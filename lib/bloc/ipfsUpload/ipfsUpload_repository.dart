@@ -1,3 +1,7 @@
+//TODO: connect to local ipfs deamon:
+// - https://github.com/hanerx/ipfs-dart
+// - https://github.com/ngngardner/dart_ipfs_client
+
 import 'dart:io';
 
 import 'package:video_compress/video_compress.dart';
