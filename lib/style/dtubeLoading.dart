@@ -46,7 +46,7 @@ class _DTubeLogoPulseState extends State<DTubeLogoPulse>
         child: Image.asset(
           'assets/images/dtube_logo_white.png',
           fit: BoxFit.fitWidth,
-          width: _circleWidth - 50,
+          width: _circleWidth - 42,
         ),
       ),
       decoration:
