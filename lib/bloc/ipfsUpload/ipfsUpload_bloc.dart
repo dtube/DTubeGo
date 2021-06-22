@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:bloc/bloc.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_event.dart';
@@ -20,19 +22,42 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
 
   @override
   Stream<IPFSUploadState> mapEventToState(IPFSUploadEvent event) async* {
+    String _uploadEndpoint = "";
+    String _uploadToken = "";
+    late Map _uploadStatusResponse;
     if (event is UploadFile) {
-      yield IPFSUploadFileProcessingState();
+      yield IPFSUploadFilePreProcessingState();
       File newFile = await repository.compressVideo(event.localFilePath);
       print(newFile.path);
+      yield IPFSUploadFilePreProcessedState(compressedFile: newFile);
       try {
-        // encoding etc
-        yield IPFSUploadFileProcessedState(compressedFile: newFile);
-        try {
-          // upload to ipfs
-        } catch (e) {
-          yield IPFSUploadErrorState(message: e.toString());
+        _uploadEndpoint = await repository.getUploadEndpoint();
+        print("ENDPOINT: " + _uploadEndpoint);
+        if (_uploadEndpoint == "") {
+          yield IPFSUploadErrorState(message: "no valid endpoint found");
+        } else {
+          _uploadToken =
+              await repository.uploadFile(newFile.path, _uploadEndpoint);
+          print("TOKEN: " + _uploadToken);
+          yield IPFSUploadFileUploadedState(uploadToken: _uploadToken);
+          try {
+            do {
+              _uploadStatusResponse = await repository.monitorUploadStatus(
+                  _uploadToken, _uploadEndpoint);
+              print(_uploadStatusResponse);
+              yield IPFSUploadFilePostProcessingState(
+                  processingResponse: _uploadStatusResponse);
+            } while (_uploadStatusResponse["finished"] == false);
+            yield IPFSUploadFilePostProcessedState(
+                processingResponse: _uploadStatusResponse);
+          } catch (e) {
+            print(e.toString());
+            yield IPFSUploadErrorState(message: e.toString());
+          }
         }
+        // upload to ipfs
       } catch (e) {
+        print(e.toString());
         yield IPFSUploadErrorState(message: e.toString());
       }
     }

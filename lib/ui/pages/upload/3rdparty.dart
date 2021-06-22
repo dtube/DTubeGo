@@ -1,3 +1,5 @@
+// TODO: continue to upload 3rd party content (after ipfs content is finished)
+
 import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
@@ -23,6 +25,8 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
   late SettingsBloc _settingsBloc;
   late UserBloc _userBloc;
   UploadData _uploadData = UploadData(
+      link: "",
+      author: "",
       title: "",
       description: "",
       tag: "",
@@ -110,6 +114,8 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
             builder: (context, state) {
               if (state is ThirdPartyMetadataLoadedState) {
                 _uploadData = UploadData(
+                    link: "",
+                    author: "",
                     title: state.metadata.title,
                     description: state.metadata.description,
                     tag: "",

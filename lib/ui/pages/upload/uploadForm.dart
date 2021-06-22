@@ -5,6 +5,7 @@ import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/ui/pages/post/players/BetterPlayer.dart';
 import 'package:dtube_togo/ui/pages/post/players/YTplayerIframe.dart';
+import 'package:dtube_togo/utils/randomPermlink.dart';
 import 'package:dtube_togo/utils/secureStorage.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,8 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class UploadData {
+  String author;
+  String link;
   String title;
   String description;
   String tag;
@@ -30,6 +33,8 @@ class UploadData {
   bool nSFWContent;
   bool unlistVideo;
   UploadData({
+    required this.link,
+    required this.author,
     required this.title,
     required this.description,
     required this.tag,
@@ -151,6 +156,9 @@ class _UploadFormState extends State<UploadForm> {
             setState(() {
               stateUploadData.vpPercent = double.parse(
                   stateSettings.settings[settingKey_defaultVotingWeight]!);
+              stateUploadData.author =
+                  stateSettings.settings[authKey_usernameKey]!;
+              stateUploadData.link = randomPermlink(11);
             });
           }
         },

@@ -3,6 +3,8 @@ import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
 import 'package:dtube_togo/bloc/thirdpartyloader/thirdpartyloader_repository.dart';
+import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
+import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
@@ -68,6 +70,10 @@ class _UploaderMainPageState extends State<UploaderMainPage>
                         create: (context) => IPFSUploadBloc(
                             repository: IPFSUploadRepositoryImpl()),
                       ),
+                      BlocProvider(
+                        create: (context) => TransactionBloc(
+                            repository: TransactionRepositoryImpl()),
+                      ),
                     ],
                     child: WizardIPFS(),
                   ),
@@ -83,6 +89,10 @@ class _UploaderMainPageState extends State<UploaderMainPage>
                       BlocProvider(
                         create: (context) => ThirdPartyMetadataBloc(
                             repository: ThirdPartyMetadataRepositoryImpl()),
+                      ),
+                      BlocProvider(
+                        create: (context) => TransactionBloc(
+                            repository: TransactionRepositoryImpl()),
                       ),
                     ],
                     child: Wizard3rdParty(),

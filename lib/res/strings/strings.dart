@@ -16,5 +16,13 @@ class AppStrings {
 
   static String ipfsVideoUrl = "https://ipfs.d.tube/ipfs/";
   static String ipfsUploadUrl = "https://ipfs.d.tube/ipfs/";
+
+  static List<String> btfsUploadEndpoints = [
+    "https://1.btfsu.d.tube",
+    "https://2.btfsu.d.tube",
+    "https://3.btfsu.d.tube",
+    "https://4.btfsu.d.tube"
+  ];
+
   static String ipfsSnapUrl = 'https://snap1.d.tube/ipfs/';
 }

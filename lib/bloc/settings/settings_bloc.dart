@@ -17,6 +17,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     if (event is FetchSettingsEvent) {
       yield SettingsLoadingState();
       try {
+        String? username = await sec.getUsername();
         Map<String, String> newSettings = {
           sec.settingKey_avalonNode: await sec.getNode(),
           sec.settingKey_defaultVotingWeight: await sec.getDefaultVote(),
@@ -24,6 +25,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               await sec.getDefaultVoteComments(),
           sec.settingKey_showHidden: await sec.getShowHidden(),
           sec.settingKey_showNSFW: await sec.getNSFW(),
+          sec.authKey_usernameKey: username!
         };
         yield SettingsLoadedState(settings: newSettings);
       } catch (e) {

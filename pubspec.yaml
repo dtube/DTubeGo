@@ -60,6 +60,7 @@ dependencies:
   flutter_bloc: ^7.0.1
   http: ^0.13.3
   equatable: ^2.0.2
+  dio: ^4.0.0
 
   # others
   flutter_secure_storage: ^4.2.0
