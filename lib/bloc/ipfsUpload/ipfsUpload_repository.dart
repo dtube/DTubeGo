@@ -1,3 +1,4 @@
+import 'package:path/path.dart';
 //TODO: connect to local ipfs deamon:
 // - https://github.com/hanerx/ipfs-dart
 // - https://github.com/ngngardner/dart_ipfs_client
@@ -13,9 +14,13 @@ import 'package:dio/dio.dart';
 
 abstract class IPFSUploadRepository {
   Future<File> compressVideo(String localFilePath);
+  Future<String> createThumbnailFromVideo(String localFilePath);
   Future<String> getUploadEndpoint();
-  Future<String> uploadFile(String localFilePath, String endpoint);
-  Future<Map> monitorUploadStatus(String token, String endpoint);
+  Future<String> uploadVideo(String localFilePath, String endpoint);
+  Future<String> uploadThumbnail(
+      String localFilePath, String generatedFilePath);
+  Future<Map> monitorVideoUploadStatus(String token, String endpoint);
+  Future<Map> monitorThumbnailUploadStatus(String token);
 }
 
 class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
@@ -30,6 +35,20 @@ class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
       );
 
       return File(mediaInfo!.path!);
+    } catch (e) {
+      print(e.toString());
+      throw Exception();
+    }
+  }
+
+  Future<String> createThumbnailFromVideo(String localFilePath) async {
+    try {
+      //await VideoCompress.setLogLevel(4);
+      File _thumb = await VideoCompress.getFileThumbnail(
+        localFilePath,
+      );
+
+      return _thumb.path;
     } catch (e) {
       print(e.toString());
       throw Exception();
@@ -53,7 +72,7 @@ class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
     }
   }
 
-  Future<String> uploadFile(String localFilePath, String endpoint) async {
+  Future<String> uploadVideo(String localFilePath, String endpoint) async {
     String _url = endpoint +
         '/uploadVideo?videoEncodingFormats=240p,480p,720p,1080p&sprite=true';
 
@@ -74,7 +93,46 @@ class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
     }
   }
 
-  Future<Map> monitorUploadStatus(String token, String endpoint) async {
+  Future<String> uploadThumbnail(
+      String localThumbnail, String generatedThumbnail) async {
+    String _url = AppStrings.ipfsSnapUploadUrl + '/uploadImage';
+    String _filePath =
+        localThumbnail != '' ? localThumbnail : generatedThumbnail;
+
+    var formData = FormData.fromMap({
+      'files':
+          await MultipartFile.fromFile(_filePath, filename: basename(_filePath))
+    });
+    var dio = Dio();
+
+    var response = await dio.post(_url, data: formData);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.data);
+      String token = data["token"];
+      return token;
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future<Map> monitorThumbnailUploadStatus(String token) async {
+    var dio = Dio();
+
+    String url = AppStrings.ipfsSnapUploadUrl + '/getProgressByToken/' + token;
+
+    var response = await dio.get(url);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      var data = json.decode(response.data);
+
+      return data;
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future<Map> monitorVideoUploadStatus(String token, String endpoint) async {
     var dio = Dio();
     int tsNow = DateTime.now().millisecondsSinceEpoch;
     String url =

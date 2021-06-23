@@ -6,6 +6,7 @@ import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_event.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc.dart';
+import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/ui/pages/upload/uploadForm.dart';
 
@@ -28,29 +29,37 @@ class _WizardIPFSState extends State<WizardIPFS> {
   late TransactionBloc _txBloc;
 
   UploadData _uploadData = UploadData(
-      link: "",
-      author: "",
-      title: "",
-      description: "",
-      tag: "",
-      vpPercent: 0.0,
-      vpBalance: 0,
-      burnDtc: 0,
-      dtcBalance: 0,
-      duration: new Duration(seconds: 0),
-      thumbnailLocation: "",
-      localThumbnail: true,
-      videoLocation: "",
-      localVideoFile: true,
-      originalContent: false,
-      nSFWContent: false,
-      unlistVideo: false);
+    link: "",
+    author: "",
+    title: "",
+    description: "",
+    tag: "",
+    vpPercent: 0.0,
+    vpBalance: 0,
+    burnDtc: 0,
+    dtcBalance: 0,
+    duration: new Duration(seconds: 0),
+    thumbnailLocation: "",
+    localThumbnail: true,
+    videoLocation: "",
+    localVideoFile: true,
+    originalContent: false,
+    nSFWContent: false,
+    unlistVideo: false,
+    videoSourceHash: "",
+    video240pHash: "",
+    video480pHash: "",
+    videoSpriteHash: "",
+    thumbnail640Hash: "",
+    thumbnail210Hash: "",
+  );
 
   void childCallback(UploadData ud) {
     setState(() {
       _uploadData = ud;
       _uploadPressed = true;
-      _uploadBloc.add(UploadFile(_uploadData.videoLocation));
+      _uploadBloc.add(UploadVideo(
+          _uploadData.videoLocation, _uploadData.thumbnailLocation));
     });
   }
 
@@ -70,92 +79,130 @@ class _WizardIPFSState extends State<WizardIPFS> {
       );
     } else {
       return BlocBuilder<IPFSUploadBloc, IPFSUploadState>(
-        builder: (context, state) {
-          if (state is IPFSUploadFilePreProcessingState) {
-            return Center(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(50.0),
-                    child: DTubeLogoPulse(),
-                  ),
-                  Text("compressing video..."),
-                ],
-              ),
-            );
-          } else if (state is IPFSUploadFilePreProcessedState) {
-            return Center(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(50.0),
-                    child: DTubeLogoPulse(),
-                  ),
-                  Text("uploading video..."),
-                ],
-              ),
-            );
-          } else if (state is IPFSUploadFilePostProcessingState) {
-            return Center(
-              child: PostProcessingStatusBars(
-                  statusInfo: state.processingResponse),
-            );
-          } else if (state is IPFSUploadFilePostProcessedState) {
-            var statusInfo = state.processingResponse;
-            String _sourceHash = statusInfo["ipfsAddSourceVideo"]["hash"];
-            String _240pHash =
-                statusInfo["encodedVideos"][0]["ipfsAddEncodeVideo"]["hash"];
-            String _480pHash =
-                statusInfo["encodedVideos"][1]["ipfsAddEncodeVideo"]["hash"];
-            String _spriteHash = statusInfo["sprite"]["ipfsAddSprite"]["hash"];
+          builder: (context, state) {
+        if (state is IPFSUploadVideoPreProcessingState) {
+          return Center(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(50.0),
+                  child: DTubeLogoPulse(),
+                ),
+                Text("compressing video..."),
+              ],
+            ),
+          );
+        } else if (state is IPFSUploadVideoPreProcessedState) {
+          return Center(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(50.0),
+                  child: DTubeLogoPulse(),
+                ),
+                Text("uploading video..."),
+              ],
+            ),
+          );
+        } else if (state is IPFSUploadVideoPostProcessingState) {
+          return Center(
+            child:
+                PostProcessingStatusBars(statusInfo: state.processingResponse),
+          );
+        } else if (state is IPFSUploadVideoPostProcessedState) {
+          var statusInfo = state.processingResponse;
 
-            var voteValue =
-                (_uploadData.vpBalance * (_uploadData.vpPercent / 100)).floor();
-            TxData txdata = TxData(
-              // TODO: continue here -> posting ipfs video!
-              link: _uploadData.link,
-              author: _uploadData.author,
-              tag: _uploadData.tag,
-              vt: voteValue,
-            );
-            Transaction newTx = Transaction(type: 5, data: txdata);
-            _txBloc.add(SignAndSendTransactionEvent(newTx));
-            return Center(
-                child: HashOverview(
-              statusInfo: state.processingResponse,
-            ));
-          } else {
-            return Center(
-              child: Column(
-                children: [
-                  Text(""),
-                ],
-              ),
-            );
-          }
-        },
-      );
+          _uploadData.videoSourceHash =
+              statusInfo["ipfsAddSourceVideo"]["hash"];
+          _uploadData.video240pHash =
+              statusInfo["encodedVideos"][0]["ipfsAddEncodeVideo"]["hash"];
+          _uploadData.video480pHash =
+              statusInfo["encodedVideos"][1]["ipfsAddEncodeVideo"]["hash"];
+          _uploadData.videoSpriteHash =
+              statusInfo["ipfsAddSourceVideo"]["hash"];
+        } else if (state is IPFSUploadThumbnailUploadingState) {
+          return Center(
+            child: ThumbnailStatusCircle(),
+          );
+        } else if (state is IPFSUploadThumbnailUploadedState) {
+          var statusInfo = state.uploadResponse;
+
+          _uploadData.thumbnail210Hash = statusInfo["ipfsAddSource"]["hash"];
+          _uploadData.thumbnail640Hash = statusInfo["ipfsAddOverlay"]["hash"];
+
+          var voteValue =
+              (_uploadData.vpBalance * (_uploadData.vpPercent / 100)).floor();
+
+          //TODO: build TxData and send transaction to avalon
+
+          // TxData txdata = TxData(
+          //
+          //   link: _uploadData.link,
+          //   author: _uploadData.author,
+          //   tag: _uploadData.tag,
+          //   vt: voteValue,
+          // );
+          // Transaction newTx = Transaction(type: 5, data: txdata);
+          // _txBloc.add(SignAndSendTransactionEvent(newTx));
+          return Center(
+              child: HashOverview(
+            videoSourceHash: _uploadData.videoSourceHash,
+            video240pHash: _uploadData.video240pHash,
+            video480pHash: _uploadData.video480pHash,
+            videoSpriteHash: _uploadData.videoSpriteHash,
+            thumbnail640Hash: _uploadData.thumbnail640Hash,
+            thumbnail210Hash: _uploadData.thumbnail210Hash,
+          ));
+        }
+
+        return Center(
+          child: Column(
+            children: [
+              Text(""),
+            ],
+          ),
+        );
+      });
     }
   }
 }
 
 // just for debugging
 class HashOverview extends StatelessWidget {
-  Map statusInfo;
-  HashOverview({Key? key, required this.statusInfo}) : super(key: key);
+  String videoSourceHash;
+  String video240pHash;
+  String video480pHash;
+  String videoSpriteHash;
+
+  String thumbnail640Hash;
+  String thumbnail210Hash;
+
+  HashOverview({
+    Key? key,
+    required this.videoSourceHash,
+    required this.video240pHash,
+    required this.video480pHash,
+    required this.videoSpriteHash,
+    required this.thumbnail640Hash,
+    required this.thumbnail210Hash,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Text("source hash"),
-        Text(statusInfo["ipfsAddSourceVideo"]["hash"]),
+        Text(videoSourceHash),
         Text("240p hash"),
-        Text(statusInfo["encodedVideos"][0]["ipfsAddEncodeVideo"]["hash"]),
+        Text(video240pHash),
         Text("480p hash"),
-        Text(statusInfo["encodedVideos"][1]["ipfsAddEncodeVideo"]["hash"]),
+        Text(video480pHash),
         Text("sprites hash"),
-        Text(statusInfo["sprite"]["ipfsAddSprite"]["hash"]),
+        Text(videoSpriteHash),
+        Text("thumbnail 640 hash"),
+        Text(thumbnail640Hash),
+        Text("thumbnail 210 hash"),
+        Text(thumbnail210Hash),
       ],
     );
   }
@@ -215,45 +262,94 @@ class PostProcessingStatusBars extends StatelessWidget {
     double creatingThumbnail = 50;
     double ipfsThumbnailUpload = 0;
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
           padding: const EdgeInsets.all(50.0),
           child: DTubeLogoPulse(),
         ),
-        Text('Source upload to ipfs'),
-        LinearProgressIndicator(
-          value: (ipfsSourceUpload + 0.0) / 100,
-          semanticsLabel: 'Source upload to ipfs',
+        UploaderProgressBar(
+          title: 'uploading source to ipfs',
+          value: ipfsSourceUpload,
         ),
-        Text('encoding to 240p'),
-        LinearProgressIndicator(
-          value: (encoding240p + 0.0) / 100,
-          semanticsLabel: 'encoding to 240p',
+        UploaderProgressBar(
+          title: 'encoding to 240p',
+          value: encoding240p,
         ),
-        Text('uploading 240p to ipfs'),
-        LinearProgressIndicator(
-          value: (ipfs240pUpload + 0.0) / 100,
-          semanticsLabel: 'uploading 240p to ipfs',
+        UploaderProgressBar(
+          title: 'uploading 240p to ipfs',
+          value: ipfs240pUpload,
         ),
-        Text('encoding to 480p'),
-        LinearProgressIndicator(
-          value: (encoding480p + 0.0) / 100,
-          semanticsLabel: 'encoding to 480p',
+        UploaderProgressBar(
+          title: 'encoding to 480p',
+          value: encoding480p,
         ),
-        Text('uploading 480p to ipfs'),
-        LinearProgressIndicator(
-          value: (ipfs480pUpload + 0.0) / 100,
-          semanticsLabel: 'uploading 480p to ipfs',
+
+        UploaderProgressBar(
+          title: 'uploading 480p to ipfs',
+          value: ipfs480pUpload,
         ),
-        Text('creating thumbnail'),
-        LinearProgressIndicator(
-          value: (creatingThumbnail + 0.0) / 100,
-          semanticsLabel: 'creating thumbnail',
+        SizedBox(height: 50)
+        // UploaderProgressBar(title: 'encoding to 480p',value: encoding480p,),
+        // UploaderProgressBar(title: 'encoding to 480p',value: encoding480p,),
+      ],
+    );
+  }
+}
+
+class ThumbnailStatusCircle extends StatelessWidget {
+  ThumbnailStatusCircle({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // // TODO: extract business logic to bloc...
+    // double ipfsAddSource = statusInfo["ipfsAddSource"]["step"] != "Waiting" &&
+    //         statusInfo["ipfsAddSource"]["progress"] != null
+    //     ? double.parse(statusInfo["ipfsAddSource"]["progress"]
+    //         .toString()
+    //         .replaceAll("%", ""))
+    //     : 0.0;
+    // double ipfsAddOverlay = statusInfo["ipfsAddOverlay"]["step"] != "Waiting" &&
+    //         statusInfo["ipfsAddSource"]["progress"] != null
+    //     ? double.parse(statusInfo["ipfsAddSource"]["progress"]
+    //         .toString()
+    //         .replaceAll("%", ""))
+    //     : 0.0;
+
+    return Column(
+      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(50.0),
+          child: DTubeLogoPulse(),
         ),
-        Text('uploading thumbnail to ipfs'),
+        Text("processing thumbnail..."),
+        SizedBox(height: 50)
+      ],
+    );
+  }
+}
+
+class UploaderProgressBar extends StatelessWidget {
+  const UploaderProgressBar({
+    Key? key,
+    required this.title,
+    required this.value,
+  }) : super(key: key);
+  final String title;
+  final double value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(title),
         LinearProgressIndicator(
-          value: (ipfsThumbnailUpload + 0.0) / 100,
-          semanticsLabel: 'uploading thumbnail to ipfs',
+          minHeight: 15,
+          value: (value + 0.0) / 100,
+          semanticsLabel: title,
         ),
       ],
     );

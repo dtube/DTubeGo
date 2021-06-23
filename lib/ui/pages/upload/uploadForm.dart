@@ -32,6 +32,14 @@ class UploadData {
   bool originalContent;
   bool nSFWContent;
   bool unlistVideo;
+
+  String videoSourceHash;
+  String video240pHash;
+  String video480pHash;
+  String videoSpriteHash;
+  String thumbnail640Hash;
+  String thumbnail210Hash;
+
   UploadData({
     required this.link,
     required this.author,
@@ -50,6 +58,12 @@ class UploadData {
     required this.originalContent,
     required this.nSFWContent,
     required this.unlistVideo,
+    required this.videoSourceHash,
+    required this.video240pHash,
+    required this.video480pHash,
+    required this.videoSpriteHash,
+    required this.thumbnail640Hash,
+    required this.thumbnail210Hash,
   });
 }
 
@@ -164,40 +178,43 @@ class _UploadFormState extends State<UploadForm> {
         },
         child: SingleChildScrollView(
           physics: ClampingScrollPhysics(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              videoPreview(),
-              SizedBox(height: 8),
-              stateUploadData.videoLocation != ""
-                  ? basicData()
-                  : SizedBox(height: 50),
-              SizedBox(height: 8),
-              _titleController.text != "" &&
-                      _descController.text != "" &&
-                      _tagController.text != ""
-                  ? imagePreview()
-                  : SizedBox(height: 50),
-              _titleController.text != "" &&
-                      _descController.text != "" &&
-                      _tagController.text != "" &&
-                      stateUploadData.thumbnailLocation != null
-                  ? Column(
-                      children: [
-                        moreSettings(),
-                        SizedBox(height: 8),
-                        InputChip(
-                          label: Text("upload", style: TextStyle(fontSize: 24)),
-                          onPressed: () {
-                            widget.callback(stateUploadData);
-                          },
-                        )
-                      ],
-                    )
-                  : SizedBox(height: 50),
-              SizedBox(height: 50)
-            ],
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                videoPreview(),
+                SizedBox(height: 8),
+                stateUploadData.videoLocation != ""
+                    ? basicData()
+                    : SizedBox(height: 50),
+                SizedBox(height: 8),
+                _titleController.text != "" &&
+                        _descController.text != "" &&
+                        _tagController.text != ""
+                    ? imagePreview()
+                    : SizedBox(height: 50),
+                _titleController.text != "" &&
+                        _descController.text != "" &&
+                        _tagController.text != "" &&
+                        stateUploadData.thumbnailLocation != null
+                    ? Column(
+                        children: [
+                          moreSettings(),
+                          SizedBox(height: 8),
+                          InputChip(
+                            label:
+                                Text("upload", style: TextStyle(fontSize: 24)),
+                            onPressed: () {
+                              widget.callback(stateUploadData);
+                            },
+                          )
+                        ],
+                      )
+                    : SizedBox(height: 50),
+                SizedBox(height: 50)
+              ],
+            ),
           ),
         ),
       ),

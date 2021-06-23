@@ -25,4 +25,5 @@ class AppStrings {
   ];
 
   static String ipfsSnapUrl = 'https://snap1.d.tube/ipfs/';
+  static String ipfsSnapUploadUrl = 'https://snap1.d.tube';
 }

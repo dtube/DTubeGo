@@ -23,33 +23,56 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
   @override
   Stream<IPFSUploadState> mapEventToState(IPFSUploadEvent event) async* {
     String _uploadEndpoint = "";
-    String _uploadToken = "";
+    String _thumbnailUploadToken = "";
+    String _videoUploadToken = "";
     late Map _uploadStatusResponse;
-    if (event is UploadFile) {
-      yield IPFSUploadFilePreProcessingState();
-      File newFile = await repository.compressVideo(event.localFilePath);
-      print(newFile.path);
-      yield IPFSUploadFilePreProcessedState(compressedFile: newFile);
+    late Map _thumbUploadStatusResponse;
+    if (event is UploadVideo) {
+      yield IPFSUploadVideoPreProcessingState();
+      File _newFile = await repository.compressVideo(event.videoPath);
+      String _newThumbnail =
+          await repository.createThumbnailFromVideo(event.videoPath);
+      print(_newFile.path);
+      yield IPFSUploadVideoPreProcessedState(compressedFile: _newFile);
       try {
         _uploadEndpoint = await repository.getUploadEndpoint();
         print("ENDPOINT: " + _uploadEndpoint);
         if (_uploadEndpoint == "") {
           yield IPFSUploadErrorState(message: "no valid endpoint found");
         } else {
-          _uploadToken =
-              await repository.uploadFile(newFile.path, _uploadEndpoint);
-          print("TOKEN: " + _uploadToken);
-          yield IPFSUploadFileUploadedState(uploadToken: _uploadToken);
+          _videoUploadToken =
+              await repository.uploadVideo(_newFile.path, _uploadEndpoint);
+          print("TOKEN: " + _videoUploadToken);
+          yield IPFSUploadVideoUploadedState(uploadToken: _videoUploadToken);
           try {
             do {
-              _uploadStatusResponse = await repository.monitorUploadStatus(
-                  _uploadToken, _uploadEndpoint);
+              _uploadStatusResponse = await repository.monitorVideoUploadStatus(
+                  _videoUploadToken, _uploadEndpoint);
               print(_uploadStatusResponse);
-              yield IPFSUploadFilePostProcessingState(
+              yield IPFSUploadVideoPostProcessingState(
                   processingResponse: _uploadStatusResponse);
             } while (_uploadStatusResponse["finished"] == false);
-            yield IPFSUploadFilePostProcessedState(
+            yield IPFSUploadVideoPostProcessedState(
                 processingResponse: _uploadStatusResponse);
+            try {
+              _thumbnailUploadToken = await repository.uploadThumbnail(
+                  event.thumbnailPath, _newThumbnail);
+              do {
+                _thumbUploadStatusResponse = await repository
+                    .monitorThumbnailUploadStatus(_thumbnailUploadToken);
+                print(_thumbUploadStatusResponse);
+                yield IPFSUploadThumbnailUploadingState(
+                    uploadingResponse: _thumbUploadStatusResponse);
+              } while (_thumbUploadStatusResponse["ipfsAddSource"]["step"] !=
+                      "Success" ||
+                  _thumbUploadStatusResponse["ipfsAddOverlay"]["step"] !=
+                      "Success");
+              yield IPFSUploadThumbnailUploadedState(
+                  uploadResponse: _thumbUploadStatusResponse);
+            } catch (e) {
+              print(e.toString());
+              yield IPFSUploadErrorState(message: e.toString());
+            }
           } catch (e) {
             print(e.toString());
             yield IPFSUploadErrorState(message: e.toString());
