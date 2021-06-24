@@ -38,7 +38,7 @@ dependencies:
   youtube_player_flutter: ^8.0.0
   webview_flutter: ^2.0.8
   video_player: ^2.1.4
-  youtube_explode_dart: ^1.9.5
+  youtube_explode_dart: ^1.9.6
   
   video_compress: ^3.0.0
   better_player: ^0.0.69

@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -10,6 +12,7 @@ import 'package:dtube_togo/utils/secureStorage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
@@ -116,10 +119,23 @@ class _UploadFormState extends State<UploadForm> {
     super.dispose();
   }
 
-  Future getFile(bool video) async {
+  Future getFile(bool video, bool camera) async {
     PickedFile? _pickedFile;
     if (video) {
-      _pickedFile = await _picker.getVideo(source: ImageSource.gallery);
+      if (camera) {
+        // TODO: rework the orientation stuff...
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeRight,
+        ]);
+        _pickedFile = await _picker.getVideo(
+            source: ImageSource
+                .camera); // TODO: request needed permissions for camera
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+        ]);
+      } else {
+        _pickedFile = await _picker.getVideo(source: ImageSource.gallery);
+      }
       _titleFocus.requestFocus();
     } else {
       _pickedFile = await _picker.getImage(source: ImageSource.gallery);
@@ -135,7 +151,6 @@ class _UploadFormState extends State<UploadForm> {
         }
       }
     }
-
     setState(() {
       if (_pickedFile != null) {
         if (!video) {
@@ -229,13 +244,35 @@ class _UploadFormState extends State<UploadForm> {
       return Column(
         children: [
           Text("1. Video file", style: TextStyle(fontSize: 18)),
-          InputChip(
-            label: Text(_video == null
-                ? "pick your video first!"
-                : "change video file"),
-            onPressed: () {
-              getFile(true);
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              InputChip(
+                label: Row(
+                  children: [
+                    Icon(FontAwesomeIcons.solidFolderOpen),
+                    SizedBox(width: 8),
+                    Text(_video == null ? "pick video" : "change video file"),
+                  ],
+                ),
+                onPressed: () {
+                  getFile(true, false);
+                },
+              ),
+              InputChip(
+                label: Row(
+                  children: [
+                    Icon(FontAwesomeIcons.video),
+                    SizedBox(width: 8),
+                    Text(
+                        _video == null ? "record video" : "record another one"),
+                  ],
+                ),
+                onPressed: () {
+                  getFile(true, true);
+                },
+              ),
+            ],
           ),
           stateUploadData.videoLocation != ""
               ? BP(
@@ -286,7 +323,7 @@ class _UploadFormState extends State<UploadForm> {
                 ? "pick your thumbnail next!"
                 : "change thumbnail"),
             onPressed: () {
-              getFile(false);
+              getFile(false, false);
             },
           ),
           stateUploadData.thumbnailLocation != null

@@ -37,11 +37,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'DTube',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData.dark().copyWith(
-            backgroundColor: globalAlmostBlack,
-            scaffoldBackgroundColor: globalAlmostBlack,
-            primaryColor: globalBlue,
-          ),
+          theme: dtubeDarkTheme,
 
           //home: NavigationContainer(title: "Dtube ToGo", username: "tibfox"),
           home: BlocProvider<AuthBloc>(

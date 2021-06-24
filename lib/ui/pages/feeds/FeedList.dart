@@ -11,6 +11,7 @@ import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_togo/ui/pages/upload/uploaderTabContainer.dart';
 import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
@@ -47,7 +48,7 @@ class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: globalAlmostBlack,
+      //backgroundColor: globalAlmostBlack,
       body: FeedList(
         feedType: widget.feedType,
         username: widget.username,
@@ -109,7 +110,7 @@ class _FeedListState extends State<FeedList> {
   Widget build(BuildContext context) {
     return Container(
       height: 500,
-      color: globalAlmostBlack,
+      // color: globalAlmostBlack,
       child: BlocListener<FeedBloc, FeedState>(
         listener: (context, state) {
           if (state is FeedErrorState) {
@@ -176,7 +177,7 @@ class _FeedListState extends State<FeedList> {
             return BlocProvider<UserBloc>(
               create: (context) => UserBloc(repository: UserRepositoryImpl()),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(2.0),
                 child: PostListCard(
                     bigThumbnail: bigThumbnail,
                     showAuthor: showAuthor,
@@ -345,21 +346,16 @@ class PostListCard extends StatelessWidget {
             dtcValue: dtcValue),
       );
     } else {
-      return
-          // Container(
-          //   height: 200,
-          //   child:
-          PostListCardSmallThumbnail(
-              blur: blur,
-              thumbnailUrl: thumbnailUrl,
-              title: title,
-              description: description,
-              author: author,
-              link: link,
-              publishDate: publishDate,
-              duration: duration,
-              dtcValue: dtcValue);
-      //   );
+      return PostListCardSmallThumbnail(
+          blur: blur,
+          thumbnailUrl: thumbnailUrl,
+          title: title,
+          description: description,
+          author: author,
+          link: link,
+          publishDate: publishDate,
+          duration: duration,
+          dtcValue: dtcValue);
     }
   }
 }
@@ -617,21 +613,12 @@ class _PostListCardSmallThumbnailState
             navigateToPostDetailPage(context, widget.author, widget.link);
           },
           child: Card(
+            color: globalBGColor,
             elevation: 0,
-            color: globalAlmostBlack,
-            //margin: new EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
             child: Container(
-              //decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Container(
-                  // // padding: EdgeInsets.only(right: 12.0),
-                  // decoration: new BoxDecoration(
-                  //     border: new Border(
-                  //         right:
-                  //             new BorderSide(width: 1.0, color: Colors.white24))),
-                  // child: Container(
-                  // width: (MediaQuery.of(context).size.width - 50) / 3,
                   height: 75,
                   child: AspectRatio(
                     aspectRatio: 8 / 5,
@@ -660,6 +647,7 @@ class _PostListCardSmallThumbnailState
                   height: 75,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
@@ -671,7 +659,6 @@ class _PostListCardSmallThumbnailState
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Row(
@@ -702,95 +689,11 @@ class _PostListCardSmallThumbnailState
                           ],
                         ),
                       ),
-
-                      // Text(widget.author, style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
-                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
               ]),
             ),
-
-            // Padding(
-            //     padding: const EdgeInsets.all(8.0),
-            //     child: Row(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: <Widget>[
-            //         Container(
-            //           width: 150,
-            //           child: AspectRatio(
-            //             aspectRatio: 8 / 5,
-            //             child: widget.blur
-            //                 ? ClipRect(
-            //                     child: ImageFiltered(
-            //                       imageFilter: ImageFilter.blur(
-            //                         sigmaY: 5,
-            //                         sigmaX: 5,
-            //                       ),
-            //                       child: CachedNetworkImage(
-            //                         imageUrl: widget.thumbnailUrl,
-            //                       ),
-            //                     ),
-            //                   )
-            //                 : CachedNetworkImage(
-            //                     imageUrl: widget.thumbnailUrl,
-            //                     fit: BoxFit.fitWidth,
-            //                   ),
-            //           ),
-            //         ),
-            //         SizedBox(width: 8),
-            //         Column(children: [
-            //           // widget.showAuthor
-            //           //     ? SizedBox(
-            //           //         width: 50,
-            //           //         child: AuthorAvatar(
-            //           //           username: widget.author,
-            //           //         ),
-            //           //       )
-            //           //     : SizedBox(width: 0),
-            //           // SizedBox(width: 8),
-
-            //           Flexible(
-            //             child: Text(
-            //               widget
-            //                   .title, // dirty solution because of rendeflex issues column in row in column
-            //               maxLines: 2,
-            //               overflow: TextOverflow.ellipsis,
-            //               style: const TextStyle(
-            //                 fontWeight: FontWeight.bold,
-            //                 fontSize: 14,
-            //               ),
-            //             ),
-            //           ),
-            //           //   ],
-            //           // ),
-            //           Row(
-            //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //             children: [
-            //               Text(
-            //                 '${widget.publishDate} - ' +
-            //                     (widget.duration.inHours == 0
-            //                         ? widget.duration.toString().substring(2, 7)
-            //                         : widget.duration.toString().substring(0, 7)),
-            //                 style: const TextStyle(
-            //                   fontSize: 12.0,
-            //                   color: Colors.grey,
-            //                 ),
-            //               ),
-            //               Text(
-            //                 '${widget.dtcValue}',
-            //                 style: const TextStyle(
-            //                   fontSize: 15.0,
-            //                   fontWeight: FontWeight.bold,
-            //                   //color: Colors.grey,
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ]),
-            //       ],
-            //     ),
-            //   ),
           ),
         ));
   }

@@ -49,14 +49,11 @@ class PostDetailPage extends StatelessWidget {
           ),
         ],
         child: Scaffold(
-          backgroundColor: globalAlmostBlack,
           resizeToAvoidBottomInset: true,
           appBar: MediaQuery.of(context).orientation == Orientation.landscape
               ? null
               : AppBar(
-                  backgroundColor: globalAlmostBlack,
-                  elevation: 0,
-                  toolbarHeight: 30,
+                  toolbarHeight: 28,
                 ),
           body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
             if (state is PostLoadingState) {

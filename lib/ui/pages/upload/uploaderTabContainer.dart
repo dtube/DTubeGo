@@ -8,6 +8,7 @@ import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/pages/upload/3rdparty.dart';
 import 'package:dtube_togo/ui/pages/upload/ipfs.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class _UploaderMainPageState extends State<UploaderMainPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: dtubeSubAppBar(),
       resizeToAvoidBottomInset: true,
       body: Column(
         children: [

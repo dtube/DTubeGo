@@ -1,4 +1,5 @@
 import 'package:dtube_togo/bloc/config/txTypes.dart';
+import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:intl/intl.dart';
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
 
@@ -46,23 +47,7 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("DTube ToGo"),
-        //   actions: <Widget>[
-        //     IconButton(
-        //       icon: Icon(Icons.refresh),
-        //       onPressed: () {
-        //         notificationBloc.add(FetchnotificationsEvent());
-        //       },
-        //     ),
-        //     IconButton(
-        //       icon: Icon(Icons.info),
-        //       onPressed: () {
-        //         navigateToAoutPage(context);
-        //       },
-        //     )
-        //   ],
-      ),
+      appBar: dtubeSubAppBar(),
       body: Container(
         child: BlocListener<NotificationBloc, NotificationState>(
           listener: (context, state) {

@@ -1,5 +1,6 @@
 import 'package:dtube_togo/realMain.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_togo/style/styledCustomWidgets.dart';
 
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
@@ -33,23 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("DTube ToGo"),
-        //   actions: <Widget>[
-        //     IconButton(
-        //       icon: Icon(Icons.refresh),
-        //       onPressed: () {
-        //         notificationBloc.add(FetchnotificationsEvent());
-        //       },
-        //     ),
-        //     IconButton(
-        //       icon: Icon(Icons.info),
-        //       onPressed: () {
-        //         navigateToAoutPage(context);
-        //       },
-        //     )
-        //   ],
-      ),
+      appBar: dtubeSubAppBar(),
       body: Container(
         child: BlocListener<SettingsBloc, SettingsState>(
           listener: (context, state) {

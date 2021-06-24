@@ -8,6 +8,7 @@ import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 
 import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/pages/feeds/FeedList.dart';
 
 import 'package:dtube_togo/ui/pages/notifications/Notifications.dart';
@@ -48,12 +49,11 @@ class _NavigationContainerState extends State<NavigationContainer> {
         title: 'New',
       ),
       PersistentBottomNavBarItem(
-        icon: new Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        title: 'Create',
-      ),
+          icon: Icon(
+            Icons.contact_page_outlined,
+            color: Colors.white,
+          ),
+          title: 'Profile'),
       PersistentBottomNavBarItem(
         icon: new Icon(
           Icons.fireplace,
@@ -62,16 +62,13 @@ class _NavigationContainerState extends State<NavigationContainer> {
         title: 'Hot',
       ),
       // TODO: combine hot + trending
-      // PersistentBottomNavBarItem(
-      //   icon: new Icon(Icons.trending_up_outlined),
-      //   title: 'Trending',
-      // ),
       PersistentBottomNavBarItem(
-          icon: Icon(
-            Icons.contact_page_outlined,
-            color: Colors.white,
-          ),
-          title: 'Profile')
+        icon: new Icon(
+          Icons.trending_up_outlined,
+          color: Colors.white,
+        ),
+        title: 'Trending',
+      ),
     ];
   }
 
@@ -95,21 +92,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
           showAuthor: false,
         ),
       ),
-      BlocProvider<FeedBloc>(
-        create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
-        child: UploaderMainPage(),
-      ),
-      BlocProvider<FeedBloc>(
-        create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
-        child: FeedList(
-            feedType: 'HotFeed', bigThumbnail: true, showAuthor: false),
-      ),
-      // TODO: combine Hot + Trending
-      // BlocProvider<FeedBloc>(
-      //   create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
-      //   child: FeedList(
-      //       feedType: 'TrendingFeed', bigThumbnail: true, showAuthor: false),
-      // ),
       MultiBlocProvider(
         providers: [
           BlocProvider<UserBloc>(
@@ -125,6 +107,16 @@ class _NavigationContainerState extends State<NavigationContainer> {
           ownUserpage: true,
         ),
       ),
+      BlocProvider<FeedBloc>(
+        create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
+        child: FeedList(
+            feedType: 'HotFeed', bigThumbnail: true, showAuthor: false),
+      ),
+      BlocProvider<FeedBloc>(
+        create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
+        child: FeedList(
+            feedType: 'TrendingFeed', bigThumbnail: true, showAuthor: false),
+      ),
     ];
   }
 
@@ -133,55 +125,114 @@ class _NavigationContainerState extends State<NavigationContainer> {
     super.initState();
   }
 
-  void pageChanged(int index) {
-    setState(() {
-      bottomSelectedIndex = index;
-    });
-  }
-
-  void bottomTapped(int index) {
-    setState(() {
-      bottomSelectedIndex = index;
-      pageController.animateToPage(index,
-          duration: Duration(milliseconds: 500), curve: Curves.ease);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(widget.title),
-          ],
+        // shadowColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(25),
+          ),
         ),
-        actions: <Widget>[
-          BalanceOverview(),
-          // TODO: figure out how to display notifications without violating the conbtext of the child tabview
-          IconButton(
-            icon: Icon(Icons.info),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return BlocProvider<NotificationBloc>(
-                    create: (context) => NotificationBloc(
-                        repository: NotificationRepositoryImpl()),
-                    child: Notifications());
-              }));
-            },
+        elevation: 8,
+        toolbarHeight: 60,
+        titleSpacing: 0,
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 130,
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: CircleAvatar(
+                    backgroundColor: globalRed,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return UploaderMainPage();
+                            },
+                          ),
+                        );
+                      },
+                      child: Icon(
+                        Icons.add_box_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Text(widget.title),
+              DTubeLogo(size: 60),
+
+              // TODO: figure out how to display notifications without violating the conbtext of the child tabview
+              Container(
+                width: 130,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: globalBlue,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return BlocProvider<NotificationBloc>(
+                                    create: (context) => NotificationBloc(
+                                        repository:
+                                            NotificationRepositoryImpl()),
+                                    child: Notifications());
+                              }));
+                            },
+                            child: Icon(
+                              Icons.inbox,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        CircleAvatar(
+                          backgroundColor: globalBlue,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return BlocProvider<SettingsBloc>(
+                                    create: (context) => SettingsBloc(),
+                                    child: SettingsPage());
+                              }));
+                            },
+                            child: Icon(
+                              Icons.settings,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // TODO: find good way to display balances all the time
+                    // Padding(
+                    //   padding: const EdgeInsets.only(right: 8.0),
+                    //   child: BalanceOverview(),
+                    // ),
+                  ],
+                ),
+              ),
+              // TODO: figure out how to display notifications without violating the conbtext of the child tabview
+            ],
           ),
-          // TODO: figure out how to display notifications without violating the conbtext of the child tabview
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return BlocProvider<SettingsBloc>(
-                    create: (context) => SettingsBloc(), child: SettingsPage());
-              }));
-            },
-          ),
-        ],
+        ),
       ),
       body: PersistentTabView(
         context,
@@ -189,7 +240,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
         screens: _buildScreens(),
         items: _navBarsItems(),
         confineInSafeArea: true,
-        backgroundColor: globalBlue, // Default is Colors.white.
+        backgroundColor: globalBGColor, // Default is Colors.white.
         handleAndroidBackButtonPress: true, // Default is true.
         resizeToAvoidBottomInset:
             true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
@@ -197,8 +248,8 @@ class _NavigationContainerState extends State<NavigationContainer> {
         hideNavigationBarWhenKeyboardShows:
             true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
         decoration: NavBarDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          colorBehindNavBar: globalAlmostBlack,
+          borderRadius: BorderRadius.circular(25.0),
+          colorBehindNavBar: globalBGColor,
         ),
         popAllScreensOnTapOfSelectedTab: true,
         popActionScreens: PopActionScreensType.all,
@@ -213,63 +264,18 @@ class _NavigationContainerState extends State<NavigationContainer> {
           curve: Curves.easeOut,
           duration: Duration(milliseconds: 200),
         ),
-        //navBarHeight: 60,
-        navBarStyle: NavBarStyle.style15,
-        // Choose the nav bar style with this property.
+        // onItemSelected: (index) {
+        //   setState(() {
+        //     bottomSelectedIndex =
+        //         index; // NOTE: THIS IS CRITICAL!! Don't miss it!
+        //     _controller.index = index;
+        //   });
+        // },
+
+        navBarStyle: NavBarStyle.style14,
       ),
     );
   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Text(widget.title),
-//           ],
-//         ),
-//         actions: <Widget>[
-//           BalanceOverview(),
-//           IconButton(
-//             icon: Icon(Icons.info),
-//             onPressed: () {
-//               Navigator.push(context, MaterialPageRoute(builder: (context) {
-//                 return BlocProvider<NotificationBloc>(
-//                     create: (context) => NotificationBloc(
-//                         repository: NotificationRepositoryImpl()),
-//                     child: Notifications());
-//               }));
-//             },
-//           ),
-//           IconButton(
-//             icon: Icon(Icons.settings),
-//             onPressed: () {
-//               Navigator.push(context, MaterialPageRoute(builder: (context) {
-//                 return BlocProvider<SettingsBloc>(
-//                     create: (context) => SettingsBloc(), child: SettingsPage());
-//               }));
-//             },
-//           ),
-//         ],
-//       ),
-//       body: buildPageView(),
-//       bottomNavigationBar: BottomNavigationBar(
-//         showUnselectedLabels: true,
-//         currentIndex: bottomSelectedIndex,
-//         selectedIconTheme: IconThemeData(color: globalRed),
-//         unselectedIconTheme: IconThemeData(color: globalAlmostWhite),
-//         selectedItemColor: globalAlmostWhite,
-//         unselectedItemColor: globalAlmostWhite,
-//         onTap: (index) {
-//           bottomTapped(index);
-//         },
-//         items: buildBottomNavBarItems(),
-//       ),
-//     );
-//   }
-// }
 }
 
 class BalanceOverview extends StatefulWidget {
@@ -302,26 +308,34 @@ class _BalanceOverviewState extends State<BalanceOverview> {
       bloc: _userBloc,
       builder: (context, state) {
         if (state is UserInitialState) {
-          return SizedBox(width: 0, height: 0);
+          return SizedBox(width: 0, height: 12);
         } else if (state is UserDTCVPLoadingState) {
-          return SizedBox(width: 0, height: 0);
+          return SizedBox(width: 0, height: 12);
         } else if (state is UserDTCVPLoadedState) {
+          double _dtcBalanceK = state.dtcBalance / 100000;
+          double _vpBalanceK = state.vtBalance["v"]! / 1000;
           try {
-            return Row(children: [
+            return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               Text(
-                (state.dtcBalance / 100000).toStringAsFixed(1) + 'K',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                (_dtcBalanceK >= 1000 ? _dtcBalanceK / 1000 : _dtcBalanceK)
+                        .toStringAsFixed(1) +
+                    (_dtcBalanceK >= 1000 ? 'M' : 'K'),
+                style: Theme.of(context).textTheme.subtitle2,
               ),
               Text(
                 "DTC",
+                style: Theme.of(context).textTheme.subtitle2,
               ),
-              SizedBox(width: 8),
+              SizedBox(width: 4),
               Text(
-                (state.vtBalance["v"]! / 1000).toStringAsFixed(0) + 'K',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                (_vpBalanceK >= 1000 ? _vpBalanceK / 1000 : _vpBalanceK)
+                        .toStringAsFixed(1) +
+                    (_vpBalanceK >= 1000 ? 'M' : 'K'),
+                style: Theme.of(context).textTheme.subtitle2,
               ),
               Text(
                 "VP",
+                style: Theme.of(context).textTheme.subtitle2,
               ),
             ]);
           } catch (e) {

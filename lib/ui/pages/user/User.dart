@@ -56,7 +56,7 @@ class _UserState extends State<UserPage> {
           : AppBar(
               backgroundColor: globalAlmostBlack,
               elevation: 0,
-              toolbarHeight: 30,
+              toolbarHeight: 28,
             ),
       body: Container(
         child: BlocListener<UserBloc, UserState>(
@@ -125,7 +125,8 @@ class _UserState extends State<UserPage> {
             child: SingleChildScrollView(
                 child: Column(children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   user.json_string?.profile?.avatar != null
                       ? CachedNetworkImage(
@@ -160,7 +161,7 @@ class _UserState extends State<UserPage> {
                             //color: Colors.black54,
                           ),
                         ),
-                        user.json_string!.profile!.location != null
+                        user.json_string?.profile?.location != null
                             ? Text(user.json_string!.profile!.location!,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -171,7 +172,7 @@ class _UserState extends State<UserPage> {
                             : SizedBox(
                                 height: 0,
                               ),
-                        user.json_string!.profile!.about != null
+                        user.json_string?.profile?.about != null
                             ? Text(
                                 user.json_string!.profile!.about!,
                                 maxLines: 2,
@@ -184,7 +185,7 @@ class _UserState extends State<UserPage> {
                             : SizedBox(
                                 height: 0,
                               ),
-                        user.json_string!.profile!.website != null
+                        user.json_string?.profile?.website != null
                             ? Text(user.json_string!.profile!.website!)
                             : SizedBox(
                                 height: 0,
@@ -221,10 +222,10 @@ class _UserState extends State<UserPage> {
       SpeedDialChild(
           child: Icon(Icons.wallet_giftcard),
           foregroundColor: globalAlmostWhite,
-          backgroundColor: globalBlue,
+          //backgroundColor: globalBlue,
           label: 'transfer',
           labelStyle: TextStyle(fontSize: 18.0),
-          labelBackgroundColor: globalBlue,
+          //labelBackgroundColor: globalBlue,
           onTap: () {
             showDialog<String>(
                 context: context,
@@ -290,10 +291,10 @@ class _UserState extends State<UserPage> {
       SpeedDialChild(
         child: Icon(Icons.follow_the_signs),
         foregroundColor: globalAlmostWhite,
-        backgroundColor: globalBlue,
+        //backgroundColor: globalBlue,
         label: alreadyFollowing ? 'Unfollow' : 'Follow',
         labelStyle: TextStyle(fontSize: 18.0),
-        labelBackgroundColor: globalBlue,
+        // labelBackgroundColor: globalBlue,
         onTap: () async {
           TxData txdata = TxData(
             target: username,
@@ -313,17 +314,27 @@ class _UserState extends State<UserPage> {
           foregroundColor: globalAlmostWhite,
           backgroundColor: globalBlue,
           label: 'Wallet',
-          labelStyle: TextStyle(fontSize: 18.0),
+          labelStyle: TextStyle(fontSize: 14.0),
           labelBackgroundColor: globalBlue,
           onTap: () {
             // navigate to new wallet page
+          }),
+      SpeedDialChild(
+          child: Icon(Icons.cake),
+          foregroundColor: globalAlmostWhite,
+          backgroundColor: globalBlue,
+          label: 'Rewards',
+          labelStyle: TextStyle(fontSize: 14.0),
+          labelBackgroundColor: globalBlue,
+          onTap: () {
+            // navigate to new rewards page
           }),
       SpeedDialChild(
           child: Icon(Icons.history),
           foregroundColor: globalAlmostWhite,
           backgroundColor: globalBlue,
           label: 'History',
-          labelStyle: TextStyle(fontSize: 18.0),
+          labelStyle: TextStyle(fontSize: 14.0),
           labelBackgroundColor: globalBlue,
           onTap: () {
             // navigate to new history page
@@ -333,7 +344,7 @@ class _UserState extends State<UserPage> {
           foregroundColor: globalAlmostWhite,
           backgroundColor: globalBlue,
           label: 'Logout',
-          labelStyle: TextStyle(fontSize: 18.0),
+          labelStyle: TextStyle(fontSize: 14.0),
           labelBackgroundColor: globalBlue,
           onTap: () {
             _authBloc.add(SignOutEvent());
@@ -344,7 +355,7 @@ class _UserState extends State<UserPage> {
     return SpeedDial(
 
         /// both default to 16
-        marginEnd: 18,
+        marginEnd: 25,
         marginBottom: 40,
         // animatedIcon: AnimatedIcons.menu_close,
         // animatedIconTheme: IconThemeData(size: 22.0),
