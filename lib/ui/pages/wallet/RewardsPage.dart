@@ -5,7 +5,7 @@ import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/AccountAvatar.dart';
-import 'package:dtube_togo/ui/pages/post/widgets/postDetailPageV2.dart';
+import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
 import 'package:dtube_togo/utils/friendlyTimestamp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -166,8 +166,11 @@ class _RewardsCardState extends State<RewardsCard> {
         padding: const EdgeInsets.all(4.0),
         child: Row(
           children: [
-            AccoutnAvatarBase(username: widget.reward.author),
-            SizedBox(width: 8),
+            SizedBox(
+                width: 40,
+                height: 40,
+                child: AccoutnAvatarBase(username: widget.reward.author)),
+            SizedBox(width: 4),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -177,14 +180,14 @@ class _RewardsCardState extends State<RewardsCard> {
                         width: widthLabel,
                         child: Text(
                           "content:",
-                          style: Theme.of(context).textTheme.subtitle2,
+                          style: Theme.of(context).textTheme.headline5,
                         )),
                     Container(
                         width: MediaQuery.of(context).size.width - 310,
                         child: Text(
                           widget.reward.author + '/' + widget.reward.link,
                           overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.caption,
+                          style: Theme.of(context).textTheme.headline5,
                         )),
                   ],
                 ),
@@ -194,11 +197,11 @@ class _RewardsCardState extends State<RewardsCard> {
                         width: widthLabel,
                         child: Text(
                           "spent:",
-                          style: Theme.of(context).textTheme.subtitle2,
+                          style: Theme.of(context).textTheme.headline5,
                         )),
                     Text(
                       (widget.reward.vt / 1000).toStringAsFixed(2) + 'K',
-                      style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context).textTheme.headline5,
                     ),
                   ],
                 ),
@@ -208,14 +211,14 @@ class _RewardsCardState extends State<RewardsCard> {
                         width: widthLabel,
                         child: Text(
                           "voted on:",
-                          style: Theme.of(context).textTheme.subtitle2,
+                          style: Theme.of(context).textTheme.headline5,
                         )),
                     Text(
                       DateTime.fromMillisecondsSinceEpoch(widget.reward.ts)
                           .toLocal()
                           .toString()
                           .substring(0, 16),
-                      style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context).textTheme.headline5,
                     ),
                   ],
                 ),
@@ -225,7 +228,7 @@ class _RewardsCardState extends State<RewardsCard> {
                         width: widthLabel,
                         child: Text(
                           "published on:",
-                          style: Theme.of(context).textTheme.subtitle2,
+                          style: Theme.of(context).textTheme.headline5,
                         )),
                     Text(
                       DateTime.fromMillisecondsSinceEpoch(
@@ -233,19 +236,25 @@ class _RewardsCardState extends State<RewardsCard> {
                           .toLocal()
                           .toString()
                           .substring(0, 16),
-                      style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context).textTheme.headline5,
                     ),
                   ],
                 ),
               ],
             ),
+            SizedBox(
+              width: 8,
+            ),
             Container(
-              width: 100,
+              width: 80,
               child: widget.reward.claimed != null
-                  ? Text("already claimed " +
-                      (widget.reward.claimable / 100).toStringAsFixed(2) +
-                      ' DTC ' +
-                      friendlyTimestamp(widget.reward.claimed!))
+                  ? Text(
+                      "already claimed " +
+                          (widget.reward.claimable / 100).toStringAsFixed(2) +
+                          ' DTC ' +
+                          friendlyTimestamp(widget.reward.claimed!),
+                      style: Theme.of(context).textTheme.headline5,
+                    )
                   : timestampGreater7Days(widget.reward.ts)
                       ? BlocProvider(
                           create: (context) => TransactionBloc(
@@ -258,10 +267,13 @@ class _RewardsCardState extends State<RewardsCard> {
                         )
                       : Column(
                           children: [
-                            Text((widget.reward.claimable / 100)
-                                    .toStringAsFixed(2) +
-                                ' DTC claimable ' +
-                                timestamp7Days(widget.reward.ts)),
+                            Text(
+                              (widget.reward.claimable / 100)
+                                      .toStringAsFixed(2) +
+                                  ' DTC claimable ' +
+                                  timestamp7Days(widget.reward.ts),
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
                           ],
                         ),
             ),

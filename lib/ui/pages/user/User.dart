@@ -158,19 +158,15 @@ class _UserState extends State<UserPage> {
                           user.name,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 24.0,
-                            //color: Colors.black54,
-                          ),
+                          style: Theme.of(context).textTheme.headline2,
                         ),
                         user.json_string?.profile?.location != null
-                            ? Text(user.json_string!.profile!.location!,
+                            ? Text(
+                                user.json_string!.profile!.location!,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 18.0,
-                                  //color: Colors.black54,
-                                ))
+                                style: Theme.of(context).textTheme.bodyText1,
+                              )
                             : SizedBox(
                                 height: 0,
                               ),
@@ -179,16 +175,16 @@ class _UserState extends State<UserPage> {
                                 user.json_string!.profile!.about!,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 12.0,
-                                  //color: Colors.black54,
-                                ),
+                                style: Theme.of(context).textTheme.bodyText1,
                               )
                             : SizedBox(
                                 height: 0,
                               ),
                         user.json_string?.profile?.website != null
-                            ? Text(user.json_string!.profile!.website!)
+                            ? Text(
+                                user.json_string!.profile!.website!,
+                                style: Theme.of(context).textTheme.bodyText1,
+                              )
                             : SizedBox(
                                 height: 0,
                               ),

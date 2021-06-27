@@ -147,7 +147,7 @@ class VotingSlider extends StatefulWidget {
 class _VotingSliderState extends State<VotingSlider> {
   late double _value;
   late TransactionBloc _txBloc;
-  late UserBloc _userBloc;
+
   late PostBloc _postBloc;
   late double _currentVT;
 
@@ -156,7 +156,7 @@ class _VotingSliderState extends State<VotingSlider> {
     super.initState();
     _txBloc = BlocProvider.of<TransactionBloc>(context);
     _postBloc = BlocProvider.of<PostBloc>(context);
-    _userBloc = BlocProvider.of<UserBloc>(context);
+
     //_userBloc.add(FetchDTCVPEvent());
     _value = widget.defaultVote;
   }
@@ -199,7 +199,7 @@ class _VotingSliderState extends State<VotingSlider> {
                   (_value < 0 ? 'downvote ' : 'upvote ') +
                       _value.floor().toString() +
                       '%',
-                  style: TextStyle(fontSize: 18.0),
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
                 SizedBox(width: 8),
                 BlocBuilder<UserBloc, UserState>(builder: (context, state) {

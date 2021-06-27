@@ -59,7 +59,7 @@ class _ReplyButtonState extends State<ReplyButton> {
             InputChip(
               label: Text(
                 widget.title,
-                style: TextStyle(fontSize: 12),
+                style: Theme.of(context).textTheme.bodyText2,
               ),
               onPressed: () {
                 setState(() {

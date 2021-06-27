@@ -6,7 +6,7 @@ import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/AccountAvatar.dart';
-import 'package:dtube_togo/ui/pages/post/widgets/postDetailPageV2.dart';
+import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
 import 'package:dtube_togo/ui/pages/wallet/transferDialog.dart';
 import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
 import 'package:dtube_togo/utils/friendlyTimestamp.dart';

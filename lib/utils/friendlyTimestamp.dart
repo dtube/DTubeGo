@@ -17,7 +17,7 @@ String friendlyTimestamp(int timestamp) {
       if (diff.inDays == 7) {
         time = (diff.inDays / 7).floor().toString() + ' week ago';
       } else {
-        time = (diff.inDays / 7).floor().toString() + ' weekd ago';
+        time = (diff.inDays / 7).floor().toString() + ' weeks ago';
       }
     }
   } else {
@@ -51,7 +51,7 @@ bool timestampGreater7Days(int timestamp) {
   var now = DateTime.now();
   var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
   var diff = now.difference(date);
-  return diff.inDays > 7;
+  return diff.inDays >= 7;
 }
 
 String timestamp7Days(int timestamp) {

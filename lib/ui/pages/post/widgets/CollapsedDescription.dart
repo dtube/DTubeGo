@@ -27,6 +27,7 @@ class _CollapsedDescriptionState extends State<CollapsedDescription> {
       child: MarkdownBody(
         //data: post.json_string.desc,
         data: widget.description,
+
         onTapLink: (text, url, title) {
           launch(url!);
         },

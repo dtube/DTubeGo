@@ -16,7 +16,6 @@ import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 
 import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
 
-import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -155,7 +154,8 @@ class _PostDetailsState extends State<PostDetails> {
                                   padding: EdgeInsets.all(10.0),
                                   child: Text(
                                     widget.post.jsonString!.title,
-                                    style: TextStyle(fontSize: 20.0),
+                                    style:
+                                        Theme.of(context).textTheme.headline1,
                                   ),
                                 ),
                                 Container(
@@ -188,8 +188,10 @@ class _PostDetailsState extends State<PostDetails> {
                                   localFile: false,
                                 )
                               : Text("no player detected"),
-                      Text((widget.post.dist / 100).round().toString() + " DTC",
-                          style: TextStyle(fontSize: 20.0)),
+                      Text(
+                        (widget.post.dist / 100).round().toString() + " DTC",
+                        style: Theme.of(context).textTheme.headline2,
+                      ),
                       BlocBuilder<SettingsBloc, SettingsState>(
                           builder: (context, state) {
                         if (state is SettingsLoadedState) {
@@ -198,20 +200,22 @@ class _PostDetailsState extends State<PostDetails> {
                           _defaultVoteWeightComments = double.parse(
                               state.settings[
                                   settingKey_defaultVotingWeightComments]!);
-                          return BlocProvider(
-                            create: (context) =>
-                                PostBloc(repository: PostRepositoryImpl()),
-                            child: VotingButtons(
-                              author: widget.post.author,
-                              link: widget.post.link,
-                              alreadyVoted: widget.post.alreadyVoted!,
-                              alreadyVotedDirection:
-                                  widget.post.alreadyVotedDirection!,
-                              upvotes: widget.post.upvotes,
-                              downvotes: widget.post.downvotes,
-                              defaultVotingWeight: _defaultVoteWeightPosts,
-                              currentVT: _currentVT,
-                            ),
+                          return
+                              // BlocProvider(
+                              //   create: (context) =>
+                              //       PostBloc(repository: PostRepositoryImpl()),
+                              //   child:
+                              VotingButtons(
+                            author: widget.post.author,
+                            link: widget.post.link,
+                            alreadyVoted: widget.post.alreadyVoted!,
+                            alreadyVotedDirection:
+                                widget.post.alreadyVotedDirection!,
+                            upvotes: widget.post.upvotes,
+                            downvotes: widget.post.downvotes,
+                            defaultVotingWeight: _defaultVoteWeightPosts,
+                            currentVT: _currentVT,
+                            //),
                           );
                         } else {
                           return SizedBox(height: 0);

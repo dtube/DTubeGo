@@ -21,7 +21,7 @@ import 'package:intl/intl.dart';
 
 import 'package:dtube_togo/res/strings/strings.dart';
 
-import 'package:dtube_togo/ui/pages/post/widgets/postDetailPageV2.dart';
+import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -256,19 +256,14 @@ class PostDescription extends StatelessWidget {
                 title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.bodyText1,
               ),
               const Padding(padding: EdgeInsets.only(bottom: 2.0)),
               Text(
                 author,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 12.0,
-                  //color: Colors.black54,
-                ),
+                style: Theme.of(context).textTheme.bodyText2,
               ),
             ],
           ),
@@ -284,18 +279,11 @@ class PostDescription extends StatelessWidget {
                 children: [
                   Text(
                     '$publishDate - $duration',
-                    style: const TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.grey,
-                    ),
+                    style: Theme.of(context).textTheme.caption,
                   ),
                   Text(
                     '$dtcValue',
-                    style: const TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                      //color: Colors.grey,
-                    ),
+                    style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ],
               ),
@@ -441,23 +429,16 @@ class _PostListCardBigThumbnailState extends State<PostListCardBigThumbnail> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget
-                            .title, // dirty solution because of rendeflex issues column in row in column
+                        widget.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
+                        style: Theme.of(context).textTheme.headline5,
                       ),
                       Text(
-                        widget
-                            .author, // dirty solution because of rendeflex issues column in row in column
+                        widget.author,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
+                        style: Theme.of(context).textTheme.headline6,
                       ),
                     ],
                   ),
@@ -498,18 +479,11 @@ class _PostListCardBigThumbnailState extends State<PostListCardBigThumbnail> {
                         ? widget.duration.toString().substring(2, 7) + ' min'
                         : widget.duration.toString().substring(0, 7) +
                             ' hours'),
-                style: const TextStyle(
-                  fontSize: 12.0,
-                  color: Colors.grey,
-                ),
+                style: Theme.of(context).textTheme.caption,
               ),
               Text(
                 '${widget.dtcValue}',
-                style: const TextStyle(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
-                  //color: Colors.grey,
-                ),
+                style: Theme.of(context).textTheme.headline5,
               ),
             ],
           ),
@@ -638,10 +612,7 @@ class _PostListCardSmallThumbnailState
                 children: [
                   Text(
                     widget.title,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.headline5,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -655,18 +626,11 @@ class _PostListCardSmallThumbnailState
                               (widget.duration.inHours == 0
                                   ? widget.duration.toString().substring(2, 7)
                                   : widget.duration.toString().substring(0, 7)),
-                          style: const TextStyle(
-                            fontSize: 12.0,
-                            color: Colors.grey,
-                          ),
+                          style: Theme.of(context).textTheme.caption,
                         ),
                         Text(
                           '${widget.dtcValue}',
-                          style: const TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            //color: Colors.grey,
-                          ),
+                          style: Theme.of(context).textTheme.headline5,
                         ),
                       ],
                     ),
