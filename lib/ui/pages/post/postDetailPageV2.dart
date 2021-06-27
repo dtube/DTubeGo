@@ -83,6 +83,8 @@ class _PostDetailsState extends State<PostDetails> {
 
   late double _defaultVoteWeightPosts = 0;
   late double _defaultVoteWeightComments = 0;
+  late double _defaultVoteTipPosts = 0;
+  late double _defaultVoteTipComments = 0;
   late int _currentVT = 0;
 
   @override
@@ -118,6 +120,7 @@ class _PostDetailsState extends State<PostDetails> {
   @override
   void dispose() {
     _controller.close();
+    _controller.pause();
     super.dispose();
   }
 
@@ -197,6 +200,8 @@ class _PostDetailsState extends State<PostDetails> {
                         if (state is SettingsLoadedState) {
                           _defaultVoteWeightPosts = double.parse(
                               state.settings[settingKey_defaultVotingWeight]!);
+                          _defaultVoteTipPosts = double.parse(
+                              state.settings[settingKey_defaultVotingWeight]!);
                           _defaultVoteWeightComments = double.parse(
                               state.settings[
                                   settingKey_defaultVotingWeightComments]!);
@@ -214,6 +219,7 @@ class _PostDetailsState extends State<PostDetails> {
                                   upvotes: widget.post.upvotes,
                                   downvotes: widget.post.downvotes,
                                   defaultVotingWeight: _defaultVoteWeightPosts,
+                                  defaultVotingTip: _defaultVoteTipPosts,
                                   currentVT: _currentVT,
                                   scale: 1
                                   //),
@@ -258,7 +264,8 @@ class _PostDetailsState extends State<PostDetails> {
                                               _defaultVoteWeightComments,
                                               _currentVT,
                                               widget.post.author,
-                                              widget.post.link),
+                                              widget.post.link,
+                                              _defaultVoteTipComments),
                                 ),
                               ),
                             )

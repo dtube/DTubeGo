@@ -254,26 +254,6 @@ class _UserState extends State<UserPage> {
 
     List<SpeedDialChild> myPageOptions = [
       SpeedDialChild(
-          child: Icon(Icons.account_balance_wallet_outlined),
-          foregroundColor: globalAlmostWhite,
-          backgroundColor: globalBlue,
-          label: 'Wallet',
-          labelStyle: TextStyle(fontSize: 14.0),
-          labelBackgroundColor: globalBlue,
-          onTap: () {
-            // navigate to new wallet page
-          }),
-      SpeedDialChild(
-          child: Icon(Icons.cake),
-          foregroundColor: globalAlmostWhite,
-          backgroundColor: globalBlue,
-          label: 'Rewards',
-          labelStyle: TextStyle(fontSize: 14.0),
-          labelBackgroundColor: globalBlue,
-          onTap: () {
-            // navigate to new rewards page
-          }),
-      SpeedDialChild(
           child: Icon(Icons.history),
           foregroundColor: globalAlmostWhite,
           backgroundColor: globalBlue,

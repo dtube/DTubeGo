@@ -11,9 +11,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // Create the Widget for the row
 class CommentDisplay extends StatelessWidget {
   const CommentDisplay(this.entry, this.defaultVoteWeight, this._currentVT,
-      this.parentAuthor, this.parentLink);
+      this.parentAuthor, this.parentLink, this.defaultVoteTip);
   final Comment entry;
   final double defaultVoteWeight;
+  final double defaultVoteTip;
   final String parentAuthor;
   final String parentLink;
   final int _currentVT;
@@ -57,6 +58,7 @@ class CommentDisplay extends StatelessWidget {
                 upvotes: root.upvotes,
                 downvotes: root.downvotes,
                 defaultVotingWeight: defaultVoteWeight,
+                defaultVotingTip: defaultVoteTip,
                 currentVT: _currentVT,
                 scale: 0.8,
               ),
@@ -115,6 +117,7 @@ class CommentDisplay extends StatelessWidget {
               upvotes: root.upvotes,
               downvotes: root.downvotes,
               defaultVotingWeight: defaultVoteWeight,
+              defaultVotingTip: defaultVoteTip,
               currentVT: _currentVT,
               scale: 0.8,
             ),

@@ -23,6 +23,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           sec.settingKey_defaultVotingWeight: await sec.getDefaultVote(),
           sec.settingKey_defaultVotingWeightComments:
               await sec.getDefaultVoteComments(),
+          sec.settingKey_defaultVotingTip: await sec.getDefaultVoteTip(),
+          sec.settingKey_defaultVotingTipComments:
+              await sec.getDefaultVoteTipComments(),
           sec.settingKey_showHidden: await sec.getShowHidden(),
           sec.settingKey_showNSFW: await sec.getNSFW(),
           sec.authKey_usernameKey: username!
@@ -39,6 +42,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
             event.newSettings[sec.settingKey_avalonNode]!,
             event.newSettings[sec.settingKey_defaultVotingWeight]!,
             event.newSettings[sec.settingKey_defaultVotingWeightComments]!,
+            event.newSettings[sec.settingKey_defaultVotingTip]!,
+            event.newSettings[sec.settingKey_defaultVotingTipComments]!,
             event.newSettings[sec.settingKey_showHidden]!,
             event.newSettings[sec.settingKey_showNSFW]!);
 

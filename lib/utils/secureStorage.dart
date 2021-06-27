@@ -7,8 +7,12 @@ const settingKey_avalonNode = 'AVALONNODE';
 
 const settingKey_showHidden = 'HIDE';
 const settingKey_showNSFW = 'NSFW';
+
 const settingKey_defaultVotingWeight = 'DEFVOTE';
 const settingKey_defaultVotingWeightComments = 'DEFVOTECOMMENTS';
+
+const settingKey_defaultVotingTip = 'DEFTIP';
+const settingKey_defaultVotingTipComments = 'DEFTIPCOMMENTS';
 
 // const _txsKey = 'TXS';
 const _storage = FlutterSecureStorage();
@@ -42,6 +46,8 @@ Future<void> persistSettings(
   String node,
   String defaultVotingWeight,
   String defaultVotingWeightComments,
+  String defaultVotingTip,
+  String defaultVotingTipComments,
   String showHidden,
   String showNsfw,
 ) async {
@@ -51,6 +57,11 @@ Future<void> persistSettings(
   await _storage.write(
       key: settingKey_defaultVotingWeightComments,
       value: defaultVotingWeightComments);
+  await _storage.write(
+      key: settingKey_defaultVotingTip, value: defaultVotingTip);
+  await _storage.write(
+      key: settingKey_defaultVotingTipComments,
+      value: defaultVotingTipComments);
   await _storage.write(key: settingKey_showHidden, value: showHidden);
   await _storage.write(key: settingKey_showNSFW, value: showNsfw);
 }
@@ -85,6 +96,25 @@ Future<String> getDefaultVoteComments() async {
     return _voteWeight;
   } else {
     return '5';
+  }
+}
+
+Future<String> getDefaultVoteTip() async {
+  var _voteWeight = await _storage.read(key: settingKey_defaultVotingTip);
+  if (_voteWeight != null) {
+    return _voteWeight;
+  } else {
+    return '25';
+  }
+}
+
+Future<String> getDefaultVoteTipComments() async {
+  var _voteWeight =
+      await _storage.read(key: settingKey_defaultVotingTipComments);
+  if (_voteWeight != null) {
+    return _voteWeight;
+  } else {
+    return '25';
   }
 }
 

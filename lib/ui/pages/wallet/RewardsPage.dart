@@ -325,7 +325,9 @@ class _ClaimRewardButtonState extends State<ClaimRewardButton> {
         builder: (context, state) {
       if (state is TransactionSent) {
         return Text(
-            "claimed " + (widget.claimable / 100).toStringAsFixed(2) + " DTC");
+          "claimed " + (widget.claimable / 100).toStringAsFixed(2) + " DTC",
+          style: Theme.of(context).textTheme.headline5,
+        );
       } else {
         if (state is TransactionSinging || state is TransactionSigned) {
           return CircularProgressIndicator();

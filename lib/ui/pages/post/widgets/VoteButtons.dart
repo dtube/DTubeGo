@@ -21,6 +21,7 @@ class VotingButtons extends StatefulWidget {
       required this.alreadyVoted,
       required this.alreadyVotedDirection,
       required this.defaultVotingWeight,
+      required this.defaultVotingTip,
       required this.currentVT,
       required this.scale})
       : super(key: key);
@@ -33,6 +34,7 @@ class VotingButtons extends StatefulWidget {
   final bool alreadyVotedDirection;
 
   final double defaultVotingWeight;
+  final double defaultVotingTip;
   final int currentVT;
   final double scale;
   //final int voteVT = 0;
@@ -131,6 +133,7 @@ class _VotingButtonsState extends State<VotingButtons> {
                 defaultVote: _downvotePressed
                     ? widget.defaultVotingWeight * -1
                     : widget.defaultVotingWeight,
+                defaultTip: widget.defaultVotingTip,
                 author: widget.author,
                 link: widget.link,
                 downvote: _downvotePressed,
@@ -147,12 +150,14 @@ class VotingSlider extends StatefulWidget {
     required this.link,
     required this.downvote,
     required this.defaultVote,
+    required this.defaultTip,
     required this.currentVT,
   }) : super(key: key);
 
   String author;
   String link;
   double defaultVote;
+  double defaultTip;
   double currentVT;
 
   bool downvote;
@@ -162,7 +167,8 @@ class VotingSlider extends StatefulWidget {
 }
 
 class _VotingSliderState extends State<VotingSlider> {
-  late double _value;
+  late double _vpValue;
+  late double _tipValue;
   late TransactionBloc _txBloc;
 
   late PostBloc _postBloc;
@@ -175,7 +181,8 @@ class _VotingSliderState extends State<VotingSlider> {
     _postBloc = BlocProvider.of<PostBloc>(context);
 
     //_userBloc.add(FetchDTCVPEvent());
-    _value = widget.defaultVote;
+    _vpValue = widget.defaultVote;
+    _tipValue = widget.defaultTip;
   }
 
   @override
@@ -191,10 +198,17 @@ class _VotingSliderState extends State<VotingSlider> {
       return Container(
         child: Column(
           children: [
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Text(
+                "voting weight:",
+                style: Theme.of(context).textTheme.caption,
+              ),
+            ),
             SfSlider(
               min: -100.0,
               max: 100.0,
-              value: _value,
+              value: _vpValue,
               interval: 10,
               //showTicks: true,
               numberFormat: NumberFormat(''),
@@ -205,7 +219,33 @@ class _VotingSliderState extends State<VotingSlider> {
               showDivisors: true,
               onChanged: (dynamic value) {
                 setState(() {
-                  _value = value;
+                  _vpValue = value;
+                });
+              },
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Text(
+                "vote tip (gift to the author from your own curation rewards):",
+                style: Theme.of(context).textTheme.caption,
+              ),
+            ),
+            SfSlider(
+              min: 0.0,
+              max: 100.0,
+              value: _tipValue,
+              interval: 10,
+
+              //showTicks: true,
+              numberFormat: NumberFormat(''),
+              // showLabels: true,
+              enableTooltip: true,
+              activeColor: Colors.red,
+              //minorTicksPerInterval: 10,
+              showDivisors: true,
+              onChanged: (dynamic value) {
+                setState(() {
+                  _tipValue = value;
                 });
               },
             ),
@@ -213,9 +253,11 @@ class _VotingSliderState extends State<VotingSlider> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  (_value < 0 ? 'downvote ' : 'upvote ') +
-                      _value.floor().toString() +
-                      '%',
+                  (_vpValue < 0 ? 'downvote ' : 'upvote ') +
+                      _vpValue.floor().toString() +
+                      '% (' +
+                      _tipValue.toStringAsFixed(2) +
+                      '% tip)',
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 SizedBox(width: 8),
@@ -224,15 +266,27 @@ class _VotingSliderState extends State<VotingSlider> {
                     _currentVT = state.vtBalance["v"]!.toDouble();
                     return ElevatedButton(
                         onPressed: () {
-                          var voteValue = (_currentVT * (_value / 100)).floor();
+                          var voteValue =
+                              (_currentVT * (_vpValue / 100)).floor();
+                          int _txType = 5;
                           TxData txdata = TxData(
                             author: widget.author,
                             link: widget.link,
                             tag: '',
                             vt: voteValue,
                           );
+
+                          if (_tipValue > 0) {
+                            _txType = 19;
+                            txdata = TxData(
+                                author: widget.author,
+                                link: widget.link,
+                                tag: '',
+                                vt: voteValue,
+                                tip: _tipValue.floor());
+                          }
                           Transaction newTx =
-                              Transaction(type: 5, data: txdata);
+                              Transaction(type: _txType, data: txdata);
                           _txBloc.add(SignAndSendTransactionEvent(newTx));
                         },
                         child: Text("send"));

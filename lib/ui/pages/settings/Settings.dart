@@ -103,6 +103,8 @@ class _SettingsListState extends State<SettingsList> {
   late String _avalonNode;
   late double _defaultVote;
   late double _defaultVoteComments;
+  late double _defaultTip;
+  late double _defaultTipComments;
   late String _showHidden;
   late String _showNsfw;
 
@@ -141,174 +143,313 @@ class _SettingsListState extends State<SettingsList> {
         ? double.parse(
             widget.currentSettings[sec.settingKey_defaultVotingWeightComments]!)
         : 5.0;
+    _defaultTip = widget.currentSettings[sec.settingKey_defaultVotingTip] !=
+            null
+        ? double.parse(widget.currentSettings[sec.settingKey_defaultVotingTip]!)
+        : 25;
+    _defaultTipComments = widget
+                .currentSettings[sec.settingKey_defaultVotingTipComments] !=
+            null
+        ? double.parse(
+            widget.currentSettings[sec.settingKey_defaultVotingTipComments]!)
+        : 25.0;
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            SizedBox(height: 10),
-            DropdownButtonFormField(
-              decoration: InputDecoration(
-                //filled: true,
-                //fillColor: Hexcolor('#ecedec'),
-                labelText: 'Avalon api node',
-                //border: new CustomBorderTextFieldSkin().getSkin(),
-              ),
-              value: _avalonNode,
-              onChanged: (newValue) {
-                setState(() {
-                  _avalonNode = newValue.toString();
-                  widget.justSaved = false;
-                });
-              },
-              items: _currentAvalonNodes.map((option) {
-                return DropdownMenuItem(
-                  child: new Text(option),
-                  value: option,
-                );
-              }).toList(),
-            ),
-            DropdownButtonFormField(
-              decoration: InputDecoration(
-                //filled: true,
-                //fillColor: Hexcolor('#ecedec'),
-                labelText: 'Hidden videos',
-                //border: new CustomBorderTextFieldSkin().getSkin(),
-              ),
-              value: _showHidden,
-              onChanged: (newValue) {
-                setState(() {
-                  _showHidden = newValue.toString();
-                  widget.justSaved = false;
-                });
-              },
-              items: _showHiddentNsfwOptions.map((option) {
-                return DropdownMenuItem(
-                  child: new Text(option),
-                  value: option,
-                );
-              }).toList(),
-            ),
-            DropdownButtonFormField(
-              decoration: InputDecoration(
-                //filled: true,
-                //fillColor: Hexcolor('#ecedec'),
-                labelText: 'NSFW videos',
-                //border: new CustomBorderTextFieldSkin().getSkin(),
-              ),
-              value: _showNsfw,
-              onChanged: (newValue) {
-                setState(() {
-                  _showNsfw = newValue.toString();
-                  widget.justSaved = false;
-                });
-              },
-              items: _showHiddentNsfwOptions.map((option) {
-                return DropdownMenuItem(
-                  child: new Text(option),
-                  value: option,
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 20),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text("default voting weight (posts):",
-                    style: TextStyle(color: Colors.grey))),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: SfSlider(
-                    min: 1.0,
-                    max: 100.0,
-                    value: _defaultVote,
-                    interval: 10,
-
-                    //showTicks: true,
-                    numberFormat: NumberFormat(''),
-                    // showLabels: true,
-                    enableTooltip: true,
-                    activeColor: Colors.red,
-                    //minorTicksPerInterval: 10,
-                    showDivisors: true,
-                    onChanged: (dynamic value) {
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 10),
+              DTubeFormCard(childs: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child:
+                      Text("API", style: Theme.of(context).textTheme.headline5),
+                ),
+                DropdownButtonFormField(
+                  decoration: InputDecoration(
+                    //filled: true,
+                    //fillColor: Hexcolor('#ecedec'),
+                    labelText: 'Avalon api node',
+                    //border: new CustomBorderTextFieldSkin().getSkin(),
+                  ),
+                  value: _avalonNode,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _avalonNode = newValue.toString();
+                      widget.justSaved = false;
+                    });
+                  },
+                  items: _currentAvalonNodes.map((option) {
+                    return DropdownMenuItem(
+                      child: new Text(option),
+                      value: option,
+                    );
+                  }).toList(),
+                ),
+              ]),
+              DTubeFormCard(
+                childs: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Text("Display",
+                        style: Theme.of(context).textTheme.headline5),
+                  ),
+                  DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      //filled: true,
+                      //fillColor: Hexcolor('#ecedec'),
+                      labelText: 'Avalon api node',
+                      //border: new CustomBorderTextFieldSkin().getSkin(),
+                    ),
+                    value: _avalonNode,
+                    onChanged: (newValue) {
                       setState(() {
-                        _defaultVote = value;
+                        _avalonNode = newValue.toString();
                         widget.justSaved = false;
                       });
                     },
+                    items: _currentAvalonNodes.map((option) {
+                      return DropdownMenuItem(
+                        child: new Text(option),
+                        value: option,
+                      );
+                    }).toList(),
                   ),
-                ),
-                Text(
-                  _defaultVote.floor().toString() + "%",
-                  style: TextStyle(fontSize: 18),
-                )
-              ],
-            ),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text("default voting weight (comments):",
-                    style: TextStyle(color: Colors.grey))),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: SfSlider(
-                    min: 1.0,
-                    max: 100.0,
-                    value: _defaultVoteComments,
-                    interval: 10,
-
-                    //showTicks: true,
-                    numberFormat: NumberFormat(''),
-                    // showLabels: true,
-                    enableTooltip: true,
-                    activeColor: Colors.red,
-                    //minorTicksPerInterval: 10,
-                    showDivisors: true,
-                    onChanged: (dynamic value) {
+                  DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      //filled: true,
+                      //fillColor: Hexcolor('#ecedec'),
+                      labelText: 'negative videos',
+                      //border: new CustomBorderTextFieldSkin().getSkin(),
+                    ),
+                    value: _showHidden,
+                    onChanged: (newValue) {
                       setState(() {
-                        _defaultVoteComments = value;
+                        _showHidden = newValue.toString();
                         widget.justSaved = false;
                       });
                     },
+                    items: _showHiddentNsfwOptions.map((option) {
+                      return DropdownMenuItem(
+                        child: new Text(option),
+                        value: option,
+                      );
+                    }).toList(),
                   ),
-                ),
-                Text(
-                  _defaultVoteComments.floor().toString() + "%",
-                  style: TextStyle(fontSize: 18),
-                )
-              ],
-            ),
-            SizedBox(height: 20),
-            InputChip(
-              backgroundColor: widget.justSaved ? Colors.green : globalBlue,
-              avatar: Icon(widget.justSaved ? Icons.check : Icons.save),
-              shadowColor: globalBlue,
-              label: Text('save settings'),
-              onPressed: () {
-                Map<String, String> newSettings = {
-                  sec.settingKey_avalonNode: _avalonNode,
-                  sec.settingKey_defaultVotingWeight: _defaultVote.toString(),
-                  sec.settingKey_defaultVotingWeightComments:
-                      _defaultVoteComments.toString(),
-                  sec.settingKey_showHidden: _showHidden,
-                  sec.settingKey_showNSFW: _showNsfw
-                };
-                _settingsBloc.add(PushSettingsEvent(newSettings));
-                Navigator.of(context).push(
-                    new MaterialPageRoute(builder: (BuildContext context) {
-                  return new MyApp();
-                }));
-              },
-            ),
-          ],
+                  DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      //filled: true,
+                      //fillColor: Hexcolor('#ecedec'),
+                      labelText: 'NSFW videos',
+                      //border: new CustomBorderTextFieldSkin().getSkin(),
+                    ),
+                    value: _showNsfw,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _showNsfw = newValue.toString();
+                        widget.justSaved = false;
+                      });
+                    },
+                    items: _showHiddentNsfwOptions.map((option) {
+                      return DropdownMenuItem(
+                        child: new Text(option),
+                        value: option,
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+              DTubeFormCard(
+                childs: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Text("Voting weight",
+                        style: Theme.of(context).textTheme.headline5),
+                  ),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("default voting weight (posts):",
+                          style: TextStyle(color: Colors.grey))),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: SfSlider(
+                          min: 1.0,
+                          max: 100.0,
+                          value: _defaultVote,
+                          interval: 10,
+
+                          //showTicks: true,
+                          numberFormat: NumberFormat(''),
+                          // showLabels: true,
+                          enableTooltip: true,
+                          activeColor: Colors.red,
+                          //minorTicksPerInterval: 10,
+                          showDivisors: true,
+                          onChanged: (dynamic value) {
+                            setState(() {
+                              _defaultVote = value;
+                              widget.justSaved = false;
+                            });
+                          },
+                        ),
+                      ),
+                      Text(
+                        _defaultVote.floor().toString() + "%",
+                        style: TextStyle(fontSize: 18),
+                      )
+                    ],
+                  ),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("default voting weight (comments):",
+                          style: TextStyle(color: Colors.grey))),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: SfSlider(
+                          min: 1.0,
+                          max: 100.0,
+                          value: _defaultVoteComments,
+                          interval: 10,
+
+                          //showTicks: true,
+                          numberFormat: NumberFormat(''),
+                          // showLabels: true,
+                          enableTooltip: true,
+                          activeColor: Colors.red,
+                          //minorTicksPerInterval: 10,
+                          showDivisors: true,
+                          onChanged: (dynamic value) {
+                            setState(() {
+                              _defaultVoteComments = value;
+                              widget.justSaved = false;
+                            });
+                          },
+                        ),
+                      ),
+                      Text(
+                        _defaultVoteComments.floor().toString() + "%",
+                        style: TextStyle(fontSize: 18),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              DTubeFormCard(
+                childs: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Text("Vote tipping",
+                        style: Theme.of(context).textTheme.headline5),
+                  ),
+                  Text("default voting tip (posts):",
+                      style: TextStyle(color: Colors.grey)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: SfSlider(
+                          min: 1.0,
+                          max: 100.0,
+                          value: _defaultTip,
+                          interval: 10,
+
+                          //showTicks: true,
+                          numberFormat: NumberFormat(''),
+                          // showLabels: true,
+                          enableTooltip: true,
+                          activeColor: Colors.red,
+                          //minorTicksPerInterval: 10,
+                          showDivisors: true,
+                          onChanged: (dynamic value) {
+                            setState(() {
+                              _defaultTip = value;
+                              widget.justSaved = false;
+                            });
+                          },
+                        ),
+                      ),
+                      Text(
+                        _defaultTip.floor().toString() + "%",
+                        style: TextStyle(fontSize: 18),
+                      )
+                    ],
+                  ),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("default voting tip (comments):",
+                          style: TextStyle(color: Colors.grey))),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: SfSlider(
+                          min: 0.0,
+                          max: 100.0,
+                          value: _defaultTipComments,
+                          interval: 10,
+
+                          //showTicks: true,
+                          numberFormat: NumberFormat(''),
+                          // showLabels: true,
+                          enableTooltip: true,
+                          activeColor: Colors.red,
+                          //minorTicksPerInterval: 10,
+                          showDivisors: true,
+                          onChanged: (dynamic value) {
+                            setState(() {
+                              _defaultTipComments = value;
+                              widget.justSaved = false;
+                            });
+                          },
+                        ),
+                      ),
+                      Text(
+                        _defaultTipComments.floor().toString() + "%",
+                        style: TextStyle(fontSize: 18),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              InputChip(
+                backgroundColor: widget.justSaved ? Colors.green : globalBlue,
+                avatar: Icon(widget.justSaved ? Icons.check : Icons.save),
+                shadowColor: globalBlue,
+                label: Text('save settings'),
+                onPressed: () {
+                  Map<String, String> newSettings = {
+                    sec.settingKey_avalonNode: _avalonNode,
+                    sec.settingKey_defaultVotingWeight: _defaultVote.toString(),
+                    sec.settingKey_defaultVotingWeightComments:
+                        _defaultVoteComments.toString(),
+                    sec.settingKey_defaultVotingTip: _defaultTip.toString(),
+                    sec.settingKey_defaultVotingTipComments:
+                        _defaultTipComments.toString(),
+                    sec.settingKey_showHidden: _showHidden,
+                    sec.settingKey_showNSFW: _showNsfw
+                  };
+                  _settingsBloc.add(PushSettingsEvent(newSettings));
+                  Navigator.of(context).push(
+                      new MaterialPageRoute(builder: (BuildContext context) {
+                    return new MyApp();
+                  }));
+                },
+              ),
+            ],
+          ),
         ));
   }
 }

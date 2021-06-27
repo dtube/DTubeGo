@@ -1,3 +1,4 @@
+import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:flutter/material.dart';
 
 AppBar dtubeSubAppBar() {
@@ -33,6 +34,24 @@ class DTubeLogo extends StatelessWidget {
       'assets/images/dtube_logo_white.png',
       fit: BoxFit.fitWidth,
       width: size,
+    );
+  }
+}
+
+class DTubeFormCard extends StatelessWidget {
+  DTubeFormCard({Key? key, required this.childs}) : super(key: key);
+  List<Widget> childs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: globalBlue,
+      elevation: 8,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start, children: childs),
+      ),
     );
   }
 }
