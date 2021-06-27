@@ -227,12 +227,18 @@ class _PostDetailsState extends State<PostDetails> {
                       Divider(),
                       Align(
                         alignment: Alignment.topRight,
-                        child: ReplyButton(
-                          title: "reply video",
-                          author: widget.post.author,
-                          link: widget.post.link,
-                          votingWeight: _defaultVoteWeightComments,
-                          scale: 1,
+                        child: BlocProvider(
+                          create: (context) => TransactionBloc(
+                              repository: TransactionRepositoryImpl()),
+                          child: ReplyButton(
+                            title: "reply video",
+                            author: widget.post.author,
+                            link: widget.post.link,
+                            parentAuthor: widget.post.author,
+                            parentLink: widget.post.link,
+                            votingWeight: _defaultVoteWeightComments,
+                            scale: 1,
+                          ),
                         ),
                       ),
                       SizedBox(height: 16),
@@ -250,7 +256,9 @@ class _PostDetailsState extends State<PostDetails> {
                                           CommentDisplay(
                                               widget.post.comments![index],
                                               _defaultVoteWeightComments,
-                                              _currentVT),
+                                              _currentVT,
+                                              widget.post.author,
+                                              widget.post.link),
                                 ),
                               ),
                             )

@@ -1,3 +1,4 @@
+import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/ReplyButton.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/VoteButtons.dart';
@@ -5,12 +6,16 @@ import 'package:dtube_togo/ui/pages/post/widgets/VoteButtons.dart';
 import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Create the Widget for the row
 class CommentDisplay extends StatelessWidget {
-  const CommentDisplay(this.entry, this.defaultVoteWeight, this._currentVT);
+  const CommentDisplay(this.entry, this.defaultVoteWeight, this._currentVT,
+      this.parentAuthor, this.parentLink);
   final Comment entry;
   final double defaultVoteWeight;
+  final String parentAuthor;
+  final String parentLink;
   final int _currentVT;
 
   // This function recursively creates the multi-level list rows.
@@ -57,12 +62,18 @@ class CommentDisplay extends StatelessWidget {
               ),
               Align(
                 alignment: Alignment.topRight,
-                child: ReplyButton(
-                  title: "reply comment",
-                  author: root.author,
-                  link: root.link,
-                  votingWeight: defaultVoteWeight,
-                  scale: 0.8,
+                child: BlocProvider(
+                  create: (context) =>
+                      TransactionBloc(repository: TransactionRepositoryImpl()),
+                  child: ReplyButton(
+                    title: "reply comment",
+                    author: root.author,
+                    link: root.link,
+                    parentAuthor: parentAuthor,
+                    parentLink: parentLink,
+                    votingWeight: defaultVoteWeight,
+                    scale: 0.8,
+                  ),
                 ),
               ),
             ],
@@ -109,12 +120,18 @@ class CommentDisplay extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.topRight,
-              child: ReplyButton(
-                title: "reply comment",
-                author: root.author,
-                link: root.link,
-                votingWeight: defaultVoteWeight,
-                scale: 0.8,
+              child: BlocProvider(
+                create: (context) =>
+                    TransactionBloc(repository: TransactionRepositoryImpl()),
+                child: ReplyButton(
+                  title: "reply comment",
+                  author: root.author,
+                  link: root.link,
+                  parentAuthor: parentAuthor,
+                  parentLink: parentLink,
+                  votingWeight: defaultVoteWeight,
+                  scale: 0.8,
+                ),
               ),
             ),
           ],
