@@ -6,14 +6,12 @@ import 'package:hex/hex.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:secp256k1/secp256k1.dart';
-
 // TODO: refactor and put in the right place ;)
 
 import 'dart:typed_data';
 
 import 'package:bs58/bs58.dart';
-
+import 'package:elliptic/elliptic.dart';
 import 'package:bs58check/bs58check.dart' as bs58check;
 
 abstract class AuthRepository {
@@ -77,10 +75,12 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   String privToPub(String privateKey) {
-    var priv =
-        PrivateKey.fromHex(HEX.encode(bs58check.base58.decode(privateKey)));
+    var ec = getS256();
+    PrivateKey _pk = PrivateKey.fromHex(
+        getSecp256k1(), HEX.encode(bs58check.base58.decode(privateKey)));
+
     var pub = base58.encode(
-        Uint8List.fromList(HEX.decode(priv.publicKey.toCompressedHex())));
+        Uint8List.fromList(HEX.decode(_pk.publicKey.toCompressedHex())));
 
     return pub;
   }

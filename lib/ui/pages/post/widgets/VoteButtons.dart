@@ -12,16 +12,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
 class VotingButtons extends StatefulWidget {
-  const VotingButtons(
-      {Key? key,
-      this.upvotes,
-      this.downvotes,
-      required this.author,
-      required this.link,
-      required this.alreadyVoted,
-      required this.alreadyVotedDirection,
-      required this.defaultVotingWeight})
-      : super(key: key);
+  const VotingButtons({
+    Key? key,
+    this.upvotes,
+    this.downvotes,
+    required this.author,
+    required this.link,
+    required this.alreadyVoted,
+    required this.alreadyVotedDirection,
+    required this.defaultVotingWeight,
+    required this.currentVT,
+  }) : super(key: key);
 
   final String author;
   final String link;
@@ -31,6 +32,8 @@ class VotingButtons extends StatefulWidget {
   final bool alreadyVotedDirection;
 
   final double defaultVotingWeight;
+  final int currentVT;
+  //final int voteVT = 0;
 
   @override
   _VotingButtonsState createState() => _VotingButtonsState();
@@ -39,98 +42,84 @@ class VotingButtons extends StatefulWidget {
 class _VotingButtonsState extends State<VotingButtons> {
   bool _upvotePressed = false;
   bool _downvotePressed = false;
-  late UserBloc _userBloc;
+
   int _currentVT = 0;
   int _voteVT = 0;
 
   @override
   void initState() {
     super.initState();
-    _userBloc = BlocProvider.of<UserBloc>(context);
-    _userBloc.add(FetchDTCVPEvent());
+    _voteVT = int.parse(
+        (_currentVT.toDouble() * (widget.defaultVotingWeight / 100))
+            .floor()
+            .toString());
+
+    // _userBloc = BlocProvider.of<UserBloc>(context);
+    // _userBloc.add(FetchDTCVPEvent());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserBloc, UserState>(
-        bloc: _userBloc,
-        builder: (context, state) {
-          // TODO error handling
-
-          if (state is UserDTCVPLoadingState) {
-            return CircularProgressIndicator();
-          }
-          if (state is UserDTCVPLoadedState) {
-            _currentVT = state.vtBalance["v"]!;
-            _voteVT = int.parse(
-                (_currentVT.toDouble() * (widget.defaultVotingWeight / 100))
-                    .floor()
-                    .toString());
-          }
-          return Column(children: [
-            Row(
-              children: [
-                InputChip(
-                  label: Text(
-                      widget.upvotes != null && widget.upvotes!.isNotEmpty
-                          ? (widget.upvotes!.length).toString()
-                          : '0'),
-                  avatar: Icon(Icons.thumb_up,
-                      color: widget.alreadyVoted && widget.alreadyVotedDirection
-                          ? globalRed
-                          : Colors.grey),
-                  onPressed: () {
-                    if (!widget.alreadyVoted) {
-                      setState(() {
-                        _upvotePressed = !_upvotePressed;
-                        if (_upvotePressed) {
-                          _downvotePressed = false;
-                        }
-                      });
-                    }
-                  },
-                ),
-                SizedBox(width: 8),
-                InputChip(
-                  label: Text(
-                      widget.downvotes != null && widget.downvotes!.isNotEmpty
-                          ? (widget.downvotes!.length).toString()
-                          : '0'),
-                  avatar: Icon(Icons.thumb_down,
-                      color:
-                          widget.alreadyVoted && !widget.alreadyVotedDirection
-                              ? globalRed
-                              : Colors.grey),
-                  onPressed: () {
-                    if (!widget.alreadyVoted) {
-                      setState(() {
-                        _downvotePressed = !_downvotePressed;
-                        if (_downvotePressed) {
-                          _upvotePressed = false;
-                        }
-                      });
-                    }
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 10),
-            Visibility(
-                visible: _upvotePressed || _downvotePressed,
-                child: BlocProvider<TransactionBloc>(
-                    create: (context) => TransactionBloc(
-                        repository: TransactionRepositoryImpl()),
-                    child: VotingSlider(
-                      defaultVote: _downvotePressed
-                          ? widget.defaultVotingWeight * -1
-                          : widget.defaultVotingWeight,
-                      author: widget.author,
-                      link: widget.link,
-                      downvote: _downvotePressed,
-                      currentVT: _currentVT.toDouble(),
-                    )))
-          ]);
-        });
+    return Column(children: [
+      Row(
+        children: [
+          InputChip(
+            label: Text(widget.upvotes != null && widget.upvotes!.isNotEmpty
+                ? (widget.upvotes!.length).toString()
+                : '0'),
+            avatar: Icon(Icons.thumb_up,
+                color: widget.alreadyVoted && widget.alreadyVotedDirection
+                    ? globalRed
+                    : Colors.grey),
+            onPressed: () {
+              if (!widget.alreadyVoted) {
+                setState(() {
+                  _upvotePressed = !_upvotePressed;
+                  if (_upvotePressed) {
+                    _downvotePressed = false;
+                  }
+                });
+              }
+            },
+          ),
+          SizedBox(width: 8),
+          InputChip(
+            label: Text(widget.downvotes != null && widget.downvotes!.isNotEmpty
+                ? (widget.downvotes!.length).toString()
+                : '0'),
+            avatar: Icon(Icons.thumb_down,
+                color: widget.alreadyVoted && !widget.alreadyVotedDirection
+                    ? globalRed
+                    : Colors.grey),
+            onPressed: () {
+              if (!widget.alreadyVoted) {
+                setState(() {
+                  _downvotePressed = !_downvotePressed;
+                  if (_downvotePressed) {
+                    _upvotePressed = false;
+                  }
+                });
+              }
+            },
+          ),
+        ],
+      ),
+      SizedBox(height: 10),
+      Visibility(
+          visible: _upvotePressed || _downvotePressed,
+          child: BlocProvider<TransactionBloc>(
+              create: (context) =>
+                  TransactionBloc(repository: TransactionRepositoryImpl()),
+              child: VotingSlider(
+                defaultVote: _downvotePressed
+                    ? widget.defaultVotingWeight * -1
+                    : widget.defaultVotingWeight,
+                author: widget.author,
+                link: widget.link,
+                downvote: _downvotePressed,
+                currentVT: _currentVT.toDouble(),
+              )))
+    ]);
   }
 }
 

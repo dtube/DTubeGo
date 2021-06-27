@@ -21,7 +21,7 @@ import 'package:intl/intl.dart';
 
 import 'package:dtube_togo/res/strings/strings.dart';
 
-import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
+import 'package:dtube_togo/ui/pages/post/widgets/postDetailPageV2.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -109,7 +109,7 @@ class _FeedListState extends State<FeedList> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 500,
+      height: 800,
       // color: globalAlmostBlack,
       child: BlocListener<FeedBloc, FeedState>(
         listener: (context, state) {
@@ -161,6 +161,7 @@ class _FeedListState extends State<FeedList> {
   Widget buildPostList(
       List<FeedItem> feed, bool bigThumbnail, bool showAuthor) {
     return ListView.builder(
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: ClampingScrollPhysics(),
       itemCount: feed.length,
@@ -177,35 +178,39 @@ class _FeedListState extends State<FeedList> {
             return BlocProvider<UserBloc>(
               create: (context) => UserBloc(repository: UserRepositoryImpl()),
               child: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: PostListCard(
-                    bigThumbnail: bigThumbnail,
-                    showAuthor: showAuthor,
-                    blur: (nsfwMode == 'blur' && feed[pos].json_string?.nsfw == 1) ||
-                            (hiddenMode == 'blur' &&
-                                feed[pos].json_string?.hide == 1)
-                        ? true
-                        : false,
-                    title: feed[pos].json_string!.title,
-                    description: feed[pos].json_string!.desc!,
-                    author: feed[pos].author,
-                    link: feed[pos].link,
-                    // publishDate: .toString(),
-                    publishDate: DateFormat('yyyy-MM-dd kk:mm').format(
-                        DateTime.fromMicrosecondsSinceEpoch(feed[pos].ts * 1000)
-                            .toLocal()),
-                    dtcValue:
-                        (feed[pos].dist / 100).round().toString() + " DTC",
-                    duration: new Duration(
-                        seconds: int.tryParse(feed[pos].json_string!.dur) != null
-                            ? int.parse(feed[pos].json_string!.dur)
-                            : 0),
-                    thumbnailUrl: feed[pos].json_string!.files!.youtube != null
-                        ? "https://img.youtube.com/vi/" +
-                            feed[pos].json_string!.files!.youtube! +
-                            "/mqdefault.jpg"
-                        : AppStrings.ipfsSnapUrl +
-                            feed[pos].json_string!.files!.ipfs!.img!.s360!),
+                padding:
+                    EdgeInsets.only(top: pos == 0 && bigThumbnail ? 90.0 : 0.0),
+                child: Padding(
+                  padding: EdgeInsets.all(2.0),
+                  child: PostListCard(
+                      bigThumbnail: bigThumbnail,
+                      showAuthor: showAuthor,
+                      blur: (nsfwMode == 'blur' && feed[pos].json_string?.nsfw == 1) ||
+                              (hiddenMode == 'blur' &&
+                                  feed[pos].json_string?.hide == 1)
+                          ? true
+                          : false,
+                      title: feed[pos].json_string!.title,
+                      description: feed[pos].json_string!.desc!,
+                      author: feed[pos].author,
+                      link: feed[pos].link,
+                      // publishDate: .toString(),
+                      publishDate: DateFormat('yyyy-MM-dd kk:mm').format(
+                          DateTime.fromMicrosecondsSinceEpoch(feed[pos].ts * 1000)
+                              .toLocal()),
+                      dtcValue:
+                          (feed[pos].dist / 100).round().toString() + " DTC",
+                      duration: new Duration(
+                          seconds: int.tryParse(feed[pos].json_string!.dur) != null
+                              ? int.parse(feed[pos].json_string!.dur)
+                              : 0),
+                      thumbnailUrl: feed[pos].json_string!.files!.youtube != null
+                          ? "https://img.youtube.com/vi/" +
+                              feed[pos].json_string!.files!.youtube! +
+                              "/mqdefault.jpg"
+                          : AppStrings.ipfsSnapUrl +
+                              feed[pos].json_string!.files!.ipfs!.img!.s360!),
+                ),
               ),
             );
           }
@@ -390,13 +395,9 @@ class PostListCardBigThumbnail extends StatefulWidget {
 }
 
 class _PostListCardBigThumbnailState extends State<PostListCardBigThumbnail> {
-  late UserBloc _userBloc;
-
   @override
   void initState() {
     super.initState();
-    _userBloc = BlocProvider.of<UserBloc>(context);
-    _userBloc.add(FetchAccountDataEvent(widget.author));
   }
 
   @override
@@ -423,7 +424,7 @@ class _PostListCardBigThumbnailState extends State<PostListCardBigThumbnail> {
                 child: SizedBox(
                   width: 50,
                   height: 50,
-                  child: AuthorAvatar(
+                  child: AccoutnAvatarBase(
                     username: widget.author,
                   ),
                 ),
@@ -587,115 +588,96 @@ class PostListCardSmallThumbnail extends StatefulWidget {
 
 class _PostListCardSmallThumbnailState
     extends State<PostListCardSmallThumbnail> {
-  late UserBloc _userBloc;
-
   @override
   void initState() {
     super.initState();
-    _userBloc = BlocProvider.of<UserBloc>(context);
-    _userBloc.add(FetchAccountDataEvent(widget.author));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserBloc, UserState>(
-        listener: (context, state) {
-          if (state is UserErrorState) {
-            Scaffold.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-              ),
-            );
-          }
-        },
-        child: InkWell(
-          onTap: () {
-            navigateToPostDetailPage(context, widget.author, widget.link);
-          },
-          child: Card(
-            color: globalBGColor,
-            elevation: 0,
-            child: Container(
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Container(
-                  height: 75,
-                  child: AspectRatio(
-                    aspectRatio: 8 / 5,
-                    child: widget.blur
-                        ? ClipRect(
-                            child: ImageFiltered(
-                              imageFilter: ImageFilter.blur(
-                                sigmaY: 5,
-                                sigmaX: 5,
-                              ),
-                              child: CachedNetworkImage(
-                                imageUrl: widget.thumbnailUrl,
-                              ),
-                            ),
-                          )
-                        : CachedNetworkImage(
-                            imageUrl: widget.thumbnailUrl,
-                            fit: BoxFit.fitWidth,
+    return InkWell(
+      onTap: () {
+        navigateToPostDetailPage(context, widget.author, widget.link);
+      },
+      child: Card(
+        color: globalBGColor,
+        elevation: 0,
+        child: Container(
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Container(
+              height: 75,
+              child: AspectRatio(
+                aspectRatio: 8 / 5,
+                child: widget.blur
+                    ? ClipRect(
+                        child: ImageFiltered(
+                          imageFilter: ImageFilter.blur(
+                            sigmaY: 5,
+                            sigmaX: 5,
                           ),
-                  ),
-                  // ),
-                ),
-                SizedBox(width: 8),
-                Container(
-                  width: (MediaQuery.of(context).size.width - 50) / 3 * 2,
-                  height: 75,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        widget.title,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          child: CachedNetworkImage(
+                            imageUrl: widget.thumbnailUrl,
+                          ),
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: widget.thumbnailUrl,
+                        fit: BoxFit.fitWidth,
                       ),
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '${widget.publishDate} - ' +
-                                  (widget.duration.inHours == 0
-                                      ? widget.duration
-                                          .toString()
-                                          .substring(2, 7)
-                                      : widget.duration
-                                          .toString()
-                                          .substring(0, 7)),
-                              style: const TextStyle(
-                                fontSize: 12.0,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            Text(
-                              '${widget.dtcValue}',
-                              style: const TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                                //color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ]),
+              ),
+              // ),
             ),
-          ),
-        ));
+            SizedBox(width: 8),
+            Container(
+              width: (MediaQuery.of(context).size.width - 50) / 3 * 2,
+              height: 75,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    widget.title,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${widget.publishDate} - ' +
+                              (widget.duration.inHours == 0
+                                  ? widget.duration.toString().substring(2, 7)
+                                  : widget.duration.toString().substring(0, 7)),
+                          style: const TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Text(
+                          '${widget.dtcValue}',
+                          style: const TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            //color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ]),
+        ),
+      ),
+    );
   }
 
   void navigateToPostDetailPage(

@@ -7,6 +7,8 @@ class AppStrings {
 
   static String postDataUrl = "/content/##AUTHOR/##LINK";
 
+  static String rewardsUrl = "/votes/##REWARDSTATE/##USERNAME/0";
+
   static String accountFeedUrl = "/blog/##USERNAME";
 
   static String notificationFeedUrl = "/notifications/##USERNAME";

@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 
 // Create the Widget for the row
 class CommentDisplay extends StatelessWidget {
-  const CommentDisplay(this.entry, this.defaultVoteWeight);
+  const CommentDisplay(this.entry, this.defaultVoteWeight, this._currentVT);
   final Comment entry;
   final double defaultVoteWeight;
+  final int _currentVT;
 
   // This function recursively creates the multi-level list rows.
   Widget _buildTiles(Comment root) {
@@ -33,6 +34,7 @@ class CommentDisplay extends StatelessWidget {
                 upvotes: root.upvotes,
                 downvotes: root.downvotes,
                 defaultVotingWeight: defaultVoteWeight,
+                currentVT: _currentVT,
               ),
               Align(
                 alignment: Alignment.topRight,
@@ -65,6 +67,7 @@ class CommentDisplay extends StatelessWidget {
               upvotes: root.upvotes,
               downvotes: root.downvotes,
               defaultVotingWeight: defaultVoteWeight,
+              currentVT: _currentVT,
             ),
             Align(
               alignment: Alignment.topRight,

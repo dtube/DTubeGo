@@ -8,8 +8,11 @@ import 'package:hex/hex.dart';
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
-import 'package:secp256k1/secp256k1.dart';
+
 import 'package:bs58/bs58.dart';
+
+import 'package:ecdsa/ecdsa.dart';
+import 'package:elliptic/elliptic.dart';
 
 // see more reference here: https://github.com/dtube/dtube/blob/master/client/broadcast.js
 
@@ -20,11 +23,13 @@ abstract class TransactionRepository {
 }
 
 class TransactionRepositoryImpl implements TransactionRepository {
-  // seek help here:
-  // https://github.com/C0MM4ND/dart-secp256k1/issues/2
+  // TODO: still buggy
+  // https://github.com/C0MM4ND/dart-secp256k1/issues/6
 
   Future<Transaction> sign(
       Transaction tx, String applicationUser, String privKey) async {
+    var ec = getS256();
+
     Transaction txNew = Transaction(type: tx.type, data: tx.data);
 
     txNew.sender = applicationUser; // set sender of tx
@@ -34,23 +39,22 @@ class TransactionRepositoryImpl implements TransactionRepository {
     List<int> txBytes = utf8.encode(jsonString);
 
     Digest digest = sha256.convert(txBytes);
-    txNew.hash = digest.toString();
+    var messageHash = digest.toString();
+
+    txNew.hash = messageHash;
 
     String pkHex = HEX.encode(base58.decode(privKey));
 
-    PrivateKey _pk = PrivateKey.fromHex(pkHex);
+    PrivateKey _pk = PrivateKey.fromHex(ec, pkHex);
 
-    Signature _sig = _pk.signature(digest.toString());
-    print(_sig.S);
+    Signature _sig = deterministicSign(_pk, HEX.decode(messageHash));
+
     String _sigHex = _sig.toString();
 
     Uint8List sigBytes = Uint8List.fromList(HEX.decode(_sigHex));
+    print(sigBytes.length);
     String _sigB58 = base58.encode(sigBytes);
     txNew.signature = _sigB58;
-
-    print(_sig.verify(
-        _pk.publicKey, digest.toString())); // of course always returns true
-
     return txNew;
   }
 

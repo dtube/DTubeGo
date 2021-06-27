@@ -15,6 +15,7 @@ import 'package:dtube_togo/ui/pages/notifications/Notifications.dart';
 import 'package:dtube_togo/ui/pages/settings/Settings.dart';
 import 'package:dtube_togo/ui/pages/upload/uploaderTabContainer.dart';
 import 'package:dtube_togo/ui/pages/user/User.dart';
+import 'package:dtube_togo/ui/pages/wallet/WalletTabContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -198,6 +199,25 @@ class _NavigationContainerState extends State<NavigationContainer> {
                             },
                             child: Icon(
                               Icons.inbox,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        CircleAvatar(
+                          backgroundColor: globalBlue,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return BlocProvider<NotificationBloc>(
+                                    create: (context) => NotificationBloc(
+                                        repository:
+                                            NotificationRepositoryImpl()),
+                                    child: WalletMainPage());
+                              }));
+                            },
+                            child: Icon(
+                              Icons.wallet_travel,
                               color: Colors.white,
                             ),
                           ),

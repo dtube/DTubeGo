@@ -6,15 +6,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
 
-class AuthorAvatar extends StatefulWidget {
-  const AuthorAvatar({Key? key, required this.username}) : super(key: key);
+class AccoutnAvatarBase extends StatelessWidget {
+  const AccoutnAvatarBase({Key? key, required this.username}) : super(key: key);
+  final String username;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => UserBloc(repository: UserRepositoryImpl()),
+      child: AccountAvatar(
+        username: username,
+      ),
+    );
+  }
+}
+
+class AccountAvatar extends StatefulWidget {
+  const AccountAvatar({Key? key, required this.username}) : super(key: key);
   final username;
 
   @override
-  _AuthorAvatarState createState() => _AuthorAvatarState();
+  _AccountAvatarState createState() => _AccountAvatarState();
 }
 
-class _AuthorAvatarState extends State<AuthorAvatar> {
+class _AccountAvatarState extends State<AccountAvatar> {
   late UserBloc _userBlocAvatar;
   @override
   void initState() {
@@ -33,7 +48,8 @@ class _AuthorAvatarState extends State<AuthorAvatar> {
         } else if (state is UserLoadedState &&
             state.user.json_string != null &&
             state.user.json_string?.profile != null &&
-            state.user.json_string?.profile?.avatar != "") {
+            state.user.json_string?.profile?.avatar != "" &&
+            state.user.name == widget.username) {
           try {
             return CachedNetworkImage(
               imageUrl: state.user.json_string!.profile!.avatar!

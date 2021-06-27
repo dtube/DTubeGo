@@ -1,9 +1,10 @@
 import 'package:dtube_togo/bloc/auth/auth_bloc.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_togo/ui/pages/wallet/transferDialog.dart';
 import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
@@ -124,6 +125,7 @@ class _UserState extends State<UserPage> {
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
                 child: Column(children: [
+              SizedBox(height: ownUsername ? 90 : 0),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -212,8 +214,8 @@ class _UserState extends State<UserPage> {
   }
 
   Widget buildSpeedDial(bool ownUser, bool alreadyFollowing, String username) {
-    TextEditingController _amountController = new TextEditingController();
-    TextEditingController _memoController = new TextEditingController();
+    // TextEditingController _amountController = new TextEditingController();
+    // TextEditingController _memoController = new TextEditingController();
     UserBloc _userBloc = BlocProvider.of<UserBloc>(context);
     AuthBloc _authBloc = BlocProvider.of<AuthBloc>(context);
     TransactionBloc _txBloc = BlocProvider.of<TransactionBloc>(context);
@@ -222,79 +224,25 @@ class _UserState extends State<UserPage> {
       SpeedDialChild(
           child: Icon(Icons.wallet_giftcard),
           foregroundColor: globalAlmostWhite,
-          //backgroundColor: globalBlue,
+          backgroundColor: globalBlue,
           label: 'transfer',
           labelStyle: TextStyle(fontSize: 18.0),
-          //labelBackgroundColor: globalBlue,
+          labelBackgroundColor: globalBlue,
           onTap: () {
             showDialog<String>(
                 context: context,
-                builder: (BuildContext context) => AlertDialog(
-                      title: const Text('DTC transfer'),
-                      backgroundColor: globalAlmostBlack,
-                      content: Builder(
-                        builder: (context) {
-                          // Get available height and width of the build area of this widget. Make a choice depending on the size.
-                          var height = MediaQuery.of(context).size.height;
-                          var width = MediaQuery.of(context).size.width;
-
-                          return Container(
-                            height: height / 5,
-                            width: width - 100,
-                            child: Column(
-                              children: [
-                                TextField(
-                                  decoration:
-                                      new InputDecoration(labelText: "Amount"),
-                                  controller: _amountController,
-                                  keyboardType: TextInputType.numberWithOptions(
-                                      decimal: true),
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(
-                                        RegExp(r"^\d+\.?\d{0,2}")),
-                                  ],
-                                ),
-                                TextField(
-                                  decoration:
-                                      new InputDecoration(labelText: "Memo"),
-                                  controller: _memoController,
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, 'Cancel'),
-                          child: const Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            TxData txdata = TxData(
-                                receiver: username,
-                                amount: (double.parse(
-                                            _amountController.value.text) *
-                                        100)
-                                    .floor(),
-                                memo: _memoController.value.text);
-                            Transaction newTx =
-                                Transaction(type: 3, data: txdata);
-                            _txBloc.add(SignAndSendTransactionEvent(newTx));
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('Send'),
-                        ),
-                      ],
+                builder: (BuildContext context) => TransferDialog(
+                      receiver: username,
+                      txBloc: _txBloc,
                     ));
           }),
       SpeedDialChild(
         child: Icon(Icons.follow_the_signs),
         foregroundColor: globalAlmostWhite,
-        //backgroundColor: globalBlue,
+        backgroundColor: globalBlue,
         label: alreadyFollowing ? 'Unfollow' : 'Follow',
         labelStyle: TextStyle(fontSize: 18.0),
-        // labelBackgroundColor: globalBlue,
+        labelBackgroundColor: globalBlue,
         onTap: () async {
           TxData txdata = TxData(
             target: username,
@@ -356,7 +304,7 @@ class _UserState extends State<UserPage> {
 
         /// both default to 16
         marginEnd: 25,
-        marginBottom: 40,
+        marginBottom: 50,
         // animatedIcon: AnimatedIcons.menu_close,
         // animatedIconTheme: IconThemeData(size: 22.0),
         /// This is ignored if animatedIcon is non null

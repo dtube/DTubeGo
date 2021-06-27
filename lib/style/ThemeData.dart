@@ -44,6 +44,12 @@ final ThemeData dtubeDarkTheme = ThemeData(
   hintColor: Color(0x80ffffff),
   errorColor: Color(0xffd32f2f),
   appBarTheme: AppBarTheme(backgroundColor: globalBGColor, elevation: 0),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+    alignment: Alignment.center,
+    elevation: 8,
+    primary: globalRed,
+  )),
   buttonTheme: ButtonThemeData(
     textTheme: ButtonTextTheme.normal,
     minWidth: 88.0,
