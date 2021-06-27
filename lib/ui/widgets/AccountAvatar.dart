@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
 
-class AccoutnAvatarBase extends StatelessWidget {
-  const AccoutnAvatarBase({Key? key, required this.username}) : super(key: key);
+class AccountAvatarBase extends StatelessWidget {
+  const AccountAvatarBase({Key? key, required this.username}) : super(key: key);
   final String username;
 
   @override

@@ -1,3 +1,4 @@
+import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/ReplyButton.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/VoteButtons.dart';
 
@@ -18,9 +19,26 @@ class CommentDisplay extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            root.author + ': ' + root.commentjson.description,
-            style: TextStyle(fontSize: 12.0),
+          Row(
+            children: [
+              SizedBox(
+                width: 30,
+                height: 30,
+                child: AccountAvatarBase(
+                  username: root.author,
+                ),
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              Container(
+                width: 300,
+                child: Text(
+                  root.commentjson.description,
+                  style: TextStyle(fontSize: 12.0),
+                ),
+              ),
+            ],
           ),
           Stack(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,9 +69,26 @@ class CommentDisplay extends StatelessWidget {
       );
     } else {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(
-          root.author + ': ' + root.commentjson.description,
-          style: TextStyle(fontSize: 12.0),
+        Row(
+          children: [
+            SizedBox(
+              width: 30,
+              height: 30,
+              child: AccountAvatarBase(
+                username: root.author,
+              ),
+            ),
+            SizedBox(
+              width: 8,
+            ),
+            Container(
+              width: 300,
+              child: Text(
+                root.commentjson.description,
+                style: TextStyle(fontSize: 12.0),
+              ),
+            ),
+          ],
         ),
         Stack(
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,

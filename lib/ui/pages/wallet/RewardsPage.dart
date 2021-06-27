@@ -169,7 +169,7 @@ class _RewardsCardState extends State<RewardsCard> {
             SizedBox(
                 width: 40,
                 height: 40,
-                child: AccoutnAvatarBase(username: widget.reward.author)),
+                child: AccountAvatarBase(username: widget.reward.author)),
             SizedBox(width: 4),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

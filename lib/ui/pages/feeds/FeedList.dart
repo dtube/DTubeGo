@@ -412,7 +412,7 @@ class _PostListCardBigThumbnailState extends State<PostListCardBigThumbnail> {
                 child: SizedBox(
                   width: 50,
                   height: 50,
-                  child: AccoutnAvatarBase(
+                  child: AccountAvatarBase(
                     username: widget.author,
                   ),
                 ),
