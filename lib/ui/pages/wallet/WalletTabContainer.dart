@@ -48,11 +48,11 @@ class _WalletMainPageState extends State<WalletMainPage>
             indicatorColor: globalRed,
             tabs: [
               Tab(
-                text: 'Wallet',
+                text: 'Rewards',
               ),
               Tab(
-                text: 'Rewards',
-              )
+                text: 'Wallet',
+              ),
             ],
             controller: _tabController,
             indicatorSize: TabBarIndicatorSize.tab,
@@ -63,14 +63,14 @@ class _WalletMainPageState extends State<WalletMainPage>
               child: TabBarView(
                 children: [
                   BlocProvider(
-                    create: (context) => TransactionBloc(
-                        repository: TransactionRepositoryImpl()),
-                    child: WalletPage(),
-                  ),
-                  BlocProvider(
                     create: (context) =>
                         RewardsBloc(repository: RewardRepositoryImpl()),
                     child: RewardsPage(),
+                  ),
+                  BlocProvider(
+                    create: (context) => TransactionBloc(
+                        repository: TransactionRepositoryImpl()),
+                    child: WalletPage(),
                   ),
                 ],
                 controller: _tabController,

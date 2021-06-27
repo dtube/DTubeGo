@@ -2,7 +2,6 @@ import 'package:dtube_togo/bloc/rewards/rewards_bloc.dart';
 import 'package:dtube_togo/bloc/rewards/rewards_bloc_full.dart';
 import 'package:dtube_togo/bloc/rewards/rewards_event.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/AccountAvatar.dart';
@@ -42,10 +41,10 @@ class _RewardsPageState extends State<RewardsPage>
             indicatorColor: globalRed,
             tabs: [
               Tab(
-                text: 'Pending',
+                text: 'Claimable',
               ),
               Tab(
-                text: 'Claimable',
+                text: 'Pending',
               ),
               Tab(
                 text: 'Claimed',
@@ -60,17 +59,18 @@ class _RewardsPageState extends State<RewardsPage>
               child: TabBarView(
                 children: [
                   // WalletPage(),
-                  BlocProvider(
-                      create: (context) =>
-                          RewardsBloc(repository: RewardRepositoryImpl()),
-                      child: RewardsList(
-                        rewardsState: "pending",
-                      )),
+
                   BlocProvider(
                       create: (context) =>
                           RewardsBloc(repository: RewardRepositoryImpl()),
                       child: RewardsList(
                         rewardsState: "claimable",
+                      )),
+                  BlocProvider(
+                      create: (context) =>
+                          RewardsBloc(repository: RewardRepositoryImpl()),
+                      child: RewardsList(
+                        rewardsState: "pending",
                       )),
                   BlocProvider(
                       create: (context) =>

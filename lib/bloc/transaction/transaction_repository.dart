@@ -48,8 +48,9 @@ class TransactionRepositoryImpl implements TransactionRepository {
     PrivateKey _pk = PrivateKey.fromHex(ec, pkHex);
 
     Signature _sig = deterministicSign(_pk, HEX.decode(messageHash));
-
-    String _sigHex = _sig.toString();
+    String _sigHex = _sig.R.toRadixString(16).padLeft(64, '0') + // r's hex
+        _sig.S.toRadixString(16).padLeft(64, '0');
+    // String _sigHex = _sig.toString();
 
     Uint8List sigBytes = Uint8List.fromList(HEX.decode(_sigHex));
     print(sigBytes.length);
