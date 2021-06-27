@@ -16,6 +16,7 @@ import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_togo/utils/friendlyTimestamp.dart';
 
 import 'package:intl/intl.dart';
 
@@ -185,7 +186,8 @@ class _FeedListState extends State<FeedList> {
                   child: PostListCard(
                       bigThumbnail: bigThumbnail,
                       showAuthor: showAuthor,
-                      blur: (nsfwMode == 'blur' && feed[pos].json_string?.nsfw == 1) ||
+                      blur: (nsfwMode == 'blur' &&
+                                  feed[pos].json_string?.nsfw == 1) ||
                               (hiddenMode == 'blur' &&
                                   feed[pos].json_string?.hide == 1)
                           ? true
@@ -195,16 +197,19 @@ class _FeedListState extends State<FeedList> {
                       author: feed[pos].author,
                       link: feed[pos].link,
                       // publishDate: .toString(),
-                      publishDate: DateFormat('yyyy-MM-dd kk:mm').format(
-                          DateTime.fromMicrosecondsSinceEpoch(feed[pos].ts * 1000)
-                              .toLocal()),
+                      // publishDate: DateFormat('yyyy-MM-dd kk:mm').format(
+                      //     DateTime.fromMicrosecondsSinceEpoch(feed[pos].ts * 1000)
+                      //         .toLocal()),
+                      publishDate: TimeAgo.timeInAgoTS(feed[pos].ts),
                       dtcValue:
                           (feed[pos].dist / 100).round().toString() + " DTC",
                       duration: new Duration(
-                          seconds: int.tryParse(feed[pos].json_string!.dur) != null
-                              ? int.parse(feed[pos].json_string!.dur)
-                              : 0),
-                      thumbnailUrl: feed[pos].json_string!.files!.youtube != null
+                          seconds:
+                              int.tryParse(feed[pos].json_string!.dur) != null
+                                  ? int.parse(feed[pos].json_string!.dur)
+                                  : 0),
+                      thumbnailUrl: feed[pos].json_string!.files!.youtube !=
+                              null
                           ? "https://img.youtube.com/vi/" +
                               feed[pos].json_string!.files!.youtube! +
                               "/mqdefault.jpg"

@@ -252,7 +252,7 @@ class _RewardsCardState extends State<RewardsCard> {
                       "already claimed " +
                           (widget.reward.claimable / 100).toStringAsFixed(2) +
                           ' DTC ' +
-                          friendlyTimestamp(widget.reward.claimed!),
+                          TimeAgo.timeInAgoTS(widget.reward.claimed!),
                       style: Theme.of(context).textTheme.headline5,
                     )
                   : timestampGreater7Days(widget.reward.ts)
@@ -271,7 +271,7 @@ class _RewardsCardState extends State<RewardsCard> {
                               (widget.reward.claimable / 100)
                                       .toStringAsFixed(2) +
                                   ' DTC claimable ' +
-                                  timestamp7Days(widget.reward.ts),
+                                  TimeAgo.timeAgoClaimIn(widget.reward.ts),
                               style: Theme.of(context).textTheme.headline5,
                             ),
                           ],

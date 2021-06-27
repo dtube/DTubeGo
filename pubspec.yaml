@@ -57,6 +57,7 @@ dependencies:
   persistent_bottom_nav_bar: ^4.0.2
   another_flushbar: ^1.10.23
   loadmore: ^2.0.1
+  jiffy: ^4.1.0
 
   # network related
   cached_network_image: ^3.0.0
