@@ -4,7 +4,7 @@ import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 
 import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/pages/post/players/BetterPlayer.dart';
-import 'package:dtube_togo/ui/pages/post/widgets/AccountAvatar.dart';
+import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/CollapsedDescription.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/Comments.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/ReplyButton.dart';
@@ -206,17 +206,18 @@ class _PostDetailsState extends State<PostDetails> {
                               //       PostBloc(repository: PostRepositoryImpl()),
                               //   child:
                               VotingButtons(
-                            author: widget.post.author,
-                            link: widget.post.link,
-                            alreadyVoted: widget.post.alreadyVoted!,
-                            alreadyVotedDirection:
-                                widget.post.alreadyVotedDirection!,
-                            upvotes: widget.post.upvotes,
-                            downvotes: widget.post.downvotes,
-                            defaultVotingWeight: _defaultVoteWeightPosts,
-                            currentVT: _currentVT,
-                            //),
-                          );
+                                  author: widget.post.author,
+                                  link: widget.post.link,
+                                  alreadyVoted: widget.post.alreadyVoted!,
+                                  alreadyVotedDirection:
+                                      widget.post.alreadyVotedDirection!,
+                                  upvotes: widget.post.upvotes,
+                                  downvotes: widget.post.downvotes,
+                                  defaultVotingWeight: _defaultVoteWeightPosts,
+                                  currentVT: _currentVT,
+                                  scale: 1
+                                  //),
+                                  );
                         } else {
                           return SizedBox(height: 0);
                         }
@@ -231,6 +232,7 @@ class _PostDetailsState extends State<PostDetails> {
                           author: widget.post.author,
                           link: widget.post.link,
                           votingWeight: _defaultVoteWeightComments,
+                          scale: 1,
                         ),
                       ),
                       SizedBox(height: 16),

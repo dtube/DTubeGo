@@ -53,6 +53,7 @@ class CommentDisplay extends StatelessWidget {
                 downvotes: root.downvotes,
                 defaultVotingWeight: defaultVoteWeight,
                 currentVT: _currentVT,
+                scale: 0.8,
               ),
               Align(
                 alignment: Alignment.topRight,
@@ -61,6 +62,7 @@ class CommentDisplay extends StatelessWidget {
                   author: root.author,
                   link: root.link,
                   votingWeight: defaultVoteWeight,
+                  scale: 0.8,
                 ),
               ),
             ],
@@ -103,6 +105,7 @@ class CommentDisplay extends StatelessWidget {
               downvotes: root.downvotes,
               defaultVotingWeight: defaultVoteWeight,
               currentVT: _currentVT,
+              scale: 0.8,
             ),
             Align(
               alignment: Alignment.topRight,
@@ -111,6 +114,7 @@ class CommentDisplay extends StatelessWidget {
                 author: root.author,
                 link: root.link,
                 votingWeight: defaultVoteWeight,
+                scale: 0.8,
               ),
             ),
           ],

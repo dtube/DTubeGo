@@ -12,6 +12,7 @@ class ReplyButton extends StatefulWidget {
   final String author;
   final String link;
   final double votingWeight;
+  final double scale;
 
   //final Comment comment;
 
@@ -21,6 +22,7 @@ class ReplyButton extends StatefulWidget {
     required this.author,
     required this.link,
     required this.votingWeight,
+    required this.scale,
   }) : super(key: key);
 
   @override
@@ -56,16 +58,19 @@ class _ReplyButtonState extends State<ReplyButton> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            InputChip(
-              label: Text(
-                widget.title,
-                style: Theme.of(context).textTheme.bodyText2,
+            Transform.scale(
+              scale: widget.scale,
+              child: InputChip(
+                label: Text(
+                  widget.title,
+                  // style: Theme.of(context).textTheme.button,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _replyPressed = !_replyPressed;
+                  });
+                },
               ),
-              onPressed: () {
-                setState(() {
-                  _replyPressed = !_replyPressed;
-                });
-              },
             ),
             Visibility(
               visible: _replyPressed,

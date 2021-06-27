@@ -12,17 +12,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
 class VotingButtons extends StatefulWidget {
-  const VotingButtons({
-    Key? key,
-    this.upvotes,
-    this.downvotes,
-    required this.author,
-    required this.link,
-    required this.alreadyVoted,
-    required this.alreadyVotedDirection,
-    required this.defaultVotingWeight,
-    required this.currentVT,
-  }) : super(key: key);
+  VotingButtons(
+      {Key? key,
+      this.upvotes,
+      this.downvotes,
+      required this.author,
+      required this.link,
+      required this.alreadyVoted,
+      required this.alreadyVotedDirection,
+      required this.defaultVotingWeight,
+      required this.currentVT,
+      required this.scale})
+      : super(key: key);
 
   final String author;
   final String link;
@@ -33,6 +34,7 @@ class VotingButtons extends StatefulWidget {
 
   final double defaultVotingWeight;
   final int currentVT;
+  final double scale;
   //final int voteVT = 0;
 
   @override
@@ -62,45 +64,60 @@ class _VotingButtonsState extends State<VotingButtons> {
   Widget build(BuildContext context) {
     return Column(children: [
       Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InputChip(
-            label: Text(widget.upvotes != null && widget.upvotes!.isNotEmpty
-                ? (widget.upvotes!.length).toString()
-                : '0'),
-            avatar: Icon(Icons.thumb_up,
+          Transform.scale(
+            scale: widget.scale,
+            child: InputChip(
+              label: Text(
+                widget.upvotes != null && widget.upvotes!.isNotEmpty
+                    ? (widget.upvotes!.length).toString()
+                    : '0',
+              ),
+              avatar: Icon(
+                Icons.thumb_up,
                 color: widget.alreadyVoted && widget.alreadyVotedDirection
                     ? globalRed
-                    : Colors.grey),
-            onPressed: () {
-              if (!widget.alreadyVoted) {
-                setState(() {
-                  _upvotePressed = !_upvotePressed;
-                  if (_upvotePressed) {
-                    _downvotePressed = false;
-                  }
-                });
-              }
-            },
+                    : Colors.grey,
+              ),
+              onPressed: () {
+                if (!widget.alreadyVoted) {
+                  setState(() {
+                    _upvotePressed = !_upvotePressed;
+                    if (_upvotePressed) {
+                      _downvotePressed = false;
+                    }
+                  });
+                }
+              },
+            ),
           ),
-          SizedBox(width: 8),
-          InputChip(
-            label: Text(widget.downvotes != null && widget.downvotes!.isNotEmpty
-                ? (widget.downvotes!.length).toString()
-                : '0'),
-            avatar: Icon(Icons.thumb_down,
-                color: widget.alreadyVoted && !widget.alreadyVotedDirection
-                    ? globalRed
-                    : Colors.grey),
-            onPressed: () {
-              if (!widget.alreadyVoted) {
-                setState(() {
-                  _downvotePressed = !_downvotePressed;
-                  if (_downvotePressed) {
-                    _upvotePressed = false;
-                  }
-                });
-              }
-            },
+          SizedBox(
+            width: 8,
+          ),
+          Transform.scale(
+            scale: widget.scale,
+            child: InputChip(
+              label: Text(
+                  widget.downvotes != null && widget.downvotes!.isNotEmpty
+                      ? (widget.downvotes!.length).toString()
+                      : '0'),
+              avatar: Icon(Icons.thumb_down,
+                  color: widget.alreadyVoted && !widget.alreadyVotedDirection
+                      ? globalRed
+                      : Colors.grey),
+              onPressed: () {
+                if (!widget.alreadyVoted) {
+                  setState(() {
+                    _downvotePressed = !_downvotePressed;
+                    if (_downvotePressed) {
+                      _upvotePressed = false;
+                    }
+                  });
+                }
+              },
+            ),
           ),
         ],
       ),

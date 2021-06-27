@@ -13,7 +13,7 @@ import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/ui/pages/upload/uploaderTabContainer.dart';
 import 'package:dtube_togo/ui/pages/user/User.dart';
-import 'package:dtube_togo/ui/pages/post/widgets/AccountAvatar.dart';
+import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 
