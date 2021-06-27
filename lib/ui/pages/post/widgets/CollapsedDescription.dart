@@ -19,15 +19,13 @@ class CollapsedDescription extends StatefulWidget {
 }
 
 class _CollapsedDescriptionState extends State<CollapsedDescription> {
-  bool showmorePressed = false;
-  var myChildSize = Size.zero;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: MarkdownBody(
-        //data: post.json_string.desc,
         data: widget.description,
-
+        styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+            p: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 14.0)),
         onTapLink: (text, url, title) {
           launch(url!);
         },
