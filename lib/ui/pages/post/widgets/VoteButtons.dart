@@ -64,64 +64,67 @@ class _VotingButtonsState extends State<VotingButtons> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Transform.scale(
-            scale: widget.scale,
-            child: InputChip(
-              label: Text(
-                widget.upvotes != null && widget.upvotes!.isNotEmpty
-                    ? (widget.upvotes!.length).toString()
-                    : '0',
-              ),
-              avatar: Icon(
-                Icons.thumb_up,
-                color: widget.alreadyVoted && widget.alreadyVotedDirection
-                    ? globalRed
-                    : Colors.grey,
-              ),
-              onPressed: () {
-                if (!widget.alreadyVoted) {
-                  setState(() {
-                    _upvotePressed = !_upvotePressed;
-                    if (_upvotePressed) {
-                      _downvotePressed = false;
-                    }
-                  });
-                }
-              },
-            ),
-          ),
-          SizedBox(
-            width: 8,
-          ),
-          Transform.scale(
-            scale: widget.scale,
-            child: InputChip(
-              label: Text(
-                  widget.downvotes != null && widget.downvotes!.isNotEmpty
-                      ? (widget.downvotes!.length).toString()
-                      : '0'),
-              avatar: Icon(Icons.thumb_down,
-                  color: widget.alreadyVoted && !widget.alreadyVotedDirection
+    return Stack(children: [
+      Visibility(
+        visible: !_upvotePressed && !_downvotePressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Transform.scale(
+              scale: widget.scale,
+              child: InputChip(
+                label: Text(
+                  widget.upvotes != null && widget.upvotes!.isNotEmpty
+                      ? (widget.upvotes!.length).toString()
+                      : '0',
+                ),
+                avatar: Icon(
+                  Icons.thumb_up,
+                  color: widget.alreadyVoted && widget.alreadyVotedDirection
                       ? globalRed
-                      : Colors.grey),
-              onPressed: () {
-                if (!widget.alreadyVoted) {
-                  setState(() {
-                    _downvotePressed = !_downvotePressed;
-                    if (_downvotePressed) {
-                      _upvotePressed = false;
-                    }
-                  });
-                }
-              },
+                      : Colors.grey,
+                ),
+                onPressed: () {
+                  if (!widget.alreadyVoted) {
+                    setState(() {
+                      _upvotePressed = !_upvotePressed;
+                      if (_upvotePressed) {
+                        _downvotePressed = false;
+                      }
+                    });
+                  }
+                },
+              ),
             ),
-          ),
-        ],
+            SizedBox(
+              width: 8,
+            ),
+            Transform.scale(
+              scale: widget.scale,
+              child: InputChip(
+                label: Text(
+                    widget.downvotes != null && widget.downvotes!.isNotEmpty
+                        ? (widget.downvotes!.length).toString()
+                        : '0'),
+                avatar: Icon(Icons.thumb_down,
+                    color: widget.alreadyVoted && !widget.alreadyVotedDirection
+                        ? globalRed
+                        : Colors.grey),
+                onPressed: () {
+                  if (!widget.alreadyVoted) {
+                    setState(() {
+                      _downvotePressed = !_downvotePressed;
+                      if (_downvotePressed) {
+                        _upvotePressed = false;
+                      }
+                    });
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
       SizedBox(height: 10),
       Visibility(
@@ -196,111 +199,116 @@ class _VotingSliderState extends State<VotingSlider> {
         _postBloc.add(FetchPostEvent(widget.author, widget.link));
       }
       return Container(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                "voting weight:",
-                style: Theme.of(context).textTheme.caption,
-              ),
-            ),
-            SfSlider(
-              min: -100.0,
-              max: 100.0,
-              value: _vpValue,
-              interval: 10,
-              //showTicks: true,
-              numberFormat: NumberFormat(''),
-              // showLabels: true,
-              enableTooltip: true,
-              activeColor: Colors.red,
-              //minorTicksPerInterval: 10,
-              showDivisors: true,
-              onChanged: (dynamic value) {
-                setState(() {
-                  _vpValue = value;
-                });
-              },
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                "vote tip (gift to the author from your own curation rewards):",
-                style: Theme.of(context).textTheme.caption,
-              ),
-            ),
-            SfSlider(
-              min: 0.0,
-              max: 100.0,
-              value: _tipValue,
-              interval: 10,
+          child: Column(
+        children: [
+          Row(
+            children: [
+              Column(
+                children: [
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      "voting weight: " + _vpValue.floor().toString() + '%',
+                      style: Theme.of(context).textTheme.caption,
+                    ),
+                  ),
+                  Slider(
+                    min: widget.downvote ? -100.0 : 1,
+                    max: widget.downvote ? -1 : 100.0,
+                    value: _vpValue,
 
-              //showTicks: true,
-              numberFormat: NumberFormat(''),
-              // showLabels: true,
-              enableTooltip: true,
-              activeColor: Colors.red,
-              //minorTicksPerInterval: 10,
-              showDivisors: true,
-              onChanged: (dynamic value) {
-                setState(() {
-                  _tipValue = value;
-                });
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  (_vpValue < 0 ? 'downvote ' : 'upvote ') +
-                      _vpValue.floor().toString() +
-                      '% (' +
-                      _tipValue.toStringAsFixed(2) +
-                      '% tip)',
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-                SizedBox(width: 8),
-                BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-                  if (state is UserDTCVPLoadedState) {
-                    _currentVT = state.vtBalance["v"]!.toDouble();
-                    return ElevatedButton(
-                        onPressed: () {
-                          var voteValue =
-                              (_currentVT * (_vpValue / 100)).floor();
-                          int _txType = 5;
-                          TxData txdata = TxData(
-                            author: widget.author,
-                            link: widget.link,
-                            tag: '',
-                            vt: voteValue,
-                          );
-
-                          if (_tipValue > 0) {
-                            _txType = 19;
-                            txdata = TxData(
-                                author: widget.author,
-                                link: widget.link,
-                                tag: '',
-                                vt: voteValue,
-                                tip: _tipValue.floor());
-                          }
-                          Transaction newTx =
-                              Transaction(type: _txType, data: txdata);
-                          _txBloc.add(SignAndSendTransactionEvent(newTx));
-                        },
-                        child: Text("send"));
-                  } else {
-                    return SizedBox(
-                      width: 0,
+                    label: _vpValue.floor().toString() + "%",
+                    //divisions: 40,
+                    inactiveColor: globalBlue,
+                    activeColor: globalRed,
+                    onChanged: (dynamic value) {
+                      setState(() {
+                        _vpValue = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              widget.downvote
+                  ? SizedBox(width: 0)
+                  : Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            "vote tip: " + _tipValue.floor().toString() + '%',
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                        ),
+                        Slider(
+                          min: 0.0,
+                          max: 100.0,
+                          value: _tipValue,
+                          label: _tipValue.floor().toString() + "%",
+                          //divisions: 20,
+                          inactiveColor: globalBlue,
+                          activeColor: globalRed,
+                          onChanged: (dynamic value) {
+                            setState(() {
+                              _tipValue = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+            ],
+          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.end,
+          //   children: [
+          //     Text(
+          //       (_vpValue < 0 ? 'downvote ' : 'upvote ') +
+          //           _vpValue.floor().toString() +
+          //           '% (' +
+          //           _tipValue.toStringAsFixed(2) +
+          //           '% tip)',
+          //       style: Theme.of(context).textTheme.bodyText1,
+          //     ),
+          //SizedBox(width: 8),
+          BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+            if (state is UserDTCVPLoadedState) {
+              _currentVT = state.vtBalance["v"]!.toDouble();
+              return ElevatedButton(
+                  onPressed: () {
+                    var voteValue = (_currentVT * (_vpValue / 100)).floor();
+                    int _txType = 5;
+                    TxData txdata = TxData(
+                      author: widget.author,
+                      link: widget.link,
+                      tag: '',
+                      vt: voteValue,
                     );
-                  }
-                }),
-              ],
-            )
-          ],
-        ),
-      );
+
+                    if (_tipValue > 0) {
+                      _txType = 19;
+                      txdata = TxData(
+                          author: widget.author,
+                          link: widget.link,
+                          tag: '',
+                          vt: voteValue,
+                          tip: _tipValue.floor());
+                    }
+                    Transaction newTx =
+                        Transaction(type: _txType, data: txdata);
+                    _txBloc.add(SignAndSendTransactionEvent(newTx));
+                  },
+                  child: Text("send"));
+            } else {
+              return SizedBox(
+                width: 0,
+              );
+            }
+          }),
+        ],
+      )
+          //   ],
+          // ),
+          );
     });
   }
 }

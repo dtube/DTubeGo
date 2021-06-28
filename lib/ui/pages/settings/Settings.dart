@@ -279,19 +279,14 @@ class _SettingsListState extends State<SettingsList> {
                     children: [
                       Expanded(
                         flex: 2,
-                        child: SfSlider(
+                        child: Slider(
                           min: 1.0,
                           max: 100.0,
                           value: _defaultVote,
-                          interval: 10,
-
-                          //showTicks: true,
-                          numberFormat: NumberFormat(''),
-                          // showLabels: true,
-                          enableTooltip: true,
-                          activeColor: Colors.red,
-                          //minorTicksPerInterval: 10,
-                          showDivisors: true,
+                          label: _defaultVote.floor().toString() + "%",
+                          divisions: 20,
+                          inactiveColor: globalBlue,
+                          activeColor: globalRed,
                           onChanged: (dynamic value) {
                             setState(() {
                               _defaultVote = value;
@@ -315,19 +310,14 @@ class _SettingsListState extends State<SettingsList> {
                     children: [
                       Expanded(
                         flex: 2,
-                        child: SfSlider(
-                          min: 1.0,
+                        child: Slider(
+                          min: 0.0,
                           max: 100.0,
                           value: _defaultVoteComments,
-                          interval: 10,
-
-                          //showTicks: true,
-                          numberFormat: NumberFormat(''),
-                          // showLabels: true,
-                          enableTooltip: true,
-                          activeColor: Colors.red,
-                          //minorTicksPerInterval: 10,
-                          showDivisors: true,
+                          label: _defaultVoteComments.floor().toString() + "%",
+                          divisions: 20,
+                          inactiveColor: globalBlue,
+                          activeColor: globalRed,
                           onChanged: (dynamic value) {
                             setState(() {
                               _defaultVoteComments = value;
@@ -358,19 +348,14 @@ class _SettingsListState extends State<SettingsList> {
                     children: [
                       Expanded(
                         flex: 2,
-                        child: SfSlider(
-                          min: 1.0,
+                        child: Slider(
+                          min: 0.0,
                           max: 100.0,
                           value: _defaultTip,
-                          interval: 10,
-
-                          //showTicks: true,
-                          numberFormat: NumberFormat(''),
-                          // showLabels: true,
-                          enableTooltip: true,
-                          activeColor: Colors.red,
-                          //minorTicksPerInterval: 10,
-                          showDivisors: true,
+                          label: _defaultTip.floor().toString() + "%",
+                          divisions: 20,
+                          inactiveColor: globalBlue,
+                          activeColor: globalRed,
                           onChanged: (dynamic value) {
                             setState(() {
                               _defaultTip = value;
@@ -394,19 +379,14 @@ class _SettingsListState extends State<SettingsList> {
                     children: [
                       Expanded(
                         flex: 2,
-                        child: SfSlider(
+                        child: Slider(
                           min: 0.0,
                           max: 100.0,
                           value: _defaultTipComments,
-                          interval: 10,
-
-                          //showTicks: true,
-                          numberFormat: NumberFormat(''),
-                          // showLabels: true,
-                          enableTooltip: true,
-                          activeColor: Colors.red,
-                          //minorTicksPerInterval: 10,
-                          showDivisors: true,
+                          label: _defaultTipComments.floor().toString() + "%",
+                          divisions: 20,
+                          inactiveColor: globalBlue,
+                          activeColor: globalRed,
                           onChanged: (dynamic value) {
                             setState(() {
                               _defaultTipComments = value;
