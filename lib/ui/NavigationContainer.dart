@@ -148,7 +148,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: 130,
+                width: 40,
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: CircleAvatar(
@@ -172,6 +172,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
                   ),
                 ),
               ),
+              BalanceOverview(),
 
               // Text(widget.title),
               DTubeLogo(size: 60),
@@ -336,29 +337,26 @@ class _BalanceOverviewState extends State<BalanceOverview> {
           double _dtcBalanceK = state.dtcBalance / 100000;
           double _vpBalanceK = state.vtBalance["v"]! / 1000;
           try {
-            return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              Text(
-                (_dtcBalanceK >= 1000 ? _dtcBalanceK / 1000 : _dtcBalanceK)
-                        .toStringAsFixed(1) +
-                    (_dtcBalanceK >= 1000 ? 'M' : 'K'),
-                style: Theme.of(context).textTheme.subtitle2,
-              ),
-              Text(
-                "DTC",
-                style: Theme.of(context).textTheme.subtitle2,
-              ),
-              SizedBox(width: 4),
-              Text(
-                (_vpBalanceK >= 1000 ? _vpBalanceK / 1000 : _vpBalanceK)
-                        .toStringAsFixed(1) +
-                    (_vpBalanceK >= 1000 ? 'M' : 'K'),
-                style: Theme.of(context).textTheme.subtitle2,
-              ),
-              Text(
-                "VP",
-                style: Theme.of(context).textTheme.subtitle2,
-              ),
-            ]);
+            return Column(
+                //mainAxisAlignment: MainAxisAlignment.end,
+
+                children: [
+                  Text(
+                    (_dtcBalanceK >= 1000 ? _dtcBalanceK / 1000 : _dtcBalanceK)
+                            .toStringAsFixed(1) +
+                        (_dtcBalanceK >= 1000 ? 'M' : 'K') +
+                        "DTC",
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  SizedBox(width: 4),
+                  Text(
+                    (_vpBalanceK >= 1000 ? _vpBalanceK / 1000 : _vpBalanceK)
+                            .toStringAsFixed(1) +
+                        (_vpBalanceK >= 1000 ? 'M' : 'K') +
+                        "VP",
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                ]);
           } catch (e) {
             return FaIcon(FontAwesomeIcons.times);
           }
