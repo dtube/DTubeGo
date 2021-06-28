@@ -52,36 +52,67 @@ class _AccountAvatarState extends State<AccountAvatar> {
             state.user.name == widget.username) {
           try {
             return CachedNetworkImage(
-              imageUrl: state.user.json_string!.profile!.avatar!
-                  .replaceAll("http:", "https:"),
-              imageBuilder: (context, imageProvider) => Container(
-                width: 50.0,
-                height: 50.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image:
-                      DecorationImage(image: imageProvider, fit: BoxFit.cover),
-                ),
-              ),
-              placeholder: (context, url) => Container(
-                  height: 50,
-                  width: 50,
-                  child: new CircularProgressIndicator()),
-              errorWidget: (context, url, error) => new Image.asset(
-                'assets/images/Image_of_none.svg.png',
-                fit: BoxFit.fitWidth,
-                width: 50,
-              ),
-            );
+                imageUrl: state.user.json_string!.profile!.avatar!
+                    .replaceAll("http:", "https:"),
+                imageBuilder: (context, imageProvider) => Container(
+                      width: 50.0,
+                      height: 50.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.cover),
+                      ),
+                    ),
+                placeholder: (context, url) => AvatarLoadingPlaceholder());
           } catch (e) {
-            return Icon(Icons.error);
+            return AvatarErrorPlaceholder();
           }
         } else if (state is UserErrorState) {
-          return new Icon(Icons.error);
+          return AvatarErrorPlaceholder();
         } else {
-          return new Icon(Icons.error);
+          return AvatarErrorPlaceholder();
         }
       },
+    );
+  }
+}
+
+class AvatarErrorPlaceholder extends StatelessWidget {
+  const AvatarErrorPlaceholder({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      width: 50.0,
+      height: 50.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        image: DecorationImage(
+            image: Image.asset('assets/images/Flag_of_None.svg.png').image,
+            fit: BoxFit.cover),
+      ),
+    );
+  }
+}
+
+class AvatarLoadingPlaceholder extends StatelessWidget {
+  const AvatarLoadingPlaceholder({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      width: 50.0,
+      height: 50.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        image: DecorationImage(
+            image: Image.asset('assets/images/appicon.png').image,
+            fit: BoxFit.cover),
+      ),
     );
   }
 }

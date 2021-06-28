@@ -28,7 +28,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.1"
+    version: "2.5.0"
   base_x:
     dependency: transitive
     description:
@@ -559,7 +559,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.8.0"
   sqflite:
     dependency: transitive
     description:
@@ -629,7 +629,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0"
+    version: "0.2.19"
   typed_data:
     dependency: transitive
     description:
@@ -805,13 +805,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.6"
-  youtube_player_iframe:
+  youtube_plyr_iframe:
     dependency: "direct main"
     description:
-      name: youtube_player_iframe
+      name: youtube_plyr_iframe
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.0.6"
 sdks:
   dart: ">=2.12.0 <3.0.0"
   flutter: ">=2.0.0"

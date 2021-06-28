@@ -114,9 +114,11 @@ class FeedItem {
         videoUrl =
             AppStrings.ipfsVideoUrl + json_string!.files!.ipfs!.vid!.s240!;
       } else {
-        if (json_string!.files!.ipfs!.vid!.src != null) {
+        if (json_string!.files!.ipfs!.vid?.src != null) {
           videoUrl =
               AppStrings.ipfsVideoUrl + json_string!.files!.ipfs!.vid!.src!;
+        } else {
+          videoUrl = "";
         }
       }
     }

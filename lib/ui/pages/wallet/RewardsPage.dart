@@ -128,7 +128,7 @@ class _RewardsListState extends State<RewardsList> {
                 );
               });
         }
-        return Text("Test");
+        return Text("loading");
       },
     );
   }

@@ -18,6 +18,7 @@ import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/pages/wallet/WalletTabContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class NavigationContainer extends StatefulWidget {
@@ -37,35 +38,35 @@ class _NavigationContainerState extends State<NavigationContainer> {
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-          icon: new Icon(
-            Icons.home,
+          icon: new FaIcon(
+            FontAwesomeIcons.addressBook,
             color: Colors.white,
           ),
           title: 'Feed'),
       PersistentBottomNavBarItem(
-        icon: new Icon(
-          Icons.watch_later_outlined,
+        icon: new FaIcon(
+          FontAwesomeIcons.newspaper,
           color: Colors.white,
         ),
         title: 'New',
       ),
       PersistentBottomNavBarItem(
-          icon: Icon(
-            Icons.contact_page_outlined,
+          icon: new FaIcon(
+            FontAwesomeIcons.idBadge,
             color: Colors.white,
           ),
           title: 'Profile'),
       PersistentBottomNavBarItem(
-        icon: new Icon(
-          Icons.fireplace,
+        icon: new FaIcon(
+          FontAwesomeIcons.burn,
           color: Colors.white,
         ),
         title: 'Hot',
       ),
       // TODO: combine hot + trending
       PersistentBottomNavBarItem(
-        icon: new Icon(
-          Icons.trending_up_outlined,
+        icon: new FaIcon(
+          FontAwesomeIcons.chartLine,
           color: Colors.white,
         ),
         title: 'Trending',
@@ -163,8 +164,8 @@ class _NavigationContainerState extends State<NavigationContainer> {
                           ),
                         );
                       },
-                      child: Icon(
-                        Icons.add_box_outlined,
+                      child: new FaIcon(
+                        FontAwesomeIcons.plus,
                         color: Colors.white,
                       ),
                     ),
@@ -197,8 +198,8 @@ class _NavigationContainerState extends State<NavigationContainer> {
                                     child: Notifications());
                               }));
                             },
-                            child: Icon(
-                              Icons.inbox,
+                            child: new FaIcon(
+                              FontAwesomeIcons.bell,
                               color: Colors.white,
                             ),
                           ),
@@ -216,8 +217,8 @@ class _NavigationContainerState extends State<NavigationContainer> {
                                     child: WalletMainPage());
                               }));
                             },
-                            child: Icon(
-                              Icons.wallet_travel,
+                            child: new FaIcon(
+                              FontAwesomeIcons.wallet,
                               color: Colors.white,
                             ),
                           ),
@@ -233,8 +234,8 @@ class _NavigationContainerState extends State<NavigationContainer> {
                                     child: SettingsPage());
                               }));
                             },
-                            child: Icon(
-                              Icons.settings,
+                            child: new FaIcon(
+                              FontAwesomeIcons.cog,
                               color: Colors.white,
                             ),
                           ),
@@ -359,12 +360,12 @@ class _BalanceOverviewState extends State<BalanceOverview> {
               ),
             ]);
           } catch (e) {
-            return Icon(Icons.error);
+            return FaIcon(FontAwesomeIcons.times);
           }
         } else if (state is UserErrorState) {
-          return new Icon(Icons.error);
+          return FaIcon(FontAwesomeIcons.times);
         } else {
-          return new Icon(Icons.error);
+          return FaIcon(FontAwesomeIcons.times);
         }
       },
     );

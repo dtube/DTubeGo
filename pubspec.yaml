@@ -37,7 +37,8 @@ dependencies:
 
   # ui related
   ## video related
-  youtube_player_iframe: ^2.1.0
+  # youtube_player_iframe: ^2.1.0
+  youtube_plyr_iframe: ^2.0.6
  
   webview_flutter: ^2.0.8
   video_player: ^2.1.4
@@ -92,3 +93,4 @@ flutter:
     - assets/images/dtube_logo_white.png
     - assets/images/Flag_of_None.svg.png
     - assets/images/Image_of_none.svg.png
+    - assets/images/appicon.png
