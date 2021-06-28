@@ -239,7 +239,10 @@ class _UploadFormState extends State<UploadForm> {
   Widget videoPreview() {
     if (!stateUploadData.localVideoFile) {
       _tagFocus.requestFocus();
-      return YTPlayerIFrame(videoUrl: stateUploadData.videoLocation);
+      return YTPlayerIFrame(
+        videoUrl: stateUploadData.videoLocation,
+        autoplay: false,
+      );
     } else {
       return Column(
         children: [
@@ -280,6 +283,7 @@ class _UploadFormState extends State<UploadForm> {
                   looping: false,
                   autoplay: false,
                   localFile: true,
+                  controls: true,
                   // key: UniqueKey(), // TODO: fix "change video file" not showing new file - WITHOUT the need of a UniqueKey()
                 )
               : SizedBox(

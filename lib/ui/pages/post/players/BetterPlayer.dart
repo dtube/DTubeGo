@@ -10,12 +10,14 @@ class BP extends StatefulWidget {
   final bool looping;
   final bool autoplay;
   final bool localFile;
+  final bool controls;
 
   BP({
     required this.videoUrl,
     required this.looping,
     required this.autoplay,
     required this.localFile,
+    required this.controls,
     Key? key,
   }) : super(key: key);
 
@@ -39,7 +41,13 @@ class _BPState extends State<BP> {
 
       _betterPlayerController = BetterPlayerController(
           BetterPlayerConfiguration(
-            autoPlay: false,
+            controlsConfiguration: BetterPlayerControlsConfiguration(
+              //showControls: widget.controls,
+              enablePlayPause: true,
+              enableSkips: false,
+              showControlsOnInitialize: false,
+            ),
+            autoPlay: widget.autoplay,
             aspectRatio: _videocontroller.value.size.width /
                 _videocontroller.value.size.height,
           ),

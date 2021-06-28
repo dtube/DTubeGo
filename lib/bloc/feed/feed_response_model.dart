@@ -1,3 +1,5 @@
+import 'package:dtube_togo/res/strings/strings.dart';
+
 class ApiResultModel {
   late String status;
   late int totalResults;
@@ -42,6 +44,9 @@ class FeedItem {
   List<Votes>? upvotes;
   List<Votes>? downvotes;
   late int ts;
+  String videoUrl = "";
+  String thumbUrl = "";
+  String videoSource = "";
   // Tags tags;
   late double dist;
 
@@ -97,6 +102,37 @@ class FeedItem {
     ts = json['ts'];
     // tags = json['tags'] != null ? new Tags.fromJson(json['tags']) : null;
     dist = json['dist'] + 0.0;
+    if (json_string?.files?.youtube != null) {
+      videoUrl = json_string!.files!.youtube!;
+      videoSource = "youtube";
+    } else if (json_string?.files?.ipfs != null) {
+      videoSource = "ipfs";
+      if (json_string?.files?.ipfs?.vid?.s480 != null) {
+        videoUrl =
+            AppStrings.ipfsVideoUrl + json_string!.files!.ipfs!.vid!.s480!;
+      } else if (json_string?.files?.ipfs?.vid?.s240 != null) {
+        videoUrl =
+            AppStrings.ipfsVideoUrl + json_string!.files!.ipfs!.vid!.s240!;
+      } else {
+        if (json_string!.files!.ipfs!.vid!.src != null) {
+          videoUrl =
+              AppStrings.ipfsVideoUrl + json_string!.files!.ipfs!.vid!.src!;
+        }
+      }
+    }
+
+    if (json_string?.files?.youtube != null) {
+      thumbUrl = "https://img.youtube.com/vi/" +
+          json_string!.files!.youtube! +
+          "/mqdefault.jpg";
+    } else if (json_string?.files?.ipfs?.img?.s360 != null) {
+      thumbUrl = AppStrings.ipfsSnapUrl + json_string!.files!.ipfs!.img!.s360!;
+    } else if (json_string?.files?.ipfs?.img?.s360 != null) {
+      thumbUrl = AppStrings.ipfsSnapUrl + json_string!.files!.ipfs!.img!.s118!;
+    } else {
+      thumbUrl =
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Flag_of_None.svg/800px-Flag_of_None.svg.png';
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -123,7 +159,9 @@ class FeedItem {
     //   data['tags'] = this.tags.toJson();
     // }
     data['dist'] = this.dist;
-
+    data['videoUrl'] = this.videoUrl;
+    data['thumbUrl'] = this.thumbUrl;
+    data['videoSource'] = this.videoSource;
     return data;
   }
 }

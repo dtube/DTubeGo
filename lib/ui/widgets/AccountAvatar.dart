@@ -67,7 +67,11 @@ class _AccountAvatarState extends State<AccountAvatar> {
                   height: 50,
                   width: 50,
                   child: new CircularProgressIndicator()),
-              errorWidget: (context, url, error) => new Icon(Icons.error),
+              errorWidget: (context, url, error) => new Image.asset(
+                'assets/images/Image_of_none.svg.png',
+                fit: BoxFit.fitWidth,
+                width: 50,
+              ),
             );
           } catch (e) {
             return Icon(Icons.error);

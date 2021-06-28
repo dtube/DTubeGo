@@ -189,6 +189,7 @@ class _PostDetailsState extends State<PostDetails> {
                                   autoplay: true,
                                   looping: false,
                                   localFile: false,
+                                  controls: true,
                                 )
                               : Text("no player detected"),
                       Text(

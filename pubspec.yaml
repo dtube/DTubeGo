@@ -37,8 +37,8 @@ dependencies:
 
   # ui related
   ## video related
-  youtube_player_iframe: ^2.0.0
-  youtube_player_flutter: ^8.0.0
+  youtube_player_iframe: ^2.1.0
+ 
   webview_flutter: ^2.0.8
   video_player: ^2.1.4
   youtube_explode_dart: ^1.9.6
@@ -58,7 +58,9 @@ dependencies:
   another_flushbar: ^1.10.23
   loadmore: ^2.0.1
   jiffy: ^4.1.0
+  scroll_snap_list: ^0.8.1
 
+  
   # network related
   cached_network_image: ^3.0.0
   flutter_bloc: ^7.0.1
@@ -71,6 +73,7 @@ dependencies:
   flutter_secure_storage: ^4.2.0
   intl: ^0.17.0
   image_picker: ^0.8.0+3
+  flutter_launcher_icons: ^0.9.0
 
 dev_dependencies:
   flutter_test:
@@ -78,7 +81,14 @@ dev_dependencies:
   # integration_test:
   #   sdk: flutter
 
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/appicon.png"
+
 flutter:
   uses-material-design: true
   assets:
     - assets/images/dtube_logo_white.png
+    - assets/images/Flag_of_None.svg.png
+    - assets/images/Image_of_none.svg.png
