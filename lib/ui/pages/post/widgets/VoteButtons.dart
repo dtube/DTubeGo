@@ -1,4 +1,5 @@
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
@@ -79,11 +80,14 @@ class _VotingButtonsState extends State<VotingButtons> {
                       ? (widget.upvotes!.length).toString()
                       : '0',
                 ),
-                avatar: Icon(
-                  Icons.thumb_up,
-                  color: widget.alreadyVoted && widget.alreadyVotedDirection
-                      ? globalRed
-                      : Colors.grey,
+                avatar: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: FaIcon(
+                    FontAwesomeIcons.thumbsUp,
+                    color: widget.alreadyVoted && widget.alreadyVotedDirection
+                        ? globalRed
+                        : Colors.grey,
+                  ),
                 ),
                 onPressed: () {
                   if (!widget.alreadyVoted) {
@@ -107,10 +111,14 @@ class _VotingButtonsState extends State<VotingButtons> {
                     widget.downvotes != null && widget.downvotes!.isNotEmpty
                         ? (widget.downvotes!.length).toString()
                         : '0'),
-                avatar: Icon(Icons.thumb_down,
-                    color: widget.alreadyVoted && !widget.alreadyVotedDirection
-                        ? globalRed
-                        : Colors.grey),
+                avatar: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: FaIcon(FontAwesomeIcons.thumbsDown,
+                      color:
+                          widget.alreadyVoted && !widget.alreadyVotedDirection
+                              ? globalRed
+                              : Colors.grey),
+                ),
                 onPressed: () {
                   if (!widget.alreadyVoted) {
                     setState(() {

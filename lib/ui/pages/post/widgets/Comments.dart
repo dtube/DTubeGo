@@ -7,6 +7,7 @@ import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Create the Widget for the row
 class CommentDisplay extends StatelessWidget {
@@ -68,7 +69,7 @@ class CommentDisplay extends StatelessWidget {
                   create: (context) =>
                       TransactionBloc(repository: TransactionRepositoryImpl()),
                   child: ReplyButton(
-                    title: "reply comment",
+                    icon: FaIcon(FontAwesomeIcons.comments),
                     author: root.author,
                     link: root.link,
                     parentAuthor: parentAuthor,
@@ -127,7 +128,7 @@ class CommentDisplay extends StatelessWidget {
                 create: (context) =>
                     TransactionBloc(repository: TransactionRepositoryImpl()),
                 child: ReplyButton(
-                  title: "reply comment",
+                  icon: FaIcon(FontAwesomeIcons.comments),
                   author: root.author,
                   link: root.link,
                   parentAuthor: parentAuthor,

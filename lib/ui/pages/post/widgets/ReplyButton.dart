@@ -8,9 +8,10 @@ import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ReplyButton extends StatefulWidget {
-  final String title;
+  final FaIcon icon;
   final String author;
   final String link;
   final String parentAuthor;
@@ -22,7 +23,7 @@ class ReplyButton extends StatefulWidget {
 
   const ReplyButton({
     Key? key,
-    required this.title,
+    required this.icon,
     required this.author,
     required this.link,
     required this.parentAuthor,
@@ -73,10 +74,7 @@ class _ReplyButtonState extends State<ReplyButton> {
           Transform.scale(
             scale: widget.scale,
             child: InputChip(
-              label: Text(
-                widget.title,
-                // style: Theme.of(context).textTheme.button,
-              ),
+              label: widget.icon,
               onPressed: () {
                 setState(() {
                   _replyPressed = !_replyPressed;

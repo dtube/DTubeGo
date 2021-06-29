@@ -165,7 +165,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
                         );
                       },
                       child: new FaIcon(
-                        FontAwesomeIcons.plus,
+                        FontAwesomeIcons.cloudUploadAlt,
                         color: Colors.white,
                       ),
                     ),

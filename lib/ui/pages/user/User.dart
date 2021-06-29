@@ -145,9 +145,9 @@ class _UserState extends State<UserPage> {
                           placeholder: (context, url) =>
                               new CircularProgressIndicator(),
                           errorWidget: (context, url, error) =>
-                              new Icon(Icons.error),
+                              new FaIcon(FontAwesomeIcons.times),
                         )
-                      : Icon(Icons.error),
+                      : FaIcon(FontAwesomeIcons.times),
                   SizedBox(width: 10),
                   Container(
                     width: (MediaQuery.of(context).size.width - 50) / 3 * 2,
@@ -218,7 +218,7 @@ class _UserState extends State<UserPage> {
 
     List<SpeedDialChild> othersPageOptions = [
       SpeedDialChild(
-          child: Icon(Icons.wallet_giftcard),
+          child: FaIcon(FontAwesomeIcons.exchangeAlt),
           foregroundColor: globalAlmostWhite,
           backgroundColor: globalBlue,
           label: 'transfer',
@@ -233,7 +233,9 @@ class _UserState extends State<UserPage> {
                     ));
           }),
       SpeedDialChild(
-        child: Icon(Icons.follow_the_signs),
+        child: FaIcon(alreadyFollowing
+            ? FontAwesomeIcons.usersSlash
+            : FontAwesomeIcons.userFriends),
         foregroundColor: globalAlmostWhite,
         backgroundColor: globalBlue,
         label: alreadyFollowing ? 'Unfollow' : 'Follow',
@@ -254,7 +256,7 @@ class _UserState extends State<UserPage> {
 
     List<SpeedDialChild> myPageOptions = [
       SpeedDialChild(
-          child: Icon(Icons.history),
+          child: FaIcon(FontAwesomeIcons.history),
           foregroundColor: globalAlmostWhite,
           backgroundColor: globalBlue,
           label: 'History',
@@ -264,7 +266,7 @@ class _UserState extends State<UserPage> {
             // navigate to new history page
           }),
       SpeedDialChild(
-          child: Icon(Icons.logout),
+          child: FaIcon(FontAwesomeIcons.signOutAlt),
           foregroundColor: globalAlmostWhite,
           backgroundColor: globalBlue,
           label: 'Logout',

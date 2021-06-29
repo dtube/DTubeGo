@@ -21,6 +21,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 //import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
@@ -239,7 +240,7 @@ class _PostDetailsState extends State<PostDetails> {
                           create: (context) => TransactionBloc(
                               repository: TransactionRepositoryImpl()),
                           child: ReplyButton(
-                            title: "reply video",
+                            icon: FaIcon(FontAwesomeIcons.comment),
                             author: widget.post.author,
                             link: widget.post.link,
                             parentAuthor: widget.post.author,
