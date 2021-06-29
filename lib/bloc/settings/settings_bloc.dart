@@ -2,6 +2,7 @@ import 'package:dtube_togo/bloc/settings/settings_event.dart';
 import 'package:dtube_togo/bloc/settings/settings_state.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:bloc/bloc.dart';
+import 'package:dtube_togo/utils/discoverAPINode.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,7 +20,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       try {
         String? username = await sec.getUsername();
         Map<String, String> newSettings = {
-          sec.settingKey_avalonNode: await sec.getNode(),
           sec.settingKey_defaultVotingWeight: await sec.getDefaultVote(),
           sec.settingKey_defaultVotingWeightComments:
               await sec.getDefaultVoteComments(),
@@ -39,7 +39,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       yield SettingsSavingState();
       try {
         await sec.persistSettings(
-            event.newSettings[sec.settingKey_avalonNode]!,
             event.newSettings[sec.settingKey_defaultVotingWeight]!,
             event.newSettings[sec.settingKey_defaultVotingWeightComments]!,
             event.newSettings[sec.settingKey_defaultVotingTip]!,

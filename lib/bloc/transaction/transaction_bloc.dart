@@ -5,6 +5,7 @@ import 'package:dtube_togo/bloc/transaction/transaction_event.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_repository.dart';
 
 import 'package:dtube_togo/bloc/transaction/transaction_state.dart';
+import 'package:dtube_togo/utils/discoverAPINode.dart';
 
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   TransactionRepository repository;
@@ -18,7 +19,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
   @override
   Stream<TransactionState> mapEventToState(TransactionEvent event) async* {
-    final String _avalonApiNode = await sec.getNode();
+    final String _avalonApiNode = await discoverAPINode();
     final String? _applicationUser = await sec.getUsername();
     final String? _privKey = await sec.getPrivateKey();
     if (event is SignAndSendTransactionEvent) {

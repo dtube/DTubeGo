@@ -4,6 +4,7 @@ import 'package:dtube_togo/bloc/avalonConfig/avalonConfig_repository.dart';
 import 'package:dtube_togo/bloc/avalonConfig/avalonConfig_response_model.dart';
 import 'package:dtube_togo/bloc/avalonConfig/avalonConfig_state.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_togo/utils/discoverAPINode.dart';
 
 class AvalonConfigBloc extends Bloc<AvalonConfigEvent, AvalonConfigState> {
   AvalonConfigRepository repository;
@@ -17,7 +18,7 @@ class AvalonConfigBloc extends Bloc<AvalonConfigEvent, AvalonConfigState> {
 
   @override
   Stream<AvalonConfigState> mapEventToState(AvalonConfigEvent event) async* {
-    String _avalonApiNode = await sec.getNode();
+    String _avalonApiNode = await discoverAPINode();
     if (event is FetchAvalonConfigEvent) {
       yield AvalonConfigLoadingState();
       try {

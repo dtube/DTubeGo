@@ -258,18 +258,6 @@ class _VotingSliderState extends State<VotingSlider> {
                     ),
             ],
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.end,
-          //   children: [
-          //     Text(
-          //       (_vpValue < 0 ? 'downvote ' : 'upvote ') +
-          //           _vpValue.floor().toString() +
-          //           '% (' +
-          //           _tipValue.toStringAsFixed(2) +
-          //           '% tip)',
-          //       style: Theme.of(context).textTheme.bodyText1,
-          //     ),
-          //SizedBox(width: 8),
           BlocBuilder<UserBloc, UserState>(builder: (context, state) {
             if (state is UserDTCVPLoadedState) {
               _currentVT = state.vtBalance["v"]!.toDouble();

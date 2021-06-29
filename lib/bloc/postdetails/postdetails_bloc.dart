@@ -4,6 +4,7 @@ import 'package:dtube_togo/bloc/postdetails/postdetails_repository.dart';
 import 'package:dtube_togo/bloc/postdetails/postdetails_response_model.dart';
 import 'package:dtube_togo/bloc/postdetails/postdetails_state.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_togo/utils/discoverAPINode.dart';
 
 class PostBloc extends Bloc<PostEvent, PostState> {
   PostRepository repository;
@@ -16,7 +17,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   @override
   Stream<PostState> mapEventToState(PostEvent event) async* {
-    String _avalonApiNode = await sec.getNode();
+    String _avalonApiNode = await discoverAPINode();
     String? _applicationUser = await sec.getUsername();
     if (event is FetchPostEvent) {
       yield PostLoadingState();

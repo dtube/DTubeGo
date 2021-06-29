@@ -3,6 +3,7 @@ import 'package:dtube_togo/bloc/auth/auth_state.dart';
 import 'package:dtube_togo/bloc/auth/auth_repository.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:bloc/bloc.dart';
+import 'package:dtube_togo/utils/discoverAPINode.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   @override
   Stream<AuthState> mapEventToState(AuthEvent event) async* {
-    String _avalonApiNode = await sec.getNode();
+    String _avalonApiNode = await discoverAPINode();
     String? _applicationUser = await sec.getUsername();
     String? _privKey = await sec.getPrivateKey();
     if (event is AppStartedEvent) {

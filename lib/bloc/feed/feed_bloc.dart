@@ -4,6 +4,7 @@ import 'package:dtube_togo/bloc/feed/feed_event.dart';
 import 'package:dtube_togo/bloc/feed/feed_response_model.dart';
 import 'package:dtube_togo/bloc/feed/feed_repository.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_togo/utils/discoverAPINode.dart';
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
   FeedRepository repository;
@@ -16,7 +17,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
 
   @override
   Stream<FeedState> mapEventToState(FeedEvent event) async* {
-    String _avalonApiNode = await sec.getNode();
+    String _avalonApiNode = await discoverAPINode();
     String? _applicationUser = await sec.getUsername();
     if (event is FetchFeedEvent) {
       yield FeedLoadingState();

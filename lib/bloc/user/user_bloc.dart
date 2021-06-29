@@ -4,6 +4,7 @@ import 'package:dtube_togo/bloc/user/user_event.dart';
 import 'package:dtube_togo/bloc/user/user_state.dart';
 import 'package:dtube_togo/bloc/user/user_response_model.dart';
 import 'package:dtube_togo/bloc/user/user_repository.dart';
+import 'package:dtube_togo/utils/discoverAPINode.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
@@ -17,7 +18,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   @override
   Stream<UserState> mapEventToState(UserEvent event) async* {
-    String _avalonApiNode = await sec.getNode();
+    String _avalonApiNode = await discoverAPINode();
     String? _applicationUser = await sec.getUsername();
     if (event is FetchAccountDataEvent) {
       yield UserLoadingState();

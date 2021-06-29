@@ -28,4 +28,11 @@ class AppStrings {
 
   static String ipfsSnapUrl = 'https://snap1.d.tube/ipfs/';
   static String ipfsSnapUploadUrl = 'https://snap1.d.tube';
+
+  static List<String> apiNodes = [
+    'https://avalon.tibfox.com',
+    'https://avalon.d.tube',
+    'https://avalon.oneloved.tube',
+    'https://dtube.fso.ovh'
+  ];
 }

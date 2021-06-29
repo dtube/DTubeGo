@@ -6,11 +6,9 @@ import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_event.dart';
-import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -100,7 +98,7 @@ class SettingsList extends StatefulWidget {
 
 class _SettingsListState extends State<SettingsList> {
   late SettingsBloc _settingsBloc;
-  late String _avalonNode;
+
   late double _defaultVote;
   late double _defaultVoteComments;
   late double _defaultTip;
@@ -108,22 +106,12 @@ class _SettingsListState extends State<SettingsList> {
   late String _showHidden;
   late String _showNsfw;
 
-  List<String> _currentAvalonNodes = [
-    'https://avalon.tibfox.com',
-    'https://avalon.d.tube',
-    'https://avalon.oneloved.tube',
-    'https://dtube.fso.ovh'
-  ];
-
   List<String> _showHiddentNsfwOptions = ['Show', 'Hide', 'Blur'];
 
   @override
   void initState() {
     super.initState();
     _settingsBloc = BlocProvider.of<SettingsBloc>(context);
-    _avalonNode = widget.currentSettings[sec.settingKey_avalonNode] != null
-        ? widget.currentSettings[sec.settingKey_avalonNode]!
-        : 'https://avalon.d.tube';
 
     _showHidden = widget.currentSettings[sec.settingKey_showHidden] != null
         ? widget.currentSettings[sec.settingKey_showHidden]!
@@ -163,61 +151,12 @@ class _SettingsListState extends State<SettingsList> {
           child: Column(
             children: [
               SizedBox(height: 10),
-              DTubeFormCard(childs: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child:
-                      Text("API", style: Theme.of(context).textTheme.headline5),
-                ),
-                DropdownButtonFormField(
-                  decoration: InputDecoration(
-                    //filled: true,
-                    //fillColor: Hexcolor('#ecedec'),
-                    labelText: 'Avalon api node',
-                    //border: new CustomBorderTextFieldSkin().getSkin(),
-                  ),
-                  value: _avalonNode,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _avalonNode = newValue.toString();
-                      widget.justSaved = false;
-                    });
-                  },
-                  items: _currentAvalonNodes.map((option) {
-                    return DropdownMenuItem(
-                      child: new Text(option),
-                      value: option,
-                    );
-                  }).toList(),
-                ),
-              ]),
               DTubeFormCard(
                 childs: [
                   Padding(
                     padding: const EdgeInsets.only(top: 16.0),
                     child: Text("Display",
                         style: Theme.of(context).textTheme.headline5),
-                  ),
-                  DropdownButtonFormField(
-                    decoration: InputDecoration(
-                      //filled: true,
-                      //fillColor: Hexcolor('#ecedec'),
-                      labelText: 'Avalon api node',
-                      //border: new CustomBorderTextFieldSkin().getSkin(),
-                    ),
-                    value: _avalonNode,
-                    onChanged: (newValue) {
-                      setState(() {
-                        _avalonNode = newValue.toString();
-                        widget.justSaved = false;
-                      });
-                    },
-                    items: _currentAvalonNodes.map((option) {
-                      return DropdownMenuItem(
-                        child: new Text(option),
-                        value: option,
-                      );
-                    }).toList(),
                   ),
                   DropdownButtonFormField(
                     decoration: InputDecoration(
@@ -411,7 +350,6 @@ class _SettingsListState extends State<SettingsList> {
                 label: Text('save settings'),
                 onPressed: () {
                   Map<String, String> newSettings = {
-                    sec.settingKey_avalonNode: _avalonNode,
                     sec.settingKey_defaultVotingWeight: _defaultVote.toString(),
                     sec.settingKey_defaultVotingWeightComments:
                         _defaultVoteComments.toString(),

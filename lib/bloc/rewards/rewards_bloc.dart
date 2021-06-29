@@ -4,6 +4,7 @@ import 'package:dtube_togo/bloc/rewards/rewards_event.dart';
 import 'package:dtube_togo/bloc/rewards/rewards_repository.dart';
 import 'package:dtube_togo/bloc/rewards/rewards_state.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_togo/utils/discoverAPINode.dart';
 
 class RewardsBloc extends Bloc<RewardsEvent, RewardsState> {
   RewardsRepository repository;
@@ -16,7 +17,7 @@ class RewardsBloc extends Bloc<RewardsEvent, RewardsState> {
 
   @override
   Stream<RewardsState> mapEventToState(RewardsEvent event) async* {
-    String _avalonApiNode = await sec.getNode();
+    String _avalonApiNode = await discoverAPINode();
     String? _applicationUser = await sec.getUsername();
     if (event is FetchRewardsEvent) {
       yield RewardsLoadingState();
