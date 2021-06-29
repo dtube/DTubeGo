@@ -76,7 +76,7 @@ Future<String> getNode() async {
   if (_node != null) {
     return _node;
   } else {
-    return 'https://avalon.tibfox.com';
+    return 'https://avalon.d.tube';
   }
 }
 
