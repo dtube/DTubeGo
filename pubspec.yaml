@@ -39,11 +39,9 @@ dependencies:
   ## video related
   # youtube_player_iframe: ^2.1.0
   youtube_plyr_iframe: ^2.0.6
- 
   webview_flutter: ^2.0.8
   video_player: ^2.1.4
   youtube_explode_dart: ^1.9.6
-  
   video_compress: ^3.0.0
   better_player: ^0.0.69
 
@@ -60,6 +58,7 @@ dependencies:
   loadmore: ^2.0.1
   jiffy: ^4.1.0
   scroll_snap_list: ^0.8.1
+  share_plus: ^2.1.4
 
   
   # network related

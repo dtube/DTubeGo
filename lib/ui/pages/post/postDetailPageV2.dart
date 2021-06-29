@@ -22,6 +22,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 
 //import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
@@ -194,62 +195,85 @@ class _PostDetailsState extends State<PostDetails> {
                                   controls: true,
                                 )
                               : Text("no player detected"),
-                      Text(
-                        (widget.post.dist / 100).round().toString() + " DTC",
-                        style: Theme.of(context).textTheme.headline2,
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          BlocBuilder<SettingsBloc, SettingsState>(
+                              builder: (context, state) {
+                            if (state is SettingsLoadedState) {
+                              _defaultVoteWeightPosts = double.parse(state
+                                  .settings[settingKey_defaultVotingWeight]!);
+                              _defaultVoteTipPosts = double.parse(state
+                                  .settings[settingKey_defaultVotingWeight]!);
+                              _defaultVoteWeightComments = double.parse(
+                                  state.settings[
+                                      settingKey_defaultVotingWeightComments]!);
+                              return
+                                  // BlocProvider(
+                                  //   create: (context) =>
+                                  //       PostBloc(repository: PostRepositoryImpl()),
+                                  //   child:
+                                  VotingButtons(
+                                      author: widget.post.author,
+                                      link: widget.post.link,
+                                      alreadyVoted: widget.post.alreadyVoted!,
+                                      alreadyVotedDirection:
+                                          widget.post.alreadyVotedDirection!,
+                                      upvotes: widget.post.upvotes,
+                                      downvotes: widget.post.downvotes,
+                                      defaultVotingWeight:
+                                          _defaultVoteWeightPosts,
+                                      defaultVotingTip: _defaultVoteTipPosts,
+                                      currentVT: _currentVT,
+                                      scale: 1
+                                      //),
+                                      );
+                            } else {
+                              return SizedBox(height: 0);
+                            }
+                          }),
+                          Text(
+                            (widget.post.dist / 100).round().toString() +
+                                " DTC",
+                            style: Theme.of(context).textTheme.headline2,
+                          ),
+                        ],
                       ),
-                      BlocBuilder<SettingsBloc, SettingsState>(
-                          builder: (context, state) {
-                        if (state is SettingsLoadedState) {
-                          _defaultVoteWeightPosts = double.parse(
-                              state.settings[settingKey_defaultVotingWeight]!);
-                          _defaultVoteTipPosts = double.parse(
-                              state.settings[settingKey_defaultVotingWeight]!);
-                          _defaultVoteWeightComments = double.parse(
-                              state.settings[
-                                  settingKey_defaultVotingWeightComments]!);
-                          return
-                              // BlocProvider(
-                              //   create: (context) =>
-                              //       PostBloc(repository: PostRepositoryImpl()),
-                              //   child:
-                              VotingButtons(
-                                  author: widget.post.author,
-                                  link: widget.post.link,
-                                  alreadyVoted: widget.post.alreadyVoted!,
-                                  alreadyVotedDirection:
-                                      widget.post.alreadyVotedDirection!,
-                                  upvotes: widget.post.upvotes,
-                                  downvotes: widget.post.downvotes,
-                                  defaultVotingWeight: _defaultVoteWeightPosts,
-                                  defaultVotingTip: _defaultVoteTipPosts,
-                                  currentVT: _currentVT,
-                                  scale: 1
-                                  //),
-                                  );
-                        } else {
-                          return SizedBox(height: 0);
-                        }
-                      }),
                       CollapsedDescription(
                           description: widget.post.jsonString!.desc!),
                       Divider(),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: BlocProvider(
-                          create: (context) => TransactionBloc(
-                              repository: TransactionRepositoryImpl()),
-                          child: ReplyButton(
-                            icon: FaIcon(FontAwesomeIcons.comment),
-                            author: widget.post.author,
-                            link: widget.post.link,
-                            parentAuthor: widget.post.author,
-                            parentLink: widget.post.link,
-                            votingWeight: _defaultVoteWeightComments,
-                            scale: 1,
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InputChip(
+                            label: FaIcon(FontAwesomeIcons.share),
+                            onPressed: () {
+                              Share.share('https://d.tube/c/' +
+                                  widget.post.author +
+                                  '/' +
+                                  widget.post.link);
+                            },
                           ),
-                        ),
+                          SizedBox(width: 10),
+                          BlocProvider(
+                            create: (context) => TransactionBloc(
+                                repository: TransactionRepositoryImpl()),
+                            child: ReplyButton(
+                              icon: FaIcon(FontAwesomeIcons.comment),
+                              author: widget.post.author,
+                              link: widget.post.link,
+                              parentAuthor: widget.post.author,
+                              parentLink: widget.post.link,
+                              votingWeight: _defaultVoteWeightComments,
+                              scale: 1,
+                            ),
+                          ),
+                        ],
                       ),
+
                       SizedBox(height: 16),
                       widget.post.comments != null &&
                               widget.post.comments!.length > 0

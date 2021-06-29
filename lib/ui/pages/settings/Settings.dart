@@ -9,6 +9,7 @@ import 'package:dtube_togo/bloc/settings/settings_event.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -345,7 +346,9 @@ class _SettingsListState extends State<SettingsList> {
               SizedBox(height: 20),
               InputChip(
                 backgroundColor: widget.justSaved ? Colors.green : globalBlue,
-                avatar: Icon(widget.justSaved ? Icons.check : Icons.save),
+                avatar: FaIcon(widget.justSaved
+                    ? FontAwesomeIcons.checkSquare
+                    : FontAwesomeIcons.save),
                 shadowColor: globalBlue,
                 label: Text('save settings'),
                 onPressed: () {
