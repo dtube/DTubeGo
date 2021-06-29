@@ -17,7 +17,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   @override
   Stream<PostState> mapEventToState(PostEvent event) async* {
-    String _avalonApiNode = await discoverAPINode();
+    String _avalonApiNode = await sec.getNode();
     String? _applicationUser = await sec.getUsername();
     if (event is FetchPostEvent) {
       yield PostLoadingState();

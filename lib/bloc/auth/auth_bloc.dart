@@ -18,11 +18,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   @override
   Stream<AuthState> mapEventToState(AuthEvent event) async* {
-    String _avalonApiNode = await discoverAPINode();
+    String _avalonApiNode = await sec.getNode();
     String? _applicationUser = await sec.getUsername();
     String? _privKey = await sec.getPrivateKey();
     if (event is AppStartedEvent) {
       yield SignInLoadingState();
+      _avalonApiNode = await discoverAPINode();
+      sec.persistNode(_avalonApiNode);
       try {
         if (_applicationUser != null && _privKey != null) {
           bool keyIsValid = await repository.signInWithCredentials(

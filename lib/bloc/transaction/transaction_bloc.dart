@@ -19,7 +19,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
   @override
   Stream<TransactionState> mapEventToState(TransactionEvent event) async* {
-    final String _avalonApiNode = await discoverAPINode();
+    final String _avalonApiNode = await sec.getNode();
     final String? _applicationUser = await sec.getUsername();
     final String? _privKey = await sec.getPrivateKey();
     if (event is SignAndSendTransactionEvent) {

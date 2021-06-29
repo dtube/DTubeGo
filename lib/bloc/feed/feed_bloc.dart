@@ -17,7 +17,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
 
   @override
   Stream<FeedState> mapEventToState(FeedEvent event) async* {
-    String _avalonApiNode = await discoverAPINode();
+    String _avalonApiNode = await sec.getNode();
     String? _applicationUser = await sec.getUsername();
     if (event is FetchFeedEvent) {
       yield FeedLoadingState();

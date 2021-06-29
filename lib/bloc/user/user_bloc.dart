@@ -18,7 +18,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   @override
   Stream<UserState> mapEventToState(UserEvent event) async* {
-    String _avalonApiNode = await discoverAPINode();
+    String _avalonApiNode = await sec.getNode();
     String? _applicationUser = await sec.getUsername();
     if (event is FetchAccountDataEvent) {
       yield UserLoadingState();

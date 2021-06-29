@@ -19,7 +19,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   @override
   Stream<NotificationState> mapEventToState(NotificationEvent event) async* {
     String? _applicationUser = await sec.getUsername();
-    String _avalonApiNode = await discoverAPINode();
+    String _avalonApiNode = await sec.getNode();
     if (event is FetchNotificationsEvent) {
       yield NotificationLoadingState();
       try {

@@ -17,7 +17,7 @@ class RewardsBloc extends Bloc<RewardsEvent, RewardsState> {
 
   @override
   Stream<RewardsState> mapEventToState(RewardsEvent event) async* {
-    String _avalonApiNode = await discoverAPINode();
+    String _avalonApiNode = await sec.getNode();
     String? _applicationUser = await sec.getUsername();
     if (event is FetchRewardsEvent) {
       yield RewardsLoadingState();

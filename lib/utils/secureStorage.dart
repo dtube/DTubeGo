@@ -3,8 +3,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const authKey_usernameKey = 'USERNAME';
 const authKey_privKey = 'PRIV';
+const settingKey_avalonNode = 'APINODE';
 
 const settingKey_showHidden = 'HIDE';
+
 const settingKey_showNSFW = 'NSFW';
 
 const settingKey_defaultVotingWeight = 'DEFVOTE';
@@ -21,6 +23,10 @@ const _storage = FlutterSecureStorage();
 Future<void> persistUsernameKey(String username, String priv) async {
   await _storage.write(key: authKey_usernameKey, value: username);
   await _storage.write(key: authKey_privKey, value: priv);
+}
+
+Future<void> persistNode(String node) async {
+  await _storage.write(key: settingKey_avalonNode, value: node);
 }
 
 Future<String?> getUsername() async {
@@ -68,15 +74,14 @@ Future<Map<String, String>> getAllSettings() async {
   return _allSettings;
 }
 
-// changed to dynamic node discovery
-// Future<String> getNode() async {
-//   var _node = await _storage.read(key: settingKey_avalonNode);
-//   if (_node != null) {
-//     return _node;
-//   } else {
-//     return 'https://avalon.d.tube';
-//   }
-// }
+Future<String> getNode() async {
+  var _node = await _storage.read(key: settingKey_avalonNode);
+  if (_node != null) {
+    return _node;
+  } else {
+    return 'https://avalon.d.tube';
+  }
+}
 
 Future<String> getDefaultVote() async {
   var _voteWeight = await _storage.read(key: settingKey_defaultVotingWeight);

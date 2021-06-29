@@ -18,7 +18,7 @@ class AvalonConfigBloc extends Bloc<AvalonConfigEvent, AvalonConfigState> {
 
   @override
   Stream<AvalonConfigState> mapEventToState(AvalonConfigEvent event) async* {
-    String _avalonApiNode = await discoverAPINode();
+    String _avalonApiNode = await sec.getNode();
     if (event is FetchAvalonConfigEvent) {
       yield AvalonConfigLoadingState();
       try {
