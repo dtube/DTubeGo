@@ -207,65 +207,81 @@ class _VotingSliderState extends State<VotingSlider> {
         _postBloc.add(FetchPostEvent(widget.author, widget.link));
       }
       return Container(
+          //width: 200,
           child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          SizedBox(height: 8),
           Row(
             children: [
-              Column(
-                children: [
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      "voting weight: " + _vpValue.floor().toString() + '%',
+              Container(
+                width: 60,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "voting weight: ",
                       style: Theme.of(context).textTheme.caption,
                     ),
-                  ),
-                  Slider(
-                    min: widget.downvote ? -100.0 : 1,
-                    max: widget.downvote ? -1 : 100.0,
-                    value: _vpValue,
-
-                    label: _vpValue.floor().toString() + "%",
-                    //divisions: 40,
-                    inactiveColor: globalBlue,
-                    activeColor: globalRed,
-                    onChanged: (dynamic value) {
-                      setState(() {
-                        _vpValue = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              widget.downvote
-                  ? SizedBox(width: 0)
-                  : Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            "vote tip: " + _tipValue.floor().toString() + '%',
-                            style: Theme.of(context).textTheme.caption,
-                          ),
-                        ),
-                        Slider(
-                          min: 0.0,
-                          max: 100.0,
-                          value: _tipValue,
-                          label: _tipValue.floor().toString() + "%",
-                          //divisions: 20,
-                          inactiveColor: globalBlue,
-                          activeColor: globalRed,
-                          onChanged: (dynamic value) {
-                            setState(() {
-                              _tipValue = value;
-                            });
-                          },
-                        ),
-                      ],
+                    Text(
+                      _vpValue.floor().toString() + '%',
+                      style: Theme.of(context).textTheme.headline3,
                     ),
+                  ],
+                ),
+              ),
+              Slider(
+                min: widget.downvote ? -100.0 : 1,
+                max: widget.downvote ? -1 : 100.0,
+                value: _vpValue,
+
+                label: _vpValue.floor().toString() + "%",
+                //divisions: 40,
+                inactiveColor: globalBlue,
+                activeColor: globalRed,
+                onChanged: (dynamic value) {
+                  setState(() {
+                    _vpValue = value;
+                  });
+                },
+              ),
             ],
           ),
+          widget.downvote
+              ? SizedBox(width: 0)
+              : Row(
+                  children: [
+                    Container(
+                      width: 60,
+                      child: Column(
+                        children: [
+                          Text(
+                            "vote tip: ",
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                          Text(
+                            _tipValue.floor().toString() + '%',
+                            style: Theme.of(context).textTheme.headline3,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Slider(
+                      min: 0.0,
+                      max: 100.0,
+                      value: _tipValue,
+                      label: _tipValue.floor().toString() + "%",
+                      //divisions: 20,
+                      inactiveColor: globalBlue,
+                      activeColor: globalRed,
+                      onChanged: (dynamic value) {
+                        setState(() {
+                          _tipValue = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
           BlocBuilder<UserBloc, UserState>(builder: (context, state) {
             if (state is UserDTCVPLoadedState) {
               _currentVT = state.vtBalance["v"]!.toDouble();
