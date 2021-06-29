@@ -123,7 +123,7 @@ class _SettingsListState extends State<SettingsList> {
     _settingsBloc = BlocProvider.of<SettingsBloc>(context);
     _avalonNode = widget.currentSettings[sec.settingKey_avalonNode] != null
         ? widget.currentSettings[sec.settingKey_avalonNode]!
-        : "https://avalon.tibfox.com";
+        : 'https://avalon.d.tube';
 
     _showHidden = widget.currentSettings[sec.settingKey_showHidden] != null
         ? widget.currentSettings[sec.settingKey_showHidden]!
