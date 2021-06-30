@@ -199,7 +199,7 @@ class Json_String {
     hide = json['hide'];
     nsfw = json['nsfw'];
     oc = json['oc'];
-    refs = json['refs'].cast<String>();
+    refs = json['refs'] != null ? json['refs'].cast<String>() : null;
   }
 
   Map<String, dynamic> toJson() {

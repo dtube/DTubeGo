@@ -3,6 +3,7 @@
 import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
+import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/ui/pages/upload/uploadForm.dart';
@@ -25,30 +26,32 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
   late SettingsBloc _settingsBloc;
   late UserBloc _userBloc;
   UploadData _uploadData = UploadData(
-    link: "",
-    author: "",
-    title: "",
-    description: "",
-    tag: "",
-    vpPercent: 0.0,
-    vpBalance: 0,
-    burnDtc: 0,
-    dtcBalance: 0,
-    duration: new Duration(seconds: 0),
-    thumbnailLocation: "",
-    localThumbnail: true,
-    videoLocation: "",
-    localVideoFile: true,
-    originalContent: false,
-    nSFWContent: false,
-    unlistVideo: false,
-    videoSourceHash: "",
-    video240pHash: "",
-    video480pHash: "",
-    videoSpriteHash: "",
-    thumbnail640Hash: "",
-    thumbnail210Hash: "",
-  );
+      link: "",
+      title: "",
+      description: "",
+      tag: "",
+      vpPercent: 0.0,
+      vpBalance: 0,
+      burnDtc: 0,
+      dtcBalance: 0,
+      duration: "",
+      thumbnailLocation: "",
+      localThumbnail: true,
+      videoLocation: "",
+      localVideoFile: true,
+      originalContent: false,
+      nSFWContent: false,
+      unlistVideo: false,
+      videoSourceHash: "",
+      video240pHash: "",
+      video480pHash: "",
+      videoSpriteHash: "",
+      thumbnail640Hash: "",
+      thumbnail210Hash: "",
+      isEditing: false,
+      isPromoted: false,
+      parentAuthor: "",
+      parentPermlink: "");
 
   @override
   void initState() {
@@ -68,6 +71,8 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
   void childCallback(UploadData ud) {
     setState(() {
       _uploadData = ud;
+      BlocProvider.of<TransactionBloc>(context)
+          .add(SendCommentEvent(_uploadData));
     });
   }
 
@@ -121,30 +126,32 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
             builder: (context, state) {
               if (state is ThirdPartyMetadataLoadedState) {
                 _uploadData = UploadData(
-                  link: "",
-                  author: "",
-                  title: state.metadata.title,
-                  description: state.metadata.description,
-                  tag: "",
-                  vpPercent: 0.0,
-                  vpBalance: 0,
-                  burnDtc: 0,
-                  dtcBalance: 0,
-                  duration: state.metadata.duration,
-                  thumbnailLocation: state.metadata.thumbUrl,
-                  localThumbnail: false,
-                  videoLocation: state.metadata.sId,
-                  localVideoFile: false,
-                  originalContent: false,
-                  nSFWContent: false,
-                  unlistVideo: false,
-                  videoSourceHash: "",
-                  video240pHash: "",
-                  video480pHash: "",
-                  videoSpriteHash: "",
-                  thumbnail640Hash: "",
-                  thumbnail210Hash: "",
-                );
+                    link: "",
+                    title: state.metadata.title,
+                    description: state.metadata.description,
+                    tag: "",
+                    vpPercent: 0.0,
+                    vpBalance: 0,
+                    burnDtc: 0,
+                    dtcBalance: 0,
+                    duration: state.metadata.duration.inSeconds.toString(),
+                    thumbnailLocation: state.metadata.thumbUrl,
+                    localThumbnail: false,
+                    videoLocation: state.metadata.sId,
+                    localVideoFile: false,
+                    originalContent: false,
+                    nSFWContent: false,
+                    unlistVideo: false,
+                    videoSourceHash: "",
+                    video240pHash: "",
+                    video480pHash: "",
+                    videoSpriteHash: "",
+                    thumbnail640Hash: "",
+                    thumbnail210Hash: "",
+                    isEditing: false,
+                    isPromoted: false,
+                    parentAuthor: "",
+                    parentPermlink: "");
                 return UploadForm(
                   uploadData: _uploadData,
                   callback: childCallback,

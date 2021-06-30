@@ -245,7 +245,7 @@ class _PostDetailsState extends State<PostDetails> {
                       Divider(),
 
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InputChip(
@@ -280,7 +280,7 @@ class _PostDetailsState extends State<PostDetails> {
                           ? Padding(
                               padding: const EdgeInsets.only(right: 16.0),
                               child: Container(
-                                height: 500,
+                                height: 300,
                                 child: ListView.builder(
                                   key: PageStorageKey('myScrollable'),
                                   itemCount: widget.post.comments!.length,
@@ -297,6 +297,7 @@ class _PostDetailsState extends State<PostDetails> {
                               ),
                             )
                           : SizedBox(height: 0),
+                      SizedBox(height: 200)
                       // return Text(widget.post.comments![pos].author);
                     ],
                   ),

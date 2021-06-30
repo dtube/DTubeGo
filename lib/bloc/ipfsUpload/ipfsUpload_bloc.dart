@@ -1,15 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:bloc/bloc.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_event.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_state.dart';
-import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_response_model.dart';
+
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:video_compress/video_compress.dart';
 
 class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
   IPFSUploadRepository repository;

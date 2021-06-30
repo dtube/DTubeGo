@@ -1,3 +1,4 @@
+import 'package:dtube_togo/utils/randomPermlink.dart';
 import 'dart:convert';
 
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc.dart';
@@ -29,30 +30,32 @@ class _WizardIPFSState extends State<WizardIPFS> {
   late TransactionBloc _txBloc;
 
   UploadData _uploadData = UploadData(
-    link: "",
-    author: "",
-    title: "",
-    description: "",
-    tag: "",
-    vpPercent: 0.0,
-    vpBalance: 0,
-    burnDtc: 0,
-    dtcBalance: 0,
-    duration: new Duration(seconds: 0),
-    thumbnailLocation: "",
-    localThumbnail: true,
-    videoLocation: "",
-    localVideoFile: true,
-    originalContent: false,
-    nSFWContent: false,
-    unlistVideo: false,
-    videoSourceHash: "",
-    video240pHash: "",
-    video480pHash: "",
-    videoSpriteHash: "",
-    thumbnail640Hash: "",
-    thumbnail210Hash: "",
-  );
+      link: "",
+      title: "",
+      description: "",
+      tag: "",
+      vpPercent: 0.0,
+      vpBalance: 0,
+      burnDtc: 0,
+      dtcBalance: 0,
+      duration: "",
+      thumbnailLocation: "",
+      localThumbnail: true,
+      videoLocation: "",
+      localVideoFile: true,
+      originalContent: false,
+      nSFWContent: false,
+      unlistVideo: false,
+      videoSourceHash: "",
+      video240pHash: "",
+      video480pHash: "",
+      videoSpriteHash: "",
+      thumbnail640Hash: "",
+      thumbnail210Hash: "",
+      isEditing: false,
+      isPromoted: false,
+      parentAuthor: "",
+      parentPermlink: "");
 
   void childCallback(UploadData ud) {
     setState(() {
@@ -133,27 +136,20 @@ class _WizardIPFSState extends State<WizardIPFS> {
           var voteValue =
               (_uploadData.vpBalance * (_uploadData.vpPercent / 100)).floor();
 
-          //TODO: build TxData and send transaction to avalon
-
-          // TxData txdata = TxData(
-          //
-          //   link: _uploadData.link,
-          //   author: _uploadData.author,
-          //   tag: _uploadData.tag,
-          //   vt: voteValue,
-          // );
-          // Transaction newTx = Transaction(type: 5, data: txdata);
-          // _txBloc.add(SignAndSendTransactionEvent(newTx));
-          return Center(
-              child: HashOverview(
-            videoSourceHash: _uploadData.videoSourceHash,
-            video240pHash: _uploadData.video240pHash,
-            video480pHash: _uploadData.video480pHash,
-            videoSpriteHash: _uploadData.videoSpriteHash,
-            thumbnail640Hash: _uploadData.thumbnail640Hash,
-            thumbnail210Hash: _uploadData.thumbnail210Hash,
-          ));
+          BlocProvider.of<TransactionBloc>(context)
+              .add(SendCommentEvent(_uploadData));
         }
+
+        //   return Center(
+        //       child: HashOverview(
+        //     videoSourceHash: _uploadData.videoSourceHash,
+        //     video240pHash: _uploadData.video240pHash,
+        //     video480pHash: _uploadData.video480pHash,
+        //     videoSpriteHash: _uploadData.videoSpriteHash,
+        //     thumbnail640Hash: _uploadData.thumbnail640Hash,
+        //     thumbnail210Hash: _uploadData.thumbnail210Hash,
+        //   ));
+        // }
 
         return Center(
           child: Column(

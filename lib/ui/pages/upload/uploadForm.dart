@@ -1,3 +1,4 @@
+import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:flutter/services.dart';
 
 import 'dart:io';
@@ -17,59 +18,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
-class UploadData {
-  String author;
-  String link;
-  String title;
-  String description;
-  String tag;
-  double vpPercent;
-  int vpBalance;
-  double burnDtc;
-  int dtcBalance;
-  Duration duration;
-  String thumbnailLocation;
-  bool localThumbnail;
-  String videoLocation;
-  bool localVideoFile;
-  bool originalContent;
-  bool nSFWContent;
-  bool unlistVideo;
-
-  String videoSourceHash;
-  String video240pHash;
-  String video480pHash;
-  String videoSpriteHash;
-  String thumbnail640Hash;
-  String thumbnail210Hash;
-
-  UploadData({
-    required this.link,
-    required this.author,
-    required this.title,
-    required this.description,
-    required this.tag,
-    required this.vpPercent,
-    required this.vpBalance,
-    required this.burnDtc,
-    required this.dtcBalance,
-    required this.duration,
-    required this.thumbnailLocation,
-    required this.localThumbnail,
-    required this.videoLocation,
-    required this.localVideoFile,
-    required this.originalContent,
-    required this.nSFWContent,
-    required this.unlistVideo,
-    required this.videoSourceHash,
-    required this.video240pHash,
-    required this.video480pHash,
-    required this.videoSpriteHash,
-    required this.thumbnail640Hash,
-    required this.thumbnail210Hash,
-  });
-}
-
 class UploadForm extends StatefulWidget {
   late UploadData uploadData;
   final Function(UploadData) callback;
@@ -87,6 +35,8 @@ class _UploadFormState extends State<UploadForm> {
   TextEditingController _titleController = new TextEditingController();
   TextEditingController _descController = new TextEditingController();
   TextEditingController _tagController = new TextEditingController();
+  bool _formIsFilled = false;
+
   File? _image;
   String _imageHints = "";
   String _videoHints = "";
@@ -96,6 +46,7 @@ class _UploadFormState extends State<UploadForm> {
   FocusNode _tagFocus = new FocusNode();
   late UserBloc _userBloc;
   late SettingsBloc _settingsBloc;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -185,9 +136,6 @@ class _UploadFormState extends State<UploadForm> {
             setState(() {
               stateUploadData.vpPercent = double.parse(
                   stateSettings.settings[settingKey_defaultVotingWeight]!);
-              stateUploadData.author =
-                  stateSettings.settings[authKey_usernameKey]!;
-              stateUploadData.link = randomPermlink(11);
             });
           }
         },
@@ -204,15 +152,8 @@ class _UploadFormState extends State<UploadForm> {
                     ? basicData()
                     : SizedBox(height: 50),
                 SizedBox(height: 8),
-                _titleController.text != "" &&
-                        _descController.text != "" &&
-                        _tagController.text != ""
-                    ? imagePreview()
-                    : SizedBox(height: 50),
-                _titleController.text != "" &&
-                        _descController.text != "" &&
-                        _tagController.text != "" &&
-                        stateUploadData.thumbnailLocation != null
+                _formIsFilled ? imagePreview() : SizedBox(height: 50),
+                _formIsFilled
                     ? Column(
                         children: [
                           moreSettings(),
@@ -295,25 +236,58 @@ class _UploadFormState extends State<UploadForm> {
   }
 
   Widget basicData() {
-    return Column(
-      children: [
-        Text("2. Basic information", style: TextStyle(fontSize: 18)),
-        TextFormField(
-          decoration: new InputDecoration(labelText: "Title"),
-          controller: _titleController,
-          focusNode: _titleFocus,
-        ),
-        TextFormField(
-          maxLines: 5,
-          decoration: new InputDecoration(labelText: "Description"),
-          controller: _descController,
-        ),
-        TextFormField(
-          decoration: new InputDecoration(labelText: "Tag"),
-          controller: _tagController,
-          focusNode: _tagFocus,
-        ),
-      ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Text("2. Basic information", style: TextStyle(fontSize: 18)),
+          TextFormField(
+            decoration: new InputDecoration(labelText: "Title"),
+            controller: _titleController,
+            onChanged: (val) {
+              checkIfFormIsFilled();
+            },
+            focusNode: _titleFocus,
+            validator: (value) {
+              if (value!.isNotEmpty && value.length > 0) {
+                return null;
+              } else {
+                return 'please fill in a title';
+              }
+            },
+          ),
+          TextFormField(
+            maxLines: 5,
+            decoration: new InputDecoration(labelText: "Description"),
+            controller: _descController,
+            onChanged: (val) {
+              checkIfFormIsFilled();
+            },
+            validator: (value) {
+              if (value!.isNotEmpty && value.length > 0) {
+                return null;
+              } else {
+                return 'please fill in a description';
+              }
+            },
+          ),
+          TextFormField(
+            decoration: new InputDecoration(labelText: "Tag"),
+            controller: _tagController,
+            focusNode: _tagFocus,
+            onChanged: (val) {
+              checkIfFormIsFilled();
+            },
+            validator: (value) {
+              if (value!.isNotEmpty && value.length > 0) {
+                return null;
+              } else {
+                return 'please fill in a tag';
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -323,8 +297,8 @@ class _UploadFormState extends State<UploadForm> {
         children: [
           Text("3. Thumbnail", style: TextStyle(fontSize: 18)),
           InputChip(
-            label: Text(stateUploadData.thumbnailLocation == null
-                ? "pick your thumbnail next!"
+            label: Text(stateUploadData.thumbnailLocation == ""
+                ? "pick a custom thumbnail"
                 : "change thumbnail"),
             onPressed: () {
               getFile(false, false);
@@ -488,5 +462,22 @@ class _UploadFormState extends State<UploadForm> {
         ),
       ],
     );
+  }
+
+  void checkIfFormIsFilled() {
+    if (_titleController.text.length > 0 &&
+        _descController.text.length > 0 &&
+        _tagController.text.length > 0) {
+      setState(() {
+        _formIsFilled = true;
+        stateUploadData.title = _titleController.text;
+        stateUploadData.description = _descController.text;
+        stateUploadData.tag = _tagController.text;
+      });
+    } else {
+      setState(() {
+        _formIsFilled = false;
+      });
+    }
   }
 }
