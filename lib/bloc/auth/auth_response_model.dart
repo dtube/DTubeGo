@@ -49,10 +49,10 @@ class Auth {
     data['_id'] = this.sId;
     data['name'] = this.name;
     data['pub'] = this.pub;
-
-    if (this.keys != null) {
+    if (this.keys.isNotEmpty) {
       data['keys'] = this.keys.map((v) => v.toJson()).toList();
     }
+
     return data;
   }
 }

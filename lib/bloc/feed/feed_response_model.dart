@@ -12,21 +12,18 @@ class ApiResultModel {
 //    status = json['status'];
 
     totalResults = json.length;
-    if (json != null) {
-      feed = [];
-      json.forEach((v) {
-        feed.add(new FeedItem.fromJson(v));
-      });
-    }
+    feed = [];
+    json.forEach((v) {
+      feed.add(new FeedItem.fromJson(v));
+    });
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['totalResults'] = this.totalResults;
-    if (this.feed != null) {
-      data['FeedItems'] = this.feed.map((v) => v.toJson()).toList();
-    }
+    data['FeedItems'] = this.feed.map((v) => v.toJson()).toList();
+
     return data;
   }
 }
@@ -37,7 +34,7 @@ class FeedItem {
   late String link;
   // Null pa;
   // Null pp;
-  Json_String? json_string;
+  JsonString? jsonString;
 
   // List<Null> child;
   //List<Votes> votes;
@@ -56,7 +53,7 @@ class FeedItem {
       required this.link,
       // this.pa,
       // this.pp,
-      this.json_string,
+      this.jsonString,
       // this.child,
       //this.votes,
       this.upvotes,
@@ -71,8 +68,8 @@ class FeedItem {
     link = json['link'];
     // pa = json['pa'];
     // pp = json['pp'];
-    json_string =
-        json['json'] != null ? new Json_String.fromJson(json['json']) : null;
+    jsonString =
+        json['json'] != null ? new JsonString.fromJson(json['json']) : null;
     // if (json['child'] != null) {
     //   child = new List<Null>();
     //   json['child'].forEach((v) {
@@ -102,35 +99,35 @@ class FeedItem {
     ts = json['ts'];
     // tags = json['tags'] != null ? new Tags.fromJson(json['tags']) : null;
     dist = json['dist'] + 0.0;
-    if (json_string?.files?.youtube != null) {
-      videoUrl = json_string!.files!.youtube!;
+    if (jsonString?.files?.youtube != null) {
+      videoUrl = jsonString!.files!.youtube!;
       videoSource = "youtube";
-    } else if (json_string?.files?.ipfs != null) {
+    } else if (jsonString?.files?.ipfs != null) {
       videoSource = "ipfs";
-      if (json_string?.files?.ipfs?.vid?.s480 != null) {
+      if (jsonString?.files?.ipfs?.vid?.s480 != null) {
         videoUrl =
-            AppStrings.ipfsVideoUrl + json_string!.files!.ipfs!.vid!.s480!;
-      } else if (json_string?.files?.ipfs?.vid?.s240 != null) {
+            AppStrings.ipfsVideoUrl + jsonString!.files!.ipfs!.vid!.s480!;
+      } else if (jsonString?.files?.ipfs?.vid?.s240 != null) {
         videoUrl =
-            AppStrings.ipfsVideoUrl + json_string!.files!.ipfs!.vid!.s240!;
+            AppStrings.ipfsVideoUrl + jsonString!.files!.ipfs!.vid!.s240!;
       } else {
-        if (json_string!.files!.ipfs!.vid?.src != null) {
+        if (jsonString!.files!.ipfs!.vid?.src != null) {
           videoUrl =
-              AppStrings.ipfsVideoUrl + json_string!.files!.ipfs!.vid!.src!;
+              AppStrings.ipfsVideoUrl + jsonString!.files!.ipfs!.vid!.src!;
         } else {
           videoUrl = "";
         }
       }
     }
 
-    if (json_string?.files?.youtube != null) {
+    if (jsonString?.files?.youtube != null) {
       thumbUrl = "https://img.youtube.com/vi/" +
-          json_string!.files!.youtube! +
+          jsonString!.files!.youtube! +
           "/mqdefault.jpg";
-    } else if (json_string?.files?.ipfs?.img?.s360 != null) {
-      thumbUrl = AppStrings.ipfsSnapUrl + json_string!.files!.ipfs!.img!.s360!;
-    } else if (json_string?.files?.ipfs?.img?.s360 != null) {
-      thumbUrl = AppStrings.ipfsSnapUrl + json_string!.files!.ipfs!.img!.s118!;
+    } else if (jsonString?.files?.ipfs?.img?.s360 != null) {
+      thumbUrl = AppStrings.ipfsSnapUrl + jsonString!.files!.ipfs!.img!.s360!;
+    } else if (jsonString?.files?.ipfs?.img?.s360 != null) {
+      thumbUrl = AppStrings.ipfsSnapUrl + jsonString!.files!.ipfs!.img!.s118!;
     } else {
       thumbUrl =
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Flag_of_None.svg/800px-Flag_of_None.svg.png';
@@ -145,8 +142,8 @@ class FeedItem {
     data['link'] = this.link;
     // data['pa'] = this.pa;
     // data['pp'] = this.pp;
-    if (this.json_string != null) {
-      data['json'] = this.json_string!.toJson();
+    if (this.jsonString != null) {
+      data['json'] = this.jsonString!.toJson();
     }
     // if (this.child != null) {
     //   data['child'] = this.child.map((v) => v.toJson()).toList();
@@ -168,7 +165,7 @@ class FeedItem {
   }
 }
 
-class Json_String {
+class JsonString {
   Files? files;
   late String title;
   String? desc;
@@ -179,7 +176,7 @@ class Json_String {
   late int oc;
   List<String>? refs;
 
-  Json_String(
+  JsonString(
       {this.files,
       required this.title,
       this.desc,
@@ -190,16 +187,41 @@ class Json_String {
       required this.oc,
       this.refs});
 
-  Json_String.fromJson(Map<String, dynamic> json) {
+  JsonString.fromJson(Map<String, dynamic> json) {
     files = json['files'] != null ? new Files.fromJson(json['files']) : null;
     title = json['title'];
     desc = json['desc'];
     dur = json['dur'].toString();
     tag = json['tag'];
-    hide = json['hide'];
-    nsfw = json['nsfw'];
-    oc = json['oc'];
-    refs = json['refs'].cast<String>();
+    if (json['hide'] is int) {
+      hide = json['hide'];
+    } else {
+      if (json["hide"] == true) {
+        hide = 1;
+      } else {
+        hide = 0;
+      }
+    }
+    if (json['nsfw'] is int) {
+      nsfw = json['nsfw'];
+    } else {
+      if (json["nsfw"] == true) {
+        nsfw = 1;
+      } else {
+        nsfw = 0;
+      }
+    }
+    if (json['hide'] is int) {
+      oc = json['oc'];
+    } else {
+      if (json["oc"] == true) {
+        oc = 1;
+      } else {
+        oc = 0;
+      }
+    }
+
+    refs = json['refs'] != null ? json['refs'].cast<String>() : null;
   }
 
   Map<String, dynamic> toJson() {

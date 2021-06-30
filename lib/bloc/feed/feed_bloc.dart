@@ -4,16 +4,15 @@ import 'package:dtube_togo/bloc/feed/feed_event.dart';
 import 'package:dtube_togo/bloc/feed/feed_response_model.dart';
 import 'package:dtube_togo/bloc/feed/feed_repository.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
-import 'package:dtube_togo/utils/discoverAPINode.dart';
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
   FeedRepository repository;
 
   FeedBloc({required this.repository}) : super(FeedInitialState());
 
-  @override
-  // TODO: implement initialState
-  FeedState get initialState => FeedInitialState();
+  // @override
+
+  // FeedState get initialState => FeedInitialState();
 
   @override
   Stream<FeedState> mapEventToState(FeedEvent event) async* {

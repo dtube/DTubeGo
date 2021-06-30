@@ -4,16 +4,15 @@ import 'package:dtube_togo/bloc/rewards/rewards_event.dart';
 import 'package:dtube_togo/bloc/rewards/rewards_repository.dart';
 import 'package:dtube_togo/bloc/rewards/rewards_state.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
-import 'package:dtube_togo/utils/discoverAPINode.dart';
 
 class RewardsBloc extends Bloc<RewardsEvent, RewardsState> {
   RewardsRepository repository;
 
   RewardsBloc({required this.repository}) : super(RewardsInitialState());
 
-  @override
-  // TODO: implement initialState
-  RewardsState get initialState => RewardsInitialState();
+  // @override
+
+  // RewardsState get initialState => RewardsInitialState();
 
   @override
   Stream<RewardsState> mapEventToState(RewardsEvent event) async* {

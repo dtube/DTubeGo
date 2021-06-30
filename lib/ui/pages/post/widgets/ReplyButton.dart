@@ -2,8 +2,6 @@ import 'package:dtube_togo/bloc/postdetails/postdetails_bloc.dart';
 import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 
-import 'package:dtube_togo/utils/randomPermlink.dart';
-
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -92,7 +90,7 @@ class _ReplyButtonState extends State<ReplyButton> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: 300, // TODO: make this dynamic
+                  width: 250, // TODO: make this dynamic
                   child: TextField(
                     //key: UniqueKey(),
                     autofocus: _replyPressed,
@@ -117,24 +115,38 @@ class _ReplyButtonState extends State<ReplyButton> {
 
                       return InputChip(
                           onPressed: () {
-                            Map<String, dynamic> jsonmeta = {};
-                            String permlink = randomPermlink(11);
-                            TxData txdata = TxData(
-                              link: permlink,
-                              jsonmetadata: {
-                                "description": _replyController.value.text,
-                                "title": ""
-                              },
-                              vt: _voteVT,
-                              tag: "",
-                              pa: widget.author,
-                              pp: widget.link,
-                            );
-                            Transaction newTx =
-                                Transaction(type: 4, data: txdata);
-                            print(newTx.toJson().toString());
+                            UploadData _uploadData = new UploadData(
+                                link: "",
+                                parentAuthor: widget.author,
+                                parentPermlink: widget.link,
+                                title: "",
+                                description: _replyController.value.text,
+                                tag: "",
+                                vpPercent: widget.votingWeight,
+                                vpBalance: _currentVp,
+                                burnDtc: 0,
+                                dtcBalance:
+                                    0, // TODO promoted comment implementation missing
+                                isPromoted: false,
+                                duration: "",
+                                thumbnailLocation: "",
+                                localThumbnail: false,
+                                videoLocation: "",
+                                localVideoFile: false,
+                                originalContent: false,
+                                nSFWContent: false,
+                                unlistVideo: false,
+                                isEditing: false,
+                                videoSourceHash: "",
+                                video240pHash: "",
+                                video480pHash: "",
+                                videoSpriteHash: "",
+                                thumbnail640Hash: "",
+                                thumbnail210Hash: "",
+                                uploaded: false);
+
                             BlocProvider.of<TransactionBloc>(context)
-                                .add(SignAndSendTransactionEvent(newTx));
+                                .add(SendCommentEvent(_uploadData));
                           },
                           label: Text(
                               "send")); // TODO: only show send button when text is entered: https://flutter-examples.com/flutter-show-hide-button-on-text-field-input/

@@ -33,7 +33,7 @@ class User {
   List<String>? follows;
   List<String>? followers;
   late List<Keys> keys;
-  Json_String? json_string;
+  JsonString? jsonString;
   List<String>? approves;
   int? nodeAppr;
   String? pubLeader;
@@ -51,7 +51,7 @@ class User {
       this.follows,
       this.followers,
       required this.keys,
-      this.json_string,
+      this.jsonString,
       this.approves,
       this.nodeAppr,
       this.pubLeader,
@@ -75,8 +75,8 @@ class User {
         keys.add(new Keys.fromJson(v));
       });
     }
-    json_string =
-        json['json'] != null ? new Json_String.fromJson(json['json']) : null;
+    jsonString =
+        json['json'] != null ? new JsonString.fromJson(json['json']) : null;
     approves =
         json['approves'] != null ? json['approves'].cast<String>() : null;
     nodeAppr = json['node_appr'];
@@ -106,11 +106,11 @@ class User {
     data['uv'] = this.uv;
     data['follows'] = this.follows;
     data['followers'] = this.followers;
-    if (this.keys != null) {
+    if (this.keys.isNotEmpty) {
       data['keys'] = this.keys.map((v) => v.toJson()).toList();
     }
-    if (this.json_string != null) {
-      data['json'] = this.json_string!.toJson();
+    if (this.jsonString != null) {
+      data['json'] = this.jsonString!.toJson();
     }
     data['approves'] = this.approves;
     data['node_appr'] = this.nodeAppr;
@@ -165,13 +165,13 @@ class Keys {
   }
 }
 
-class Json_String {
+class JsonString {
   Node? node;
   Profile? profile;
 
-  Json_String({this.node, this.profile});
+  JsonString({this.node, this.profile});
 
-  Json_String.fromJson(Map<String, dynamic> json) {
+  JsonString.fromJson(Map<String, dynamic> json) {
     node = json['node'] != null ? new Node.fromJson(json['node']) : null;
     profile = new Profile.fromJson(json['profile']);
   }

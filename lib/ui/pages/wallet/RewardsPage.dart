@@ -289,6 +289,7 @@ class _RewardsCardState extends State<RewardsCard> {
       return PostDetailPage(
         author: author,
         link: link,
+        recentlyUploaded: false,
       );
     }));
   }

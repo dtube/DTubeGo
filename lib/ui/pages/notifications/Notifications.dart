@@ -1,5 +1,8 @@
 import 'package:dtube_togo/bloc/config/txTypes.dart';
+import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
+import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
+
 import 'package:intl/intl.dart';
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
 
@@ -49,31 +52,20 @@ class _NotificationsState extends State<Notifications> {
     return Scaffold(
       appBar: dtubeSubAppBar(),
       body: Container(
-        child: BlocListener<NotificationBloc, NotificationState>(
-          listener: (context, state) {
-            if (state is NotificationErrorState) {
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                ),
-              );
+        child: BlocBuilder<NotificationBloc, NotificationState>(
+          builder: (context, state) {
+            if (state is NotificationInitialState) {
+              return buildLoading();
+            } else if (state is NotificationLoadingState) {
+              return buildLoading();
+            } else if (state is NotificationLoadedState) {
+              return buildnotificationList(state.notifications);
+            } else if (state is NotificationErrorState) {
+              return buildErrorUi(state.message);
+            } else {
+              return buildErrorUi('test');
             }
           },
-          child: BlocBuilder<NotificationBloc, NotificationState>(
-            builder: (context, state) {
-              if (state is NotificationInitialState) {
-                return buildLoading();
-              } else if (state is NotificationLoadingState) {
-                return buildLoading();
-              } else if (state is NotificationLoadedState) {
-                return buildnotificationList(state.notifications);
-              } else if (state is NotificationErrorState) {
-                return buildErrorUi(state.message);
-              } else {
-                return buildErrorUi('test');
-              }
-            },
-          ),
         ),
       ),
     );
@@ -149,11 +141,11 @@ class CustomListItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // TODO: sender avatar
-            // AspectRatio(
-            //   aspectRatio: 8 / 5,
-            //   child: Image.network(thumbnailUrl),
-            // ),
+            BlocProvider<UserBloc>(
+              create: (BuildContext context) =>
+                  UserBloc(repository: UserRepositoryImpl()),
+              child: AccountAvatar(username: sender),
+            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,7 +175,7 @@ class NotificationTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String friendlyDescription =
-        ' ' + txTypeFriendlyDescription_Notifications[tx.type]!;
+        ' ' + txTypeFriendlyDescriptionNotifications[tx.type]!;
     switch (tx.type) {
       case 3:
         friendlyDescription = friendlyDescription.replaceAll(

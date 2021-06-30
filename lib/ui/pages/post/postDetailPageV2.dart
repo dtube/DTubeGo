@@ -1,6 +1,8 @@
+import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:dtube_togo/ui/NavigationContainer.dart';
 
 import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/pages/post/players/BetterPlayer.dart';
@@ -27,11 +29,41 @@ import 'package:share_plus/share_plus.dart';
 //import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
-class PostDetailPage extends StatelessWidget {
+class PostDetailPage extends StatefulWidget {
   String link;
   String author;
+  bool recentlyUploaded;
 
-  PostDetailPage({required this.link, required this.author});
+  PostDetailPage(
+      {required this.link,
+      required this.author,
+      required this.recentlyUploaded});
+
+  @override
+  _PostDetailPageState createState() => _PostDetailPageState();
+}
+
+class _PostDetailPageState extends State<PostDetailPage> {
+  Future<bool> _onWillPop() async {
+    if (widget.recentlyUploaded) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MultiBlocProvider(providers: [
+                    BlocProvider<UserBloc>(create: (context) {
+                      return UserBloc(repository: UserRepositoryImpl());
+                    }),
+                    BlocProvider<AuthBloc>(
+                      create: (BuildContext context) =>
+                          AuthBloc(repository: AuthRepositoryImpl()),
+                    ),
+                  ], child: NavigationContainer())),
+          (route) => false);
+    } else {
+      Navigator.pop(context);
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +72,7 @@ class PostDetailPage extends StatelessWidget {
           BlocProvider<PostBloc>(
             create: (BuildContext context) =>
                 PostBloc(repository: PostRepositoryImpl())
-                  ..add(FetchPostEvent(author, link)),
+                  ..add(FetchPostEvent(widget.author, widget.link)),
           ),
           BlocProvider<UserBloc>(
               create: (BuildContext context) =>
@@ -50,23 +82,30 @@ class PostDetailPage extends StatelessWidget {
                 SettingsBloc()..add(FetchSettingsEvent()),
           ),
         ],
-        child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          appBar: MediaQuery.of(context).orientation == Orientation.landscape
-              ? null
-              : AppBar(
-                  toolbarHeight: 28,
-                ),
-          body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
-            if (state is PostLoadingState) {
-              return Center(child: DTubeLogoPulse());
-            } else if (state is PostLoadedState) {
-              return PostDetails(post: state.post);
-            } else {
-              return Text("failed");
-            }
-          }),
-        ));
+        child: WillPopScope(
+            onWillPop: _onWillPop,
+            child: Scaffold(
+              resizeToAvoidBottomInset: true,
+              appBar:
+                  MediaQuery.of(context).orientation == Orientation.landscape
+                      ? null
+                      : AppBar(
+                          toolbarHeight: 28,
+                          automaticallyImplyLeading: true,
+
+                          // TODO: recently uploaded posts - back button should go to main navigator
+                          //https://stackoverflow.com/questions/50452710/catch-android-back-button-event-on-flutter
+                        ),
+              body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+                if (state is PostLoadingState) {
+                  return Center(child: DTubeLogoPulse());
+                } else if (state is PostLoadedState) {
+                  return PostDetails(post: state.post);
+                } else {
+                  return Text("failed");
+                }
+              }),
+            )));
   }
 }
 
@@ -241,11 +280,13 @@ class _PostDetailsState extends State<PostDetails> {
                         ],
                       ),
                       CollapsedDescription(
-                          description: widget.post.jsonString!.desc!),
+                          description: widget.post.jsonString!.desc != null
+                              ? widget.post.jsonString!.desc!
+                              : ""),
                       Divider(),
 
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InputChip(
@@ -280,7 +321,7 @@ class _PostDetailsState extends State<PostDetails> {
                           ? Padding(
                               padding: const EdgeInsets.only(right: 16.0),
                               child: Container(
-                                height: 500,
+                                height: 300,
                                 child: ListView.builder(
                                   key: PageStorageKey('myScrollable'),
                                   itemCount: widget.post.comments!.length,
@@ -297,6 +338,7 @@ class _PostDetailsState extends State<PostDetails> {
                               ),
                             )
                           : SizedBox(height: 0),
+                      SizedBox(height: 200)
                       // return Text(widget.post.comments![pos].author);
                     ],
                   ),

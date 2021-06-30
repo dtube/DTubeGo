@@ -14,8 +14,6 @@ import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/utils/friendlyTimestamp.dart';
 
-import 'package:dtube_togo/res/strings/strings.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -104,31 +102,21 @@ class _FeedListState extends State<FeedList> {
     return Container(
       height: 800,
       // color: globalAlmostBlack,
-      child: BlocListener<FeedBloc, FeedState>(
-        listener: (context, state) {
-          if (state is FeedErrorState) {
-            Scaffold.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-              ),
-            );
+
+      child: BlocBuilder<FeedBloc, FeedState>(
+        builder: (context, state) {
+          if (state is FeedInitialState) {
+            return buildLoading();
+          } else if (state is FeedLoadingState) {
+            return buildLoading();
+          } else if (state is FeedLoadedState) {
+            return buildPostList(state.feed, widget.bigThumbnail, true);
+          } else if (state is FeedErrorState) {
+            return buildErrorUi(state.message);
+          } else {
+            return buildErrorUi('test');
           }
         },
-        child: BlocBuilder<FeedBloc, FeedState>(
-          builder: (context, state) {
-            if (state is FeedInitialState) {
-              return buildLoading();
-            } else if (state is FeedLoadingState) {
-              return buildLoading();
-            } else if (state is FeedLoadedState) {
-              return buildPostList(state.feed, widget.bigThumbnail, true);
-            } else if (state is FeedErrorState) {
-              return buildErrorUi(state.message);
-            } else {
-              return buildErrorUi('test');
-            }
-          },
-        ),
       ),
     );
   }
@@ -160,10 +148,10 @@ class _FeedListState extends State<FeedList> {
       itemCount: feed.length,
       itemBuilder: (ctx, pos) {
         // work on more sources
-        if (feed[pos].json_string!.files?.youtube != null ||
-            feed[pos].json_string!.files?.ipfs != null) {
-          if ((nsfwMode == 'hide' && feed[pos].json_string?.nsfw == 1) ||
-              (hiddenMode == 'hide' && feed[pos].json_string?.hide == 1)) {
+        if (feed[pos].jsonString!.files?.youtube != null ||
+            feed[pos].jsonString!.files?.ipfs != null) {
+          if ((nsfwMode == 'hide' && feed[pos].jsonString?.nsfw == 1) ||
+              (hiddenMode == 'hide' && feed[pos].jsonString?.hide == 1)) {
             return SizedBox(
               height: 0,
             );
@@ -179,13 +167,15 @@ class _FeedListState extends State<FeedList> {
                     bigThumbnail: bigThumbnail,
                     showAuthor: showAuthor,
                     blur: (nsfwMode == 'blur' &&
-                                feed[pos].json_string?.nsfw == 1) ||
+                                feed[pos].jsonString?.nsfw == 1) ||
                             (hiddenMode == 'blur' &&
-                                feed[pos].json_string?.hide == 1)
+                                feed[pos].jsonString?.hide == 1)
                         ? true
                         : false,
-                    title: feed[pos].json_string!.title,
-                    description: feed[pos].json_string!.desc!,
+                    title: feed[pos].jsonString!.title,
+                    description: feed[pos].jsonString!.desc != null
+                        ? feed[pos].jsonString!.desc!
+                        : "",
                     author: feed[pos].author,
                     link: feed[pos].link,
                     // publishDate: .toString(),
@@ -196,10 +186,9 @@ class _FeedListState extends State<FeedList> {
                     dtcValue:
                         (feed[pos].dist / 100).round().toString() + " DTC",
                     duration: new Duration(
-                        seconds:
-                            int.tryParse(feed[pos].json_string!.dur) != null
-                                ? int.parse(feed[pos].json_string!.dur)
-                                : 0),
+                        seconds: int.tryParse(feed[pos].jsonString!.dur) != null
+                            ? int.parse(feed[pos].jsonString!.dur)
+                            : 0),
                     thumbnailUrl: feed[pos].thumbUrl,
                     videoUrl: feed[pos].videoUrl,
                     videoSource: feed[pos].videoSource,

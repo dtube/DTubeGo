@@ -8,7 +8,7 @@ import 'dart:io';
 import 'package:dtube_togo/res/strings/strings.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
+
 import 'dart:convert';
 import 'package:dio/dio.dart';
 
@@ -65,7 +65,7 @@ class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
     }
     validBTFSUploadEndpoints.shuffle();
 
-    if (validBTFSUploadEndpoints[0] != null) {
+    if (validBTFSUploadEndpoints.isNotEmpty) {
       return validBTFSUploadEndpoints[0];
     } else {
       return "";

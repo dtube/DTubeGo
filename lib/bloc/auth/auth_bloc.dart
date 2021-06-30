@@ -12,9 +12,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc({required this.repository}) : super(AuthInitialState());
 
-  @override
-  // TODO: implement initialState
-  AuthState get initialState => AuthInitialState();
+  //@override
+
+  //AuthState get initialState => AuthInitialState();
 
   @override
   Stream<AuthState> mapEventToState(AuthEvent event) async* {

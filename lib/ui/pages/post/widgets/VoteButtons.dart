@@ -1,8 +1,6 @@
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
 

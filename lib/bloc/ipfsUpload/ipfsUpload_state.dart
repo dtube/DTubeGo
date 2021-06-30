@@ -1,9 +1,6 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
-import 'package:dtube_togo/bloc/user/user_response_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:video_compress/video_compress.dart';
 
 abstract class IPFSUploadState extends Equatable {}
 

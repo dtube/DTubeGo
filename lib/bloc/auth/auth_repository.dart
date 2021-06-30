@@ -75,7 +75,6 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   String privToPub(String privateKey) {
-    var ec = getS256();
     PrivateKey _pk = PrivateKey.fromHex(
         getSecp256k1(), HEX.encode(bs58check.base58.decode(privateKey)));
 

@@ -24,22 +24,18 @@ class _StartUpState extends State<StartUp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(listener: (context, state) {
-      if (state is SignInFailedState) {
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text(state.message),
-          ),
-        );
-      }
-    }, child: BlocBuilder<AuthBloc, AuthState>(
+    return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state == SignedInState()) {
-          return BlocProvider<UserBloc>(
-              create: (context) {
-                return UserBloc(repository: UserRepositoryImpl());
-              },
-              child: NavigationContainer(title: 'Dtube ToGo'));
+          return MultiBlocProvider(providers: [
+            BlocProvider<UserBloc>(create: (context) {
+              return UserBloc(repository: UserRepositoryImpl());
+            }),
+            BlocProvider<AuthBloc>(
+              create: (BuildContext context) =>
+                  AuthBloc(repository: AuthRepositoryImpl()),
+            ),
+          ], child: NavigationContainer());
         }
         if ([
           SignInFailedState(message: "login failed"),
@@ -56,7 +52,7 @@ class _StartUpState extends State<StartUp> {
           body: Center(child: DTubeLogoPulse()),
         );
       },
-    ));
+    );
   }
 }
 

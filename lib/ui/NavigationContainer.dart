@@ -22,9 +22,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class NavigationContainer extends StatefulWidget {
-  NavigationContainer({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  NavigationContainer({Key? key}) : super(key: key);
 
   @override
   _NavigationContainerState createState() => _NavigationContainerState();
@@ -63,7 +61,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
         ),
         title: 'Hot',
       ),
-      // TODO: combine hot + trending
+      // TODO: combine hot + trending ?
       PersistentBottomNavBarItem(
         icon: new FaIcon(
           FontAwesomeIcons.chartLine,
@@ -173,11 +171,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
                 ),
               ),
               BalanceOverview(),
-
-              // Text(widget.title),
               DTubeLogo(size: 60),
-
-              // TODO: figure out how to display notifications without violating the conbtext of the child tabview
               Container(
                 width: 130,
                 child: Column(
@@ -243,15 +237,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
                         ),
                       ],
                     ),
-                    // TODO: find good way to display balances all the time
-                    // Padding(
-                    //   padding: const EdgeInsets.only(right: 8.0),
-                    //   child: BalanceOverview(),
-                    // ),
                   ],
                 ),
               ),
-              // TODO: figure out how to display notifications without violating the conbtext of the child tabview
             ],
           ),
         ),

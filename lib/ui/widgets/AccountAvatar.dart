@@ -46,13 +46,13 @@ class _AccountAvatarState extends State<AccountAvatar> {
         if (state is UserLoadingState) {
           return CircularProgressIndicator();
         } else if (state is UserLoadedState &&
-            state.user.json_string != null &&
-            state.user.json_string?.profile != null &&
-            state.user.json_string?.profile?.avatar != "" &&
+            state.user.jsonString != null &&
+            state.user.jsonString?.profile != null &&
+            state.user.jsonString?.profile?.avatar != "" &&
             state.user.name == widget.username) {
           try {
             return CachedNetworkImage(
-                imageUrl: state.user.json_string!.profile!.avatar!
+                imageUrl: state.user.jsonString!.profile!.avatar!
                     .replaceAll("http:", "https:"),
                 imageBuilder: (context, imageProvider) => Container(
                       width: 50.0,

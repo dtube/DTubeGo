@@ -124,6 +124,7 @@ class _PostListCardUserFeedState extends State<PostListCardUserFeed> {
       return PostDetailPage(
         author: author,
         link: link,
+        recentlyUploaded: false,
       );
     }));
   }

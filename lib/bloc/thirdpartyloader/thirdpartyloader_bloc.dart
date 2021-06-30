@@ -13,9 +13,9 @@ class ThirdPartyMetadataBloc
   ThirdPartyMetadataBloc({required this.repository})
       : super(ThirdPartyMetadataInitialState());
 
-  @override
-  // TODO: implement initialState
-  ThirdPartyMetadataState get initialState => ThirdPartyMetadataInitialState();
+  // @override
+
+  // ThirdPartyMetadataState get initialState => ThirdPartyMetadataInitialState();
 
   @override
   Stream<ThirdPartyMetadataState> mapEventToState(

@@ -4,7 +4,6 @@ import 'package:dtube_togo/bloc/notification/notification_state.dart';
 import 'package:dtube_togo/bloc/notification/notification_response_model.dart';
 import 'package:dtube_togo/bloc/notification/notification_repository.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
-import 'package:dtube_togo/utils/discoverAPINode.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   NotificationRepository repository;
@@ -12,9 +11,9 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   NotificationBloc({required this.repository})
       : super(NotificationInitialState());
 
-  @override
-  // TODO: implement initialState
-  NotificationState get initialState => NotificationInitialState();
+  // @override
+
+  // NotificationState get initialState => NotificationInitialState();
 
   @override
   Stream<NotificationState> mapEventToState(NotificationEvent event) async* {

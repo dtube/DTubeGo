@@ -1,7 +1,5 @@
 import 'package:jiffy/jiffy.dart';
 
-import 'package:intl/intl.dart';
-
 bool timestampGreater7Days(int timestamp) {
   var now = DateTime.now();
   var date = DateTime.fromMillisecondsSinceEpoch(timestamp);

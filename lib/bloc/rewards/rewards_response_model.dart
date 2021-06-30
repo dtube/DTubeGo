@@ -12,7 +12,7 @@ class ApiResultModel {
 //    status = json['status'];
 
     totalResults = json.length;
-    if (json != null) {
+    if (json.isNotEmpty) {
       rewardList = [];
       json.forEach((v) {
         rewardList.add(new Reward.fromJson(v));
@@ -24,7 +24,7 @@ class ApiResultModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['totalResults'] = this.totalResults;
-    if (this.rewardList != null) {
+    if (this.rewardList.isNotEmpty) {
       data['FeedItems'] = this.rewardList.map((v) => v.toJson()).toList();
     }
     return data;

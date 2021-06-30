@@ -4,7 +4,7 @@ import 'package:dtube_togo/bloc/user/user_event.dart';
 import 'package:dtube_togo/bloc/user/user_state.dart';
 import 'package:dtube_togo/bloc/user/user_response_model.dart';
 import 'package:dtube_togo/bloc/user/user_repository.dart';
-import 'package:dtube_togo/utils/discoverAPINode.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
@@ -12,9 +12,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   UserBloc({required this.repository}) : super(UserInitialState());
 
-  @override
-  // TODO: implement initialState
-  UserState get initialState => UserInitialState();
+  // @override
+
+  // UserState get initialState => UserInitialState();
 
   @override
   Stream<UserState> mapEventToState(UserEvent event) async* {

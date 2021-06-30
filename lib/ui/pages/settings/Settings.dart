@@ -35,36 +35,24 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: dtubeSubAppBar(),
       body: Container(
-        child: BlocListener<SettingsBloc, SettingsState>(
-          listener: (context, state) {
-            if (state is settingsErrorState) {
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                ),
+        child: BlocBuilder<SettingsBloc, SettingsState>(
+          builder: (context, state) {
+            if (state is SettingsLoadingState || state is SettingsSavingState) {
+              return Center(
+                child: CircularProgressIndicator(),
               );
+            } else if (state is SettingsLoadedState) {
+              return SettingsList(
+                  currentSettings: state.settings, justSaved: false);
+            } else if (state is SettingsErrorState) {
+              return buildErrorUi(state.message);
+            } else if (state is SettingsSavedState) {
+              return SettingsList(
+                  currentSettings: state.settings, justSaved: true);
+            } else {
+              return Text("unknown state");
             }
           },
-          child: BlocBuilder<SettingsBloc, SettingsState>(
-            builder: (context, state) {
-              if (state is SettingsLoadingState ||
-                  state is SettingsSavingState) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (state is SettingsLoadedState) {
-                return SettingsList(
-                    currentSettings: state.settings, justSaved: false);
-              } else if (state is settingsErrorState) {
-                return buildErrorUi(state.message);
-              } else if (state is SettingsSavedState) {
-                return SettingsList(
-                    currentSettings: state.settings, justSaved: true);
-              } else {
-                return Text("unknown state");
-              }
-            },
-          ),
         ),
       ),
     );

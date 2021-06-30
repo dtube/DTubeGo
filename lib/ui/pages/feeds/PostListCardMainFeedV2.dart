@@ -53,144 +53,131 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserBloc, UserState>(
-      listener: (context, state) {
-        if (state is UserErrorState) {
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
-          );
-        }
-      },
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              InkWell(
-                onTap: () {
-                  navigateToUserDetailPage(context, widget.author);
-                },
-                child: SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: AccountAvatarBase(
-                    username: widget.author,
-                  ),
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            InkWell(
+              onTap: () {
+                navigateToUserDetailPage(context, widget.author);
+              },
+              child: SizedBox(
+                width: 50,
+                height: 50,
+                child: AccountAvatarBase(
+                  username: widget.author,
                 ),
               ),
-              SizedBox(width: 8),
-              Container(
-                width: MediaQuery.of(context).size.width - 50 - 50,
-                child: InkWell(
+            ),
+            SizedBox(width: 8),
+            Container(
+              width: MediaQuery.of(context).size.width - 50 - 50,
+              child: InkWell(
+                onTap: () {
+                  navigateToPostDetailPage(context, widget.author, widget.link);
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    Text(
+                      widget.author,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        AspectRatio(
+          aspectRatio: 8 / 5,
+          child: widget.blur
+              ? ClipRect(
+                  child: ImageFiltered(
+                    imageFilter: ImageFilter.blur(
+                      sigmaY: 5,
+                      sigmaX: 5,
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: widget.thumbnailUrl,
+                    ),
+                  ),
+                )
+              : InkWell(
                   onTap: () {
-                    navigateToPostDetailPage(
-                        context, widget.author, widget.link);
+                    setState(() {
+                      _thumbnailTapped = true;
+                    });
                   },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Stack(
+                    alignment: Alignment.topCenter,
                     children: [
-                      Text(
-                        widget.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.headline5,
+                      Visibility(
+                        visible: !_thumbnailTapped,
+                        child: AspectRatio(
+                          aspectRatio: 8 / 5,
+                          child: widget.thumbnailUrl != ''
+                              ? CachedNetworkImage(
+                                  imageUrl: widget.thumbnailUrl,
+                                  fit: BoxFit.fitWidth,
+                                )
+                              : Image.asset(
+                                  'assets/images/Image_of_none.svg.png',
+                                  fit: BoxFit.fitWidth,
+                                ),
+                        ),
                       ),
-                      Text(
-                        widget.author,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.headline6,
+                      Center(
+                        child: Visibility(
+                          visible: _thumbnailTapped,
+                          child: (widget.videoSource == 'ipfs' &&
+                                  widget.videoUrl != "")
+                              ? BP(
+                                  videoUrl: widget.videoUrl,
+                                  autoplay: true,
+                                  looping: false,
+                                  localFile: false,
+                                  controls: false,
+                                )
+                              : (widget.videoSource == 'youtube' &&
+                                      widget.videoUrl != "")
+                                  ? YTPlayerIFrame(
+                                      videoUrl: widget.videoUrl,
+                                      autoplay: true,
+                                    )
+                                  : Text("no player detected"),
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
-          ),
-          AspectRatio(
-            aspectRatio: 8 / 5,
-            child: widget.blur
-                ? ClipRect(
-                    child: ImageFiltered(
-                      imageFilter: ImageFilter.blur(
-                        sigmaY: 5,
-                        sigmaX: 5,
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl: widget.thumbnailUrl,
-                      ),
-                    ),
-                  )
-                : InkWell(
-                    onTap: () {
-                      setState(() {
-                        _thumbnailTapped = true;
-                      });
-                    },
-                    child: Stack(
-                      alignment: Alignment.topCenter,
-                      children: [
-                        Visibility(
-                          visible: !_thumbnailTapped,
-                          child: AspectRatio(
-                            aspectRatio: 8 / 5,
-                            child: widget.thumbnailUrl != ''
-                                ? CachedNetworkImage(
-                                    imageUrl: widget.thumbnailUrl,
-                                    fit: BoxFit.fitWidth,
-                                  )
-                                : Image.asset(
-                                    'assets/images/Image_of_none.svg.png',
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                          ),
-                        ),
-                        Center(
-                          child: Visibility(
-                            visible: _thumbnailTapped,
-                            child: (widget.videoSource == 'ipfs' &&
-                                    widget.videoUrl != "")
-                                ? BP(
-                                    videoUrl: widget.videoUrl,
-                                    autoplay: true,
-                                    looping: false,
-                                    localFile: false,
-                                    controls: false,
-                                  )
-                                : (widget.videoSource == 'youtube' &&
-                                        widget.videoUrl != "")
-                                    ? YTPlayerIFrame(
-                                        videoUrl: widget.videoUrl,
-                                        autoplay: true,
-                                      )
-                                    : Text("no player detected"),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${widget.publishDate} - ' +
-                    (widget.duration.inHours == 0
-                        ? widget.duration.toString().substring(2, 7) + ' min'
-                        : widget.duration.toString().substring(0, 7) +
-                            ' hours'),
-                style: Theme.of(context).textTheme.caption,
-              ),
-              Text(
-                '${widget.dtcValue}',
-                style: Theme.of(context).textTheme.headline5,
-              ),
-            ],
-          ),
-        ],
-      ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '${widget.publishDate} - ' +
+                  (widget.duration.inHours == 0
+                      ? widget.duration.toString().substring(2, 7) + ' min'
+                      : widget.duration.toString().substring(0, 7) + ' hours'),
+              style: Theme.of(context).textTheme.caption,
+            ),
+            Text(
+              '${widget.dtcValue}',
+              style: Theme.of(context).textTheme.headline5,
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -200,6 +187,7 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
       return PostDetailPage(
         author: author,
         link: link,
+        recentlyUploaded: false,
       );
     }));
   }

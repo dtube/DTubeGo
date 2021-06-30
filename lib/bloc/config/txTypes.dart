@@ -21,7 +21,7 @@ var txTypes = {
   19: 'TIPPED_VOTE'
 };
 
-var txTypeFriendlyDescription_Notifications = {
+var txTypeFriendlyDescriptionNotifications = {
   0: 'NEW_ACCOUNT',
   1: 'voted for you as chain leader', //'APPROVE_NODE_OWNER',
   2: 'unvoted you as chain leader', //'DISAPROVE_NODE_OWNER',
@@ -44,7 +44,7 @@ var txTypeFriendlyDescription_Notifications = {
   19: 'voted on your content ##TIPAMOUNT% tip' //'TIPPED_VOTE'
 };
 
-var txTypeFriendlyDescription_Actions = {
+var txTypeFriendlyDescriptionActions = {
   0: 'account created',
   1: 'voted for chain leader', //'APPROVE_NODE_OWNER',
   2: 'unvoted as chain leader', //'DISAPROVE_NODE_OWNER',

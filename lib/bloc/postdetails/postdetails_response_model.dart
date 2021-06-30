@@ -78,7 +78,7 @@ class Post {
       });
 
       comments?.forEach((c) {
-        if (c.pa != null && c.pp != link) {
+        if (c.pa != "" && c.pp != link) {
           Comment? parent = comments?.firstWhere((parentComment) =>
               parentComment.author == c.pa && parentComment.link == c.pp);
           if (parent != null) {
@@ -95,7 +95,7 @@ class Post {
       List<Comment> copyOfComments = [...comments!];
 
       copyOfComments.forEach((c) {
-        if (c.pa != null && c.pp != link) {
+        if (c.pa != "" && c.pp != link) {
           int indexOfChild = comments!.indexOf(c);
           comments!.removeAt(indexOfChild);
           print("test");
@@ -212,7 +212,7 @@ class PostJsonString {
     files = json['files'] != null ? new Files.fromJson(json['files']) : null;
     dur = json['dur'];
     title = json['title'];
-    desc = json['desc'];
+    desc = json['description'] == null ? json['desc'] : json['description'];
     tag = json['tag'];
     hide = json['hide'];
     nsfw = json['nsfw'];
@@ -232,7 +232,7 @@ class PostJsonString {
     }
     data['dur'] = this.dur;
     data['title'] = this.title;
-    data['desc'] = this.desc;
+    data['description'] = this.desc;
     data['tag'] = this.tag;
     data['hide'] = this.hide;
     data['nsfw'] = this.nsfw;

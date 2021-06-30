@@ -37,6 +37,7 @@ class TxData {
   String? author;
   String? link;
   int? vt;
+  int? burn;
   int? tip;
   String? tag;
   String? receiver;
@@ -47,20 +48,20 @@ class TxData {
   String? pa;
   String? pp;
 
-  TxData({
-    this.author,
-    this.link,
-    this.vt,
-    this.tip,
-    this.tag,
-    this.receiver,
-    this.target,
-    this.amount,
-    this.memo,
-    this.jsonmetadata,
-    this.pp,
-    this.pa,
-  });
+  TxData(
+      {this.author,
+      this.link,
+      this.vt,
+      this.tip,
+      this.tag,
+      this.receiver,
+      this.target,
+      this.amount,
+      this.memo,
+      this.jsonmetadata,
+      this.pp,
+      this.pa,
+      this.burn});
 
   TxData.fromJson(Map<String, dynamic> json) {
     author = json['author'];
@@ -75,6 +76,7 @@ class TxData {
     jsonmetadata = json['json'];
     pa = json['pa'];
     pp = json['pp'];
+    burn = int.parse(json['burn']);
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -116,7 +118,71 @@ class TxData {
     if (this.pp != null) {
       data['pp'] = this.pp;
     }
+    if (this.burn != null) {
+      data['burn'] = this.burn;
+    }
 
     return data;
   }
+}
+
+class UploadData {
+  String link;
+  String title;
+  String parentAuthor;
+  String parentPermlink;
+  String description;
+  String tag;
+  double vpPercent;
+  int vpBalance;
+  double burnDtc;
+  int dtcBalance;
+  String duration;
+  String thumbnailLocation;
+  bool localThumbnail;
+  String videoLocation;
+  bool localVideoFile;
+  bool originalContent;
+  bool nSFWContent;
+  bool unlistVideo;
+  bool isEditing;
+  bool isPromoted;
+
+  String videoSourceHash;
+  String video240pHash;
+  String video480pHash;
+  String videoSpriteHash;
+  String thumbnail640Hash;
+  String thumbnail210Hash;
+  bool uploaded;
+
+  UploadData({
+    required this.link,
+    required this.parentAuthor,
+    required this.parentPermlink,
+    required this.title,
+    required this.description,
+    required this.tag,
+    required this.vpPercent,
+    required this.vpBalance,
+    required this.burnDtc,
+    required this.dtcBalance,
+    required this.duration,
+    required this.thumbnailLocation,
+    required this.localThumbnail,
+    required this.videoLocation,
+    required this.localVideoFile,
+    required this.originalContent,
+    required this.nSFWContent,
+    required this.unlistVideo,
+    required this.isEditing,
+    required this.isPromoted,
+    required this.videoSourceHash,
+    required this.video240pHash,
+    required this.video480pHash,
+    required this.videoSpriteHash,
+    required this.thumbnail640Hash,
+    required this.thumbnail210Hash,
+    required this.uploaded,
+  });
 }

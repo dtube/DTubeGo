@@ -2,16 +2,15 @@ import 'package:dtube_togo/bloc/settings/settings_event.dart';
 import 'package:dtube_togo/bloc/settings/settings_state.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:bloc/bloc.dart';
-import 'package:dtube_togo/utils/discoverAPINode.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   SettingsBloc() : super(SettingsInitialState());
 
-  @override
-  // TODO: implement initialState
-  SettingsState get initialState => SettingsInitialState();
+  // @override
+
+  // SettingsState get initialState => SettingsInitialState();
 
   @override
   Stream<SettingsState> mapEventToState(SettingsEvent event) async* {
@@ -32,7 +31,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         };
         yield SettingsLoadedState(settings: newSettings);
       } catch (e) {
-        yield settingsErrorState(message: 'unknown error');
+        yield SettingsErrorState(message: 'unknown error');
       }
     }
     if (event is PushSettingsEvent) {
@@ -48,7 +47,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
         yield SettingsSavedState(settings: event.newSettings);
       } catch (e) {
-        yield settingsErrorState(message: 'unknown error');
+        yield SettingsErrorState(message: 'unknown error');
       }
     }
   }

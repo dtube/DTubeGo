@@ -4,16 +4,15 @@ import 'package:dtube_togo/bloc/postdetails/postdetails_repository.dart';
 import 'package:dtube_togo/bloc/postdetails/postdetails_response_model.dart';
 import 'package:dtube_togo/bloc/postdetails/postdetails_state.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
-import 'package:dtube_togo/utils/discoverAPINode.dart';
 
 class PostBloc extends Bloc<PostEvent, PostState> {
   PostRepository repository;
 
   PostBloc({required this.repository}) : super(PostInitialState());
 
-  @override
-  // TODO: implement initialState
-  PostState get initialState => PostInitialState();
+  // @override
+
+  // PostState get initialState => PostInitialState();
 
   @override
   Stream<PostState> mapEventToState(PostEvent event) async* {

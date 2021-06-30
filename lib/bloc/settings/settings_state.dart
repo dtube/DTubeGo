@@ -34,10 +34,10 @@ class SettingsSavedState extends SettingsState {
   List<Object> get props => [];
 }
 
-class settingsErrorState extends SettingsState {
+class SettingsErrorState extends SettingsState {
   String message;
 
-  settingsErrorState({required this.message});
+  SettingsErrorState({required this.message});
 
   @override
   List<Object> get props => [message];

@@ -1,15 +1,15 @@
-import 'dart:convert';
+import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
+import 'package:dtube_togo/utils/randomPermlink.dart';
 
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_event.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
+
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/ui/pages/upload/uploadForm.dart';
-
+import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,30 +29,33 @@ class _WizardIPFSState extends State<WizardIPFS> {
   late TransactionBloc _txBloc;
 
   UploadData _uploadData = UploadData(
-    link: "",
-    author: "",
-    title: "",
-    description: "",
-    tag: "",
-    vpPercent: 0.0,
-    vpBalance: 0,
-    burnDtc: 0,
-    dtcBalance: 0,
-    duration: new Duration(seconds: 0),
-    thumbnailLocation: "",
-    localThumbnail: true,
-    videoLocation: "",
-    localVideoFile: true,
-    originalContent: false,
-    nSFWContent: false,
-    unlistVideo: false,
-    videoSourceHash: "",
-    video240pHash: "",
-    video480pHash: "",
-    videoSpriteHash: "",
-    thumbnail640Hash: "",
-    thumbnail210Hash: "",
-  );
+      link: "",
+      title: "",
+      description: "",
+      tag: "",
+      vpPercent: 0.0,
+      vpBalance: 0,
+      burnDtc: 0,
+      dtcBalance: 0,
+      duration: "",
+      thumbnailLocation: "",
+      localThumbnail: true,
+      videoLocation: "",
+      localVideoFile: true,
+      originalContent: false,
+      nSFWContent: false,
+      unlistVideo: false,
+      videoSourceHash: "",
+      video240pHash: "",
+      video480pHash: "",
+      videoSpriteHash: "",
+      thumbnail640Hash: "",
+      thumbnail210Hash: "",
+      isEditing: false,
+      isPromoted: false,
+      parentAuthor: "",
+      parentPermlink: "",
+      uploaded: false);
 
   void childCallback(UploadData ud) {
     setState(() {
@@ -70,6 +73,18 @@ class _WizardIPFSState extends State<WizardIPFS> {
     _txBloc = BlocProvider.of<TransactionBloc>(context);
   }
 
+  void navigateToPostDetailPage(BuildContext context) async {
+    String? _username = await sec.getUsername();
+    _uploadData.uploaded = true;
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return PostDetailPage(
+        author: _username!,
+        link: _uploadData.link,
+        recentlyUploaded: true,
+      );
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_uploadPressed) {
@@ -78,91 +93,102 @@ class _WizardIPFSState extends State<WizardIPFS> {
         callback: childCallback,
       );
     } else {
-      return BlocBuilder<IPFSUploadBloc, IPFSUploadState>(
-          builder: (context, state) {
-        if (state is IPFSUploadVideoPreProcessingState) {
+      return BlocBuilder<TransactionBloc, TransactionState>(
+        builder: (context, state) {
+          if (state is TransactionSent) {
+            navigateToPostDetailPage(context);
+          } else {
+            return BlocBuilder<IPFSUploadBloc, IPFSUploadState>(
+                builder: (context, state) {
+              if (state is IPFSUploadVideoPreProcessingState &&
+                  _uploadData.uploaded == false) {
+                return Center(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(50.0),
+                        child: DTubeLogoPulse(),
+                      ),
+                      Text("compressing video..."),
+                    ],
+                  ),
+                );
+              } else if (state is IPFSUploadVideoPreProcessedState &&
+                  _uploadData.uploaded == false) {
+                return Center(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(50.0),
+                        child: DTubeLogoPulse(),
+                      ),
+                      Text("uploading video..."),
+                    ],
+                  ),
+                );
+              } else if (state is IPFSUploadVideoPostProcessingState &&
+                  _uploadData.uploaded == false) {
+                return Center(
+                  child: PostProcessingStatusBars(
+                      statusInfo: state.processingResponse),
+                );
+              } else if (state is IPFSUploadVideoPostProcessedState &&
+                  _uploadData.uploaded == false) {
+                var statusInfo = state.processingResponse;
+
+                _uploadData.videoSourceHash =
+                    statusInfo["ipfsAddSourceVideo"]["hash"];
+                _uploadData.video240pHash = statusInfo["encodedVideos"][0]
+                    ["ipfsAddEncodeVideo"]["hash"];
+                _uploadData.video480pHash = statusInfo["encodedVideos"][1]
+                    ["ipfsAddEncodeVideo"]["hash"];
+                _uploadData.videoSpriteHash =
+                    statusInfo["ipfsAddSourceVideo"]["hash"];
+              } else if (state is IPFSUploadThumbnailUploadingState &&
+                  _uploadData.uploaded == false) {
+                return Center(
+                  child: ThumbnailStatusCircle(),
+                );
+              } else if (state is IPFSUploadThumbnailUploadedState &&
+                  _uploadData.uploaded == false) {
+                var statusInfo = state.uploadResponse;
+
+                _uploadData.thumbnail210Hash =
+                    statusInfo["ipfsAddSource"]["hash"];
+                _uploadData.thumbnail640Hash =
+                    statusInfo["ipfsAddOverlay"]["hash"];
+
+                var voteValue =
+                    (_uploadData.vpBalance * (_uploadData.vpPercent / 100))
+                        .floor();
+                _uploadData.link = randomPermlink(11);
+                BlocProvider.of<TransactionBloc>(context)
+                    .add(SendCommentEvent(_uploadData));
+              } else {
+                return Center(
+                  child: Column(
+                    children: [
+                      Text(""),
+                    ],
+                  ),
+                );
+              }
+              return Center(
+                  child: Column(
+                children: [
+                  Text(""),
+                ],
+              ));
+            });
+          }
           return Center(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(50.0),
-                  child: DTubeLogoPulse(),
-                ),
-                Text("compressing video..."),
-              ],
-            ),
-          );
-        } else if (state is IPFSUploadVideoPreProcessedState) {
-          return Center(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(50.0),
-                  child: DTubeLogoPulse(),
-                ),
-                Text("uploading video..."),
-              ],
-            ),
-          );
-        } else if (state is IPFSUploadVideoPostProcessingState) {
-          return Center(
-            child:
-                PostProcessingStatusBars(statusInfo: state.processingResponse),
-          );
-        } else if (state is IPFSUploadVideoPostProcessedState) {
-          var statusInfo = state.processingResponse;
-
-          _uploadData.videoSourceHash =
-              statusInfo["ipfsAddSourceVideo"]["hash"];
-          _uploadData.video240pHash =
-              statusInfo["encodedVideos"][0]["ipfsAddEncodeVideo"]["hash"];
-          _uploadData.video480pHash =
-              statusInfo["encodedVideos"][1]["ipfsAddEncodeVideo"]["hash"];
-          _uploadData.videoSpriteHash =
-              statusInfo["ipfsAddSourceVideo"]["hash"];
-        } else if (state is IPFSUploadThumbnailUploadingState) {
-          return Center(
-            child: ThumbnailStatusCircle(),
-          );
-        } else if (state is IPFSUploadThumbnailUploadedState) {
-          var statusInfo = state.uploadResponse;
-
-          _uploadData.thumbnail210Hash = statusInfo["ipfsAddSource"]["hash"];
-          _uploadData.thumbnail640Hash = statusInfo["ipfsAddOverlay"]["hash"];
-
-          var voteValue =
-              (_uploadData.vpBalance * (_uploadData.vpPercent / 100)).floor();
-
-          //TODO: build TxData and send transaction to avalon
-
-          // TxData txdata = TxData(
-          //
-          //   link: _uploadData.link,
-          //   author: _uploadData.author,
-          //   tag: _uploadData.tag,
-          //   vt: voteValue,
-          // );
-          // Transaction newTx = Transaction(type: 5, data: txdata);
-          // _txBloc.add(SignAndSendTransactionEvent(newTx));
-          return Center(
-              child: HashOverview(
-            videoSourceHash: _uploadData.videoSourceHash,
-            video240pHash: _uploadData.video240pHash,
-            video480pHash: _uploadData.video480pHash,
-            videoSpriteHash: _uploadData.videoSpriteHash,
-            thumbnail640Hash: _uploadData.thumbnail640Hash,
-            thumbnail210Hash: _uploadData.thumbnail210Hash,
-          ));
-        }
-
-        return Center(
-          child: Column(
+              child: Column(
             children: [
               Text(""),
             ],
-          ),
-        );
-      });
+          ));
+        },
+      );
     }
   }
 }
@@ -215,7 +241,6 @@ class PostProcessingStatusBars extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: extract business logic to bloc...
     double ipfsSourceUpload =
         statusInfo["ipfsAddSourceVideo"]["step"] != "Waiting" &&
                 statusInfo["ipfsAddSourceVideo"]["progress"] != null
@@ -259,8 +284,6 @@ class PostProcessingStatusBars extends StatelessWidget {
             .replaceAll("%", ""))
         : 0.0;
 
-    double creatingThumbnail = 50;
-    double ipfsThumbnailUpload = 0;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -284,14 +307,11 @@ class PostProcessingStatusBars extends StatelessWidget {
           title: 'encoding to 480p',
           value: encoding480p,
         ),
-
         UploaderProgressBar(
           title: 'uploading 480p to ipfs',
           value: ipfs480pUpload,
         ),
         SizedBox(height: 50)
-        // UploaderProgressBar(title: 'encoding to 480p',value: encoding480p,),
-        // UploaderProgressBar(title: 'encoding to 480p',value: encoding480p,),
       ],
     );
   }
@@ -304,22 +324,7 @@ class ThumbnailStatusCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // // TODO: extract business logic to bloc...
-    // double ipfsAddSource = statusInfo["ipfsAddSource"]["step"] != "Waiting" &&
-    //         statusInfo["ipfsAddSource"]["progress"] != null
-    //     ? double.parse(statusInfo["ipfsAddSource"]["progress"]
-    //         .toString()
-    //         .replaceAll("%", ""))
-    //     : 0.0;
-    // double ipfsAddOverlay = statusInfo["ipfsAddOverlay"]["step"] != "Waiting" &&
-    //         statusInfo["ipfsAddSource"]["progress"] != null
-    //     ? double.parse(statusInfo["ipfsAddSource"]["progress"]
-    //         .toString()
-    //         .replaceAll("%", ""))
-    //     : 0.0;
-
     return Column(
-      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
           padding: const EdgeInsets.all(50.0),

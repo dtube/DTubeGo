@@ -130,9 +130,9 @@ class _UserState extends State<UserPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  user.json_string?.profile?.avatar != null
+                  user.jsonString?.profile?.avatar != null
                       ? CachedNetworkImage(
-                          imageUrl: user.json_string!.profile!.avatar!,
+                          imageUrl: user.jsonString!.profile!.avatar!,
                           imageBuilder: (context, imageProvider) => Container(
                             width: 80.0,
                             height: 80.0,
@@ -160,9 +160,9 @@ class _UserState extends State<UserPage> {
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.headline2,
                         ),
-                        user.json_string?.profile?.location != null
+                        user.jsonString?.profile?.location != null
                             ? Text(
-                                user.json_string!.profile!.location!,
+                                user.jsonString!.profile!.location!,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context).textTheme.bodyText1,
@@ -170,9 +170,9 @@ class _UserState extends State<UserPage> {
                             : SizedBox(
                                 height: 0,
                               ),
-                        user.json_string?.profile?.about != null
+                        user.jsonString?.profile?.about != null
                             ? Text(
-                                user.json_string!.profile!.about!,
+                                user.jsonString!.profile!.about!,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context).textTheme.bodyText1,
@@ -180,9 +180,9 @@ class _UserState extends State<UserPage> {
                             : SizedBox(
                                 height: 0,
                               ),
-                        user.json_string?.profile?.website != null
+                        user.jsonString?.profile?.website != null
                             ? Text(
-                                user.json_string!.profile!.website!,
+                                user.jsonString!.profile!.website!,
                                 style: Theme.of(context).textTheme.bodyText1,
                               )
                             : SizedBox(
