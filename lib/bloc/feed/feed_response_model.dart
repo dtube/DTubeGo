@@ -39,6 +39,7 @@ class FeedItem {
   // List<Null> child;
   //List<Votes> votes;
   List<Votes>? upvotes;
+
   List<Votes>? downvotes;
   late int ts;
   String videoUrl = "";
@@ -46,21 +47,24 @@ class FeedItem {
   String videoSource = "";
   // Tags tags;
   late double dist;
+  //List<String> tags = [];
 
-  FeedItem(
-      {required this.sId,
-      required this.author,
-      required this.link,
-      // this.pa,
-      // this.pp,
-      this.jsonString,
-      // this.child,
-      //this.votes,
-      this.upvotes,
-      this.downvotes,
-      required this.ts,
-      // this.tags,
-      required this.dist});
+  FeedItem({
+    required this.sId,
+    required this.author,
+    required this.link,
+    // this.pa,
+    // this.pp,
+    this.jsonString,
+    // this.child,
+    //this.votes,
+    this.upvotes,
+    this.downvotes,
+    required this.ts,
+    // this.tags,
+    required this.dist,
+    //required this.tags
+  });
 
   FeedItem.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -82,19 +86,22 @@ class FeedItem {
     //     votes.add(new Votes.fromJson(v));
     //   });
     // }
-
-    if (json['votes'] != null) {
-      upvotes = [];
-      downvotes = [];
-      json['votes'].forEach((v) {
-        Votes _v = new Votes.fromJson(v);
-        if (_v.vt > 0.0) {
-          upvotes!.add(_v);
-        } else {
-          downvotes!.add(_v);
-        }
-      });
-    }
+    // tags = [];
+    // tags.add(jsonString!.tag);
+    // if (json['votes'] != null) {
+    //   upvotes = [];
+    //   downvotes = [];
+    //   json['votes'].forEach((v) {
+    //     Votes _v = new Votes.fromJson(v);
+    //     if (_v.vt > 0.0) {
+    //       upvotes!.add(_v);
+    //     } else {
+    //       downvotes!.add(_v);
+    //     }
+    //     if (_v.tag != null && _v.tag != "" && !tags.contains(_v.tag)) {
+    //       tags.add(_v.tag!);
+    //     }
+    //  });
 
     ts = json['ts'];
     // tags = json['tags'] != null ? new Tags.fromJson(json['tags']) : null;

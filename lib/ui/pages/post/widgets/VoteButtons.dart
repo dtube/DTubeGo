@@ -22,7 +22,8 @@ class VotingButtons extends StatefulWidget {
       required this.defaultVotingWeight,
       required this.defaultVotingTip,
       required this.currentVT,
-      required this.scale})
+      required this.scale,
+      required this.isPost})
       : super(key: key);
 
   final String author;
@@ -36,6 +37,7 @@ class VotingButtons extends StatefulWidget {
   final double defaultVotingTip;
   final int currentVT;
   final double scale;
+  final bool isPost;
   //final int voteVT = 0;
 
   @override
@@ -147,6 +149,7 @@ class _VotingButtonsState extends State<VotingButtons> {
                 link: widget.link,
                 downvote: _downvotePressed,
                 currentVT: _currentVT.toDouble(),
+                isPost: widget.isPost,
               )))
     ]);
   }
@@ -161,6 +164,7 @@ class VotingSlider extends StatefulWidget {
     required this.defaultVote,
     required this.defaultTip,
     required this.currentVT,
+    required this.isPost,
   }) : super(key: key);
 
   String author;
@@ -168,6 +172,7 @@ class VotingSlider extends StatefulWidget {
   double defaultVote;
   double defaultTip;
   double currentVT;
+  bool isPost;
 
   bool downvote;
 
@@ -179,6 +184,7 @@ class _VotingSliderState extends State<VotingSlider> {
   late double _vpValue;
   late double _tipValue;
   late TransactionBloc _txBloc;
+  late TextEditingController _tagController;
 
   late PostBloc _postBloc;
   late double _currentVT;
@@ -188,7 +194,7 @@ class _VotingSliderState extends State<VotingSlider> {
     super.initState();
     _txBloc = BlocProvider.of<TransactionBloc>(context);
     _postBloc = BlocProvider.of<PostBloc>(context);
-
+    _tagController = TextEditingController();
     //_userBloc.add(FetchDTCVPEvent());
     _vpValue = widget.defaultVote;
     _tipValue = widget.defaultTip;
@@ -213,7 +219,7 @@ class _VotingSliderState extends State<VotingSlider> {
           Row(
             children: [
               Container(
-                width: 60,
+                width: 100,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -250,7 +256,7 @@ class _VotingSliderState extends State<VotingSlider> {
               : Row(
                   children: [
                     Container(
-                      width: 60,
+                      width: 100,
                       child: Column(
                         children: [
                           Text(
@@ -280,40 +286,56 @@ class _VotingSliderState extends State<VotingSlider> {
                     ),
                   ],
                 ),
-          BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-            if (state is UserDTCVPLoadedState) {
-              _currentVT = state.vtBalance["v"]!.toDouble();
-              return ElevatedButton(
-                  onPressed: () {
-                    var voteValue = (_currentVT * (_vpValue / 100)).floor();
-                    int _txType = 5;
-                    TxData txdata = TxData(
-                      author: widget.author,
-                      link: widget.link,
-                      tag: '',
-                      vt: voteValue,
-                    );
-
-                    if (_tipValue > 0) {
-                      _txType = 19;
-                      txdata = TxData(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              widget.isPost
+                  ? Container(
+                      width: 200,
+                      child: TextFormField(
+                        controller: _tagController,
+                        decoration:
+                            new InputDecoration(labelText: "curator tag"),
+                      ),
+                    )
+                  : SizedBox(width: 0),
+              SizedBox(width: 8),
+              BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+                if (state is UserDTCVPLoadedState) {
+                  _currentVT = state.vtBalance["v"]!.toDouble();
+                  return ElevatedButton(
+                      onPressed: () {
+                        var voteValue = (_currentVT * (_vpValue / 100)).floor();
+                        int _txType = 5;
+                        TxData txdata = TxData(
                           author: widget.author,
                           link: widget.link,
-                          tag: '',
+                          tag: _tagController.value.text,
                           vt: voteValue,
-                          tip: _tipValue.floor());
-                    }
-                    Transaction newTx =
-                        Transaction(type: _txType, data: txdata);
-                    _txBloc.add(SignAndSendTransactionEvent(newTx));
-                  },
-                  child: Text("send"));
-            } else {
-              return SizedBox(
-                width: 0,
-              );
-            }
-          }),
+                        );
+
+                        if (_tipValue > 0) {
+                          _txType = 19;
+                          txdata = TxData(
+                              author: widget.author,
+                              link: widget.link,
+                              tag: _tagController.value.text,
+                              vt: voteValue,
+                              tip: _tipValue.floor());
+                        }
+                        Transaction newTx =
+                            Transaction(type: _txType, data: txdata);
+                        _txBloc.add(SignAndSendTransactionEvent(newTx));
+                      },
+                      child: Text("send"));
+                } else {
+                  return SizedBox(
+                    width: 0,
+                  );
+                }
+              }),
+            ],
+          ),
         ],
       )
           //   ],

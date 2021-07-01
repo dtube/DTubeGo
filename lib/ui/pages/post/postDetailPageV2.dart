@@ -254,20 +254,20 @@ class _PostDetailsState extends State<PostDetails> {
                                   //       PostBloc(repository: PostRepositoryImpl()),
                                   //   child:
                                   VotingButtons(
-                                      author: widget.post.author,
-                                      link: widget.post.link,
-                                      alreadyVoted: widget.post.alreadyVoted!,
-                                      alreadyVotedDirection:
-                                          widget.post.alreadyVotedDirection!,
-                                      upvotes: widget.post.upvotes,
-                                      downvotes: widget.post.downvotes,
-                                      defaultVotingWeight:
-                                          _defaultVoteWeightPosts,
-                                      defaultVotingTip: _defaultVoteTipPosts,
-                                      currentVT: _currentVT,
-                                      scale: 1
-                                      //),
-                                      );
+                                author: widget.post.author,
+                                link: widget.post.link,
+                                alreadyVoted: widget.post.alreadyVoted!,
+                                alreadyVotedDirection:
+                                    widget.post.alreadyVotedDirection!,
+                                upvotes: widget.post.upvotes,
+                                downvotes: widget.post.downvotes,
+                                defaultVotingWeight: _defaultVoteWeightPosts,
+                                defaultVotingTip: _defaultVoteTipPosts,
+                                currentVT: _currentVT,
+                                scale: 1,
+                                isPost: true,
+                                //),
+                              );
                             } else {
                               return SizedBox(height: 0);
                             }
@@ -279,6 +279,28 @@ class _PostDetailsState extends State<PostDetails> {
                           ),
                         ],
                       ),
+                      widget.post.tags.length > 0
+                          ? Container(
+                              width: 500,
+                              height: 50,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: widget.post.tags.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: InputChip(
+                                          label: Text(
+                                        widget.post.tags[index].toString(),
+                                      )),
+                                    );
+                                    // return Text(
+                                    //   widget.post.tags[index].toString(),
+                                    // );
+                                  }),
+                            )
+                          : SizedBox(height: 0),
                       CollapsedDescription(
                           description: widget.post.jsonString!.desc != null
                               ? widget.post.jsonString!.desc!

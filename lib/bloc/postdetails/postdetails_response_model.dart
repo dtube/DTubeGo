@@ -43,23 +43,24 @@ class Post {
   bool? alreadyVoted = false;
   bool? alreadyVotedDirection = false; // false = downvote | true = upvote
   List<Comment>? comments;
+  List<String> tags = [];
 
-  Post({
-    required this.sId,
-    required this.author,
-    required this.link,
-    // this.pa,
-    // this.pp,
-    this.jsonString,
-    // this.child,
-    //this.votes,
-    this.upvotes,
-    this.downvotes,
-    required this.ts,
-    //required this.tags,
-    required this.dist,
-    this.comments,
-  });
+  Post(
+      {required this.sId,
+      required this.author,
+      required this.link,
+      // this.pa,
+      // this.pp,
+      this.jsonString,
+      // this.child,
+      //this.votes,
+      this.upvotes,
+      this.downvotes,
+      required this.ts,
+      //required this.tags,
+      required this.dist,
+      this.comments,
+      required this.tags});
 
   Post.fromJson(Map<String, dynamic> json, String currentUser) {
     sId = json['_id'];
@@ -99,6 +100,25 @@ class Post {
           int indexOfChild = comments!.indexOf(c);
           comments!.removeAt(indexOfChild);
           print("test");
+        }
+      });
+    }
+    tags = [];
+    tags.add(jsonString!.tag!.toLowerCase());
+    if (json['votes'] != null) {
+      upvotes = [];
+      downvotes = [];
+      json['votes'].forEach((v) {
+        Votes _v = new Votes.fromJson(v);
+        if (_v.vt > 0.0) {
+          upvotes!.add(_v);
+        } else {
+          downvotes!.add(_v);
+        }
+        if (_v.tag != null &&
+            _v.tag != "" &&
+            !tags.contains(_v.tag!.toLowerCase())) {
+          tags.add(_v.tag!.toLowerCase());
         }
       });
     }
@@ -182,6 +202,7 @@ class Post {
     data['dist'] = this.dist;
     data['videoUrl'] = this.videoUrl;
     data['thumbUrl'] = this.thumbUrl;
+    data['tags'] = this.tags;
     return data;
   }
 }
