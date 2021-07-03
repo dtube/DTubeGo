@@ -146,14 +146,16 @@ class Post {
     if (jsonString?.files?.youtube != null) {
       videoUrl = jsonString?.files?.youtube;
     } else if (jsonString?.files?.ipfs != null) {
+      String _gateway = AppStrings.ipfsVideoUrl;
+      if (jsonString?.files?.ipfs!.gw != null) {
+        _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
+      }
       if (jsonString?.files?.ipfs?.vid?.s480 != null) {
-        videoUrl =
-            AppStrings.ipfsVideoUrl + jsonString!.files!.ipfs!.vid!.s480!;
+        videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.s480!;
       } else if (jsonString?.files?.ipfs?.vid?.s240 != null) {
-        videoUrl =
-            AppStrings.ipfsVideoUrl + jsonString!.files!.ipfs!.vid!.s240!;
+        videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.s240!;
       } else {
-        videoUrl = AppStrings.ipfsVideoUrl + jsonString!.files!.ipfs!.vid!.src!;
+        videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.src!;
       }
     }
 
@@ -161,11 +163,16 @@ class Post {
       thumbUrl = "https://img.youtube.com/vi/" +
           jsonString!.files!.youtube! +
           "/mqdefault.jpg";
-    } else if (jsonString?.files?.youtube != null) {
+    } else {
+      String _gateway = AppStrings.ipfsVideoUrl;
+      if (jsonString?.files?.ipfs!.gw != null) {
+        _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
+      }
+
       if (jsonString?.files?.ipfs?.img?.s360 != null) {
-        thumbUrl = AppStrings.ipfsSnapUrl + jsonString!.files!.ipfs!.img!.s360!;
+        thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s360!;
       } else {
-        thumbUrl = AppStrings.ipfsSnapUrl + jsonString!.files!.ipfs!.img!.s118!;
+        thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s118!;
       }
     }
 
@@ -231,7 +238,7 @@ class PostJsonString {
 
   PostJsonString.fromJson(Map<String, dynamic> json) {
     files = json['files'] != null ? new Files.fromJson(json['files']) : null;
-    dur = json['dur'];
+    dur = json['dur'].toString();
     title = json['title'];
     desc = json['description'] == null ? json['desc'] : json['description'];
     tag = json['tag'];

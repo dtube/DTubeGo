@@ -111,16 +111,17 @@ class FeedItem {
       videoSource = "youtube";
     } else if (jsonString?.files?.ipfs != null) {
       videoSource = "ipfs";
+      String _gateway = AppStrings.ipfsVideoUrl;
+      if (jsonString?.files?.ipfs!.gw != null) {
+        _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
+      }
       if (jsonString?.files?.ipfs?.vid?.s480 != null) {
-        videoUrl =
-            AppStrings.ipfsVideoUrl + jsonString!.files!.ipfs!.vid!.s480!;
+        videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.s480!;
       } else if (jsonString?.files?.ipfs?.vid?.s240 != null) {
-        videoUrl =
-            AppStrings.ipfsVideoUrl + jsonString!.files!.ipfs!.vid!.s240!;
+        videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.s240!;
       } else {
         if (jsonString!.files!.ipfs!.vid?.src != null) {
-          videoUrl =
-              AppStrings.ipfsVideoUrl + jsonString!.files!.ipfs!.vid!.src!;
+          videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.src!;
         } else {
           videoUrl = "";
         }
@@ -131,13 +132,20 @@ class FeedItem {
       thumbUrl = "https://img.youtube.com/vi/" +
           jsonString!.files!.youtube! +
           "/mqdefault.jpg";
-    } else if (jsonString?.files?.ipfs?.img?.s360 != null) {
-      thumbUrl = AppStrings.ipfsSnapUrl + jsonString!.files!.ipfs!.img!.s360!;
-    } else if (jsonString?.files?.ipfs?.img?.s360 != null) {
-      thumbUrl = AppStrings.ipfsSnapUrl + jsonString!.files!.ipfs!.img!.s118!;
     } else {
-      thumbUrl =
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Flag_of_None.svg/800px-Flag_of_None.svg.png';
+      String _gateway = AppStrings.ipfsVideoUrl;
+      if (jsonString?.files?.ipfs!.gw != null) {
+        _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
+      }
+
+      if (jsonString?.files?.ipfs?.img?.s360 != null) {
+        thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s360!;
+      } else if (jsonString?.files?.ipfs?.img?.s118 != null) {
+        thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s118!;
+      } else {
+        thumbUrl =
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Flag_of_None.svg/800px-Flag_of_None.svg.png';
+      }
     }
   }
 
