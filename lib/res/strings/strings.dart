@@ -1,15 +1,22 @@
 class AppStrings {
-  static String myFeedUrl = "/feed/##USERNAME";
-  static String newFeedUrl = "/new";
-  static String hotFeedUrl = "/hot";
-  static String trendingFeedUrl = "/trending";
+  static String myFeedUrlFirst = "/feed/##USERNAME";
+  static String myFeedUrlMore = "/feed/##USERNAME/##AUTHOR/##LINK";
+  static String newFeedUrlFirst = "/new";
+  static String newFeedUrlMore = "/new/##AUTHOR/##LINK";
+
+  static String hotFeedUrlFirst = "/hot";
+  static String hotFeedUrlMore = "/hot/##AUTHOR/##LINK";
+  static String trendingFeedUrlFirst = "/trending";
+  static String trendingFeedUrlMore = "/trending/##AUTHOR/##LINK";
+
   static String accountDataUrl = "/account/##USERNAME";
 
   static String postDataUrl = "/content/##AUTHOR/##LINK";
 
   static String rewardsUrl = "/votes/##REWARDSTATE/##USERNAME/0";
 
-  static String accountFeedUrl = "/blog/##USERNAME";
+  static String accountFeedUrlFirst = "/blog/##USERNAME";
+  static String accountFeedUrlMore = "/blog/##USERNAME/##AUTHORNAME/##LINK";
 
   static String notificationFeedUrl = "/notifications/##USERNAME";
 

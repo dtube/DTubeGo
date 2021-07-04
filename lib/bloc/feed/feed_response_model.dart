@@ -1,4 +1,5 @@
 import 'package:dtube_togo/res/strings/strings.dart';
+import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 class ApiResultModel {
   late String status;
@@ -8,20 +9,21 @@ class ApiResultModel {
   ApiResultModel(
       {required this.status, required this.totalResults, required this.feed});
 
-  ApiResultModel.fromJson(List<dynamic> json) {
+  ApiResultModel.fromJson(List<dynamic> json, String currentUser) {
 //    status = json['status'];
 
     totalResults = json.length;
     feed = [];
     json.forEach((v) {
-      feed.add(new FeedItem.fromJson(v));
+      feed.add(new FeedItem.fromJson(v, currentUser));
     });
   }
 
-  Map<String, dynamic> toJson() {
+  Future<Map<String, dynamic>> toJson() async {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['totalResults'] = this.totalResults;
+
     data['FeedItems'] = this.feed.map((v) => v.toJson()).toList();
 
     return data;
@@ -41,6 +43,7 @@ class FeedItem {
   List<Votes>? upvotes;
 
   List<Votes>? downvotes;
+
   late int ts;
   String videoUrl = "";
   String thumbUrl = "";
@@ -48,25 +51,29 @@ class FeedItem {
   // Tags tags;
   late double dist;
   //List<String> tags = [];
+  int summaryOfVotes = 0;
+  bool? alreadyVoted = false;
+  bool? alreadyVotedDirection = false; // false = downvote | true = upvote
+  List<String> tags = [];
+  FeedItem(
+      {required this.sId,
+      required this.author,
+      required this.link,
+      // this.pa,
+      // this.pp,
+      this.jsonString,
+      // this.child,
+      //this.votes,
+      this.upvotes,
+      this.downvotes,
+      required this.ts,
+      // this.tags,
+      required this.dist,
+      required this.tags
+      //required this.tags
+      });
 
-  FeedItem({
-    required this.sId,
-    required this.author,
-    required this.link,
-    // this.pa,
-    // this.pp,
-    this.jsonString,
-    // this.child,
-    //this.votes,
-    this.upvotes,
-    this.downvotes,
-    required this.ts,
-    // this.tags,
-    required this.dist,
-    //required this.tags
-  });
-
-  FeedItem.fromJson(Map<String, dynamic> json) {
+  FeedItem.fromJson(Map<String, dynamic> json, String currentUser) {
     sId = json['_id'];
     author = json['author'];
     link = json['link'];
@@ -74,34 +81,32 @@ class FeedItem {
     // pp = json['pp'];
     jsonString =
         json['json'] != null ? new JsonString.fromJson(json['json']) : null;
-    // if (json['child'] != null) {
-    //   child = new List<Null>();
-    //   json['child'].forEach((v) {
-    //     child.add(new Null.fromJson(v));
-    //   });
-    // }
-    // if (json['votes'] != null) {
-    //   votes = new List<Votes>();
-    //   json['votes'].forEach((v) {
-    //     votes.add(new Votes.fromJson(v));
-    //   });
-    // }
-    // tags = [];
-    // tags.add(jsonString!.tag);
-    // if (json['votes'] != null) {
-    //   upvotes = [];
-    //   downvotes = [];
-    //   json['votes'].forEach((v) {
-    //     Votes _v = new Votes.fromJson(v);
-    //     if (_v.vt > 0.0) {
-    //       upvotes!.add(_v);
-    //     } else {
-    //       downvotes!.add(_v);
-    //     }
-    //     if (_v.tag != null && _v.tag != "" && !tags.contains(_v.tag)) {
-    //       tags.add(_v.tag!);
-    //     }
-    //  });
+    if (json['votes'] != null) {
+      upvotes = [];
+      downvotes = [];
+      json['votes'].forEach((v) {
+        Votes _v = new Votes.fromJson(v);
+        summaryOfVotes = summaryOfVotes + _v.vt;
+        if (_v.vt > 0.0) {
+          upvotes!.add(_v);
+          if (_v.u == currentUser) {
+            alreadyVoted = true;
+            alreadyVotedDirection = true;
+          }
+        } else {
+          downvotes!.add(_v);
+          if (_v.u == currentUser) {
+            alreadyVoted = true;
+            alreadyVotedDirection = false;
+          }
+        }
+        if (_v.tag != null &&
+            _v.tag != "" &&
+            !tags.contains(_v.tag!.toLowerCase())) {
+          tags.add(_v.tag!.toLowerCase());
+        }
+      });
+    }
 
     ts = json['ts'];
     // tags = json['tags'] != null ? new Tags.fromJson(json['tags']) : null;
@@ -133,10 +138,7 @@ class FeedItem {
           jsonString!.files!.youtube! +
           "/mqdefault.jpg";
     } else {
-      String _gateway = AppStrings.ipfsVideoUrl;
-      if (jsonString?.files?.ipfs!.gw != null) {
-        _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
-      }
+      String _gateway = AppStrings.ipfsSnapUrl;
 
       if (jsonString?.files?.ipfs?.img?.s360 != null) {
         thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s360!;

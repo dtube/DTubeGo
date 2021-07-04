@@ -17,14 +17,14 @@ import 'package:dtube_togo/utils/friendlyTimestamp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class FeedPage extends StatefulWidget {
+class FeedPage extends StatelessWidget {
   String feedType;
   String? username;
   bool bigThumbnail;
   bool showAuthor;
 
-  @override
-  _FeedPageState createState() => _FeedPageState();
+  // @override
+  // _FeedPageState createState() => _FeedPageState();
 
   FeedPage({
     required this.feedType,
@@ -33,31 +33,38 @@ class FeedPage extends StatefulWidget {
     required this.showAuthor,
     Key? key,
   }) : super(key: key);
-}
+//}
 
-class _FeedPageState extends State<FeedPage> {
-  @override
+// class _FeedPageState extends State<FeedPage> {
+//   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //backgroundColor: globalAlmostBlack,
+      // body: FeedList(
+      //   feedType: widget.feedType,
+      //   username: widget.username,
+      //   bigThumbnail: widget.bigThumbnail,
+      //   showAuthor: widget.showAuthor,
+      // ),
       body: FeedList(
-        feedType: widget.feedType,
-        username: widget.username,
-        bigThumbnail: widget.bigThumbnail,
-        showAuthor: widget.showAuthor,
+        feedType: feedType,
+        username: username,
+        bigThumbnail: bigThumbnail,
+        showAuthor: showAuthor,
       ),
     );
   }
 }
+//separated FeedList of FeedPage to support channel feedlist without creating dublicate code
 
-class FeedList extends StatefulWidget {
+class FeedList extends StatelessWidget {
   String feedType;
   String? username;
   bool bigThumbnail;
   bool showAuthor;
 
-  @override
-  _FeedListState createState() => _FeedListState();
+  // @override
+  // _FeedListState createState() => _FeedListState();
 
   FeedList({
     required this.feedType,
@@ -66,59 +73,82 @@ class FeedList extends StatefulWidget {
     required this.showAuthor,
     Key? key,
   }) : super(key: key);
-}
+// }
 
-class _FeedListState extends State<FeedList> {
+  late FeedBloc postBloc;
+  final ScrollController _scrollController = ScrollController();
+  List<FeedItem> _feedItems = [];
+
+// class _FeedListState extends State<FeedList> {
   String? nsfwMode;
   String? hiddenMode;
 
-  late FeedBloc postBloc;
+//   late FeedBloc postBloc;
+//   final ScrollController _scrollController = ScrollController();
+//   List<FeedItem> _feedItems = [];
 
-  void getDisplayModes() async {
+  Future<bool> getDisplayModes() async {
     hiddenMode = await sec.getShowHidden();
     nsfwMode = await sec.getNSFW();
     if (nsfwMode == null) {
-      nsfwMode = 'blur';
+      nsfwMode = 'Blur';
     }
     if (hiddenMode == null) {
-      hiddenMode = 'hide';
+      hiddenMode = 'Hide';
     }
+    return true;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    postBloc = BlocProvider.of<FeedBloc>(context);
-    getDisplayModes();
-    if (widget.feedType != "UserFeed") {
-      postBloc.add(FetchFeedEvent(feedType: widget.feedType));
-    } else {
-      postBloc.add(FetchUserFeedEvent(widget.username!));
-    }
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     postBloc = BlocProvider.of<FeedBloc>(context);
+//     getDisplayModes();
+//     if (widget.feedType != "UserFeed") {
+//       postBloc.add(FetchFeedEvent(feedType: widget.feedType));
+//     } else {
+//       postBloc.add(FetchUserFeedEvent(widget.username!));
+//     }
+//   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 800,
-      // color: globalAlmostBlack,
-
-      child: BlocBuilder<FeedBloc, FeedState>(
-        builder: (context, state) {
-          if (state is FeedInitialState) {
-            return buildLoading();
-          } else if (state is FeedLoadingState) {
-            return buildLoading();
-          } else if (state is FeedLoadedState) {
-            return buildPostList(state.feed, widget.bigThumbnail, true);
-          } else if (state is FeedErrorState) {
-            return buildErrorUi(state.message);
+    return FutureBuilder<bool>(
+        future: getDisplayModes(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           } else {
-            return buildErrorUi('test');
+            return Container(
+              height: 800,
+              // color: globalAlmostBlack,
+
+              child: BlocConsumer<FeedBloc, FeedState>(
+                listener: (context, state) {
+                  if (state is FeedErrorState) {
+                    BlocProvider.of<FeedBloc>(context).isFetching = false;
+                  }
+                  return;
+                },
+                builder: (context, state) {
+                  if (state is FeedInitialState ||
+                      state is FeedLoadingState && _feedItems.isEmpty) {
+                    return buildLoading();
+                  } else if (state is FeedLoadedState) {
+                    _feedItems.addAll(state.feed);
+                    BlocProvider.of<FeedBloc>(context).isFetching = false;
+                  } else if (state is FeedErrorState) {
+                    return buildErrorUi(state.message);
+                  }
+                  //return buildPostList(_feedItems, widget.bigThumbnail, true);
+                  return buildPostList(_feedItems, bigThumbnail, true, context);
+                },
+              ),
+            );
           }
-        },
-      ),
-    );
+        });
   }
 
   Widget buildLoading() {
@@ -139,19 +169,50 @@ class _FeedListState extends State<FeedList> {
     );
   }
 
-  Widget buildPostList(
-      List<FeedItem> feed, bool bigThumbnail, bool showAuthor) {
+  Widget buildPostList(List<FeedItem> feed, bool bigThumbnail, bool showAuthor,
+      BuildContext context) {
     return ListView.builder(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: ClampingScrollPhysics(),
       itemCount: feed.length,
+      controller: _scrollController
+        ..addListener(() {
+          if (_scrollController.offset >=
+                  _scrollController.position.maxScrollExtent &&
+              !BlocProvider.of<FeedBloc>(context).isFetching) {
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
+              ..add(feedType != "UserFeed"
+                  ? FetchFeedEvent(
+                      //feedType: widget.feedType,
+                      feedType: feedType,
+                      fromAuthor: feed[feed.length - 1].author,
+                      fromLink: feed[feed.length - 1].link)
+                  : FetchUserFeedEvent(
+                      username: username!,
+                      fromLink: feed[feed.length - 1].link));
+          }
+          if (_scrollController.offset <=
+                  _scrollController.position.minScrollExtent &&
+              !BlocProvider.of<FeedBloc>(context).isFetching) {
+            _feedItems.clear();
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
+              ..add(feedType != "UserFeed"
+                  ? FetchFeedEvent(
+                      //feedType: widget.feedType,
+                      feedType: feedType,
+                    )
+                  : FetchUserFeedEvent(username: username!));
+          }
+        }),
       itemBuilder: (ctx, pos) {
         // work on more sources
         if (feed[pos].jsonString!.files?.youtube != null ||
             feed[pos].jsonString!.files?.ipfs != null) {
-          if ((nsfwMode == 'hide' && feed[pos].jsonString?.nsfw == 1) ||
-              (hiddenMode == 'hide' && feed[pos].jsonString?.hide == 1)) {
+          if ((nsfwMode == 'Hide' && feed[pos].jsonString?.nsfw == 1) ||
+              (hiddenMode == 'Hide' && feed[pos].summaryOfVotes < 0)) {
             return SizedBox(
               height: 0,
             );
@@ -166,10 +227,10 @@ class _FeedListState extends State<FeedList> {
                   child: PostListCard(
                     bigThumbnail: bigThumbnail,
                     showAuthor: showAuthor,
-                    blur: (nsfwMode == 'blur' &&
+                    blur: (nsfwMode == 'Blur' &&
                                 feed[pos].jsonString?.nsfw == 1) ||
-                            (hiddenMode == 'blur' &&
-                                feed[pos].jsonString?.hide == 1)
+                            (hiddenMode == 'Blur' &&
+                                feed[pos].summaryOfVotes < 0)
                         ? true
                         : false,
                     title: feed[pos].jsonString!.title,

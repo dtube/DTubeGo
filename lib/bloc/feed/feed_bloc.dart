@@ -7,6 +7,7 @@ import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
   FeedRepository repository;
+  bool isFetching = false;
 
   FeedBloc({required this.repository}) : super(FeedInitialState());
 
@@ -25,29 +26,32 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         switch (event.feedType) {
           case 'MyFeed':
             {
-              feed =
-                  await repository.getMyFeed(_avalonApiNode, _applicationUser!);
+              feed = await repository.getMyFeed(_avalonApiNode,
+                  _applicationUser!, event.fromAuthor, event.fromLink);
             }
             break;
           case 'HotFeed':
             {
-              feed = await repository.getHotFeed(
-                _avalonApiNode,
-              );
+              feed = await repository.getHotFeed(_avalonApiNode,
+                  event.fromAuthor, event.fromLink, _applicationUser!);
             }
             break;
           case 'TrendingFeed':
             {
               feed = await repository.getTrendingFeed(
-                _avalonApiNode,
-              ); // statements;
+                  _avalonApiNode,
+                  event.fromAuthor,
+                  event.fromLink,
+                  _applicationUser!); // statements;
             }
             break;
           case 'NewFeed':
             {
               feed = await repository.getNewFeed(
-                _avalonApiNode,
-              ); // statements;
+                  _avalonApiNode,
+                  event.fromAuthor,
+                  event.fromLink,
+                  _applicationUser!); // statements;
             }
             break;
         }
@@ -61,10 +65,15 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     if (event is FetchUserFeedEvent) {
       yield FeedLoadingState();
       try {
-        List<FeedItem> feed =
-            await repository.getUserFeed(_avalonApiNode, event.username);
+        List<FeedItem> feed = await repository.getUserFeed(
+            _avalonApiNode,
+            event.username,
+            event.fromAuthor,
+            event.fromLink,
+            _applicationUser!);
         yield FeedLoadedState(feed: feed);
       } catch (e) {
+        print(e.toString());
         yield FeedErrorState(message: e.toString());
       }
     }

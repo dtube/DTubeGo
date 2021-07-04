@@ -112,8 +112,16 @@ class Post {
         Votes _v = new Votes.fromJson(v);
         if (_v.vt > 0.0) {
           upvotes!.add(_v);
+          if (_v.u == currentUser) {
+            alreadyVoted = true;
+            alreadyVotedDirection = true;
+          }
         } else {
           downvotes!.add(_v);
+          if (_v.u == currentUser) {
+            alreadyVoted = true;
+            alreadyVotedDirection = false;
+          }
         }
         if (_v.tag != null &&
             _v.tag != "" &&
@@ -123,26 +131,6 @@ class Post {
       });
     }
 
-    if (json['votes'] != null) {
-      upvotes = [];
-      downvotes = [];
-      json['votes'].forEach((v) {
-        Votes _v = new Votes.fromJson(v);
-        if (_v.vt > 0.0) {
-          upvotes!.add(_v);
-          if (_v.u == currentUser) {
-            alreadyVoted = true;
-            alreadyVotedDirection = true;
-          }
-        } else {
-          if (_v.u == currentUser) {
-            alreadyVoted = true;
-            alreadyVotedDirection = false;
-          }
-          downvotes!.add(_v);
-        }
-      });
-    }
     if (jsonString?.files?.youtube != null) {
       videoUrl = jsonString?.files?.youtube;
     } else if (jsonString?.files?.ipfs != null) {

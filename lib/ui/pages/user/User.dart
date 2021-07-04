@@ -196,7 +196,8 @@ class _UserState extends State<UserPage> {
               SizedBox(height: 8),
               BlocProvider<FeedBloc>(
                   create: (context) =>
-                      FeedBloc(repository: FeedRepositoryImpl()),
+                      FeedBloc(repository: FeedRepositoryImpl())
+                        ..add(FetchUserFeedEvent(username: user.name)),
                   child: FeedList(
                     feedType: 'UserFeed',
                     username: user.name,

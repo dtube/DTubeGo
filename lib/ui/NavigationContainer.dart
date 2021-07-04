@@ -80,12 +80,14 @@ class _NavigationContainerState extends State<NavigationContainer> {
   List<Widget> _buildScreens() {
     return [
       BlocProvider<FeedBloc>(
-        create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
+        create: (context) => FeedBloc(repository: FeedRepositoryImpl())
+          ..add(FetchFeedEvent(feedType: "MyFeed")),
         child:
             FeedList(feedType: 'MyFeed', bigThumbnail: true, showAuthor: false),
       ),
       BlocProvider<FeedBloc>(
-        create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
+        create: (context) => FeedBloc(repository: FeedRepositoryImpl())
+          ..add(FetchFeedEvent(feedType: "NewFeed")),
         child: FeedList(
           feedType: 'NewFeed',
           bigThumbnail: true,
@@ -108,12 +110,14 @@ class _NavigationContainerState extends State<NavigationContainer> {
         ),
       ),
       BlocProvider<FeedBloc>(
-        create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
+        create: (context) => FeedBloc(repository: FeedRepositoryImpl())
+          ..add(FetchFeedEvent(feedType: "HotFeed")),
         child: FeedList(
             feedType: 'HotFeed', bigThumbnail: true, showAuthor: false),
       ),
       BlocProvider<FeedBloc>(
-        create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
+        create: (context) => FeedBloc(repository: FeedRepositoryImpl())
+          ..add(FetchFeedEvent(feedType: "TrendingFeed")),
         child: FeedList(
             feedType: 'TrendingFeed', bigThumbnail: true, showAuthor: false),
       ),

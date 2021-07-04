@@ -73,16 +73,7 @@ class _UploadFormState extends State<UploadForm> {
     PickedFile? _pickedFile;
     if (video) {
       if (camera) {
-        // TODO: rework the orientation stuff...
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.landscapeRight,
-        ]);
-        _pickedFile = await _picker.getVideo(
-            source: ImageSource
-                .camera); // TODO: request needed permissions for camera
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.portraitUp,
-        ]);
+        _pickedFile = await _picker.getVideo(source: ImageSource.camera);
       } else {
         _pickedFile = await _picker.getVideo(source: ImageSource.gallery);
       }
@@ -208,7 +199,7 @@ class _UploadFormState extends State<UploadForm> {
                     Icon(FontAwesomeIcons.video),
                     SizedBox(width: 8),
                     Text(
-                        _video == null ? "record video" : "record another one"),
+                        _video == null ? "record video" : "record a new video"),
                   ],
                 ),
                 onPressed: () {
