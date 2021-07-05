@@ -44,6 +44,7 @@ class Post {
   bool? alreadyVotedDirection = false; // false = downvote | true = upvote
   List<Comment>? comments;
   List<String> tags = [];
+  String videoSource = "";
 
   Post(
       {required this.sId,
@@ -132,8 +133,10 @@ class Post {
     }
 
     if (jsonString?.files?.youtube != null) {
-      videoUrl = jsonString?.files?.youtube;
-    } else if (jsonString?.files?.ipfs != null) {
+      videoUrl = jsonString!.files!.youtube!;
+      videoSource = "youtube";
+    } else if (jsonString?.files?.ipfs?.vid != null) {
+      videoSource = "ipfs";
       String _gateway = AppStrings.ipfsVideoUrl;
       if (jsonString?.files?.ipfs!.gw != null) {
         _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
@@ -143,8 +146,16 @@ class Post {
       } else if (jsonString?.files?.ipfs?.vid?.s240 != null) {
         videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.s240!;
       } else {
-        videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.src!;
+        if (jsonString!.files!.ipfs!.vid?.src != null) {
+          videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.src!;
+        }
       }
+    } else if (jsonString!.files!.sia?.vid?.src != null) {
+      videoSource = "sia";
+      videoUrl = AppStrings.siaVideoUrl + jsonString!.files!.sia!.vid!.src!;
+      print(videoUrl);
+    } else {
+      videoUrl = "";
     }
 
     if (jsonString?.files?.youtube != null) {
@@ -261,12 +272,13 @@ class PostJsonString {
 class Files {
   Ipfs? ipfs;
   String? youtube;
-
+  Sia? sia;
   Files({this.youtube, this.ipfs});
 
   Files.fromJson(Map<String, dynamic> json) {
     youtube = json['youtube'];
     ipfs = json['ipfs'] != null ? new Ipfs.fromJson(json['ipfs']) : null;
+    sia = json['sia'] != null ? new Sia.fromJson(json['sia']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -274,6 +286,9 @@ class Files {
     data['youtube'] = this.youtube;
     if (this.ipfs != null) {
       data['ipfs'] = this.ipfs?.toJson();
+    }
+    if (this.sia != null) {
+      data['sia'] = this.sia!.toJson();
     }
     return data;
   }
@@ -322,6 +337,42 @@ class Vid {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['240'] = this.s240;
     data['480'] = this.s480;
+    data['src'] = this.src;
+    return data;
+  }
+}
+
+class Sia {
+  SiaVid? vid;
+
+  Sia({this.vid});
+
+  Sia.fromJson(Map<String, dynamic> json) {
+    vid = json['vid'] != null ? new SiaVid.fromJson(json['vid']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.vid != null) {
+      data['vid'] = this.vid!.toJson();
+    }
+
+    return data;
+  }
+}
+
+class SiaVid {
+  String? src;
+
+  SiaVid({this.src});
+
+  SiaVid.fromJson(Map<String, dynamic> json) {
+    src = json['src'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
     data['src'] = this.src;
     return data;
   }

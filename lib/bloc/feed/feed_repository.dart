@@ -1,4 +1,4 @@
-import 'package:dtube_togo/bloc/feed/feed_response_model.dart';
+import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/res/strings/strings.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -124,6 +124,7 @@ class FeedRepositoryImpl implements FeedRepository {
       var data = json.decode(response.body);
 
       List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+
       return feed;
     } else {
       throw Exception();

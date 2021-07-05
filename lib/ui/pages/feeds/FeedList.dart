@@ -7,7 +7,7 @@ import 'dart:ui';
 
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 
-import 'package:dtube_togo/ui/pages/feeds/PostListCardMainFeedV2.dart';
+import 'package:dtube_togo/ui/pages/feeds/PostListCardMainFeed.dart';
 import 'package:dtube_togo/ui/pages/feeds/PostListCardUserFeed.dart';
 
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;

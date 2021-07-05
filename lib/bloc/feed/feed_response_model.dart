@@ -111,10 +111,11 @@ class FeedItem {
     ts = json['ts'];
     // tags = json['tags'] != null ? new Tags.fromJson(json['tags']) : null;
     dist = json['dist'] + 0.0;
+
     if (jsonString?.files?.youtube != null) {
       videoUrl = jsonString!.files!.youtube!;
       videoSource = "youtube";
-    } else if (jsonString?.files?.ipfs != null) {
+    } else if (jsonString?.files?.ipfs?.vid != null) {
       videoSource = "ipfs";
       String _gateway = AppStrings.ipfsVideoUrl;
       if (jsonString?.files?.ipfs!.gw != null) {
@@ -127,10 +128,14 @@ class FeedItem {
       } else {
         if (jsonString!.files!.ipfs!.vid?.src != null) {
           videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.src!;
-        } else {
-          videoUrl = "";
         }
       }
+    } else if (jsonString!.files!.sia?.vid?.src != null) {
+      videoSource = "sia";
+      videoUrl = AppStrings.siaVideoUrl + jsonString!.files!.sia!.vid!.src!;
+      print(videoUrl);
+    } else {
+      videoUrl = "";
     }
 
     if (jsonString?.files?.youtube != null) {
@@ -261,12 +266,14 @@ class JsonString {
 class Files {
   String? youtube;
   Ipfs? ipfs;
+  Sia? sia;
 
-  Files({this.youtube, this.ipfs});
+  Files({this.youtube, this.ipfs, this.sia});
 
   Files.fromJson(Map<String, dynamic> json) {
     youtube = json['youtube'];
     ipfs = json['ipfs'] != null ? new Ipfs.fromJson(json['ipfs']) : null;
+    sia = json['sia'] != null ? new Sia.fromJson(json['sia']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -274,6 +281,9 @@ class Files {
     data['youtube'] = this.youtube;
     if (this.ipfs != null) {
       data['ipfs'] = this.ipfs!.toJson();
+    }
+    if (this.sia != null) {
+      data['sia'] = this.sia!.toJson();
     }
     return data;
   }
@@ -345,6 +355,42 @@ class Img {
     data['118'] = this.s118;
     data['360'] = this.s360;
     data['spr'] = this.spr;
+    return data;
+  }
+}
+
+class Sia {
+  SiaVid? vid;
+
+  Sia({this.vid});
+
+  Sia.fromJson(Map<String, dynamic> json) {
+    vid = json['vid'] != null ? new SiaVid.fromJson(json['vid']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.vid != null) {
+      data['vid'] = this.vid!.toJson();
+    }
+
+    return data;
+  }
+}
+
+class SiaVid {
+  String? src;
+
+  SiaVid({this.src});
+
+  SiaVid.fromJson(Map<String, dynamic> json) {
+    src = json['src'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['src'] = this.src;
     return data;
   }
 }

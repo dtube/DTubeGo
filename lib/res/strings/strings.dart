@@ -24,6 +24,8 @@ class AppStrings {
   static String avalonConfig = "/config";
 
   static String ipfsVideoUrl = "https://ipfs.d.tube/ipfs/";
+  static String siaVideoUrl = "https://siasky.net/";
+
   static String ipfsUploadUrl = "https://ipfs.d.tube/ipfs/";
 
   static List<String> btfsUploadEndpoints = [

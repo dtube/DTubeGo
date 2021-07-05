@@ -223,9 +223,9 @@ class _PostDetailsState extends State<PostDetails> {
                                 ),
                               ],
                             ),
-                      widget.post.jsonString!.files!.youtube != null
+                      widget.post.videoSource == "youtube"
                           ? player
-                          : widget.post.jsonString!.files?.ipfs != null
+                          : ["ipfs", "sia"].contains(widget.post.videoSource)
                               ? BP(
                                   videoUrl: widget.post.videoUrl!,
                                   autoplay: true,
