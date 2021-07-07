@@ -290,6 +290,7 @@ class _RewardsCardState extends State<RewardsCard> {
         author: author,
         link: link,
         recentlyUploaded: false,
+        directFocus: "none",
       );
     }));
   }

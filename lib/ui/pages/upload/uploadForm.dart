@@ -1,4 +1,5 @@
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_togo/utils/VideoRecorder.dart';
 import 'package:flutter/services.dart';
 
 import 'dart:io';
@@ -47,6 +48,14 @@ class _UploadFormState extends State<UploadForm> {
   late SettingsBloc _settingsBloc;
   final _formKey = GlobalKey<FormState>();
 
+  void childCallback(String videoPath) {
+    setState(() {
+      _video = File(videoPath);
+      stateUploadData.localVideoFile = true;
+      stateUploadData.videoLocation = videoPath;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -71,9 +80,18 @@ class _UploadFormState extends State<UploadForm> {
 
   Future getFile(bool video, bool camera) async {
     PickedFile? _pickedFile;
+
     if (video) {
       if (camera) {
-        _pickedFile = await _picker.getVideo(source: ImageSource.camera);
+        _pickedFile = await _picker.getVideo(
+          source: ImageSource.camera,
+        );
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (builder) => CameraScreen(
+        //               callback: childCallback,
+        //             )));
       } else {
         _pickedFile = await _picker.getVideo(source: ImageSource.gallery);
       }

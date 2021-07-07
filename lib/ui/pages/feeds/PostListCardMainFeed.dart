@@ -1,3 +1,4 @@
+import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/ui/pages/post/players/BetterPlayer.dart';
 
 import 'dart:ui';
@@ -11,6 +12,7 @@ import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PostListCardMainFeed extends StatefulWidget {
   const PostListCardMainFeed(
@@ -25,7 +27,11 @@ class PostListCardMainFeed extends StatefulWidget {
       required this.duration,
       required this.dtcValue,
       required this.videoUrl,
-      required this.videoSource})
+      required this.videoSource,
+      required this.alreadyVoted,
+      required this.alreadyVotedDirection,
+      required this.upvotesCount,
+      required this.downvotesCount})
       : super(key: key);
 
   final bool blur;
@@ -39,6 +45,10 @@ class PostListCardMainFeed extends StatefulWidget {
   final String dtcValue;
   final String videoUrl;
   final String videoSource;
+  final bool alreadyVoted;
+  final bool alreadyVotedDirection;
+  final int upvotesCount;
+  final int downvotesCount;
 
   @override
   _PostListCardMainFeedState createState() => _PostListCardMainFeedState();
@@ -75,7 +85,8 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
               width: MediaQuery.of(context).size.width - 50 - 50,
               child: InkWell(
                 onTap: () {
-                  navigateToPostDetailPage(context, widget.author, widget.link);
+                  navigateToPostDetailPage(
+                      context, widget.author, widget.link, "none");
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,17 +175,104 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '${widget.publishDate} - ' +
-                  (widget.duration.inHours == 0
-                      ? widget.duration.toString().substring(2, 7) + ' min'
-                      : widget.duration.toString().substring(0, 7) + ' hours'),
-              style: Theme.of(context).textTheme.caption,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Transform.scale(
+                  scale: 0.8,
+                  child: InputChip(
+                    label: Text(
+                      '',
+                    ),
+                    avatar: Padding(
+                      padding: const EdgeInsets.only(left: 4.0),
+                      child: FaIcon(FontAwesomeIcons.reply,
+                          color: widget.alreadyVoted &&
+                                  !widget.alreadyVotedDirection
+                              ? globalRed
+                              : Colors.grey),
+                    ),
+                    onPressed: () {
+                      navigateToPostDetailPage(
+                          context, widget.author, widget.link, "newcomment");
+                    },
+                  ),
+                ),
+                Text(
+                  '${widget.publishDate} - ' +
+                      (widget.duration.inHours == 0
+                          ? widget.duration.toString().substring(2, 7) + ' min'
+                          : widget.duration.toString().substring(0, 7) +
+                              ' hours'),
+                  style: Theme.of(context).textTheme.caption,
+                ),
+              ],
             ),
-            Text(
-              '${widget.dtcValue}',
-              style: Theme.of(context).textTheme.headline5,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Transform.scale(
+                  scale: 0.8,
+                  child: Row(
+                    children: [
+                      InputChip(
+                        label: Text(
+                          widget.upvotesCount.toString(),
+                        ),
+                        avatar: Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: FaIcon(
+                            FontAwesomeIcons.thumbsUp,
+                            color: widget.alreadyVoted &&
+                                    widget.alreadyVotedDirection
+                                ? globalRed
+                                : Colors.grey,
+                          ),
+                        ),
+                        onPressed: () {
+                          if (!widget.alreadyVoted) {
+                            navigateToPostDetailPage(
+                                context, widget.author, widget.link, "vote");
+                          }
+                        },
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      InputChip(
+                        label: Text(
+                          widget.downvotesCount.toString(),
+                        ),
+                        avatar: Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: FaIcon(FontAwesomeIcons.thumbsDown,
+                              color: widget.alreadyVoted &&
+                                      !widget.alreadyVotedDirection
+                                  ? globalRed
+                                  : Colors.grey),
+                        ),
+                        onPressed: () {
+                          if (!widget.alreadyVoted) {
+                            navigateToPostDetailPage(
+                                context, widget.author, widget.link, "vote");
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: Text(
+                    '${widget.dtcValue}',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -183,12 +281,13 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
   }
 
   void navigateToPostDetailPage(
-      BuildContext context, String author, String link) {
+      BuildContext context, String author, String link, String directFocus) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return PostDetailPage(
         author: author,
         link: link,
         recentlyUploaded: false,
+        directFocus: directFocus,
       );
     }));
   }

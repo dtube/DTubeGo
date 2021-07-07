@@ -133,7 +133,6 @@ class FeedItem {
     } else if (jsonString!.files!.sia?.vid?.src != null) {
       videoSource = "sia";
       videoUrl = AppStrings.siaVideoUrl + jsonString!.files!.sia!.vid!.src!;
-      print(videoUrl);
     } else {
       videoUrl = "";
     }

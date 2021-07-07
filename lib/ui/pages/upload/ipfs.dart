@@ -81,6 +81,7 @@ class _WizardIPFSState extends State<WizardIPFS> {
         author: _username!,
         link: _uploadData.link,
         recentlyUploaded: true,
+        directFocus: "none",
       );
     }));
   }

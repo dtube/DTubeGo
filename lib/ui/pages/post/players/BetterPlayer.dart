@@ -48,6 +48,7 @@ class _BPState extends State<BP> {
               showControlsOnInitialize: false,
             ),
             autoPlay: widget.autoplay,
+            autoDispose: true,
             aspectRatio: _videocontroller.value.size.width /
                 _videocontroller.value.size.height,
           ),

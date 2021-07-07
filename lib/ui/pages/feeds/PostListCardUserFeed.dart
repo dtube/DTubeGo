@@ -125,6 +125,7 @@ class _PostListCardUserFeedState extends State<PostListCardUserFeed> {
         author: author,
         link: link,
         recentlyUploaded: false,
+        directFocus: "none",
       );
     }));
   }

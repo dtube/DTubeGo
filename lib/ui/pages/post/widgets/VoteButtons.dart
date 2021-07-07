@@ -23,7 +23,8 @@ class VotingButtons extends StatefulWidget {
       required this.defaultVotingTip,
       required this.currentVT,
       required this.scale,
-      required this.isPost})
+      required this.isPost,
+      required this.focusVote})
       : super(key: key);
 
   final String author;
@@ -32,6 +33,7 @@ class VotingButtons extends StatefulWidget {
   final List<Votes>? downvotes;
   final bool alreadyVoted;
   final bool alreadyVotedDirection;
+  final bool focusVote;
 
   final double defaultVotingWeight;
   final double defaultVotingTip;
@@ -58,6 +60,7 @@ class _VotingButtonsState extends State<VotingButtons> {
         (_currentVT.toDouble() * (widget.defaultVotingWeight / 100))
             .floor()
             .toString());
+    _upvotePressed = widget.focusVote;
 
     // _userBloc = BlocProvider.of<UserBloc>(context);
     // _userBloc.add(FetchDTCVPEvent());
@@ -287,11 +290,11 @@ class _VotingSliderState extends State<VotingSlider> {
                   ],
                 ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               widget.isPost
                   ? Container(
-                      width: 200,
+                      width: 100,
                       child: TextFormField(
                         controller: _tagController,
                         decoration:
@@ -299,7 +302,7 @@ class _VotingSliderState extends State<VotingSlider> {
                       ),
                     )
                   : SizedBox(width: 0),
-              SizedBox(width: 8),
+              SizedBox(width: 50),
               BlocBuilder<UserBloc, UserState>(builder: (context, state) {
                 if (state is UserDTCVPLoadedState) {
                   _currentVT = state.vtBalance["v"]!.toDouble();

@@ -16,19 +16,21 @@ class ReplyButton extends StatefulWidget {
   final String parentLink;
   final double votingWeight;
   final double scale;
+  bool focusOnNewComment;
 
   //final Comment comment;
 
-  const ReplyButton({
-    Key? key,
-    required this.icon,
-    required this.author,
-    required this.link,
-    required this.parentAuthor,
-    required this.parentLink,
-    required this.votingWeight,
-    required this.scale,
-  }) : super(key: key);
+  ReplyButton(
+      {Key? key,
+      required this.icon,
+      required this.author,
+      required this.link,
+      required this.parentAuthor,
+      required this.parentLink,
+      required this.votingWeight,
+      required this.scale,
+      required this.focusOnNewComment})
+      : super(key: key);
 
   @override
   _ReplyButtonState createState() => _ReplyButtonState();
@@ -49,6 +51,9 @@ class _ReplyButtonState extends State<ReplyButton> {
   @override
   void initState() {
     super.initState();
+    if (widget.focusOnNewComment) {
+      _replyPressed = true;
+    }
     _replyController = new TextEditingController();
 
     _userBloc = BlocProvider.of<UserBloc>(context);

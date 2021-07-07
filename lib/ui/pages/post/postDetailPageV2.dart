@@ -33,17 +33,20 @@ class PostDetailPage extends StatefulWidget {
   String link;
   String author;
   bool recentlyUploaded;
+  String directFocus;
 
   PostDetailPage(
       {required this.link,
       required this.author,
-      required this.recentlyUploaded});
+      required this.recentlyUploaded,
+      required this.directFocus});
 
   @override
   _PostDetailPageState createState() => _PostDetailPageState();
 }
 
 class _PostDetailPageState extends State<PostDetailPage> {
+  int reloadCount = 0;
   Future<bool> _onWillPop() async {
     if (widget.recentlyUploaded) {
       Navigator.pushAndRemoveUntil(
@@ -100,7 +103,11 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 if (state is PostLoadingState) {
                   return Center(child: DTubeLogoPulse());
                 } else if (state is PostLoadedState) {
-                  return PostDetails(post: state.post);
+                  reloadCount++;
+                  return PostDetails(
+                    post: state.post,
+                    directFocus: reloadCount <= 1 ? widget.directFocus : "none",
+                  );
                 } else {
                   return Text("failed");
                 }
@@ -111,8 +118,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
 class PostDetails extends StatefulWidget {
   final Post post;
+  final String directFocus;
 
-  const PostDetails({Key? key, required this.post}) : super(key: key);
+  const PostDetails({Key? key, required this.post, required this.directFocus})
+      : super(key: key);
 
   @override
   _PostDetailsState createState() => _PostDetailsState();
@@ -132,6 +141,7 @@ class _PostDetailsState extends State<PostDetails> {
   @override
   void initState() {
     super.initState();
+
     _userBloc = BlocProvider.of<UserBloc>(context);
 
     _userBloc.add(FetchAccountDataEvent(widget.post.author));
@@ -139,13 +149,13 @@ class _PostDetailsState extends State<PostDetails> {
 
     _controller = YoutubePlayerController(
       initialVideoId: widget.post.videoUrl!,
-      params: const YoutubePlayerParams(
-        showControls: true,
-        showFullscreenButton: true,
-        desktopMode: true,
-        privacyEnhanced: true,
-        useHybridComposition: true,
-      ),
+      params: YoutubePlayerParams(
+          showControls: true,
+          showFullscreenButton: true,
+          desktopMode: true,
+          privacyEnhanced: true,
+          useHybridComposition: true,
+          autoPlay: !(widget.directFocus != "none")),
     );
     _controller.onEnterFullscreen = () {
       SystemChrome.setPreferredOrientations([
@@ -228,7 +238,7 @@ class _PostDetailsState extends State<PostDetails> {
                           : ["ipfs", "sia"].contains(widget.post.videoSource)
                               ? BP(
                                   videoUrl: widget.post.videoUrl!,
-                                  autoplay: true,
+                                  autoplay: !(widget.directFocus == "none"),
                                   looping: false,
                                   localFile: false,
                                   controls: true,
@@ -254,20 +264,22 @@ class _PostDetailsState extends State<PostDetails> {
                                   //       PostBloc(repository: PostRepositoryImpl()),
                                   //   child:
                                   VotingButtons(
-                                author: widget.post.author,
-                                link: widget.post.link,
-                                alreadyVoted: widget.post.alreadyVoted!,
-                                alreadyVotedDirection:
-                                    widget.post.alreadyVotedDirection!,
-                                upvotes: widget.post.upvotes,
-                                downvotes: widget.post.downvotes,
-                                defaultVotingWeight: _defaultVoteWeightPosts,
-                                defaultVotingTip: _defaultVoteTipPosts,
-                                currentVT: _currentVT,
-                                scale: 1,
-                                isPost: true,
-                                //),
-                              );
+                                      author: widget.post.author,
+                                      link: widget.post.link,
+                                      alreadyVoted: widget.post.alreadyVoted!,
+                                      alreadyVotedDirection:
+                                          widget.post.alreadyVotedDirection!,
+                                      upvotes: widget.post.upvotes,
+                                      downvotes: widget.post.downvotes,
+                                      defaultVotingWeight:
+                                          _defaultVoteWeightPosts,
+                                      defaultVotingTip: _defaultVoteTipPosts,
+                                      currentVT: _currentVT,
+                                      scale: 1,
+                                      isPost: true,
+                                      focusVote: widget.directFocus == "vote"
+                                      //),
+                                      );
                             } else {
                               return SizedBox(height: 0);
                             }
@@ -332,6 +344,8 @@ class _PostDetailsState extends State<PostDetails> {
                               parentLink: widget.post.link,
                               votingWeight: _defaultVoteWeightComments,
                               scale: 1,
+                              focusOnNewComment:
+                                  widget.directFocus == "newcomment",
                             ),
                           ),
                         ],

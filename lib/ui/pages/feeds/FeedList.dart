@@ -253,6 +253,10 @@ class FeedList extends StatelessWidget {
                     thumbnailUrl: feed[pos].thumbUrl,
                     videoUrl: feed[pos].videoUrl,
                     videoSource: feed[pos].videoSource,
+                    alreadyVoted: feed[pos].alreadyVoted!,
+                    alreadyVotedDirection: feed[pos].alreadyVotedDirection!,
+                    upvotesCount: feed[pos].upvotes!.length,
+                    downvotesCount: feed[pos].downvotes!.length,
                   ),
                 ),
               ),
@@ -282,29 +286,37 @@ class PostListCard extends StatelessWidget {
   final String dtcValue;
   final String videoUrl;
   final String videoSource;
+  final bool alreadyVoted;
+  final bool alreadyVotedDirection;
+  final int upvotesCount;
+  final int downvotesCount;
 
-  const PostListCard({
-    Key? key,
-    required this.showAuthor,
-    required this.bigThumbnail,
-    required this.blur,
-    required this.thumbnailUrl,
-    required this.title,
-    required this.description,
-    required this.author,
-    required this.link,
-    required this.publishDate,
-    required this.duration,
-    required this.dtcValue,
-    required this.videoUrl,
-    required this.videoSource,
-  }) : super(key: key);
+  const PostListCard(
+      {Key? key,
+      required this.showAuthor,
+      required this.bigThumbnail,
+      required this.blur,
+      required this.thumbnailUrl,
+      required this.title,
+      required this.description,
+      required this.author,
+      required this.link,
+      required this.publishDate,
+      required this.duration,
+      required this.dtcValue,
+      required this.videoUrl,
+      required this.videoSource,
+      required this.alreadyVoted,
+      required this.alreadyVotedDirection,
+      required this.upvotesCount,
+      required this.downvotesCount})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (bigThumbnail) {
       return Container(
-        height: (MediaQuery.of(context).size.width / 16 * 9) + 100,
+        height: (MediaQuery.of(context).size.width / 16 * 9) + 140,
         child: PostListCardMainFeed(
           blur: blur,
           thumbnailUrl: thumbnailUrl,
@@ -317,6 +329,10 @@ class PostListCard extends StatelessWidget {
           dtcValue: dtcValue,
           videoUrl: videoUrl,
           videoSource: videoSource,
+          alreadyVoted: alreadyVoted,
+          alreadyVotedDirection: alreadyVotedDirection,
+          upvotesCount: upvotesCount,
+          downvotesCount: downvotesCount,
         ),
       );
     } else {

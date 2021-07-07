@@ -83,7 +83,6 @@ class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
     var dio = Dio();
 
     var response = await dio.post(_url, data: formData);
-
     if (response.statusCode == 200) {
       var data = response.data;
       String token = data["token"];

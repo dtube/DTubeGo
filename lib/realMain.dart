@@ -1,5 +1,5 @@
 // this file is needed until bs85 is null safety
-
+import 'package:flutter/services.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc.dart';
 import 'package:dtube_togo/bloc/auth/auth_repository.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
@@ -27,7 +27,9 @@ const MaterialColor kPrimaryColor = const MaterialColor(
   },
 );
 
-void realMain() => runApp(MyApp());
+void realMain() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
