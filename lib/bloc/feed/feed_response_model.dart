@@ -111,28 +111,31 @@ class FeedItem {
     ts = json['ts'];
     // tags = json['tags'] != null ? new Tags.fromJson(json['tags']) : null;
     dist = json['dist'] + 0.0;
-
-    if (jsonString?.files?.youtube != null) {
-      videoUrl = jsonString!.files!.youtube!;
-      videoSource = "youtube";
-    } else if (jsonString?.files?.ipfs?.vid != null) {
-      videoSource = "ipfs";
-      String _gateway = AppConfig.ipfsVideoUrl;
-      if (jsonString?.files?.ipfs!.gw != null) {
-        _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
-      }
-      if (jsonString?.files?.ipfs?.vid?.s480 != null) {
-        videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.s480!;
-      } else if (jsonString?.files?.ipfs?.vid?.s240 != null) {
-        videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.s240!;
-      } else {
-        if (jsonString!.files!.ipfs!.vid?.src != null) {
-          videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.src!;
+    if (jsonString?.files != null) {
+      if (jsonString?.files?.youtube != null) {
+        videoUrl = jsonString!.files!.youtube!;
+        videoSource = "youtube";
+      } else if (jsonString?.files?.ipfs?.vid != null) {
+        videoSource = "ipfs";
+        String _gateway = AppConfig.ipfsVideoUrl;
+        if (jsonString?.files?.ipfs!.gw != null) {
+          _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
         }
+        if (jsonString?.files?.ipfs?.vid?.s480 != null) {
+          videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.s480!;
+        } else if (jsonString?.files?.ipfs?.vid?.s240 != null) {
+          videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.s240!;
+        } else {
+          if (jsonString!.files!.ipfs!.vid?.src != null) {
+            videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.src!;
+          }
+        }
+      } else if (jsonString!.files!.sia?.vid?.src != null) {
+        videoSource = "sia";
+        videoUrl = AppConfig.siaVideoUrl + jsonString!.files!.sia!.vid!.src!;
+      } else {
+        videoUrl = "";
       }
-    } else if (jsonString!.files!.sia?.vid?.src != null) {
-      videoSource = "sia";
-      videoUrl = AppConfig.siaVideoUrl + jsonString!.files!.sia!.vid!.src!;
     } else {
       videoUrl = "";
     }
