@@ -1,8 +1,11 @@
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_togo/res/appConfigValues.dart';
+import 'package:dtube_togo/ui/pages/post/players/localVideoPlayer.dart';
 import 'package:dtube_togo/utils/VideoRecorder.dart';
 import 'package:flutter/services.dart';
 
 import 'dart:io';
+import 'package:disk_space/disk_space.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
@@ -83,15 +86,52 @@ class _UploadFormState extends State<UploadForm> {
 
     if (video) {
       if (camera) {
-        _pickedFile = await _picker.getVideo(
-          source: ImageSource.camera,
-        );
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (builder) => CameraScreen(
-        //               callback: childCallback,
-        //             )));
+        double? _freeSpace = await DiskSpace.getFreeDiskSpace;
+        if (_freeSpace! > AppConfig.minFreeSpaceRecordVideoInMB) {
+          print(await DiskSpace.getFreeDiskSpace);
+          _pickedFile = await _picker.getVideo(
+            source: ImageSource.camera,
+          );
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: Text('not enough free storage',
+                  style: Theme.of(context).textTheme.headline1),
+              content: Container(
+                height: MediaQuery.of(context).size.height / 7,
+                child: Column(
+                  children: [
+                    Text(
+                        "In order to record a video with the app please make sure to have enough free internal storage on your device.",
+                        style: Theme.of(context).textTheme.headline4),
+                    SizedBox(
+                      height: 18,
+                    ),
+                    Text(
+                        "We have set the minimum required free space to ${AppConfig.minFreeSpaceRecordVideoInMB / 1000} GB internal storage.",
+                        style: Theme.of(context).textTheme.headline4)
+                  ],
+                ),
+              ),
+              actions: [
+                new ElevatedButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (builder) => CameraScreen(
+                      callback: childCallback,
+                    )));
       } else {
         _pickedFile = await _picker.getVideo(source: ImageSource.gallery);
       }
@@ -227,13 +267,16 @@ class _UploadFormState extends State<UploadForm> {
             ],
           ),
           stateUploadData.videoLocation != ""
+              // TODO: react on possibly wrong orientation with videos in landscape
+              // e.g. open issue on https://github.com/jhomlala/betterplayer/issues
               ? BP(
                   videoUrl: _video!.path,
                   looping: false,
                   autoplay: false,
                   localFile: true,
                   controls: true,
-                  // key: UniqueKey(), // TODO: fix "change video file" not showing new file - WITHOUT the need of a UniqueKey()
+                  key: UniqueKey(),
+                  usedAsPreview: true,
                 )
               : SizedBox(
                   height: 0,

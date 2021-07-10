@@ -1,7 +1,7 @@
 import 'package:dtube_togo/bloc/avalonConfig/avalonConfig_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_response_model.dart';
 
-import 'package:dtube_togo/res/strings/strings.dart';
+import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:dtube_togo/utils/growInt.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -19,8 +19,8 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<User> getAccountData(
       String apiNode, String username, applicationUser) async {
-    var response = await http.get(Uri.parse(apiNode +
-        AppStrings.accountDataUrl.replaceAll("##USERNAME", username)));
+    var response = await http.get(Uri.parse(
+        apiNode + AppConfig.accountDataUrl.replaceAll("##USERNAME", username)));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
@@ -39,8 +39,8 @@ class UserRepositoryImpl implements UserRepository {
     };
 
     int dtcBalance = 0;
-    var response = await http.get(Uri.parse(apiNode +
-        AppStrings.accountDataUrl.replaceAll("##USERNAME", username)));
+    var response = await http.get(Uri.parse(
+        apiNode + AppConfig.accountDataUrl.replaceAll("##USERNAME", username)));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
@@ -49,7 +49,7 @@ class UserRepositoryImpl implements UserRepository {
       int vp = user.vt!.v;
       int vpTS = user.vt!.t;
       var configResponse =
-          await http.get(Uri.parse(apiNode + AppStrings.avalonConfig));
+          await http.get(Uri.parse(apiNode + AppConfig.avalonConfig));
       if (configResponse.statusCode == 200) {
         var configData = json.decode(configResponse.body);
         AvalonConfig conf =
@@ -65,8 +65,8 @@ class UserRepositoryImpl implements UserRepository {
 
   Future<int> getDTC(String apiNode, String username, applicationUser) async {
     int dtcBalance = 0;
-    var response = await http.get(Uri.parse(apiNode +
-        AppStrings.accountDataUrl.replaceAll("##USERNAME", username)));
+    var response = await http.get(Uri.parse(
+        apiNode + AppConfig.accountDataUrl.replaceAll("##USERNAME", username)));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 

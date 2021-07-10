@@ -1,5 +1,5 @@
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_togo/res/strings/strings.dart';
+import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -38,10 +38,10 @@ class FeedRepositoryImpl implements FeedRepository {
   Future<List<FeedItem>> getMyFeed(String apiNode, String applicationUser,
       String? fromAuthor, String? fromLink) async {
     String _url = apiNode +
-        AppStrings.myFeedUrlFirst.replaceAll("##USERNAME", applicationUser);
+        AppConfig.myFeedUrlFirst.replaceAll("##USERNAME", applicationUser);
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
-          AppStrings.myFeedUrlMore
+          AppConfig.myFeedUrlMore
               .replaceAll("##USERNAME", applicationUser)
               .replaceAll("##AUTHOR", fromAuthor)
               .replaceAll("##LINK", fromLink);
@@ -64,10 +64,10 @@ class FeedRepositoryImpl implements FeedRepository {
     String? fromLink,
     String applicationUser,
   ) async {
-    String _url = apiNode + AppStrings.hotFeedUrlFirst;
+    String _url = apiNode + AppConfig.hotFeedUrlFirst;
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
-          AppStrings.hotFeedUrlMore
+          AppConfig.hotFeedUrlMore
               .replaceAll("##AUTHOR", fromAuthor)
               .replaceAll("##LINK", fromLink);
     }
@@ -88,10 +88,10 @@ class FeedRepositoryImpl implements FeedRepository {
     String? fromLink,
     String applicationUser,
   ) async {
-    String _url = apiNode + AppStrings.trendingFeedUrlFirst;
+    String _url = apiNode + AppConfig.trendingFeedUrlFirst;
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
-          AppStrings.trendingFeedUrlMore
+          AppConfig.trendingFeedUrlMore
               .replaceAll("##AUTHOR", fromAuthor)
               .replaceAll("##LINK", fromLink);
     }
@@ -112,10 +112,10 @@ class FeedRepositoryImpl implements FeedRepository {
     String? fromLink,
     String applicationUser,
   ) async {
-    String _url = apiNode + AppStrings.newFeedUrlFirst;
+    String _url = apiNode + AppConfig.newFeedUrlFirst;
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
-          AppStrings.newFeedUrlMore
+          AppConfig.newFeedUrlMore
               .replaceAll("##AUTHOR", fromAuthor)
               .replaceAll("##LINK", fromLink);
     }
@@ -134,10 +134,10 @@ class FeedRepositoryImpl implements FeedRepository {
   Future<List<FeedItem>> getUserFeed(String apiNode, String username,
       String? fromAuthor, String? fromLink, String applicationUser) async {
     String _url = apiNode +
-        AppStrings.accountFeedUrlFirst.replaceAll("##USERNAME", username);
+        AppConfig.accountFeedUrlFirst.replaceAll("##USERNAME", username);
     if (fromLink != null) {
       _url = apiNode +
-          AppStrings.accountFeedUrlMore
+          AppConfig.accountFeedUrlMore
               .replaceAll("##USERNAME", username)
               .replaceAll("##AUTHORNAME", username)
               .replaceAll("##LINK", fromLink);

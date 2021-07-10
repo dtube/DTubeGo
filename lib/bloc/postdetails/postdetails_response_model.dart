@@ -1,4 +1,4 @@
-import 'package:dtube_togo/res/strings/strings.dart';
+import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 class ApiResultModel {
@@ -137,7 +137,7 @@ class Post {
       videoSource = "youtube";
     } else if (jsonString?.files?.ipfs?.vid != null) {
       videoSource = "ipfs";
-      String _gateway = AppStrings.ipfsVideoUrl;
+      String _gateway = AppConfig.ipfsVideoUrl;
       if (jsonString?.files?.ipfs!.gw != null) {
         _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
       }
@@ -152,7 +152,7 @@ class Post {
       }
     } else if (jsonString!.files!.sia?.vid?.src != null) {
       videoSource = "sia";
-      videoUrl = AppStrings.siaVideoUrl + jsonString!.files!.sia!.vid!.src!;
+      videoUrl = AppConfig.siaVideoUrl + jsonString!.files!.sia!.vid!.src!;
       print(videoUrl);
     } else {
       videoUrl = "";
@@ -163,7 +163,7 @@ class Post {
           jsonString!.files!.youtube! +
           "/mqdefault.jpg";
     } else {
-      String _gateway = AppStrings.ipfsVideoUrl;
+      String _gateway = AppConfig.ipfsVideoUrl;
       if (jsonString?.files?.ipfs!.gw != null) {
         _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
       }

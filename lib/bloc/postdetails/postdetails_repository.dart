@@ -1,6 +1,6 @@
 import 'package:dtube_togo/bloc/postdetails/postdetails_response_model.dart';
 
-import 'package:dtube_togo/res/strings/strings.dart';
+import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -14,7 +14,7 @@ class PostRepositoryImpl implements PostRepository {
   Future<Post> getPost(String apiNode, String author, String link,
       String applicationUser) async {
     var response = await http.get(Uri.parse(apiNode +
-        AppStrings.postDataUrl
+        AppConfig.postDataUrl
             .replaceAll("##AUTHOR", author)
             .replaceAll("##LINK", link)));
     if (response.statusCode == 200) {

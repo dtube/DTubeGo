@@ -1,10 +1,10 @@
-import 'package:dtube_togo/res/strings/strings.dart';
+import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;
 
 import 'dart:collection';
 
 Future<String> discoverAPINode() async {
-  var _nodes = AppStrings.apiNodes;
+  var _nodes = AppConfig.apiNodes;
   Map<String, int> _nodeResponses = {};
   Map<String, int> _sortedApiNodesByResponseTime = {};
 

@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:dtube_togo/res/strings/strings.dart';
+import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;
 import 'package:dtube_togo/bloc/transaction/transaction_response_model.dart';
 
@@ -61,7 +61,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   Future<String> send(String apiNode, Transaction tx) async {
     var response =
-        await http.post(Uri.parse(apiNode + AppStrings.sendTransactionUrl),
+        await http.post(Uri.parse(apiNode + AppConfig.sendTransactionUrl),
             headers: {
               'Accept': 'application/json, text/plain, */*',
               'Content-Type': 'application/json'

@@ -1,5 +1,5 @@
 import 'package:dtube_togo/bloc/rewards/rewards_response_model.dart';
-import 'package:dtube_togo/res/strings/strings.dart';
+import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -13,7 +13,7 @@ class RewardRepositoryImpl implements RewardsRepository {
   Future<List<Reward>> getRewards(
       String apiNode, String applicationUser, String rewardState) async {
     var response = await http.get(Uri.parse(apiNode +
-        AppStrings.rewardsUrl
+        AppConfig.rewardsUrl
             .replaceAll("##USERNAME", applicationUser)
             .replaceAll("##REWARDSTATE", rewardState)));
     if (response.statusCode == 200) {

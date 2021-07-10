@@ -1,3 +1,5 @@
+// probably not needed anymore because we use the internal camera
+
 // More info: https://github.com/joeltok/flutter-camera-example/blob/main/src/camera.dart
 
 import 'dart:math';

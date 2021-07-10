@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 
 import 'dart:io';
 
-import 'package:dtube_togo/res/strings/strings.dart';
+import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:http/http.dart' as http;
 
@@ -57,7 +57,7 @@ class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
 
   Future<String> getUploadEndpoint() async {
     List<String> validBTFSUploadEndpoints = [];
-    for (var url in AppStrings.btfsUploadEndpoints) {
+    for (var url in AppConfig.btfsUploadEndpoints) {
       var response = await http.get(Uri.parse(url + '/getStatus'));
       if (response.statusCode == 200) {
         validBTFSUploadEndpoints.add(url);
@@ -94,7 +94,7 @@ class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
 
   Future<String> uploadThumbnail(
       String localThumbnail, String generatedThumbnail) async {
-    String _url = AppStrings.ipfsSnapUploadUrl + '/uploadImage';
+    String _url = AppConfig.ipfsSnapUploadUrl + '/uploadImage';
     String _filePath =
         localThumbnail != '' ? localThumbnail : generatedThumbnail;
 
@@ -118,7 +118,7 @@ class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
   Future<Map> monitorThumbnailUploadStatus(String token) async {
     var dio = Dio();
 
-    String url = AppStrings.ipfsSnapUploadUrl + '/getProgressByToken/' + token;
+    String url = AppConfig.ipfsSnapUploadUrl + '/getProgressByToken/' + token;
 
     var response = await dio.get(url);
     print(response.statusCode);

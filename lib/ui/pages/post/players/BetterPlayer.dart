@@ -11,6 +11,7 @@ class BP extends StatefulWidget {
   final bool autoplay;
   final bool localFile;
   final bool controls;
+  final bool usedAsPreview;
 
   BP({
     required this.videoUrl,
@@ -18,6 +19,7 @@ class BP extends StatefulWidget {
     required this.autoplay,
     required this.localFile,
     required this.controls,
+    required this.usedAsPreview,
     Key? key,
   }) : super(key: key);
 
@@ -94,12 +96,31 @@ class _BPState extends State<BP> {
             padding: EdgeInsets.only(
                 left: _aspectRatio < 1 ? 50.0 : 0.0,
                 right: _aspectRatio < 1 ? 50.0 : 0.0),
-            child: AspectRatio(
-              aspectRatio: _videocontroller.value.size.width /
-                  _videocontroller.value.size.height,
-              child: BetterPlayer(
-                controller: _betterPlayerController,
-              ),
+            child: Column(
+              children: [
+                AspectRatio(
+                  aspectRatio: _aspectRatio,
+                  child: BetterPlayer(
+                    controller: _betterPlayerController,
+                  ),
+                ),
+                widget.usedAsPreview
+                    ? _aspectRatio > 1
+                        ? Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 8, 30, 8),
+                                child: Text(
+                                  "Hint: preview of landscape videos could be wrong oriented.\nBut the upload will usually be fine!",
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                              ),
+                            ],
+                          )
+                        : SizedBox(height: 0)
+                    : SizedBox(height: 0)
+              ],
             ),
           ),
         );

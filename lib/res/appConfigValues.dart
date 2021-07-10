@@ -1,4 +1,4 @@
-class AppStrings {
+class AppConfig {
   static String myFeedUrlFirst = "/feed/##USERNAME";
   static String myFeedUrlMore = "/feed/##USERNAME/##AUTHOR/##LINK";
   static String newFeedUrlFirst = "/new";
@@ -44,4 +44,5 @@ class AppStrings {
     'https://avalon.oneloved.tube',
     'https://dtube.fso.ovh'
   ];
+  static int minFreeSpaceRecordVideoInMB = 5000;
 }

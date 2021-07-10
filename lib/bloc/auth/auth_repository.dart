@@ -1,7 +1,7 @@
 import 'package:dtube_togo/bloc/auth/auth_response_model.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
-import 'package:dtube_togo/res/strings/strings.dart';
+import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:hex/hex.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -45,7 +45,7 @@ class AuthRepositoryImpl implements AuthRepository {
       response = await http
           .get(
         Uri.parse(apiNode +
-            AppStrings.accountDataUrl.replaceAll("##USERNAME", username)),
+            AppConfig.accountDataUrl.replaceAll("##USERNAME", username)),
       )
           .catchError((e) {
         throw Exception();

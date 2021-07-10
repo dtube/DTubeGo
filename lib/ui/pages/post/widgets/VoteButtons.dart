@@ -328,6 +328,7 @@ class _VotingSliderState extends State<VotingSlider> {
                         }
                         Transaction newTx =
                             Transaction(type: _txType, data: txdata);
+
                         _txBloc.add(SignAndSendTransactionEvent(newTx));
                       },
                       child: Text("send"));

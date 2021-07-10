@@ -159,6 +159,7 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                                       looping: false,
                                       localFile: false,
                                       controls: false,
+                                      usedAsPreview: false,
                                     )
                                   : (widget.videoSource == 'youtube' &&
                                           widget.videoUrl != "")

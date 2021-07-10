@@ -1,6 +1,6 @@
 import 'package:dtube_togo/bloc/avalonConfig/avalonConfig_bloc_full.dart';
 
-import 'package:dtube_togo/res/strings/strings.dart';
+import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -13,7 +13,7 @@ abstract class AvalonConfigRepository {
 class AvalonConfigRepositoryImpl implements AvalonConfigRepository {
   @override
   Future<AvalonConfig> getAvalonConfig(String apiNode) async {
-    var response = await http.get(Uri.parse(apiNode + AppStrings.avalonConfig));
+    var response = await http.get(Uri.parse(apiNode + AppConfig.avalonConfig));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       print(response.body);

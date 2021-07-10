@@ -387,7 +387,7 @@ final ThemeData dtubeDarkTheme = ThemeData(
     ),
     focusedBorder: UnderlineInputBorder(
       borderSide: BorderSide(
-        color: Color(0xff000000),
+        color: globalRed,
         width: 1.0,
         style: BorderStyle.solid,
       ),
