@@ -20,6 +20,7 @@ class RewardRepositoryImpl implements RewardsRepository {
       var data = json.decode(response.body);
 
       List<Reward> rewardList = ApiResultModel.fromJson(data).rewardList;
+
       return rewardList;
     } else {
       throw Exception();

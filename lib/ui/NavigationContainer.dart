@@ -79,11 +79,22 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
   List<Widget> _buildScreens() {
     return [
-      BlocProvider<FeedBloc>(
-        create: (context) => FeedBloc(repository: FeedRepositoryImpl())
-          ..add(FetchFeedEvent(feedType: "MyFeed")),
-        child:
-            FeedList(feedType: 'MyFeed', bigThumbnail: true, showAuthor: false),
+      Wrap(
+        children: [
+          //MomentsList(), // Moments not ready yet
+          Expanded(
+            child: BlocProvider<FeedBloc>(
+              create: (context) => FeedBloc(repository: FeedRepositoryImpl())
+                ..add(FetchFeedEvent(feedType: "MyFeed")),
+              child: FeedList(
+                  feedType: 'MyFeed',
+                  bigThumbnail: true,
+                  showAuthor: false,
+                  paddingTop: 90 // if Moments ready then 0
+                  ),
+            ),
+          ),
+        ],
       ),
       BlocProvider<FeedBloc>(
         create: (context) => FeedBloc(repository: FeedRepositoryImpl())
@@ -92,6 +103,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           feedType: 'NewFeed',
           bigThumbnail: true,
           showAuthor: false,
+          paddingTop: 90,
         ),
       ),
       MultiBlocProvider(
@@ -113,13 +125,21 @@ class _NavigationContainerState extends State<NavigationContainer> {
         create: (context) => FeedBloc(repository: FeedRepositoryImpl())
           ..add(FetchFeedEvent(feedType: "HotFeed")),
         child: FeedList(
-            feedType: 'HotFeed', bigThumbnail: true, showAuthor: false),
+          feedType: 'HotFeed',
+          bigThumbnail: true,
+          showAuthor: false,
+          paddingTop: 90,
+        ),
       ),
       BlocProvider<FeedBloc>(
         create: (context) => FeedBloc(repository: FeedRepositoryImpl())
           ..add(FetchFeedEvent(feedType: "TrendingFeed")),
         child: FeedList(
-            feedType: 'TrendingFeed', bigThumbnail: true, showAuthor: false),
+          feedType: 'TrendingFeed',
+          bigThumbnail: true,
+          showAuthor: false,
+          paddingTop: 90,
+        ),
       ),
     ];
   }
@@ -287,6 +307,37 @@ class _NavigationContainerState extends State<NavigationContainer> {
         // },
 
         navBarStyle: NavBarStyle.style14,
+      ),
+    );
+  }
+}
+
+// TODO: Moments (aka Shorts) not ready yet
+class MomentsList extends StatelessWidget {
+  const MomentsList({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 90.0),
+      child: Container(
+        height: 75,
+        child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 20,
+            itemBuilder: (BuildContext context, int index) {
+              return Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: CircleAvatar(
+                    child: Icon(
+                  Icons.ac_unit_rounded,
+                  size: 50,
+                )),
+              );
+            }),
+        // child: Text("test"),
       ),
     );
   }

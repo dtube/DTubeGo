@@ -12,8 +12,8 @@ class ApiResultModel {
 //    status = json['status'];
 
     totalResults = json.length;
+    rewardList = [];
     if (json.isNotEmpty) {
-      rewardList = [];
       json.forEach((v) {
         rewardList.add(new Reward.fromJson(v));
       });
@@ -52,7 +52,7 @@ class Reward {
   Reward.fromJson(Map<String, dynamic> json) {
     author = json['author'];
     link = json['link'];
-    claimable = json['claimable'];
+    claimable = json['claimable'] + 0.0;
     vt = json['vt'];
     ts = json['ts'];
     contentTs = json['contentTs'];

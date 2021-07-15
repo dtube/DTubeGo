@@ -238,7 +238,7 @@ class _PostDetailsState extends State<PostDetails> {
                           : ["ipfs", "sia"].contains(widget.post.videoSource)
                               ? BP(
                                   videoUrl: widget.post.videoUrl!,
-                                  autoplay: !(widget.directFocus == "none"),
+                                  autoplay: !(widget.directFocus != "none"),
                                   looping: false,
                                   localFile: false,
                                   controls: true,

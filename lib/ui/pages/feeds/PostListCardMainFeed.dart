@@ -31,7 +31,8 @@ class PostListCardMainFeed extends StatefulWidget {
       required this.alreadyVoted,
       required this.alreadyVotedDirection,
       required this.upvotesCount,
-      required this.downvotesCount})
+      required this.downvotesCount,
+      required this.indexOfList})
       : super(key: key);
 
   final bool blur;
@@ -49,6 +50,7 @@ class PostListCardMainFeed extends StatefulWidget {
   final bool alreadyVotedDirection;
   final int upvotesCount;
   final int downvotesCount;
+  final int indexOfList;
 
   @override
   _PostListCardMainFeedState createState() => _PostListCardMainFeedState();

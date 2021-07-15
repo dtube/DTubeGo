@@ -41,7 +41,7 @@ class AppConfig {
   static List<String> apiNodes = [
     'https://avalon.tibfox.com',
     'https://avalon.d.tube',
-    'https://avalon.oneloved.tube',
+    // 'https://avalon.oneloved.tube',
     'https://dtube.fso.ovh'
   ];
   static int minFreeSpaceRecordVideoInMB = 5000;

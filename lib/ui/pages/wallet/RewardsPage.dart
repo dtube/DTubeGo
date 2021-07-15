@@ -117,16 +117,24 @@ class _RewardsListState extends State<RewardsList> {
         }
         if (state is RewardsLoadedState) {
           List<Reward> _rewards = state.rewardList;
-          return ListView.builder(
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              physics: ClampingScrollPhysics(),
-              itemCount: _rewards.length,
-              itemBuilder: (ctx, pos) {
-                return RewardsCard(
-                  reward: _rewards[pos],
-                );
-              });
+          if (_rewards.isEmpty) {
+            return Center(
+                child: Text(
+              "nothing here",
+              style: Theme.of(context).textTheme.headline2,
+            ));
+          } else {
+            return ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                physics: ClampingScrollPhysics(),
+                itemCount: _rewards.length,
+                itemBuilder: (ctx, pos) {
+                  return RewardsCard(
+                    reward: _rewards[pos],
+                  );
+                });
+          }
         }
         return Text("loading");
       },

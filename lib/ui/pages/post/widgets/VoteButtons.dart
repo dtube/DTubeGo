@@ -191,6 +191,7 @@ class _VotingSliderState extends State<VotingSlider> {
 
   late PostBloc _postBloc;
   late double _currentVT;
+  bool _sendButtonPressed = false;
 
   @override
   void initState() {
@@ -213,138 +214,147 @@ class _VotingSliderState extends State<VotingSlider> {
       if (state is TransactionSent) {
         _postBloc.add(FetchPostEvent(widget.author, widget.link));
       }
-      return Container(
-          //width: 200,
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(height: 8),
-          Row(
-            children: [
-              Container(
-                width: 100,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "voting weight: ",
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                    Text(
-                      _vpValue.floor().toString() + '%',
-                      style: Theme.of(context).textTheme.headline3,
-                    ),
-                  ],
-                ),
-              ),
-              Slider(
-                min: widget.downvote ? -100.0 : 1,
-                max: widget.downvote ? -1 : 100.0,
-                value: _vpValue,
 
-                label: _vpValue.floor().toString() + "%",
-                //divisions: 40,
-                inactiveColor: globalBlue,
-                activeColor: globalRed,
-                onChanged: (dynamic value) {
-                  setState(() {
-                    _vpValue = value;
-                  });
-                },
-              ),
-            ],
-          ),
-          widget.downvote
-              ? SizedBox(width: 0)
-              : Row(
+      return !_sendButtonPressed
+          ? Container(
+              //width: 200,
+              child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 8),
+                Row(
                   children: [
                     Container(
                       width: 100,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "vote tip: ",
+                            "voting weight: ",
                             style: Theme.of(context).textTheme.caption,
                           ),
                           Text(
-                            _tipValue.floor().toString() + '%',
+                            _vpValue.floor().toString() + '%',
                             style: Theme.of(context).textTheme.headline3,
                           ),
                         ],
                       ),
                     ),
                     Slider(
-                      min: 0.0,
-                      max: 100.0,
-                      value: _tipValue,
-                      label: _tipValue.floor().toString() + "%",
-                      //divisions: 20,
+                      min: widget.downvote ? -100.0 : 1,
+                      max: widget.downvote ? -1 : 100.0,
+                      value: _vpValue,
+
+                      label: _vpValue.floor().toString() + "%",
+                      //divisions: 40,
                       inactiveColor: globalBlue,
                       activeColor: globalRed,
                       onChanged: (dynamic value) {
                         setState(() {
-                          _tipValue = value;
+                          _vpValue = value;
                         });
                       },
                     ),
                   ],
                 ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              widget.isPost
-                  ? Container(
-                      width: 100,
-                      child: TextFormField(
-                        controller: _tagController,
-                        decoration:
-                            new InputDecoration(labelText: "curator tag"),
+                widget.downvote
+                    ? SizedBox(width: 0)
+                    : Row(
+                        children: [
+                          Container(
+                            width: 100,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "vote tip: ",
+                                  style: Theme.of(context).textTheme.caption,
+                                ),
+                                Text(
+                                  _tipValue.floor().toString() + '%',
+                                  style: Theme.of(context).textTheme.headline3,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Slider(
+                            min: 0.0,
+                            max: 100.0,
+                            value: _tipValue,
+                            label: _tipValue.floor().toString() + "%",
+                            //divisions: 20,
+                            inactiveColor: globalBlue,
+                            activeColor: globalRed,
+                            onChanged: (dynamic value) {
+                              setState(() {
+                                _tipValue = value;
+                              });
+                            },
+                          ),
+                        ],
                       ),
-                    )
-                  : SizedBox(width: 0),
-              SizedBox(width: 50),
-              BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-                if (state is UserDTCVPLoadedState) {
-                  _currentVT = state.vtBalance["v"]!.toDouble();
-                  return ElevatedButton(
-                      onPressed: () {
-                        var voteValue = (_currentVT * (_vpValue / 100)).floor();
-                        int _txType = 5;
-                        TxData txdata = TxData(
-                          author: widget.author,
-                          link: widget.link,
-                          tag: _tagController.value.text,
-                          vt: voteValue,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    widget.isPost
+                        ? Container(
+                            width: 100,
+                            child: TextFormField(
+                              controller: _tagController,
+                              decoration:
+                                  new InputDecoration(labelText: "curator tag"),
+                            ),
+                          )
+                        : SizedBox(width: 0),
+                    SizedBox(width: 50),
+                    BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+                      if (state is UserDTCVPLoadedState) {
+                        _currentVT = state.vtBalance["v"]!.toDouble();
+                        return ElevatedButton(
+                            onPressed: () {
+                              var voteValue =
+                                  (_currentVT * (_vpValue / 100)).floor();
+                              int _txType = 5;
+                              TxData txdata = TxData(
+                                author: widget.author,
+                                link: widget.link,
+                                tag: _tagController.value.text,
+                                vt: voteValue,
+                              );
+
+                              if (_tipValue > 0) {
+                                _txType = 19;
+                                txdata = TxData(
+                                    author: widget.author,
+                                    link: widget.link,
+                                    tag: _tagController.value.text,
+                                    vt: voteValue,
+                                    tip: _tipValue.floor());
+                              }
+                              Transaction newTx =
+                                  Transaction(type: _txType, data: txdata);
+
+                              _txBloc.add(SignAndSendTransactionEvent(newTx));
+                              setState(() {
+                                _sendButtonPressed = true;
+                              });
+                            },
+                            child: Text("send"));
+                      } else {
+                        return SizedBox(
+                          width: 0,
                         );
-
-                        if (_tipValue > 0) {
-                          _txType = 19;
-                          txdata = TxData(
-                              author: widget.author,
-                              link: widget.link,
-                              tag: _tagController.value.text,
-                              vt: voteValue,
-                              tip: _tipValue.floor());
-                        }
-                        Transaction newTx =
-                            Transaction(type: _txType, data: txdata);
-
-                        _txBloc.add(SignAndSendTransactionEvent(newTx));
-                      },
-                      child: Text("send"));
-                } else {
-                  return SizedBox(
-                    width: 0,
-                  );
-                }
-              }),
-            ],
-          ),
-        ],
-      )
-          //   ],
-          // ),
-          );
+                      }
+                    })
+                  ],
+                ),
+              ],
+            ))
+          : Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: CircularProgressIndicator(),
+              ),
+            );
     });
   }
 }

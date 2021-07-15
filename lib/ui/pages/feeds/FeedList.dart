@@ -1,8 +1,3 @@
-// TODO: known issue - no lazy loading for now.
-// implement this to lazy load more entries:
-// https://pub.dev/packages/loadmore
-// https://github.com/dtube/javalon/blob/45d47cb38eefde0b84f29ba06be5571faecfa0ab/index.js#L105
-
 import 'dart:ui';
 
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
@@ -16,139 +11,87 @@ import 'package:dtube_togo/utils/friendlyTimestamp.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-class FeedPage extends StatelessWidget {
-  String feedType;
-  String? username;
-  bool bigThumbnail;
-  bool showAuthor;
-
-  // @override
-  // _FeedPageState createState() => _FeedPageState();
-
-  FeedPage({
-    required this.feedType,
-    this.username,
-    required this.bigThumbnail,
-    required this.showAuthor,
-    Key? key,
-  }) : super(key: key);
-//}
-
-// class _FeedPageState extends State<FeedPage> {
-//   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      //backgroundColor: globalAlmostBlack,
-      // body: FeedList(
-      //   feedType: widget.feedType,
-      //   username: widget.username,
-      //   bigThumbnail: widget.bigThumbnail,
-      //   showAuthor: widget.showAuthor,
-      // ),
-      body: FeedList(
-        feedType: feedType,
-        username: username,
-        bigThumbnail: bigThumbnail,
-        showAuthor: showAuthor,
-      ),
-    );
-  }
-}
-//separated FeedList of FeedPage to support channel feedlist without creating dublicate code
+import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
 class FeedList extends StatelessWidget {
   String feedType;
   String? username;
   bool bigThumbnail;
   bool showAuthor;
-
-  // @override
-  // _FeedListState createState() => _FeedListState();
+  double paddingTop;
+  late YoutubePlayerController _youtubePlayerController;
 
   FeedList({
     required this.feedType,
     this.username,
     required this.bigThumbnail,
     required this.showAuthor,
+    required this.paddingTop,
     Key? key,
   }) : super(key: key);
-// }
 
   late FeedBloc postBloc;
   final ScrollController _scrollController = ScrollController();
   List<FeedItem> _feedItems = [];
 
-// class _FeedListState extends State<FeedList> {
-  String? nsfwMode;
-  String? hiddenMode;
-
-//   late FeedBloc postBloc;
-//   final ScrollController _scrollController = ScrollController();
-//   List<FeedItem> _feedItems = [];
+  String? _nsfwMode;
+  String? _hiddenMode;
+  String? _applicationUser;
 
   Future<bool> getDisplayModes() async {
-    hiddenMode = await sec.getShowHidden();
-    nsfwMode = await sec.getNSFW();
-    if (nsfwMode == null) {
-      nsfwMode = 'Blur';
+    _hiddenMode = await sec.getShowHidden();
+    _nsfwMode = await sec.getNSFW();
+    _applicationUser = await sec.getUsername();
+    if (_nsfwMode == null) {
+      _nsfwMode = 'Blur';
     }
-    if (hiddenMode == null) {
-      hiddenMode = 'Hide';
+    if (_hiddenMode == null) {
+      _hiddenMode = 'Hide';
     }
     return true;
   }
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     postBloc = BlocProvider.of<FeedBloc>(context);
-//     getDisplayModes();
-//     if (widget.feedType != "UserFeed") {
-//       postBloc.add(FetchFeedEvent(feedType: widget.feedType));
-//     } else {
-//       postBloc.add(FetchUserFeedEvent(widget.username!));
-//     }
-//   }
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-        future: getDisplayModes(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return Container(
-              height: 800,
-              // color: globalAlmostBlack,
+    return Padding(
+      padding: EdgeInsets.only(top: (paddingTop)),
+      child: FutureBuilder<bool>(
+          future: getDisplayModes(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return Container(
+                height: 800,
+                // color: globalAlmostBlack,
 
-              child: BlocConsumer<FeedBloc, FeedState>(
-                listener: (context, state) {
-                  if (state is FeedErrorState) {
-                    BlocProvider.of<FeedBloc>(context).isFetching = false;
-                  }
-                  return;
-                },
-                builder: (context, state) {
-                  if (state is FeedInitialState ||
-                      state is FeedLoadingState && _feedItems.isEmpty) {
-                    return buildLoading();
-                  } else if (state is FeedLoadedState) {
-                    _feedItems.addAll(state.feed);
-                    BlocProvider.of<FeedBloc>(context).isFetching = false;
-                  } else if (state is FeedErrorState) {
-                    return buildErrorUi(state.message);
-                  }
-                  //return buildPostList(_feedItems, widget.bigThumbnail, true);
-                  return buildPostList(_feedItems, bigThumbnail, true, context);
-                },
-              ),
-            );
-          }
-        });
+                child: BlocConsumer<FeedBloc, FeedState>(
+                  listener: (context, state) {
+                    if (state is FeedErrorState) {
+                      BlocProvider.of<FeedBloc>(context).isFetching = false;
+                    }
+                    return;
+                  },
+                  builder: (context, state) {
+                    if (state is FeedInitialState ||
+                        state is FeedLoadingState && _feedItems.isEmpty) {
+                      return buildLoading();
+                    } else if (state is FeedLoadedState) {
+                      _feedItems.addAll(state.feed);
+                      BlocProvider.of<FeedBloc>(context).isFetching = false;
+                    } else if (state is FeedErrorState) {
+                      return buildErrorUi(state.message);
+                    }
+                    return buildPostList(
+                        _feedItems, bigThumbnail, true, context, feedType);
+                  },
+                ),
+              );
+            }
+          }),
+    );
   }
 
   Widget buildLoading() {
@@ -170,7 +113,7 @@ class FeedList extends StatelessWidget {
   }
 
   Widget buildPostList(List<FeedItem> feed, bool bigThumbnail, bool showAuthor,
-      BuildContext context) {
+      BuildContext context, String gpostType) {
     return ListView.builder(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
@@ -211,8 +154,10 @@ class FeedList extends StatelessWidget {
         // work on more sources
         if (feed[pos].jsonString!.files?.youtube != null ||
             feed[pos].jsonString!.files?.ipfs != null) {
-          if ((nsfwMode == 'Hide' && feed[pos].jsonString?.nsfw == 1) ||
-              (hiddenMode == 'Hide' && feed[pos].summaryOfVotes < 0)) {
+          if ((_nsfwMode == 'Hide' && feed[pos].jsonString?.nsfw == 1) ||
+              (_hiddenMode == 'Hide' && feed[pos].summaryOfVotes < 0) ||
+              (feed[pos].jsonString!.hide == 1 &&
+                  feed[pos].author != _applicationUser)) {
             return SizedBox(
               height: 0,
             );
@@ -220,44 +165,40 @@ class FeedList extends StatelessWidget {
             return BlocProvider<UserBloc>(
               create: (context) => UserBloc(repository: UserRepositoryImpl()),
               child: Padding(
-                padding:
-                    EdgeInsets.only(top: pos == 0 && bigThumbnail ? 90.0 : 0.0),
-                child: Padding(
-                  padding: EdgeInsets.all(2.0),
-                  child: PostListCard(
-                    bigThumbnail: bigThumbnail,
-                    showAuthor: showAuthor,
-                    blur: (nsfwMode == 'Blur' &&
-                                feed[pos].jsonString?.nsfw == 1) ||
-                            (hiddenMode == 'Blur' &&
-                                feed[pos].summaryOfVotes < 0)
-                        ? true
-                        : false,
-                    title: feed[pos].jsonString!.title,
-                    description: feed[pos].jsonString!.desc != null
-                        ? feed[pos].jsonString!.desc!
-                        : "",
-                    author: feed[pos].author,
-                    link: feed[pos].link,
-                    // publishDate: .toString(),
-                    // publishDate: DateFormat('yyyy-MM-dd kk:mm').format(
-                    //     DateTime.fromMicrosecondsSinceEpoch(feed[pos].ts * 1000)
-                    //         .toLocal()),
-                    publishDate: TimeAgo.timeInAgoTS(feed[pos].ts),
-                    dtcValue:
-                        (feed[pos].dist / 100).round().toString() + " DTC",
-                    duration: new Duration(
-                        seconds: int.tryParse(feed[pos].jsonString!.dur) != null
-                            ? int.parse(feed[pos].jsonString!.dur)
-                            : 0),
-                    thumbnailUrl: feed[pos].thumbUrl,
-                    videoUrl: feed[pos].videoUrl,
-                    videoSource: feed[pos].videoSource,
-                    alreadyVoted: feed[pos].alreadyVoted!,
-                    alreadyVotedDirection: feed[pos].alreadyVotedDirection!,
-                    upvotesCount: feed[pos].upvotes!.length,
-                    downvotesCount: feed[pos].downvotes!.length,
-                  ),
+                padding: EdgeInsets.all(2.0),
+                child: PostListCard(
+                  bigThumbnail: bigThumbnail,
+                  showAuthor: showAuthor,
+                  blur: (_nsfwMode == 'Blur' &&
+                              feed[pos].jsonString?.nsfw == 1) ||
+                          (_hiddenMode == 'Blur' &&
+                              feed[pos].summaryOfVotes < 0)
+                      ? true
+                      : false,
+                  title: feed[pos].jsonString!.title,
+                  description: feed[pos].jsonString!.desc != null
+                      ? feed[pos].jsonString!.desc!
+                      : "",
+                  author: feed[pos].author,
+                  link: feed[pos].link,
+                  // publishDate: .toString(),
+                  // publishDate: DateFormat('yyyy-MM-dd kk:mm').format(
+                  //     DateTime.fromMicrosecondsSinceEpoch(feed[pos].ts * 1000)
+                  //         .toLocal()),
+                  publishDate: TimeAgo.timeInAgoTS(feed[pos].ts),
+                  dtcValue: (feed[pos].dist / 100).round().toString() + " DTC",
+                  duration: new Duration(
+                      seconds: int.tryParse(feed[pos].jsonString!.dur) != null
+                          ? int.parse(feed[pos].jsonString!.dur)
+                          : 0),
+                  thumbnailUrl: feed[pos].thumbUrl,
+                  videoUrl: feed[pos].videoUrl,
+                  videoSource: feed[pos].videoSource,
+                  alreadyVoted: feed[pos].alreadyVoted!,
+                  alreadyVotedDirection: feed[pos].alreadyVotedDirection!,
+                  upvotesCount: feed[pos].upvotes!.length,
+                  downvotesCount: feed[pos].downvotes!.length,
+                  indexOfList: pos,
                 ),
               ),
             );
@@ -268,6 +209,20 @@ class FeedList extends StatelessWidget {
           );
         }
       },
+    );
+  }
+}
+
+class MomentsList extends StatelessWidget {
+  const MomentsList({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 80.0),
+      child: Icon(Icons.access_alarm_outlined),
     );
   }
 }
@@ -290,6 +245,7 @@ class PostListCard extends StatelessWidget {
   final bool alreadyVotedDirection;
   final int upvotesCount;
   final int downvotesCount;
+  final int indexOfList;
 
   const PostListCard(
       {Key? key,
@@ -309,7 +265,8 @@ class PostListCard extends StatelessWidget {
       required this.alreadyVoted,
       required this.alreadyVotedDirection,
       required this.upvotesCount,
-      required this.downvotesCount})
+      required this.downvotesCount,
+      required this.indexOfList})
       : super(key: key);
 
   @override
@@ -333,6 +290,7 @@ class PostListCard extends StatelessWidget {
           alreadyVotedDirection: alreadyVotedDirection,
           upvotesCount: upvotesCount,
           downvotesCount: downvotesCount,
+          indexOfList: indexOfList,
         ),
       );
     } else {

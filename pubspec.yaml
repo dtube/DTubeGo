@@ -43,7 +43,7 @@ dependencies:
   video_player: ^2.1.6
   youtube_explode_dart: ^1.9.6
   video_compress: ^3.0.0
-  better_player: ^0.0.70
+  better_player: ^0.0.72
 
   ## markdown related
   flutter_markdown: ^0.6.2  

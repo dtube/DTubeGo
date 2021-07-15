@@ -164,23 +164,17 @@ class FeedItem {
     data['_id'] = this.sId;
     data['author'] = this.author;
     data['link'] = this.link;
-    // data['pa'] = this.pa;
-    // data['pp'] = this.pp;
+  
     if (this.jsonString != null) {
       data['json'] = this.jsonString!.toJson();
     }
-    // if (this.child != null) {
-    //   data['child'] = this.child.map((v) => v.toJson()).toList();
-    // }
-    // this.upvotes.map((v) => v.toJson()).toList();
+  
     if (this.upvotes != null || this.downvotes != null) {
       allVotes = this.upvotes! + this.downvotes!;
       data['votes'] = allVotes.map((v) => v.toJson()).toList();
     }
     data['ts'] = this.ts;
-    // if (this.tags != null) {
-    //   data['tags'] = this.tags.toJson();
-    // }
+   
     data['dist'] = this.dist;
     data['videoUrl'] = this.videoUrl;
     data['thumbUrl'] = this.thumbUrl;
