@@ -206,7 +206,11 @@ class _UserState extends State<UserPage> {
                     paddingTop: 0,
                   ))
             ]))),
-        buildSpeedDial(ownUsername, user.alreadyFollowing, user.name),
+        Positioned(
+            bottom: 50,
+            right: 25,
+            child:
+                buildSpeedDial(ownUsername, user.alreadyFollowing, user.name)),
       ],
     );
   }

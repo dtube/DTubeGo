@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:dtube_togo/style/dtubeLoading.dart';
 
 import 'package:dtube_togo/ui/pages/feeds/PostListCardMainFeed.dart';
 import 'package:dtube_togo/ui/pages/feeds/PostListCardUserFeed.dart';
@@ -59,12 +60,10 @@ class FeedList extends StatelessWidget {
           future: getDisplayModes(),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return buildLoading();
             } else {
               return Container(
-                height: 800,
+                height: MediaQuery.of(context).size.height - 250,
                 // color: globalAlmostBlack,
 
                 child: BlocConsumer<FeedBloc, FeedState>(
@@ -95,9 +94,7 @@ class FeedList extends StatelessWidget {
   }
 
   Widget buildLoading() {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
+    return Center(child: DTubeLogoPulse());
   }
 
   Widget buildErrorUi(String message) {
