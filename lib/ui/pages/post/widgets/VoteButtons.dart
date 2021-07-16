@@ -144,9 +144,7 @@ class _VotingButtonsState extends State<VotingButtons> {
               create: (context) =>
                   TransactionBloc(repository: TransactionRepositoryImpl()),
               child: VotingSlider(
-                defaultVote: _downvotePressed
-                    ? widget.defaultVotingWeight * -1
-                    : widget.defaultVotingWeight,
+                defaultVote: widget.defaultVotingWeight,
                 defaultTip: widget.defaultVotingTip,
                 author: widget.author,
                 link: widget.link,
@@ -234,18 +232,22 @@ class _VotingSliderState extends State<VotingSlider> {
                             style: Theme.of(context).textTheme.caption,
                           ),
                           Text(
-                            _vpValue.floor().toString() + '%',
+                            (_vpValue.floor() * (widget.downvote ? -1 : 1))
+                                    .toString() +
+                                '%',
                             style: Theme.of(context).textTheme.headline3,
                           ),
                         ],
                       ),
                     ),
                     Slider(
-                      min: widget.downvote ? -100.0 : 1,
-                      max: widget.downvote ? -1 : 100.0,
+                      min: 1,
+                      max: 100.0,
                       value: _vpValue,
 
-                      label: _vpValue.floor().toString() + "%",
+                      label: (widget.downvote ? "-" : "") +
+                          _vpValue.floor().toString() +
+                          "%",
                       //divisions: 40,
                       inactiveColor: globalBlue,
                       activeColor: globalRed,
@@ -318,7 +320,7 @@ class _VotingSliderState extends State<VotingSlider> {
                                 author: widget.author,
                                 link: widget.link,
                                 tag: _tagController.value.text,
-                                vt: voteValue,
+                                vt: voteValue * (widget.downvote ? -1 : 1),
                               );
 
                               if (_tipValue > 0) {
@@ -327,7 +329,7 @@ class _VotingSliderState extends State<VotingSlider> {
                                     author: widget.author,
                                     link: widget.link,
                                     tag: _tagController.value.text,
-                                    vt: voteValue,
+                                    vt: voteValue * (widget.downvote ? -1 : 1),
                                     tip: _tipValue.floor());
                               }
                               Transaction newTx =
