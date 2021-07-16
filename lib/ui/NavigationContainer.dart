@@ -79,23 +79,24 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
   List<Widget> _buildScreens() {
     return [
-      Wrap(
-        children: [
-          //MomentsList(), // Moments not ready yet
-          Expanded(
-            child: BlocProvider<FeedBloc>(
-              create: (context) => FeedBloc(repository: FeedRepositoryImpl())
-                ..add(FetchFeedEvent(feedType: "MyFeed")),
-              child: FeedList(
-                  feedType: 'MyFeed',
-                  bigThumbnail: true,
-                  showAuthor: false,
-                  paddingTop: 90 // if Moments ready then 0
-                  ),
+      // Wrap(
+      //   children: [
+      //MomentsList(), // Moments not ready yet
+      //  Expanded(
+      //   child:
+      BlocProvider<FeedBloc>(
+        create: (context) => FeedBloc(repository: FeedRepositoryImpl())
+          ..add(FetchFeedEvent(feedType: "MyFeed")),
+        child: FeedList(
+            feedType: 'MyFeed',
+            bigThumbnail: true,
+            showAuthor: false,
+            paddingTop: 90 // if Moments ready then 0
             ),
-          ),
-        ],
       ),
+      //   ),
+      //   ],
+      // ),
       BlocProvider<FeedBloc>(
         create: (context) => FeedBloc(repository: FeedRepositoryImpl())
           ..add(FetchFeedEvent(feedType: "NewFeed")),

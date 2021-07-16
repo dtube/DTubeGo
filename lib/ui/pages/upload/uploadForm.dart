@@ -82,14 +82,14 @@ class _UploadFormState extends State<UploadForm> {
   }
 
   Future getFile(bool video, bool camera) async {
-    PickedFile? _pickedFile;
+    XFile? _pickedFile;
 
     if (video) {
       if (camera) {
         double? _freeSpace = await DiskSpace.getFreeDiskSpace;
         if (_freeSpace! > AppConfig.minFreeSpaceRecordVideoInMB) {
           print(await DiskSpace.getFreeDiskSpace);
-          _pickedFile = await _picker.getVideo(
+          _pickedFile = await _picker.pickVideo(
             source: ImageSource.camera,
           );
         } else {
@@ -133,11 +133,11 @@ class _UploadFormState extends State<UploadForm> {
                       callback: childCallback,
                     )));
       } else {
-        _pickedFile = await _picker.getVideo(source: ImageSource.gallery);
+        _pickedFile = await _picker.pickVideo(source: ImageSource.gallery);
       }
       _titleFocus.requestFocus();
     } else {
-      _pickedFile = await _picker.getImage(source: ImageSource.gallery);
+      _pickedFile = await _picker.pickImage(source: ImageSource.gallery);
       if (_pickedFile != null) {
         var _tempImage = File(_pickedFile.path);
         var decodedImage =
@@ -449,7 +449,7 @@ class _UploadFormState extends State<UploadForm> {
                   enableTooltip: true,
                   activeColor: Colors.red,
                   //minorTicksPerInterval: 10,
-                  showDivisors: true,
+                  //showDivisors: true,
                   onChanged: (dynamic value) {
                     setState(() {
                       stateUploadData.vpPercent = value;
@@ -492,7 +492,7 @@ class _UploadFormState extends State<UploadForm> {
                     enableTooltip: true,
                     activeColor: Colors.red,
                     //minorTicksPerInterval: 10,
-                    showDivisors: true,
+                    // showDivisors: true,
                     onChanged: (dynamic value) {
                       setState(() {
                         stateUploadData.burnDtc = value;

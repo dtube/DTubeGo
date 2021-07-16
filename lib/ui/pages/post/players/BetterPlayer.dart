@@ -34,6 +34,7 @@ class _BPState extends State<BP> {
 
   Future<void> initVideoPlayer() async {
     await _videocontroller.initialize();
+    print("test");
     setState(() {
       BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
           !widget.localFile
@@ -86,44 +87,46 @@ class _BPState extends State<BP> {
     return FutureBuilder(
       future: _future,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
-          return buildPlaceholderImage();
-
-        double _aspectRatio = _videocontroller.value.size.width /
-            _videocontroller.value.size.height;
-        return Center(
-          child: Padding(
-            padding: EdgeInsets.only(
-                left: _aspectRatio < 1 ? 50.0 : 0.0,
-                right: _aspectRatio < 1 ? 50.0 : 0.0),
-            child: Column(
-              children: [
-                AspectRatio(
-                  aspectRatio: _aspectRatio,
-                  child: BetterPlayer(
-                    controller: _betterPlayerController,
+        if (snapshot.connectionState == ConnectionState.done) {
+          double _aspectRatio = _videocontroller.value.size.width /
+              _videocontroller.value.size.height;
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: _aspectRatio < 1 ? 50.0 : 0.0,
+                  right: _aspectRatio < 1 ? 50.0 : 0.0),
+              child: Column(
+                children: [
+                  AspectRatio(
+                    aspectRatio: _aspectRatio,
+                    child: BetterPlayer(
+                      controller: _betterPlayerController,
+                    ),
                   ),
-                ),
-                widget.usedAsPreview
-                    ? _aspectRatio > 1
-                        ? Column(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(30, 8, 30, 8),
-                                child: Text(
-                                  "Hint: preview of landscape videos could be wrong oriented.\nBut the upload will usually be fine!",
-                                  style: Theme.of(context).textTheme.bodyText1,
+                  widget.usedAsPreview
+                      ? _aspectRatio > 1
+                          ? Column(
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(30, 8, 30, 8),
+                                  child: Text(
+                                    "Hint: preview of landscape videos could be wrong oriented.\nBut the upload will usually be fine!",
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          )
-                        : SizedBox(height: 0)
-                    : SizedBox(height: 0)
-              ],
+                              ],
+                            )
+                          : SizedBox(height: 0)
+                      : SizedBox(height: 0)
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          return buildPlaceholderImage();
+        }
       },
     );
   }

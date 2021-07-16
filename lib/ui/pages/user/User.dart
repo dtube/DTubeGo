@@ -283,8 +283,9 @@ class _UserState extends State<UserPage> {
     return SpeedDial(
 
         /// both default to 16
-        marginEnd: 25,
-        marginBottom: 50,
+        // marginEnd: 25,
+        // marginBottom: 50,
+
         // animatedIcon: AnimatedIcons.menu_close,
         // animatedIconTheme: IconThemeData(size: 22.0),
         /// This is ignored if animatedIcon is non null

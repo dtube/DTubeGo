@@ -40,7 +40,7 @@ dependencies:
   # youtube_player_iframe: ^2.1.0
   youtube_plyr_iframe: ^2.0.6
   webview_flutter: ^2.0.8
-  video_player: ^2.1.6
+  video_player: ^2.1.4
   youtube_explode_dart: ^1.9.6
   video_compress: ^3.0.0
   better_player: ^0.0.72
@@ -52,7 +52,7 @@ dependencies:
   syncfusion_flutter_sliders: ^19.1.66-beta
   font_awesome_flutter: ^9.0.0
   rflutter_alert: ^2.0.2
-  flutter_speed_dial: ^3.0.5
+  flutter_speed_dial: ^4.1.0
   persistent_bottom_nav_bar: ^4.0.2
   another_flushbar: ^1.10.23
   loadmore: ^2.0.1
