@@ -6,6 +6,7 @@ import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:dtube_togo/realMain.dart';
 
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
@@ -196,7 +197,14 @@ class _NavigationContainerState extends State<NavigationContainer> {
                 ),
               ),
               BalanceOverview(),
-              DTubeLogo(size: 60),
+              GestureDetector(
+                  child: DTubeLogo(size: 60),
+                  onTap: () {
+                    Navigator.of(context).push(
+                        new MaterialPageRoute(builder: (BuildContext context) {
+                      return new MyApp();
+                    }));
+                  }),
               Container(
                 width: 130,
                 child: Column(
