@@ -12,7 +12,7 @@ Future<String> discoverAPINode() async {
     var _beforeRequestMicroSeconds = DateTime.now().microsecondsSinceEpoch;
     var response = await http
         .get(Uri.parse(node + '/count'))
-        .timeout(Duration(seconds: 1), onTimeout: () {
+        .timeout(Duration(seconds: 5), onTimeout: () {
       // Time has run out, do what you wanted to do.
       return http.Response('Error', 500); // Replace 500 with your http code.
     });
@@ -22,8 +22,8 @@ Future<String> discoverAPINode() async {
       _nodeResponses[node] =
           _afterRequestMicroSeconds - _beforeRequestMicroSeconds;
     }
-    _sortedApiNodesByResponseTime = SplayTreeMap.from(_nodeResponses,
-        (key1, key2) => _nodeResponses[key1]!.compareTo(_nodeResponses[key2]!));
   }
+  _sortedApiNodesByResponseTime = SplayTreeMap.from(_nodeResponses,
+      (key1, key2) => _nodeResponses[key1]!.compareTo(_nodeResponses[key2]!));
   return _sortedApiNodesByResponseTime.entries.toList()[0].key;
 }

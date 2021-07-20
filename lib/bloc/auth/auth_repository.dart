@@ -67,11 +67,13 @@ class AuthRepositoryImpl implements AuthRepository {
           }
         }
       }
+
       //check if key is enough to login
-      return _keyIsValid;
+
     } else {
       throw Exception();
     }
+    return _keyIsValid;
   }
 
   String privToPub(String privateKey) {

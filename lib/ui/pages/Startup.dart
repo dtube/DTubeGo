@@ -6,6 +6,7 @@ import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class StartUp extends StatefulWidget {
   StartUp({Key? key}) : super(key: key);
@@ -37,13 +38,12 @@ class _StartUpState extends State<StartUp> {
             ),
           ], child: NavigationContainer());
         }
-        if ([
-          SignInFailedState(message: "login failed"),
-          SignOutCompleteState(),
-          NoSignInInformationFoundState()
-        ].contains(state)) {
-          // remove inputs and show snackbar
-          //usernameController.text = "";
+        if (state is SignInFailedState) {
+          return LoginForm(message: state.message);
+        }
+
+        if (state is SignOutCompleteState ||
+            state is NoSignInInformationFoundState) {
           return LoginForm();
         }
 
@@ -57,7 +57,8 @@ class _StartUpState extends State<StartUp> {
 }
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({Key? key}) : super(key: key);
+  String? message;
+  LoginForm({Key? key, this.message}) : super(key: key);
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -84,37 +85,62 @@ class _LoginFormState extends State<LoginForm> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Form(
-              child: Column(
-                children: [
-                  Image.asset('assets/images/dtube_logo_white.png',
-                      width: MediaQuery.of(context).size.width / 2),
-                  SizedBox(height: 8),
-                  TextField(
-                    controller: usernameController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Username',
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  children: [
+                    Image.asset('assets/images/dtube_logo_white.png',
+                        width: MediaQuery.of(context).size.width / 2),
+                    SizedBox(height: 8),
+                    TextField(
+                      controller: usernameController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Username',
+                      ),
                     ),
-                  ),
-                  TextField(
-                    obscureText: true,
-                    controller: privateKeyController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'key',
+                    TextField(
+                      obscureText: true,
+                      controller: privateKeyController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'key',
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          _loginBloc.add(SignInWithCredentialsEvent(
-                              usernameController.value.text,
-                              privateKeyController.value.text));
-                        },
-                        child: Text("Sign in")),
-                  )
-                ],
+                    widget.message != null
+                        ? Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                            child: Row(
+                              children: [
+                                FaIcon(
+                                  FontAwesomeIcons.exclamationTriangle,
+                                  color: globalRed,
+                                ),
+                                SizedBox(width: 8),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width - 100,
+                                  child: Text(widget.message!,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1),
+                                ),
+                              ],
+                            ),
+                          )
+                        : SizedBox(height: 16),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            _loginBloc.add(SignInWithCredentialsEvent(
+                                usernameController.value.text,
+                                privateKeyController.value.text));
+                          },
+                          child: Text("Sign in")),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

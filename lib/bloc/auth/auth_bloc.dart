@@ -33,6 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (_applicationUser != null && _privKey != null) {
           bool keyIsValid = await repository.signInWithCredentials(
               _avalonApiNode, _applicationUser, _privKey);
+
           if (keyIsValid) {
             //sec.persistUsernameKey(event.username, event.privateKey);
             yield SignedInState();
@@ -70,7 +71,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           sec.persistUsernameKey(event.username, event.privateKey);
           yield SignedInState();
         } else {
-          yield AuthErrorState(message: 'error logging in');
+          yield SignInFailedState(
+              message:
+                  'login failed: Please check your username and key (we currently do not support login with the master key)');
         }
       } catch (e) {
         yield AuthErrorState(message: 'unknown error');
