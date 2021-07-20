@@ -196,7 +196,11 @@ class _NavigationContainerState extends State<NavigationContainer> {
                   ),
                 ),
               ),
-              BalanceOverview(),
+              GestureDetector(
+                  child: BalanceOverview(),
+                  onTap: () {
+                    BlocProvider.of<UserBloc>(context).add(FetchDTCVPEvent());
+                  }),
               GestureDetector(
                   child: DTubeLogo(size: 60),
                   onTap: () {
@@ -394,9 +398,17 @@ class _BalanceOverviewState extends State<BalanceOverview> {
 
                 children: [
                   Text(
-                    (_dtcBalanceK >= 1000 ? _dtcBalanceK / 1000 : _dtcBalanceK)
+                    (state.dtcBalance < 100000
+                                ? state.dtcBalance / 100
+                                : _dtcBalanceK >= 1000
+                                    ? _dtcBalanceK / 1000
+                                    : _dtcBalanceK)
                             .toStringAsFixed(1) +
-                        (_dtcBalanceK >= 1000 ? 'M' : 'K') +
+                        (state.dtcBalance < 10000
+                            ? ""
+                            : _dtcBalanceK >= 1000
+                                ? 'M'
+                                : 'K') +
                         "DTC",
                     style: Theme.of(context).textTheme.subtitle1,
                   ),

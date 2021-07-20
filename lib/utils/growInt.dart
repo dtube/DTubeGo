@@ -1,4 +1,4 @@
-Map<String, int> growInt(int v, int t, int growth, int min, int max) {
+Map<String, int> growInt(int v, int t, double growth, int min, int max) {
   const int int64MaxValue = 9223372036854775807;
   const int int64MinValue = -9223372036854775808;
 
@@ -12,9 +12,8 @@ Map<String, int> growInt(int v, int t, int growth, int min, int max) {
     return {"v": v, "t": currentTS};
   }
   int tmpValue = v;
-  tmpValue += (currentTS - t) * growth;
+  tmpValue += ((currentTS - t) * growth).floor();
 
-  int currentVT = 0;
   if (max == 0) {
     max = int64MaxValue;
   }

@@ -55,7 +55,8 @@ class UserRepositoryImpl implements UserRepository {
         AvalonConfig conf =
             ApiResultModelAvalonConfig.fromJson(configData).conf;
         int vpGrowth = conf.vtGrowth;
-        currentVT = growInt(vp, vpTS, (dtcBalance / vpGrowth).floor(), 0, 0);
+        currentVT = growInt(vp, vpTS, (dtcBalance / vpGrowth), 0, 0);
+        print(currentVT);
       } else {
         throw Exception();
       }
