@@ -279,7 +279,7 @@ class _UserState extends State<UserPage> {
           labelStyle: TextStyle(fontSize: 14.0),
           labelBackgroundColor: globalBlue,
           onTap: () {
-            _authBloc.add(SignOutEvent());
+            _authBloc.add(SignOutEvent(context: context));
             // navigate to new wallet page
           }),
     ];

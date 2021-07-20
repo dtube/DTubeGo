@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 abstract class AuthEvent extends Equatable {}
 
@@ -9,7 +10,8 @@ class AppStartedEvent extends AuthEvent {
 }
 
 class SignOutEvent extends AuthEvent {
-  SignOutEvent();
+  final BuildContext context;
+  SignOutEvent({required this.context});
   @override
   List<Object> get props => List.empty();
 }

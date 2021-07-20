@@ -1,3 +1,5 @@
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+
 // this file is needed until bs85 is null safety
 import 'package:flutter/services.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc.dart';
@@ -28,7 +30,9 @@ const MaterialColor kPrimaryColor = const MaterialColor(
 );
 
 void realMain() {
-  runApp(MyApp());
+  runApp(
+    Phoenix(child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
