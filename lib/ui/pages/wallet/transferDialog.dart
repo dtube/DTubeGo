@@ -31,18 +31,19 @@ class _TransferDialogState extends State<TransferDialog> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
+
     return AlertDialog(
       title: const Text('DTC transfer'),
       backgroundColor: globalAlmostBlack,
       content: Builder(
         builder: (context) {
           // Get available height and width of the build area of this widget. Make a choice depending on the size.
-          var height = MediaQuery.of(context).size.height;
-          var width = MediaQuery.of(context).size.width;
 
           return Container(
-            height: height / 3,
-            width: width - 100,
+            height: deviceHeight / 3,
+            width: deviceWidth - 100,
             child: SingleChildScrollView(
               child: Column(
                 children: [

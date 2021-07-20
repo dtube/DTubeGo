@@ -1,5 +1,6 @@
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/res/appConfigValues.dart';
+import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/ui/pages/post/players/localVideoPlayer.dart';
 import 'package:dtube_togo/utils/VideoRecorder.dart';
 import 'package:flutter/services.dart';
@@ -20,7 +21,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class UploadForm extends StatefulWidget {
   late UploadData uploadData;
@@ -99,18 +99,18 @@ class _UploadFormState extends State<UploadForm> {
               title: Text('not enough free storage',
                   style: Theme.of(context).textTheme.headline1),
               content: Container(
-                height: MediaQuery.of(context).size.height / 7,
+                height: MediaQuery.of(context).size.height / 5,
                 child: Column(
                   children: [
                     Text(
                         "In order to record a video with the app please make sure to have enough free internal storage on your device.",
-                        style: Theme.of(context).textTheme.headline4),
+                        style: Theme.of(context).textTheme.bodyText1),
                     SizedBox(
                       height: 18,
                     ),
                     Text(
                         "We have set the minimum required free space to ${AppConfig.minFreeSpaceRecordVideoInMB / 1000} GB internal storage.",
-                        style: Theme.of(context).textTheme.headline4)
+                        style: Theme.of(context).textTheme.bodyText1)
                   ],
                 ),
               ),
@@ -126,12 +126,12 @@ class _UploadFormState extends State<UploadForm> {
           );
         }
 
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (builder) => CameraScreen(
-                      callback: childCallback,
-                    )));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (builder) => CameraScreen(
+        //               callback: childCallback,
+        //             )));
       } else {
         _pickedFile = await _picker.pickVideo(source: ImageSource.gallery);
       }
@@ -437,19 +437,15 @@ class _UploadFormState extends State<UploadForm> {
             Column(
               children: [
                 Text("selfvote"),
-                SfSlider.vertical(
+                Slider(
                   min: 1.0,
                   max: 100.0,
                   value: stateUploadData.vpPercent,
-                  interval: 10,
-                  //showTicks: true,
-                  numberFormat: NumberFormat(''),
-                  // showLabels: true,
 
-                  enableTooltip: true,
-                  activeColor: Colors.red,
-                  //minorTicksPerInterval: 10,
-                  //showDivisors: true,
+                  label: stateUploadData.vpPercent.floor().toString(),
+                  //divisions: 40,
+                  inactiveColor: globalBlue,
+                  activeColor: globalRed,
                   onChanged: (dynamic value) {
                     setState(() {
                       stateUploadData.vpPercent = value;
@@ -481,18 +477,16 @@ class _UploadFormState extends State<UploadForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text("promote"),
-                  SfSlider.vertical(
+
+                  Slider(
                     min: 0.0,
                     max: (stateUploadData.dtcBalance + 0.0) / 100,
                     value: stateUploadData.burnDtc,
-                    interval: 50,
-                    //showTicks: true,
-                    numberFormat: NumberFormat(''),
-                    // showLabels: true,
-                    enableTooltip: true,
-                    activeColor: Colors.red,
-                    //minorTicksPerInterval: 10,
-                    // showDivisors: true,
+
+                    label: stateUploadData.burnDtc.floor().toString(),
+                    //divisions: 40,
+                    inactiveColor: globalBlue,
+                    activeColor: globalRed,
                     onChanged: (dynamic value) {
                       setState(() {
                         stateUploadData.burnDtc = value;

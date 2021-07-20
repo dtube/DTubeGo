@@ -178,6 +178,8 @@ class _PostDetailsState extends State<PostDetails> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
     const player = YoutubePlayerIFrame();
     return BlocListener<UserBloc, UserState>(
       listener: (context, state) {
@@ -249,6 +251,38 @@ class _PostDetailsState extends State<PostDetails> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          widget.post.tags.length > 0
+                              ? Container(
+                                  width: deviceWidth * 0.6,
+                                  height: 50,
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: widget.post.tags.length,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 8.0),
+                                          child: InputChip(
+                                              label: Text(
+                                            widget.post.tags[index].toString(),
+                                          )),
+                                        );
+                                        // return Text(
+                                        //   widget.post.tags[index].toString(),
+                                        // );
+                                      }),
+                                )
+                              : SizedBox(height: 0),
+                          Text(
+                            (widget.post.dist / 100).round().toString() +
+                                " DTC",
+                            style: Theme.of(context).textTheme.headline2,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
                           BlocBuilder<SettingsBloc, SettingsState>(
                               builder: (context, state) {
                             if (state is SettingsLoadedState) {
@@ -285,35 +319,9 @@ class _PostDetailsState extends State<PostDetails> {
                               return SizedBox(height: 0);
                             }
                           }),
-                          Text(
-                            (widget.post.dist / 100).round().toString() +
-                                " DTC",
-                            style: Theme.of(context).textTheme.headline2,
-                          ),
                         ],
                       ),
-                      widget.post.tags.length > 0
-                          ? Container(
-                              width: 500,
-                              height: 50,
-                              child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: widget.post.tags.length,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 8.0),
-                                      child: InputChip(
-                                          label: Text(
-                                        widget.post.tags[index].toString(),
-                                      )),
-                                    );
-                                    // return Text(
-                                    //   widget.post.tags[index].toString(),
-                                    // );
-                                  }),
-                            )
-                          : SizedBox(height: 0),
+
                       CollapsedDescription(
                           description: widget.post.jsonString!.desc != null
                               ? widget.post.jsonString!.desc!

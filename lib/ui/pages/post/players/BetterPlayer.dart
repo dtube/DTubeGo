@@ -37,10 +37,13 @@ class _BPState extends State<BP> {
     print("test");
     setState(() {
       BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-          !widget.localFile
-              ? BetterPlayerDataSourceType.network
-              : BetterPlayerDataSourceType.file,
-          widget.videoUrl);
+        !widget.localFile
+            ? BetterPlayerDataSourceType.network
+            : BetterPlayerDataSourceType.file,
+        widget.videoUrl,
+      );
+      double aspectRatio = _videocontroller.value.size.width /
+          _videocontroller.value.size.height;
 
       _betterPlayerController = BetterPlayerController(
           BetterPlayerConfiguration(
@@ -52,8 +55,7 @@ class _BPState extends State<BP> {
             ),
             autoPlay: widget.autoplay,
             autoDispose: true,
-            aspectRatio: _videocontroller.value.size.width /
-                _videocontroller.value.size.height,
+            aspectRatio: aspectRatio,
           ),
           betterPlayerDataSource: betterPlayerDataSource);
     });

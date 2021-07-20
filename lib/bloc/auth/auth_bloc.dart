@@ -29,6 +29,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield SignInLoadingState();
       _avalonApiNode = await discoverAPINode();
       sec.persistNode(_avalonApiNode);
+
       try {
         if (_applicationUser != null && _privKey != null) {
           bool keyIsValid = await repository.signInWithCredentials(
@@ -69,6 +70,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             _avalonApiNode, event.username, event.privateKey);
         if (keyIsValid) {
           sec.persistUsernameKey(event.username, event.privateKey);
+
           yield SignedInState();
         } else {
           yield SignInFailedState(

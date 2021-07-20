@@ -44,5 +44,5 @@ class AppConfig {
     // 'https://avalon.oneloved.tube',
     'https://dtube.fso.ovh'
   ];
-  static int minFreeSpaceRecordVideoInMB = 5000;
+  static int minFreeSpaceRecordVideoInMB = 10;
 }

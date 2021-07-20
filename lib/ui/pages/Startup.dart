@@ -78,6 +78,9 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: globalBlue,
       body: Center(
@@ -90,7 +93,7 @@ class _LoginFormState extends State<LoginForm> {
                 child: Column(
                   children: [
                     Image.asset('assets/images/dtube_logo_white.png',
-                        width: MediaQuery.of(context).size.width / 2),
+                        width: deviceWidth / 2),
                     SizedBox(height: 8),
                     TextField(
                       controller: usernameController,
@@ -118,8 +121,7 @@ class _LoginFormState extends State<LoginForm> {
                                 ),
                                 SizedBox(width: 8),
                                 Container(
-                                  width:
-                                      MediaQuery.of(context).size.width - 100,
+                                  width: deviceWidth - 100,
                                   child: Text(widget.message!,
                                       style: Theme.of(context)
                                           .textTheme

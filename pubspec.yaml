@@ -25,7 +25,8 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.1
-  # crypto related
+
+  # CRYPTO
   pointycastle: ^3.1.1
   crypto_keys: ^0.3.0
   bs58check: ^1.0.2
@@ -35,48 +36,53 @@ dependencies:
   elliptic: ^0.3.1
   ecdsa: ^0.0.2
 
-  # ui related
-  ## video related
-  # youtube_player_iframe: ^2.1.0
-  youtube_plyr_iframe: ^2.0.6
+  # UI - video related
   webview_flutter: ^2.0.8
   video_player: ^2.1.4
-  youtube_explode_dart: ^1.9.6
-  video_compress: ^3.0.0
-  better_player: ^0.0.72
+  youtube_explode_dart: ^1.9.6 #loading youtube metadata
+  better_player: ^0.0.72 # player for ipfs/sia/local files
+  youtube_plyr_iframe: ^2.0.6 # player for youtube
 
-  ## markdown related
-  flutter_markdown: ^0.6.2  
-  url_launcher: ^6.0.4
-  ## ui elements related
-  syncfusion_flutter_sliders: ^19.1.66-beta
+  # UI - markdown related
+  flutter_markdown: ^0.6.2  # display markdown (only post description for now)
+  url_launcher: ^6.0.4 
+
+  # UI - image/video related
+  camera: ^0.8.1+3 # gives possibility to capture camera input in own widget
+  image_picker: ^0.8.1+3 # open file browser / record image/video
+
+  # UI - specific elements related
+  
   font_awesome_flutter: ^9.0.0
   rflutter_alert: ^2.0.2
   flutter_speed_dial: ^4.1.0
   persistent_bottom_nav_bar: ^4.0.2
   another_flushbar: ^1.10.23
   loadmore: ^2.0.1
-  jiffy: ^4.1.0
-  scroll_snap_list: ^0.8.1
-  share_plus: ^2.1.4
-  camera: ^0.8.1+3
-
-  
-  # network related
+  jiffy: ^4.1.0 # library to display time in a user friendly way
+  # scroll_snap_list: ^0.8.1 # not needed for now (snapping lists like instagram explore page)
+  share_plus: ^2.1.4 # share post
+    
+  # NETWORK - cache related
   cached_network_image: ^3.0.0
-  flutter_bloc: ^7.0.1
+  
+  # NETWORK - http related
   http: ^0.13.3
-  equatable: ^2.0.2
   dio: ^4.0.0
   
+  # OTHERS - global stuff
+  flutter_phoenix: ^1.0.0 # for restarting the app on purpose (e.g. logout)
+  flutter_launcher_icons: ^0.9.0 # creating app icons
 
-  # others
+  
+
+# unsorted
+  flutter_bloc: ^7.0.1
+  equatable: ^2.0.2
+  disk_space: ^0.1.1
   flutter_secure_storage: ^4.2.0
   intl: ^0.17.0
-  image_picker: ^0.8.1+3
-  flutter_launcher_icons: ^0.9.0
-  disk_space: ^0.1.1
-  flutter_phoenix: ^1.0.0
+  video_compress: ^3.0.0
 
 dev_dependencies:
   flutter_test:

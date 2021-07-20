@@ -164,6 +164,9 @@ class _RewardsCardState extends State<RewardsCard> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
+
     return GestureDetector(
       onTap: () {
         navigateToPostDetailPage(
@@ -191,7 +194,7 @@ class _RewardsCardState extends State<RewardsCard> {
                           style: Theme.of(context).textTheme.headline5,
                         )),
                     Container(
-                        width: MediaQuery.of(context).size.width - 310,
+                        width: deviceWidth - 310,
                         child: Text(
                           widget.reward.author + '/' + widget.reward.link,
                           overflow: TextOverflow.ellipsis,

@@ -65,6 +65,8 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
     return Column(
       children: [
         Row(
@@ -84,7 +86,7 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
             ),
             SizedBox(width: 8),
             Container(
-              width: MediaQuery.of(context).size.width - 50 - 50,
+              width: deviceWidth - 50 - 50,
               child: InkWell(
                 onTap: () {
                   navigateToPostDetailPage(

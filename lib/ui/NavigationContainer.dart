@@ -153,10 +153,13 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        // shadowColor: Colors.transparent,
+        shadowColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(25),
@@ -172,35 +175,44 @@ class _NavigationContainerState extends State<NavigationContainer> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: 40,
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: CircleAvatar(
-                    backgroundColor: globalRed,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return UploaderMainPage();
+                width: (deviceWidth / 2) - 60 - 8,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 40,
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: CircleAvatar(
+                          backgroundColor: globalRed,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return UploaderMainPage();
+                                  },
+                                ),
+                              );
                             },
+                            child: new FaIcon(
+                              FontAwesomeIcons.cloudUploadAlt,
+                              color: Colors.white,
+                            ),
                           ),
-                        );
-                      },
-                      child: new FaIcon(
-                        FontAwesomeIcons.cloudUploadAlt,
-                        color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
+                    GestureDetector(
+                        child: BalanceOverview(),
+                        onTap: () {
+                          BlocProvider.of<UserBloc>(context)
+                              .add(FetchDTCVPEvent());
+                        }),
+                  ],
                 ),
               ),
-              GestureDetector(
-                  child: BalanceOverview(),
-                  onTap: () {
-                    BlocProvider.of<UserBloc>(context).add(FetchDTCVPEvent());
-                  }),
               GestureDetector(
                   child: DTubeLogo(size: 60),
                   onTap: () {
@@ -210,7 +222,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
                     }));
                   }),
               Container(
-                width: 130,
+                width: (deviceWidth / 2) - 60 - 8,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -386,9 +398,9 @@ class _BalanceOverviewState extends State<BalanceOverview> {
       bloc: _userBloc,
       builder: (context, state) {
         if (state is UserInitialState) {
-          return SizedBox(width: 0, height: 12);
+          return SizedBox(width: 0);
         } else if (state is UserDTCVPLoadingState) {
-          return SizedBox(width: 0, height: 12);
+          return SizedBox(width: 0);
         } else if (state is UserDTCVPLoadedState) {
           double _dtcBalanceK = state.dtcBalance / 100000;
           double _vpBalanceK = state.vtBalance["v"]! / 1000;
@@ -397,22 +409,23 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                 //mainAxisAlignment: MainAxisAlignment.end,
 
                 children: [
-                  Text(
-                    (state.dtcBalance < 100000
-                                ? state.dtcBalance / 100
-                                : _dtcBalanceK >= 1000
-                                    ? _dtcBalanceK / 1000
-                                    : _dtcBalanceK)
-                            .toStringAsFixed(1) +
-                        (state.dtcBalance < 10000
-                            ? ""
-                            : _dtcBalanceK >= 1000
-                                ? 'M'
-                                : 'K') +
-                        "DTC",
-                    style: Theme.of(context).textTheme.subtitle1,
+                  Center(
+                    child: Text(
+                      (state.dtcBalance < 100000
+                                  ? state.dtcBalance / 100
+                                  : _dtcBalanceK >= 1000
+                                      ? _dtcBalanceK / 1000
+                                      : _dtcBalanceK)
+                              .toStringAsFixed(1) +
+                          (state.dtcBalance < 10000
+                              ? ""
+                              : _dtcBalanceK >= 1000
+                                  ? 'M'
+                                  : 'K') +
+                          "DTC",
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
                   ),
-                  SizedBox(width: 4),
                   Text(
                     (_vpBalanceK >= 1000 ? _vpBalanceK / 1000 : _vpBalanceK)
                             .toStringAsFixed(1) +

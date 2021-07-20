@@ -119,6 +119,9 @@ class _UserState extends State<UserPage> {
   }
 
   Widget buildUserPage(User user, bool ownUsername) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
+
     return Stack(
       children: [
         Padding(
@@ -150,7 +153,7 @@ class _UserState extends State<UserPage> {
                       : FaIcon(FontAwesomeIcons.times),
                   SizedBox(width: 10),
                   Container(
-                    width: (MediaQuery.of(context).size.width - 50) / 3 * 2,
+                    width: (deviceWidth - 50) / 3 * 2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

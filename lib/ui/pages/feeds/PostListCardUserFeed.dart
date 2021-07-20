@@ -43,6 +43,9 @@ class _PostListCardUserFeedState extends State<PostListCardUserFeed> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
+
     return InkWell(
       onTap: () {
         navigateToPostDetailPage(context, widget.author, widget.link);
@@ -77,7 +80,7 @@ class _PostListCardUserFeedState extends State<PostListCardUserFeed> {
             ),
             SizedBox(width: 8),
             Container(
-              width: (MediaQuery.of(context).size.width - 50) / 3 * 2,
+              width: (deviceWidth - 50) / 3 * 2,
               height: 75,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -590,13 +590,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.27.1"
-  scroll_snap_list:
-    dependency: "direct main"
-    description:
-      name: scroll_snap_list
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.8.2"
   secp256k1:
     dependency: "direct main"
     description:
@@ -700,20 +693,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  syncfusion_flutter_core:
-    dependency: transitive
-    description:
-      name: syncfusion_flutter_core
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "19.2.47"
-  syncfusion_flutter_sliders:
-    dependency: "direct main"
-    description:
-      name: syncfusion_flutter_sliders
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "19.2.47"
   synchronized:
     dependency: transitive
     description:

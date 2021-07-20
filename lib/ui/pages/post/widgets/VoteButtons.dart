@@ -204,7 +204,8 @@ class _VotingSliderState extends State<VotingSlider> {
 
   @override
   Widget build(BuildContext context) {
-    //int _currentVp = 0;
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
 
     return BlocBuilder<TransactionBloc, TransactionState>(
         //bloc: _txBloc,
@@ -214,143 +215,156 @@ class _VotingSliderState extends State<VotingSlider> {
       }
 
       return !_sendButtonPressed
-          ? Container(
-              //width: 200,
-              child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    Container(
-                      width: 100,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "voting weight: ",
-                            style: Theme.of(context).textTheme.caption,
-                          ),
-                          Text(
-                            (_vpValue.floor() * (widget.downvote ? -1 : 1))
-                                    .toString() +
-                                '%',
-                            style: Theme.of(context).textTheme.headline3,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Slider(
-                      min: 1,
-                      max: 100.0,
-                      value: _vpValue,
-
-                      label: (widget.downvote ? "-" : "") +
-                          _vpValue.floor().toString() +
-                          "%",
-                      //divisions: 40,
-                      inactiveColor: globalBlue,
-                      activeColor: globalRed,
-                      onChanged: (dynamic value) {
-                        setState(() {
-                          _vpValue = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                widget.downvote
-                    ? SizedBox(width: 0)
-                    : Row(
-                        children: [
-                          Container(
-                            width: 100,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "vote tip: ",
-                                  style: Theme.of(context).textTheme.caption,
-                                ),
-                                Text(
-                                  _tipValue.floor().toString() + '%',
-                                  style: Theme.of(context).textTheme.headline3,
-                                ),
-                              ],
+                Container(
+                    width: deviceWidth * 0.67,
+                    child: Column(
+                      //crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: deviceWidth * 0.2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "voting weight: ",
+                                    style: Theme.of(context).textTheme.caption,
+                                  ),
+                                  Text(
+                                    (_vpValue.floor() *
+                                                (widget.downvote ? -1 : 1))
+                                            .toString() +
+                                        '%',
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Slider(
-                            min: 0.0,
-                            max: 100.0,
-                            value: _tipValue,
-                            label: _tipValue.floor().toString() + "%",
-                            //divisions: 20,
-                            inactiveColor: globalBlue,
-                            activeColor: globalRed,
-                            onChanged: (dynamic value) {
-                              setState(() {
-                                _tipValue = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    widget.isPost
-                        ? Container(
-                            width: 100,
-                            child: TextFormField(
+                            Slider(
+                              min: 1,
+                              max: 100.0,
+                              value: _vpValue,
+
+                              label: (widget.downvote ? "-" : "") +
+                                  _vpValue.floor().toString() +
+                                  "%",
+                              //divisions: 40,
+                              inactiveColor: globalBlue,
+                              activeColor: globalRed,
+                              onChanged: (dynamic value) {
+                                setState(() {
+                                  _vpValue = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        widget.downvote
+                            ? SizedBox(width: 0)
+                            : Row(
+                                children: [
+                                  Container(
+                                    width: deviceWidth / 5,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "vote tip: ",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .caption,
+                                        ),
+                                        Text(
+                                          _tipValue.floor().toString() + '%',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline3,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Slider(
+                                    min: 0.0,
+                                    max: 100.0,
+                                    value: _tipValue,
+                                    label: _tipValue.floor().toString() + "%",
+                                    //divisions: 20,
+                                    inactiveColor: globalBlue,
+                                    activeColor: globalRed,
+                                    onChanged: (dynamic value) {
+                                      setState(() {
+                                        _tipValue = value;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                      ],
+                    )),
+                Container(
+                  width: deviceWidth * 0.25,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      widget.isPost
+                          ? TextFormField(
                               controller: _tagController,
-                              decoration:
-                                  new InputDecoration(labelText: "curator tag"),
-                            ),
-                          )
-                        : SizedBox(width: 0),
-                    SizedBox(width: 50),
-                    BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-                      if (state is UserDTCVPLoadedState) {
-                        _currentVT = state.vtBalance["v"]!.toDouble();
-                        return ElevatedButton(
-                            onPressed: () {
-                              var voteValue =
-                                  (_currentVT * (_vpValue / 100)).floor();
-                              int _txType = 5;
-                              TxData txdata = TxData(
-                                author: widget.author,
-                                link: widget.link,
-                                tag: _tagController.value.text,
-                                vt: voteValue * (widget.downvote ? -1 : 1),
-                              );
+                              decoration: new InputDecoration(
+                                labelText: "curator tag",
+                              ),
+                            )
+                          : SizedBox(width: 0),
+                      SizedBox(height: 8),
+                      BlocBuilder<UserBloc, UserState>(
+                          builder: (context, state) {
+                        if (state is UserDTCVPLoadedState) {
+                          _currentVT = state.vtBalance["v"]!.toDouble();
+                          return ElevatedButton(
+                              onPressed: () {
+                                var voteValue =
+                                    (_currentVT * (_vpValue / 100)).floor();
+                                int _txType = 5;
+                                TxData txdata = TxData(
+                                  author: widget.author,
+                                  link: widget.link,
+                                  tag: _tagController.value.text,
+                                  vt: voteValue * (widget.downvote ? -1 : 1),
+                                );
 
-                              if (_tipValue > 0) {
-                                _txType = 19;
-                                txdata = TxData(
-                                    author: widget.author,
-                                    link: widget.link,
-                                    tag: _tagController.value.text,
-                                    vt: voteValue * (widget.downvote ? -1 : 1),
-                                    tip: _tipValue.floor());
-                              }
-                              Transaction newTx =
-                                  Transaction(type: _txType, data: txdata);
+                                if (_tipValue > 0) {
+                                  _txType = 19;
+                                  txdata = TxData(
+                                      author: widget.author,
+                                      link: widget.link,
+                                      tag: _tagController.value.text,
+                                      vt: voteValue *
+                                          (widget.downvote ? -1 : 1),
+                                      tip: _tipValue.floor());
+                                }
+                                Transaction newTx =
+                                    Transaction(type: _txType, data: txdata);
 
-                              _txBloc.add(SignAndSendTransactionEvent(newTx));
-                              setState(() {
-                                _sendButtonPressed = true;
-                              });
-                            },
-                            child: Text("send"));
-                      } else {
-                        return SizedBox(
-                          width: 0,
-                        );
-                      }
-                    })
-                  ],
+                                _txBloc.add(SignAndSendTransactionEvent(newTx));
+                                setState(() {
+                                  _sendButtonPressed = true;
+                                });
+                              },
+                              child: Text("send"));
+                        } else {
+                          return SizedBox(
+                            width: 0,
+                          );
+                        }
+                      })
+                    ],
+                  ),
                 ),
               ],
-            ))
+            )
           : Center(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),

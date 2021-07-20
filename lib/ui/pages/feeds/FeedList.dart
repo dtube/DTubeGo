@@ -268,9 +268,11 @@ class PostListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
     if (bigThumbnail) {
       return Container(
-        height: (MediaQuery.of(context).size.width / 16 * 9) + 140,
+        height: (deviceWidth / 16 * 9) + 140,
         child: PostListCardMainFeed(
           blur: blur,
           thumbnailUrl: thumbnailUrl,
