@@ -222,7 +222,8 @@ class _PostDetailsState extends State<PostDetails> {
                                           UserBloc(
                                               repository: UserRepositoryImpl()),
                                       child: AccountAvatar(
-                                          username: widget.post.author),
+                                          username: widget.post.author,
+                                          size: 40),
                                     ),
                                     onPressed: () {
                                       navigateToUserDetailPage(

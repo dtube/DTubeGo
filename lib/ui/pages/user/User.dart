@@ -2,6 +2,7 @@ import 'package:dtube_togo/bloc/auth/auth_bloc.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/ui/pages/wallet/transferDialog.dart';
+import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
 import 'package:flutter/rendering.dart';
 
@@ -133,24 +134,7 @@ class _UserState extends State<UserPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  user.jsonString?.profile?.avatar != null
-                      ? CachedNetworkImage(
-                          imageUrl: user.jsonString!.profile!.avatar!,
-                          imageBuilder: (context, imageProvider) => Container(
-                            width: 80.0,
-                            height: 80.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover),
-                            ),
-                          ),
-                          placeholder: (context, url) =>
-                              new CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              new FaIcon(FontAwesomeIcons.times),
-                        )
-                      : FaIcon(FontAwesomeIcons.times),
+                  AccountAvatarBase(username: user.name, size: 80),
                   SizedBox(width: 10),
                   Container(
                     width: (deviceWidth - 50) / 3 * 2,

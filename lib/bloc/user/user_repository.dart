@@ -10,6 +10,9 @@ import 'dart:convert';
 abstract class UserRepository {
   Future<User> getAccountData(
       String apiNode, String username, String applicationUser);
+
+  Future<bool> getAccountVerification(String username);
+
   Future<Map<String, int>> getVP(
       String apiNode, String username, String applicationUser);
   Future<int> getDTC(String apiNode, String username, String applicationUser);
@@ -26,6 +29,20 @@ class UserRepositoryImpl implements UserRepository {
 
       User user = ApiResultModel.fromJson(data, applicationUser).user;
       return user;
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future<bool> getAccountVerification(String username) async {
+    var response = await http.get(Uri.parse(AppConfig.originalDtuberListUrl));
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      if (data.contains(username)) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
       throw Exception();
     }

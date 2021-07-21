@@ -16,8 +16,9 @@ class UserLoadingState extends UserState {
 
 class UserLoadedState extends UserState {
   User user;
+  bool verified;
 
-  UserLoadedState({required this.user});
+  UserLoadedState({required this.user, required this.verified});
 
   @override
   List<Object> get props => [user];

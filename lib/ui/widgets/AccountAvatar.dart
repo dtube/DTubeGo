@@ -1,29 +1,34 @@
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:dtube_togo/style/ThemeData.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AccountAvatarBase extends StatelessWidget {
-  const AccountAvatarBase({Key? key, required this.username}) : super(key: key);
+  const AccountAvatarBase(
+      {Key? key, required this.username, required this.size})
+      : super(key: key);
   final String username;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => UserBloc(repository: UserRepositoryImpl()),
-      child: AccountAvatar(
-        username: username,
-      ),
+      child: AccountAvatar(username: username, size: size),
     );
   }
 }
 
 class AccountAvatar extends StatefulWidget {
-  const AccountAvatar({Key? key, required this.username}) : super(key: key);
-  final username;
+  const AccountAvatar({Key? key, required this.username, required this.size})
+      : super(key: key);
+  final String username;
+  final double size;
 
   @override
   _AccountAvatarState createState() => _AccountAvatarState();
@@ -51,19 +56,36 @@ class _AccountAvatarState extends State<AccountAvatar> {
             state.user.jsonString?.profile?.avatar != "" &&
             state.user.name == widget.username) {
           try {
-            return CachedNetworkImage(
-                imageUrl: state.user.jsonString!.profile!.avatar!
-                    .replaceAll("http:", "https:"),
-                imageBuilder: (context, imageProvider) => Container(
-                      width: 50.0,
-                      height: 50.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: imageProvider, fit: BoxFit.cover),
-                      ),
-                    ),
-                placeholder: (context, url) => AvatarLoadingPlaceholder());
+            return Stack(
+              children: [
+                CachedNetworkImage(
+                    imageUrl: state.user.jsonString!.profile!.avatar!
+                        .replaceAll("http:", "https:"),
+                    imageBuilder: (context, imageProvider) => Container(
+                          width: widget.size,
+                          height: widget.size,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
+                          ),
+                        ),
+                    placeholder: (context, url) => AvatarLoadingPlaceholder()),
+                state.verified
+                    ? Align(
+                        alignment: Alignment.bottomRight,
+                        child: CircleAvatar(
+                            maxRadius: widget.size / 5,
+                            backgroundColor: globalRed,
+                            child: FaIcon(
+                              FontAwesomeIcons.check,
+                              color: globalAlmostWhite,
+                              size: widget.size / 5,
+                            )),
+                      )
+                    : SizedBox(height: 0),
+              ],
+            );
           } catch (e) {
             return AvatarErrorPlaceholder();
           }

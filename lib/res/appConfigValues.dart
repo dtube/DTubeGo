@@ -28,6 +28,8 @@ class AppConfig {
 
   static String ipfsUploadUrl = "https://ipfs.d.tube/ipfs/";
 
+  static String originalDtuberListUrl = "https://dtube.fso.ovh/oc/creators";
+
   static List<String> btfsUploadEndpoints = [
     "https://1.btfsu.d.tube",
     "https://2.btfsu.d.tube",

@@ -144,7 +144,7 @@ class CustomListItem extends StatelessWidget {
             BlocProvider<UserBloc>(
               create: (BuildContext context) =>
                   UserBloc(repository: UserRepositoryImpl()),
-              child: AccountAvatar(username: sender),
+              child: AccountAvatar(username: sender, size: 30),
             ),
             Expanded(
               child: Column(

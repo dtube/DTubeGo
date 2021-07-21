@@ -23,9 +23,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     if (event is FetchAccountDataEvent) {
       yield UserLoadingState();
       try {
-        User user = await repository.getAccountData(
+        User _user = await repository.getAccountData(
             _avalonApiNode, event.username, _applicationUser!);
-        yield UserLoadedState(user: user);
+
+        bool _verified =
+            await repository.getAccountVerification(event.username);
+
+        yield UserLoadedState(user: _user, verified: _verified);
       } catch (e) {
         yield UserErrorState(message: e.toString());
       }
@@ -35,8 +39,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       try {
         User user = await repository.getAccountData(
             _avalonApiNode, _applicationUser!, _applicationUser);
+        bool _verified =
+            await repository.getAccountVerification(_applicationUser);
 
-        yield UserLoadedState(user: user);
+        yield UserLoadedState(user: user, verified: _verified);
       } catch (e) {
         yield UserErrorState(message: e.toString());
       }
