@@ -1,8 +1,7 @@
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/ui/pages/post/players/localVideoPlayer.dart';
-import 'package:dtube_togo/utils/VideoRecorder.dart';
+
 import 'package:flutter/services.dart';
 
 import 'dart:io';
