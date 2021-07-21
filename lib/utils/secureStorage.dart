@@ -14,6 +14,10 @@ const settingKey_defaultVotingWeightComments = 'DEFVOTECOMMENTS';
 const settingKey_defaultVotingTip = 'DEFTIP';
 const settingKey_defaultVotingTipComments = 'DEFTIPCOMMENTS';
 
+const settingKey_hiveSignerAccessToken = 'HSAT';
+const settingKey_hiveSignerAccessTokenExpiresIn = 'HSEI';
+const settingKey_hiveSignerAccessTokenRequestedOn = 'HSRO';
+
 // const _txsKey = 'TXS';
 const _storage = FlutterSecureStorage();
 
@@ -42,6 +46,19 @@ Future<bool> deleteUsernameKey() async {
   await _storage.delete(key: authKey_usernameKey);
   await _storage.delete(key: authKey_privKey);
   return true;
+}
+
+Future<void> persistHiveSignerData(
+    String accessToken, String expiresIn, String requestedOn) async {
+  await _storage.write(
+      key: settingKey_hiveSignerAccessToken, value: accessToken);
+  print(accessToken);
+  await _storage.write(
+      key: settingKey_hiveSignerAccessTokenExpiresIn, value: expiresIn);
+  print(expiresIn);
+  await _storage.write(
+      key: settingKey_hiveSignerAccessTokenRequestedOn, value: requestedOn);
+  print(requestedOn);
 }
 
 // app settings

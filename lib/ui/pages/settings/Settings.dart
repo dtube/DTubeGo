@@ -1,8 +1,13 @@
+import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+
+import 'package:flutter/services.dart';
+import 'package:flutter_web_auth/flutter_web_auth.dart';
+
+import 'dart:core';
 import 'package:dtube_togo/realMain.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_event.dart';
@@ -10,6 +15,7 @@ import 'package:dtube_togo/bloc/settings/settings_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -134,12 +140,17 @@ class _SettingsListState extends State<SettingsList> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 10),
+              SizedBox(height: 16),
+              Text("User interface",
+                  style: Theme.of(context).textTheme.headline3),
+              SizedBox(height: 8),
               DTubeFormCard(
                 childs: [
                   Padding(
@@ -191,6 +202,10 @@ class _SettingsListState extends State<SettingsList> {
                   ),
                 ],
               ),
+              SizedBox(height: 8),
+              Text("Avalon settings",
+                  style: Theme.of(context).textTheme.headline3),
+              SizedBox(height: 8),
               DTubeFormCard(
                 childs: [
                   Padding(
@@ -331,6 +346,33 @@ class _SettingsListState extends State<SettingsList> {
                   ),
                 ],
               ),
+              SizedBox(height: 8),
+              Text("Cross-posting settings",
+                  style: Theme.of(context).textTheme.headline3),
+              SizedBox(height: 8),
+              DTubeFormCard(
+                childs: [
+                  Row(
+                    children: [
+                      Container(
+                        width: deviceWidth * 0.6,
+                        child: Column(
+                          children: [
+                            Text(
+                                "Cross-posting to the hive blockchain is possible by linking your account via hivesigner.",
+                                style: Theme.of(context).textTheme.bodyText1),
+                            SizedBox(height: 8),
+                            Text(
+                                "This does not include voting, commenting or any other functionality of the hive blockchain.",
+                                style: Theme.of(context).textTheme.bodyText1),
+                          ],
+                        ),
+                      ),
+                      HiveSignerButton(),
+                    ],
+                  ),
+                ],
+              ),
               SizedBox(height: 20),
               InputChip(
                 backgroundColor: widget.justSaved ? Colors.green : globalBlue,
@@ -360,5 +402,82 @@ class _SettingsListState extends State<SettingsList> {
             ],
           ),
         ));
+  }
+
+  void _launchURL(String externalUrl) async => await canLaunch(externalUrl)
+      ? await launch(externalUrl)
+      : throw 'Could not launch $externalUrl';
+}
+
+// TODO: extract logic to its own bloc
+class HiveSignerButton extends StatefulWidget {
+  const HiveSignerButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _HiveSignerButtonState createState() => _HiveSignerButtonState();
+}
+
+class _HiveSignerButtonState extends State<HiveSignerButton> {
+  String _status = 'notset'; // notset, invalid, valid
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void authenticate() async {
+    final callbackUrlScheme = 'dtubetogo';
+    final _redirectUrlHTMLencoded = 'dtubetogo%3A%2F%2Foauth2redirect';
+    final url =
+        'https://hivesigner.com/oauth2/authorize?client_id=dtubemobile&redirect_uri=${_redirectUrlHTMLencoded}&scope=vote,comment';
+    try {
+      final result = await FlutterWebAuth.authenticate(
+          url: url, callbackUrlScheme: callbackUrlScheme);
+
+      Uri _uri = Uri.parse(result);
+      String _accessToken = _uri.queryParameters['access_token'].toString();
+      String _expiresIn = _uri.queryParameters['expires_in'].toString();
+
+      String _accessTokenRequestedOn = new DateTime.now().toString();
+
+      await sec.persistHiveSignerData(
+          _accessToken, _expiresIn, _accessTokenRequestedOn);
+    } on PlatformException catch (e) {
+      setState(() {
+        _status = 'Got error: $e';
+        print("error: " + e.toString());
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        InputChip(
+          elevation: 2,
+          backgroundColor: _status == "valid" ? Colors.green : globalRed,
+          avatar: FaIcon(
+            _status == "valid"
+                ? FontAwesomeIcons.check
+                : _status == "invalid"
+                    ? FontAwesomeIcons.undo
+                    : FontAwesomeIcons.play,
+            size: 10,
+          ),
+          label: Text("hivesigner"),
+          onPressed: () {
+            this.authenticate();
+          },
+        ),
+        Text(_status == "valid"
+            ? "you are already connected"
+            : _status == "invalid"
+                ? "you need to renew your connection"
+                : "not connected yet")
+      ],
+    );
   }
 }
