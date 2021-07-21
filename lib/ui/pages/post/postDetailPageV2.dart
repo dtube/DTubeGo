@@ -1,7 +1,13 @@
+import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
+
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
-import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:dtube_togo/ui/NavigationContainer.dart';
 
 import 'package:dtube_togo/ui/pages/user/User.dart';
@@ -14,19 +20,10 @@ import 'package:dtube_togo/ui/pages/post/widgets/VoteButtons.dart';
 
 import 'package:dtube_togo/utils/secureStorage.dart';
 
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-
-import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
-
 import 'package:dtube_togo/style/dtubeLoading.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
-
-//import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
 class PostDetailPage extends StatefulWidget {
@@ -247,7 +244,6 @@ class _PostDetailsState extends State<PostDetails> {
                                   usedAsPreview: false,
                                 )
                               : Text("no player detected"),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -321,13 +317,11 @@ class _PostDetailsState extends State<PostDetails> {
                           }),
                         ],
                       ),
-
                       CollapsedDescription(
                           description: widget.post.jsonString!.desc != null
                               ? widget.post.jsonString!.desc!
                               : ""),
                       Divider(),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,7 +353,6 @@ class _PostDetailsState extends State<PostDetails> {
                           ),
                         ],
                       ),
-
                       SizedBox(height: 16),
                       widget.post.comments != null &&
                               widget.post.comments!.length > 0
@@ -384,7 +377,6 @@ class _PostDetailsState extends State<PostDetails> {
                             )
                           : SizedBox(height: 0),
                       SizedBox(height: 200)
-                      // return Text(widget.post.comments![pos].author);
                     ],
                   ),
                 ),
@@ -392,18 +384,10 @@ class _PostDetailsState extends State<PostDetails> {
             ),
           )),
     );
-
-    // });
   }
 
   void navigateToUserDetailPage(BuildContext context, String username) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      // return BlocProvider<UserBloc>(
-      //   create: (context) {
-      //     return UserBloc(repository: UserRepositoryImpl())
-
-      //   },
-      //   child:
       return MultiBlocProvider(
         providers: [
           BlocProvider<UserBloc>(

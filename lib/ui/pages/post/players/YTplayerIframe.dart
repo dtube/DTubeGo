@@ -19,8 +19,6 @@ class YTPlayerIFrame extends StatefulWidget {
 class _YTPlayerIFrameState extends State<YTPlayerIFrame> {
   late YoutubePlayerController _controller;
 
-//TextEditingController _seekToController;
-
   @override
   void initState() {
     super.initState();
@@ -49,17 +47,13 @@ class _YTPlayerIFrameState extends State<YTPlayerIFrame> {
 
   @override
   void deactivate() {
-    // Pauses video while navigating to next page.
     _controller.pause();
     super.deactivate();
   }
 
   @override
   void dispose() {
-    // _controller.dispose();
     _controller.close();
-    // _idController.dispose();
-    // _seekToController.dispose();
     super.dispose();
   }
 
@@ -68,8 +62,6 @@ class _YTPlayerIFrameState extends State<YTPlayerIFrame> {
     const _player = YoutubePlayerIFrame();
 
     return YoutubePlayerControllerProvider(
-        // Passing controller to widgets below.
-        controller: _controller,
-        child: _player);
+        controller: _controller, child: _player);
   }
 }

@@ -48,8 +48,6 @@ class CommentDisplay extends StatelessWidget {
             ],
           ),
           Stack(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               VotingButtons(
                 author: root.author,
@@ -110,8 +108,6 @@ class CommentDisplay extends StatelessWidget {
           ],
         ),
         Stack(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             VotingButtons(
               author: root.author,

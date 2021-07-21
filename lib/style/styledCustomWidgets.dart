@@ -7,20 +7,6 @@ AppBar dtubeSubAppBar() {
     title: DTubeLogo(
       size: 60,
     ),
-    //   actions: <Widget>[
-    //     IconButton(
-    //       icon: Icon(Icons.refresh),
-    //       onPressed: () {
-    //         notificationBloc.add(FetchnotificationsEvent());
-    //       },
-    //     ),
-    //     IconButton(
-    //       icon: Icon(Icons.info),
-    //       onPressed: () {
-    //         navigateToAoutPage(context);
-    //       },
-    //     )
-    //   ],
   );
 }
 

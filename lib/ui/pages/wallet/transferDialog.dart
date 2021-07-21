@@ -39,8 +39,6 @@ class _TransferDialogState extends State<TransferDialog> {
       backgroundColor: globalAlmostBlack,
       content: Builder(
         builder: (context) {
-          // Get available height and width of the build area of this widget. Make a choice depending on the size.
-
           return Container(
             height: deviceHeight / 3,
             width: deviceWidth - 100,
