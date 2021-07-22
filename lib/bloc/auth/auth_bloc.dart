@@ -73,9 +73,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
           yield SignedInState();
         } else {
-          yield SignInFailedState(
-              message:
-                  'login failed: Please check your username and key (we currently do not support login with the master key)');
+          yield SignInFailedState(message: 'login failed');
         }
       } catch (e) {
         yield AuthErrorState(message: 'unknown error');

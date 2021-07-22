@@ -1,60 +1,11 @@
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
-
-import 'package:dtube_togo/ui/NavigationContainer.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:dtube_togo/style/OpenableHyperlink.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/style/dtubeLoading.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-class StartUp extends StatefulWidget {
-  StartUp({Key? key}) : super(key: key);
-
-  @override
-  _StartUpState createState() => _StartUpState();
-}
-
-class _StartUpState extends State<StartUp> {
-// Create storage
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, state) {
-        if (state == SignedInState()) {
-          return MultiBlocProvider(providers: [
-            BlocProvider<UserBloc>(create: (context) {
-              return UserBloc(repository: UserRepositoryImpl());
-            }),
-            BlocProvider<AuthBloc>(
-              create: (BuildContext context) =>
-                  AuthBloc(repository: AuthRepositoryImpl()),
-            ),
-          ], child: NavigationContainer());
-        }
-        if (state is SignInFailedState) {
-          return LoginForm(message: state.message);
-        }
-
-        if (state is SignOutCompleteState ||
-            state is NoSignInInformationFoundState) {
-          return LoginForm();
-        }
-
-        return Scaffold(
-          backgroundColor: globalBlue,
-          body: Center(child: DTubeLogoPulse()),
-        );
-      },
-    );
-  }
-}
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginForm extends StatefulWidget {
   String? message;
@@ -112,21 +63,42 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                     widget.message != null
                         ? Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                            child: Row(
+                            padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                FaIcon(
-                                  FontAwesomeIcons.exclamationTriangle,
-                                  color: globalRed,
+                                Wrap(
+                                  direction: Axis.horizontal,
+                                  children: [
+                                    FaIcon(
+                                      FontAwesomeIcons.exclamationTriangle,
+                                      color: globalRed,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(widget.message!,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline2),
+                                  ],
                                 ),
-                                SizedBox(width: 8),
-                                Container(
-                                  width: deviceWidth - 100,
-                                  child: Text(widget.message!,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1),
-                                ),
+                                widget.message == 'login failed'
+                                    ? Container(
+                                        width: deviceWidth - 100,
+                                        child: Column(
+                                          children: [
+                                            SizedBox(height: 8),
+                                            Text(
+                                                "Please check your username & custom private key! More info on how to create such a custom key:\n",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1),
+                                            OpenableHyperlink(
+                                                url:
+                                                    "https://d.tube/#!/wiki/faq/how-can-i-create-lesser-authority-keys")
+                                          ],
+                                        ),
+                                      )
+                                    : SizedBox(height: 0),
                               ],
                             ),
                           )

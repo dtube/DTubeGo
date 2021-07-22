@@ -216,7 +216,12 @@ class _PostDetailsState extends State<PostDetails> {
                                   alignment: Alignment.topRight,
                                   margin: EdgeInsets.all(5.0),
                                   child: InputChip(
-                                    label: Text(widget.post.author),
+                                    label: Container(
+                                      width: 100,
+                                      height: 40,
+                                      child: Center(
+                                          child: Text(widget.post.author)),
+                                    ),
                                     avatar: BlocProvider<UserBloc>(
                                       create: (BuildContext context) =>
                                           UserBloc(

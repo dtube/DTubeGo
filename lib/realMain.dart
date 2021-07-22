@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc.dart';
 import 'package:dtube_togo/bloc/auth/auth_repository.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/ui/pages/Startup.dart';
+import 'package:dtube_togo/ui/startup/Startup.dart';
 import 'package:dtube_togo/utils/AppBuilder.dart';
 
 import 'package:flutter/material.dart';

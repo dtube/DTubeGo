@@ -53,25 +53,30 @@ class AuthRepositoryImpl implements AuthRepository {
     } catch (e) {
       throw Exception();
     }
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      Auth authInformation = ApiResultModel.fromJson(data).auth;
-      if (pub.toString() == authInformation.pub) {
-        _keyIsValid = true;
-      } else {
-        for (Keys key in authInformation.keys) {
-          if (key.pub == pub.toString()) {
-            // availableTxTypes = key.types;
-            _keyIsValid = true;
-            break;
+    if (response.statusCode == 404) {
+      // username unknown
+      _keyIsValid = false;
+    } else {
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        Auth authInformation = ApiResultModel.fromJson(data).auth;
+        if (pub.toString() == authInformation.pub) {
+          _keyIsValid = true;
+        } else {
+          for (Keys key in authInformation.keys) {
+            if (key.pub == pub.toString()) {
+              // availableTxTypes = key.types;
+              _keyIsValid = true;
+              break;
+            }
           }
         }
+
+        //check if key is enough to login
+
+      } else {
+        throw Exception();
       }
-
-      //check if key is enough to login
-
-    } else {
-      throw Exception();
     }
     return _keyIsValid;
   }

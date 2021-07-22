@@ -1,6 +1,7 @@
 import 'package:dtube_togo/bloc/auth/auth_bloc.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_togo/style/OpenableHyperlink.dart';
 import 'package:dtube_togo/ui/pages/wallet/transferDialog.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
@@ -168,9 +169,8 @@ class _UserState extends State<UserPage> {
                                 height: 0,
                               ),
                         user.jsonString?.profile?.website != null
-                            ? Text(
-                                user.jsonString!.profile!.website!,
-                                style: Theme.of(context).textTheme.bodyText1,
+                            ? OpenableHyperlink(
+                                url: user.jsonString!.profile!.website!,
                               )
                             : SizedBox(
                                 height: 0,
