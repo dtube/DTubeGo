@@ -1,3 +1,5 @@
+import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 
 import 'package:dtube_togo/ui/NavigationContainer.dart';
@@ -22,6 +24,7 @@ class _StartUpState extends State<StartUp> {
   @override
   void initState() {
     super.initState();
+    // sec.deleteAllSettings(); // flush ALL app settings including logindata, hivesigner and so on
   }
 
   @override

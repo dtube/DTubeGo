@@ -90,6 +90,35 @@ Future<Map<String, String>> getAllSettings() async {
   return _allSettings;
 }
 
+Future<String> getHiveSignerAccessToken() async {
+  var _accessToken = await _storage.read(key: settingKey_hiveSignerAccessToken);
+  if (_accessToken != null) {
+    return _accessToken;
+  } else {
+    return '';
+  }
+}
+
+Future<String> getHiveSignerAccessTokenExpiresIn() async {
+  var _accessTokenExpiresIn =
+      await _storage.read(key: settingKey_hiveSignerAccessTokenExpiresIn);
+  if (_accessTokenExpiresIn != null) {
+    return _accessTokenExpiresIn;
+  } else {
+    return '';
+  }
+}
+
+Future<String> getHiveSignerAccessTokenRequestedOn() async {
+  var _accessTokenRequestedOn =
+      await _storage.read(key: settingKey_hiveSignerAccessTokenRequestedOn);
+  if (_accessTokenRequestedOn != null) {
+    return _accessTokenRequestedOn;
+  } else {
+    return '';
+  }
+}
+
 Future<String> getNode() async {
   var _node = await _storage.read(key: settingKey_avalonNode);
   if (_node != null) {
@@ -155,10 +184,8 @@ Future<String> getNSFW() async {
   }
 }
 
-Future<bool> deleteAppSettings() async {
-  await _storage.delete(key: settingKey_defaultVotingWeight);
-  await _storage.delete(key: settingKey_showHidden);
-  await _storage.delete(key: settingKey_showNSFW);
+Future<bool> deleteAllSettings() async {
+  await _storage.deleteAll();
   return true;
 }
 

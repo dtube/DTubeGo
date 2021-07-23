@@ -47,4 +47,10 @@ class AppConfig {
     'https://dtube.fso.ovh'
   ];
   static int minFreeSpaceRecordVideoInMB = 10;
+
+  static String hiveSignerCallbackUrlScheme = 'dtubetogo';
+  static String hiveSignerRedirectUrlHTMLEncoded =
+      'dtubetogo%3A%2F%2Foauth2redirect';
+  static String hiveSignerUrl =
+      'https://hivesigner.com/oauth2/authorize?client_id=dtubemobile&redirect_uri=${hiveSignerRedirectUrlHTMLEncoded}&scope=vote,comment';
 }

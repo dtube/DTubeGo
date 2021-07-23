@@ -1,3 +1,4 @@
+import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 import 'package:flutter/services.dart';
@@ -355,20 +356,31 @@ class _SettingsListState extends State<SettingsList> {
                   Row(
                     children: [
                       Container(
-                        width: deviceWidth * 0.6,
+                        width: deviceWidth * 0.9,
                         child: Column(
                           children: [
                             Text(
-                                "Cross-posting to the hive blockchain is possible by linking your account via hivesigner.",
+                                "Cross-posting to the hive blockchain is possible by authorizing the app via hivesigner:",
+                                style: Theme.of(context).textTheme.bodyText1),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: BlocProvider<HivesignerBloc>(
+                                create: (BuildContext context) =>
+                                    HivesignerBloc(
+                                        repository: HivesignerRepositoryImpl()),
+                                child: HiveSignerButton(),
+                              ),
+                            ),
+                            Text(
+                                "For security reasons you have to renew the connection every 7 days.",
                                 style: Theme.of(context).textTheme.bodyText1),
                             SizedBox(height: 8),
                             Text(
-                                "This does not include voting, commenting or any other functionality of the hive blockchain.",
+                                "This authorizing does not include voting, commenting or any other functionality of the hive blockchain.",
                                 style: Theme.of(context).textTheme.bodyText1),
                           ],
                         ),
                       ),
-                      HiveSignerButton(),
                     ],
                   ),
                 ],
@@ -403,13 +415,8 @@ class _SettingsListState extends State<SettingsList> {
           ),
         ));
   }
-
-  void _launchURL(String externalUrl) async => await canLaunch(externalUrl)
-      ? await launch(externalUrl)
-      : throw 'Could not launch $externalUrl';
 }
 
-// TODO: extract logic to its own bloc
 class HiveSignerButton extends StatefulWidget {
   const HiveSignerButton({
     Key? key,
@@ -427,31 +434,6 @@ class _HiveSignerButtonState extends State<HiveSignerButton> {
     super.initState();
   }
 
-  void authenticate() async {
-    final callbackUrlScheme = 'dtubetogo';
-    final _redirectUrlHTMLencoded = 'dtubetogo%3A%2F%2Foauth2redirect';
-    final url =
-        'https://hivesigner.com/oauth2/authorize?client_id=dtubemobile&redirect_uri=${_redirectUrlHTMLencoded}&scope=vote,comment';
-    try {
-      final result = await FlutterWebAuth.authenticate(
-          url: url, callbackUrlScheme: callbackUrlScheme);
-
-      Uri _uri = Uri.parse(result);
-      String _accessToken = _uri.queryParameters['access_token'].toString();
-      String _expiresIn = _uri.queryParameters['expires_in'].toString();
-
-      String _accessTokenRequestedOn = new DateTime.now().toString();
-
-      await sec.persistHiveSignerData(
-          _accessToken, _expiresIn, _accessTokenRequestedOn);
-    } on PlatformException catch (e) {
-      setState(() {
-        _status = 'Got error: $e';
-        print("error: " + e.toString());
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -467,16 +449,19 @@ class _HiveSignerButtonState extends State<HiveSignerButton> {
                     : FontAwesomeIcons.play,
             size: 10,
           ),
-          label: Text("hivesigner"),
+          label: Text("add hivesigner"),
           onPressed: () {
-            this.authenticate();
+            BlocProvider.of<HivesignerBloc>(context).add(CheckAccessToken());
           },
         ),
-        Text(_status == "valid"
-            ? "you are already connected"
-            : _status == "invalid"
-                ? "you need to renew your connection"
-                : "not connected yet")
+        BlocBuilder<HivesignerBloc, HivesignerState>(builder: (context, state) {
+          if (state is AccessTokenValidState) {
+            return Text("hivesigner authorization is still valid");
+          } else {
+            return Text(
+                "click to check current hivesigner authorization connection");
+          }
+        }),
       ],
     );
   }
