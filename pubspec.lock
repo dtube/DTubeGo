@@ -189,7 +189,7 @@ packages:
       name: elliptic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.2"
+    version: "0.3.5"
   equatable:
     dependency: "direct main"
     description:
@@ -316,7 +316,7 @@ packages:
       name: flutter_widget_from_html_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.1+3"
+    version: "0.6.1+4"
   font_awesome_flutter:
     dependency: "direct main"
     description:
@@ -372,7 +372,7 @@ packages:
       name: image_picker_for_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   image_picker_platform_interface:
     dependency: transitive
     description:

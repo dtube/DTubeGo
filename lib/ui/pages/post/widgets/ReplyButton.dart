@@ -148,7 +148,8 @@ class _ReplyButtonState extends State<ReplyButton> {
                                 videoSpriteHash: "",
                                 thumbnail640Hash: "",
                                 thumbnail210Hash: "",
-                                uploaded: false);
+                                uploaded: false,
+                                crossPostToHive: false);
 
                             BlocProvider.of<TransactionBloc>(context)
                                 .add(SendCommentEvent(_uploadData));

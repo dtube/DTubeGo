@@ -14,6 +14,7 @@ const settingKey_defaultVotingWeightComments = 'DEFVOTECOMMENTS';
 const settingKey_defaultVotingTip = 'DEFTIP';
 const settingKey_defaultVotingTipComments = 'DEFTIPCOMMENTS';
 
+const settingKey_hiveSignerUsername = 'HSUN';
 const settingKey_hiveSignerAccessToken = 'HSAT';
 const settingKey_hiveSignerAccessTokenExpiresIn = 'HSEI';
 const settingKey_hiveSignerAccessTokenRequestedOn = 'HSRO';
@@ -48,17 +49,15 @@ Future<bool> deleteUsernameKey() async {
   return true;
 }
 
-Future<void> persistHiveSignerData(
-    String accessToken, String expiresIn, String requestedOn) async {
+Future<void> persistHiveSignerData(String accessToken, String expiresIn,
+    String requestedOn, String username) async {
   await _storage.write(
       key: settingKey_hiveSignerAccessToken, value: accessToken);
-  print(accessToken);
   await _storage.write(
       key: settingKey_hiveSignerAccessTokenExpiresIn, value: expiresIn);
-  print(expiresIn);
   await _storage.write(
       key: settingKey_hiveSignerAccessTokenRequestedOn, value: requestedOn);
-  print(requestedOn);
+  await _storage.write(key: settingKey_hiveSignerUsername, value: username);
 }
 
 // app settings
@@ -114,6 +113,15 @@ Future<String> getHiveSignerAccessTokenRequestedOn() async {
       await _storage.read(key: settingKey_hiveSignerAccessTokenRequestedOn);
   if (_accessTokenRequestedOn != null) {
     return _accessTokenRequestedOn;
+  } else {
+    return '';
+  }
+}
+
+Future<String> getHiveSignerUsername() async {
+  var _username = await _storage.read(key: settingKey_hiveSignerUsername);
+  if (_username != null) {
+    return _username;
   } else {
     return '';
   }
@@ -186,6 +194,13 @@ Future<String> getNSFW() async {
 
 Future<bool> deleteAllSettings() async {
   await _storage.deleteAll();
+  return true;
+}
+
+Future<bool> deleteHiveSignerSettings() async {
+  await _storage.delete(key: settingKey_hiveSignerAccessToken);
+  await _storage.delete(key: settingKey_hiveSignerAccessTokenExpiresIn);
+  await _storage.delete(key: settingKey_hiveSignerAccessTokenRequestedOn);
   return true;
 }
 

@@ -428,17 +428,55 @@ class HiveSignerButton extends StatefulWidget {
 
 class _HiveSignerButtonState extends State<HiveSignerButton> {
   String _status = 'notset'; // notset, invalid, valid
+  late TextEditingController _usernameController;
+  bool _usernameFilled = false;
 
   @override
   void initState() {
     super.initState();
+    _usernameController = new TextEditingController();
+  }
+
+  void getHiveSignerUsername() async {
+    _usernameController.text = await sec.getHiveSignerUsername();
+    if (_usernameController.text.length > 3) {
+      _usernameFilled = true;
+    }
+  }
+
+  void checkIfFormIsFilled() {
+    if (_usernameController.text.length > 3) {
+      setState(() {
+        _usernameFilled = true;
+      });
+    } else {
+      setState(() {
+        _usernameFilled = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        TextFormField(
+          maxLines: 1,
+          decoration: new InputDecoration(labelText: "hive username"),
+          controller: _usernameController,
+          onChanged: (val) {
+            checkIfFormIsFilled();
+          },
+          validator: (value) {
+            if (value!.isNotEmpty && value.length > 0) {
+              return null;
+            } else {
+              return 'please fill in a valid username';
+            }
+          },
+        ),
         InputChip(
+          isEnabled: _usernameController.text.length > 3,
           elevation: 2,
           backgroundColor: _status == "valid" ? Colors.green : globalRed,
           avatar: FaIcon(
@@ -447,16 +485,35 @@ class _HiveSignerButtonState extends State<HiveSignerButton> {
                 : _status == "invalid"
                     ? FontAwesomeIcons.undo
                     : FontAwesomeIcons.play,
-            size: 10,
+            size: 15,
           ),
-          label: Text("add hivesigner"),
+          label: Text("hivesigner"),
           onPressed: () {
-            BlocProvider.of<HivesignerBloc>(context).add(CheckAccessToken());
+            BlocProvider.of<HivesignerBloc>(context).add(CheckAccessToken(
+                hiveSignerUsername: _usernameController.value.text));
           },
         ),
         BlocBuilder<HivesignerBloc, HivesignerState>(builder: (context, state) {
-          if (state is AccessTokenValidState) {
-            return Text("hivesigner authorization is still valid");
+          if (state is HiveSignerAccessTokenValidState) {
+            return Column(
+              children: [
+                Text("hivesigner authorization is still valid"),
+                InputChip(
+                  label: Text("remove"),
+                  avatar: FaIcon(
+                    FontAwesomeIcons.removeFormat,
+                    size: 15,
+                  ),
+                  elevation: 2,
+                  backgroundColor: globalRed,
+                  onPressed: () async {
+                    await sec.deleteHiveSignerSettings();
+                    // BlocProvider.of<HivesignerBloc>(context)
+                    //     .add(CheckAccessToken());
+                  },
+                )
+              ],
+            );
           } else {
             return Text(
                 "click to check current hivesigner authorization connection");

@@ -1,3 +1,5 @@
+import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc.dart';
+import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
@@ -76,6 +78,10 @@ class _UploaderMainPageState extends State<UploaderMainPage>
                         create: (context) => TransactionBloc(
                             repository: TransactionRepositoryImpl()),
                       ),
+                      BlocProvider(
+                        create: (context) => HivesignerBloc(
+                            repository: HivesignerRepositoryImpl()),
+                      ),
                     ],
                     child: WizardIPFS(),
                   ),
@@ -95,6 +101,10 @@ class _UploaderMainPageState extends State<UploaderMainPage>
                       BlocProvider(
                         create: (context) => TransactionBloc(
                             repository: TransactionRepositoryImpl()),
+                      ),
+                      BlocProvider(
+                        create: (context) => HivesignerBloc(
+                            repository: HivesignerRepositoryImpl()),
                       ),
                     ],
                     child: Wizard3rdParty(),

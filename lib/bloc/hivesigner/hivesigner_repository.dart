@@ -1,4 +1,5 @@
 import 'package:dtube_togo/bloc/hivesigner/hivesigner_response_model.dart';
+import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_togo/res/appConfigValues.dart';
@@ -14,16 +15,26 @@ import 'package:elliptic/elliptic.dart';
 import 'package:bs58check/bs58check.dart' as bs58check;
 
 abstract class HivesignerRepository {
-  Future<bool> requestNewAccessToken();
+  Future<bool> requestNewAccessToken(String username);
   Future<bool> checkCurrentAccessToken();
+  Future<bool> broadcastPostToHive(String transactionBody);
+  Future<String> preparePostTransaction(
+      String permlink,
+      String title,
+      String body,
+      String dtubeUrl,
+      String thumbnailUrl,
+      String videoUrl,
+      String storageType,
+      String tag);
 }
 
 // TODO: error handling
 class HivesignerRepositoryImpl implements HivesignerRepository {
   @override
-  Future<bool> requestNewAccessToken() async {
+  Future<bool> requestNewAccessToken(String username) async {
     final result = await FlutterWebAuth.authenticate(
-        url: AppConfig.hiveSignerUrl,
+        url: AppConfig.hiveSignerAccessTokenUrl,
         callbackUrlScheme: AppConfig.hiveSignerCallbackUrlScheme);
 
     Uri _uri = Uri.parse(result);
@@ -33,7 +44,7 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
     String _accessTokenRequestedOn = new DateTime.now().toString();
 
     await sec.persistHiveSignerData(
-        _accessToken, _expiresIn, _accessTokenRequestedOn);
+        _accessToken, _expiresIn, _accessTokenRequestedOn, username);
     return true;
   }
 
@@ -56,5 +67,132 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
     } else {
       return false;
     }
+  }
+
+  @override
+  Future<bool> broadcastPostToHive(String transactionBody) async {
+    String _accessToken = await sec.getHiveSignerAccessToken();
+    final headers = {
+      'Authorization': _accessToken,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    final encoding = Encoding.getByName('utf-8');
+    var response;
+    try {
+      response = await http
+          .post(
+        Uri.parse(AppConfig.hiveSignerBroadcastAddress),
+        headers: headers,
+        body: transactionBody,
+      )
+          .catchError((e) {
+        throw Exception();
+      });
+    } catch (e) {
+      throw Exception();
+    }
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      if (data["errors"] == null) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<String> preparePostTransaction(
+      String permlink,
+      String title,
+      String body,
+      String dtubeUrl,
+      String thumbnailUrl,
+      String videoUrl,
+      String storageType,
+      String tag) async {
+    String _hiveUsername = await sec.getHiveSignerUsername();
+    String _hiveBody = genHiveBody(
+        _hiveUsername, permlink, body, thumbnailUrl, videoUrl, storageType);
+
+    var _transactionJson = {
+      "operations": [
+        [
+          "comment",
+          {
+            "parent_author": "",
+            "parent_permlink": 'hive-196037',
+
+            "author": _hiveUsername,
+            "category": 'hive-196037', // dtube community
+            "permlink": permlink,
+            "title": title,
+            "body": _hiveBody,
+            "json_metadata":
+                "{\"tags\":[\"dtube\",\"${tag}\"],\"app\":\"dtubemobile\/1.0\"}"
+          }
+        ],
+        [
+          "comment_options",
+          {
+            "author": _hiveUsername,
+            "permlink": permlink,
+            "max_accepted_payout": "1000000.000 HBD",
+            "percent_hbd": 10000,
+            "allow_votes": true,
+            "allow_curation_rewards": true,
+            "extensions": [
+              [
+                0,
+                {
+                  "beneficiaries": [
+                    {"account": "dtube", "weight": 1000}
+                  ]
+                }
+              ]
+            ]
+          }
+        ]
+      ]
+    };
+
+    return json.encode(_transactionJson);
+  }
+
+  String genHiveBody(String author, String permlink, String postBody,
+      String thumbnailUrl, String videoUrl, String storageType) {
+    String body = '<center>';
+    body += '<a href=\'https://d.tube/#!/v/' + author + '/' + permlink + '\'>';
+    body += '<img src=\'' +
+        AppConfig.ipfsSnapUrl +
+        thumbnailUrl +
+        '\' ></a></center><hr>';
+
+    body += postBody;
+
+    body += '\n\n<hr>';
+    body += '<a href=\'https://d.tube/#!/v/' +
+        author +
+        '/' +
+        permlink +
+        '\'> ▶️ DTube</a><br />';
+
+    if (storageType == "ipfs")
+      body += '<a href=\'https://ipfs.io/ipfs/' +
+          videoUrl +
+          '\'> ▶️ IPFS</a><br />';
+    if (storageType == "btfs")
+      body += '<a href=\'https://btfs.d.tube/btfs/' +
+          videoUrl +
+          '\'> ▶️ BTFS</a><br />';
+    if (storageType == "sia")
+      body += '<a href=\'https://siasky.net/' +
+          videoUrl +
+          '\'> ▶️ Skynet</a><br />';
+    return body;
   }
 }

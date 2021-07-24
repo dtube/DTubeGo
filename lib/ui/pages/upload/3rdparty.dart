@@ -9,6 +9,7 @@ import 'package:dtube_togo/ui/pages/upload/uploadForm.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
+import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 class Wizard3rdParty extends StatefulWidget {
   const Wizard3rdParty({
@@ -50,7 +51,8 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
       isPromoted: false,
       parentAuthor: "",
       parentPermlink: "",
-      uploaded: false);
+      uploaded: false,
+      crossPostToHive: false);
 
   @override
   void initState() {
@@ -60,11 +62,17 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
 
     _userBloc = BlocProvider.of<UserBloc>(context);
     _userBloc.add(FetchDTCVPEvent());
+    loadHiveSignerAccessToken();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void loadHiveSignerAccessToken() async {
+    String _accessToken = await sec.getHiveSignerAccessToken();
+    _uploadData.crossPostToHive = _accessToken != '';
   }
 
   void childCallback(UploadData ud) {
@@ -85,7 +93,7 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text("1. Video", style: TextStyle(fontSize: 18)),
-          Row(
+          Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -151,7 +159,8 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
                     isPromoted: false,
                     parentAuthor: "",
                     parentPermlink: "",
-                    uploaded: false);
+                    uploaded: false,
+                    crossPostToHive: _uploadData.crossPostToHive);
                 return UploadForm(
                   uploadData: _uploadData,
                   callback: childCallback,

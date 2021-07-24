@@ -1,3 +1,5 @@
+import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc.dart';
+import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
 import 'package:dtube_togo/utils/randomPermlink.dart';
 
@@ -27,6 +29,7 @@ class _WizardIPFSState extends State<WizardIPFS> {
   late IPFSUploadBloc _uploadBloc;
 
   late TransactionBloc _txBloc;
+  late HivesignerBloc _hivesignerBloc;
 
   UploadData _uploadData = UploadData(
       link: "",
@@ -55,7 +58,8 @@ class _WizardIPFSState extends State<WizardIPFS> {
       isPromoted: false,
       parentAuthor: "",
       parentPermlink: "",
-      uploaded: false);
+      uploaded: false,
+      crossPostToHive: false);
 
   void childCallback(UploadData ud) {
     setState(() {
@@ -71,6 +75,14 @@ class _WizardIPFSState extends State<WizardIPFS> {
     super.initState();
     _uploadBloc = BlocProvider.of<IPFSUploadBloc>(context);
     _txBloc = BlocProvider.of<TransactionBloc>(context);
+    _hivesignerBloc = BlocProvider.of<HivesignerBloc>(context);
+
+    loadHiveSignerAccessToken();
+  }
+
+  void loadHiveSignerAccessToken() async {
+    String _accessToken = await sec.getHiveSignerAccessToken();
+    _uploadData.crossPostToHive = _accessToken != '';
   }
 
   void navigateToPostDetailPage(BuildContext context) async {
@@ -97,6 +109,18 @@ class _WizardIPFSState extends State<WizardIPFS> {
       return BlocBuilder<TransactionBloc, TransactionState>(
         builder: (context, state) {
           if (state is TransactionSent) {
+            // TODO: somehow this event happens 2 times
+            if (_uploadData.crossPostToHive) {
+              _hivesignerBloc.add(SendPostToHive(
+                  postTitle: _uploadData.title,
+                  postBody: _uploadData.description,
+                  permlink: _uploadData.link,
+                  dtubeUrl: _uploadData.link,
+                  thumbnailUrl: _uploadData.thumbnail640Hash,
+                  videoUrl: _uploadData.videoSourceHash,
+                  storageType: "ipfs",
+                  tag: _uploadData.tag));
+            }
             navigateToPostDetailPage(context);
           } else {
             return BlocBuilder<IPFSUploadBloc, IPFSUploadState>(

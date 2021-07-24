@@ -274,7 +274,7 @@ class _UploadFormState extends State<UploadForm> {
                   autoplay: false,
                   localFile: true,
                   controls: true,
-                  key: UniqueKey(),
+                  //key: UniqueKey(),
                   usedAsPreview: true,
                 )
               : SizedBox(
@@ -375,60 +375,80 @@ class _UploadFormState extends State<UploadForm> {
   }
 
   Widget moreSettings() {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 25),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Checkbox(
-                    // title: Text("original content"),
-                    value: stateUploadData.originalContent,
-                    // controlAffinity: ListTileControlAffinity.leading,
-                    onChanged: (dynamic value) {
-                      setState(() {
-                        stateUploadData.originalContent = value;
-                      });
-                    }),
-                Text("original content"),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Checkbox(
-                    //title: Text("NSFW content"),
-                    value: stateUploadData.nSFWContent,
-                    //controlAffinity: ListTileControlAffinity.leading,
-                    onChanged: (dynamic value) {
-                      setState(() {
-                        stateUploadData.nSFWContent = value;
-                      });
-                    }),
-                Text("NSFW content"),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Checkbox(
-                    //title: Text("unlist the video"),
-                    value: stateUploadData.unlistVideo,
-                    // controlAffinity: ListTileControlAffinity.leading,
-                    onChanged: (dynamic value) {
-                      setState(() {
-                        stateUploadData.unlistVideo = value;
-                      });
-                    }),
-                Text("unlist the video"),
-              ],
-            ),
-          ],
+        Container(
+          width: deviceWidth * 0.2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Checkbox(
+                      // title: Text("original content"),
+                      value: stateUploadData.originalContent,
+                      // controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (dynamic value) {
+                        setState(() {
+                          stateUploadData.originalContent = value;
+                        });
+                      }),
+                  Text("original"),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Checkbox(
+                      //title: Text("NSFW content"),
+                      value: stateUploadData.nSFWContent,
+                      //controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (dynamic value) {
+                        setState(() {
+                          stateUploadData.nSFWContent = value;
+                        });
+                      }),
+                  Text("NSFW"),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Checkbox(
+                      //title: Text("unlist the video"),
+                      value: stateUploadData.unlistVideo,
+                      // controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (dynamic value) {
+                        setState(() {
+                          stateUploadData.unlistVideo = value;
+                        });
+                      }),
+                  Text("unlist"),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Checkbox(
+                      //title: Text("unlist the video"),
+                      value: stateUploadData.crossPostToHive,
+                      // controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (dynamic value) {
+                        setState(() {
+                          stateUploadData.crossPostToHive = value;
+                        });
+                      }),
+                  Text("hive"),
+                ],
+              ),
+            ],
+          ),
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
