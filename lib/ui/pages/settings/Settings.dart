@@ -434,7 +434,13 @@ class _HiveSignerButtonState extends State<HiveSignerButton> {
   @override
   void initState() {
     super.initState();
-    _usernameController = new TextEditingController();
+    sec.getHiveSignerUsername().then((value) => setState(() {
+          if (value != '') {
+            _usernameController = new TextEditingController(text: value);
+          } else {
+            _usernameController = new TextEditingController();
+          }
+        }));
   }
 
   void getHiveSignerUsername() async {
