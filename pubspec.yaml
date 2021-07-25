@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.13.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -39,7 +39,8 @@ dependencies:
   # UI - video related
   webview_flutter: ^2.0.8
   video_player: ^2.1.4
-  youtube_explode_dart: ^1.9.6 #loading youtube metadata
+  #youtube_explode_dart: ^1.9.6 #loading youtube metadata
+  youtube_explode_dart: ^1.10.2 #loading youtube metadata
   better_player: ^0.0.72 # player for ipfs/sia/local files
   youtube_plyr_iframe: ^2.0.6 # player for youtube
 

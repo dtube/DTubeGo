@@ -106,115 +106,113 @@ class _WizardIPFSState extends State<WizardIPFS> {
         callback: childCallback,
       );
     } else {
-      return BlocBuilder<TransactionBloc, TransactionState>(
-        builder: (context, state) {
-          if (state is TransactionSent) {
-            // TODO: somehow this event happens 2 times
-            if (_uploadData.crossPostToHive) {
-              _hivesignerBloc.add(SendPostToHive(
-                  postTitle: _uploadData.title,
-                  postBody: _uploadData.description,
-                  permlink: _uploadData.link,
-                  dtubeUrl: _uploadData.link,
-                  thumbnailUrl: _uploadData.thumbnail640Hash,
-                  videoUrl: _uploadData.videoSourceHash,
-                  storageType: "ipfs",
-                  tag: _uploadData.tag));
-            }
-            navigateToPostDetailPage(context);
-          } else {
-            return BlocBuilder<IPFSUploadBloc, IPFSUploadState>(
-                builder: (context, state) {
-              if (state is IPFSUploadVideoPreProcessingState &&
-                  _uploadData.uploaded == false) {
-                return Center(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(50.0),
-                        child: DTubeLogoPulse(),
-                      ),
-                      Text("compressing video..."),
-                    ],
-                  ),
-                );
-              } else if (state is IPFSUploadVideoPreProcessedState &&
-                  _uploadData.uploaded == false) {
-                return Center(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(50.0),
-                        child: DTubeLogoPulse(),
-                      ),
-                      Text("uploading video..."),
-                    ],
-                  ),
-                );
-              } else if (state is IPFSUploadVideoPostProcessingState &&
-                  _uploadData.uploaded == false) {
-                return Center(
-                  child: PostProcessingStatusBars(
-                      statusInfo: state.processingResponse),
-                );
-              } else if (state is IPFSUploadVideoPostProcessedState &&
-                  _uploadData.uploaded == false) {
-                var statusInfo = state.processingResponse;
-
-                _uploadData.videoSourceHash =
-                    statusInfo["ipfsAddSourceVideo"]["hash"];
-                _uploadData.video240pHash = statusInfo["encodedVideos"][0]
-                    ["ipfsAddEncodeVideo"]["hash"];
-                _uploadData.video480pHash = statusInfo["encodedVideos"][1]
-                    ["ipfsAddEncodeVideo"]["hash"];
-                _uploadData.videoSpriteHash =
-                    statusInfo["ipfsAddSourceVideo"]["hash"];
-              } else if (state is IPFSUploadThumbnailUploadingState &&
-                  _uploadData.uploaded == false) {
-                return Center(
-                  child: ThumbnailStatusCircle(),
-                );
-              } else if (state is IPFSUploadThumbnailUploadedState &&
-                  _uploadData.uploaded == false) {
-                var statusInfo = state.uploadResponse;
-
-                _uploadData.thumbnail210Hash =
-                    statusInfo["ipfsAddSource"]["hash"];
-                _uploadData.thumbnail640Hash =
-                    statusInfo["ipfsAddOverlay"]["hash"];
-
-                var voteValue =
-                    (_uploadData.vpBalance * (_uploadData.vpPercent / 100))
-                        .floor();
-                _uploadData.link = randomPermlink(11);
-                BlocProvider.of<TransactionBloc>(context)
-                    .add(SendCommentEvent(_uploadData));
-              } else {
-                return Center(
-                  child: Column(
-                    children: [
-                      Text(""),
-                    ],
-                  ),
-                );
-              }
-              return Center(
-                  child: Column(
-                children: [
-                  Text(""),
-                ],
-              ));
-            });
+      return BlocListener<TransactionBloc, TransactionState>(
+          listener: (context, state) {
+        if (state is TransactionSent) {
+          // TODO: somehow this event happens 2 times
+          if (_uploadData.crossPostToHive) {
+            _hivesignerBloc.add(SendPostToHive(
+                postTitle: _uploadData.title,
+                postBody: _uploadData.description,
+                permlink: _uploadData.link,
+                dtubeUrl: _uploadData.link,
+                thumbnailUrl: _uploadData.thumbnail640Hash,
+                videoUrl: _uploadData.videoSourceHash,
+                storageType: "ipfs",
+                tag: _uploadData.tag));
           }
+          navigateToPostDetailPage(context);
+        }
+      }, child: BlocBuilder<IPFSUploadBloc, IPFSUploadState>(
+              builder: (context, state) {
+        if (state is IPFSUploadVideoPreProcessingState &&
+            _uploadData.uploaded == false) {
           return Center(
-              child: Column(
-            children: [
-              Text(""),
-            ],
-          ));
-        },
-      );
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(50.0),
+                  child: DTubeLogoPulse(),
+                ),
+                Text("compressing video..."),
+              ],
+            ),
+          );
+        } else if (state is IPFSUploadVideoPreProcessedState &&
+            _uploadData.uploaded == false) {
+          return Center(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(50.0),
+                  child: DTubeLogoPulse(),
+                ),
+                Text("uploading video..."),
+              ],
+            ),
+          );
+        } else if (state is IPFSUploadVideoPostProcessingState &&
+            _uploadData.uploaded == false) {
+          return Center(
+            child:
+                PostProcessingStatusBars(statusInfo: state.processingResponse),
+          );
+        } else if (state is IPFSUploadVideoPostProcessedState &&
+            _uploadData.uploaded == false) {
+          var statusInfo = state.processingResponse;
+
+          _uploadData.videoSourceHash =
+              statusInfo["ipfsAddSourceVideo"]["hash"];
+          _uploadData.video240pHash =
+              statusInfo["encodedVideos"][0]["ipfsAddEncodeVideo"]["hash"];
+          _uploadData.video480pHash =
+              statusInfo["encodedVideos"][1]["ipfsAddEncodeVideo"]["hash"];
+          _uploadData.videoSpriteHash =
+              statusInfo["ipfsAddSourceVideo"]["hash"];
+        } else if (state is IPFSUploadThumbnailUploadingState &&
+            _uploadData.uploaded == false) {
+          return Center(
+            child: ThumbnailStatusCircle(),
+          );
+        } else if (state is IPFSUploadThumbnailUploadedState &&
+            _uploadData.uploaded == false) {
+          var statusInfo = state.uploadResponse;
+
+          _uploadData.thumbnail210Hash = statusInfo["ipfsAddSource"]["hash"];
+          _uploadData.thumbnail640Hash = statusInfo["ipfsAddOverlay"]["hash"];
+          _uploadData.thumbnailLocation = statusInfo["ipfsAddOverlay"]["hash"];
+
+          var voteValue =
+              (_uploadData.vpBalance * (_uploadData.vpPercent / 100)).floor();
+          _uploadData.link = randomPermlink(11);
+          BlocProvider.of<TransactionBloc>(context)
+              .add(SendCommentEvent(_uploadData));
+        } else {
+          return Center(
+            child: Column(
+              children: [
+                Text(""),
+              ],
+            ),
+          );
+        }
+        return Center(
+            child: Column(
+          children: [
+            Text(""),
+          ],
+        ));
+      }));
     }
+    //     return Center(
+    //         child: Column(
+    //       children: [
+    //         Text(""),
+    //       ],
+    //     ));
+    //   },
+    // );
+    //}
   }
 }
 

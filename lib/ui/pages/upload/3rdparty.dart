@@ -1,3 +1,4 @@
+import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
@@ -24,6 +25,8 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
   TextEditingController _foreignUrlController = new TextEditingController();
   late SettingsBloc _settingsBloc;
   late UserBloc _userBloc;
+  late HivesignerBloc _hivesignerBloc;
+
   UploadData _uploadData = UploadData(
       link: "",
       title: "",
@@ -62,6 +65,8 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
 
     _userBloc = BlocProvider.of<UserBloc>(context);
     _userBloc.add(FetchDTCVPEvent());
+    _hivesignerBloc = BlocProvider.of<HivesignerBloc>(context);
+
     loadHiveSignerAccessToken();
   }
 
@@ -117,7 +122,7 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
                           return Text("reload data");
                         } else if (state is ThirdPartyMetadataErrorState) {
                           print(state.message);
-                          return Text("error loading data");
+                          return Text("error data");
                         } else {
                           return CircularProgressIndicator();
                         }

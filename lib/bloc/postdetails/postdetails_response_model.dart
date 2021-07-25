@@ -111,7 +111,7 @@ class Post {
       downvotes = [];
       json['votes'].forEach((v) {
         Votes _v = new Votes.fromJson(v);
-        if (_v.vt > 0.0) {
+        if (_v.vt > 0) {
           upvotes!.add(_v);
           if (_v.u == currentUser) {
             alreadyVoted = true;
@@ -518,7 +518,7 @@ class Comment {
       downvotes = [];
       json['votes'].forEach((v) {
         Votes _v = new Votes.fromJson(v);
-        if (_v.vt > 0.0) {
+        if (_v.vt > 0) {
           upvotes!.add(_v);
           if (_v.u == currentUser) {
             alreadyVoted = true;

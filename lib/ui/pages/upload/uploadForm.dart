@@ -1,3 +1,7 @@
+import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
+import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
+import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
@@ -33,6 +37,9 @@ class UploadForm extends StatefulWidget {
 
 class _UploadFormState extends State<UploadForm> {
   late UploadData stateUploadData;
+  late TransactionBloc _txBloc;
+  late HivesignerBloc _hivesignerBloc;
+
   _UploadFormState(this.stateUploadData);
 
   TextEditingController _titleController = new TextEditingController();
@@ -58,6 +65,19 @@ class _UploadFormState extends State<UploadForm> {
     });
   }
 
+  void navigateToPostDetailPage(BuildContext context) async {
+    String? _username = await sec.getUsername();
+    stateUploadData.uploaded = true;
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return PostDetailPage(
+        author: _username!,
+        link: stateUploadData.link,
+        recentlyUploaded: true,
+        directFocus: "noAutoplay",
+      );
+    }));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -67,6 +87,8 @@ class _UploadFormState extends State<UploadForm> {
 
     _userBloc = BlocProvider.of<UserBloc>(context);
     _settingsBloc = BlocProvider.of<SettingsBloc>(context);
+    _txBloc = BlocProvider.of<TransactionBloc>(context);
+    _hivesignerBloc = BlocProvider.of<HivesignerBloc>(context);
 
     _userBloc.add(FetchDTCVPEvent());
     _settingsBloc.add(FetchSettingsEvent());
@@ -168,55 +190,74 @@ class _UploadFormState extends State<UploadForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserBloc, UserState>(
-      listener: (context, stateDTCVP) {
-        if (stateDTCVP is UserDTCVPLoadedState) {
-          setState(() {
-            stateUploadData.dtcBalance = stateDTCVP.dtcBalance;
-            stateUploadData.vpBalance = stateDTCVP.vtBalance["v"]!;
-          });
+    return BlocListener<TransactionBloc, TransactionState>(
+      listener: (context, stateUpload) {
+        if (stateUpload is TransactionSent) {
+          if (stateUploadData.crossPostToHive) {
+            _hivesignerBloc.add(SendPostToHive(
+                postTitle: stateUploadData.title,
+                postBody: stateUploadData.description,
+                permlink: stateUploadData.link,
+                dtubeUrl: stateUploadData.link,
+                thumbnailUrl: stateUploadData.thumbnailLocation,
+                videoUrl: stateUploadData.videoSourceHash,
+                storageType: "ipfs",
+                tag: stateUploadData.tag));
+          }
+          navigateToPostDetailPage(context);
         }
       },
-      child: BlocListener<SettingsBloc, SettingsState>(
-        listener: (context, stateSettings) {
-          if (stateSettings is SettingsLoadedState) {
+      child: BlocListener<UserBloc, UserState>(
+        listener: (context, stateDTCVP) {
+          if (stateDTCVP is UserDTCVPLoadedState) {
             setState(() {
-              stateUploadData.vpPercent = double.parse(
-                  stateSettings.settings[settingKey_defaultVotingWeight]!);
+              stateUploadData.dtcBalance = stateDTCVP.dtcBalance;
+              stateUploadData.vpBalance = stateDTCVP.vtBalance["v"]!;
             });
           }
         },
-        child: SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                videoPreview(),
-                SizedBox(height: 8),
-                stateUploadData.videoLocation != ""
-                    ? basicData()
-                    : SizedBox(height: 50),
-                SizedBox(height: 8),
-                _formIsFilled ? imagePreview() : SizedBox(height: 50),
-                _formIsFilled
-                    ? Column(
-                        children: [
-                          moreSettings(),
-                          SizedBox(height: 8),
-                          InputChip(
-                            label:
-                                Text("upload", style: TextStyle(fontSize: 24)),
-                            onPressed: () {
-                              widget.callback(stateUploadData);
-                            },
-                          )
-                        ],
-                      )
-                    : SizedBox(height: 50),
-                SizedBox(height: 50)
-              ],
+        child: BlocListener<SettingsBloc, SettingsState>(
+          listener: (context, stateSettings) {
+            if (stateSettings is SettingsLoadedState) {
+              setState(() {
+                stateUploadData.vpPercent = double.parse(
+                    stateSettings.settings[settingKey_defaultVotingWeight]!);
+              });
+            }
+          },
+          child: SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  videoPreview(),
+                  SizedBox(height: 8),
+                  stateUploadData.videoLocation != ""
+                      ? basicData()
+                      : SizedBox(height: 50),
+                  SizedBox(height: 8),
+                  _formIsFilled ? imagePreview() : SizedBox(height: 50),
+                  _formIsFilled
+                      ? Column(
+                          children: [
+                            moreSettings(),
+                            SizedBox(height: 8),
+                            InputChip(
+                              backgroundColor: globalRed,
+                              label: Text("upload",
+                                  style: TextStyle(fontSize: 24)),
+                              onPressed: () {
+                                widget.callback(stateUploadData);
+                              },
+                            )
+                          ],
+                        )
+                      : SizedBox(height: 50),
+                  SizedBox(height: 50)
+                ],
+              ),
             ),
           ),
         ),
@@ -292,6 +333,7 @@ class _UploadFormState extends State<UploadForm> {
         children: [
           Text("2. Basic information", style: TextStyle(fontSize: 18)),
           TextFormField(
+            cursorColor: globalRed,
             decoration: new InputDecoration(labelText: "Title"),
             controller: _titleController,
             onChanged: (val) {
@@ -307,6 +349,7 @@ class _UploadFormState extends State<UploadForm> {
             },
           ),
           TextFormField(
+            cursorColor: globalRed,
             maxLines: 5,
             decoration: new InputDecoration(labelText: "Description"),
             controller: _descController,
@@ -322,6 +365,7 @@ class _UploadFormState extends State<UploadForm> {
             },
           ),
           TextFormField(
+            cursorColor: globalRed,
             decoration: new InputDecoration(labelText: "Tag"),
             controller: _tagController,
             focusNode: _tagFocus,
@@ -377,103 +421,113 @@ class _UploadFormState extends State<UploadForm> {
   Widget moreSettings() {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Container(
-          width: deviceWidth * 0.2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Checkbox(
-                      // title: Text("original content"),
-                      value: stateUploadData.originalContent,
-                      // controlAffinity: ListTileControlAffinity.leading,
-                      onChanged: (dynamic value) {
-                        setState(() {
-                          stateUploadData.originalContent = value;
-                        });
-                      }),
-                  Text("original"),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Checkbox(
-                      //title: Text("NSFW content"),
-                      value: stateUploadData.nSFWContent,
-                      //controlAffinity: ListTileControlAffinity.leading,
-                      onChanged: (dynamic value) {
-                        setState(() {
-                          stateUploadData.nSFWContent = value;
-                        });
-                      }),
-                  Text("NSFW"),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Checkbox(
-                      //title: Text("unlist the video"),
-                      value: stateUploadData.unlistVideo,
-                      // controlAffinity: ListTileControlAffinity.leading,
-                      onChanged: (dynamic value) {
-                        setState(() {
-                          stateUploadData.unlistVideo = value;
-                        });
-                      }),
-                  Text("unlist"),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Checkbox(
-                      //title: Text("unlist the video"),
-                      value: stateUploadData.crossPostToHive,
-                      // controlAffinity: ListTileControlAffinity.leading,
-                      onChanged: (dynamic value) {
-                        setState(() {
-                          stateUploadData.crossPostToHive = value;
-                        });
-                      }),
-                  Text("hive"),
-                ],
-              ),
-            ],
-          ),
+        Wrap(
+          direction: Axis.horizontal,
+          runAlignment: WrapAlignment.spaceEvenly,
+          children: [
+            ChoiceChip(
+                selected: stateUploadData.originalContent,
+                label: Text('original content'),
+                labelStyle: TextStyle(color: Colors.white),
+                avatar: stateUploadData.originalContent
+                    ? FaIcon(
+                        FontAwesomeIcons.check,
+                        size: 15,
+                      )
+                    : null,
+                backgroundColor: Colors.grey.withAlpha(30),
+                selectedColor: Colors.green[700],
+                onSelected: (bool selected) {
+                  setState(() {
+                    stateUploadData.originalContent =
+                        !stateUploadData.originalContent;
+                  });
+                }),
+            ChoiceChip(
+                selected: stateUploadData.nSFWContent,
+                label: Text('nsfw content'),
+                labelStyle: TextStyle(color: Colors.white),
+                avatar: stateUploadData.nSFWContent
+                    ? FaIcon(
+                        FontAwesomeIcons.check,
+                        size: 15,
+                      )
+                    : null,
+                backgroundColor: Colors.grey.withAlpha(30),
+                selectedColor: Colors.green[700],
+                onSelected: (bool selected) {
+                  setState(() {
+                    stateUploadData.nSFWContent = !stateUploadData.nSFWContent;
+                  });
+                }),
+            ChoiceChip(
+                selected: stateUploadData.unlistVideo,
+                label: Text('unlist video'),
+                labelStyle: TextStyle(color: Colors.white),
+                avatar: stateUploadData.unlistVideo
+                    ? FaIcon(
+                        FontAwesomeIcons.check,
+                        size: 15,
+                      )
+                    : null,
+                backgroundColor: Colors.grey.withAlpha(30),
+                selectedColor: Colors.green[700],
+                onSelected: (bool selected) {
+                  setState(() {
+                    stateUploadData.unlistVideo = !stateUploadData.unlistVideo;
+                  });
+                }),
+            ChoiceChip(
+                selected: stateUploadData.crossPostToHive,
+                label: Text('cross-post to hive'),
+                labelStyle: TextStyle(color: Colors.white),
+                avatar: stateUploadData.crossPostToHive
+                    ? FaIcon(
+                        FontAwesomeIcons.check,
+                        size: 15,
+                      )
+                    : null,
+                backgroundColor: Colors.grey.withAlpha(30),
+                selectedColor: Colors.green[700],
+                onSelected: (bool selected) {
+                  setState(() {
+                    stateUploadData.crossPostToHive =
+                        !stateUploadData.crossPostToHive;
+                  });
+                }),
+          ],
         ),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              width: deviceWidth * 0.6,
+              child: Slider(
+                min: 1.0,
+                max: 100.0,
+                value: stateUploadData.vpPercent,
+
+                label: stateUploadData.vpPercent.floor().toString(),
+                //divisions: 40,
+                inactiveColor: globalBlue,
+                activeColor: globalRed,
+                onChanged: (dynamic value) {
+                  setState(() {
+                    stateUploadData.vpPercent = value;
+                  });
+                },
+              ),
+            ),
             Column(
               children: [
-                Text("selfvote"),
-                Slider(
-                  min: 1.0,
-                  max: 100.0,
-                  value: stateUploadData.vpPercent,
-
-                  label: stateUploadData.vpPercent.floor().toString(),
-                  //divisions: 40,
-                  inactiveColor: globalBlue,
-                  activeColor: globalRed,
-                  onChanged: (dynamic value) {
-                    setState(() {
-                      stateUploadData.vpPercent = value;
-                    });
-                  },
-                ),
                 Text(
-                  stateUploadData.vpPercent.floor().toString() + '%',
-                  style: TextStyle(fontSize: 18.0),
+                  "initial vote: " +
+                      stateUploadData.vpPercent.floor().toString() +
+                      '%',
+                  style: Theme.of(context).textTheme.headline5,
                 ),
                 Text(
                   '(' +
@@ -486,42 +540,53 @@ class _UploadFormState extends State<UploadForm> {
                   style: TextStyle(fontSize: 14.0),
                 ),
               ],
-            ),
-            SizedBox(
-              width: 8,
-            ),
+            )
+          ],
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Row(
+          children: [
             Container(
-              width: 75,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("promote"),
+              width: deviceWidth * 0.6,
+              child: Slider(
+                min: 0.0,
+                max: (stateUploadData.dtcBalance + 0.0) / 100,
+                value: stateUploadData.burnDtc,
 
-                  Slider(
-                    min: 0.0,
-                    max: (stateUploadData.dtcBalance + 0.0) / 100,
-                    value: stateUploadData.burnDtc,
-
-                    label: stateUploadData.burnDtc.floor().toString(),
-                    //divisions: 40,
-                    inactiveColor: globalBlue,
-                    activeColor: globalRed,
-                    onChanged: (dynamic value) {
-                      setState(() {
-                        stateUploadData.burnDtc = value;
-                      });
-                    },
-                  ),
-                  Text("burn"),
-                  Text(
-                    stateUploadData.burnDtc.floor().toString() + ' DTC',
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-
-                  // TODO: calculate approx. VP of burn
-                ],
+                label: stateUploadData.burnDtc.floor().toString(),
+                //divisions: 40,
+                inactiveColor: globalBlue,
+                activeColor: globalRed,
+                onChanged: (dynamic value) {
+                  setState(() {
+                    stateUploadData.burnDtc = value;
+                  });
+                },
               ),
             ),
+            Column(
+              children: [
+                Text(
+                  "promote: " +
+                      stateUploadData.burnDtc.floor().toString() +
+                      ' DTC',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+                // TODO: calculate approx. VP of burn
+                // Text(
+                //   '(' +
+                //       ((stateUploadData.vpBalance /
+                //                   100 *
+                //                   stateUploadData.vpPercent) /
+                //               1000)
+                //           .toStringAsFixed(2) +
+                //       'K VP)',
+                //   style: TextStyle(fontSize: 14.0),
+                // ),
+              ],
+            )
           ],
         ),
       ],

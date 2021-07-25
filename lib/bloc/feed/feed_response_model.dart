@@ -87,7 +87,7 @@ class FeedItem {
       json['votes'].forEach((v) {
         Votes _v = new Votes.fromJson(v);
         summaryOfVotes = summaryOfVotes + _v.vt;
-        if (_v.vt > 0.0) {
+        if (_v.vt > 0) {
           upvotes!.add(_v);
           if (_v.u == currentUser) {
             alreadyVoted = true;
@@ -164,17 +164,17 @@ class FeedItem {
     data['_id'] = this.sId;
     data['author'] = this.author;
     data['link'] = this.link;
-  
+
     if (this.jsonString != null) {
       data['json'] = this.jsonString!.toJson();
     }
-  
+
     if (this.upvotes != null || this.downvotes != null) {
       allVotes = this.upvotes! + this.downvotes!;
       data['votes'] = allVotes.map((v) => v.toJson()).toList();
     }
     data['ts'] = this.ts;
-   
+
     data['dist'] = this.dist;
     data['videoUrl'] = this.videoUrl;
     data['thumbUrl'] = this.thumbUrl;
