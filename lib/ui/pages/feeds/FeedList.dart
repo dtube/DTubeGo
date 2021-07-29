@@ -12,7 +12,7 @@ import 'package:dtube_togo/utils/friendlyTimestamp.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class FeedList extends StatelessWidget {
   String feedType;

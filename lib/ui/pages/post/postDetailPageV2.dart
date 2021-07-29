@@ -24,7 +24,7 @@ import 'package:dtube_togo/style/dtubeLoading.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class PostDetailPage extends StatefulWidget {
   String link;
@@ -248,6 +248,7 @@ class _PostDetailsState extends State<PostDetails> {
                                   localFile: false,
                                   controls: true,
                                   usedAsPreview: false,
+                                  allowFullscreen: true,
                                 )
                               : Text("no player detected"),
                       Row(

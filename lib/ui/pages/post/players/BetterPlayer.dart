@@ -12,6 +12,7 @@ class BP extends StatefulWidget {
   final bool localFile;
   final bool controls;
   final bool usedAsPreview;
+  final bool allowFullscreen;
 
   BP({
     required this.videoUrl,
@@ -20,6 +21,7 @@ class BP extends StatefulWidget {
     required this.localFile,
     required this.controls,
     required this.usedAsPreview,
+    required this.allowFullscreen,
     Key? key,
   }) : super(key: key);
 
@@ -48,11 +50,11 @@ class _BPState extends State<BP> {
       _betterPlayerController = BetterPlayerController(
           BetterPlayerConfiguration(
             controlsConfiguration: BetterPlayerControlsConfiguration(
-              //showControls: widget.controls,
-              enablePlayPause: true,
-              enableSkips: false,
-              showControlsOnInitialize: false,
-            ),
+                //showControls: widget.controls,
+                enablePlayPause: true,
+                enableSkips: false,
+                showControlsOnInitialize: false,
+                enableFullscreen: widget.allowFullscreen),
             autoPlay: widget.autoplay,
             autoDispose: true,
             aspectRatio: aspectRatio,

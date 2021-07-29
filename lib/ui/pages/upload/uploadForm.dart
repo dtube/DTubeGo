@@ -271,6 +271,7 @@ class _UploadFormState extends State<UploadForm> {
       return YTPlayerIFrame(
         videoUrl: stateUploadData.videoLocation,
         autoplay: false,
+        allowFullscreen: false,
       );
     } else {
       return Column(
@@ -317,6 +318,7 @@ class _UploadFormState extends State<UploadForm> {
                   controls: true,
                   //key: UniqueKey(),
                   usedAsPreview: true,
+                  allowFullscreen: false,
                 )
               : SizedBox(
                   height: 0,

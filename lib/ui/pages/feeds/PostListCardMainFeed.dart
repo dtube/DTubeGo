@@ -160,15 +160,15 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                                       autoplay: true,
                                       looping: false,
                                       localFile: false,
-                                      controls: false,
+                                      controls: true,
                                       usedAsPreview: false,
-                                    )
+                                      allowFullscreen: false)
                                   : (widget.videoSource == 'youtube' &&
                                           widget.videoUrl != "")
                                       ? YTPlayerIFrame(
                                           videoUrl: widget.videoUrl,
                                           autoplay: true,
-                                        )
+                                          allowFullscreen: false)
                                       : Text("no player detected"),
                         ),
                       ),

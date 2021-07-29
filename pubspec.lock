@@ -21,7 +21,7 @@ packages:
       name: args
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.2.0"
   async:
     dependency: transitive
     description:
@@ -257,7 +257,7 @@ packages:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.0"
+    version: "0.9.1"
   flutter_markdown:
     dependency: "direct main"
     description:
@@ -540,7 +540,7 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "4.2.0"
   platform:
     dependency: transitive
     description:
@@ -895,14 +895,14 @@ packages:
       name: youtube_explode_dart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.10.2"
-  youtube_plyr_iframe:
+    version: "1.10.3"
+  youtube_player_iframe:
     dependency: "direct main"
     description:
-      name: youtube_plyr_iframe
+      name: youtube_player_iframe
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.7"
+    version: "2.2.1"
 sdks:
   dart: ">=2.13.0 <3.0.0"
   flutter: ">=2.0.0"
