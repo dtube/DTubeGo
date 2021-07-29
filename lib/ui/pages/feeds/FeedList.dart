@@ -162,7 +162,7 @@ class FeedList extends StatelessWidget {
             return BlocProvider<UserBloc>(
               create: (context) => UserBloc(repository: UserRepositoryImpl()),
               child: Padding(
-                padding: EdgeInsets.all(2.0),
+                padding: EdgeInsets.all(8.0),
                 child: PostListCard(
                   bigThumbnail: bigThumbnail,
                   showAuthor: showAuthor,

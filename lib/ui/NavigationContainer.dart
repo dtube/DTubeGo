@@ -30,6 +30,7 @@ class NavigationContainer extends StatefulWidget {
 }
 
 class _NavigationContainerState extends State<NavigationContainer> {
+  double topBarHeight = 90;
   int bottomSelectedIndex = 0;
   PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
@@ -92,7 +93,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
             feedType: 'MyFeed',
             bigThumbnail: true,
             showAuthor: false,
-            paddingTop: 90 // if Moments ready then 0
+            paddingTop: topBarHeight // if Moments ready then 0
             ),
       ),
       //   ),
@@ -105,7 +106,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           feedType: 'NewFeed',
           bigThumbnail: true,
           showAuthor: false,
-          paddingTop: 90,
+          paddingTop: topBarHeight,
         ),
       ),
       MultiBlocProvider(
@@ -130,7 +131,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           feedType: 'HotFeed',
           bigThumbnail: true,
           showAuthor: false,
-          paddingTop: 90,
+          paddingTop: topBarHeight,
         ),
       ),
       BlocProvider<FeedBloc>(
@@ -140,7 +141,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           feedType: 'TrendingFeed',
           bigThumbnail: true,
           showAuthor: false,
-          paddingTop: 90,
+          paddingTop: topBarHeight,
         ),
       ),
     ];
@@ -166,7 +167,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           ),
         ),
         elevation: 8,
-        toolbarHeight: 60,
+        toolbarHeight: topBarHeight * 0.6,
         titleSpacing: 0,
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
