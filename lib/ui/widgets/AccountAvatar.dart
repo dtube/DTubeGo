@@ -59,18 +59,21 @@ class _AccountAvatarState extends State<AccountAvatar> {
             return Stack(
               children: [
                 CachedNetworkImage(
-                    imageUrl: state.user.jsonString!.profile!.avatar!
-                        .replaceAll("http:", "https:"),
-                    imageBuilder: (context, imageProvider) => Container(
-                          width: widget.size,
-                          height: widget.size,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                image: imageProvider, fit: BoxFit.cover),
-                          ),
-                        ),
-                    placeholder: (context, url) => AvatarLoadingPlaceholder()),
+                  imageUrl: state.user.jsonString!.profile!.avatar!
+                      .replaceAll("http:", "https:"),
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: widget.size,
+                    height: widget.size,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: imageProvider, fit: BoxFit.cover),
+                    ),
+                  ),
+                  placeholder: (context, url) => AvatarLoadingPlaceholder(),
+                  errorWidget: (context, url, error) =>
+                      AvatarLoadingPlaceholder(),
+                ),
                 state.verified
                     ? Align(
                         alignment: Alignment.bottomRight,
@@ -87,12 +90,12 @@ class _AccountAvatarState extends State<AccountAvatar> {
               ],
             );
           } catch (e) {
-            return AvatarErrorPlaceholder();
+            return AvatarLoadingPlaceholder();
           }
         } else if (state is UserErrorState) {
-          return AvatarErrorPlaceholder();
+          return AvatarLoadingPlaceholder();
         } else {
-          return AvatarErrorPlaceholder();
+          return AvatarLoadingPlaceholder();
         }
       },
     );

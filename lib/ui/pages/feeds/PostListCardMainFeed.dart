@@ -32,7 +32,8 @@ class PostListCardMainFeed extends StatefulWidget {
       required this.alreadyVotedDirection,
       required this.upvotesCount,
       required this.downvotesCount,
-      required this.indexOfList})
+      required this.indexOfList,
+      required this.mainTag})
       : super(key: key);
 
   final bool blur;
@@ -51,12 +52,15 @@ class PostListCardMainFeed extends StatefulWidget {
   final int upvotesCount;
   final int downvotesCount;
   final int indexOfList;
+  final String mainTag;
 
   @override
   _PostListCardMainFeedState createState() => _PostListCardMainFeedState();
 }
 
 class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
+  double _avatarSize = 50;
+  double _tagSpace = 100;
   bool _thumbnailTapped = false;
   @override
   void initState() {
@@ -77,14 +81,15 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                 navigateToUserDetailPage(context, widget.author);
               },
               child: SizedBox(
-                width: 50,
-                height: 50,
-                child: AccountAvatarBase(username: widget.author, size: 50),
+                width: _avatarSize,
+                height: _avatarSize,
+                child: AccountAvatarBase(
+                    username: widget.author, size: _avatarSize),
               ),
             ),
             SizedBox(width: 8),
             Container(
-              width: deviceWidth - 50 - 50,
+              width: deviceWidth - _avatarSize - _tagSpace - 8 - 16,
               child: InkWell(
                 onTap: () {
                   navigateToPostDetailPage(
@@ -97,15 +102,35 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                       widget.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.bodyText1,
                     ),
                     Text(
                       widget.author,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.bodyText2,
                     ),
                   ],
+                ),
+              ),
+            ),
+            Container(
+              width: _tagSpace,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  onTap: () {
+                    navigateToPostDetailPage(
+                        context, widget.author, widget.link, "none");
+                  },
+                  child: Transform.scale(
+                    scale: 0.8,
+                    alignment: Alignment.centerRight,
+                    child: InputChip(
+                      label: Text(widget.mainTag),
+                      onPressed: () {},
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -176,23 +201,41 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                   ),
                 ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${widget.publishDate} - ' +
+                      (widget.duration.inHours == 0
+                          ? widget.duration.toString().substring(2, 7) + ' min'
+                          : widget.duration.toString().substring(0, 7) +
+                              ' hours'),
+                  style: Theme.of(context).textTheme.caption,
+                ),
+                Text(
+                  '${widget.dtcValue}',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Transform.scale(
                   scale: 0.8,
+                  alignment: Alignment.centerLeft,
                   child: InputChip(
                     label: Text(
                       '',
                     ),
                     avatar: Padding(
-                      padding: const EdgeInsets.only(left: 4.0),
-                      child: FaIcon(FontAwesomeIcons.reply,
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: FaIcon(FontAwesomeIcons.comment,
                           color: widget.alreadyVoted &&
                                   !widget.alreadyVotedDirection
                               ? globalRed
@@ -204,22 +247,9 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                     },
                   ),
                 ),
-                Text(
-                  '${widget.publishDate} - ' +
-                      (widget.duration.inHours == 0
-                          ? widget.duration.toString().substring(2, 7) + ' min'
-                          : widget.duration.toString().substring(0, 7) +
-                              ' hours'),
-                  style: Theme.of(context).textTheme.caption,
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
                 Transform.scale(
                   scale: 0.8,
+                  alignment: Alignment.centerRight,
                   child: Row(
                     children: [
                       InputChip(
@@ -266,13 +296,6 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                         },
                       ),
                     ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
-                  child: Text(
-                    '${widget.dtcValue}',
-                    style: Theme.of(context).textTheme.headline5,
                   ),
                 ),
               ],

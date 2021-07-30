@@ -1,10 +1,12 @@
 // TODO: truncate description if too long - issue here is markdown since it's not calculateable before rendering
 // perhaps this can help: https://stackoverflow.com/questions/63019636/flutter-markdown-show-more-button
 
+import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 import 'package:flutter/material.dart';
+import 'package:expandable/expandable.dart';
 
 class CollapsedDescription extends StatefulWidget {
   const CollapsedDescription({
@@ -21,15 +23,73 @@ class CollapsedDescription extends StatefulWidget {
 class _CollapsedDescriptionState extends State<CollapsedDescription> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: MarkdownBody(
-        data: widget.description,
-        styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-            p: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 14.0)),
-        onTapLink: (text, url, title) {
-          launch(url!);
-        },
+    return ExpandableNotifier(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+        child: ScrollOnExpand(
+          // child: Card(
+          //   clipBehavior: Clip.antiAlias,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expandable(
+                collapsed: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.description,
+                      style: Theme.of(context).textTheme.bodyText1,
+                      softWrap: true,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      "...",
+                      style: Theme.of(context).textTheme.bodyText1,
+                    )
+                  ],
+                ),
+                expanded: MarkdownBody(
+                  data: widget.description,
+                  styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+                      .copyWith(
+                          p: Theme.of(context)
+                              .textTheme
+                              .bodyText1!
+                              .copyWith(fontSize: 14.0)),
+                  onTapLink: (text, url, title) {
+                    launch(url!);
+                  },
+                ),
+              ),
+              // Divider(
+              //   height: 1,
+              // ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Builder(
+                    builder: (context) {
+                      var controller =
+                          ExpandableController.of(context, required: true)!;
+                      return InputChip(
+                        label: Text(
+                          controller.expanded ? "collapse" : "read more",
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                        onPressed: () {
+                          controller.toggle();
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
+      //),
     );
   }
 }

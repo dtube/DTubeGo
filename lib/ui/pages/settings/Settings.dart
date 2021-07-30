@@ -487,10 +487,10 @@ class _HiveSignerButtonState extends State<HiveSignerButton> {
           backgroundColor: _status == "valid" ? Colors.green : globalRed,
           avatar: FaIcon(
             _status == "valid"
-                ? FontAwesomeIcons.check
+                ? FontAwesomeIcons.hive
                 : _status == "invalid"
                     ? FontAwesomeIcons.undo
-                    : FontAwesomeIcons.play,
+                    : FontAwesomeIcons.hive,
             size: 15,
           ),
           label: Text("hivesigner"),

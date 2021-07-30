@@ -162,7 +162,7 @@ class FeedList extends StatelessWidget {
             return BlocProvider<UserBloc>(
               create: (context) => UserBloc(repository: UserRepositoryImpl()),
               child: Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
                 child: PostListCard(
                   bigThumbnail: bigThumbnail,
                   showAuthor: showAuthor,
@@ -196,6 +196,7 @@ class FeedList extends StatelessWidget {
                   upvotesCount: feed[pos].upvotes!.length,
                   downvotesCount: feed[pos].downvotes!.length,
                   indexOfList: pos,
+                  mainTag: feed[pos].jsonString!.tag,
                 ),
               ),
             );
@@ -243,6 +244,7 @@ class PostListCard extends StatelessWidget {
   final int upvotesCount;
   final int downvotesCount;
   final int indexOfList;
+  final String mainTag;
 
   const PostListCard(
       {Key? key,
@@ -263,7 +265,8 @@ class PostListCard extends StatelessWidget {
       required this.alreadyVotedDirection,
       required this.upvotesCount,
       required this.downvotesCount,
-      required this.indexOfList})
+      required this.indexOfList,
+      required this.mainTag})
       : super(key: key);
 
   @override
@@ -290,6 +293,7 @@ class PostListCard extends StatelessWidget {
           upvotesCount: upvotesCount,
           downvotesCount: downvotesCount,
           indexOfList: indexOfList,
+          mainTag: mainTag,
         ),
       );
     } else {

@@ -334,7 +334,7 @@ class _PostDetailsState extends State<PostDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InputChip(
-                            label: FaIcon(FontAwesomeIcons.share),
+                            label: FaIcon(FontAwesomeIcons.shareAlt),
                             onPressed: () {
                               Share.share('https://d.tube/c/' +
                                   widget.post.author +
