@@ -35,14 +35,11 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   Future<bool> getAccountVerification(String username) async {
-    var response = await http.get(Uri.parse(AppConfig.originalDtuberListUrl));
+    var response = await http.get(Uri.parse(
+        AppConfig.originalDtuberCheckUrl.replaceAll("##USERNAME", username)));
     if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
-      if (data.contains(username)) {
-        return true;
-      } else {
-        return false;
-      }
+      bool data = json.decode(response.body);
+      return data;
     } else {
       throw Exception();
     }

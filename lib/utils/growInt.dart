@@ -1,6 +1,6 @@
 Map<String, int> growInt(int v, int t, double growth, int min, int max) {
-  const int int64MaxValue = 9223372036854775807;
-  const int int64MinValue = -9223372036854775808;
+  const int int64MaxValue = 9007199254740991;
+  const int int64MinValue = -9007199254740991;
 
   if (max == 0) {
     min = int64MinValue;
