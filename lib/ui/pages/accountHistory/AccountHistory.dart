@@ -1,3 +1,4 @@
+import 'package:dtube_togo/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_togo/bloc/config/txTypes.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
@@ -9,58 +10,61 @@ import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class NotificationScreen extends StatefulWidget {
-  NotificationScreen({Key? key}) : super(key: key);
+class AccountHistoryScreen extends StatefulWidget {
+  AccountHistoryScreen({Key? key, required this.username}) : super(key: key);
+  String username;
 
   @override
-  _NotificationScreenState createState() => _NotificationScreenState();
+  _AccountHistoryScreenState createState() => _AccountHistoryScreenState();
 }
 
-class _NotificationScreenState extends State<NotificationScreen> {
+class _AccountHistoryScreenState extends State<AccountHistoryScreen> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<NotificationBloc>(
+    return BlocProvider<AccountHistoryBloc>(
       create: (context) =>
-          NotificationBloc(repository: NotificationRepositoryImpl()),
-      child: Notifications(),
+          AccountHistoryBloc(repository: AccountHistoryRepositoryImpl()),
+      child: History(
+        username: widget.username,
+      ),
     );
   }
 }
 
-class Notifications extends StatefulWidget {
+class History extends StatefulWidget {
+  final String username;
   @override
-  _NotificationsState createState() => _NotificationsState();
+  _HistoryState createState() => _HistoryState();
 
-  Notifications({
-    Key? key,
-  }) : super(key: key);
+  History({Key? key, required this.username}) : super(key: key);
 }
 
-class _NotificationsState extends State<Notifications> {
-  late NotificationBloc notificationBloc;
+class _HistoryState extends State<History> {
+  late AccountHistoryBloc historyBloc;
   late int lastNotification;
 
   @override
   void initState() {
     super.initState();
-    notificationBloc = BlocProvider.of<NotificationBloc>(context);
-    notificationBloc.add(FetchNotificationsEvent([])); // statements;
+    historyBloc = BlocProvider.of<AccountHistoryBloc>(context);
+    historyBloc.add(FetchAccountHistorysEvent(
+        accountHistoryTypes: [], username: widget.username)); // statements;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: dtubeSubAppBar(true),
+      appBar: dtubeSubAppBar(false),
       body: Container(
-        child: BlocBuilder<NotificationBloc, NotificationState>(
+        child: BlocBuilder<AccountHistoryBloc, AccountHistoryState>(
           builder: (context, state) {
-            if (state is NotificationInitialState) {
+            if (state is AccountHistoryInitialState) {
               return buildLoading();
-            } else if (state is NotificationLoadingState) {
+            } else if (state is AccountHistoryLoadingState) {
               return buildLoading();
-            } else if (state is NotificationLoadedState) {
-              return buildnotificationList(state.notifications);
-            } else if (state is NotificationErrorState) {
+            } else if (state is AccountHistoryLoadedState) {
+              return buildHistoryList(state.historyItems);
+            } else if (state is AccountHistoryErrorState) {
               return buildErrorUi(state.message);
             } else {
               return buildErrorUi('test');
@@ -89,34 +93,51 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  Widget buildnotificationList(List<AvalonNotification> notifications) {
+  Widget buildHistoryList(List<AvalonAccountHistoryItem> history) {
     return ListView.builder(
-      itemCount: notifications.length,
+      itemCount: history.length,
       itemBuilder: (ctx, pos) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: InkWell(
-            child: CustomListItem(
-              sender: notifications[pos].tx.sender,
-              tx: notifications[pos].tx,
+            child: Container(
+              height: 50,
+              width: 50,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: history[pos].txs.length,
+                itemBuilder: (ctx, posTx) {
+                  return Column(
+                    children: [
+                      history[pos].txs[posTx].sender != ""
+                          ? Text(history[pos].txs[posTx].sender)
+                          : SizedBox(height: 0, width: 0),
+                      Text(txTypes[history[pos].txs[posTx].type]!)
+                    ],
+                  );
+                },
+              ),
             ),
             onTap: () {
-              List<int> navigatableTxsUser = [1, 2, 7, 8];
-              List<int> navigatableTxsPost = [4, 5, 13, 19];
-              if (navigatableTxsUser.contains(notifications[pos].tx.type)) {
-                //load user and navigate
-              }
-              if (navigatableTxsPost.contains(notifications[pos].tx.type)) {
-                //load post and navigate to it
+              // List<int> navigatableTxsUser = [1, 2, 7, 8];
+              // List<int> navigatableTxsPost = [4, 5, 13, 19];
+              // if (navigatableTxsUser.contains(history[pos].txs.type)) {
+              //   //load user and navigate
+              // }
+              // if (navigatableTxsPost.contains(history[pos].txs.type)) {
+              //   //load post and navigate to it
 
-                //           Navigator.push(context, MaterialPageRoute(builder: (context) {
-                // return PostDetailPage(
-                //   post: postData,
-                // );
-              }
+              //   //           Navigator.push(context, MaterialPageRoute(builder: (context) {
+              //   // return PostDetailPage(
+              //   //   post: postData,
+              //   // );
+              //}
             },
           ),
         );
+        // return Padding(
+        //     padding: const EdgeInsets.only(bottom: 8.0),
+        //     child: Text(history[pos].iId.toString()));
       },
     );
   }

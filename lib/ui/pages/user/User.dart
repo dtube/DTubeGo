@@ -1,7 +1,9 @@
+import 'package:dtube_togo/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/style/OpenableHyperlink.dart';
+import 'package:dtube_togo/ui/pages/accountHistory/AccountHistory.dart';
 import 'package:dtube_togo/ui/pages/wallet/transferDialog.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
@@ -209,11 +211,28 @@ class _UserState extends State<UserPage> {
 
     List<SpeedDialChild> othersPageOptions = [
       SpeedDialChild(
+          child: FaIcon(FontAwesomeIcons.history),
+          foregroundColor: globalAlmostWhite,
+          backgroundColor: globalBlue,
+          label: 'History',
+          labelStyle: TextStyle(fontSize: 14.0),
+          labelBackgroundColor: globalBlue,
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return BlocProvider<AccountHistoryBloc>(
+                  create: (context) => AccountHistoryBloc(
+                      repository: AccountHistoryRepositoryImpl()),
+                  child: AccountHistoryScreen(
+                    username: username,
+                  ));
+            }));
+          }),
+      SpeedDialChild(
           child: FaIcon(FontAwesomeIcons.exchangeAlt),
           foregroundColor: globalAlmostWhite,
           backgroundColor: globalBlue,
-          label: 'transfer',
-          labelStyle: TextStyle(fontSize: 18.0),
+          label: 'Transfer',
+          labelStyle: TextStyle(fontSize: 14.0),
           labelBackgroundColor: globalBlue,
           onTap: () {
             showDialog<String>(
@@ -230,7 +249,7 @@ class _UserState extends State<UserPage> {
         foregroundColor: globalAlmostWhite,
         backgroundColor: globalBlue,
         label: alreadyFollowing ? 'Unfollow' : 'Follow',
-        labelStyle: TextStyle(fontSize: 18.0),
+        labelStyle: TextStyle(fontSize: 14.0),
         labelBackgroundColor: globalBlue,
         onTap: () async {
           TxData txdata = TxData(
@@ -253,7 +272,14 @@ class _UserState extends State<UserPage> {
           labelStyle: TextStyle(fontSize: 14.0),
           labelBackgroundColor: globalBlue,
           onTap: () {
-            // navigate to new history page
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return BlocProvider<AccountHistoryBloc>(
+                  create: (context) => AccountHistoryBloc(
+                      repository: AccountHistoryRepositoryImpl()),
+                  child: AccountHistoryScreen(
+                    username: username,
+                  ));
+            }));
           }),
       SpeedDialChild(
           child: FaIcon(FontAwesomeIcons.signOutAlt),

@@ -37,7 +37,7 @@ class _UploaderMainPageState extends State<UploaderMainPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: dtubeSubAppBar(),
+      appBar: dtubeSubAppBar(true),
       resizeToAvoidBottomInset: true,
       body: Column(
         children: [

@@ -1,12 +1,14 @@
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:flutter/material.dart';
 
-AppBar dtubeSubAppBar() {
+AppBar dtubeSubAppBar(bool showLogo) {
   return AppBar(
     centerTitle: true,
-    title: DTubeLogo(
-      size: 60,
-    ),
+    title: showLogo
+        ? DTubeLogo(
+            size: 60,
+          )
+        : Text(""),
   );
 }
 
