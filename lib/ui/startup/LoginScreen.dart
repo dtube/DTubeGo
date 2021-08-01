@@ -88,7 +88,7 @@ class _LoginFormState extends State<LoginForm> {
                                           children: [
                                             SizedBox(height: 8),
                                             Text(
-                                                "Please check your username & custom private key! More info on how to create such a custom key:\n",
+                                                "Please check your username & private key!\n\nSometimes a login with the private master key does not work. Then please try to login with a custom key. More info on how to create such a custom key:\n",
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyText1),
