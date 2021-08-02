@@ -23,25 +23,25 @@ var txTypes = {
 
 var txTypeFriendlyDescriptionNotifications = {
   0: 'NEW_ACCOUNT',
-  1: 'voted for you as chain leader', //'APPROVE_NODE_OWNER',
-  2: 'unvoted you as chain leader', //'DISAPROVE_NODE_OWNER',
-  3: 'sent you ##DTCAMOUNT DTC', //'TRANSFER',
-  4: 'commented on your content', // 'COMMENT',
-  5: 'voted on your content', // 'VOTE',
+  1: 'voted for ##USERNAME as chain leader', //'APPROVE_NODE_OWNER',
+  2: 'unvoted ##USERNAME as chain leader', //'DISAPROVE_NODE_OWNER',
+  3: 'sent ##USERNAME ##DTCAMOUNT DTC', //'TRANSFER',
+  4: 'commented on ##USERNAMES content', // 'COMMENT',
+  5: 'voted on ##USERNAMES content', // 'VOTE',
   6: 'USER_JSON',
-  7: 'subscribed to your channel', // 'FOLLOW',
-  8: 'unsubscribed from your channel', // 'UNFOLLOW',
+  7: 'subscribed to ##USERNAME', // 'FOLLOW',
+  8: 'unsubscribed from ##USERNAME', // 'UNFOLLOW',
   // RESHARE: 9, // not sure
   10: 'NEW_KEY',
   11: 'REMOVE_KEY',
   12: 'CHANGE_PASSWORD',
-  13: 'commented on your content', // 'PROMOTED_COMMENT',
+  13: 'commented on ##USERNAMES content', // 'PROMOTED_COMMENT',
   14: 'TRANSFER_VT',
   15: 'TRANSFER_BW',
   16: 'LIMIT_VT',
-  17: 'CLAIM_REWARD',
+  17: 'claimed rewards',
   18: 'ENABLE_NODE',
-  19: 'voted on your content ##TIPAMOUNT% tip' //'TIPPED_VOTE'
+  19: 'voted on ##USERNAME content ##TIPAMOUNT% tip' //'TIPPED_VOTE'
 };
 
 var txTypeFriendlyDescriptionActions = {

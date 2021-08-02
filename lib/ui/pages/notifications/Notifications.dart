@@ -59,7 +59,7 @@ class _NotificationsState extends State<Notifications> {
             } else if (state is NotificationLoadingState) {
               return buildLoading();
             } else if (state is NotificationLoadedState) {
-              return buildnotificationList(state.notifications);
+              return buildnotificationList(state.notifications, state.username);
             } else if (state is NotificationErrorState) {
               return buildErrorUi(state.message);
             } else {
@@ -89,7 +89,8 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  Widget buildnotificationList(List<AvalonNotification> notifications) {
+  Widget buildnotificationList(
+      List<AvalonNotification> notifications, String username) {
     return ListView.builder(
       itemCount: notifications.length,
       itemBuilder: (ctx, pos) {
@@ -99,6 +100,7 @@ class _NotificationsState extends State<Notifications> {
             child: CustomListItem(
               sender: notifications[pos].tx.sender,
               tx: notifications[pos].tx,
+              username: username,
             ),
             onTap: () {
               List<int> navigatableTxsUser = [1, 2, 7, 8];
@@ -126,10 +128,12 @@ class CustomListItem extends StatelessWidget {
   const CustomListItem({
     Key? key,
     required this.sender,
+    required this.username,
     required this.tx,
   }) : super(key: key);
 
   final String sender;
+  final String username;
   final Tx tx;
 
   @override
@@ -150,7 +154,11 @@ class CustomListItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  NotificationTitle(sender: sender, tx: tx),
+                  NotificationTitle(
+                    sender: sender,
+                    tx: tx,
+                    username: username,
+                  ),
                   NotificationDescription(tx: tx),
                 ],
               ),
@@ -166,16 +174,22 @@ class NotificationTitle extends StatelessWidget {
   const NotificationTitle({
     Key? key,
     required this.sender,
+    required this.username,
     required this.tx,
   }) : super(key: key);
 
   final String sender;
+  final String username;
   final Tx tx;
 
   @override
   Widget build(BuildContext context) {
-    String friendlyDescription =
-        ' ' + txTypeFriendlyDescriptionNotifications[tx.type]!;
+    String username2 = "your";
+
+    String friendlyDescription = ' ' +
+        txTypeFriendlyDescriptionNotifications[tx.type]!
+            .replaceAll("##USERNAMES", username2)
+            .replaceAll("##USERNAME", username);
     switch (tx.type) {
       case 3:
         friendlyDescription = friendlyDescription.replaceAll(

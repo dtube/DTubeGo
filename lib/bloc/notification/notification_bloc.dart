@@ -26,7 +26,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
             await repository.getNotifications(
                 _avalonApiNode, event.notificationTypes, _applicationUser!);
 
-        yield NotificationLoadedState(notifications: notifications);
+        yield NotificationLoadedState(
+            notifications: notifications, username: "you");
       } catch (e) {
         yield NotificationErrorState(message: e.toString());
       }

@@ -15,11 +15,13 @@ class NotificationLoadingState extends NotificationState {
 
 class NotificationLoadedState extends NotificationState {
   List<AvalonNotification> notifications;
+  String username;
 
-  NotificationLoadedState({required this.notifications});
+  NotificationLoadedState(
+      {required this.notifications, required this.username});
 
   @override
-  List<Object> get props => [notifications];
+  List<Object> get props => [notifications, username];
 }
 
 class NotificationErrorState extends NotificationState {

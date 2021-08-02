@@ -63,7 +63,7 @@ class _HistoryState extends State<History> {
             } else if (state is AccountHistoryLoadingState) {
               return buildLoading();
             } else if (state is AccountHistoryLoadedState) {
-              return buildHistoryList(state.historyItems);
+              return buildHistoryList(state.historyItems, state.username);
             } else if (state is AccountHistoryErrorState) {
               return buildErrorUi(state.message);
             } else {
@@ -93,7 +93,8 @@ class _HistoryState extends State<History> {
     );
   }
 
-  Widget buildHistoryList(List<AvalonAccountHistoryItem> history) {
+  Widget buildHistoryList(
+      List<AvalonAccountHistoryItem> history, String username) {
     return ListView.builder(
       itemCount: history.length,
       itemBuilder: (ctx, pos) {
@@ -107,12 +108,22 @@ class _HistoryState extends State<History> {
                 scrollDirection: Axis.horizontal,
                 itemCount: history[pos].txs.length,
                 itemBuilder: (ctx, posTx) {
+                  String username2 = "your";
+                  if (username != "you") {
+                    username2 = username + "'s";
+                  }
+
+                  String friendlyDescription = ' ' +
+                      txTypeFriendlyDescriptionNotifications[
+                              history[pos].txs[posTx].type]!
+                          .replaceAll("##USERNAMES", username2)
+                          .replaceAll("##USERNAME", username);
                   return Column(
                     children: [
                       history[pos].txs[posTx].sender != ""
-                          ? Text(history[pos].txs[posTx].sender)
+                          ? Text(history[pos].txs[posTx].sender +
+                              friendlyDescription)
                           : SizedBox(height: 0, width: 0),
-                      Text(txTypes[history[pos].txs[posTx].type]!)
                     ],
                   );
                 },

@@ -33,7 +33,8 @@ class PostListCardMainFeed extends StatefulWidget {
       required this.upvotesCount,
       required this.downvotesCount,
       required this.indexOfList,
-      required this.mainTag})
+      required this.mainTag,
+      required this.oc})
       : super(key: key);
 
   final bool blur;
@@ -53,6 +54,7 @@ class PostListCardMainFeed extends StatefulWidget {
   final int downvotesCount;
   final int indexOfList;
   final String mainTag;
+  final bool oc;
 
   @override
   _PostListCardMainFeedState createState() => _PostListCardMainFeedState();
@@ -60,7 +62,7 @@ class PostListCardMainFeed extends StatefulWidget {
 
 class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
   double _avatarSize = 50;
-  double _tagSpace = 100;
+  double _tagSpace = 150;
   bool _thumbnailTapped = false;
   @override
   void initState() {
@@ -116,22 +118,34 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
             ),
             Container(
               width: _tagSpace,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: InkWell(
-                  onTap: () {
-                    navigateToPostDetailPage(
-                        context, widget.author, widget.link, "none");
-                  },
-                  child: Transform.scale(
-                    scale: 0.8,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  widget.oc
+                      ? Transform.scale(
+                          scale: 0.8,
+                          alignment: Alignment.centerRight,
+                          child: FaIcon(FontAwesomeIcons.award),
+                        )
+                      : SizedBox(width: 0),
+                  Align(
                     alignment: Alignment.centerRight,
-                    child: InputChip(
-                      label: Text(widget.mainTag),
-                      onPressed: () {},
+                    child: InkWell(
+                      onTap: () {
+                        navigateToPostDetailPage(
+                            context, widget.author, widget.link, "none");
+                      },
+                      child: Transform.scale(
+                        scale: 0.8,
+                        alignment: Alignment.centerRight,
+                        child: InputChip(
+                          label: Text(widget.mainTag),
+                          onPressed: () {},
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           ],

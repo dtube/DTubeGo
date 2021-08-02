@@ -15,8 +15,10 @@ class AccountHistoryLoadingState extends AccountHistoryState {
 
 class AccountHistoryLoadedState extends AccountHistoryState {
   List<AvalonAccountHistoryItem> historyItems;
+  String username;
 
-  AccountHistoryLoadedState({required this.historyItems});
+  AccountHistoryLoadedState(
+      {required this.historyItems, required this.username});
 
   @override
   List<Object> get props => [historyItems];

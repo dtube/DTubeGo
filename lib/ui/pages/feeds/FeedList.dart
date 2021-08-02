@@ -164,40 +164,41 @@ class FeedList extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
                 child: PostListCard(
-                  bigThumbnail: bigThumbnail,
-                  showAuthor: showAuthor,
-                  blur: (_nsfwMode == 'Blur' &&
-                              feed[pos].jsonString?.nsfw == 1) ||
-                          (_hiddenMode == 'Blur' &&
-                              feed[pos].summaryOfVotes < 0)
-                      ? true
-                      : false,
-                  title: feed[pos].jsonString!.title,
-                  description: feed[pos].jsonString!.desc != null
-                      ? feed[pos].jsonString!.desc!
-                      : "",
-                  author: feed[pos].author,
-                  link: feed[pos].link,
-                  // publishDate: .toString(),
-                  // publishDate: DateFormat('yyyy-MM-dd kk:mm').format(
-                  //     DateTime.fromMicrosecondsSinceEpoch(feed[pos].ts * 1000)
-                  //         .toLocal()),
-                  publishDate: TimeAgo.timeInAgoTS(feed[pos].ts),
-                  dtcValue: (feed[pos].dist / 100).round().toString() + " DTC",
-                  duration: new Duration(
-                      seconds: int.tryParse(feed[pos].jsonString!.dur) != null
-                          ? int.parse(feed[pos].jsonString!.dur)
-                          : 0),
-                  thumbnailUrl: feed[pos].thumbUrl,
-                  videoUrl: feed[pos].videoUrl,
-                  videoSource: feed[pos].videoSource,
-                  alreadyVoted: feed[pos].alreadyVoted!,
-                  alreadyVotedDirection: feed[pos].alreadyVotedDirection!,
-                  upvotesCount: feed[pos].upvotes!.length,
-                  downvotesCount: feed[pos].downvotes!.length,
-                  indexOfList: pos,
-                  mainTag: feed[pos].jsonString!.tag,
-                ),
+                    bigThumbnail: bigThumbnail,
+                    showAuthor: showAuthor,
+                    blur: (_nsfwMode == 'Blur' &&
+                                feed[pos].jsonString?.nsfw == 1) ||
+                            (_hiddenMode == 'Blur' &&
+                                feed[pos].summaryOfVotes < 0)
+                        ? true
+                        : false,
+                    title: feed[pos].jsonString!.title,
+                    description: feed[pos].jsonString!.desc != null
+                        ? feed[pos].jsonString!.desc!
+                        : "",
+                    author: feed[pos].author,
+                    link: feed[pos].link,
+                    // publishDate: .toString(),
+                    // publishDate: DateFormat('yyyy-MM-dd kk:mm').format(
+                    //     DateTime.fromMicrosecondsSinceEpoch(feed[pos].ts * 1000)
+                    //         .toLocal()),
+                    publishDate: TimeAgo.timeInAgoTS(feed[pos].ts),
+                    dtcValue:
+                        (feed[pos].dist / 100).round().toString() + " DTC",
+                    duration: new Duration(
+                        seconds: int.tryParse(feed[pos].jsonString!.dur) != null
+                            ? int.parse(feed[pos].jsonString!.dur)
+                            : 0),
+                    thumbnailUrl: feed[pos].thumbUrl,
+                    videoUrl: feed[pos].videoUrl,
+                    videoSource: feed[pos].videoSource,
+                    alreadyVoted: feed[pos].alreadyVoted!,
+                    alreadyVotedDirection: feed[pos].alreadyVotedDirection!,
+                    upvotesCount: feed[pos].upvotes!.length,
+                    downvotesCount: feed[pos].downvotes!.length,
+                    indexOfList: pos,
+                    mainTag: feed[pos].jsonString!.tag,
+                    oc: feed[pos].jsonString!.oc == 1 ? true : false),
               ),
             );
           }
@@ -245,6 +246,7 @@ class PostListCard extends StatelessWidget {
   final int downvotesCount;
   final int indexOfList;
   final String mainTag;
+  final bool oc;
 
   const PostListCard(
       {Key? key,
@@ -266,7 +268,8 @@ class PostListCard extends StatelessWidget {
       required this.upvotesCount,
       required this.downvotesCount,
       required this.indexOfList,
-      required this.mainTag})
+      required this.mainTag,
+      required this.oc})
       : super(key: key);
 
   @override
@@ -277,24 +280,24 @@ class PostListCard extends StatelessWidget {
       return Container(
         height: (deviceWidth / 16 * 9) + 140,
         child: PostListCardMainFeed(
-          blur: blur,
-          thumbnailUrl: thumbnailUrl,
-          title: title,
-          description: description,
-          author: author,
-          link: link,
-          publishDate: publishDate,
-          duration: duration,
-          dtcValue: dtcValue,
-          videoUrl: videoUrl,
-          videoSource: videoSource,
-          alreadyVoted: alreadyVoted,
-          alreadyVotedDirection: alreadyVotedDirection,
-          upvotesCount: upvotesCount,
-          downvotesCount: downvotesCount,
-          indexOfList: indexOfList,
-          mainTag: mainTag,
-        ),
+            blur: blur,
+            thumbnailUrl: thumbnailUrl,
+            title: title,
+            description: description,
+            author: author,
+            link: link,
+            publishDate: publishDate,
+            duration: duration,
+            dtcValue: dtcValue,
+            videoUrl: videoUrl,
+            videoSource: videoSource,
+            alreadyVoted: alreadyVoted,
+            alreadyVotedDirection: alreadyVotedDirection,
+            upvotesCount: upvotesCount,
+            downvotesCount: downvotesCount,
+            indexOfList: indexOfList,
+            mainTag: mainTag,
+            oc: oc),
       );
     } else {
       return PostListCardUserFeed(

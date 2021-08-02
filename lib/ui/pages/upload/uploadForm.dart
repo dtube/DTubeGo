@@ -440,7 +440,7 @@ class _UploadFormState extends State<UploadForm> {
                         FontAwesomeIcons.check,
                         size: 15,
                       )
-                    : null,
+                    : FaIcon(FontAwesomeIcons.award),
                 backgroundColor: Colors.grey.withAlpha(30),
                 selectedColor: Colors.green[700],
                 onSelected: (bool selected) {
