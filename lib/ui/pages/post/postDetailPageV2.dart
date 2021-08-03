@@ -1,3 +1,4 @@
+import 'package:dtube_togo/utils/navigationShortcuts.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
@@ -402,27 +403,5 @@ class _PostDetailsState extends State<PostDetails> {
             ),
           )),
     );
-  }
-
-  void navigateToUserDetailPage(BuildContext context, String username) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return MultiBlocProvider(
-        providers: [
-          BlocProvider<UserBloc>(
-            create: (BuildContext context) =>
-                UserBloc(repository: UserRepositoryImpl())
-                  ..add(FetchAccountDataEvent(username)),
-          ),
-          BlocProvider<TransactionBloc>(
-            create: (BuildContext context) =>
-                TransactionBloc(repository: TransactionRepositoryImpl()),
-          ),
-        ],
-        child: UserPage(
-          username: username,
-          ownUserpage: false,
-        ),
-      );
-    }));
   }
 }

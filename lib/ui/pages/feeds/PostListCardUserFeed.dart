@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
+import 'package:dtube_togo/utils/navigationShortcuts.dart';
 
 import 'package:flutter/material.dart';
 
@@ -48,7 +49,7 @@ class _PostListCardUserFeedState extends State<PostListCardUserFeed> {
 
     return InkWell(
       onTap: () {
-        navigateToPostDetailPage(context, widget.author, widget.link);
+        navigateToPostDetailPage(context, widget.author, widget.link, "none");
       },
       child: Card(
         color: globalBGColor,
@@ -119,17 +120,5 @@ class _PostListCardUserFeedState extends State<PostListCardUserFeed> {
         ),
       ),
     );
-  }
-
-  void navigateToPostDetailPage(
-      BuildContext context, String author, String link) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return PostDetailPage(
-        author: author,
-        link: link,
-        recentlyUploaded: false,
-        directFocus: "none",
-      );
-    }));
   }
 }
