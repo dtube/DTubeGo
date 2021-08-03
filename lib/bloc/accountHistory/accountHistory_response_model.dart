@@ -123,10 +123,16 @@ class Data {
   String? pub;
   String? author;
   String? link;
+
   int? vt;
   String? tag;
   int? tip;
   JsonData? jsonString;
+  String? receiver;
+  int? amount;
+  String? pa;
+  String? pp;
+  String? target;
 
   Data(
       {this.pub,
@@ -135,18 +141,29 @@ class Data {
       this.vt,
       this.tag,
       this.tip,
-      this.jsonString});
+      this.jsonString,
+      this.receiver,
+      this.amount,
+      this.pa,
+      this.pp,
+      this.target});
 
   Data.fromJson(Map<String, dynamic> json) {
     pub = json['pub'] != null ? json['pub'] : null;
     author = json['author'] != null ? json['author'] : null;
     link = json['link'] != null ? json['link'] : null;
-    vt = json['vt'] != null ? json['vt'] : null;
+    vt = json['vt'] != null ? json['vt'] : 0;
+
     tag = json['tag'] != null ? json['tag'] : null;
-    tip = json['tip'] != null ? json['tip'] : null;
+    tip = json['tip'] != null ? json['tip'] : 0;
     if (json['json'] != null) {
       jsonString = JsonData.fromJson(json['json']);
     }
+    receiver = json['receiver'] != null ? json['receiver'] : null;
+    amount = json['amount'] != null ? json['amount'] : 0;
+    pa = json['pa'] != null ? json['pa'] : null;
+    pp = json['pp'] != null ? json['pp'] : null;
+    target = json['target'] != null ? json['target'] : null;
   }
 
   Map<String, dynamic> toJson() {

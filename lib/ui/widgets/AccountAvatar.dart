@@ -70,9 +70,14 @@ class _AccountAvatarState extends State<AccountAvatar> {
                           image: imageProvider, fit: BoxFit.cover),
                     ),
                   ),
-                  placeholder: (context, url) => AvatarLoadingPlaceholder(),
-                  errorWidget: (context, url, error) =>
-                      AvatarLoadingPlaceholder(),
+                  placeholder: (context, url) => Container(
+                      width: widget.size,
+                      height: widget.size,
+                      child: AvatarLoadingPlaceholder(size: widget.size)),
+                  errorWidget: (context, url, error) => Container(
+                      width: widget.size,
+                      height: widget.size,
+                      child: AvatarLoadingPlaceholder(size: widget.size)),
                 ),
                 state.verified
                     ? Align(
@@ -90,12 +95,14 @@ class _AccountAvatarState extends State<AccountAvatar> {
               ],
             );
           } catch (e) {
-            return AvatarLoadingPlaceholder();
+            return AvatarLoadingPlaceholder(
+              size: widget.size,
+            );
           }
         } else if (state is UserErrorState) {
-          return AvatarLoadingPlaceholder();
+          return AvatarLoadingPlaceholder(size: widget.size);
         } else {
-          return AvatarLoadingPlaceholder();
+          return AvatarLoadingPlaceholder(size: widget.size);
         }
       },
     );
@@ -123,15 +130,14 @@ class AvatarErrorPlaceholder extends StatelessWidget {
 }
 
 class AvatarLoadingPlaceholder extends StatelessWidget {
-  const AvatarLoadingPlaceholder({
-    Key? key,
-  }) : super(key: key);
+  AvatarLoadingPlaceholder({Key? key, required this.size}) : super(key: key);
+  double size;
 
   @override
   Widget build(BuildContext context) {
     return new Container(
-      width: 50.0,
-      height: 50.0,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         image: DecorationImage(

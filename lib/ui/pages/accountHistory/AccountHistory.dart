@@ -1,8 +1,13 @@
 import 'package:dtube_togo/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_togo/bloc/config/txTypes.dart';
+import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
+import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
+import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
+import 'package:dtube_togo/utils/navigationShortCuts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:intl/intl.dart';
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
@@ -102,29 +107,16 @@ class _HistoryState extends State<History> {
           padding: const EdgeInsets.only(bottom: 8.0),
           child: InkWell(
             child: Container(
-              height: 50,
-              width: 50,
+              height: 48.0 * history[pos].txs.length + 1,
+              //width: 30.0,
               child: ListView.builder(
-                scrollDirection: Axis.horizontal,
+                scrollDirection: Axis.vertical,
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: history[pos].txs.length,
                 itemBuilder: (ctx, posTx) {
-                  String username2 = "your";
-                  if (username != "you") {
-                    username2 = username + "'s";
-                  }
-
-                  String friendlyDescription = ' ' +
-                      txTypeFriendlyDescriptionNotifications[
-                              history[pos].txs[posTx].type]!
-                          .replaceAll("##USERNAMES", username2)
-                          .replaceAll("##USERNAME", username);
-                  return Column(
-                    children: [
-                      history[pos].txs[posTx].sender != ""
-                          ? Text(history[pos].txs[posTx].sender +
-                              friendlyDescription)
-                          : SizedBox(height: 0, width: 0),
-                    ],
+                  return ActivityItem(
+                    username: username,
+                    txData: history[pos].txs[posTx],
                   );
                 },
               ),
@@ -154,124 +146,101 @@ class _HistoryState extends State<History> {
   }
 }
 
-class CustomListItem extends StatelessWidget {
-  const CustomListItem({
+class ActivityItem extends StatelessWidget {
+  ActivityItem({
+    required this.username,
+    required this.txData,
     Key? key,
-    required this.sender,
-    required this.tx,
   }) : super(key: key);
+  String username;
 
-  final String sender;
-  final Tx tx;
+  Txs txData;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        height: 35,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            BlocProvider<UserBloc>(
-              create: (BuildContext context) =>
-                  UserBloc(repository: UserRepositoryImpl()),
-              child: AccountAvatar(username: sender, size: 30),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  NotificationTitle(sender: sender, tx: tx),
-                  NotificationDescription(tx: tx),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
 
-class NotificationTitle extends StatelessWidget {
-  const NotificationTitle({
-    Key? key,
-    required this.sender,
-    required this.tx,
-  }) : super(key: key);
+    String _receiver = txData.data.receiver != null
+        ? txData.data.receiver!
+        : txData.data.pa != null
+            ? txData.data.pa!
+            : txData.data.author != null
+                ? txData.data.author!
+                : txData.data.target != null
+                    ? txData.data.target!
+                    : "";
 
-  final String sender;
-  final Tx tx;
+    String _receivers = _receiver + "'s";
 
-  @override
-  Widget build(BuildContext context) {
     String friendlyDescription =
-        ' ' + txTypeFriendlyDescriptionNotifications[tx.type]!;
-    switch (tx.type) {
-      case 3:
-        friendlyDescription = friendlyDescription.replaceAll(
-            '##DTCAMOUNT', (tx.data.amount! / 100).toString());
-        break;
-      case 19:
-        friendlyDescription = friendlyDescription.replaceAll(
-            '##TIPAMOUNT', tx.data.tip!.toString());
-        break;
-      default:
+        txTypeFriendlyDescriptionNotifications[txData.type]!
+            .replaceAll("##USERNAMES", _receivers)
+            .replaceAll("##USERNAME", _receiver)
+            .replaceAll('##DTCAMOUNT', (txData.data.amount! / 100).toString())
+            .replaceAll('##TIPAMOUNT', (txData.data.tip!).toString());
+    if (txData.type == 4 && _receiver == "") {
+      friendlyDescription = "posted a video";
     }
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        Text(
-          sender,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14.0,
-          ),
-        ),
-        const Padding(padding: EdgeInsets.only(bottom: 2.0)),
-        Text(
-          friendlyDescription,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            fontSize: 14.0,
-            //color: Colors.black54,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class NotificationDescription extends StatelessWidget {
-  const NotificationDescription({
-    Key? key,
-    required this.tx,
-  }) : super(key: key);
-
-  final Tx tx;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        const Padding(padding: EdgeInsets.only(bottom: 2.0)),
-        Text(
-          DateFormat('yyyy-MM-dd kk:mm').format(
-              DateTime.fromMicrosecondsSinceEpoch(tx.ts * 1000).toLocal()),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            fontSize: 12.0,
-            //color: Colors.black54,
-          ),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+      child: Column(
+        children: [
+          txData.sender != ""
+              ? Row(
+                  children: [
+                    InkWell(
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                            child: BlocProvider<UserBloc>(
+                              create: (BuildContext context) =>
+                                  UserBloc(repository: UserRepositoryImpl()),
+                              child: AccountAvatar(
+                                  username: txData.sender, size: 40),
+                            ),
+                          ),
+                          Container(
+                            width: 90,
+                            child: Text(
+                              txData.sender,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        navigateToUserDetailPage(context, txData.sender);
+                      },
+                    ),
+                    Container(
+                      width: deviceWidth - 180,
+                      child: Text(
+                        friendlyDescription,
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    ),
+                    InkWell(
+                      child: Container(
+                        width: 20,
+                        child: [4, 5, 13, 17, 19].contains(txData.type)
+                            ? FaIcon(
+                                FontAwesomeIcons.play,
+                                size: 15,
+                              )
+                            : SizedBox(width: 0),
+                      ),
+                      onTap: () {
+                        // TODO: navigate to post
+                      },
+                    ),
+                  ],
+                )
+              : SizedBox(height: 0, width: 0),
+        ],
+      ),
     );
   }
 }
