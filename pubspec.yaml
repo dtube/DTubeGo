@@ -99,7 +99,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/appicon.png"
+  image_path: "assets/images/appicon_noalpha.png"
 
 flutter:
   uses-material-design: true
@@ -108,3 +108,4 @@ flutter:
     - assets/images/Flag_of_None.svg.png
     - assets/images/Image_of_none.svg.png
     - assets/images/appicon.png
+    - assets/images/appicon_noalpha.png

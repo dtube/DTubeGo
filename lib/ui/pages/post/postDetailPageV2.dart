@@ -255,25 +255,36 @@ class _PostDetailsState extends State<PostDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           widget.post.tags.length > 0
-                              ? Container(
-                                  width: deviceWidth * 0.6,
-                                  height: 50,
-                                  child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: widget.post.tags.length,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8.0),
-                                          child: InputChip(
-                                              label: Text(
-                                            widget.post.tags[index].toString(),
-                                          )),
-                                        );
-                                        // return Text(
-                                        //   widget.post.tags[index].toString(),
-                                        // );
-                                      }),
+                              ? Row(
+                                  children: [
+                                    widget.post.jsonString!.oc == 1
+                                        ? SizedBox(
+                                            width: 23,
+                                            child:
+                                                FaIcon(FontAwesomeIcons.award))
+                                        : SizedBox(width: 0),
+                                    Container(
+                                      width: deviceWidth * 0.6,
+                                      height: 50,
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: widget.post.tags.length,
+                                          itemBuilder: (context, index) {
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 8.0),
+                                              child: InputChip(
+                                                  label: Text(
+                                                widget.post.tags[index]
+                                                    .toString(),
+                                              )),
+                                            );
+                                            // return Text(
+                                            //   widget.post.tags[index].toString(),
+                                            // );
+                                          }),
+                                    ),
+                                  ],
                                 )
                               : SizedBox(height: 0),
                           Text(
