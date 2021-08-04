@@ -25,27 +25,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     String _avalonApiNode = await sec.getNode();
     String? _applicationUser = await sec.getUsername();
     String? _privKey = await sec.getPrivateKey();
+    bool _openedOnce = await sec.getOpenedOnce();
+
     if (event is AppStartedEvent) {
       yield SignInLoadingState();
       _avalonApiNode = await discoverAPINode();
       sec.persistNode(_avalonApiNode);
+      if (!_openedOnce) {
+        yield NeverUsedTheAppBeforeState();
+      } else {
+        try {
+          if (_applicationUser != null && _privKey != null) {
+            bool keyIsValid = await repository.signInWithCredentials(
+                _avalonApiNode, _applicationUser, _privKey);
 
-      try {
-        if (_applicationUser != null && _privKey != null) {
-          bool keyIsValid = await repository.signInWithCredentials(
-              _avalonApiNode, _applicationUser, _privKey);
-
-          if (keyIsValid) {
-            //sec.persistUsernameKey(event.username, event.privateKey);
-            yield SignedInState();
+            if (keyIsValid) {
+              //sec.persistUsernameKey(event.username, event.privateKey);
+              yield SignedInState();
+            } else {
+              yield SignInFailedState(message: "login failed");
+            }
           } else {
-            yield SignInFailedState(message: "login failed");
+            yield NoSignInInformationFoundState();
           }
-        } else {
-          yield NoSignInInformationFoundState();
+        } catch (e) {
+          yield ApiNodeOfflineState();
         }
-      } catch (e) {
-        yield ApiNodeOfflineState();
       }
     }
     if (event is SignOutEvent) {

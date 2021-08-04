@@ -61,3 +61,10 @@ class AuthErrorState extends AuthState {
   @override
   List<Object> get props => [message];
 }
+
+class NeverUsedTheAppBeforeState extends AuthState {
+  NeverUsedTheAppBeforeState();
+
+  @override
+  List<Object> get props => [];
+}

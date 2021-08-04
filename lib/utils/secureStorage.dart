@@ -19,6 +19,8 @@ const settingKey_hiveSignerAccessToken = 'HSAT';
 const settingKey_hiveSignerAccessTokenExpiresIn = 'HSEI';
 const settingKey_hiveSignerAccessTokenRequestedOn = 'HSRO';
 
+const settingKey_OpenedOnce = 'OPENEDONCE';
+
 // const _txsKey = 'TXS';
 const _storage = FlutterSecureStorage();
 
@@ -31,6 +33,19 @@ Future<void> persistUsernameKey(String username, String priv) async {
 
 Future<void> persistNode(String node) async {
   await _storage.write(key: settingKey_avalonNode, value: node);
+}
+
+Future<void> persistOpenedOnce() async {
+  await _storage.write(key: settingKey_OpenedOnce, value: "true");
+}
+
+Future<bool> getOpenedOnce() async {
+  var _openedOnce = await _storage.read(key: settingKey_OpenedOnce);
+  if (_openedOnce == null || _openedOnce != "true") {
+    return false;
+  } else {
+    return true;
+  }
 }
 
 Future<String?> getUsername() async {

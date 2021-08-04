@@ -36,7 +36,7 @@ class _BPState extends State<BP> {
 
   Future<void> initVideoPlayer() async {
     await _videocontroller.initialize();
-    print("test");
+
     setState(() {
       BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
         !widget.localFile

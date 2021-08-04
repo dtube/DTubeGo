@@ -1,3 +1,4 @@
+import 'package:dtube_togo/ui/startup/OnboardingJourney.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
@@ -49,6 +50,10 @@ class _StartUpState extends State<StartUp> {
         if (state is SignOutCompleteState ||
             state is NoSignInInformationFoundState) {
           return LoginForm();
+        }
+
+        if (state is NeverUsedTheAppBeforeState) {
+          return OnboardingJourney();
         }
 
         return Scaffold(
