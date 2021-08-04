@@ -18,7 +18,7 @@ class AppConfig {
   static String accountFeedUrlFirst = "/blog/##USERNAME";
   static String accountFeedUrlMore = "/blog/##USERNAME/##AUTHORNAME/##LINK";
 
-  static String accountHistoryFeedUrl = "/history/##USERNAME/0";
+  static String accountHistoryFeedUrl = "/history/##USERNAME/##FROMBLOC";
   static String accountHistoryFeedUrlFromBlock = "/history/##USERNAME/##BLOCK";
 
   static String notificationFeedUrl = "/notifications/##USERNAME";

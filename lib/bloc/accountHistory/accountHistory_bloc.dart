@@ -8,6 +8,7 @@ import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 class AccountHistoryBloc
     extends Bloc<AccountHistoryEvent, AccountHistoryState> {
   AccountHistoryRepository repository;
+  bool isFetching = false;
 
   AccountHistoryBloc({required this.repository})
       : super(AccountHistoryInitialState());
@@ -25,8 +26,8 @@ class AccountHistoryBloc
       yield AccountHistoryLoadingState();
       try {
         List<AvalonAccountHistoryItem> accountHistory =
-            await repository.getAccountHistory(
-                _avalonApiNode, event.accountHistoryTypes, event.username);
+            await repository.getAccountHistory(_avalonApiNode,
+                event.accountHistoryTypes, event.username, event.fromBloc);
 
         yield AccountHistoryLoadedState(
             historyItems: accountHistory, username: event.username);

@@ -50,7 +50,7 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: dtubeSubAppBar(true),
+      appBar: dtubeSubAppBar(true, "", context),
       body: Container(
         child: BlocBuilder<NotificationBloc, NotificationState>(
           builder: (context, state) {

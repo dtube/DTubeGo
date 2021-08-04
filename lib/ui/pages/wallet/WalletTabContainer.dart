@@ -32,7 +32,7 @@ class _WalletMainPageState extends State<WalletMainPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: dtubeSubAppBar(true),
+      appBar: dtubeSubAppBar(true, "", context),
       resizeToAvoidBottomInset: true,
       body: Column(
         children: [

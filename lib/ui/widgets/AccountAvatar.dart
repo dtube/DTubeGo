@@ -51,10 +51,12 @@ class _AccountAvatarState extends State<AccountAvatar> {
         if (state is UserLoadingState) {
           return CircularProgressIndicator();
         } else if (state is UserLoadedState &&
-            state.user.jsonString != null &&
-            state.user.jsonString?.profile != null &&
-            state.user.jsonString?.profile?.avatar != "" &&
-            state.user.name == widget.username) {
+                state.user.jsonString != null &&
+                state.user.jsonString?.profile != null &&
+                state.user.jsonString?.profile?.avatar != ""
+            //  &&
+            // state.user.name == widget.username
+            ) {
           try {
             return Stack(
               children: [

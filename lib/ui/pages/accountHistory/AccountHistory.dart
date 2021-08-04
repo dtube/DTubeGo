@@ -2,6 +2,7 @@ import 'package:dtube_togo/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_togo/bloc/config/txTypes.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
 import 'package:dtube_togo/ui/pages/user/User.dart';
@@ -47,42 +48,75 @@ class History extends StatefulWidget {
 class _HistoryState extends State<History> {
   late AccountHistoryBloc historyBloc;
   late int lastNotification;
-
+  final ScrollController _scrollController = ScrollController();
+  List<AvalonAccountHistoryItem> _historyItems = [];
   @override
   void initState() {
     super.initState();
     historyBloc = BlocProvider.of<AccountHistoryBloc>(context);
     historyBloc.add(FetchAccountHistorysEvent(
-        accountHistoryTypes: [], username: widget.username)); // statements;
+        accountHistoryTypes: [],
+        username: widget.username,
+        fromBloc: 0)); // statements;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: dtubeSubAppBar(false),
-      body: Container(
-        child: BlocBuilder<AccountHistoryBloc, AccountHistoryState>(
-          builder: (context, state) {
-            if (state is AccountHistoryInitialState) {
-              return buildLoading();
-            } else if (state is AccountHistoryLoadingState) {
-              return buildLoading();
-            } else if (state is AccountHistoryLoadedState) {
-              return buildHistoryList(state.historyItems, state.username);
-            } else if (state is AccountHistoryErrorState) {
-              return buildErrorUi(state.message);
-            } else {
-              return buildErrorUi('test');
-            }
-          },
-        ),
-      ),
-    );
+        appBar: dtubeSubAppBar(false, "history", context),
+        body:
+            // Container(
+            //   child: BlocBuilder<AccountHistoryBloc, AccountHistoryState>(
+            //     builder: (context, state) {
+            //       if (state is AccountHistoryInitialState) {
+            //         return buildLoading();
+            //       } else if (state is AccountHistoryLoadingState) {
+            //         return buildLoading();
+            //       } else if (state is AccountHistoryLoadedState) {
+            //         return buildHistoryList(state.historyItems, state.username);
+            //       } else if (state is AccountHistoryErrorState) {
+            //         return buildErrorUi(state.message);
+            //       } else {
+            //         return buildErrorUi('test');
+            //       }
+            //     },
+            //   ),
+            // ),
+
+            Container(
+          height: MediaQuery.of(context).size.height - 150,
+          // color: globalAlmostBlack,
+
+          child: BlocConsumer<AccountHistoryBloc, AccountHistoryState>(
+            listener: (context, state) {
+              if (state is AccountHistoryErrorState) {
+                BlocProvider.of<AccountHistoryBloc>(context).isFetching = false;
+              }
+              return;
+            },
+            builder: (context, state) {
+              if (state is AccountHistoryInitialState ||
+                  state is AccountHistoryLoadingState &&
+                      _historyItems.isEmpty) {
+                return buildLoading();
+              } else if (state is AccountHistoryLoadedState) {
+                _historyItems.addAll(state.historyItems);
+                BlocProvider.of<AccountHistoryBloc>(context).isFetching = false;
+              } else if (state is AccountHistoryErrorState) {
+                return buildErrorUi(state.message);
+              }
+              return buildHistoryList(
+                _historyItems,
+                widget.username,
+              );
+            },
+          ),
+        ));
   }
 
   Widget buildLoading() {
     return Center(
-      child: CircularProgressIndicator(),
+      child: DTubeLogoPulse(),
     );
   }
 
@@ -102,6 +136,31 @@ class _HistoryState extends State<History> {
       List<AvalonAccountHistoryItem> history, String username) {
     return ListView.builder(
       itemCount: history.length,
+      controller: _scrollController
+        ..addListener(() {
+          if (_scrollController.offset >=
+                  _scrollController.position.maxScrollExtent &&
+              !BlocProvider.of<AccountHistoryBloc>(context).isFetching) {
+            BlocProvider.of<AccountHistoryBloc>(context)
+              ..isFetching = true
+              ..add(FetchAccountHistorysEvent(
+                  accountHistoryTypes: [],
+                  username: widget.username,
+                  fromBloc: history[history.length - 1].iId));
+          }
+
+          if (_scrollController.offset <=
+                  _scrollController.position.minScrollExtent &&
+              !BlocProvider.of<AccountHistoryBloc>(context).isFetching) {
+            history.clear();
+            BlocProvider.of<AccountHistoryBloc>(context)
+              ..isFetching = true
+              ..add(FetchAccountHistorysEvent(
+                  accountHistoryTypes: [],
+                  username: widget.username,
+                  fromBloc: 0));
+          }
+        }),
       itemBuilder: (ctx, pos) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
@@ -225,15 +284,46 @@ class ActivityItem extends StatelessWidget {
                     InkWell(
                       child: Container(
                         width: 20,
-                        child: [4, 5, 13, 17, 19].contains(txData.type)
+                        child: [4, 5, 13, 17, 19].contains(txData.type) // post
                             ? FaIcon(
                                 FontAwesomeIcons.play,
                                 size: 15,
                               )
-                            : SizedBox(width: 0),
+                            : ([1, 2, 7, 8].contains(txData.type) &&
+                                        txData.data.target != null &&
+                                        txData.data.target != username) ||
+                                    (txData.type == 3 &&
+                                        txData.data.receiver !=
+                                            username) // user
+                                ? FaIcon(
+                                    FontAwesomeIcons.user,
+                                    size: 15,
+                                  )
+                                : SizedBox(width: 0),
                       ),
                       onTap: () {
-                        // TODO: navigate to post
+                        if (txData.data.author != null &&
+                            txData.data.link != null) {
+                          navigateToPostDetailPage(context, txData.data.author!,
+                              txData.data.link!, "none");
+                        }
+                        if (txData.data.pa != null && txData.data.pp != null) {
+                          navigateToPostDetailPage(context, txData.data.pa!,
+                              txData.data.pp!, "none");
+                        }
+                        if (txData.data.target != null) {
+                          print(username);
+                          navigateToUserDetailPage(
+                            context,
+                            txData.data.target!,
+                          );
+                        }
+                        if (txData.data.receiver != null) {
+                          navigateToUserDetailPage(
+                            context,
+                            txData.data.receiver!,
+                          );
+                        }
                       },
                     ),
                   ],

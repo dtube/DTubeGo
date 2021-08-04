@@ -40,7 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: dtubeSubAppBar(true),
+      appBar: dtubeSubAppBar(true, "", context),
       body: Container(
         child: BlocBuilder<SettingsBloc, SettingsState>(
           builder: (context, state) {
