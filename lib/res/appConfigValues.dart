@@ -61,4 +61,6 @@ class AppConfig {
 
   static String hiveSignerBroadcastAddress =
       'https://hivesigner.com/api/broadcast';
+
+  static String signUpUrl = "https://signup.d.tube";
 }

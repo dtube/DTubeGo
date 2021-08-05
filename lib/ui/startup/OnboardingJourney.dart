@@ -1,3 +1,4 @@
+import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'dart:io';
 
 import 'package:better_player/better_player.dart';
@@ -41,14 +42,23 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
 
   final introKey = GlobalKey<IntroductionScreenState>();
 
-  void _onIntroEnd(context) {
+  void _onIntroEnd(context) async {
+    await sec.persistOpenedOnce();
+
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => LoginForm()),
+      MaterialPageRoute(
+        builder: (_) => BlocProvider<AuthBloc>(
+            create: (BuildContext context) =>
+                AuthBloc(repository: AuthRepositoryImpl()),
+            child: LoginForm()),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
     var pageDecoration = PageDecoration(
       titleTextStyle: Theme.of(context).textTheme.headline1!,
       bodyTextStyle: Theme.of(context).textTheme.bodyText1!,
@@ -69,8 +79,9 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
         alignment: Alignment.topRight,
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Center(child: DTubeLogo(size: 70)),
+            padding: const EdgeInsets.all(8.0),
+            child:
+                Align(alignment: Alignment.topLeft, child: DTubeLogo(size: 70)),
           ),
         ),
       ),
@@ -87,12 +98,22 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
       // ),
       pages: [
         PageViewModel(
+          title: "Intro page",
+          body: "This is the subtitle of the intro page to prepare for videos.",
+          image: Align(
+              alignment: Alignment.topCenter,
+              child: DTubeLogo(
+                size: 150,
+              )),
+          decoration: pageDecoration,
+          reverse: true,
+        ),
+        PageViewModel(
           title: "First page",
           body: "This is the subtitle of the first video.",
           image: Align(
-            alignment: Alignment.bottomRight,
-            child: OnboardingVideo(videoname: "firstpage.mp4"),
-          ),
+              alignment: Alignment.topCenter,
+              child: OnboardingVideo(videoname: "firstpage.mp4")),
           decoration: pageDecoration,
           reverse: true,
         ),
@@ -173,23 +194,32 @@ class OnboardingVideo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-      future: getFileUrl(videoname),
-      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-        if (snapshot.data != null) {
-          //return BetterPlayer.file(snapshot.data!);
-          return BP(
-              videoUrl: snapshot.data!,
-              looping: false,
-              autoplay: true,
-              localFile: true,
-              controls: false,
-              usedAsPreview: false,
-              allowFullscreen: true);
-        } else {
-          return const SizedBox();
-        }
-      },
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
+    return Container(
+      //height: deviceHeight * 0.6,
+      width: deviceWidth * 0.8,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: FutureBuilder<String>(
+          future: getFileUrl(videoname),
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (snapshot.data != null) {
+              //return BetterPlayer.file(snapshot.data!);
+              return BP(
+                  videoUrl: snapshot.data!,
+                  looping: false,
+                  autoplay: true,
+                  localFile: true,
+                  controls: false,
+                  usedAsPreview: false,
+                  allowFullscreen: false);
+            } else {
+              return const SizedBox();
+            }
+          },
+        ),
+      ),
     );
   }
 }

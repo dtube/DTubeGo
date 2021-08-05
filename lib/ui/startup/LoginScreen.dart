@@ -1,4 +1,5 @@
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
+import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:dtube_togo/style/OpenableHyperlink.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 
@@ -103,16 +104,22 @@ class _LoginFormState extends State<LoginForm> {
                             ),
                           )
                         : SizedBox(height: 16),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            _loginBloc.add(SignInWithCredentialsEvent(
-                                usernameController.value.text,
-                                privateKeyController.value.text));
-                          },
-                          child: Text("Sign in")),
-                    )
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                launch(AppConfig.signUpUrl);
+                              },
+                              child: Text("Register")),
+                          ElevatedButton(
+                              onPressed: () {
+                                _loginBloc.add(SignInWithCredentialsEvent(
+                                    usernameController.value.text,
+                                    privateKeyController.value.text));
+                              },
+                              child: Text("Sign in")),
+                        ])
                   ],
                 ),
               ),
