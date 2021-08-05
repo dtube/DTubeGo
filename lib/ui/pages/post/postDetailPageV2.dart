@@ -9,7 +9,7 @@ import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:dtube_togo/ui/NavigationContainer.dart';
+import 'package:dtube_togo/ui/MainContainer/NavigationContainer.dart';
 
 import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/pages/post/players/BetterPlayer.dart';

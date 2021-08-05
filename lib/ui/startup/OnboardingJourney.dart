@@ -20,8 +20,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OnboardingJourney extends StatefulWidget {
-  String? message;
-  OnboardingJourney({Key? key, this.message}) : super(key: key);
+  bool loggedIn;
+  OnboardingJourney({Key? key, required this.loggedIn}) : super(key: key);
 
   @override
   _OnboardingJourneyState createState() => _OnboardingJourneyState();
@@ -42,17 +42,21 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
 
   final introKey = GlobalKey<IntroductionScreenState>();
 
-  void _onIntroEnd(context) async {
-    await sec.persistOpenedOnce();
+  void _onIntroEnd(context, bool loggedIn) async {
+    if (!loggedIn) {
+      await sec.persistOpenedOnce();
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => BlocProvider<AuthBloc>(
-            create: (BuildContext context) =>
-                AuthBloc(repository: AuthRepositoryImpl()),
-            child: LoginForm()),
-      ),
-    );
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => BlocProvider<AuthBloc>(
+              create: (BuildContext context) =>
+                  AuthBloc(repository: AuthRepositoryImpl()),
+              child: LoginForm()),
+        ),
+      );
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -139,7 +143,7 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
           reverse: true,
         ),
       ],
-      onDone: () => _onIntroEnd(context),
+      onDone: () => _onIntroEnd(context, widget.loggedIn),
       //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
       showSkipButton: true,
       skipFlex: 0,

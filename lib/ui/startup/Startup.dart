@@ -4,7 +4,7 @@ import 'package:dtube_togo/ui/startup/OnboardingJourney.dart';
 
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 
-import 'package:dtube_togo/ui/NavigationContainer.dart';
+import 'package:dtube_togo/ui/MainContainer/NavigationContainer.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
@@ -57,7 +57,7 @@ class _StartUpState extends State<StartUp> {
 
         if (state is NeverUsedTheAppBeforeState) {
           if (ActivatedOnboardingJourney) {
-            return OnboardingJourney();
+            return OnboardingJourney(loggedIn: false);
           } else {
             return LoginForm();
           }
