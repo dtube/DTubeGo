@@ -1,3 +1,5 @@
+import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+
 import 'package:dtube_togo/ui/startup/OnboardingJourney.dart';
 
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
@@ -10,6 +12,8 @@ import 'package:dtube_togo/ui/startup/LoginScreen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+bool ActivatedOnboardingJourney = false;
 
 class StartUp extends StatefulWidget {
   StartUp({Key? key}) : super(key: key);
@@ -52,7 +56,11 @@ class _StartUpState extends State<StartUp> {
         }
 
         if (state is NeverUsedTheAppBeforeState) {
-          return OnboardingJourney();
+          if (ActivatedOnboardingJourney) {
+            return OnboardingJourney();
+          } else {
+            return LoginForm();
+          }
         }
 
         return Scaffold(
