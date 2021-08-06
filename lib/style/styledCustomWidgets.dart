@@ -1,7 +1,9 @@
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-AppBar dtubeSubAppBar(bool showLogo, String title, BuildContext context) {
+AppBar dtubeSubAppBar(
+    bool showLogo, String title, BuildContext context, List<Widget>? actions) {
   return AppBar(
     centerTitle: true,
     title: showLogo
@@ -12,6 +14,7 @@ AppBar dtubeSubAppBar(bool showLogo, String title, BuildContext context) {
             title,
             style: Theme.of(context).textTheme.headline2,
           ),
+    actions: actions,
   );
 }
 

@@ -15,7 +15,6 @@ import 'package:dtube_togo/ui/MainContainer/MenuButton.dart';
 import 'package:dtube_togo/ui/pages/feeds/FeedList.dart';
 
 import 'package:dtube_togo/ui/pages/notifications/Notifications.dart';
-import 'package:dtube_togo/ui/pages/settings/Settings.dart';
 import 'package:dtube_togo/ui/pages/upload/uploaderTabContainer.dart';
 import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/pages/wallet/WalletTabContainer.dart';

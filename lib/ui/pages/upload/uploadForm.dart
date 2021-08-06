@@ -70,7 +70,7 @@ class _UploadFormState extends State<UploadForm> {
     stateUploadData.uploaded = true;
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return PostDetailPage(
-        author: _username!,
+        author: _username,
         link: stateUploadData.link,
         recentlyUploaded: true,
         directFocus: "noAutoplay",
@@ -222,6 +222,18 @@ class _UploadFormState extends State<UploadForm> {
               setState(() {
                 stateUploadData.vpPercent = double.parse(
                     stateSettings.settings[settingKey_defaultVotingWeight]!);
+                if (_titleController.text.isEmpty) {
+                  _titleController.text =
+                      stateSettings.settings[settingKey_templateTitle]!;
+                }
+                if (_descController.text.isEmpty) {
+                  _descController.text =
+                      stateSettings.settings[settingKey_templateBody]!;
+                }
+                if (_tagController.text.isEmpty) {
+                  _tagController.text =
+                      stateSettings.settings[settingKey_templateTag]!;
+                }
               });
             }
           },

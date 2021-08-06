@@ -22,7 +22,7 @@ class RewardsBloc extends Bloc<RewardsEvent, RewardsState> {
       yield RewardsLoadingState();
       try {
         List<Reward> rewardList = await repository.getRewards(
-            _avalonApiNode, _applicationUser!, event.rewardState);
+            _avalonApiNode, _applicationUser, event.rewardState);
 
         yield RewardsLoadedState(rewardList: rewardList);
       } catch (e) {

@@ -24,7 +24,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       try {
         List<AvalonNotification> notifications =
             await repository.getNotifications(
-                _avalonApiNode, event.notificationTypes, _applicationUser!);
+                _avalonApiNode, event.notificationTypes, _applicationUser);
 
         yield NotificationLoadedState(
             notifications: notifications, username: "you");

@@ -26,13 +26,14 @@ class _WalletMainPageState extends State<WalletMainPage>
   @override
   void initState() {
     _tabController = new TabController(length: 2, vsync: this);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: dtubeSubAppBar(true, "", context),
+      appBar: dtubeSubAppBar(true, "", context, null),
       resizeToAvoidBottomInset: true,
       body: Column(
         children: [

@@ -22,7 +22,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       yield PostLoadingState();
       try {
         Post post = await repository.getPost(
-            _avalonApiNode, event.author, event.link, _applicationUser!);
+            _avalonApiNode, event.author, event.link, _applicationUser);
 
         yield PostLoadedState(post: post);
       } catch (e) {

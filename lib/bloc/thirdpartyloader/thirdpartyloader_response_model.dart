@@ -16,7 +16,7 @@ class ApiResultModel {
   Future<Map<String, dynamic>> toJson() async {
     Map<String, dynamic> data = new Map<String, dynamic>();
     String? _username = await sec.getUsername();
-    data = this.metadata.toJson(_username!);
+    data = this.metadata.toJson(_username);
 
     return data;
   }

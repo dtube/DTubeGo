@@ -18,6 +18,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       yield SettingsLoadingState();
       try {
         String? username = await sec.getUsername();
+
         Map<String, String> newSettings = {
           sec.settingKey_defaultVotingWeight: await sec.getDefaultVote(),
           sec.settingKey_defaultVotingWeightComments:
@@ -27,7 +28,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               await sec.getDefaultVoteTipComments(),
           sec.settingKey_showHidden: await sec.getShowHidden(),
           sec.settingKey_showNSFW: await sec.getNSFW(),
-          sec.authKey_usernameKey: username!
+          sec.authKey_usernameKey: username,
+          sec.settingKey_templateTitle: await sec.getTemplateTitle(),
+          sec.settingKey_templateBody: await sec.getTemplateBody(),
+          sec.settingKey_templateTag: await sec.getTemplateTag(),
+          sec.settingKey_hiveSignerUsername: await sec.getHiveSignerUsername()
         };
         yield SettingsLoadedState(settings: newSettings);
       } catch (e) {
@@ -37,13 +42,21 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     if (event is PushSettingsEvent) {
       yield SettingsSavingState();
       try {
-        await sec.persistSettings(
-            event.newSettings[sec.settingKey_defaultVotingWeight]!,
-            event.newSettings[sec.settingKey_defaultVotingWeightComments]!,
-            event.newSettings[sec.settingKey_defaultVotingTip]!,
-            event.newSettings[sec.settingKey_defaultVotingTipComments]!,
-            event.newSettings[sec.settingKey_showHidden]!,
-            event.newSettings[sec.settingKey_showNSFW]!);
+        await sec.persistGeneralSettings(
+          event.newSettings[sec.settingKey_showHidden]!,
+          event.newSettings[sec.settingKey_showNSFW]!,
+        );
+        await sec.persistAvalonSettings(
+          event.newSettings[sec.settingKey_defaultVotingWeight]!,
+          event.newSettings[sec.settingKey_defaultVotingWeightComments]!,
+          event.newSettings[sec.settingKey_defaultVotingTip]!,
+          event.newSettings[sec.settingKey_defaultVotingTipComments]!,
+        );
+        await sec.persistTemplateSettings(
+          event.newSettings[sec.settingKey_templateTitle]!,
+          event.newSettings[sec.settingKey_templateBody]!,
+          event.newSettings[sec.settingKey_templateTag]!,
+        );
 
         yield SettingsSavedState(settings: event.newSettings);
       } catch (e) {

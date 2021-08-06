@@ -90,7 +90,7 @@ class _WizardIPFSState extends State<WizardIPFS> {
     _uploadData.uploaded = true;
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return PostDetailPage(
-        author: _username!,
+        author: _username,
         link: _uploadData.link,
         recentlyUploaded: true,
         directFocus: "none",

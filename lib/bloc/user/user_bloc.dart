@@ -24,7 +24,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       yield UserLoadingState();
       try {
         User _user = await repository.getAccountData(
-            _avalonApiNode, event.username, _applicationUser!);
+            _avalonApiNode, event.username, _applicationUser);
 
         bool _verified =
             await repository.getAccountVerification(event.username);
@@ -38,7 +38,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       yield UserLoadingState();
       try {
         User user = await repository.getAccountData(
-            _avalonApiNode, _applicationUser!, _applicationUser);
+            _avalonApiNode, _applicationUser, _applicationUser);
         bool _verified =
             await repository.getAccountVerification(_applicationUser);
 
@@ -52,7 +52,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       yield UserDTCVPLoadingState();
       try {
         Map<String, int> vtBalance = await repository.getVP(
-            _avalonApiNode, _applicationUser!, _applicationUser);
+            _avalonApiNode, _applicationUser, _applicationUser);
         int dtcBalance = await repository.getDTC(
             _avalonApiNode, _applicationUser, _applicationUser);
 

@@ -27,13 +27,13 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           case 'MyFeed':
             {
               feed = await repository.getMyFeed(_avalonApiNode,
-                  _applicationUser!, event.fromAuthor, event.fromLink);
+                  _applicationUser, event.fromAuthor, event.fromLink);
             }
             break;
           case 'HotFeed':
             {
               feed = await repository.getHotFeed(_avalonApiNode,
-                  event.fromAuthor, event.fromLink, _applicationUser!);
+                  event.fromAuthor, event.fromLink, _applicationUser);
             }
             break;
           case 'TrendingFeed':
@@ -42,7 +42,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
                   _avalonApiNode,
                   event.fromAuthor,
                   event.fromLink,
-                  _applicationUser!); // statements;
+                  _applicationUser); // statements;
             }
             break;
           case 'NewFeed':
@@ -51,7 +51,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
                   _avalonApiNode,
                   event.fromAuthor,
                   event.fromLink,
-                  _applicationUser!); // statements;
+                  _applicationUser); // statements;
             }
             break;
         }
@@ -65,12 +65,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     if (event is FetchUserFeedEvent) {
       yield FeedLoadingState();
       try {
-        List<FeedItem> feed = await repository.getUserFeed(
-            _avalonApiNode,
-            event.username,
-            event.fromAuthor,
-            event.fromLink,
-            _applicationUser!);
+        List<FeedItem> feed = await repository.getUserFeed(_avalonApiNode,
+            event.username, event.fromAuthor, event.fromLink, _applicationUser);
         yield FeedLoadedState(feed: feed);
       } catch (e) {
         print(e.toString());

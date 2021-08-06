@@ -15,7 +15,7 @@ class ApiResultModel {
     String? _username = await sec.getUsername();
     Map<String, dynamic> data = new Map<String, dynamic>();
 
-    data = this.user.toJson(_username!);
+    data = this.user.toJson(_username);
 
     return data;
   }

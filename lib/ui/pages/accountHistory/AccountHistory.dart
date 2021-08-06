@@ -63,7 +63,7 @@ class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: dtubeSubAppBar(false, "history", context),
+        appBar: dtubeSubAppBar(false, "history", context, null),
         body:
             // Container(
             //   child: BlocBuilder<AccountHistoryBloc, AccountHistoryState>(
