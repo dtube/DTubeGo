@@ -12,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dtube_togo/ui/MainContainer/NavigationContainer.dart';
 
 import 'package:dtube_togo/ui/pages/user/User.dart';
-import 'package:dtube_togo/ui/pages/post/players/BetterPlayer.dart';
+import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/CollapsedDescription.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/Comments.dart';

@@ -25,5 +25,6 @@ Future<String> discoverAPINode() async {
   }
   _sortedApiNodesByResponseTime = SplayTreeMap.from(_nodeResponses,
       (key1, key2) => _nodeResponses[key1]!.compareTo(_nodeResponses[key2]!));
+  print("using " + _sortedApiNodesByResponseTime.entries.toList()[0].key);
   return _sortedApiNodesByResponseTime.entries.toList()[0].key;
 }

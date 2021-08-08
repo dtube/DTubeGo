@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:path/path.dart' as p;
 import 'package:bloc/bloc.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_event.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_state.dart';
@@ -21,14 +21,22 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
     String _uploadEndpoint = "";
     String _thumbnailUploadToken = "";
     String _videoUploadToken = "";
+    File _newFile;
     late Map _uploadStatusResponse;
     late Map _thumbUploadStatusResponse;
     if (event is UploadVideo) {
       yield IPFSUploadVideoPreProcessingState();
-      File _newFile = await repository.compressVideo(event.videoPath);
+
+      if (!(p.extension(event.videoPath) == ".mov" ||
+          p.extension(event.videoPath) == ".mp4")) {
+        _newFile = await repository.compressVideo(event.videoPath);
+      } else {
+        _newFile = File(event.videoPath);
+      }
+
       String _newThumbnail =
           await repository.createThumbnailFromVideo(event.videoPath);
-      print(_newFile.path);
+
       yield IPFSUploadVideoPreProcessedState(compressedFile: _newFile);
       try {
         _uploadEndpoint = await repository.getUploadEndpoint();

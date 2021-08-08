@@ -14,8 +14,8 @@ import 'package:disk_space/disk_space.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/ui/pages/post/players/BetterPlayer.dart';
-import 'package:dtube_togo/ui/pages/post/players/YTplayerIframe.dart';
+import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
+import 'package:dtube_togo/ui/widgets/players/YTplayerIframe.dart';
 
 import 'package:dtube_togo/utils/secureStorage.dart';
 import 'package:flutter/material.dart';

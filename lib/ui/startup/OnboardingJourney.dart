@@ -2,7 +2,7 @@ import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'dart:io';
 
 import 'package:better_player/better_player.dart';
-import 'package:dtube_togo/ui/pages/post/players/BetterPlayer.dart';
+import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
 import 'package:dtube_togo/utils/GetAppDocDirectory.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';

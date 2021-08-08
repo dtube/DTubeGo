@@ -1,12 +1,12 @@
 import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/ui/pages/post/players/BetterPlayer.dart';
+import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
 
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/ui/pages/post/players/YTplayerIframe.dart';
+import 'package:dtube_togo/ui/widgets/players/YTplayerIframe.dart';
 import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
 import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';

@@ -306,7 +306,7 @@ class _UserState extends State<UserPage> {
         onOpen: () => print('OPENING DIAL'),
         onClose: () => print('DIAL CLOSED'),
         tooltip: 'Speed Dial',
-        heroTag: 'speed-dial-hero-tag',
+        heroTag: 'heroTagUser',
         backgroundColor: globalBlue,
         foregroundColor: globalAlmostWhite,
         elevation: 8.0,

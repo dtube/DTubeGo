@@ -43,23 +43,28 @@ class _BPState extends State<BP> {
             ? BetterPlayerDataSourceType.network
             : BetterPlayerDataSourceType.file,
         widget.videoUrl,
+        bufferingConfiguration: BetterPlayerBufferingConfiguration(
+          minBufferMs: Duration(seconds: 10).inMilliseconds,
+          maxBufferMs: Duration(seconds: 60).inMilliseconds,
+        ),
       );
       double aspectRatio = _videocontroller.value.size.width /
           _videocontroller.value.size.height;
 
       _betterPlayerController = BetterPlayerController(
-          BetterPlayerConfiguration(
-            controlsConfiguration: BetterPlayerControlsConfiguration(
-                //showControls: widget.controls,
-                enablePlayPause: true,
-                enableSkips: false,
-                showControlsOnInitialize: false,
-                enableFullscreen: widget.allowFullscreen),
-            autoPlay: widget.autoplay,
-            autoDispose: true,
-            aspectRatio: aspectRatio,
-          ),
-          betterPlayerDataSource: betterPlayerDataSource);
+        BetterPlayerConfiguration(
+          controlsConfiguration: BetterPlayerControlsConfiguration(
+              //showControls: widget.controls,
+              enablePlayPause: true,
+              enableSkips: false,
+              showControlsOnInitialize: false,
+              enableFullscreen: widget.allowFullscreen),
+          autoPlay: widget.autoplay,
+          autoDispose: true,
+          aspectRatio: aspectRatio,
+        ),
+        betterPlayerDataSource: betterPlayerDataSource,
+      );
     });
   }
 

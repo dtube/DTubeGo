@@ -1,3 +1,4 @@
+import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_togo/ui/startup/OnboardingJourney.dart';
@@ -35,7 +36,15 @@ class _StartUpState extends State<StartUp> {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        if (state == SignedInState()) {
+        if (AppConfig.faqStartup) {
+          if (ActivatedOnboardingJourney) {
+            if (state is NeverUsedTheAppBeforeState) {
+              return OnboardingJourney(loggedIn: false);
+            }
+          }
+        }
+
+        if (state is SignedInState) {
           return MultiBlocProvider(providers: [
             BlocProvider<UserBloc>(create: (context) {
               return UserBloc(repository: UserRepositoryImpl());
@@ -53,14 +62,6 @@ class _StartUpState extends State<StartUp> {
         if (state is SignOutCompleteState ||
             state is NoSignInInformationFoundState) {
           return LoginForm();
-        }
-
-        if (state is NeverUsedTheAppBeforeState) {
-          if (ActivatedOnboardingJourney) {
-            return OnboardingJourney(loggedIn: false);
-          } else {
-            return LoginForm();
-          }
         }
 
         return Scaffold(

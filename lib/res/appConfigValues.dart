@@ -63,4 +63,6 @@ class AppConfig {
       'https://hivesigner.com/api/broadcast';
 
   static String signUpUrl = "https://signup.d.tube";
+
+  static bool faqStartup = false;
 }

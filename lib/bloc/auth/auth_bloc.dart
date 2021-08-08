@@ -1,3 +1,4 @@
+import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'package:dtube_togo/bloc/auth/auth_event.dart';
@@ -31,11 +32,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield SignInLoadingState();
       _avalonApiNode = await discoverAPINode();
       sec.persistNode(_avalonApiNode);
-      if (!_openedOnce) {
+      if (!_openedOnce && AppConfig.faqStartup) {
         yield NeverUsedTheAppBeforeState();
       } else {
         try {
-          if (_applicationUser != null && _privKey != null) {
+          if (_applicationUser != "" && _privKey != "") {
             bool keyIsValid = await repository.signInWithCredentials(
                 _avalonApiNode, _applicationUser, _privKey);
 
