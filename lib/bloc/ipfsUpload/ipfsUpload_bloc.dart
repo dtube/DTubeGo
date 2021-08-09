@@ -27,12 +27,13 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
     if (event is UploadVideo) {
       yield IPFSUploadVideoPreProcessingState();
 
-      if (!(p.extension(event.videoPath) == ".mov" ||
-          p.extension(event.videoPath) == ".mp4")) {
-        _newFile = await repository.compressVideo(event.videoPath);
-      } else {
-        _newFile = File(event.videoPath);
-      }
+      // if (!(p.extension(event.videoPath) == ".mov" ||
+      //     p.extension(event.videoPath) == ".mp4")) {
+
+      _newFile = await repository.compressVideo(event.videoPath);
+      // } else {
+      //   _newFile = File(event.videoPath);
+      // }
 
       String _newThumbnail =
           await repository.createThumbnailFromVideo(event.videoPath);

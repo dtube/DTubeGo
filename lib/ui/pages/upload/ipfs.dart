@@ -1,5 +1,6 @@
 import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc.dart';
 import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
+import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
 import 'package:dtube_togo/utils/randomPermlink.dart';
 
@@ -14,6 +15,7 @@ import 'package:dtube_togo/ui/pages/upload/uploadForm.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class WizardIPFS extends StatefulWidget {
   const WizardIPFS({
@@ -125,6 +127,41 @@ class _WizardIPFSState extends State<WizardIPFS> {
         }
       }, child: BlocBuilder<IPFSUploadBloc, IPFSUploadState>(
               builder: (context, state) {
+        if (state is IPFSUploadErrorState) {
+          return Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FaIcon(FontAwesomeIcons.exclamationTriangle,
+                    color: globalRed, size: 50),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Oops sorry an error has occured!",
+                  style: Theme.of(context).textTheme.headline3,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                    "Please select & forward this error details to the dtube team: ",
+                    style: Theme.of(context).textTheme.headline4),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SelectableText(state.message,
+                    showCursor: true,
+                    cursorColor: globalRed,
+                    //maxLines: 2,
+
+                    style: Theme.of(context).textTheme.bodyText1),
+              ),
+            ],
+          ));
+        }
         if (state is IPFSUploadVideoPreProcessingState &&
             _uploadData.uploaded == false) {
           return Center(

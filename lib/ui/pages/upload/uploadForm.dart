@@ -566,7 +566,9 @@ class _UploadFormState extends State<UploadForm> {
               width: deviceWidth * 0.6,
               child: Slider(
                 min: 0.0,
-                max: (stateUploadData.dtcBalance + 0.0) / 100,
+                max: (stateUploadData.dtcBalance + 0.0) / 100 < 100.0
+                    ? (stateUploadData.dtcBalance + 0.0) / 100
+                    : 100.0,
                 value: stateUploadData.burnDtc,
 
                 label: stateUploadData.burnDtc.floor().toString(),
