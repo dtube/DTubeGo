@@ -26,6 +26,7 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
   late SettingsBloc _settingsBloc;
   late UserBloc _userBloc;
   late HivesignerBloc _hivesignerBloc;
+  late ThirdPartyMetadataBloc _thirdPartyBloc;
 
   UploadData _uploadData = UploadData(
       link: "",
@@ -62,7 +63,7 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
     super.initState();
     _settingsBloc = BlocProvider.of<SettingsBloc>(context);
     _settingsBloc.add(FetchSettingsEvent());
-
+    _thirdPartyBloc = BlocProvider.of<ThirdPartyMetadataBloc>(context);
     _userBloc = BlocProvider.of<UserBloc>(context);
     _userBloc.add(FetchDTCVPEvent());
     _hivesignerBloc = BlocProvider.of<HivesignerBloc>(context);
@@ -85,14 +86,12 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
       _uploadData = ud;
       BlocProvider.of<TransactionBloc>(context)
           .add(SendCommentEvent(_uploadData));
+      Navigator.of(context).pop();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    ThirdPartyMetadataBloc _thirdPartyBloc =
-        BlocProvider.of<ThirdPartyMetadataBloc>(context);
-
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:isolate';
 
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
@@ -12,6 +13,7 @@ import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/MainContainer/BalanceOverview.dart';
 import 'package:dtube_togo/ui/MainContainer/MenuButton.dart';
+import 'package:dtube_togo/ui/MainContainer/UploadButton.dart';
 import 'package:dtube_togo/ui/pages/feeds/FeedList.dart';
 
 import 'package:dtube_togo/ui/pages/notifications/Notifications.dart';
@@ -184,25 +186,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
                       width: 40,
                       child: Align(
                         alignment: Alignment.topLeft,
-                        child: CircleAvatar(
-                          backgroundColor: globalRed,
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return UploaderMainPage();
-                                  },
-                                ),
-                              );
-                            },
-                            child: new FaIcon(
-                              FontAwesomeIcons.cloudUploadAlt,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                        child: UploaderButton(),
                       ),
                     ),
                     GestureDetector(
@@ -268,44 +252,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
                             ),
                           ),
                         ),
-
-                        // CircleAvatar(
-                        //   backgroundColor: globalBlue,
-                        //   child: GestureDetector(
-                        //     onTap: () {
-                        //       Navigator.push(context,
-                        //           MaterialPageRoute(builder: (context) {
-                        //         return BlocProvider<NotificationBloc>(
-                        //             create: (context) => NotificationBloc(
-                        //                 repository:
-                        //                     NotificationRepositoryImpl()),
-                        //             child: WalletMainPage());
-                        //       }));
-                        //     },
-                        //     child: new FaIcon(
-                        //       FontAwesomeIcons.wallet,
-                        //       color: Colors.white,
-                        //     ),
-                        //   ),
-                        // ),
-
-                        // CircleAvatar(
-                        //   backgroundColor: globalBlue,
-                        //   child: GestureDetector(
-                        //     onTap: () {
-                        //       Navigator.push(context,
-                        //           MaterialPageRoute(builder: (context) {
-                        //         return BlocProvider<SettingsBloc>(
-                        //             create: (context) => SettingsBloc(),
-                        //             child: SettingsPage());
-                        //       }));
-                        //     },
-                        //     child: new FaIcon(
-                        //       FontAwesomeIcons.cog,
-                        //       color: Colors.white,
-                        //     ),
-                        //   ),
-                        // ),
                         buildMainMenuSpeedDial(context)
                       ],
                     ),

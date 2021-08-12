@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
+import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_togo/utils/randomPermlink.dart';
 import 'package:path/path.dart' as p;
 import 'package:bloc/bloc.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_event.dart';
@@ -24,7 +27,9 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
     File _newFile;
     late Map _uploadStatusResponse;
     late Map _thumbUploadStatusResponse;
+    late UploadData _uploadData;
     if (event is UploadVideo) {
+      _uploadData = event.uploadData;
       yield IPFSUploadVideoPreProcessingState();
 
       // if (!(p.extension(event.videoPath) == ".mov" ||
@@ -59,6 +64,16 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
             } while (_uploadStatusResponse["finished"] == false);
             yield IPFSUploadVideoPostProcessedState(
                 processingResponse: _uploadStatusResponse);
+            var statusInfo = _uploadStatusResponse;
+
+            _uploadData.videoSourceHash =
+                statusInfo["ipfsAddSourceVideo"]["hash"];
+            _uploadData.video240pHash =
+                statusInfo["encodedVideos"][0]["ipfsAddEncodeVideo"]["hash"];
+            _uploadData.video480pHash =
+                statusInfo["encodedVideos"][1]["ipfsAddEncodeVideo"]["hash"];
+            _uploadData.videoSpriteHash =
+                statusInfo["ipfsAddSourceVideo"]["hash"];
             try {
               _thumbnailUploadToken = await repository.uploadThumbnail(
                   event.thumbnailPath, _newThumbnail);
@@ -74,6 +89,25 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
                       "Success");
               yield IPFSUploadThumbnailUploadedState(
                   uploadResponse: _thumbUploadStatusResponse);
+              // just for testing: background uploader
+              var statusInfo = _thumbUploadStatusResponse;
+
+              _uploadData.thumbnail210Hash =
+                  statusInfo["ipfsAddSource"]["hash"];
+              _uploadData.thumbnail640Hash =
+                  statusInfo["ipfsAddOverlay"]["hash"];
+              _uploadData.thumbnailLocation =
+                  statusInfo["ipfsAddOverlay"]["hash"];
+
+              var voteValue =
+                  (_uploadData.vpBalance * (_uploadData.vpPercent / 100))
+                      .floor();
+              _uploadData.link = randomPermlink(11);
+
+              TransactionBloc txBloc =
+                  TransactionBloc(repository: TransactionRepositoryImpl());
+
+              txBloc.add(SendCommentEvent(_uploadData));
             } catch (e) {
               print(e.toString());
               yield IPFSUploadErrorState(message: e.toString());

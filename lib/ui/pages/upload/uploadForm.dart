@@ -280,6 +280,7 @@ class _UploadFormState extends State<UploadForm> {
   Widget videoPreview() {
     if (!stateUploadData.localVideoFile) {
       _tagFocus.requestFocus();
+      checkIfFormIsFilled();
       return YTPlayerIFrame(
         videoUrl: stateUploadData.videoLocation,
         autoplay: false,
