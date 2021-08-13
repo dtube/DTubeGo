@@ -51,7 +51,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                   .replaceAll('##TIPAMOUNT', event.tx.data.tip.toString())
                   .replaceAll('##USERNAME', event.tx.data.target.toString()),
               txType: event.tx.type,
-              isParentContent: event.tx.data.pa == "" && event.tx.type == 4);
+              isParentContent:
+                  (event.tx.data.pa == "" || event.tx.data.pa == null) &&
+                      (event.tx.type == 4 || event.tx.type == 13));
         } else {
           yield TransactionError(message: result);
         }
@@ -181,8 +183,13 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               block: int.parse(result),
               successMessage: txTypeFriendlyDescriptionActions[_tx.type]!,
               txType: _tx.type,
-              isParentContent:
-                  (_tx.data.pa == "" || _tx.data.pa == null) && _tx.type == 4);
+              isParentContent: (_tx.data.pa == "" || _tx.data.pa == null) &&
+                  (_tx.type == 4 || _tx.type == 13),
+              authorPerm: (_tx.data.pa == "" || _tx.data.pa == null) &&
+                      (_tx.type == 4 || _tx.type == 13) &&
+                      _tx.data.link != null
+                  ? _applicationUser + '/' + _tx.data.link!
+                  : null);
         } else {
           yield TransactionError(message: result);
         }

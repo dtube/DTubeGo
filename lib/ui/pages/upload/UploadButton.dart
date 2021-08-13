@@ -6,6 +6,7 @@ import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/ui/pages/upload/uploaderTabContainer.dart';
 import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
+import 'package:dtube_togo/utils/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -31,21 +32,31 @@ class _UploaderButtonState extends State<UploaderButton> {
             backgroundColor: Colors.green,
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      BlocProvider.of<TransactionBloc>(context)
-                          .add(SetInitState());
-
-                      return UploaderMainPage();
-                    },
-                  ),
-                );
+                if (state.authorPerm != null) {
+                  navigateToPostDetailPage(
+                      context,
+                      state.authorPerm!
+                          .substring(0, state.authorPerm!.indexOf('/')),
+                      state.authorPerm!
+                          .substring(state.authorPerm!.indexOf('/') + 1),
+                      "none");
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return UploaderMainPage();
+                      },
+                    ),
+                  );
+                }
               },
-              child: new FaIcon(
-                FontAwesomeIcons.play,
-                color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 4.0),
+                child: new FaIcon(
+                  FontAwesomeIcons.play,
+                  color: Colors.white,
+                ),
               ),
             ),
           );

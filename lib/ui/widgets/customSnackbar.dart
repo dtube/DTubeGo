@@ -1,6 +1,7 @@
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:another_flushbar/flushbar.dart';
+import 'package:dtube_togo/utils/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -36,7 +37,17 @@ Flushbar showCustomFlushbarOnSuccess(
   return Flushbar(
     margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
     borderRadius: BorderRadius.circular(8),
-    message: state.successMessage,
+    message:
+        state.isParentContent ? "new video is published" : state.successMessage,
+    onTap: (Flushbar fb) {
+      if (state.authorPerm != null) {
+        navigateToPostDetailPage(
+            context,
+            state.authorPerm!.substring(0, state.authorPerm!.indexOf('/')),
+            state.authorPerm!.substring(state.authorPerm!.indexOf('/') + 1),
+            "none");
+      }
+    },
     flushbarPosition: FlushbarPosition.TOP,
     flushbarStyle: FlushbarStyle.FLOATING,
     reverseAnimationCurve: Curves.decelerate,
