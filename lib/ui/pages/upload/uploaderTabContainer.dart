@@ -78,10 +78,6 @@ class _UploaderMainPageState extends State<UploaderMainPage>
                             repository: IPFSUploadRepositoryImpl()),
                       ),
                       BlocProvider(
-                        create: (context) => TransactionBloc(
-                            repository: TransactionRepositoryImpl()),
-                      ),
-                      BlocProvider(
                         create: (context) => HivesignerBloc(
                             repository: HivesignerRepositoryImpl()),
                       ),
@@ -100,10 +96,6 @@ class _UploaderMainPageState extends State<UploaderMainPage>
                       BlocProvider(
                         create: (context) => ThirdPartyMetadataBloc(
                             repository: ThirdPartyMetadataRepositoryImpl()),
-                      ),
-                      BlocProvider(
-                        create: (context) => TransactionBloc(
-                            repository: TransactionRepositoryImpl()),
                       ),
                       BlocProvider(
                         create: (context) => HivesignerBloc(

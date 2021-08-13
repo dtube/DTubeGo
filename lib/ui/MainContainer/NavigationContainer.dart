@@ -13,13 +13,14 @@ import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/MainContainer/BalanceOverview.dart';
 import 'package:dtube_togo/ui/MainContainer/MenuButton.dart';
-import 'package:dtube_togo/ui/MainContainer/UploadButton.dart';
+import 'package:dtube_togo/ui/pages/upload/UploadButton.dart';
 import 'package:dtube_togo/ui/pages/feeds/FeedList.dart';
 
 import 'package:dtube_togo/ui/pages/notifications/Notifications.dart';
 import 'package:dtube_togo/ui/pages/upload/uploaderTabContainer.dart';
 import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/pages/wallet/WalletTabContainer.dart';
+import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -111,17 +112,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
           paddingTop: topBarHeight,
         ),
       ),
-      MultiBlocProvider(
-        providers: [
-          BlocProvider<UserBloc>(
-            create: (BuildContext context) =>
-                UserBloc(repository: UserRepositoryImpl()),
-          ),
-          BlocProvider<TransactionBloc>(
-            create: (BuildContext context) =>
-                TransactionBloc(repository: TransactionRepositoryImpl()),
-          ),
-        ],
+      BlocProvider<UserBloc>(
+        create: (BuildContext context) =>
+            UserBloc(repository: UserRepositoryImpl()),
         child: UserPage(
           ownUserpage: true,
         ),
@@ -158,7 +151,18 @@ class _NavigationContainerState extends State<NavigationContainer> {
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
-
+    BlocListener<TransactionBloc, TransactionState>(
+      bloc: BlocProvider.of<TransactionBloc>(context),
+      listener: (context, state) {
+        if (state is TransactionSent) {
+          print("test test");
+          showCustomFlushbarOnSuccess(state, context);
+        }
+        if (state is TransactionError) {
+          showCustomFlushbarOnError(state, context);
+        }
+      },
+    );
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -262,45 +266,57 @@ class _NavigationContainerState extends State<NavigationContainer> {
           ),
         ),
       ),
-      body: PersistentTabView(
-        context,
-        controller: _controller,
-        screens: _buildScreens(),
-        items: _navBarsItems(),
-        confineInSafeArea: true,
-        backgroundColor: globalBGColor, // Default is Colors.white.
-        handleAndroidBackButtonPress: true, // Default is true.
-        resizeToAvoidBottomInset:
-            true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-        stateManagement: true, // Default is true.
-        hideNavigationBarWhenKeyboardShows:
-            true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-        decoration: NavBarDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          colorBehindNavBar: globalBGColor,
-        ),
-        popAllScreensOnTapOfSelectedTab: true,
-        popActionScreens: PopActionScreensType.all,
-        itemAnimationProperties: ItemAnimationProperties(
-          // Navigation Bar's items animation properties.
-          duration: Duration(milliseconds: 200),
-          curve: Curves.ease,
-        ),
-        screenTransitionAnimation: ScreenTransitionAnimation(
-          // Screen transition animation on change of selected tab.
-          animateTabTransition: true,
-          curve: Curves.easeOut,
-          duration: Duration(milliseconds: 200),
-        ),
-        // onItemSelected: (index) {
-        //   setState(() {
-        //     bottomSelectedIndex =
-        //         index; // NOTE: THIS IS CRITICAL!! Don't miss it!
-        //     _controller.index = index;
-        //   });
-        // },
+      body: BlocListener<TransactionBloc, TransactionState>(
+        bloc: BlocProvider.of<TransactionBloc>(context),
+        listener: (context, state) {
+          if (state is TransactionSent) {
+            print("test test");
+            showCustomFlushbarOnSuccess(state, context);
+          }
+          if (state is TransactionError) {
+            showCustomFlushbarOnError(state, context);
+          }
+        },
+        child: PersistentTabView(
+          context,
+          controller: _controller,
+          screens: _buildScreens(),
+          items: _navBarsItems(),
+          confineInSafeArea: true,
+          backgroundColor: globalBGColor, // Default is Colors.white.
+          handleAndroidBackButtonPress: true, // Default is true.
+          resizeToAvoidBottomInset:
+              true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+          stateManagement: true, // Default is true.
+          hideNavigationBarWhenKeyboardShows:
+              true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+          decoration: NavBarDecoration(
+            borderRadius: BorderRadius.circular(25.0),
+            colorBehindNavBar: globalBGColor,
+          ),
+          popAllScreensOnTapOfSelectedTab: true,
+          popActionScreens: PopActionScreensType.all,
+          itemAnimationProperties: ItemAnimationProperties(
+            // Navigation Bar's items animation properties.
+            duration: Duration(milliseconds: 200),
+            curve: Curves.ease,
+          ),
+          screenTransitionAnimation: ScreenTransitionAnimation(
+            // Screen transition animation on change of selected tab.
+            animateTabTransition: true,
+            curve: Curves.easeOut,
+            duration: Duration(milliseconds: 200),
+          ),
+          // onItemSelected: (index) {
+          //   setState(() {
+          //     bottomSelectedIndex =
+          //         index; // NOTE: THIS IS CRITICAL!! Don't miss it!
+          //     _controller.index = index;
+          //   });
+          // },
 
-        navBarStyle: NavBarStyle.style14,
+          navBarStyle: NavBarStyle.style14,
+        ),
       ),
     );
   }

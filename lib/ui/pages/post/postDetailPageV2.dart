@@ -93,9 +93,6 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       : AppBar(
                           toolbarHeight: 28,
                           automaticallyImplyLeading: true,
-
-                          // TODO: recently uploaded posts - back button should go to main navigator
-                          //https://stackoverflow.com/questions/50452710/catch-android-back-button-event-on-flutter
                         ),
               body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
                 if (state is PostLoadingState) {
@@ -308,28 +305,20 @@ class _PostDetailsState extends State<PostDetails> {
                               _defaultVoteWeightComments = double.parse(
                                   state.settings[
                                       settingKey_defaultVotingWeightComments]!);
-                              return
-                                  // BlocProvider(
-                                  //   create: (context) =>
-                                  //       PostBloc(repository: PostRepositoryImpl()),
-                                  //   child:
-                                  VotingButtons(
-                                      author: widget.post.author,
-                                      link: widget.post.link,
-                                      alreadyVoted: widget.post.alreadyVoted!,
-                                      alreadyVotedDirection:
-                                          widget.post.alreadyVotedDirection!,
-                                      upvotes: widget.post.upvotes,
-                                      downvotes: widget.post.downvotes,
-                                      defaultVotingWeight:
-                                          _defaultVoteWeightPosts,
-                                      defaultVotingTip: _defaultVoteTipPosts,
-                                      currentVT: _currentVT,
-                                      scale: 1,
-                                      isPost: true,
-                                      focusVote: widget.directFocus == "vote"
-                                      //),
-                                      );
+                              return VotingButtons(
+                                  author: widget.post.author,
+                                  link: widget.post.link,
+                                  alreadyVoted: widget.post.alreadyVoted!,
+                                  alreadyVotedDirection:
+                                      widget.post.alreadyVotedDirection!,
+                                  upvotes: widget.post.upvotes,
+                                  downvotes: widget.post.downvotes,
+                                  defaultVotingWeight: _defaultVoteWeightPosts,
+                                  defaultVotingTip: _defaultVoteTipPosts,
+                                  currentVT: _currentVT,
+                                  scale: 1,
+                                  isPost: true,
+                                  focusVote: widget.directFocus == "vote");
                             } else {
                               return SizedBox(height: 0);
                             }
@@ -355,20 +344,16 @@ class _PostDetailsState extends State<PostDetails> {
                             },
                           ),
                           SizedBox(width: 10),
-                          BlocProvider(
-                            create: (context) => TransactionBloc(
-                                repository: TransactionRepositoryImpl()),
-                            child: ReplyButton(
-                              icon: FaIcon(FontAwesomeIcons.comment),
-                              author: widget.post.author,
-                              link: widget.post.link,
-                              parentAuthor: widget.post.author,
-                              parentLink: widget.post.link,
-                              votingWeight: _defaultVoteWeightComments,
-                              scale: 1,
-                              focusOnNewComment:
-                                  widget.directFocus == "newcomment",
-                            ),
+                          ReplyButton(
+                            icon: FaIcon(FontAwesomeIcons.comment),
+                            author: widget.post.author,
+                            link: widget.post.link,
+                            parentAuthor: widget.post.author,
+                            parentLink: widget.post.link,
+                            votingWeight: _defaultVoteWeightComments,
+                            scale: 1,
+                            focusOnNewComment:
+                                widget.directFocus == "newcomment",
                           ),
                         ],
                       ),

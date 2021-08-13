@@ -7,7 +7,6 @@ class UploadVideo extends IPFSUploadEvent {
   UploadVideo(this.videoPath, this.thumbnailPath, this.uploadData);
   final String videoPath;
   final String thumbnailPath;
-  // just for testing: background uploader
   UploadData uploadData;
   @override
   List<Object> get props => List.empty();

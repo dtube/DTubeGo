@@ -28,8 +28,14 @@ class TransactionSigned extends TransactionState {
 class TransactionSent extends TransactionState {
   int block;
   String successMessage;
+  int txType;
+  bool isParentContent;
 
-  TransactionSent({required this.block, required this.successMessage});
+  TransactionSent(
+      {required this.block,
+      required this.successMessage,
+      required this.txType,
+      required this.isParentContent});
 
   @override
   List<Object> get props => [block];

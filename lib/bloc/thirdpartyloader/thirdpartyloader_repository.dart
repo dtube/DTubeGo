@@ -26,9 +26,9 @@ class ThirdPartyMetadataRepositoryImpl implements ThirdPartyMetadataRepository {
           duration: video.duration!,
           videoUrl: foreignUrl,
           votingWeight: double.parse(votingWeight),
-          oc: false, // TODO: include oc in settings
-          nsfw: false, // TODO: include nsfw in settings
-          unlist: false, // TODO: include unlist in settings
+          oc: false,
+          nsfw: false,
+          unlist: false,
           burnDTC: 0.0);
       yt.close();
       return _meta;

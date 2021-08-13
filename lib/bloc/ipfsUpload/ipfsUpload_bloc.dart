@@ -32,13 +32,7 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
       _uploadData = event.uploadData;
       yield IPFSUploadVideoPreProcessingState();
 
-      // if (!(p.extension(event.videoPath) == ".mov" ||
-      //     p.extension(event.videoPath) == ".mp4")) {
-
       _newFile = await repository.compressVideo(event.videoPath);
-      // } else {
-      //   _newFile = File(event.videoPath);
-      // }
 
       String _newThumbnail =
           await repository.createThumbnailFromVideo(event.videoPath);
@@ -89,7 +83,7 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
                       "Success");
               yield IPFSUploadThumbnailUploadedState(
                   uploadResponse: _thumbUploadStatusResponse);
-              // just for testing: background uploader
+
               var statusInfo = _thumbUploadStatusResponse;
 
               _uploadData.thumbnail210Hash =
@@ -99,9 +93,6 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
               _uploadData.thumbnailLocation =
                   statusInfo["ipfsAddOverlay"]["hash"];
 
-              var voteValue =
-                  (_uploadData.vpBalance * (_uploadData.vpPercent / 100))
-                      .floor();
               _uploadData.link = randomPermlink(11);
 
               TransactionBloc txBloc =
@@ -119,7 +110,7 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
         }
         // upload to ipfs
       } catch (e) {
-        print(e.toString());
+        print("error: " + e.toString());
         yield IPFSUploadErrorState(message: e.toString());
       }
     }

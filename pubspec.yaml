@@ -60,7 +60,7 @@ dependencies:
   rflutter_alert: ^2.0.2
   flutter_speed_dial: ^4.1.0
   persistent_bottom_nav_bar: ^4.0.2
-  another_flushbar: ^1.10.23
+  another_flushbar: ^1.10.24
   loadmore: ^2.0.1
   jiffy: ^4.1.0 # library to display time in a user friendly way
   # scroll_snap_list: ^0.8.1 # not needed for now (snapping lists like instagram explore page)

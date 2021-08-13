@@ -64,14 +64,15 @@ class _ReplyButtonState extends State<ReplyButton> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TransactionBloc, TransactionState>(
-        //bloc: _txBloc,
-        builder: (context, state) {
-      if (state is TransactionSent) {
-        print(widget.author + '/' + widget.link);
-        _postBloc.add(FetchPostEvent(widget.parentAuthor, widget.parentLink));
-      }
-      return Column(
+    return BlocListener<TransactionBloc, TransactionState>(
+      //bloc: _txBloc,
+      listener: (context, state) {
+        if (state is TransactionSent) {
+          print(widget.author + '/' + widget.link);
+          _postBloc.add(FetchPostEvent(widget.parentAuthor, widget.parentLink));
+        }
+      },
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Transform.scale(
@@ -162,7 +163,7 @@ class _ReplyButtonState extends State<ReplyButton> {
           ),
           SizedBox(height: 16)
         ],
-      );
-    });
+      ),
+    );
   }
 }

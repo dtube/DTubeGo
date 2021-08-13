@@ -269,6 +269,7 @@ class _RewardsCardState extends State<RewardsCard> {
                     )
                   : timestampGreater7Days(widget.reward.ts)
                       ? BlocProvider(
+                          // gets its own tranactionbloc to avoid spamming snackbars
                           create: (context) => TransactionBloc(
                               repository: TransactionRepositoryImpl()),
                           child: ClaimRewardButton(

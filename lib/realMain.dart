@@ -1,3 +1,6 @@
+import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
+import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 // this file is needed until bs85 is null safety
@@ -35,23 +38,36 @@ void realMain() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late TransactionBloc txBloc;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppBuilder(
       builder: (context) {
-        return MaterialApp(
-          title: 'DTube',
-          debugShowCheckedModeBanner: false,
-          theme: dtubeDarkTheme,
-
-          //home: NavigationContainer(title: "Dtube ToGo", username: "tibfox"),
-          home: BlocProvider<AuthBloc>(
-            create: (context) {
-              return AuthBloc(repository: AuthRepositoryImpl())
-                ..add(AppStartedEvent());
-            },
-            child: StartUp(),
+        return BlocProvider<TransactionBloc>(
+          create: (context) =>
+              TransactionBloc(repository: TransactionRepositoryImpl()),
+          child: MaterialApp(
+            title: 'DTube',
+            debugShowCheckedModeBanner: false,
+            theme: dtubeDarkTheme,
+            home: BlocProvider<AuthBloc>(
+              create: (context) {
+                return AuthBloc(repository: AuthRepositoryImpl())
+                  ..add(AppStartedEvent());
+              },
+              child: StartUp(),
+            ),
           ),
         );
       },

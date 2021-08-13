@@ -61,9 +61,6 @@ class _VotingButtonsState extends State<VotingButtons> {
             .floor()
             .toString());
     _upvotePressed = widget.focusVote;
-
-    // _userBloc = BlocProvider.of<UserBloc>(context);
-    // _userBloc.add(FetchDTCVPEvent());
   }
 
   @override
@@ -139,19 +136,17 @@ class _VotingButtonsState extends State<VotingButtons> {
       ),
       SizedBox(height: 10),
       Visibility(
-          visible: _upvotePressed || _downvotePressed,
-          child: BlocProvider<TransactionBloc>(
-              create: (context) =>
-                  TransactionBloc(repository: TransactionRepositoryImpl()),
-              child: VotingSlider(
-                defaultVote: widget.defaultVotingWeight,
-                defaultTip: widget.defaultVotingTip,
-                author: widget.author,
-                link: widget.link,
-                downvote: _downvotePressed,
-                currentVT: _currentVT.toDouble(),
-                isPost: widget.isPost,
-              )))
+        visible: _upvotePressed || _downvotePressed,
+        child: VotingSlider(
+          defaultVote: widget.defaultVotingWeight,
+          defaultTip: widget.defaultVotingTip,
+          author: widget.author,
+          link: widget.link,
+          downvote: _downvotePressed,
+          currentVT: _currentVT.toDouble(),
+          isPost: widget.isPost,
+        ),
+      ),
     ]);
   }
 }
@@ -207,14 +202,13 @@ class _VotingSliderState extends State<VotingSlider> {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
 
-    return BlocBuilder<TransactionBloc, TransactionState>(
-        //bloc: _txBloc,
-        builder: (context, state) {
-      if (state is TransactionSent) {
-        _postBloc.add(FetchPostEvent(widget.author, widget.link));
-      }
-
-      return !_sendButtonPressed
+    return BlocListener<TransactionBloc, TransactionState>(
+      listener: (context, state) {
+        if (state is TransactionSent) {
+          _postBloc.add(FetchPostEvent(widget.author, widget.link));
+        }
+      },
+      child: !_sendButtonPressed
           ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -370,7 +364,7 @@ class _VotingSliderState extends State<VotingSlider> {
                 padding: const EdgeInsets.all(16.0),
                 child: CircularProgressIndicator(),
               ),
-            );
-    });
+            ),
+    );
   }
 }

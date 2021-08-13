@@ -24,6 +24,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     final String? _applicationUser = await sec.getUsername();
     final String? _privKey = await sec.getPrivateKey();
 
+    if (event is SetInitState) {
+      yield TransactionInitialState();
+    }
+
     if (event is SignAndSendTransactionEvent) {
       String result = "";
       //for (var i = 0; i < 5; i++) {
@@ -45,7 +49,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                               : 0)
                           .toString())
                   .replaceAll('##TIPAMOUNT', event.tx.data.tip.toString())
-                  .replaceAll('##USERNAME', event.tx.data.target.toString()));
+                  .replaceAll('##USERNAME', event.tx.data.target.toString()),
+              txType: event.tx.type,
+              isParentContent: event.tx.data.pa == "" && event.tx.type == 4);
         } else {
           yield TransactionError(message: result);
         }
@@ -173,7 +179,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         if (int.tryParse(result) != null) {
           yield TransactionSent(
               block: int.parse(result),
-              successMessage: txTypeFriendlyDescriptionActions[_tx.type]!);
+              successMessage: txTypeFriendlyDescriptionActions[_tx.type]!,
+              txType: _tx.type,
+              isParentContent:
+                  (_tx.data.pa == "" || _tx.data.pa == null) && _tx.type == 4);
         } else {
           yield TransactionError(message: result);
         }

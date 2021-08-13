@@ -21,6 +21,13 @@ class SendCommentEvent extends TransactionEvent {
   List<Object> get props => List.empty();
 }
 
+class SetInitState extends TransactionEvent {
+  SetInitState();
+
+  @override
+  List<Object> get props => List.empty();
+}
+
 
 
 // https://github.com/dtube/dtube/blob/master/client/broadcast.js

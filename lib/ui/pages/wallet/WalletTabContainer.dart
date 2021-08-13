@@ -62,11 +62,7 @@ class _WalletMainPageState extends State<WalletMainPage>
                         RewardsBloc(repository: RewardRepositoryImpl()),
                     child: RewardsPage(),
                   ),
-                  BlocProvider(
-                    create: (context) => TransactionBloc(
-                        repository: TransactionRepositoryImpl()),
-                    child: WalletPage(),
-                  ),
+                  WalletPage(),
                 ],
                 controller: _tabController,
               ),

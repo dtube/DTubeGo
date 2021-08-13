@@ -7,13 +7,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 Flushbar showCustomFlushbarOnError(
     TransactionError state, BuildContext context) {
   return Flushbar(
-    margin: EdgeInsets.all(8),
+    margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
     borderRadius: BorderRadius.circular(8),
     message: state.message,
     flushbarPosition: FlushbarPosition.TOP,
     flushbarStyle: FlushbarStyle.FLOATING,
     reverseAnimationCurve: Curves.decelerate,
-    forwardAnimationCurve: Curves.elasticOut,
+    forwardAnimationCurve: Curves.easeOut,
     backgroundColor: globalBlue,
     boxShadows: [
       BoxShadow(color: globalRed, offset: Offset(0.0, 2.0), blurRadius: 3.0)
@@ -21,9 +21,12 @@ Flushbar showCustomFlushbarOnError(
     //backgroundGradient: LinearGradient(colors: [globalBlue, globalAlmostBlack]),
     isDismissible: true,
     duration: Duration(seconds: 4),
-    icon: FaIcon(
-      FontAwesomeIcons.times,
-      color: globalRed,
+    icon: Padding(
+      padding: const EdgeInsets.only(left: 8.0),
+      child: FaIcon(
+        FontAwesomeIcons.times,
+        color: globalRed,
+      ),
     ),
   )..show(context);
 }
@@ -31,7 +34,7 @@ Flushbar showCustomFlushbarOnError(
 Flushbar showCustomFlushbarOnSuccess(
     TransactionSent state, BuildContext context) {
   return Flushbar(
-    margin: EdgeInsets.all(8),
+    margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
     borderRadius: BorderRadius.circular(8),
     message: state.successMessage,
     flushbarPosition: FlushbarPosition.TOP,
@@ -45,9 +48,39 @@ Flushbar showCustomFlushbarOnSuccess(
     //backgroundGradient: LinearGradient(colors: [globalBlue, globalAlmostBlack]),
     isDismissible: true,
     duration: Duration(seconds: 4),
-    icon: FaIcon(
-      FontAwesomeIcons.check,
-      color: Colors.green,
+    icon: Padding(
+      padding: const EdgeInsets.only(left: 8.0),
+      child: FaIcon(
+        FontAwesomeIcons.check,
+        color: Colors.green,
+      ),
+    ),
+  )..show(context);
+}
+
+Flushbar testBar(BuildContext context) {
+  print("test test");
+  return Flushbar(
+    margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+    borderRadius: BorderRadius.circular(8),
+    message: "test",
+    flushbarPosition: FlushbarPosition.TOP,
+    flushbarStyle: FlushbarStyle.FLOATING,
+    reverseAnimationCurve: Curves.decelerate,
+    forwardAnimationCurve: Curves.elasticOut,
+    backgroundColor: globalBlue,
+    boxShadows: [
+      BoxShadow(color: globalRed, offset: Offset(0.0, 2.0), blurRadius: 3.0)
+    ],
+    //backgroundGradient: LinearGradient(colors: [globalBlue, globalAlmostBlack]),
+    isDismissible: true,
+    duration: Duration(seconds: 4),
+    icon: Padding(
+      padding: const EdgeInsets.only(left: 8.0),
+      child: FaIcon(
+        FontAwesomeIcons.times,
+        color: globalRed,
+      ),
     ),
   )..show(context);
 }
