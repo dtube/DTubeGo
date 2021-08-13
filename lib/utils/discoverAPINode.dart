@@ -8,23 +8,25 @@ Future<String> discoverAPINode() async {
   Map<String, int> _nodeResponses = {};
   Map<String, int> _sortedApiNodesByResponseTime = {};
 
-  for (var node in _nodes) {
-    var _beforeRequestMicroSeconds = DateTime.now().microsecondsSinceEpoch;
-    var response = await http
-        .get(Uri.parse(node + '/count'))
-        .timeout(Duration(seconds: 1), onTimeout: () {
-      // Time has run out, do what you wanted to do.
-      return http.Response('Error', 500); // Replace 500 with your http code.
-    });
-    if (response.statusCode == 200) {
-      var _afterRequestMicroSeconds = DateTime.now().microsecondsSinceEpoch;
+  do {
+    for (var node in _nodes) {
+      var _beforeRequestMicroSeconds = DateTime.now().microsecondsSinceEpoch;
+      var response = await http
+          .get(Uri.parse(node + '/count'))
+          .timeout(Duration(seconds: 1), onTimeout: () {
+        // Time has run out, do what you wanted to do.
+        return http.Response('Error', 500); // Replace 500 with your http code.
+      });
+      if (response.statusCode == 200) {
+        var _afterRequestMicroSeconds = DateTime.now().microsecondsSinceEpoch;
 
-      _nodeResponses[node] =
-          _afterRequestMicroSeconds - _beforeRequestMicroSeconds;
+        _nodeResponses[node] =
+            _afterRequestMicroSeconds - _beforeRequestMicroSeconds;
+      }
     }
-  }
-  _sortedApiNodesByResponseTime = SplayTreeMap.from(_nodeResponses,
-      (key1, key2) => _nodeResponses[key1]!.compareTo(_nodeResponses[key2]!));
+    _sortedApiNodesByResponseTime = SplayTreeMap.from(_nodeResponses,
+        (key1, key2) => _nodeResponses[key1]!.compareTo(_nodeResponses[key2]!));
+  } while (_sortedApiNodesByResponseTime.entries.toList().isEmpty);
   print("using " + _sortedApiNodesByResponseTime.entries.toList()[0].key);
   return _sortedApiNodesByResponseTime.entries.toList()[0].key;
 }

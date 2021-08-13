@@ -66,7 +66,9 @@ class _StartUpState extends State<StartUp> {
 
         return Scaffold(
           backgroundColor: globalBlue,
-          body: Center(child: DTubeLogoPulse()),
+          body: Center(
+              child:
+                  DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3)),
         );
       },
     );

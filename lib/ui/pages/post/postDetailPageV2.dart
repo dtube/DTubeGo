@@ -96,7 +96,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         ),
               body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
                 if (state is PostLoadingState) {
-                  return Center(child: DTubeLogoPulse());
+                  return Center(
+                      child: DTubeLogoPulse(
+                          size: MediaQuery.of(context).size.width / 3));
                 } else if (state is PostLoadedState) {
                   reloadCount++;
                   return PostDetails(

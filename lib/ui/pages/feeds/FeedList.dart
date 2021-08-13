@@ -60,7 +60,7 @@ class FeedList extends StatelessWidget {
           future: getDisplayModes(),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
-              return buildLoading();
+              return buildLoading(context);
             } else {
               return Container(
                 height: MediaQuery.of(context).size.height - 250,
@@ -76,7 +76,7 @@ class FeedList extends StatelessWidget {
                   builder: (context, state) {
                     if (state is FeedInitialState ||
                         state is FeedLoadingState && _feedItems.isEmpty) {
-                      return buildLoading();
+                      return buildLoading(context);
                     } else if (state is FeedLoadedState) {
                       _feedItems.addAll(state.feed);
                       BlocProvider.of<FeedBloc>(context).isFetching = false;
@@ -93,8 +93,9 @@ class FeedList extends StatelessWidget {
     );
   }
 
-  Widget buildLoading() {
-    return Center(child: DTubeLogoPulse());
+  Widget buildLoading(BuildContext context) {
+    return Center(
+        child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
   }
 
   Widget buildErrorUi(String message) {

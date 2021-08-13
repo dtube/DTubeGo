@@ -3,6 +3,7 @@ import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dtube_togo/utils/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Flushbar showCustomFlushbarOnError(String message, BuildContext context) {
@@ -40,6 +41,7 @@ Flushbar showCustomFlushbarOnSuccess(
         state.isParentContent ? "new video is published" : state.successMessage,
     onTap: (Flushbar fb) {
       if (state.authorPerm != null) {
+        BlocProvider.of<TransactionBloc>(context).add(SetInitState());
         navigateToPostDetailPage(
             context,
             state.authorPerm!.substring(0, state.authorPerm!.indexOf('/')),

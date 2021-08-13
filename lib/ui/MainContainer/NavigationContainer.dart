@@ -270,7 +270,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
         bloc: BlocProvider.of<TransactionBloc>(context),
         listener: (context, state) {
           if (state is TransactionSent) {
-            print("test test");
             showCustomFlushbarOnSuccess(state, context);
           }
           if (state is TransactionError) {

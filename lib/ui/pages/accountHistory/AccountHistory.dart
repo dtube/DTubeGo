@@ -116,7 +116,7 @@ class _HistoryState extends State<History> {
 
   Widget buildLoading() {
     return Center(
-      child: DTubeLogoPulse(),
+      child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3),
     );
   }
 

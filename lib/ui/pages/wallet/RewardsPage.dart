@@ -113,7 +113,9 @@ class _RewardsListState extends State<RewardsList> {
     return BlocBuilder<RewardsBloc, RewardsState>(
       builder: (context, state) {
         if (state is RewardsLoadingState) {
-          return Center(child: DTubeLogoPulse());
+          return Center(
+              child:
+                  DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
         }
         if (state is RewardsLoadedState) {
           List<Reward> _rewards = state.rewardList;

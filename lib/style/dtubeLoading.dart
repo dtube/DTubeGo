@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'ThemeData.dart';
 
 class DTubeLogoPulse extends StatefulWidget {
-  const DTubeLogoPulse({
-    Key? key,
-  }) : super(key: key);
-
+  DTubeLogoPulse({Key? key, required this.size}) : super(key: key);
+  double size;
   @override
   _DTubeLogoPulseState createState() => _DTubeLogoPulseState();
 }
@@ -22,10 +20,11 @@ class _DTubeLogoPulseState extends State<DTubeLogoPulse>
     _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 2));
     _animationController.repeat(reverse: true);
-    _animation = Tween(begin: 2.0, end: 15.0).animate(_animationController)
-      ..addListener(() {
-        setState(() {});
-      });
+    _animation =
+        Tween(begin: 0.0, end: widget.size * 0.1).animate(_animationController)
+          ..addListener(() {
+            setState(() {});
+          });
     super.initState();
   }
 
@@ -38,7 +37,7 @@ class _DTubeLogoPulseState extends State<DTubeLogoPulse>
 
   @override
   Widget build(BuildContext context) {
-    double _circleWidth = MediaQuery.of(context).size.width / 3;
+    double _circleWidth = widget.size;
     return Container(
       width: _circleWidth,
       height: _circleWidth,
@@ -46,7 +45,7 @@ class _DTubeLogoPulseState extends State<DTubeLogoPulse>
         child: Image.asset(
           'assets/images/dtube_logo_white.png',
           fit: BoxFit.fitWidth,
-          width: _circleWidth - 42,
+          width: _circleWidth * 0.6,
         ),
       ),
       decoration:

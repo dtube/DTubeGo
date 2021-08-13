@@ -98,7 +98,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
       body: BlocBuilder<SettingsBloc, SettingsState>(builder: (context, state) {
         if (state is SettingsLoadingState || state is SettingsSavingState) {
           return Center(
-            child: DTubeLogoPulse(),
+            child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3),
           );
         } else if (state is SettingsLoadedState) {
           if (settings.length == 1) {
@@ -582,7 +582,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
         } else {
           return Text("unknown state");
         }
-        return Center(child: DTubeLogoPulse());
+        return Center(
+            child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
       }),
     );
   }

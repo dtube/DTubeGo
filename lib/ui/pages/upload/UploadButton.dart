@@ -1,11 +1,8 @@
-import 'dart:isolate';
-
-import 'package:another_flushbar/flushbar.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/ui/pages/upload/uploaderTabContainer.dart';
-import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
 import 'package:dtube_togo/utils/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,23 +18,12 @@ class UploaderButton extends StatefulWidget {
 }
 
 class _UploaderButtonState extends State<UploaderButton> {
-  // TODO: Provide ipfs and tx bloc here to the upload form -> to react on state changes from the background upload
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TransactionBloc, TransactionState>(
       builder: (context, state) {
         if (state is TransactionPreprocessingState) {
-          return CircleAvatar(
-            backgroundColor: Colors.yellow,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 4.0),
-              child: new FaIcon(
-                FontAwesomeIcons.play,
-                color: Colors.white,
-              ),
-            ),
-          );
+          return DTubeLogoPulse(size: 40.0);
         } else if (state is TransactionSent && state.isParentContent) {
           return CircleAvatar(
             backgroundColor: Colors.green,
