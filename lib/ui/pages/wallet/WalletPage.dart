@@ -31,7 +31,7 @@ class _WalletPageState extends State<WalletPage>
     return BlocListener<TransactionBloc, TransactionState>(
         listener: (context, state) {
           if (state is TransactionError) {
-            showCustomFlushbarOnError(state, context);
+            showCustomFlushbarOnError(state.message, context);
           }
           if (state is TransactionSent) {
             showCustomFlushbarOnSuccess(state, context);

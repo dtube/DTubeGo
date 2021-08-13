@@ -83,6 +83,7 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
 
   void childCallback(UploadData ud) {
     setState(() {
+      BlocProvider.of<TransactionBloc>(context).add(TransactionPreprocessing());
       _uploadData = ud;
       BlocProvider.of<TransactionBloc>(context)
           .add(SendCommentEvent(_uploadData));

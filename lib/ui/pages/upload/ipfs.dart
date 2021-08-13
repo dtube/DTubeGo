@@ -67,14 +67,14 @@ class _WizardIPFSState extends State<WizardIPFS> {
 
   void childCallback(UploadData ud) {
     setState(() {
+      BlocProvider.of<TransactionBloc>(context).add(TransactionPreprocessing());
       _uploadData = ud;
       _uploadPressed = true;
       _uploadBloc.add(UploadVideo(
-          _uploadData.videoLocation,
-          _uploadData.thumbnailLocation
-          // just for testing: background upload
-          ,
-          _uploadData));
+          videoPath: _uploadData.videoLocation,
+          thumbnailPath: _uploadData.thumbnailLocation,
+          uploadData: _uploadData,
+          context: context));
       Navigator.of(context).pop();
     });
   }

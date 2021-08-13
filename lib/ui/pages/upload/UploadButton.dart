@@ -27,7 +27,18 @@ class _UploaderButtonState extends State<UploaderButton> {
   Widget build(BuildContext context) {
     return BlocBuilder<TransactionBloc, TransactionState>(
       builder: (context, state) {
-        if (state is TransactionSent && state.isParentContent) {
+        if (state is TransactionPreprocessingState) {
+          return CircleAvatar(
+            backgroundColor: Colors.yellow,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 4.0),
+              child: new FaIcon(
+                FontAwesomeIcons.play,
+                color: Colors.white,
+              ),
+            ),
+          );
+        } else if (state is TransactionSent && state.isParentContent) {
           return CircleAvatar(
             backgroundColor: Colors.green,
             child: GestureDetector(

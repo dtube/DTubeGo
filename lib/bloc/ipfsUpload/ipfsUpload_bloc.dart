@@ -29,6 +29,8 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
     late Map _thumbUploadStatusResponse;
     late UploadData _uploadData;
     if (event is UploadVideo) {
+      TransactionBloc txBloc = BlocProvider.of<TransactionBloc>(event.context);
+
       _uploadData = event.uploadData;
       yield IPFSUploadVideoPreProcessingState();
 
@@ -95,23 +97,32 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
 
               _uploadData.link = randomPermlink(11);
 
-              TransactionBloc txBloc =
-                  TransactionBloc(repository: TransactionRepositoryImpl());
-
               txBloc.add(SendCommentEvent(_uploadData));
             } catch (e) {
               print(e.toString());
               yield IPFSUploadErrorState(message: e.toString());
+              txBloc.add(TransactionPreprocessingFailed(
+                  errorMessage:
+                      "\nPlease report this error to the dtube team with a screenshot!\n\n" +
+                          e.toString()));
             }
           } catch (e) {
             print(e.toString());
             yield IPFSUploadErrorState(message: e.toString());
+            txBloc.add(TransactionPreprocessingFailed(
+                errorMessage:
+                    "\nPlease report this error to the dtube team with a screenshot!\n\n" +
+                        e.toString()));
           }
         }
         // upload to ipfs
       } catch (e) {
         print("error: " + e.toString());
         yield IPFSUploadErrorState(message: e.toString());
+        txBloc.add(TransactionPreprocessingFailed(
+            errorMessage:
+                "\nPlease report this error to the dtube team with a screenshot!\n\n" +
+                    e.toString()));
       }
     }
   }

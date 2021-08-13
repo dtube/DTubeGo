@@ -27,6 +27,12 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     if (event is SetInitState) {
       yield TransactionInitialState();
     }
+    if (event is TransactionPreprocessing) {
+      yield TransactionPreprocessingState();
+    }
+    if (event is TransactionPreprocessingFailed) {
+      yield TransactionError(message: "error uploading\n" + event.errorMessage);
+    }
 
     if (event is SignAndSendTransactionEvent) {
       String result = "";

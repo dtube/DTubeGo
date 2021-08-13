@@ -5,12 +5,11 @@ import 'package:dtube_togo/utils/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-Flushbar showCustomFlushbarOnError(
-    TransactionError state, BuildContext context) {
+Flushbar showCustomFlushbarOnError(String message, BuildContext context) {
   return Flushbar(
     margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
     borderRadius: BorderRadius.circular(8),
-    message: state.message,
+    message: message,
     flushbarPosition: FlushbarPosition.TOP,
     flushbarStyle: FlushbarStyle.FLOATING,
     reverseAnimationCurve: Curves.decelerate,
@@ -21,7 +20,7 @@ Flushbar showCustomFlushbarOnError(
     ],
     //backgroundGradient: LinearGradient(colors: [globalBlue, globalAlmostBlack]),
     isDismissible: true,
-    duration: Duration(seconds: 4),
+    duration: Duration(seconds: 10),
     icon: Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: FaIcon(
@@ -64,33 +63,6 @@ Flushbar showCustomFlushbarOnSuccess(
       child: FaIcon(
         FontAwesomeIcons.check,
         color: Colors.green,
-      ),
-    ),
-  )..show(context);
-}
-
-Flushbar testBar(BuildContext context) {
-  print("test test");
-  return Flushbar(
-    margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-    borderRadius: BorderRadius.circular(8),
-    message: "test",
-    flushbarPosition: FlushbarPosition.TOP,
-    flushbarStyle: FlushbarStyle.FLOATING,
-    reverseAnimationCurve: Curves.decelerate,
-    forwardAnimationCurve: Curves.elasticOut,
-    backgroundColor: globalBlue,
-    boxShadows: [
-      BoxShadow(color: globalRed, offset: Offset(0.0, 2.0), blurRadius: 3.0)
-    ],
-    //backgroundGradient: LinearGradient(colors: [globalBlue, globalAlmostBlack]),
-    isDismissible: true,
-    duration: Duration(seconds: 4),
-    icon: Padding(
-      padding: const EdgeInsets.only(left: 8.0),
-      child: FaIcon(
-        FontAwesomeIcons.times,
-        color: globalRed,
       ),
     ),
   )..show(context);

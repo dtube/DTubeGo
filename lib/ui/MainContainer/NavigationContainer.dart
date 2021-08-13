@@ -159,7 +159,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           showCustomFlushbarOnSuccess(state, context);
         }
         if (state is TransactionError) {
-          showCustomFlushbarOnError(state, context);
+          showCustomFlushbarOnError(state.message, context);
         }
       },
     );
@@ -274,7 +274,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
             showCustomFlushbarOnSuccess(state, context);
           }
           if (state is TransactionError) {
-            showCustomFlushbarOnError(state, context);
+            showCustomFlushbarOnError(state.message, context);
           }
         },
         child: PersistentTabView(

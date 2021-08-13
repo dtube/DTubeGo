@@ -28,6 +28,20 @@ class SetInitState extends TransactionEvent {
   List<Object> get props => List.empty();
 }
 
+// used only for uploading videos
+class TransactionPreprocessing extends TransactionEvent {
+  TransactionPreprocessing();
+  @override
+  List<Object> get props => List.empty();
+}
+
+// used only for uploading videos
+class TransactionPreprocessingFailed extends TransactionEvent {
+  String errorMessage;
+  TransactionPreprocessingFailed({required this.errorMessage});
+  @override
+  List<Object> get props => List.empty();
+}
 
 
 // https://github.com/dtube/dtube/blob/master/client/broadcast.js
