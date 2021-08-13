@@ -32,6 +32,7 @@ class _UploaderButtonState extends State<UploaderButton> {
             backgroundColor: Colors.green,
             child: GestureDetector(
               onTap: () {
+                BlocProvider.of<TransactionBloc>(context).add(SetInitState());
                 if (state.authorPerm != null) {
                   navigateToPostDetailPage(
                       context,
