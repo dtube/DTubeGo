@@ -84,25 +84,29 @@ class _HiveSignerButtonState extends State<HiveSignerButton> {
         ),
         BlocBuilder<HivesignerBloc, HivesignerState>(builder: (context, state) {
           if (state is HiveSignerAccessTokenValidState) {
-            return Column(
-              children: [
-                Text("hivesigner authorization is still valid"),
-                InputChip(
-                  label: Text("remove"),
-                  avatar: FaIcon(
-                    FontAwesomeIcons.removeFormat,
-                    size: 15,
-                  ),
-                  elevation: 2,
-                  backgroundColor: globalRed,
-                  onPressed: () async {
-                    await sec.deleteHiveSignerSettings();
-                    // BlocProvider.of<HivesignerBloc>(context)
-                    //     .add(CheckAccessToken());
-                  },
-                )
-              ],
-            );
+            return _usernameFilled
+                ? Column(
+                    children: [
+                      Text("hivesigner authorization is still valid"),
+                      InputChip(
+                        label: Text("remove"),
+                        avatar: FaIcon(
+                          FontAwesomeIcons.removeFormat,
+                          size: 15,
+                        ),
+                        elevation: 2,
+                        backgroundColor: globalRed,
+                        onPressed: () async {
+                          await sec.deleteHiveSignerSettings();
+                          setState(() {
+                            _usernameController.text = "";
+                            _usernameFilled = false;
+                          });
+                        },
+                      )
+                    ],
+                  )
+                : SizedBox(height: 0);
           } else {
             return Text(
                 "click to check current hivesigner authorization connection");

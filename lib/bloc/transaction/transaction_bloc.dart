@@ -1,4 +1,6 @@
 import 'package:dtube_togo/bloc/config/txTypes.dart';
+import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc.dart';
+import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:bloc/bloc.dart';
@@ -196,6 +198,31 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                       _tx.data.link != null
                   ? _applicationUser + '/' + _tx.data.link!
                   : null);
+          if (_upload.crossPostToHive) {
+            HivesignerBloc _hiveSignerBloc =
+                HivesignerBloc(repository: HivesignerRepositoryImpl());
+            if (_upload.thumbnailLocation.contains('img.youtube')) {
+              _hiveSignerBloc.add(SendPostToHive(
+                  postTitle: _upload.title,
+                  postBody: _upload.description,
+                  permlink: _upload.link,
+                  dtubeUrl: _upload.link,
+                  thumbnailUrl: _upload.thumbnailLocation,
+                  videoUrl: _upload.videoSourceHash,
+                  storageType: "youtube",
+                  tag: _upload.tag));
+            } else {
+              _hiveSignerBloc.add(SendPostToHive(
+                  postTitle: _upload.title,
+                  postBody: _upload.description,
+                  permlink: _upload.link,
+                  dtubeUrl: _upload.link,
+                  thumbnailUrl: _upload.thumbnail640Hash,
+                  videoUrl: _upload.videoSourceHash,
+                  storageType: "ipfs",
+                  tag: _upload.tag));
+            }
+          }
         } else {
           yield TransactionError(message: result);
         }

@@ -167,10 +167,15 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
       String thumbnailUrl, String videoUrl, String storageType) {
     String body = '<center>';
     body += '<a href=\'https://d.tube/#!/v/' + author + '/' + permlink + '\'>';
-    body += '<img src=\'' +
-        AppConfig.ipfsSnapUrl +
-        thumbnailUrl +
-        '\' ></a></center><hr>';
+    if (storageType == "ipfs") {
+      body += '<img src=\'' +
+          AppConfig.ipfsSnapUrl +
+          thumbnailUrl +
+          '\' ></a></center><hr>';
+    }
+    if (storageType == "youtube") {
+      body += '<img src=\'' + thumbnailUrl + '\' ></a></center><hr>';
+    }
 
     body += postBody;
 

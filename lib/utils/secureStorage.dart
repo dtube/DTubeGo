@@ -270,6 +270,7 @@ Future<bool> deleteAllSettings() async {
 }
 
 Future<bool> deleteHiveSignerSettings() async {
+  await _storage.delete(key: settingKey_hiveSignerUsername);
   await _storage.delete(key: settingKey_hiveSignerAccessToken);
   await _storage.delete(key: settingKey_hiveSignerAccessTokenExpiresIn);
   await _storage.delete(key: settingKey_hiveSignerAccessTokenRequestedOn);

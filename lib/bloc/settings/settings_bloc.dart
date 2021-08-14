@@ -32,7 +32,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           sec.settingKey_templateTitle: await sec.getTemplateTitle(),
           sec.settingKey_templateBody: await sec.getTemplateBody(),
           sec.settingKey_templateTag: await sec.getTemplateTag(),
-          sec.settingKey_hiveSignerUsername: await sec.getHiveSignerUsername()
+          sec.settingKey_hiveSignerUsername: await sec.getHiveSignerUsername(),
+          sec.settingKey_hiveSignerAccessTokenExpiresIn:
+              await sec.getHiveSignerAccessTokenExpiresIn(),
+          sec.settingKey_hiveSignerAccessTokenRequestedOn:
+              await sec.getHiveSignerAccessTokenRequestedOn()
         };
         yield SettingsLoadedState(settings: newSettings);
       } catch (e) {

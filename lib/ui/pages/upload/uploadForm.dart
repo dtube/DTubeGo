@@ -57,6 +57,9 @@ class _UploadFormState extends State<UploadForm> {
   late SettingsBloc _settingsBloc;
   final _formKey = GlobalKey<FormState>();
 
+  bool hiveSignerValid = false;
+  String hiveSignerUsername = "";
+
   void childCallback(String videoPath) {
     setState(() {
       _video = File(videoPath);
@@ -233,6 +236,22 @@ class _UploadFormState extends State<UploadForm> {
                 if (_tagController.text.isEmpty) {
                   _tagController.text =
                       stateSettings.settings[settingKey_templateTag]!;
+                }
+                if (stateSettings.settings[settingKey_hiveSignerUsername] !=
+                        null &&
+                    stateSettings.settings[settingKey_hiveSignerUsername] !=
+                        "") {
+                  DateTime requestedOn = DateTime.parse(stateSettings
+                      .settings[settingKey_hiveSignerAccessTokenRequestedOn]!);
+                  DateTime invalidOn = requestedOn.add(Duration(
+                      seconds: int.parse(stateSettings.settings[
+                          settingKey_hiveSignerAccessTokenExpiresIn]!)));
+                  if (invalidOn.isAfter(DateTime.now())) {
+                    stateUploadData.crossPostToHive = true;
+                    hiveSignerValid = true;
+                    hiveSignerUsername =
+                        stateSettings.settings[settingKey_hiveSignerUsername]!;
+                  }
                 }
               });
             }
@@ -496,24 +515,35 @@ class _UploadFormState extends State<UploadForm> {
                     stateUploadData.unlistVideo = !stateUploadData.unlistVideo;
                   });
                 }),
-            ChoiceChip(
-                selected: stateUploadData.crossPostToHive,
-                label: Text('cross-post to hive'),
-                labelStyle: TextStyle(color: Colors.white),
-                avatar: stateUploadData.crossPostToHive
-                    ? FaIcon(
-                        FontAwesomeIcons.check,
-                        size: 15,
-                      )
-                    : null,
-                backgroundColor: Colors.grey.withAlpha(30),
-                selectedColor: Colors.green[700],
-                onSelected: (bool selected) {
-                  setState(() {
-                    stateUploadData.crossPostToHive =
-                        !stateUploadData.crossPostToHive;
-                  });
-                }),
+            hiveSignerUsername != ""
+                ? ChoiceChip(
+                    selected: stateUploadData.crossPostToHive,
+                    label: Text('cross-post to hive'),
+                    labelStyle: TextStyle(color: Colors.white),
+                    avatar: stateUploadData.crossPostToHive
+                        ? FaIcon(
+                            FontAwesomeIcons.check,
+                            size: 15,
+                          )
+                        : null,
+                    backgroundColor: Colors.grey.withAlpha(30),
+                    selectedColor: Colors.green[700],
+                    onSelected: (bool selected) {
+                      if (!stateUploadData.crossPostToHive) {
+                        if (!hiveSignerValid) {
+                          BlocProvider.of<HivesignerBloc>(context).add(
+                              CheckAccessToken(
+                                  hiveSignerUsername: hiveSignerUsername));
+                        }
+                      }
+                      setState(() {
+                        stateUploadData.crossPostToHive =
+                            !stateUploadData.crossPostToHive;
+                      });
+                    })
+                : SizedBox(
+                    width: 0,
+                  ),
           ],
         ),
         Row(
