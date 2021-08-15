@@ -2,11 +2,13 @@ import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:dtube_togo/style/OpenableHyperlink.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class LoginForm extends StatefulWidget {
   String? message;
@@ -20,12 +22,36 @@ class _LoginFormState extends State<LoginForm> {
   late AuthBloc _loginBloc;
   TextEditingController usernameController = new TextEditingController();
   TextEditingController privateKeyController = new TextEditingController();
-
+  String _scanBarcode = 'Unknown';
   @override
   void initState() {
     super.initState();
     _loginBloc = BlocProvider.of<AuthBloc>(context);
     //if logindata already stored
+  }
+
+  Future<void> scanQR() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      print("KEEEEEEEY: " + barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      if (!barcodeScanRes.contains('Failed')) {
+        _scanBarcode = barcodeScanRes;
+        privateKeyController.text = barcodeScanRes;
+      }
+    });
   }
 
   @override
@@ -47,21 +73,60 @@ class _LoginFormState extends State<LoginForm> {
                     Image.asset('assets/images/dtube_logo_white.png',
                         width: deviceWidth / 2),
                     SizedBox(height: 8),
-                    TextField(
-                      controller: usernameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Username',
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          width: 200,
+                          child: TextField(
+                            controller: usernameController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Username',
+                            ),
+                          ),
+                        ),
+                        // Row(
+                        //     children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              launch(AppConfig.signUpUrl);
+                            },
+                            child: Text(
+                              "Sign-Up",
+                            )),
+                      ],
                     ),
-                    TextField(
-                      obscureText: true,
-                      controller: privateKeyController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'key',
-                      ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          width: 200,
+                          child: TextField(
+                            obscureText: true,
+                            controller: privateKeyController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'key',
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                            onPressed: () => scanQR(),
+                            child: SizedBox(
+                                width: 40,
+                                child: Center(
+                                    child: FaIcon(FontAwesomeIcons.qrcode)))),
+                        // InputChip(
+                        //   label: Text("QR-Scan"),
+                        //   onPressed: () => scanQR(),
+                        // ),
+                      ],
                     ),
+
+                    // ],
+                    // ),
                     widget.message != null
                         ? Padding(
                             padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
@@ -104,22 +169,34 @@ class _LoginFormState extends State<LoginForm> {
                             ),
                           )
                         : SizedBox(height: 16),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                              onPressed: () {
-                                launch(AppConfig.signUpUrl);
-                              },
-                              child: Text("Register")),
-                          ElevatedButton(
-                              onPressed: () {
-                                _loginBloc.add(SignInWithCredentialsEvent(
-                                    usernameController.value.text,
-                                    privateKeyController.value.text));
-                              },
-                              child: Text("Sign in")),
-                        ])
+
+                    ValueListenableBuilder<TextEditingValue>(
+                        valueListenable: usernameController,
+                        builder: (context, value, child) {
+                          return ValueListenableBuilder<TextEditingValue>(
+                              valueListenable: privateKeyController,
+                              builder: (context, value, child) {
+                                return ElevatedButton(
+                                    onPressed: usernameController.value.text !=
+                                                "" &&
+                                            privateKeyController.value.text !=
+                                                ""
+                                        ? () {
+                                            _loginBloc.add(
+                                                SignInWithCredentialsEvent(
+                                                    usernameController
+                                                        .value.text,
+                                                    privateKeyController
+                                                        .value.text));
+                                          }
+                                        : null,
+                                    child: Text(
+                                      "Sign in",
+                                      style:
+                                          Theme.of(context).textTheme.headline1,
+                                    ));
+                              });
+                        }),
                   ],
                 ),
               ),

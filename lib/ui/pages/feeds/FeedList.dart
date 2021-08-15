@@ -66,13 +66,13 @@ class FeedList extends StatelessWidget {
                 height: MediaQuery.of(context).size.height - 250,
                 // color: globalAlmostBlack,
 
-                child: BlocConsumer<FeedBloc, FeedState>(
-                  listener: (context, state) {
-                    if (state is FeedErrorState) {
-                      BlocProvider.of<FeedBloc>(context).isFetching = false;
-                    }
-                    return;
-                  },
+                child: BlocBuilder<FeedBloc, FeedState>(
+                  // listener: (context, state) {
+                  //   if (state is FeedErrorState) {
+                  //     BlocProvider.of<FeedBloc>(context).isFetching = false;
+                  //   }
+                  //   return;
+                  // },
                   builder: (context, state) {
                     if (state is FeedInitialState ||
                         state is FeedLoadingState && _feedItems.isEmpty) {

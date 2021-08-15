@@ -3,6 +3,7 @@ import 'dart:isolate';
 
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
+import 'package:dtube_togo/bloc/search/search_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 
@@ -13,6 +14,7 @@ import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/MainContainer/BalanceOverview.dart';
 import 'package:dtube_togo/ui/MainContainer/MenuButton.dart';
+import 'package:dtube_togo/ui/Search/SearchScreen.dart';
 import 'package:dtube_togo/ui/pages/upload/UploadButton.dart';
 import 'package:dtube_togo/ui/pages/feeds/FeedList.dart';
 
@@ -84,60 +86,33 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
   List<Widget> _buildScreens() {
     return [
-      // Wrap(
-      //   children: [
-      //MomentsList(), // Moments not ready yet
-      //  Expanded(
-      //   child:
-      BlocProvider<FeedBloc>(
-        create: (context) => FeedBloc(repository: FeedRepositoryImpl())
-          ..add(FetchFeedEvent(feedType: "MyFeed")),
-        child: FeedList(
-            feedType: 'MyFeed',
-            bigThumbnail: true,
-            showAuthor: false,
-            paddingTop: topBarHeight // if Moments ready then 0
-            ),
-      ),
-      //   ),
-      //   ],
-      // ),
-      BlocProvider<FeedBloc>(
-        create: (context) => FeedBloc(repository: FeedRepositoryImpl())
-          ..add(FetchFeedEvent(feedType: "NewFeed")),
-        child: FeedList(
-          feedType: 'NewFeed',
+      FeedList(
+          feedType: 'MyFeed',
           bigThumbnail: true,
           showAuthor: false,
-          paddingTop: topBarHeight,
-        ),
+          paddingTop: topBarHeight // if Moments ready then 0
+          ),
+      FeedList(
+        feedType: 'NewFeed',
+        bigThumbnail: true,
+        showAuthor: false,
+        paddingTop: topBarHeight,
       ),
-      BlocProvider<UserBloc>(
-        create: (BuildContext context) =>
-            UserBloc(repository: UserRepositoryImpl()),
-        child: UserPage(
-          ownUserpage: true,
-        ),
+      UserPage(
+        ownUserpage: true,
       ),
-      BlocProvider<FeedBloc>(
-        create: (context) => FeedBloc(repository: FeedRepositoryImpl())
-          ..add(FetchFeedEvent(feedType: "HotFeed")),
-        child: FeedList(
-          feedType: 'HotFeed',
-          bigThumbnail: true,
-          showAuthor: false,
-          paddingTop: topBarHeight,
-        ),
+      FeedList(
+        feedType: 'HotFeed',
+        bigThumbnail: true,
+        showAuthor: false,
+        paddingTop: topBarHeight,
       ),
-      BlocProvider<FeedBloc>(
-        create: (context) => FeedBloc(repository: FeedRepositoryImpl())
-          ..add(FetchFeedEvent(feedType: "TrendingFeed")),
-        child: FeedList(
-          feedType: 'TrendingFeed',
-          bigThumbnail: true,
-          showAuthor: false,
-          paddingTop: topBarHeight,
-        ),
+      FeedList(
+        feedType: 'TrendingFeed',
+        bigThumbnail: true,
+        showAuthor: false,
+        paddingTop: topBarHeight,
+        //  ),
       ),
     ];
   }
@@ -145,6 +120,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<FeedBloc>(context).add(FetchFeedEvent(feedType: "MyFeed"));
   }
 
   @override
@@ -222,14 +198,13 @@ class _NavigationContainerState extends State<NavigationContainer> {
                           backgroundColor: globalBlue,
                           child: GestureDetector(
                             onTap: () {
-                              // Navigator.push(context,
-                              //     MaterialPageRoute(builder: (context) {
-                              //   return BlocProvider<NotificationBloc>(
-                              //       create: (context) => NotificationBloc(
-                              //           repository:
-                              //               NotificationRepositoryImpl()),
-                              //       child: Notifications());
-                              // }));
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return BlocProvider<SearchBloc>(
+                                    create: (context) => SearchBloc(
+                                        repository: SearchRepositoryImpl()),
+                                    child: SearchScreen());
+                              }));
                             },
                             child: new FaIcon(
                               FontAwesomeIcons.search,
@@ -300,19 +275,30 @@ class _NavigationContainerState extends State<NavigationContainer> {
             duration: Duration(milliseconds: 200),
             curve: Curves.ease,
           ),
-          screenTransitionAnimation: ScreenTransitionAnimation(
-            // Screen transition animation on change of selected tab.
-            animateTabTransition: true,
-            curve: Curves.easeOut,
-            duration: Duration(milliseconds: 200),
-          ),
-          // onItemSelected: (index) {
-          //   setState(() {
-          //     bottomSelectedIndex =
-          //         index; // NOTE: THIS IS CRITICAL!! Don't miss it!
-          //     _controller.index = index;
-          //   });
-          // },
+
+          onItemSelected: (index) {
+            setState(() {
+              switch (index) {
+                case 0:
+                  BlocProvider.of<FeedBloc>(context)
+                      .add(FetchFeedEvent(feedType: "MyFeed"));
+                  break;
+                case 1:
+                  BlocProvider.of<FeedBloc>(context)
+                      .add(FetchFeedEvent(feedType: "NewFeed"));
+                  break;
+                case 3:
+                  BlocProvider.of<FeedBloc>(context)
+                      .add(FetchFeedEvent(feedType: "HotFeed"));
+                  break;
+                case 4:
+                  BlocProvider.of<FeedBloc>(context)
+                      .add(FetchFeedEvent(feedType: "TrendingFeed"));
+                  break;
+                default:
+              }
+            });
+          },
 
           navBarStyle: NavBarStyle.style14,
         ),

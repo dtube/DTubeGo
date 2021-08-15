@@ -1,3 +1,4 @@
+import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
@@ -52,6 +53,9 @@ class _StartUpState extends State<StartUp> {
             BlocProvider<AuthBloc>(
               create: (BuildContext context) =>
                   AuthBloc(repository: AuthRepositoryImpl()),
+            ),
+            BlocProvider(
+              create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
             ),
           ], child: NavigationContainer());
         }
