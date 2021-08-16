@@ -1,3 +1,4 @@
+import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
@@ -35,6 +36,10 @@ void navigateToUserDetailPage(BuildContext context, String username) {
         BlocProvider<TransactionBloc>(
           create: (BuildContext context) =>
               TransactionBloc(repository: TransactionRepositoryImpl()),
+        ),
+        BlocProvider<AuthBloc>(
+          create: (BuildContext context) =>
+              AuthBloc(repository: AuthRepositoryImpl()),
         ),
       ],
       child: UserPage(

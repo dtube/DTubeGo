@@ -14,7 +14,7 @@ class SearchLoadingState extends SearchState {
 }
 
 class SearchLoadedState extends SearchState {
-  List<SearchResult> searchResults;
+  SearchResults searchResults;
 
   SearchLoadedState({required this.searchResults});
 

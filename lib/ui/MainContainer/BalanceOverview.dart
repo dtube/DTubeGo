@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:dtube_togo/utils/shortBalanceStrings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -39,8 +40,6 @@ class _BalanceOverviewState extends State<BalanceOverview> {
         } else if (state is UserDTCVPLoadingState) {
           return SizedBox(width: 0);
         } else if (state is UserDTCVPLoadedState) {
-          double _dtcBalanceK = state.dtcBalance / 100000;
-          double _vpBalanceK = state.vtBalance["v"]! / 1000;
           try {
             return Column(
                 //mainAxisAlignment: MainAxisAlignment.end,
@@ -48,26 +47,12 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                 children: [
                   Center(
                     child: Text(
-                      (state.dtcBalance < 100000
-                                  ? state.dtcBalance / 100
-                                  : _dtcBalanceK >= 1000
-                                      ? _dtcBalanceK / 1000
-                                      : _dtcBalanceK)
-                              .toStringAsFixed(1) +
-                          (state.dtcBalance < 10000
-                              ? ""
-                              : _dtcBalanceK >= 1000
-                                  ? 'M'
-                                  : 'K') +
-                          "DTC",
+                      shortDTC(state.dtcBalance) + "DTC",
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ),
                   Text(
-                    (_vpBalanceK >= 1000 ? _vpBalanceK / 1000 : _vpBalanceK)
-                            .toStringAsFixed(1) +
-                        (_vpBalanceK >= 1000 ? 'M' : 'K') +
-                        "VP",
+                    shortVP(state.vtBalance['v']!) + "VP",
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                 ]);

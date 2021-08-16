@@ -21,8 +21,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     if (event is FetchSearchResultsEvent) {
       yield SearchLoadingState();
       try {
-        List<SearchResult> results =
-            await repository.getSearchResults(event.searchQuery);
+        SearchResults results = await repository.getSearchResults(
+            event.searchQuery, _avalonApiNode);
 
         yield SearchLoadedState(searchResults: results);
       } catch (e) {

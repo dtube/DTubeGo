@@ -1,16 +1,28 @@
+import 'package:dtube_togo/bloc/avalonConfig/avalonConfig_bloc_full.dart';
 import 'package:dtube_togo/bloc/search/search_response_model.dart';
 import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 abstract class SearchRepository {
-  Future<List<SearchResult>> getSearchResults(String searchQuery);
+  Future<SearchResults> getSearchResults(String searchQuery, String apiNode);
 }
 
 class SearchRepositoryImpl implements SearchRepository {
   @override
-  Future<List<SearchResult>> getSearchResults(String searchQuery) async {
-    // handling notification types
+  Future<SearchResults> getSearchResults(
+      String searchQuery, String apiNode) async {
+    int vpGrowth = 0;
+    var configResponse =
+        await http.get(Uri.parse(apiNode + AppConfig.avalonConfig));
+    if (configResponse.statusCode == 200) {
+      var configData = json.decode(configResponse.body);
+      AvalonConfig conf = ApiResultModelAvalonConfig.fromJson(configData).conf;
+      vpGrowth = conf.vtGrowth;
+    } else {
+      throw Exception();
+    }
+
     var response = await http.get(Uri.parse(
         AppConfig.searchAccountsUrl.replaceAll('##SEARCHSTRING', searchQuery)));
 
@@ -18,7 +30,7 @@ class SearchRepositoryImpl implements SearchRepository {
       var data = json.decode(response.body);
       print(response.body);
       // filter here for specfic notification types
-      List<SearchResult> results = ApiResultModel.fromJson(data).searchResults;
+      SearchResults results = SearchResults.fromJson(data, vpGrowth);
       return results;
     } else {
       throw Exception();
