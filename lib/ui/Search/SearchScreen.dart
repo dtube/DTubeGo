@@ -59,38 +59,41 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: dtubeSubAppBar(true, "", context, null),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: searchTextController,
-              //maxLength: 100
-              autofocus: true,
-              cursorColor: globalRed,
-              maxLines: 1,
+      //appBar: dtubeSubAppBar(true, "", context, null),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 50.0),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: searchTextController,
+                //maxLength: 100
+                //autofocus: true,
+                cursorColor: globalRed,
+                maxLines: 1,
+              ),
             ),
-          ),
-          Container(
-            height: 500,
-            child: BlocBuilder<SearchBloc, SearchState>(
-              builder: (context, state) {
-                if (state is SearchInitialState) {
-                  return buildLoading();
-                } else if (state is SearchLoadingState) {
-                  return buildLoading();
-                } else if (state is SearchLoadedState) {
-                  return buildResultsList(state.searchResults);
-                } else if (state is SearchErrorState) {
-                  return buildErrorUi(state.message);
-                } else {
-                  return buildErrorUi('test');
-                }
-              },
+            Container(
+              height: 500,
+              child: BlocBuilder<SearchBloc, SearchState>(
+                builder: (context, state) {
+                  if (state is SearchInitialState) {
+                    return buildLoading();
+                  } else if (state is SearchLoadingState) {
+                    return buildLoading();
+                  } else if (state is SearchLoadedState) {
+                    return buildResultsList(state.searchResults);
+                  } else if (state is SearchErrorState) {
+                    return buildErrorUi(state.message);
+                  } else {
+                    return buildErrorUi('test');
+                  }
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

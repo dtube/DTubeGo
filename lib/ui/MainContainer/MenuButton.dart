@@ -1,3 +1,4 @@
+import 'package:decorated_icon/decorated_icon.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
@@ -14,12 +15,25 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 Widget buildMainMenuSpeedDial(BuildContext context) {
   List<SpeedDialChild> mainMenuButtonOptions = [
     SpeedDialChild(
-        child: FaIcon(FontAwesomeIcons.wallet),
-        foregroundColor: globalAlmostWhite,
-        backgroundColor: globalBlue,
-        label: 'Wallet',
-        labelStyle: TextStyle(fontSize: 14.0),
-        labelBackgroundColor: globalBlue,
+        child: DecoratedIcon(
+          FontAwesomeIcons.wallet,
+          shadows: [
+            BoxShadow(
+              blurRadius: 24.0,
+              color: Colors.black,
+            ),
+            // BoxShadow(
+            //   blurRadius: 12.0,
+            //   color: Colors.white,
+            // ),
+          ],
+        ),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        // label: '',
+        // labelStyle: TextStyle(fontSize: 14.0),
+        // labelBackgroundColor: Colors.transparent,
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return BlocProvider<NotificationBloc>(
@@ -29,12 +43,25 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
           }));
         }),
     SpeedDialChild(
-        child: FaIcon(FontAwesomeIcons.question),
-        foregroundColor: globalAlmostWhite,
-        backgroundColor: globalBlue,
-        label: 'FAQ',
-        labelStyle: TextStyle(fontSize: 14.0),
-        labelBackgroundColor: globalBlue,
+        child: DecoratedIcon(
+          FontAwesomeIcons.question,
+          shadows: [
+            BoxShadow(
+              blurRadius: 24.0,
+              color: Colors.black,
+            ),
+            // BoxShadow(
+            //   blurRadius: 12.0,
+            //   color: Colors.white,
+            // ),
+          ],
+        ),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        // label: '',
+        // labelStyle: TextStyle(fontSize: 14.0),
+        // labelBackgroundColor: Colors.transparent,
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return BlocProvider<AuthBloc>(
@@ -45,12 +72,25 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
           }));
         }),
     SpeedDialChild(
-        child: FaIcon(FontAwesomeIcons.cog),
-        foregroundColor: globalAlmostWhite,
-        backgroundColor: globalBlue,
-        label: 'Settings',
-        labelStyle: TextStyle(fontSize: 14.0),
-        labelBackgroundColor: globalBlue,
+        child: DecoratedIcon(
+          FontAwesomeIcons.cog,
+          shadows: [
+            BoxShadow(
+              blurRadius: 24.0,
+              color: Colors.black,
+            ),
+            // BoxShadow(
+            //   blurRadius: 12.0,
+            //   color: Colors.white,
+            // ),
+          ],
+        ),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        // label: '',
+        // labelStyle: TextStyle(fontSize: 14.0),
+        // labelBackgroundColor: Colors.transparent,
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return BlocProvider<SettingsBloc>(
@@ -68,15 +108,15 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
       visible: true,
       closeManually: false,
       curve: Curves.bounceIn,
-      overlayColor: globalAlmostWhite,
+      overlayColor: Colors.white,
       overlayOpacity: 0,
       onOpen: () => print('OPENING DIAL'),
       onClose: () => print('DIAL CLOSED'),
       tooltip: 'Speed Dial',
       heroTag: 'speed-dial-hero-tag',
-      backgroundColor: globalBlue,
-      foregroundColor: globalAlmostWhite,
-      elevation: 8.0,
+      backgroundColor: Colors.transparent,
+      foregroundColor: Colors.white,
+      elevation: 0.0,
       shape: CircleBorder(),
       gradientBoxShape: BoxShape.circle,
       children: mainMenuButtonOptions);

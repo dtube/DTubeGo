@@ -11,8 +11,11 @@ import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/utils/friendlyTimestamp.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+
+typedef Bool2VoidFunc = void Function(bool);
 
 class FeedList extends StatelessWidget {
   String feedType;
@@ -20,6 +23,7 @@ class FeedList extends StatelessWidget {
   bool bigThumbnail;
   bool showAuthor;
   double paddingTop;
+  Bool2VoidFunc scrollCallback;
   late YoutubePlayerController _youtubePlayerController;
 
   FeedList({
@@ -28,6 +32,7 @@ class FeedList extends StatelessWidget {
     required this.bigThumbnail,
     required this.showAuthor,
     required this.paddingTop,
+    required this.scrollCallback,
     Key? key,
   }) : super(key: key);
 
@@ -55,7 +60,8 @@ class FeedList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: (paddingTop)),
+      //padding: EdgeInsets.only(top: (paddingTop)),
+      padding: EdgeInsets.only(top: (0.0)),
       child: FutureBuilder<bool>(
           future: getDisplayModes(),
           builder: (context, snapshot) {
@@ -63,7 +69,8 @@ class FeedList extends StatelessWidget {
               return buildLoading(context);
             } else {
               return Container(
-                height: MediaQuery.of(context).size.height - 250,
+                // height: MediaQuery.of(context).size.height - 250,
+                height: MediaQuery.of(context).size.height,
                 // color: globalAlmostBlack,
 
                 child: BlocBuilder<FeedBloc, FeedState>(
@@ -147,6 +154,14 @@ class FeedList extends StatelessWidget {
                     )
                   : FetchUserFeedEvent(username: username!));
           }
+          if (_scrollController.position.userScrollDirection ==
+              ScrollDirection.forward) {
+            scrollCallback(true);
+          }
+          if (_scrollController.position.userScrollDirection ==
+              ScrollDirection.reverse) {
+            scrollCallback(false);
+          }
         }),
       itemBuilder: (ctx, pos) {
         // work on more sources
@@ -163,43 +178,44 @@ class FeedList extends StatelessWidget {
             return BlocProvider<UserBloc>(
               create: (context) => UserBloc(repository: UserRepositoryImpl()),
               child: Padding(
-                padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                padding: EdgeInsets.fromLTRB(
+                    8, pos == 0 && feedType != "UserFeed" ? 90 : 0, 8, 0),
                 child: PostListCard(
-                    bigThumbnail: bigThumbnail,
-                    showAuthor: showAuthor,
-                    blur: (_nsfwMode == 'Blur' &&
-                                feed[pos].jsonString?.nsfw == 1) ||
-                            (_hiddenMode == 'Blur' &&
-                                feed[pos].summaryOfVotes < 0)
-                        ? true
-                        : false,
-                    title: feed[pos].jsonString!.title,
-                    description: feed[pos].jsonString!.desc != null
-                        ? feed[pos].jsonString!.desc!
-                        : "",
-                    author: feed[pos].author,
-                    link: feed[pos].link,
-                    // publishDate: .toString(),
-                    // publishDate: DateFormat('yyyy-MM-dd kk:mm').format(
-                    //     DateTime.fromMicrosecondsSinceEpoch(feed[pos].ts * 1000)
-                    //         .toLocal()),
-                    publishDate: TimeAgo.timeInAgoTS(feed[pos].ts),
-                    dtcValue:
-                        (feed[pos].dist / 100).round().toString() + " DTC",
-                    duration: new Duration(
-                        seconds: int.tryParse(feed[pos].jsonString!.dur) != null
-                            ? int.parse(feed[pos].jsonString!.dur)
-                            : 0),
-                    thumbnailUrl: feed[pos].thumbUrl,
-                    videoUrl: feed[pos].videoUrl,
-                    videoSource: feed[pos].videoSource,
-                    alreadyVoted: feed[pos].alreadyVoted!,
-                    alreadyVotedDirection: feed[pos].alreadyVotedDirection!,
-                    upvotesCount: feed[pos].upvotes!.length,
-                    downvotesCount: feed[pos].downvotes!.length,
-                    indexOfList: pos,
-                    mainTag: feed[pos].jsonString!.tag,
-                    oc: feed[pos].jsonString!.oc == 1 ? true : false),
+                  bigThumbnail: bigThumbnail,
+                  showAuthor: showAuthor,
+                  blur: (_nsfwMode == 'Blur' &&
+                              feed[pos].jsonString?.nsfw == 1) ||
+                          (_hiddenMode == 'Blur' &&
+                              feed[pos].summaryOfVotes < 0)
+                      ? true
+                      : false,
+                  title: feed[pos].jsonString!.title,
+                  description: feed[pos].jsonString!.desc != null
+                      ? feed[pos].jsonString!.desc!
+                      : "",
+                  author: feed[pos].author,
+                  link: feed[pos].link,
+                  // publishDate: .toString(),
+                  // publishDate: DateFormat('yyyy-MM-dd kk:mm').format(
+                  //     DateTime.fromMicrosecondsSinceEpoch(feed[pos].ts * 1000)
+                  //         .toLocal()),
+                  publishDate: TimeAgo.timeInAgoTS(feed[pos].ts),
+                  dtcValue: (feed[pos].dist / 100).round().toString() + " DTC",
+                  duration: new Duration(
+                      seconds: int.tryParse(feed[pos].jsonString!.dur) != null
+                          ? int.parse(feed[pos].jsonString!.dur)
+                          : 0),
+                  thumbnailUrl: feed[pos].thumbUrl,
+                  videoUrl: feed[pos].videoUrl,
+                  videoSource: feed[pos].videoSource,
+                  alreadyVoted: feed[pos].alreadyVoted!,
+                  alreadyVotedDirection: feed[pos].alreadyVotedDirection!,
+                  upvotesCount: feed[pos].upvotes!.length,
+                  downvotesCount: feed[pos].downvotes!.length,
+                  indexOfList: pos,
+                  mainTag: feed[pos].jsonString!.tag,
+                  oc: feed[pos].jsonString!.oc == 1 ? true : false,
+                ),
               ),
             );
           }
@@ -249,29 +265,29 @@ class PostListCard extends StatelessWidget {
   final String mainTag;
   final bool oc;
 
-  const PostListCard(
-      {Key? key,
-      required this.showAuthor,
-      required this.bigThumbnail,
-      required this.blur,
-      required this.thumbnailUrl,
-      required this.title,
-      required this.description,
-      required this.author,
-      required this.link,
-      required this.publishDate,
-      required this.duration,
-      required this.dtcValue,
-      required this.videoUrl,
-      required this.videoSource,
-      required this.alreadyVoted,
-      required this.alreadyVotedDirection,
-      required this.upvotesCount,
-      required this.downvotesCount,
-      required this.indexOfList,
-      required this.mainTag,
-      required this.oc})
-      : super(key: key);
+  const PostListCard({
+    Key? key,
+    required this.showAuthor,
+    required this.bigThumbnail,
+    required this.blur,
+    required this.thumbnailUrl,
+    required this.title,
+    required this.description,
+    required this.author,
+    required this.link,
+    required this.publishDate,
+    required this.duration,
+    required this.dtcValue,
+    required this.videoUrl,
+    required this.videoSource,
+    required this.alreadyVoted,
+    required this.alreadyVotedDirection,
+    required this.upvotesCount,
+    required this.downvotesCount,
+    required this.indexOfList,
+    required this.mainTag,
+    required this.oc,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -281,24 +297,25 @@ class PostListCard extends StatelessWidget {
       return Container(
         height: (deviceWidth / 16 * 9) + 140,
         child: PostListCardMainFeed(
-            blur: blur,
-            thumbnailUrl: thumbnailUrl,
-            title: title,
-            description: description,
-            author: author,
-            link: link,
-            publishDate: publishDate,
-            duration: duration,
-            dtcValue: dtcValue,
-            videoUrl: videoUrl,
-            videoSource: videoSource,
-            alreadyVoted: alreadyVoted,
-            alreadyVotedDirection: alreadyVotedDirection,
-            upvotesCount: upvotesCount,
-            downvotesCount: downvotesCount,
-            indexOfList: indexOfList,
-            mainTag: mainTag,
-            oc: oc),
+          blur: blur,
+          thumbnailUrl: thumbnailUrl,
+          title: title,
+          description: description,
+          author: author,
+          link: link,
+          publishDate: publishDate,
+          duration: duration,
+          dtcValue: dtcValue,
+          videoUrl: videoUrl,
+          videoSource: videoSource,
+          alreadyVoted: alreadyVoted,
+          alreadyVotedDirection: alreadyVotedDirection,
+          upvotesCount: upvotesCount,
+          downvotesCount: downvotesCount,
+          indexOfList: indexOfList,
+          mainTag: mainTag,
+          oc: oc,
+        ),
       );
     } else {
       return PostListCardUserFeed(

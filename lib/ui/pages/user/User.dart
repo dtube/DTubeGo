@@ -193,6 +193,7 @@ class _UserState extends State<UserPage> {
                     showAuthor: false,
                     bigThumbnail: false,
                     paddingTop: 0,
+                    scrollCallback: (bool) {},
                   ))
             ]))),
         Positioned(

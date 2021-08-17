@@ -40,76 +40,79 @@ class _UploaderMainPageState extends State<UploaderMainPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: dtubeSubAppBar(true, "", context, null),
+      //appBar: dtubeSubAppBar(true, "", context, null),
       resizeToAvoidBottomInset: true,
-      body: Column(
-        children: [
-          TabBar(
-            unselectedLabelColor: Colors.grey,
-            labelColor: globalAlmostWhite,
-            indicatorColor: globalRed,
-            tabs: [
-              Tab(
-                text: 'IPFS',
-              ),
-              Tab(
-                text: '3rd Party',
-              )
-            ],
-            controller: _tabController,
-            indicatorSize: TabBarIndicatorSize.tab,
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TabBarView(
-                children: [
-                  MultiBlocProvider(
-                    providers: [
-                      BlocProvider(
-                        create: (context) => SettingsBloc(),
-                      ),
-                      BlocProvider(
-                        create: (context) =>
-                            UserBloc(repository: UserRepositoryImpl()),
-                      ),
-                      BlocProvider(
-                        create: (context) => IPFSUploadBloc(
-                            repository: IPFSUploadRepositoryImpl()),
-                      ),
-                      BlocProvider(
-                        create: (context) => HivesignerBloc(
-                            repository: HivesignerRepositoryImpl()),
-                      ),
-                    ],
-                    child: WizardIPFS(),
-                  ),
-                  MultiBlocProvider(
-                    providers: [
-                      BlocProvider(
-                        create: (context) => SettingsBloc(),
-                      ),
-                      BlocProvider(
-                        create: (context) =>
-                            UserBloc(repository: UserRepositoryImpl()),
-                      ),
-                      BlocProvider(
-                        create: (context) => ThirdPartyMetadataBloc(
-                            repository: ThirdPartyMetadataRepositoryImpl()),
-                      ),
-                      BlocProvider(
-                        create: (context) => HivesignerBloc(
-                            repository: HivesignerRepositoryImpl()),
-                      ),
-                    ],
-                    child: Wizard3rdParty(),
-                  ),
-                ],
-                controller: _tabController,
+      body: Padding(
+        padding: const EdgeInsets.only(top: 90.0),
+        child: Column(
+          children: [
+            TabBar(
+              unselectedLabelColor: Colors.grey,
+              labelColor: globalAlmostWhite,
+              indicatorColor: globalRed,
+              tabs: [
+                Tab(
+                  text: 'IPFS',
+                ),
+                Tab(
+                  text: '3rd Party',
+                )
+              ],
+              controller: _tabController,
+              indicatorSize: TabBarIndicatorSize.tab,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TabBarView(
+                  children: [
+                    MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create: (context) => SettingsBloc(),
+                        ),
+                        BlocProvider(
+                          create: (context) =>
+                              UserBloc(repository: UserRepositoryImpl()),
+                        ),
+                        BlocProvider(
+                          create: (context) => IPFSUploadBloc(
+                              repository: IPFSUploadRepositoryImpl()),
+                        ),
+                        BlocProvider(
+                          create: (context) => HivesignerBloc(
+                              repository: HivesignerRepositoryImpl()),
+                        ),
+                      ],
+                      child: WizardIPFS(),
+                    ),
+                    MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create: (context) => SettingsBloc(),
+                        ),
+                        BlocProvider(
+                          create: (context) =>
+                              UserBloc(repository: UserRepositoryImpl()),
+                        ),
+                        BlocProvider(
+                          create: (context) => ThirdPartyMetadataBloc(
+                              repository: ThirdPartyMetadataRepositoryImpl()),
+                        ),
+                        BlocProvider(
+                          create: (context) => HivesignerBloc(
+                              repository: HivesignerRepositoryImpl()),
+                        ),
+                      ],
+                      child: Wizard3rdParty(),
+                    ),
+                  ],
+                  controller: _tabController,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

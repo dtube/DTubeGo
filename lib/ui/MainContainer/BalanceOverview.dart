@@ -6,6 +6,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+class BalanceOverviewBase extends StatefulWidget {
+  BalanceOverviewBase({Key? key}) : super(key: key);
+
+  @override
+  _BalanceOverviewBaseState createState() => _BalanceOverviewBaseState();
+}
+
+class _BalanceOverviewBaseState extends State<BalanceOverviewBase> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => UserBloc(repository: UserRepositoryImpl()),
+      child: BalanceOverview(),
+    );
+  }
+}
+
 class BalanceOverview extends StatefulWidget {
   const BalanceOverview({
     Key? key,
