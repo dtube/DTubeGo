@@ -21,3 +21,10 @@ class FetchUserFeedEvent extends FeedEvent {
   @override
   List<Object> get props => List.empty();
 }
+
+class InitFeedEvent extends FeedEvent {
+  InitFeedEvent();
+
+  @override
+  List<Object> get props => List.empty();
+}

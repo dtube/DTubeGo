@@ -257,7 +257,9 @@ class ActivityItem extends StatelessWidget {
                               create: (BuildContext context) =>
                                   UserBloc(repository: UserRepositoryImpl()),
                               child: AccountAvatar(
-                                  username: txData.sender, size: 40),
+                                  username: txData.sender,
+                                  size: 40,
+                                  showVerified: true),
                             ),
                           ),
                           Container(

@@ -87,12 +87,14 @@ class _PostDetailPageState extends State<PostDetailPage> {
             onWillPop: _onWillPop,
             child: Scaffold(
               resizeToAvoidBottomInset: true,
+              extendBodyBehindAppBar: true,
               appBar:
                   MediaQuery.of(context).orientation == Orientation.landscape
                       ? null
                       : AppBar(
                           toolbarHeight: 28,
                           automaticallyImplyLeading: true,
+                          backgroundColor: Colors.transparent,
                         ),
               body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
                 if (state is PostLoadingState) {
@@ -101,9 +103,13 @@ class _PostDetailPageState extends State<PostDetailPage> {
                           size: MediaQuery.of(context).size.width / 3));
                 } else if (state is PostLoadedState) {
                   reloadCount++;
-                  return PostDetails(
-                    post: state.post,
-                    directFocus: reloadCount <= 1 ? widget.directFocus : "none",
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 100),
+                    child: PostDetails(
+                      post: state.post,
+                      directFocus:
+                          reloadCount <= 1 ? widget.directFocus : "none",
+                    ),
                   );
                 } else {
                   return Text("failed");
@@ -141,7 +147,7 @@ class _PostDetailsState extends State<PostDetails> {
 
     _userBloc = BlocProvider.of<UserBloc>(context);
 
-    _userBloc.add(FetchAccountDataEvent(widget.post.author));
+    _userBloc.add(FetchAccountDataEvent(username: widget.post.author));
     _userBloc.add(FetchDTCVPEvent());
 
     _controller = YoutubePlayerController(
@@ -228,7 +234,8 @@ class _PostDetailsState extends State<PostDetails> {
                                               repository: UserRepositoryImpl()),
                                       child: AccountAvatar(
                                           username: widget.post.author,
-                                          size: 40),
+                                          size: 40,
+                                          showVerified: true),
                                     ),
                                     onPressed: () {
                                       navigateToUserDetailPage(

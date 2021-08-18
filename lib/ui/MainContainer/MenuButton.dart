@@ -101,7 +101,20 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
   ];
 
   return SpeedDial(
-      icon: FontAwesomeIcons.bars,
+      // icon: FontAwesomeIcons.bars,
+      child: DecoratedIcon(
+        FontAwesomeIcons.bars,
+        shadows: [
+          BoxShadow(
+            blurRadius: 24.0,
+            color: Colors.black,
+          ),
+          // BoxShadow(
+          //   blurRadius: 12.0,
+          //   color: Colors.white,
+          // ),
+        ],
+      ),
       activeIcon: FontAwesomeIcons.chevronLeft,
       buttonSize: 40.0,
       direction: SpeedDialDirection.Down,

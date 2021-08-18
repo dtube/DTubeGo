@@ -18,8 +18,10 @@ import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/MainContainer/BalanceOverview.dart';
 import 'package:dtube_togo/ui/MainContainer/MenuButton.dart';
-import 'package:dtube_togo/ui/Search/ExploreTabContainer.dart';
-import 'package:dtube_togo/ui/Search/SearchScreen.dart';
+import 'package:dtube_togo/ui/Explore/ExploreTabContainer.dart';
+import 'package:dtube_togo/ui/Explore/SearchScreen.dart';
+import 'package:dtube_togo/ui/pages/feeds/FeedMainContainer.dart';
+import 'package:dtube_togo/ui/pages/feeds/MomentsList.dart';
 import 'package:dtube_togo/ui/pages/upload/UploadButton.dart';
 import 'package:dtube_togo/ui/pages/feeds/FeedList.dart';
 
@@ -57,9 +59,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
         opacity: 0.0,
         icon: Center(
           child: new DecoratedIcon(
-            FontAwesomeIcons.addressBook,
+            FontAwesomeIcons.alignJustify,
             color: Colors.white,
-            size: 30,
+            size: 24,
             shadows: [
               BoxShadow(
                 blurRadius: 24.0,
@@ -78,9 +80,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
         opacity: 0.0,
         icon: Center(
           child: new DecoratedIcon(
-            FontAwesomeIcons.newspaper,
+            FontAwesomeIcons.globeAfrica,
             color: Colors.white,
-            size: 30,
+            size: 24,
             shadows: [
               BoxShadow(
                 blurRadius: 24.0,
@@ -175,9 +177,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
         opacity: 0.0,
         icon: Center(
           child: new DecoratedIcon(
-            FontAwesomeIcons.search,
+            FontAwesomeIcons.eye,
             color: Colors.white,
-            size: 30,
+            size: 24,
             shadows: [
               BoxShadow(
                 blurRadius: 24.0,
@@ -208,9 +210,11 @@ class _NavigationContainerState extends State<NavigationContainer> {
           //     // ),
           //   ],
           // ),
-          icon: AccountAvatarBase(
-            username: "you",
-            size: 40,
+          icon: CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 15,
+            child: AccountAvatarBase(
+                username: "you", size: 25, showVerified: false),
           )
 
           // title: 'Profile'
@@ -236,27 +240,10 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
   List<Widget> _buildScreens() {
     return [
-      FeedList(
-          feedType: 'MyFeed',
-          bigThumbnail: true,
-          showAuthor: false,
-          paddingTop: topBarHeight,
-          scrollCallback: scrollCallback // if Moments ready then 0
-          ),
-      FeedList(
-          feedType: 'NewFeed',
-          bigThumbnail: true,
-          showAuthor: false,
-          paddingTop: topBarHeight,
-          scrollCallback: scrollCallback),
-      UploaderMainPage(),
-      // FeedList(
-      //     feedType: 'HotFeed',
-      //     bigThumbnail: true,
-      //     showAuthor: false,
-      //     paddingTop: topBarHeight,
-      //     scrollCallback: scrollCallback),
+      FeedMainPage(),
       ExploreMainPage(),
+      UploaderMainPage(),
+      MomentsList(),
       UserPage(
         ownUserpage: true,
       ),
@@ -266,7 +253,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<FeedBloc>(context).add(FetchFeedEvent(feedType: "MyFeed"));
+    BlocProvider.of<FeedBloc>(context).add(FetchFeedEvent(feedType: "NewFeed"));
   }
 
   @override
@@ -460,31 +447,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
             duration: Duration(milliseconds: 200),
             curve: Curves.ease,
           ),
-
-          onItemSelected: (index) {
-            setState(() {
-              switch (index) {
-                case 0:
-                  BlocProvider.of<FeedBloc>(context)
-                      .add(FetchFeedEvent(feedType: "MyFeed"));
-                  break;
-                case 1:
-                  BlocProvider.of<FeedBloc>(context)
-                      .add(FetchFeedEvent(feedType: "NewFeed"));
-                  break;
-
-                // case 3:
-                //   BlocProvider.of<FeedBloc>(context)
-                //       .add(FetchFeedEvent(feedType: "HotFeed"));
-                //   break;
-                // case 4:
-                //   BlocProvider.of<FeedBloc>(context)
-                //       .add(FetchFeedEvent(feedType: "TrendingFeed"));
-                //   break;
-                default:
-              }
-            });
-          },
 
           navBarStyle: NavBarStyle.style15,
 

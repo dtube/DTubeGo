@@ -3,8 +3,9 @@ import 'package:equatable/equatable.dart';
 abstract class UserEvent extends Equatable {}
 
 class FetchAccountDataEvent extends UserEvent {
-  FetchAccountDataEvent(this.username);
+  FetchAccountDataEvent({required this.username});
   final String username;
+
   @override
   List<Object> get props => List.empty();
 }

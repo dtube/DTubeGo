@@ -49,3 +49,39 @@ class DTubeFormCard extends StatelessWidget {
     );
   }
 }
+
+class OverlayText extends StatelessWidget {
+  OverlayText(
+      {Key? key,
+      required this.text,
+      this.sizeMultiply,
+      this.maxLines,
+      this.overflow})
+      : super(key: key);
+
+  final String text;
+  double? sizeMultiply;
+  int? maxLines;
+  TextOverflow? overflow;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      //style: Theme.of(context).textTheme.headline5,
+      maxLines: maxLines != null ? maxLines! : 1,
+      overflow: overflow != null ? overflow! : TextOverflow.ellipsis,
+      style: TextStyle(
+        fontSize: 14.0 * (sizeMultiply != null ? sizeMultiply! : 1),
+        color: Colors.white,
+        shadows: [
+          Shadow(
+            offset: Offset(1.0, 1.0),
+            blurRadius: 13.0,
+            color: Colors.black,
+          ),
+        ],
+      ),
+    );
+  }
+}

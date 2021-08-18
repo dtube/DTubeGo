@@ -87,7 +87,9 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                 width: _avatarSize,
                 height: _avatarSize,
                 child: AccountAvatarBase(
-                    username: widget.author, size: _avatarSize),
+                    username: widget.author,
+                    size: _avatarSize,
+                    showVerified: true),
               ),
             ),
             SizedBox(width: 8),

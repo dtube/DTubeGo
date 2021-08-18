@@ -16,8 +16,9 @@ class FeedLoadingState extends FeedState {
 
 class FeedLoadedState extends FeedState {
   List<FeedItem> feed;
+  String feedType;
 
-  FeedLoadedState({required this.feed});
+  FeedLoadedState({required this.feed, required this.feedType});
 
   @override
   List<Object> get props => [feed];

@@ -12,6 +12,7 @@ class OpenableHyperlink extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         child: Text(url,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Colors.blue,

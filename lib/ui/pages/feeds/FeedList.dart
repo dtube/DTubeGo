@@ -85,7 +85,9 @@ class FeedList extends StatelessWidget {
                         state is FeedLoadingState && _feedItems.isEmpty) {
                       return buildLoading(context);
                     } else if (state is FeedLoadedState) {
-                      _feedItems.addAll(state.feed);
+                      if (state.feedType == feedType) {
+                        _feedItems.addAll(state.feed);
+                      }
                       BlocProvider.of<FeedBloc>(context).isFetching = false;
                     } else if (state is FeedErrorState) {
                       return buildErrorUi(state.message);
@@ -102,7 +104,9 @@ class FeedList extends StatelessWidget {
 
   Widget buildLoading(BuildContext context) {
     return Center(
-        child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
+        child: feedType == "UserFeed"
+            ? SizedBox(height: 0, width: 0)
+            : DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
   }
 
   Widget buildErrorUi(String message) {
@@ -175,11 +179,19 @@ class FeedList extends StatelessWidget {
               height: 0,
             );
           } else {
+            double _topPadding = 0;
+            if (pos == 0) {
+              if (feedType == "UserFeed") {
+                _topPadding = 180;
+              } else {
+                _topPadding = 110;
+              }
+            }
+
             return BlocProvider<UserBloc>(
               create: (context) => UserBloc(repository: UserRepositoryImpl()),
               child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                    8, pos == 0 && feedType != "UserFeed" ? 90 : 0, 8, 0),
+                padding: EdgeInsets.fromLTRB(8, _topPadding, 8, 0),
                 child: PostListCard(
                   bigThumbnail: bigThumbnail,
                   showAuthor: showAuthor,
@@ -225,20 +237,6 @@ class FeedList extends StatelessWidget {
           );
         }
       },
-    );
-  }
-}
-
-class MomentsList extends StatelessWidget {
-  const MomentsList({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 80.0),
-      child: Icon(Icons.access_alarm_outlined),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/utils/shortBalanceStrings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,15 +63,13 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                 //mainAxisAlignment: MainAxisAlignment.end,
 
                 children: [
-                  Center(
-                    child: Text(
-                      shortDTC(state.dtcBalance) + "DTC",
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
+                  OverlayText(
+                    text: shortDTC(state.dtcBalance) + "DTC",
+                    sizeMultiply: 1.1,
                   ),
-                  Text(
-                    shortVP(state.vtBalance['v']!) + "VP",
-                    style: Theme.of(context).textTheme.subtitle1,
+                  OverlayText(
+                    text: shortVP(state.vtBalance['v']!) + "VP",
+                    sizeMultiply: 1.1,
                   ),
                 ]);
           } catch (e) {

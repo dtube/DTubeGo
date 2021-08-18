@@ -189,7 +189,8 @@ class CustomListItem extends StatelessWidget {
                         UserBloc(repository: UserRepositoryImpl()),
                     child: Padding(
                       padding: const EdgeInsets.only(right: 8.0),
-                      child: AccountAvatar(username: name, size: 40),
+                      child: AccountAvatar(
+                          username: name, size: 40, showVerified: true),
                     ),
                   ),
                   Text(

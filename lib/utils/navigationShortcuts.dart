@@ -20,18 +20,13 @@ void navigateToPostDetailPage(
 
 void navigateToUserDetailPage(BuildContext context, String username) {
   Navigator.push(context, MaterialPageRoute(builder: (context) {
-    // return BlocProvider<UserBloc>(
-    //   create: (context) {
-    //     return UserBloc(repository: UserRepositoryImpl())
-
-    //   },
-    //   child:
     return MultiBlocProvider(
       providers: [
         BlocProvider<UserBloc>(
           create: (BuildContext context) =>
               UserBloc(repository: UserRepositoryImpl())
-                ..add(FetchAccountDataEvent(username)),
+          //..add(FetchAccountDataEvent(username))
+          ,
         ),
         BlocProvider<TransactionBloc>(
           create: (BuildContext context) =>

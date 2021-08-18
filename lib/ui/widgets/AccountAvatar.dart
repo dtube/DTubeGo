@@ -10,25 +10,35 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AccountAvatarBase extends StatelessWidget {
   const AccountAvatarBase(
-      {Key? key, required this.username, required this.size})
+      {Key? key,
+      required this.username,
+      required this.size,
+      required this.showVerified})
       : super(key: key);
   final String username;
   final double size;
+  final bool showVerified;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => UserBloc(repository: UserRepositoryImpl()),
-      child: AccountAvatar(username: username, size: size),
+      child: AccountAvatar(
+          username: username, size: size, showVerified: showVerified),
     );
   }
 }
 
 class AccountAvatar extends StatefulWidget {
-  const AccountAvatar({Key? key, required this.username, required this.size})
+  const AccountAvatar(
+      {Key? key,
+      required this.username,
+      required this.size,
+      required this.showVerified})
       : super(key: key);
   final String username;
   final double size;
+  final bool showVerified;
 
   @override
   _AccountAvatarState createState() => _AccountAvatarState();
@@ -40,7 +50,7 @@ class _AccountAvatarState extends State<AccountAvatar> {
   void initState() {
     super.initState();
     _userBlocAvatar = BlocProvider.of<UserBloc>(context);
-    _userBlocAvatar.add(FetchAccountDataEvent(widget.username));
+    _userBlocAvatar.add(FetchAccountDataEvent(username: widget.username));
   }
 
   @override
@@ -81,7 +91,7 @@ class _AccountAvatarState extends State<AccountAvatar> {
                       height: widget.size,
                       child: AvatarLoadingPlaceholder(size: widget.size)),
                 ),
-                state.verified
+                state.verified && widget.showVerified
                     ? Align(
                         alignment: Alignment.bottomRight,
                         child: CircleAvatar(

@@ -183,7 +183,10 @@ class _RewardsCardState extends State<RewardsCard> {
                 width: 40,
                 height: 40,
                 child: AccountAvatarBase(
-                    username: widget.reward.author, size: 40)),
+                  username: widget.reward.author,
+                  size: 40,
+                  showVerified: true,
+                )),
             SizedBox(width: 4),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

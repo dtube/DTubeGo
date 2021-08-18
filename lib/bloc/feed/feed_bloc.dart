@@ -19,6 +19,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   Stream<FeedState> mapEventToState(FeedEvent event) async* {
     String _avalonApiNode = await sec.getNode();
     String? _applicationUser = await sec.getUsername();
+    if (event is InitFeedEvent) {
+      yield FeedInitialState();
+    }
     if (event is FetchFeedEvent) {
       yield FeedLoadingState();
       try {
@@ -56,7 +59,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             break;
         }
 
-        yield FeedLoadedState(feed: feed);
+        yield FeedLoadedState(feed: feed, feedType: event.feedType);
       } catch (e) {
         yield FeedErrorState(message: e.toString());
       }
@@ -67,7 +70,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       try {
         List<FeedItem> feed = await repository.getUserFeed(_avalonApiNode,
             event.username, event.fromAuthor, event.fromLink, _applicationUser);
-        yield FeedLoadedState(feed: feed);
+        yield FeedLoadedState(feed: feed, feedType: "UserFeed");
       } catch (e) {
         print(e.toString());
         yield FeedErrorState(message: e.toString());
