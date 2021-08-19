@@ -86,15 +86,16 @@ class _PostDetailPageState extends State<PostDetailPage> {
         child: WillPopScope(
             onWillPop: _onWillPop,
             child: Scaffold(
-              resizeToAvoidBottomInset: true,
+              // resizeToAvoidBottomInset: true,
               extendBodyBehindAppBar: true,
+              // backgroundColor: Colors.transparent,
               appBar:
                   MediaQuery.of(context).orientation == Orientation.landscape
                       ? null
                       : AppBar(
-                          toolbarHeight: 28,
-                          automaticallyImplyLeading: true,
                           backgroundColor: Colors.transparent,
+                          elevation: 0,
+                          toolbarHeight: 28,
                         ),
               body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
                 if (state is PostLoadingState) {
@@ -103,13 +104,14 @@ class _PostDetailPageState extends State<PostDetailPage> {
                           size: MediaQuery.of(context).size.width / 3));
                 } else if (state is PostLoadedState) {
                   reloadCount++;
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 100),
-                    child: PostDetails(
-                      post: state.post,
-                      directFocus:
-                          reloadCount <= 1 ? widget.directFocus : "none",
-                    ),
+                  return
+                      // Padding(
+                      //   padding: const EdgeInsets.only(top: 100),
+                      //   child:
+                      PostDetails(
+                    post: state.post,
+                    directFocus: reloadCount <= 1 ? widget.directFocus : "none",
+                    //),
                   );
                 } else {
                   return Text("failed");
@@ -193,207 +195,206 @@ class _PostDetailsState extends State<PostDetails> {
         }
       },
       child: YoutubePlayerControllerProvider(
-          // Passing controller to widgets below.
           controller: _controller,
           child: SingleChildScrollView(
-            //shrinkWrap: true,
-            child: Stack(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    //padding: EdgeInsets.all(5.0),
-                    children: <Widget>[
-                      MediaQuery.of(context).orientation ==
-                              Orientation.landscape
-                          ? SizedBox(height: 0)
-                          : Column(
-                              children: [
-                                Container(
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.all(10.0),
-                                  child: Text(
-                                    widget.post.jsonString!.title,
-                                    style:
-                                        Theme.of(context).textTheme.headline1,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 100.0),
+              child: Stack(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        MediaQuery.of(context).orientation ==
+                                Orientation.landscape
+                            ? SizedBox(height: 0)
+                            : Column(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Text(
+                                      widget.post.jsonString!.title,
+                                      style:
+                                          Theme.of(context).textTheme.headline1,
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  alignment: Alignment.topRight,
-                                  margin: EdgeInsets.all(5.0),
-                                  child: InputChip(
-                                    label: Container(
-                                      width: 100,
-                                      height: 40,
-                                      child: Center(
-                                          child: Text(widget.post.author)),
+                                  Container(
+                                    alignment: Alignment.topRight,
+                                    margin: EdgeInsets.all(5.0),
+                                    child: InputChip(
+                                      label: Container(
+                                        width: 100,
+                                        height: 40,
+                                        child: Center(
+                                            child: Text(widget.post.author)),
+                                      ),
+                                      avatar: BlocProvider<UserBloc>(
+                                        create: (BuildContext context) =>
+                                            UserBloc(
+                                                repository:
+                                                    UserRepositoryImpl()),
+                                        child: AccountAvatar(
+                                            username: widget.post.author,
+                                            size: 40,
+                                            showVerified: true),
+                                      ),
+                                      onPressed: () {
+                                        navigateToUserDetailPage(
+                                            context, widget.post.author);
+                                      },
                                     ),
-                                    avatar: BlocProvider<UserBloc>(
-                                      create: (BuildContext context) =>
-                                          UserBloc(
-                                              repository: UserRepositoryImpl()),
-                                      child: AccountAvatar(
-                                          username: widget.post.author,
-                                          size: 40,
-                                          showVerified: true),
-                                    ),
-                                    onPressed: () {
-                                      navigateToUserDetailPage(
-                                          context, widget.post.author);
-                                    },
                                   ),
-                                ),
-                              ],
-                            ),
-                      widget.post.videoSource == "youtube"
-                          ? player
-                          : ["ipfs", "sia"].contains(widget.post.videoSource)
-                              ? BP(
-                                  videoUrl: widget.post.videoUrl!,
-                                  autoplay: !(widget.directFocus != "none"),
-                                  looping: false,
-                                  localFile: false,
-                                  controls: true,
-                                  usedAsPreview: false,
-                                  allowFullscreen: true,
-                                )
-                              : Text("no player detected"),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          widget.post.tags.length > 0
-                              ? Row(
-                                  children: [
-                                    widget.post.jsonString!.oc == 1
-                                        ? SizedBox(
-                                            width: 23,
-                                            child:
-                                                FaIcon(FontAwesomeIcons.award))
-                                        : SizedBox(width: 0),
-                                    Container(
-                                      width: deviceWidth * 0.6,
-                                      height: 50,
-                                      child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: widget.post.tags.length,
-                                          itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 8.0),
-                                              child: InputChip(
-                                                  label: Text(
-                                                widget.post.tags[index]
-                                                    .toString(),
-                                              )),
-                                            );
-                                            // return Text(
-                                            //   widget.post.tags[index].toString(),
-                                            // );
-                                          }),
-                                    ),
-                                  ],
-                                )
-                              : SizedBox(height: 0),
-                          Text(
-                            (widget.post.dist / 100).round().toString() +
-                                " DTC",
-                            style: Theme.of(context).textTheme.headline2,
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          BlocBuilder<SettingsBloc, SettingsState>(
-                              builder: (context, state) {
-                            if (state is SettingsLoadedState) {
-                              _defaultVoteWeightPosts = double.parse(state
-                                  .settings[settingKey_defaultVotingWeight]!);
-                              _defaultVoteTipPosts = double.parse(state
-                                  .settings[settingKey_defaultVotingWeight]!);
-                              _defaultVoteWeightComments = double.parse(
-                                  state.settings[
-                                      settingKey_defaultVotingWeightComments]!);
-                              return VotingButtons(
-                                  author: widget.post.author,
-                                  link: widget.post.link,
-                                  alreadyVoted: widget.post.alreadyVoted!,
-                                  alreadyVotedDirection:
-                                      widget.post.alreadyVotedDirection!,
-                                  upvotes: widget.post.upvotes,
-                                  downvotes: widget.post.downvotes,
-                                  defaultVotingWeight: _defaultVoteWeightPosts,
-                                  defaultVotingTip: _defaultVoteTipPosts,
-                                  currentVT: _currentVT,
-                                  scale: 1,
-                                  isPost: true,
-                                  focusVote: widget.directFocus == "vote");
-                            } else {
-                              return SizedBox(height: 0);
-                            }
-                          }),
-                        ],
-                      ),
-                      CollapsedDescription(
-                          description: widget.post.jsonString!.desc != null
-                              ? widget.post.jsonString!.desc!
-                              : ""),
-                      Divider(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InputChip(
-                            label: FaIcon(FontAwesomeIcons.shareAlt),
-                            onPressed: () {
-                              Share.share('https://d.tube/c/' +
-                                  widget.post.author +
-                                  '/' +
-                                  widget.post.link);
-                            },
-                          ),
-                          SizedBox(width: 10),
-                          ReplyButton(
-                            icon: FaIcon(FontAwesomeIcons.comment),
-                            author: widget.post.author,
-                            link: widget.post.link,
-                            parentAuthor: widget.post.author,
-                            parentLink: widget.post.link,
-                            votingWeight: _defaultVoteWeightComments,
-                            scale: 1,
-                            focusOnNewComment:
-                                widget.directFocus == "newcomment",
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 16),
-                      widget.post.comments != null &&
-                              widget.post.comments!.length > 0
-                          ? Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: Container(
-                                height: 300,
-                                child: ListView.builder(
-                                  key: PageStorageKey('myScrollable'),
-                                  itemCount: widget.post.comments!.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) =>
-                                          CommentDisplay(
-                                              widget.post.comments![index],
-                                              _defaultVoteWeightComments,
-                                              _currentVT,
-                                              widget.post.author,
-                                              widget.post.link,
-                                              _defaultVoteTipComments),
-                                ),
+                                ],
                               ),
-                            )
-                          : SizedBox(height: 0),
-                      SizedBox(height: 200)
-                    ],
+                        widget.post.videoSource == "youtube"
+                            ? player
+                            : ["ipfs", "sia"].contains(widget.post.videoSource)
+                                ? BP(
+                                    videoUrl: widget.post.videoUrl!,
+                                    autoplay: !(widget.directFocus != "none"),
+                                    looping: false,
+                                    localFile: false,
+                                    controls: true,
+                                    usedAsPreview: false,
+                                    allowFullscreen: true,
+                                  )
+                                : Text("no player detected"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            widget.post.tags.length > 0
+                                ? Row(
+                                    children: [
+                                      widget.post.jsonString!.oc == 1
+                                          ? SizedBox(
+                                              width: 23,
+                                              child: FaIcon(
+                                                  FontAwesomeIcons.award))
+                                          : SizedBox(width: 0),
+                                      Container(
+                                        width: deviceWidth * 0.6,
+                                        height: 50,
+                                        child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: widget.post.tags.length,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8.0),
+                                                child: InputChip(
+                                                    label: Text(
+                                                  widget.post.tags[index]
+                                                      .toString(),
+                                                )),
+                                              );
+                                            }),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(height: 0),
+                            Text(
+                              (widget.post.dist / 100).round().toString() +
+                                  " DTC",
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            BlocBuilder<SettingsBloc, SettingsState>(
+                                builder: (context, state) {
+                              if (state is SettingsLoadedState) {
+                                _defaultVoteWeightPosts = double.parse(state
+                                    .settings[settingKey_defaultVotingWeight]!);
+                                _defaultVoteTipPosts = double.parse(state
+                                    .settings[settingKey_defaultVotingWeight]!);
+                                _defaultVoteWeightComments = double.parse(state
+                                        .settings[
+                                    settingKey_defaultVotingWeightComments]!);
+                                return VotingButtons(
+                                    author: widget.post.author,
+                                    link: widget.post.link,
+                                    alreadyVoted: widget.post.alreadyVoted!,
+                                    alreadyVotedDirection:
+                                        widget.post.alreadyVotedDirection!,
+                                    upvotes: widget.post.upvotes,
+                                    downvotes: widget.post.downvotes,
+                                    defaultVotingWeight:
+                                        _defaultVoteWeightPosts,
+                                    defaultVotingTip: _defaultVoteTipPosts,
+                                    currentVT: _currentVT,
+                                    scale: 1,
+                                    isPost: true,
+                                    focusVote: widget.directFocus == "vote");
+                              } else {
+                                return SizedBox(height: 0);
+                              }
+                            }),
+                          ],
+                        ),
+                        CollapsedDescription(
+                            description: widget.post.jsonString!.desc != null
+                                ? widget.post.jsonString!.desc!
+                                : ""),
+                        Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InputChip(
+                              label: FaIcon(FontAwesomeIcons.shareAlt),
+                              onPressed: () {
+                                Share.share('https://d.tube/c/' +
+                                    widget.post.author +
+                                    '/' +
+                                    widget.post.link);
+                              },
+                            ),
+                            SizedBox(width: 10),
+                            ReplyButton(
+                              icon: FaIcon(FontAwesomeIcons.comment),
+                              author: widget.post.author,
+                              link: widget.post.link,
+                              parentAuthor: widget.post.author,
+                              parentLink: widget.post.link,
+                              votingWeight: _defaultVoteWeightComments,
+                              scale: 1,
+                              focusOnNewComment:
+                                  widget.directFocus == "newcomment",
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        widget.post.comments != null &&
+                                widget.post.comments!.length > 0
+                            ? Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: Container(
+                                  height: 300,
+                                  child: ListView.builder(
+                                    key: PageStorageKey('myScrollable'),
+                                    itemCount: widget.post.comments!.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) =>
+                                            CommentDisplay(
+                                                widget.post.comments![index],
+                                                _defaultVoteWeightComments,
+                                                _currentVT,
+                                                widget.post.author,
+                                                widget.post.link,
+                                                _defaultVoteTipComments),
+                                  ),
+                                ),
+                              )
+                            : SizedBox(height: 0),
+                        SizedBox(height: 200)
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           )),
     );

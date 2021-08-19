@@ -69,24 +69,23 @@ class FeedList extends StatelessWidget {
               return buildLoading(context);
             } else {
               return Container(
-                // height: MediaQuery.of(context).size.height - 250,
                 height: MediaQuery.of(context).size.height,
-                // color: globalAlmostBlack,
-
                 child: BlocBuilder<FeedBloc, FeedState>(
-                  // listener: (context, state) {
-                  //   if (state is FeedErrorState) {
-                  //     BlocProvider.of<FeedBloc>(context).isFetching = false;
-                  //   }
-                  //   return;
-                  // },
                   builder: (context, state) {
                     if (state is FeedInitialState ||
                         state is FeedLoadingState && _feedItems.isEmpty) {
                       return buildLoading(context);
                     } else if (state is FeedLoadedState) {
+                      List<FeedItem> _tempFeedItemList = state.feed;
+
                       if (state.feedType == feedType) {
-                        _feedItems.addAll(state.feed);
+                        if (_feedItems.isNotEmpty &&
+                            _feedItems.first.link == state.feed.first.link) {
+                          _feedItems.clear();
+                        } else {
+                          _tempFeedItemList.removeAt(0);
+                        }
+                        _feedItems.addAll(_tempFeedItemList);
                       }
                       BlocProvider.of<FeedBloc>(context).isFetching = false;
                     } else if (state is FeedErrorState) {
@@ -148,7 +147,6 @@ class FeedList extends StatelessWidget {
           if (_scrollController.offset <=
                   _scrollController.position.minScrollExtent &&
               !BlocProvider.of<FeedBloc>(context).isFetching) {
-            _feedItems.clear();
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
               ..add(feedType != "UserFeed"
@@ -157,14 +155,6 @@ class FeedList extends StatelessWidget {
                       feedType: feedType,
                     )
                   : FetchUserFeedEvent(username: username!));
-          }
-          if (_scrollController.position.userScrollDirection ==
-              ScrollDirection.forward) {
-            scrollCallback(true);
-          }
-          if (_scrollController.position.userScrollDirection ==
-              ScrollDirection.reverse) {
-            scrollCallback(false);
           }
         }),
       itemBuilder: (ctx, pos) {
@@ -207,10 +197,6 @@ class FeedList extends StatelessWidget {
                       : "",
                   author: feed[pos].author,
                   link: feed[pos].link,
-                  // publishDate: .toString(),
-                  // publishDate: DateFormat('yyyy-MM-dd kk:mm').format(
-                  //     DateTime.fromMicrosecondsSinceEpoch(feed[pos].ts * 1000)
-                  //         .toLocal()),
                   publishDate: TimeAgo.timeInAgoTS(feed[pos].ts),
                   dtcValue: (feed[pos].dist / 100).round().toString() + " DTC",
                   duration: new Duration(
