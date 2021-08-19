@@ -26,6 +26,8 @@ const settingKey_templateTitle = 'TEMPLATETITLE';
 const settingKey_templateBody = 'TEMPLATEBODY';
 const settingKey_templateTag = 'TEMPLATETAG';
 
+const settingKey_tsLastNotificationSeen = 'LASTNOT';
+
 // const _txsKey = 'TXS';
 const _storage = FlutterSecureStorage();
 
@@ -38,6 +40,11 @@ Future<void> persistUsernameKey(String username, String priv) async {
 
 Future<void> persistNode(String node) async {
   await _storage.write(key: settingKey_avalonNode, value: node);
+}
+
+Future<void> persistNotificationSeen(int tsLast) async {
+  await _storage.write(
+      key: settingKey_tsLastNotificationSeen, value: tsLast.toString());
 }
 
 Future<void> persistOpenedOnce() async {
@@ -198,6 +205,16 @@ Future<String> getNode() async {
     return _node;
   } else {
     return 'https://avalon.d.tube';
+  }
+}
+
+Future<String> getLastNotification() async {
+  var _lastNotification =
+      await _storage.read(key: settingKey_tsLastNotificationSeen);
+  if (_lastNotification != null) {
+    return _lastNotification;
+  } else {
+    return '0';
   }
 }
 

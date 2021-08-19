@@ -9,3 +9,10 @@ class FetchNotificationsEvent extends NotificationEvent {
   @override
   List<Object> get props => List.empty();
 }
+
+class UpdateLastNotificationSeen extends NotificationEvent {
+  UpdateLastNotificationSeen();
+
+  @override
+  List<Object> get props => List.empty();
+}

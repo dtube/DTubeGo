@@ -2,6 +2,7 @@ import 'package:dtube_togo/bloc/config/txTypes.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
+import 'package:dtube_togo/utils/navigationShortcuts.dart';
 
 import 'package:intl/intl.dart';
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
@@ -9,31 +10,11 @@ import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class NotificationScreen extends StatefulWidget {
-  NotificationScreen({Key? key}) : super(key: key);
-
-  @override
-  _NotificationScreenState createState() => _NotificationScreenState();
-}
-
-class _NotificationScreenState extends State<NotificationScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider<NotificationBloc>(
-      create: (context) =>
-          NotificationBloc(repository: NotificationRepositoryImpl()),
-      child: Notifications(),
-    );
-  }
-}
-
 class Notifications extends StatefulWidget {
   @override
   _NotificationsState createState() => _NotificationsState();
 
-  Notifications({
-    Key? key,
-  }) : super(key: key);
+  Notifications({Key? key}) : super(key: key);
 }
 
 class _NotificationsState extends State<Notifications> {
@@ -106,15 +87,14 @@ class _NotificationsState extends State<Notifications> {
               List<int> navigatableTxsUser = [1, 2, 7, 8];
               List<int> navigatableTxsPost = [4, 5, 13, 19];
               if (navigatableTxsUser.contains(notifications[pos].tx.type)) {
-                //load user and navigate
+                navigateToUserDetailPage(context, notifications[pos].tx.sender);
               }
               if (navigatableTxsPost.contains(notifications[pos].tx.type)) {
-                //load post and navigate to it
-
-                //           Navigator.push(context, MaterialPageRoute(builder: (context) {
-                // return PostDetailPage(
-                //   post: postData,
-                // );
+                navigateToPostDetailPage(
+                    context,
+                    notifications[pos].tx.data.author!,
+                    notifications[pos].tx.data.link!,
+                    "none");
               }
             },
           ),
@@ -199,6 +179,7 @@ class NotificationTitle extends StatelessWidget {
       case 19:
         friendlyDescription = friendlyDescription.replaceAll(
             '##TIPAMOUNT', tx.data.tip!.toString());
+
         break;
       default:
     }

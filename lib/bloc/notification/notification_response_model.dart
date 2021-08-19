@@ -101,6 +101,7 @@ class Data {
   String? receiver;
   double? amount;
   String? memo;
+  String? author;
 
   Data(
       {this.link,
@@ -109,10 +110,12 @@ class Data {
       this.tip,
       this.receiver,
       this.amount,
-      this.memo});
+      this.memo,
+      this.author});
 
   Data.fromJson(Map<String, dynamic> json) {
     link = json['link'] != null ? json['link'] : '';
+    author = json['author'] != null ? json['author'] : '';
 
     vt = json['vt'] != null ? json['vt'] : 0;
 
@@ -126,6 +129,7 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['link'] = this.link;
+    data['author'] = this.author;
     data['vt'] = this.vt;
     data['tag'] = this.tag;
     data['tip'] = this.tip;

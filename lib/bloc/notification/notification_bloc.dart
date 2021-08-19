@@ -19,6 +19,15 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   Stream<NotificationState> mapEventToState(NotificationEvent event) async* {
     String? _applicationUser = await sec.getUsername();
     String _avalonApiNode = await sec.getNode();
+    String _tsLastNotificationSeen = await sec.getLastNotification();
+    if (event is UpdateLastNotificationSeen) {
+      List<AvalonNotification> notifications = await repository
+          .getNotifications(_avalonApiNode, [], _applicationUser);
+
+      sec.persistNotificationSeen(notifications.first.ts);
+      yield LastSeenUpdated();
+    }
+
     if (event is FetchNotificationsEvent) {
       yield NotificationLoadingState();
       try {
@@ -27,7 +36,9 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
                 _avalonApiNode, event.notificationTypes, _applicationUser);
 
         yield NotificationLoadedState(
-            notifications: notifications, username: "you");
+            notifications: notifications,
+            username: "you",
+            tsLastNotificationSeen: int.parse(_tsLastNotificationSeen));
       } catch (e) {
         yield NotificationErrorState(message: e.toString());
       }
