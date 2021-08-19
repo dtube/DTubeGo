@@ -26,11 +26,16 @@ class AccountHistoryBloc
       yield AccountHistoryLoadingState();
       try {
         List<AvalonAccountHistoryItem> accountHistory =
-            await repository.getAccountHistory(_avalonApiNode,
-                event.accountHistoryTypes, event.username, event.fromBloc);
+            await repository.getAccountHistory(
+                _avalonApiNode,
+                event.accountHistoryTypes,
+                event.username != null ? event.username! : _applicationUser,
+                event.fromBloc);
 
         yield AccountHistoryLoadedState(
-            historyItems: accountHistory, username: event.username);
+            historyItems: accountHistory,
+            username:
+                event.username != null ? event.username! : _applicationUser);
       } catch (e) {
         yield AccountHistoryErrorState(message: e.toString());
       }

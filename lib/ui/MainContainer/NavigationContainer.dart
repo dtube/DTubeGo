@@ -22,6 +22,7 @@ import 'package:dtube_togo/ui/Explore/ExploreTabContainer.dart';
 import 'package:dtube_togo/ui/Explore/SearchScreen.dart';
 import 'package:dtube_togo/ui/pages/feeds/FeedMainContainer.dart';
 import 'package:dtube_togo/ui/pages/feeds/MomentsList.dart';
+import 'package:dtube_togo/ui/pages/notifications/NotificationButton.dart';
 import 'package:dtube_togo/ui/pages/upload/UploadButton.dart';
 import 'package:dtube_togo/ui/pages/feeds/FeedList.dart';
 
@@ -283,38 +284,11 @@ class _NavigationContainerState extends State<NavigationContainer> {
           ),
         ),
         elevation: 0,
-        //toolbarHeight: topBarHeight * 0.6,
         titleSpacing: 0,
-        // make it blurry
-        // flexibleSpace: ClipRect(
-        //   child: BackdropFilter(
-        //     filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-        //     child: Container(
-        //       color: Colors.transparent,
-        //     ),
-        //   ),
-        // ),
         title: Padding(
           padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
           child: Stack(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Container(
-              //   width: (deviceWidth / 2) - 60 - 8,
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              // Container(
-              //   width: 40,
-              // ),
-              // Container(
-              //   width: 40,
-              //   child: Align(
-              //     alignment: Alignment.topLeft,
-              //     child: UploaderButton(),
-              //   ),
-              // ),
               Center(
                 child: GestureDetector(
                     child: BalanceOverviewBase(),
@@ -322,50 +296,11 @@ class _NavigationContainerState extends State<NavigationContainer> {
                       BlocProvider.of<UserBloc>(context).add(FetchDTCVPEvent());
                     }),
               ),
-              //   ],
-              // ),
-              //),
-              // GestureDetector(
-              //     child: DTubeLogo(size: 60),
-              //     onTap: () {
-              //       Navigator.of(context).push(
-              //           new MaterialPageRoute(builder: (BuildContext context) {
-              //         return new MyApp();
-              //       }));
-              //     }),
               Align(
                 alignment: Alignment.centerRight,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // CircleAvatar(
-                    //   backgroundColor: Colors.transparent,
-                    //   child: GestureDetector(
-                    //     onTap: () {
-                    //       Navigator.push(context,
-                    //           MaterialPageRoute(builder: (context) {
-                    //         return BlocProvider<SearchBloc>(
-                    //             create: (context) => SearchBloc(
-                    //                 repository: SearchRepositoryImpl()),
-                    //             child: SearchScreen());
-                    //       }));
-                    //     },
-                    //     child: new DecoratedIcon(
-                    //       FontAwesomeIcons.search,
-                    //       color: Colors.white,
-                    //       shadows: [
-                    //         BoxShadow(
-                    //           blurRadius: 24.0,
-                    //           color: Colors.black,
-                    //         ),
-                    //         // BoxShadow(
-                    //         //   blurRadius: 12.0,
-                    //         //   color: Colors.white,
-                    //         // ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
                     BlocProvider<NotificationBloc>(
                       create: (context) => NotificationBloc(
                           repository: NotificationRepositoryImpl()),
@@ -389,12 +324,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
             showCustomFlushbarOnError(state.message, context);
           }
         },
-        child:
-            // ValueListenableBuilder(
-            //     valueListenable: _notifier,
-            //     builder: (BuildContext context, bool val, Widget? child) {
-            //       return
-            PersistentTabView(
+        child: PersistentTabView(
           context,
 
           controller: _controller,
@@ -407,8 +337,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
           backgroundColor: Colors.transparent, // Default is Colors.white.
           handleAndroidBackButtonPress: true, // Default is true.
 
-          // resizeToAvoidBottomInset:
-          //     true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
           stateManagement: true, // Default is true.
           hideNavigationBarWhenKeyboardShows:
               true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
@@ -431,74 +359,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
           //}
         ),
       ),
-    );
-  }
-}
-
-class NotificationButton extends StatefulWidget {
-  const NotificationButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<NotificationButton> createState() => _NotificationButtonState();
-}
-
-class _NotificationButtonState extends State<NotificationButton> {
-  @override
-  void initState() {
-    BlocProvider.of<NotificationBloc>(context).add(FetchNotificationsEvent([]));
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
-        backgroundColor: Colors.transparent,
-        child: GestureDetector(
-          onTap: () {
-            BlocProvider.of<NotificationBloc>(context)
-                .add(UpdateLastNotificationSeen());
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              //needs it's own bloc to prevent refreshing in the page itself bc the button will get refreshed
-              return BlocProvider<NotificationBloc>(
-                  create: (context) => NotificationBloc(
-                      repository: NotificationRepositoryImpl()),
-                  child: Notifications());
-            }));
-          },
-          child: BlocBuilder<NotificationBloc, NotificationState>(
-              builder: (context, state) {
-            if (state is NotificationInitialState) {
-              return buildNotificationIcon(false);
-            } else if (state is NotificationLoadingState) {
-              return buildNotificationIcon(false);
-            } else if (state is NotificationLoadedState) {
-              return buildNotificationIcon(
-                  state.notifications.first.ts > state.tsLastNotificationSeen);
-            } else if (state is NotificationErrorState) {
-              return buildNotificationIcon(false);
-            } else {
-              return buildNotificationIcon(false);
-            }
-          }),
-        ));
-  }
-
-  DecoratedIcon buildNotificationIcon(bool newNotifications) {
-    return DecoratedIcon(
-      FontAwesomeIcons.bell,
-      color: newNotifications ? Colors.red : Colors.white,
-      shadows: [
-        BoxShadow(
-          blurRadius: 24.0,
-          color: Colors.black,
-        ),
-        // BoxShadow(
-        //   blurRadius: 12.0,
-        //   color: Colors.white,
-        // ),
-      ],
     );
   }
 }

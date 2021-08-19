@@ -8,7 +8,7 @@ class FetchAccountHistorysEvent extends AccountHistoryEvent {
       required this.username,
       required this.fromBloc});
   final List<int> accountHistoryTypes;
-  final String username;
+  final String? username;
   final int fromBloc;
 
   @override

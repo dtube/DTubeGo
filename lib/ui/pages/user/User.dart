@@ -350,7 +350,7 @@ class _UserState extends State<UserPage> {
                                           repository:
                                               AccountHistoryRepositoryImpl()),
                                       child: AccountHistoryScreen(
-                                        username: widget.username!,
+                                        username: widget.username,
                                       ));
                                 }));
                               }),

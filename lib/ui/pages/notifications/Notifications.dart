@@ -3,6 +3,7 @@ import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/utils/navigationShortcuts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:intl/intl.dart';
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
@@ -72,9 +73,17 @@ class _NotificationsState extends State<Notifications> {
 
   Widget buildnotificationList(
       List<AvalonNotification> notifications, String username) {
+    List<int> navigatableTxsUser = [1, 2, 7, 8];
+    List<int> navigatableTxsPost = [4, 5, 13, 19];
+
     return ListView.builder(
       itemCount: notifications.length,
       itemBuilder: (ctx, pos) {
+        bool _userNavigationPossible =
+            navigatableTxsUser.contains(notifications[pos].tx.type);
+        bool _postNavigationPossible =
+            navigatableTxsPost.contains(notifications[pos].tx.type);
+
         return Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: InkWell(
@@ -82,14 +91,16 @@ class _NotificationsState extends State<Notifications> {
               sender: notifications[pos].tx.sender,
               tx: notifications[pos].tx,
               username: username,
+              userNavigation: _userNavigationPossible,
+              postNavigation: _postNavigationPossible,
             ),
             onTap: () {
               List<int> navigatableTxsUser = [1, 2, 7, 8];
               List<int> navigatableTxsPost = [4, 5, 13, 19];
-              if (navigatableTxsUser.contains(notifications[pos].tx.type)) {
+              if (_userNavigationPossible) {
                 navigateToUserDetailPage(context, notifications[pos].tx.sender);
               }
-              if (navigatableTxsPost.contains(notifications[pos].tx.type)) {
+              if (_postNavigationPossible) {
                 navigateToPostDetailPage(
                     context,
                     notifications[pos].tx.data.author!,
@@ -110,11 +121,15 @@ class CustomListItem extends StatelessWidget {
     required this.sender,
     required this.username,
     required this.tx,
+    required this.userNavigation,
+    required this.postNavigation,
   }) : super(key: key);
 
   final String sender;
   final String username;
   final Tx tx;
+  final bool userNavigation;
+  final bool postNavigation;
 
   @override
   Widget build(BuildContext context) {
@@ -144,6 +159,14 @@ class CustomListItem extends StatelessWidget {
                 ],
               ),
             ),
+            userNavigation || postNavigation
+                ? FaIcon(
+                    userNavigation
+                        ? FontAwesomeIcons.user
+                        : FontAwesomeIcons.play,
+                    size: 15,
+                  )
+                : SizedBox(width: 0)
           ],
         ),
       ),

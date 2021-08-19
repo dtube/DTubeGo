@@ -18,13 +18,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountHistoryScreen extends StatefulWidget {
   AccountHistoryScreen({Key? key, required this.username}) : super(key: key);
-  String username;
+  String? username;
 
   @override
   _AccountHistoryScreenState createState() => _AccountHistoryScreenState();
 }
 
 class _AccountHistoryScreenState extends State<AccountHistoryScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AccountHistoryBloc>(
@@ -38,7 +43,7 @@ class _AccountHistoryScreenState extends State<AccountHistoryScreen> {
 }
 
 class History extends StatefulWidget {
-  final String username;
+  final String? username;
   @override
   _HistoryState createState() => _HistoryState();
 
@@ -50,6 +55,7 @@ class _HistoryState extends State<History> {
   late int lastNotification;
   final ScrollController _scrollController = ScrollController();
   List<AvalonAccountHistoryItem> _historyItems = [];
+  late String? _username;
   @override
   void initState() {
     super.initState();
@@ -58,6 +64,7 @@ class _HistoryState extends State<History> {
         accountHistoryTypes: [],
         username: widget.username,
         fromBloc: 0)); // statements;
+    _username = widget.username;
   }
 
   @override
@@ -100,6 +107,7 @@ class _HistoryState extends State<History> {
                       _historyItems.isEmpty) {
                 return buildLoading();
               } else if (state is AccountHistoryLoadedState) {
+                _username = state.username;
                 _historyItems.addAll(state.historyItems);
                 BlocProvider.of<AccountHistoryBloc>(context).isFetching = false;
               } else if (state is AccountHistoryErrorState) {
@@ -107,7 +115,7 @@ class _HistoryState extends State<History> {
               }
               return buildHistoryList(
                 _historyItems,
-                widget.username,
+                _username,
               );
             },
           ),
@@ -133,7 +141,7 @@ class _HistoryState extends State<History> {
   }
 
   Widget buildHistoryList(
-      List<AvalonAccountHistoryItem> history, String username) {
+      List<AvalonAccountHistoryItem> history, String? username) {
     return ListView.builder(
       itemCount: history.length,
       controller: _scrollController
@@ -174,7 +182,7 @@ class _HistoryState extends State<History> {
                 itemCount: history[pos].txs.length,
                 itemBuilder: (ctx, posTx) {
                   return ActivityItem(
-                    username: username,
+                    username: username!,
                     txData: history[pos].txs[posTx],
                   );
                 },
