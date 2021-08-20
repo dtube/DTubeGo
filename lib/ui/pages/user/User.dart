@@ -155,11 +155,29 @@ class _UserState extends State<UserPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          user.jsonString?.additionals?.displayName != null
+                              ? OverlayText(
+                                  text: user
+                                      .jsonString!.additionals!.displayName!,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  sizeMultiply: 1.4,
+                                )
+                              : SizedBox(
+                                  height: 0,
+                                ),
                           OverlayText(
-                            text: user.name,
+                            text: user.jsonString?.additionals?.displayName !=
+                                    null
+                                ? '(@' + user.name + ')'
+                                : user.name,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            sizeMultiply: 1.8,
+                            sizeMultiply:
+                                user.jsonString?.additionals?.displayName !=
+                                        null
+                                    ? 1
+                                    : 1.8,
                           ),
                           user.jsonString?.profile?.location != null
                               ? OverlayText(
