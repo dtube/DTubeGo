@@ -168,12 +168,16 @@ class Keys {
 class JsonString {
   Node? node;
   Profile? profile;
+  Additionals? additionals;
 
-  JsonString({this.node, this.profile});
+  JsonString({this.node, this.profile, this.additionals});
 
   JsonString.fromJson(Map<String, dynamic> json) {
     node = json['node'] != null ? new Node.fromJson(json['node']) : null;
     profile = new Profile.fromJson(json['profile']);
+    additionals = json['additionals'] != null
+        ? new Additionals.fromJson(json['additionals'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -183,6 +187,9 @@ class JsonString {
     }
     if (this.profile != null) {
       data['profile'] = this.profile!.toJson();
+    }
+    if (this.additionals != null) {
+      data['additionals'] = this.additionals!.toJson();
     }
     return data;
   }
@@ -241,6 +248,29 @@ class Profile {
     data['website'] = this.website;
     data['steem'] = this.steem;
     data['hive'] = this.hive;
+    return data;
+  }
+}
+
+class Additionals {
+  String? displayName;
+  String? accountType;
+
+  Additionals({
+    this.displayName,
+    this.accountType,
+  });
+
+  Additionals.fromJson(Map<String, dynamic> json) {
+    displayName = json['displayName'] != null ? json['displayName'] : '';
+    accountType = json['accountType'] != null ? json['accountType'] : '';
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['displayName'] = this.displayName;
+    data['accountType'] = this.accountType;
+
     return data;
   }
 }

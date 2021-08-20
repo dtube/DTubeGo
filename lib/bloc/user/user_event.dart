@@ -1,10 +1,11 @@
+import 'package:dtube_togo/bloc/user/user_response_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class UserEvent extends Equatable {}
 
 class FetchAccountDataEvent extends UserEvent {
   FetchAccountDataEvent({required this.username});
-  final String username;
+  final String? username;
 
   @override
   List<Object> get props => List.empty();

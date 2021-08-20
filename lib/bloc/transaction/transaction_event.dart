@@ -1,4 +1,5 @@
 import 'package:dtube_togo/bloc/transaction/transaction_response_model.dart';
+import 'package:dtube_togo/bloc/user/user_response_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class TransactionEvent extends Equatable {}
@@ -21,6 +22,16 @@ class SendCommentEvent extends TransactionEvent {
   List<Object> get props => List.empty();
 }
 
+class ChangeProfileData extends TransactionEvent {
+  ChangeProfileData(
+    this.userData,
+  );
+  User userData;
+
+  @override
+  List<Object> get props => List.empty();
+}
+
 class SetInitState extends TransactionEvent {
   SetInitState();
 
@@ -30,7 +41,8 @@ class SetInitState extends TransactionEvent {
 
 // used only for uploading videos
 class TransactionPreprocessing extends TransactionEvent {
-  TransactionPreprocessing();
+  TransactionPreprocessing({required this.txType});
+  final int txType;
   @override
   List<Object> get props => List.empty();
 }

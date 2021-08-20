@@ -8,6 +8,7 @@ import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/style/OpenableHyperlink.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/pages/accountHistory/AccountHistory.dart';
+import 'package:dtube_togo/ui/pages/user/ProfileSettings.dart';
 import 'package:dtube_togo/ui/pages/wallet/transferDialog.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
@@ -77,35 +78,24 @@ class _UserState extends State<UserPage> {
               );
             }
           },
-          child: BlocListener<TransactionBloc, TransactionState>(
-            listener: (context, state) {
-              if (state is TransactionError) {
-                showCustomFlushbarOnError(state.message, context);
-              }
-              if (state is TransactionSent) {
-                showCustomFlushbarOnSuccess(state, context);
-                BlocProvider.of<UserBloc>(context)
-                    .add(FetchAccountDataEvent(username: widget.username!));
+          child: BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              if (state is UserInitialState) {
+                return buildLoading();
+              } else if (state is UserLoadingState) {
+                return buildLoading();
+              } else if (state is UserLoadedState) {
+                return buildUserPage(state.user, widget.ownUserpage);
+              } else if (state is UserErrorState) {
+                return buildErrorUi(state.message);
+              } else {
+                return buildErrorUi('test');
               }
             },
-            child: BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) {
-                if (state is UserInitialState) {
-                  return buildLoading();
-                } else if (state is UserLoadingState) {
-                  return buildLoading();
-                } else if (state is UserLoadedState) {
-                  return buildUserPage(state.user, widget.ownUserpage);
-                } else if (state is UserErrorState) {
-                  return buildErrorUi(state.message);
-                } else {
-                  return buildErrorUi('test');
-                }
-              },
-            ),
           ),
         ),
       ),
+      //),
     );
   }
 
@@ -225,17 +215,8 @@ class _UserState extends State<UserPage> {
                                     blurRadius: 24.0,
                                     color: Colors.black,
                                   ),
-                                  // BoxShadow(
-                                  //   blurRadius: 12.0,
-                                  //   color: Colors.white,
-                                  // ),
                                 ],
                               ),
-                              // foregroundColor: Colors.white,
-                              // elevation: 0,
-                              // backgroundColor: Colors.transparent,
-                              // labelStyle: TextStyle(fontSize: 14.0),
-                              // labelBackgroundColor: globalBlue,
                               onTap: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
@@ -258,17 +239,8 @@ class _UserState extends State<UserPage> {
                                     blurRadius: 24.0,
                                     color: Colors.black,
                                   ),
-                                  // BoxShadow(
-                                  //   blurRadius: 12.0,
-                                  //   color: Colors.white,
-                                  // ),
                                 ],
                               ),
-                              // foregroundColor: Colors.white,
-                              // elevation: 0,
-                              // backgroundColor: Colors.transparent,
-                              // labelStyle: TextStyle(fontSize: 14.0),
-                              // labelBackgroundColor: globalBlue,
                               onTap: () {
                                 showDialog<String>(
                                     context: context,
@@ -282,16 +254,7 @@ class _UserState extends State<UserPage> {
                               }),
                           SizedBox(height: 24),
                           GestureDetector(
-                            child:
-                                // FaIcon(widget.alreadyFollowing
-                                //     ? FontAwesomeIcons.usersSlash
-                                //     : FontAwesomeIcons.userFriends),
-                                // foregroundColor: globalAlmostWhite,
-                                // backgroundColor: globalBlue,
-                                // label: widget.alreadyFollowing ? 'Unfollow' : 'Follow',
-                                // labelStyle: TextStyle(fontSize: 14.0),
-                                // labelBackgroundColor: globalBlue,
-                                DecoratedIcon(
+                            child: DecoratedIcon(
                               user.alreadyFollowing
                                   ? FontAwesomeIcons.usersSlash
                                   : FontAwesomeIcons.userFriends,
@@ -301,17 +264,8 @@ class _UserState extends State<UserPage> {
                                   blurRadius: 24.0,
                                   color: Colors.black,
                                 ),
-                                // BoxShadow(
-                                //   blurRadius: 12.0,
-                                //   color: Colors.white,
-                                // ),
                               ],
                             ),
-                            // foregroundColor: Colors.white,
-                            // elevation: 0,
-                            // backgroundColor: Colors.transparent,
-                            // labelStyle: TextStyle(fontSize: 14.0),
-                            // labelBackgroundColor: globalBlue,
                             onTap: () async {
                               TxData txdata = TxData(
                                 target: widget.username,
@@ -329,6 +283,24 @@ class _UserState extends State<UserPage> {
                         children: [
                           GestureDetector(
                               child: DecoratedIcon(
+                                FontAwesomeIcons.cogs,
+                                size: 25,
+                                shadows: [
+                                  BoxShadow(
+                                    blurRadius: 24.0,
+                                    color: Colors.black,
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ProfileSettingsContainer();
+                                }));
+                              }),
+                          SizedBox(height: 24),
+                          GestureDetector(
+                              child: DecoratedIcon(
                                 FontAwesomeIcons.history,
                                 size: 25,
                                 shadows: [
@@ -336,10 +308,6 @@ class _UserState extends State<UserPage> {
                                     blurRadius: 24.0,
                                     color: Colors.black,
                                   ),
-                                  // BoxShadow(
-                                  //   blurRadius: 12.0,
-                                  //   color: Colors.white,
-                                  // ),
                                 ],
                               ),
                               onTap: () {
@@ -364,214 +332,17 @@ class _UserState extends State<UserPage> {
                                     blurRadius: 24.0,
                                     color: Colors.black,
                                   ),
-                                  // BoxShadow(
-                                  //   blurRadius: 12.0,
-                                  //   color: Colors.white,
-                                  // ),
                                 ],
                               ),
                               onTap: () {
                                 BlocProvider.of<AuthBloc>(context)
                                     .add(SignOutEvent(context: context));
-                                // navigate to new wallet page
                               }),
                         ],
                       ),
               ),
             ]))),
-        // Positioned(
-        //     bottom: 50,
-        //     right: 25,
-        //     child: UserSpeedDial(
-        //         ownUser: ownUsername,
-        //         alreadyFollowing: user.alreadyFollowing,
-        //         username: user.name)),
       ],
     );
-  }
-}
-
-class UserSpeedDial extends StatefulWidget {
-  UserSpeedDial(
-      {Key? key,
-      required this.alreadyFollowing,
-      required this.ownUser,
-      required this.username})
-      : super(key: key);
-  bool alreadyFollowing;
-  String username;
-  bool ownUser;
-
-  @override
-  User_SpeedDialState createState() => User_SpeedDialState();
-}
-
-class User_SpeedDialState extends State<UserSpeedDial> {
-  UserBloc _userBloc = UserBloc(repository: UserRepositoryImpl());
-  AuthBloc _authBloc = AuthBloc(repository: AuthRepositoryImpl());
-  TransactionBloc _txBloc =
-      TransactionBloc(repository: TransactionRepositoryImpl());
-  List<SpeedDialChild> othersPageOptions = [];
-  List<SpeedDialChild> myPageOptions = [];
-
-  @override
-  void initState() {
-    super.initState();
-    UserBloc _userBloc = BlocProvider.of<UserBloc>(context);
-    AuthBloc _authBloc = BlocProvider.of<AuthBloc>(context);
-    TransactionBloc _txBloc = BlocProvider.of<TransactionBloc>(context);
-    othersPageOptions = [
-      SpeedDialChild(
-          child: DecoratedIcon(
-            FontAwesomeIcons.history,
-            shadows: [
-              BoxShadow(
-                blurRadius: 24.0,
-                color: Colors.black,
-              ),
-              // BoxShadow(
-              //   blurRadius: 12.0,
-              //   color: Colors.white,
-              // ),
-            ],
-          ),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          labelStyle: TextStyle(fontSize: 14.0),
-          labelBackgroundColor: globalBlue,
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return BlocProvider<AccountHistoryBloc>(
-                  create: (context) => AccountHistoryBloc(
-                      repository: AccountHistoryRepositoryImpl()),
-                  child: AccountHistoryScreen(
-                    username: widget.username,
-                  ));
-            }));
-          }),
-      SpeedDialChild(
-          child: DecoratedIcon(
-            FontAwesomeIcons.exchangeAlt,
-            shadows: [
-              BoxShadow(
-                blurRadius: 24.0,
-                color: Colors.black,
-              ),
-              // BoxShadow(
-              //   blurRadius: 12.0,
-              //   color: Colors.white,
-              // ),
-            ],
-          ),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          labelStyle: TextStyle(fontSize: 14.0),
-          labelBackgroundColor: globalBlue,
-          onTap: () {
-            showDialog<String>(
-                context: context,
-                builder: (BuildContext context) => TransferDialog(
-                      receiver: widget.username,
-                      txBloc: _txBloc,
-                    ));
-          }),
-      SpeedDialChild(
-        child:
-            // FaIcon(widget.alreadyFollowing
-            //     ? FontAwesomeIcons.usersSlash
-            //     : FontAwesomeIcons.userFriends),
-            // foregroundColor: globalAlmostWhite,
-            // backgroundColor: globalBlue,
-            // label: widget.alreadyFollowing ? 'Unfollow' : 'Follow',
-            // labelStyle: TextStyle(fontSize: 14.0),
-            // labelBackgroundColor: globalBlue,
-            DecoratedIcon(
-          widget.alreadyFollowing
-              ? FontAwesomeIcons.usersSlash
-              : FontAwesomeIcons.userFriends,
-          shadows: [
-            BoxShadow(
-              blurRadius: 24.0,
-              color: Colors.black,
-            ),
-            // BoxShadow(
-            //   blurRadius: 12.0,
-            //   color: Colors.white,
-            // ),
-          ],
-        ),
-        foregroundColor: Colors.white,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        labelStyle: TextStyle(fontSize: 14.0),
-        labelBackgroundColor: globalBlue,
-        onTap: () async {
-          TxData txdata = TxData(
-            target: widget.username,
-          );
-          Transaction newTx =
-              Transaction(type: widget.alreadyFollowing ? 8 : 7, data: txdata);
-          _txBloc.add(SignAndSendTransactionEvent(newTx));
-          _userBloc.add(FetchAccountDataEvent(username: widget.username));
-        },
-      ),
-    ];
-
-    myPageOptions = [
-      SpeedDialChild(
-          child: FaIcon(FontAwesomeIcons.history),
-          foregroundColor: globalAlmostWhite,
-          backgroundColor: globalBlue,
-          label: 'History',
-          labelStyle: TextStyle(fontSize: 14.0),
-          labelBackgroundColor: globalBlue,
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return BlocProvider<AccountHistoryBloc>(
-                  create: (context) => AccountHistoryBloc(
-                      repository: AccountHistoryRepositoryImpl()),
-                  child: AccountHistoryScreen(
-                    username: widget.username,
-                  ));
-            }));
-          }),
-      SpeedDialChild(
-          child: FaIcon(FontAwesomeIcons.signOutAlt),
-          foregroundColor: globalAlmostWhite,
-          backgroundColor: globalBlue,
-          label: 'Logout',
-          labelStyle: TextStyle(fontSize: 14.0),
-          labelBackgroundColor: globalBlue,
-          onTap: () {
-            _authBloc.add(SignOutEvent(context: context));
-            // navigate to new wallet page
-          }),
-    ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SpeedDial(
-        icon: FontAwesomeIcons.bars,
-        activeIcon: FontAwesomeIcons.chevronLeft,
-        buttonSize: 56.0,
-        visible: true,
-        closeManually: false,
-        curve: Curves.bounceIn,
-        overlayColor: globalAlmostWhite,
-        renderOverlay: false,
-        overlayOpacity: 0,
-        onOpen: () => print('OPENING DIAL'),
-        onClose: () => print('DIAL CLOSED'),
-        tooltip: 'Speed Dial',
-        heroTag: 'heroTagUser',
-        backgroundColor: globalBlue,
-        foregroundColor: globalAlmostWhite,
-        elevation: 8.0,
-        shape: CircleBorder(),
-        gradientBoxShape: BoxShape.circle,
-        children: widget.ownUser ? myPageOptions : othersPageOptions);
   }
 }

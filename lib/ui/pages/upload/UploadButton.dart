@@ -23,7 +23,9 @@ class _UploaderButtonState extends State<UploaderButton> {
     return BlocBuilder<TransactionBloc, TransactionState>(
       builder: (context, state) {
         if (state is TransactionPreprocessingState) {
-          return DTubeLogoPulse(size: 40.0);
+          if (state.txType == 13 || state.txType == 4) {
+            return DTubeLogoPulse(size: 40.0);
+          }
         } else if (state is TransactionSent && state.isParentContent) {
           return CircleAvatar(
             backgroundColor: Colors.green,
@@ -58,27 +60,26 @@ class _UploaderButtonState extends State<UploaderButton> {
               ),
             ),
           );
-        } else {
-          return CircleAvatar(
-            backgroundColor: globalRed,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return UploaderMainPage();
-                    },
-                  ),
-                );
-              },
-              child: new FaIcon(
-                FontAwesomeIcons.cloudUploadAlt,
-                color: Colors.white,
-              ),
-            ),
-          );
         }
+        return CircleAvatar(
+          backgroundColor: globalRed,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return UploaderMainPage();
+                  },
+                ),
+              );
+            },
+            child: new FaIcon(
+              FontAwesomeIcons.cloudUploadAlt,
+              color: Colors.white,
+            ),
+          ),
+        );
       },
     );
   }

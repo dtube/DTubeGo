@@ -18,7 +18,8 @@ class TransactionSinging extends TransactionState {
 
 // used only for uploading videos
 class TransactionPreprocessingState extends TransactionState {
-  TransactionPreprocessingState();
+  TransactionPreprocessingState({required this.txType});
+  final int txType;
   @override
   List<Object> get props => [];
 }

@@ -68,14 +68,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
                 blurRadius: 24.0,
                 color: Colors.black,
               ),
-              // BoxShadow(
-              //   blurRadius: 12.0,
-              //   color: Colors.white,
-              // ),
             ],
           ),
         ),
-        // title: 'Feed'
       ),
       PersistentBottomNavBarItem(
         opacity: 0.0,
@@ -89,91 +84,61 @@ class _NavigationContainerState extends State<NavigationContainer> {
                 blurRadius: 24.0,
                 color: Colors.black,
               ),
-              // BoxShadow(
-              //   blurRadius: 12.0,
-              //   color: Colors.white,
-              // ),
             ],
           ),
         ),
-        // title: 'New',
       ),
       PersistentBottomNavBarItem(
         opacity: 0.0,
         icon: Center(
           child: BlocBuilder<TransactionBloc, TransactionState>(
-            builder: (context, state) {
-              if (state is TransactionPreprocessingState) {
+              builder: (context, state) {
+            if (state is TransactionPreprocessingState) {
+              if (state.txType == 13 || state.txType == 4) {
                 return DTubeLogoPulse(size: 40.0);
-              } else if (state is TransactionSent && state.isParentContent) {
-                return
-                    // CircleAvatar(
-                    //   backgroundColor: Colors.green,
-                    //   child:
-                    GestureDetector(
-                  onTap: () {
-                    BlocProvider.of<TransactionBloc>(context)
-                        .add(SetInitState());
-                    if (state.authorPerm != null) {
-                      navigateToPostDetailPage(
-                          context,
-                          state.authorPerm!
-                              .substring(0, state.authorPerm!.indexOf('/')),
-                          state.authorPerm!
-                              .substring(state.authorPerm!.indexOf('/') + 1),
-                          "none");
-                    } else {
-                      Navigator.push(
+              }
+            } else if (state is TransactionSent && state.isParentContent) {
+              return GestureDetector(
+                onTap: () {
+                  BlocProvider.of<TransactionBloc>(context).add(SetInitState());
+                  if (state.authorPerm != null) {
+                    navigateToPostDetailPage(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return UploaderMainPage();
-                          },
-                        ),
-                      );
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: new FaIcon(
-                      FontAwesomeIcons.play,
-                      color: Colors.white,
-                    ),
-                  ),
-                  // ),
-                );
-              } else {
-                return
-                    // CircleAvatar(
-                    //   backgroundColor: globalRed,
-                    //   child:
-                    //   GestureDetector(
-                    // onTap: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) {
-                    //         return UploaderMainPage();
-                    //       },
-                    //     ),
-                    //   );
-                    // },
-                    // child:
-                    Center(
+                        state.authorPerm!
+                            .substring(0, state.authorPerm!.indexOf('/')),
+                        state.authorPerm!
+                            .substring(state.authorPerm!.indexOf('/') + 1),
+                        "none");
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return UploaderMainPage();
+                        },
+                      ),
+                    );
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
                   child: new FaIcon(
-                    FontAwesomeIcons.plus,
+                    FontAwesomeIcons.play,
                     color: Colors.white,
                   ),
-                  // ),
-                  // ),
-                );
-              }
-            },
-          ),
+                ),
+                // ),
+              );
+            }
+            return Center(
+              child: new FaIcon(
+                FontAwesomeIcons.plus,
+                color: Colors.white,
+              ),
+            );
+          }),
         ),
-        //title: 'test',
       ),
-
       PersistentBottomNavBarItem(
         opacity: 0.0,
         icon: Center(
@@ -186,10 +151,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
                 blurRadius: 24.0,
                 color: Colors.black,
               ),
-              // BoxShadow(
-              //   blurRadius: 12.0,
-              //   color: Colors.white,
-              // ),
             ],
           ),
         ),
@@ -197,36 +158,12 @@ class _NavigationContainerState extends State<NavigationContainer> {
       ),
       PersistentBottomNavBarItem(
           opacity: 0.0,
-          // icon: new DecoratedIcon(
-          //   FontAwesomeIcons.idBadge,
-          //   color: Colors.white,
-          //   shadows: [
-          //     BoxShadow(
-          //       blurRadius: 24.0,
-          //       color: Colors.black,
-          //     ),
-          //     // BoxShadow(
-          //     //   blurRadius: 12.0,
-          //     //   color: Colors.white,
-          //     // ),
-          //   ],
-          // ),
           icon: CircleAvatar(
             backgroundColor: Colors.white,
             radius: 15,
             child: AccountAvatarBase(
                 username: "you", size: 25, showVerified: false),
-          )
-
-          // title: 'Profile'
-          ),
-      // PersistentBottomNavBarItem(
-      //   icon: new FaIcon(
-      //     FontAwesomeIcons.chartLine,
-      //     color: Colors.white,
-      //   ),
-      //   title: 'Trending',
-      // ),
+          )),
     ];
   }
 

@@ -44,8 +44,12 @@ class _NotificationButtonState extends State<NotificationButton> {
             } else if (state is NotificationLoadingState) {
               return buildNotificationIcon(false);
             } else if (state is NotificationLoadedState) {
-              return buildNotificationIcon(
-                  state.notifications.first.ts > state.tsLastNotificationSeen);
+              if (state.notifications.isNotEmpty) {
+                return buildNotificationIcon(state.notifications.first.ts >
+                    state.tsLastNotificationSeen);
+              } else {
+                return buildNotificationIcon(false);
+              }
             } else if (state is NotificationErrorState) {
               return buildNotificationIcon(false);
             } else {

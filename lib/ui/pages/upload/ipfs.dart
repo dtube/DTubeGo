@@ -67,7 +67,8 @@ class _WizardIPFSState extends State<WizardIPFS> {
 
   void childCallback(UploadData ud) {
     setState(() {
-      BlocProvider.of<TransactionBloc>(context).add(TransactionPreprocessing());
+      BlocProvider.of<TransactionBloc>(context)
+          .add(TransactionPreprocessing(txType: ud.isPromoted ? 13 : 4));
       _uploadData = ud;
       _uploadPressed = true;
       _uploadBloc.add(UploadVideo(

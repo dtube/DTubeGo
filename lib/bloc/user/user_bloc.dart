@@ -23,9 +23,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     if (event is FetchAccountDataEvent) {
       yield UserLoadingState();
       try {
-        String _username = event.username;
+        String _username =
+            event.username != null ? event.username! : _applicationUser;
         if (event.username == "you") {
-          _username = await sec.getUsername();
+          _username = _applicationUser;
         }
         User _user = await repository.getAccountData(
             _avalonApiNode, _username, _applicationUser);

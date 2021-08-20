@@ -2,6 +2,7 @@ import 'package:dtube_togo/bloc/config/txTypes.dart';
 import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc.dart';
 import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_togo/bloc/user/user_response_model.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:bloc/bloc.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_event.dart';
@@ -30,10 +31,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       yield TransactionInitialState();
     }
     if (event is TransactionPreprocessing) {
-      yield TransactionPreprocessingState();
+      yield TransactionPreprocessingState(txType: event.txType);
     }
     if (event is TransactionPreprocessingFailed) {
-      yield TransactionError(message: "error uploading\n" + event.errorMessage);
+      yield TransactionError(
+          message: "error preparing transaction\n" + event.errorMessage);
     }
 
     if (event is SignAndSendTransactionEvent) {
@@ -69,6 +71,39 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         yield TransactionError(message: e.toString());
       }
     }
+
+    if (event is ChangeProfileData) {
+      int _txType = 6;
+      User _userData = event.userData;
+      yield TransactionPreprocessingState(txType: _txType);
+      Map<String, dynamic> jsonMetadata = {};
+
+      TxData _txData = new TxData(
+        jsonmetadata: _userData.jsonString!.toJson(),
+      );
+
+// change profile
+      Transaction _tx = new Transaction(type: _txType, data: _txData);
+
+      int _block = 0;
+      String result = "";
+
+      try {
+        result = "";
+        result = await repository
+            .sign(_tx, _applicationUser!, _privKey!)
+            .then((value) => repository.send(_avalonApiNode, value));
+      } catch (e) {
+        yield TransactionError(message: e.toString());
+      }
+
+      yield TransactionSent(
+          block: _block,
+          isParentContent: false,
+          successMessage: "profile updated",
+          txType: _txType);
+    }
+
     if (event is SendCommentEvent) {
       UploadData _upload = event.uploadData;
       String result = "";
