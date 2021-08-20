@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">dtube_togo</string>
+    <string name="facebook_app_id">343540024092692</string>
+    <string name="fb_login_protocol_scheme">fb343540024092692</string>
+</resources>

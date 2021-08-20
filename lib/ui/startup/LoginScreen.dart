@@ -6,9 +6,23 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+final auth = FirebaseAuth.instance;
+final GoogleSignIn googleSignIn = GoogleSignIn(
+  scopes: [
+    'email',
+    'https://www.googleapis.com/auth/contacts.readonly',
+  ],
+);
 
 class LoginForm extends StatefulWidget {
   String? message;
@@ -197,6 +211,59 @@ class _LoginFormState extends State<LoginForm> {
                                     ));
                               });
                         }),
+                        SignInButton(
+                          Buttons.Google, onPressed: () async{
+                            try {
+                              await Firebase.initializeApp();
+
+                              final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+                              final GoogleSignInAuthentication? googleAuth = await googleUser!.authentication;
+
+                              final String? accessToken = googleAuth!.accessToken;
+                              final String? idToken = googleAuth.idToken;
+
+                              final AuthCredential credential = GoogleAuthProvider.credential(
+                                    accessToken: accessToken,
+                                    idToken: idToken
+                              );
+                              print(credential);
+
+                              await auth.signInWithCredential(credential);
+                              print(auth);
+
+                            } catch (error) {
+                                print(error);
+                            }
+                          },
+                        ),
+                        SignInButton(
+                          Buttons.Facebook, onPressed: () async{
+                            try {
+                              await Firebase.initializeApp();
+                              final LoginResult result = await FacebookAuth.instance.login();
+                              switch (result.status) {
+                                case LoginStatus.success:
+                                  final AuthCredential facebookCredential = FacebookAuthProvider.credential(result.accessToken!.token);
+                                  print(facebookCredential);
+                                  final userCredential = await auth.signInWithCredential(facebookCredential);
+                                  print(userCredential);
+                                  return userCredential;
+                                case LoginStatus.cancelled:
+                                  print("cancelled");
+                                  return null;
+                                case LoginStatus.failed:
+                                  print("failed");
+                                  return null;
+                                default:
+                                  print("default");
+                                  return null;
+                              }
+                            } catch(error) {
+                              print(error);
+                            }
+                          }
+                    ),
                   ],
                 ),
               ),
