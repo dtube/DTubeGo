@@ -60,7 +60,7 @@ class CommentDisplay extends StatelessWidget {
                 currentVT: _currentVT,
                 scale: 0.8,
                 isPost: false,
-                focusVote: false,
+                focusVote: "",
               ),
               Align(
                 alignment: Alignment.topRight,
@@ -119,7 +119,7 @@ class CommentDisplay extends StatelessWidget {
               currentVT: _currentVT,
               scale: 0.8,
               isPost: false,
-              focusVote: false,
+              focusVote: "",
             ),
             Align(
               alignment: Alignment.topRight,

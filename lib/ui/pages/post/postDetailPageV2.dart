@@ -327,7 +327,7 @@ class _PostDetailsState extends State<PostDetails> {
                                     currentVT: _currentVT,
                                     scale: 1,
                                     isPost: true,
-                                    focusVote: widget.directFocus == "vote");
+                                    focusVote: widget.directFocus);
                               } else {
                                 return SizedBox(height: 0);
                               }

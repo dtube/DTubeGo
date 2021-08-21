@@ -295,7 +295,7 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                         onPressed: () {
                           if (!widget.alreadyVoted) {
                             navigateToPostDetailPage(
-                                context, widget.author, widget.link, "vote");
+                                context, widget.author, widget.link, "upvote");
                           }
                         },
                       ),
@@ -316,8 +316,8 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                         ),
                         onPressed: () {
                           if (!widget.alreadyVoted) {
-                            navigateToPostDetailPage(
-                                context, widget.author, widget.link, "vote");
+                            navigateToPostDetailPage(context, widget.author,
+                                widget.link, "downvote");
                           }
                         },
                       ),
