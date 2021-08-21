@@ -28,6 +28,8 @@ const settingKey_templateTag = 'TEMPLATETAG';
 
 const settingKey_tsLastNotificationSeen = 'LASTNOT';
 
+const settingKey_pincode = "PINC";
+
 // const _txsKey = 'TXS';
 const _storage = FlutterSecureStorage();
 
@@ -40,6 +42,10 @@ Future<void> persistUsernameKey(String username, String priv) async {
 
 Future<void> persistNode(String node) async {
   await _storage.write(key: settingKey_avalonNode, value: node);
+}
+
+Future<void> persistPinCode(String pin) async {
+  await _storage.write(key: settingKey_pincode, value: pin);
 }
 
 Future<void> persistNotificationSeen(int tsLast) async {
@@ -115,6 +121,15 @@ Future<String> getUsername() async {
   var _username = await _storage.read(key: authKey_usernameKey);
   if (_username != null) {
     return _username;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getPinCode() async {
+  var _pin = await _storage.read(key: settingKey_pincode);
+  if (_pin != null) {
+    return _pin;
   } else {
     return "";
   }

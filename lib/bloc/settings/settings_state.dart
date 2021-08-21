@@ -26,6 +26,11 @@ class SettingsSavingState extends SettingsState {
   List<Object> get props => [];
 }
 
+class PinSavedState extends SettingsState {
+  @override
+  List<Object> get props => [];
+}
+
 class SettingsSavedState extends SettingsState {
   Map<String, String> settings;
   @override

@@ -1,5 +1,8 @@
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
+import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/res/appConfigValues.dart';
+import 'package:dtube_togo/ui/startup/PinPad.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_togo/ui/startup/OnboardingJourney.dart';
@@ -46,18 +49,10 @@ class _StartUpState extends State<StartUp> {
         }
 
         if (state is SignedInState) {
-          return MultiBlocProvider(providers: [
-            BlocProvider<UserBloc>(create: (context) {
-              return UserBloc(repository: UserRepositoryImpl());
-            }),
-            BlocProvider<AuthBloc>(
+          return BlocProvider<SettingsBloc>(
               create: (BuildContext context) =>
-                  AuthBloc(repository: AuthRepositoryImpl()),
-            ),
-            BlocProvider(
-              create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
-            ),
-          ], child: NavigationContainer());
+                  SettingsBloc()..add(FetchSettingsEvent()),
+              child: PinPadScreen());
         }
         if (state is SignInFailedState) {
           return LoginForm(message: state.message);

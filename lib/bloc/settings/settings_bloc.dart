@@ -36,7 +36,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           sec.settingKey_hiveSignerAccessTokenExpiresIn:
               await sec.getHiveSignerAccessTokenExpiresIn(),
           sec.settingKey_hiveSignerAccessTokenRequestedOn:
-              await sec.getHiveSignerAccessTokenRequestedOn()
+              await sec.getHiveSignerAccessTokenRequestedOn(),
+          sec.settingKey_pincode: await sec.getPinCode()
         };
         yield SettingsLoadedState(settings: newSettings);
       } catch (e) {
@@ -63,6 +64,16 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         );
 
         yield SettingsSavedState(settings: event.newSettings);
+      } catch (e) {
+        yield SettingsErrorState(message: 'unknown error');
+      }
+    }
+    if (event is PushNewPinEvent) {
+      yield SettingsSavingState();
+      try {
+        await sec.persistPinCode(event.newPin);
+
+        yield PinSavedState();
       } catch (e) {
         yield SettingsErrorState(message: 'unknown error');
       }

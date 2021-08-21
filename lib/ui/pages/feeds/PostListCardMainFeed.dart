@@ -142,7 +142,16 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                         scale: 0.8,
                         alignment: Alignment.centerRight,
                         child: InputChip(
-                          label: Text(widget.mainTag),
+                          label: Container(
+                            width: 50,
+                            //height: 40,
+                            child: Center(
+                              child: Text(
+                                widget.mainTag,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
                           onPressed: () {},
                         ),
                       ),

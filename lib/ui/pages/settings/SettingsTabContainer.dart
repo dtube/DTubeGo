@@ -4,6 +4,7 @@ import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/pages/settings/HiveSignerButton.dart';
+import 'package:dtube_togo/ui/pages/settings/PinCodeDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -33,6 +34,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   late String _hiveUsername;
   late String _postTemplateBody;
   late String _postTemplateTitle;
+  late String _pinCode;
 
   late TextEditingController _templateTitleController;
   late TextEditingController _templateBodyController;
@@ -146,6 +148,9 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
             _hiveUsername = settings[sec.settingKey_hiveSignerUsername] != null
                 ? settings[sec.settingKey_hiveSignerUsername]!
                 : "";
+            _pinCode = settings[sec.settingKey_pincode] != null
+                ? settings[sec.settingKey_pincode]!
+                : "";
           }
 
           return Column(
@@ -179,16 +184,13 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                       SingleChildScrollView(
                         child: Column(
                           children: [
-                            SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Text("Display",
+                                  style: Theme.of(context).textTheme.headline3),
+                            ),
                             DTubeFormCard(
                               childs: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 16.0),
-                                  child: Text("Display",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5),
-                                ),
                                 DropdownButtonFormField(
                                   decoration: InputDecoration(
                                     //filled: true,
@@ -231,6 +233,46 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                     );
                                   }).toList(),
                                 ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Text("Security",
+                                  style: Theme.of(context).textTheme.headline3),
+                            ),
+                            DTubeFormCard(
+                              childs: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: 200,
+                                      child: Text(
+                                          "secure your app with a 5 digit pin",
+                                          maxLines: 2,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                    ),
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          showDialog<String>(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  BlocProvider<SettingsBloc>(
+                                                      create: (BuildContext
+                                                              context) =>
+                                                          SettingsBloc(),
+                                                      child: PinCodeDialog(
+                                                        currentPin: _pinCode,
+                                                      )));
+                                        },
+                                        child: Text(_pinCode != ""
+                                            ? "change pin"
+                                            : "set pin"))
+                                  ],
+                                )
                               ],
                             ),
                           ],
