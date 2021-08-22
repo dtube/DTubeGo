@@ -138,7 +138,6 @@ class _UserState extends State<UserPage> {
                     username: user.name,
                     showAuthor: false,
                     bigThumbnail: false,
-                    paddingTop: 0,
                     scrollCallback: (bool) {},
                   )),
               Padding(

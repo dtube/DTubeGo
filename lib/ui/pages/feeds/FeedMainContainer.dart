@@ -84,25 +84,21 @@ class _FeedMainPageState extends State<FeedMainPage>
                         feedType: 'NewFeed',
                         bigThumbnail: true,
                         showAuthor: false,
-                        paddingTop: 0,
                         scrollCallback: (bool) {}),
                     FeedList(
                         feedType: 'MyFeed',
                         bigThumbnail: true,
                         showAuthor: false,
-                        paddingTop: 0,
                         scrollCallback: (bool) {}),
                     FeedList(
                         feedType: 'HotFeed',
                         bigThumbnail: true,
                         showAuthor: false,
-                        paddingTop: 0,
                         scrollCallback: (bool) {}),
                     FeedList(
                         feedType: 'TrendingFeed',
                         bigThumbnail: true,
                         showAuthor: false,
-                        paddingTop: 0,
                         scrollCallback: (bool) {}),
                     // BlocProvider<SearchBloc>(
                     //     create: (context) =>

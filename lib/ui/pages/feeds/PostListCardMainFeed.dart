@@ -74,256 +74,252 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
-    return Padding(
-      padding: EdgeInsets.only(top: widget.indexOfList == 0 ? 110 : 0),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              InkWell(
-                onTap: () {
-                  navigateToUserDetailPage(context, widget.author);
-                },
-                child: AccountAvatarBase(
-                  username: widget.author,
-                  avatarSize: _avatarSize,
-                  showVerified: true,
-                  showName: true,
-                  nameFontSizeMultiply: 1,
-                  width: 200,
-                ),
-              ),
-              SizedBox(width: 8),
-              Container(
-                width: _tagSpace,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    widget.oc
-                        ? Transform.scale(
-                            scale: 0.8,
-                            alignment: Alignment.centerRight,
-                            child: FaIcon(FontAwesomeIcons.award),
-                          )
-                        : SizedBox(width: 0),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: InkWell(
-                        onTap: () {
-                          navigateToPostDetailPage(context, widget.author,
-                              widget.link, "none", false);
-                        },
-                        child: Transform.scale(
-                          scale: 0.8,
-                          alignment: Alignment.centerRight,
-                          child: InputChip(
-                            label: Container(
-                              width: 50,
-                              //height: 40,
-                              child: Center(
-                                child: Text(
-                                  widget.mainTag,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          Container(
-            width: deviceWidth - 16,
-            child: InkWell(
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            InkWell(
               onTap: () {
-                navigateToPostDetailPage(
-                    context, widget.author, widget.link, "none", false);
+                navigateToUserDetailPage(context, widget.author);
               },
-              child: Text(
-                widget.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyText1,
+              child: AccountAvatarBase(
+                username: widget.author,
+                avatarSize: _avatarSize,
+                showVerified: true,
+                showName: true,
+                nameFontSizeMultiply: 1,
+                width: 200,
               ),
             ),
-          ),
-          AspectRatio(
-            aspectRatio: 8 / 5,
-            child: widget.blur
-                ? ClipRect(
-                    child: ImageFiltered(
-                      imageFilter: ImageFilter.blur(
-                        sigmaY: 5,
-                        sigmaX: 5,
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl: widget.thumbnailUrl,
-                      ),
-                    ),
-                  )
-                : InkWell(
-                    onTap: () {
-                      setState(() {
-                        _thumbnailTapped = true;
-                      });
-                    },
-                    child: Stack(
-                      alignment: Alignment.topCenter,
-                      children: [
-                        Visibility(
-                          visible: !_thumbnailTapped,
-                          child: AspectRatio(
-                            aspectRatio: 8 / 5,
-                            child: widget.thumbnailUrl != ''
-                                ? CachedNetworkImage(
-                                    imageUrl: widget.thumbnailUrl,
-                                    fit: BoxFit.fitWidth,
-                                  )
-                                : Image.asset(
-                                    'assets/images/Image_of_none.svg.png',
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                          ),
-                        ),
-                        Center(
-                          child: Visibility(
-                            visible: _thumbnailTapped,
-                            child:
-                                (["sia", "ipfs"].contains(widget.videoSource) &&
-                                        widget.videoUrl != "")
-                                    ? BP(
-                                        videoUrl: widget.videoUrl,
-                                        autoplay: true,
-                                        looping: false,
-                                        localFile: false,
-                                        controls: true,
-                                        usedAsPreview: false,
-                                        allowFullscreen: false)
-                                    : (widget.videoSource == 'youtube' &&
-                                            widget.videoUrl != "")
-                                        ? YTPlayerIFrame(
-                                            videoUrl: widget.videoUrl,
-                                            autoplay: true,
-                                            allowFullscreen: false)
-                                        : Text("no player detected"),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            SizedBox(width: 8),
+            Container(
+              width: _tagSpace,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    '${widget.publishDate} - ' +
-                        (widget.duration.inHours == 0
-                            ? widget.duration.toString().substring(2, 7) +
-                                ' min'
-                            : widget.duration.toString().substring(0, 7) +
-                                ' hours'),
-                    style: Theme.of(context).textTheme.caption,
-                  ),
-                  Text(
-                    '${widget.dtcValue}',
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Transform.scale(
-                    scale: 0.8,
-                    alignment: Alignment.centerLeft,
-                    child: InputChip(
-                      label: Text(
-                        '',
-                      ),
-                      avatar: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: FaIcon(FontAwesomeIcons.comment,
-                            color: widget.alreadyVoted &&
-                                    !widget.alreadyVotedDirection
-                                ? globalRed
-                                : Colors.grey),
-                      ),
-                      onPressed: () {
-                        navigateToPostDetailPage(context, widget.author,
-                            widget.link, "newcomment", false);
-                      },
-                    ),
-                  ),
-                  Transform.scale(
-                    scale: 0.8,
+                  widget.oc
+                      ? Transform.scale(
+                          scale: 0.8,
+                          alignment: Alignment.centerRight,
+                          child: FaIcon(FontAwesomeIcons.award),
+                        )
+                      : SizedBox(width: 0),
+                  Align(
                     alignment: Alignment.centerRight,
-                    child: Row(
-                      children: [
-                        InputChip(
-                          label: Text(
-                            widget.upvotesCount.toString(),
-                          ),
-                          avatar: Padding(
-                            padding: const EdgeInsets.only(left: 4.0),
-                            child: FaIcon(
-                              FontAwesomeIcons.thumbsUp,
-                              color: widget.alreadyVoted &&
-                                      widget.alreadyVotedDirection
-                                  ? globalRed
-                                  : Colors.grey,
+                    child: InkWell(
+                      onTap: () {
+                        navigateToPostDetailPage(
+                            context, widget.author, widget.link, "none", false);
+                      },
+                      child: Transform.scale(
+                        scale: 0.8,
+                        alignment: Alignment.centerRight,
+                        child: InputChip(
+                          label: Container(
+                            width: 50,
+                            //height: 40,
+                            child: Center(
+                              child: Text(
+                                widget.mainTag,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
-                          onPressed: () {
-                            if (!widget.alreadyVoted) {
-                              navigateToPostDetailPage(context, widget.author,
-                                  widget.link, "upvote", false);
-                            }
-                          },
+                          onPressed: () {},
                         ),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        InputChip(
-                          label: Text(
-                            widget.downvotesCount.toString(),
-                          ),
-                          avatar: Padding(
-                            padding: const EdgeInsets.only(left: 4.0),
-                            child: FaIcon(FontAwesomeIcons.thumbsDown,
-                                color: widget.alreadyVoted &&
-                                        !widget.alreadyVotedDirection
-                                    ? globalRed
-                                    : Colors.grey),
-                          ),
-                          onPressed: () {
-                            if (!widget.alreadyVoted) {
-                              navigateToPostDetailPage(context, widget.author,
-                                  widget.link, "downvote", false);
-                            }
-                          },
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ],
               ),
-            ],
+            ),
+          ],
+        ),
+        SizedBox(height: 8),
+        Container(
+          width: deviceWidth - 16,
+          child: InkWell(
+            onTap: () {
+              navigateToPostDetailPage(
+                  context, widget.author, widget.link, "none", false);
+            },
+            child: Text(
+              widget.title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
           ),
-        ],
-      ),
+        ),
+        AspectRatio(
+          aspectRatio: 8 / 5,
+          child: widget.blur
+              ? ClipRect(
+                  child: ImageFiltered(
+                    imageFilter: ImageFilter.blur(
+                      sigmaY: 5,
+                      sigmaX: 5,
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: widget.thumbnailUrl,
+                    ),
+                  ),
+                )
+              : InkWell(
+                  onTap: () {
+                    setState(() {
+                      _thumbnailTapped = true;
+                    });
+                  },
+                  child: Stack(
+                    alignment: Alignment.topCenter,
+                    children: [
+                      Visibility(
+                        visible: !_thumbnailTapped,
+                        child: AspectRatio(
+                          aspectRatio: 8 / 5,
+                          child: widget.thumbnailUrl != ''
+                              ? CachedNetworkImage(
+                                  imageUrl: widget.thumbnailUrl,
+                                  fit: BoxFit.fitWidth,
+                                )
+                              : Image.asset(
+                                  'assets/images/Image_of_none.svg.png',
+                                  fit: BoxFit.fitWidth,
+                                ),
+                        ),
+                      ),
+                      Center(
+                        child: Visibility(
+                          visible: _thumbnailTapped,
+                          child:
+                              (["sia", "ipfs"].contains(widget.videoSource) &&
+                                      widget.videoUrl != "")
+                                  ? BP(
+                                      videoUrl: widget.videoUrl,
+                                      autoplay: true,
+                                      looping: false,
+                                      localFile: false,
+                                      controls: true,
+                                      usedAsPreview: false,
+                                      allowFullscreen: false)
+                                  : (widget.videoSource == 'youtube' &&
+                                          widget.videoUrl != "")
+                                      ? YTPlayerIFrame(
+                                          videoUrl: widget.videoUrl,
+                                          autoplay: true,
+                                          allowFullscreen: false)
+                                      : Text("no player detected"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${widget.publishDate} - ' +
+                      (widget.duration.inHours == 0
+                          ? widget.duration.toString().substring(2, 7) + ' min'
+                          : widget.duration.toString().substring(0, 7) +
+                              ' hours'),
+                  style: Theme.of(context).textTheme.caption,
+                ),
+                Text(
+                  '${widget.dtcValue}',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Transform.scale(
+                  scale: 0.8,
+                  alignment: Alignment.centerLeft,
+                  child: InputChip(
+                    label: Text(
+                      '',
+                    ),
+                    avatar: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: FaIcon(FontAwesomeIcons.comment,
+                          color: widget.alreadyVoted &&
+                                  !widget.alreadyVotedDirection
+                              ? globalRed
+                              : Colors.grey),
+                    ),
+                    onPressed: () {
+                      navigateToPostDetailPage(context, widget.author,
+                          widget.link, "newcomment", false);
+                    },
+                  ),
+                ),
+                Transform.scale(
+                  scale: 0.8,
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    children: [
+                      InputChip(
+                        label: Text(
+                          widget.upvotesCount.toString(),
+                        ),
+                        avatar: Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: FaIcon(
+                            FontAwesomeIcons.thumbsUp,
+                            color: widget.alreadyVoted &&
+                                    widget.alreadyVotedDirection
+                                ? globalRed
+                                : Colors.grey,
+                          ),
+                        ),
+                        onPressed: () {
+                          if (!widget.alreadyVoted) {
+                            navigateToPostDetailPage(context, widget.author,
+                                widget.link, "upvote", false);
+                          }
+                        },
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      InputChip(
+                        label: Text(
+                          widget.downvotesCount.toString(),
+                        ),
+                        avatar: Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: FaIcon(FontAwesomeIcons.thumbsDown,
+                              color: widget.alreadyVoted &&
+                                      !widget.alreadyVotedDirection
+                                  ? globalRed
+                                  : Colors.grey),
+                        ),
+                        onPressed: () {
+                          if (!widget.alreadyVoted) {
+                            navigateToPostDetailPage(context, widget.author,
+                                widget.link, "downvote", false);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
