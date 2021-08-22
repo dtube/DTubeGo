@@ -204,6 +204,7 @@ class _PostDetailsState extends State<PostDetails> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         MediaQuery.of(context).orientation ==
                                 Orientation.landscape
@@ -223,19 +224,20 @@ class _PostDetailsState extends State<PostDetails> {
                                     alignment: Alignment.topRight,
                                     margin: EdgeInsets.all(5.0),
                                     child: InputChip(
-                                      label: Container(
-                                        width: 100,
-                                        height: 40,
-                                        child: Center(
-                                            child: Text(widget.post.author)),
-                                      ),
-                                      avatar: AccountAvatarBase(
+                                      label: AccountAvatarBase(
                                         username: widget.post.author,
-                                        avatarSize: 40,
+                                        avatarSize: 30,
                                         showVerified: true,
                                         showName: true,
-                                        width: 150,
+                                        width: 130,
                                       ),
+                                      // avatar: AccountAvatarBase(
+                                      //   username: widget.post.author,
+                                      //   avatarSize: 40,
+                                      //   showVerified: true,
+                                      //   showName: true,
+                                      //   width: 150,
+                                      // ),
                                       onPressed: () {
                                         navigateToUserDetailPage(
                                             context, widget.post.author);
@@ -369,9 +371,8 @@ class _PostDetailsState extends State<PostDetails> {
                             ? Padding(
                                 padding: const EdgeInsets.only(right: 16.0),
                                 child: Container(
-                                  height: 300,
+                                  height: 200.0,
                                   child: ListView.builder(
-                                    key: PageStorageKey('myScrollable'),
                                     itemCount: widget.post.comments!.length,
                                     itemBuilder:
                                         (BuildContext context, int index) =>

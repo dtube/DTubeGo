@@ -24,26 +24,23 @@ class CommentDisplay extends StatelessWidget {
   Widget _buildTiles(Comment root) {
     if (root.childComments == null) {
       return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              SizedBox(
-                width: 30,
-                height: 30,
-                child: AccountAvatarBase(
-                  username: root.author,
-                  avatarSize: 30,
-                  showVerified: true,
-                  showName: false,
-                  width: 40,
-                ),
+              AccountAvatarBase(
+                username: root.author,
+                avatarSize: 30,
+                showVerified: true,
+                showName: true,
+                width: 90,
               ),
               SizedBox(
                 width: 8,
               ),
               Container(
-                width: 300,
+                width: 200,
                 child: Text(
                   root.commentjson.description,
                   style: TextStyle(fontSize: 12.0),
@@ -89,74 +86,73 @@ class CommentDisplay extends StatelessWidget {
         ],
       );
     } else {
-      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(
+      return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(
-              width: 30,
-              height: 30,
-              child: AccountAvatarBase(
-                username: root.author,
-                avatarSize: 30,
-                showVerified: true,
-                showName: false,
-                width: 40,
-              ),
+            Row(
+              children: [
+                AccountAvatarBase(
+                  username: root.author,
+                  avatarSize: 30,
+                  showVerified: true,
+                  showName: true,
+                  width: 100,
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Container(
+                  width: 200,
+                  child: Text(
+                    root.commentjson.description,
+                    style: TextStyle(fontSize: 12.0),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(
-              width: 8,
-            ),
-            Container(
-              width: 300,
-              child: Text(
-                root.commentjson.description,
-                style: TextStyle(fontSize: 12.0),
-              ),
-            ),
-          ],
-        ),
-        Stack(
-          children: [
-            VotingButtons(
-              author: root.author,
-              link: root.link,
-              alreadyVoted: root.alreadyVoted,
-              alreadyVotedDirection: root.alreadyVotedDirection,
-              upvotes: root.upvotes,
-              downvotes: root.downvotes,
-              defaultVotingWeight: defaultVoteWeight,
-              defaultVotingTip: defaultVoteTip,
-              currentVT: _currentVT,
-              scale: 0.8,
-              isPost: false,
-              focusVote: "",
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: BlocProvider(
-                create: (context) =>
-                    TransactionBloc(repository: TransactionRepositoryImpl()),
-                child: ReplyButton(
-                  icon: FaIcon(FontAwesomeIcons.comments),
+            Stack(
+              children: [
+                VotingButtons(
                   author: root.author,
                   link: root.link,
-                  parentAuthor: parentAuthor,
-                  parentLink: parentLink,
-                  votingWeight: defaultVoteWeight,
+                  alreadyVoted: root.alreadyVoted,
+                  alreadyVotedDirection: root.alreadyVotedDirection,
+                  upvotes: root.upvotes,
+                  downvotes: root.downvotes,
+                  defaultVotingWeight: defaultVoteWeight,
+                  defaultVotingTip: defaultVoteTip,
+                  currentVT: _currentVT,
                   scale: 0.8,
-                  focusOnNewComment: false,
+                  isPost: false,
+                  focusVote: "",
                 ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: BlocProvider(
+                    create: (context) => TransactionBloc(
+                        repository: TransactionRepositoryImpl()),
+                    child: ReplyButton(
+                      icon: FaIcon(FontAwesomeIcons.comments),
+                      author: root.author,
+                      link: root.link,
+                      parentAuthor: parentAuthor,
+                      parentLink: parentLink,
+                      votingWeight: defaultVoteWeight,
+                      scale: 0.8,
+                      focusOnNewComment: false,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 12.0),
+              child: Column(
+                children: root.childComments!.map<Widget>(_buildTiles).toList(),
               ),
             ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 12.0),
-          child: Column(
-            children: root.childComments!.map<Widget>(_buildTiles).toList(),
-          ),
-        ),
-      ]);
+          ]);
     }
   }
 

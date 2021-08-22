@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:decorated_icon/decorated_icon.dart';
-import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
-import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
+import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc.dart';
+import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
+
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
@@ -14,6 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:image_picker/image_picker.dart';
 
 class ProfileSettingsContainer extends StatefulWidget {
   ProfileSettingsContainer({Key? key}) : super(key: key);
@@ -44,6 +48,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
   late TextEditingController _aboutController;
   late TextEditingController _websiteController;
   late String _accountType;
+
   bool _userDataLoaded = false;
 
   // late Map<String, String> currentSettings;
@@ -68,6 +73,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       // Todo abstract this to dtubeSubAppBar
       appBar: AppBar(
@@ -88,10 +94,10 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
             } else if (state is UserLoadedState) {
               if (!_userDataLoaded) {
                 _userDataLoaded = true;
-                // set textfields to content of user
+
                 _originalUserData = state.user;
                 _newUserData = state.user;
-                // basic
+
                 if (_originalUserData.jsonString?.profile?.about != null) {
                   _aboutController.text =
                       _originalUserData.jsonString!.profile!.about!;
@@ -192,22 +198,103 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                         Theme.of(context).textTheme.headline3,
                                   ),
                                 ),
-                                DTubeFormCard(
-                                  childs: [
-                                    TextFormField(
-                                      controller: _avatarController,
-                                      decoration: new InputDecoration(
-                                          labelText: "Avatar Image URL"),
-                                      maxLines: 1,
-                                    ),
-                                    TextFormField(
-                                      controller: _coverImageController,
-                                      decoration: new InputDecoration(
-                                          labelText: "Channel Banner URL"),
-                                      maxLines: 1,
-                                    ),
-                                  ],
+                                BlocProvider<ThirdPartyUploaderBloc>(
+                                  create: (BuildContext context) =>
+                                      ThirdPartyUploaderBloc(
+                                          repository:
+                                              ThirdPartyUploaderRepositoryImpl()),
+                                  child: DTubeFormCard(
+                                    childs: [
+                                      BlocBuilder<ThirdPartyUploaderBloc,
+                                              ThirdPartyUploaderState>(
+                                          builder: (context, state) {
+                                        if (state
+                                            is ThirdPartyUploaderUploadingState) {
+                                          return CircularProgressIndicator();
+                                        }
+                                        if (state
+                                            is ThirdPartyUploaderUploadedState) {
+                                          _avatarController.text =
+                                              state.uploadResponse;
+                                          return Column(
+                                            children: [
+                                              TextFormField(
+                                                controller: _avatarController,
+                                                decoration: new InputDecoration(
+                                                    labelText:
+                                                        "Avatar Image URL"),
+                                                maxLines: 1,
+                                              ),
+                                              UploadImageButton(),
+                                            ],
+                                          );
+                                        }
+                                        return Column(
+                                          children: [
+                                            TextFormField(
+                                              controller: _avatarController,
+                                              decoration: new InputDecoration(
+                                                  labelText:
+                                                      "Avatar Image URL"),
+                                              maxLines: 1,
+                                            ),
+                                            UploadImageButton(),
+                                          ],
+                                        );
+                                      }),
+                                    ],
+                                  ),
                                 ),
+                                BlocProvider<ThirdPartyUploaderBloc>(
+                                  create: (BuildContext context) =>
+                                      ThirdPartyUploaderBloc(
+                                          repository:
+                                              ThirdPartyUploaderRepositoryImpl()),
+                                  child: DTubeFormCard(
+                                    childs: [
+                                      BlocBuilder<ThirdPartyUploaderBloc,
+                                              ThirdPartyUploaderState>(
+                                          builder: (context, state) {
+                                        if (state
+                                            is ThirdPartyUploaderUploadingState) {
+                                          return CircularProgressIndicator();
+                                        }
+                                        if (state
+                                            is ThirdPartyUploaderUploadedState) {
+                                          _coverImageController.text =
+                                              state.uploadResponse;
+                                          return Column(
+                                            children: [
+                                              TextFormField(
+                                                controller:
+                                                    _coverImageController,
+                                                decoration: new InputDecoration(
+                                                    labelText:
+                                                        "Cover Image URL"),
+                                                maxLines: 1,
+                                              ),
+                                              UploadImageButton(),
+                                            ],
+                                          );
+                                        }
+                                        return Column(
+                                          children: [
+                                            TextFormField(
+                                              controller: _coverImageController,
+                                              decoration: new InputDecoration(
+                                                  labelText: "Cover Image URL"),
+                                              maxLines: 1,
+                                            ),
+                                            UploadImageButton(),
+                                          ],
+                                        );
+                                      }),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 100,
+                                )
                               ],
                             ),
                           ),
@@ -232,10 +319,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                     ),
                                     DropdownButtonFormField(
                                       decoration: InputDecoration(
-                                        //filled: true,
-                                        //fillColor: Hexcolor('#ecedec'),
                                         labelText: 'Account Type',
-                                        //border: new CustomBorderTextFieldSkin().getSkin(),
                                       ),
                                       value: _accountType,
                                       onChanged: (newValue) {
@@ -301,9 +385,6 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                           ],
                         ),
                         onTap: () async {
-                          // _newUserData.jsonString.profile.about =
-                          //     _aboutController.text;
-
                           User _saveUserData = new User(
                               sId: _originalUserData.sId,
                               name: _originalUserData.name,
@@ -351,5 +432,38 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
         ),
       ),
     );
+  }
+}
+
+class UploadImageButton extends StatefulWidget {
+  UploadImageButton({Key? key}) : super(key: key);
+
+  @override
+  State<UploadImageButton> createState() => _UploadImageButtonState();
+}
+
+class _UploadImageButtonState extends State<UploadImageButton> {
+  Future<String> getAndUploadFile() async {
+    BlocProvider.of<ThirdPartyUploaderBloc>(context)
+        .add(SetThirdPartyUploaderInitState());
+    XFile? _pickedFile;
+    BlocProvider.of<ThirdPartyUploaderBloc>(context);
+    final _picker = ImagePicker();
+    _pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (_pickedFile != null) {
+      BlocProvider.of<ThirdPartyUploaderBloc>(context)
+          .add(UploadFile(filePath: _pickedFile.path, context: context));
+      return _pickedFile.path;
+    }
+    return "no image selected";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        onPressed: () async {
+          String imagePath = await getAndUploadFile();
+        },
+        child: Text("upload"));
   }
 }
