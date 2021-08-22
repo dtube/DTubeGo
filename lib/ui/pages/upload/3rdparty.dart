@@ -13,9 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 class Wizard3rdParty extends StatefulWidget {
-  const Wizard3rdParty({
-    Key? key,
-  }) : super(key: key);
+  Wizard3rdParty({Key? key, required this.uploaderCallback}) : super(key: key);
+
+  VoidCallback uploaderCallback;
 
   @override
   _Wizard3rdPartyState createState() => _Wizard3rdPartyState();
@@ -83,12 +83,12 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
 
   void childCallback(UploadData ud) {
     setState(() {
+      widget.uploaderCallback();
       BlocProvider.of<TransactionBloc>(context)
           .add(TransactionPreprocessing(txType: ud.isPromoted ? 13 : 4));
       _uploadData = ud;
       BlocProvider.of<TransactionBloc>(context)
           .add(SendCommentEvent(_uploadData));
-      Navigator.of(context).pop();
     });
   }
 

@@ -23,7 +23,7 @@ import 'package:dtube_togo/ui/Explore/SearchScreen.dart';
 import 'package:dtube_togo/ui/pages/feeds/FeedMainContainer.dart';
 import 'package:dtube_togo/ui/pages/feeds/MomentsList.dart';
 import 'package:dtube_togo/ui/pages/notifications/NotificationButton.dart';
-import 'package:dtube_togo/ui/pages/upload/UploadButton.dart';
+
 import 'package:dtube_togo/ui/pages/feeds/FeedList.dart';
 
 import 'package:dtube_togo/ui/pages/notifications/Notifications.dart';
@@ -51,7 +51,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
   double topBarHeight = 90;
   int bottomSelectedIndex = 0;
-  PersistentTabController _controller =
+  PersistentTabController mainTabController =
       PersistentTabController(initialIndex: 0);
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -97,38 +97,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
               if (state.txType == 13 || state.txType == 4) {
                 return DTubeLogoPulse(size: 40.0);
               }
-            } else if (state is TransactionSent && state.isParentContent) {
-              return GestureDetector(
-                onTap: () {
-                  BlocProvider.of<TransactionBloc>(context).add(SetInitState());
-                  if (state.authorPerm != null) {
-                    navigateToPostDetailPage(
-                        context,
-                        state.authorPerm!
-                            .substring(0, state.authorPerm!.indexOf('/')),
-                        state.authorPerm!
-                            .substring(state.authorPerm!.indexOf('/') + 1),
-                        "none");
-                  } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return UploaderMainPage();
-                        },
-                      ),
-                    );
-                  }
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: new FaIcon(
-                    FontAwesomeIcons.play,
-                    color: Colors.white,
-                  ),
-                ),
-                // ),
-              );
             }
             return Center(
               child: new FaIcon(
@@ -180,16 +148,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
     _notifier.value = hide;
   }
 
-  List<Widget> _buildScreens() {
-    return [
-      FeedMainPage(),
-      ExploreMainPage(),
-      UploaderMainPage(),
-      MomentsList(),
-      UserPage(
-        ownUserpage: true,
-      ),
-    ];
+  void uploaderCallback() {
+    mainTabController.jumpToTab(0);
+    print("yoooooo");
   }
 
   @override
@@ -200,6 +161,19 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> screens = [
+      FeedMainPage(),
+      ExploreMainPage(),
+      UploaderMainPage(
+        callback: uploaderCallback,
+        // key: UniqueKey(),
+      ),
+      MomentsList(),
+      UserPage(
+        ownUserpage: true,
+      ),
+    ];
+
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
     BlocListener<TransactionBloc, TransactionState>(
@@ -216,6 +190,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
     );
     return Scaffold(
       extendBodyBehindAppBar: true,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
@@ -269,10 +244,10 @@ class _NavigationContainerState extends State<NavigationContainer> {
         child: PersistentTabView(
           context,
 
-          controller: _controller,
-          screens: _buildScreens(),
+          controller: mainTabController,
+          screens: screens,
           items: _navBarsItems(),
-          // bottomScreenMargin: 0.0,
+          bottomScreenMargin: 0.0,
           // hideNavigationBar:
           //     val, // autohide would be cool - but still buggy https://github.com/BilalShahid13/PersistentBottomNavBar/issues/188
           confineInSafeArea: true,
@@ -296,6 +271,22 @@ class _NavigationContainerState extends State<NavigationContainer> {
           ),
 
           navBarStyle: NavBarStyle.style15,
+          onItemSelected: (index) {
+            if (index == 2) {
+              setState(() {
+                screens.removeAt(2);
+
+                screens.insert(
+                    2,
+                    new UploaderMainPage(
+                      callback: uploaderCallback,
+                      key: UniqueKey(),
+                    )
+                    //  index = index;
+                    );
+              });
+            }
+          },
 
           //  );
           //}

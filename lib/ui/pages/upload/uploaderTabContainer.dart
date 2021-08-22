@@ -1,3 +1,4 @@
+import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc.dart';
 import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc.dart';
@@ -17,7 +18,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UploaderMainPage extends StatefulWidget {
-  UploaderMainPage({Key? key}) : super(key: key);
+  UploaderMainPage({Key? key, required this.callback}) : super(key: key);
+
+  VoidCallback callback;
 
   @override
   _UploaderMainPageState createState() => _UploaderMainPageState();
@@ -83,8 +86,14 @@ class _UploaderMainPageState extends State<UploaderMainPage>
                           create: (context) => HivesignerBloc(
                               repository: HivesignerRepositoryImpl()),
                         ),
+                        BlocProvider(
+                          create: (context) => ThirdPartyUploaderBloc(
+                              repository: ThirdPartyUploaderRepositoryImpl()),
+                        ),
                       ],
-                      child: WizardIPFS(),
+                      child: WizardIPFS(
+                        uploaderCallback: widget.callback,
+                      ),
                     ),
                     MultiBlocProvider(
                       providers: [
@@ -103,8 +112,14 @@ class _UploaderMainPageState extends State<UploaderMainPage>
                           create: (context) => HivesignerBloc(
                               repository: HivesignerRepositoryImpl()),
                         ),
+                        BlocProvider(
+                          create: (context) => ThirdPartyUploaderBloc(
+                              repository: ThirdPartyUploaderRepositoryImpl()),
+                        ),
                       ],
-                      child: Wizard3rdParty(),
+                      child: Wizard3rdParty(
+                        uploaderCallback: widget.callback,
+                      ),
                     ),
                   ],
                   controller: _tabController,

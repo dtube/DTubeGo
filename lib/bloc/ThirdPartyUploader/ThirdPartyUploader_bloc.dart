@@ -8,6 +8,7 @@ import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_state.dart
 
 import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 class ThirdPartyUploaderBloc
     extends Bloc<ThirdPartyUploaderEvent, ThirdPartyUploaderState> {
@@ -19,11 +20,12 @@ class ThirdPartyUploaderBloc
   @override
   Stream<ThirdPartyUploaderState> mapEventToState(
       ThirdPartyUploaderEvent event) async* {
+    String imageUploadProvider = await sec.getImageUploadService();
 // TODO: error handling
     if (event is UploadFile) {
       yield ThirdPartyUploaderUploadingState();
       String _uploadServiceEndpoint =
-          await repository.getUploadServiceEndpoint();
+          await repository.getUploadServiceEndpoint(imageUploadProvider);
 
       String resultString =
           await repository.uploadFile(event.filePath, _uploadServiceEndpoint);

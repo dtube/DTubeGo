@@ -151,41 +151,81 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       // video
       if (_upload.videoLocation != "") {
         if (_upload.videoSourceHash != "") {
-          jsonMetadata = {
-            "files": {
-              "ipfs": {
-                "vid": {
-                  "240": _upload.video240pHash,
-                  "480": _upload.video480pHash,
-                  "src": _upload.videoSourceHash
+          if (_upload.localThumbnail == true) {
+            jsonMetadata = {
+              "files": {
+                "ipfs": {
+                  "vid": {
+                    "240": _upload.video240pHash,
+                    "480": _upload.video480pHash,
+                    "src": _upload.videoSourceHash
+                  },
+                  "img": {
+                    "118": _upload.thumbnail210Hash,
+                    "360": _upload.thumbnail640Hash,
+                    "spr": _upload.videoSpriteHash
+                  },
+                  "gw": "https://player.d.tube"
                 },
-                "img": {
-                  "118": _upload.thumbnail210Hash,
-                  "360": _upload.thumbnail640Hash,
-                  "spr": _upload.videoSpriteHash
-                },
-                "gw": "https://player.d.tube"
               },
-            },
-            "title": _upload.title,
-            "description": _upload.description,
-            "dur": _upload.duration,
-            "tag": _upload.tag,
-            "hide": _upload.unlistVideo ? 1 : 0,
-            "nsfw": _upload.nSFWContent ? 1 : 0,
-            "oc": _upload.originalContent ? 1 : 0
-          };
+              "title": _upload.title,
+              "description": _upload.description,
+              "dur": _upload.duration,
+              "tag": _upload.tag,
+              "hide": _upload.unlistVideo ? 1 : 0,
+              "nsfw": _upload.nSFWContent ? 1 : 0,
+              "oc": _upload.originalContent ? 1 : 0
+            };
+          } else {
+            jsonMetadata = {
+              "files": {
+                "ipfs": {
+                  "vid": {
+                    "240": _upload.video240pHash,
+                    "480": _upload.video480pHash,
+                    "src": _upload.videoSourceHash
+                  },
+                  "img": {"spr": _upload.videoSpriteHash},
+                  "gw": "https://player.d.tube"
+                },
+              },
+              "title": _upload.title,
+              "description": _upload.description,
+              "dur": _upload.duration,
+              "tag": _upload.tag,
+              "hide": _upload.unlistVideo ? 1 : 0,
+              "nsfw": _upload.nSFWContent ? 1 : 0,
+              "oc": _upload.originalContent ? 1 : 0,
+              "thumbnailUrlExternal": _upload.thumbnailLocation,
+              "thumbnailUrl": _upload.thumbnailLocation
+            };
+          }
         } else {
-          jsonMetadata = {
-            "files": {"youtube": _upload.videoLocation},
-            "title": _upload.title,
-            "description": _upload.description,
-            "dur": _upload.duration,
-            "tag": _upload.tag,
-            "hide": _upload.unlistVideo ? 1 : 0,
-            "nsfw": _upload.nSFWContent ? 1 : 0,
-            "oc": _upload.originalContent ? 1 : 0
-          };
+          if (_upload.thumbnailLocation != "" && !_upload.localThumbnail) {
+            jsonMetadata = {
+              "files": {"youtube": _upload.videoLocation},
+              "title": _upload.title,
+              "description": _upload.description,
+              "dur": _upload.duration,
+              "tag": _upload.tag,
+              "hide": _upload.unlistVideo ? 1 : 0,
+              "nsfw": _upload.nSFWContent ? 1 : 0,
+              "oc": _upload.originalContent ? 1 : 0,
+              "thumbnailUrlExternal": _upload.thumbnailLocation,
+              "thumbnailUrl": _upload.thumbnailLocation
+            };
+          } else {
+            jsonMetadata = {
+              "files": {"youtube": _upload.videoLocation},
+              "title": _upload.title,
+              "description": _upload.description,
+              "dur": _upload.duration,
+              "tag": _upload.tag,
+              "hide": _upload.unlistVideo ? 1 : 0,
+              "nsfw": _upload.nSFWContent ? 1 : 0,
+              "oc": _upload.originalContent ? 1 : 0
+            };
+          }
         }
 
         _txData = new TxData(

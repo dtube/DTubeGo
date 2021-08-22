@@ -452,7 +452,7 @@ class _UploadImageButtonState extends State<UploadImageButton> {
     _pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (_pickedFile != null) {
       BlocProvider.of<ThirdPartyUploaderBloc>(context)
-          .add(UploadFile(filePath: _pickedFile.path, context: context));
+          .add(UploadFile(filePath: _pickedFile.path));
       return _pickedFile.path;
     }
     return "no image selected";

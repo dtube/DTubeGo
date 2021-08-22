@@ -5,9 +5,9 @@ import 'package:flutter/cupertino.dart';
 abstract class ThirdPartyUploaderEvent extends Equatable {}
 
 class UploadFile extends ThirdPartyUploaderEvent {
-  UploadFile({required this.filePath, required this.context});
+  UploadFile({required this.filePath});
   final String filePath;
-  BuildContext context;
+
   @override
   List<Object> get props => List.empty();
 }

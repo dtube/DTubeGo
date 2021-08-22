@@ -36,6 +36,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   late String _postTemplateTitle;
   late String _pinCode;
 
+  late String _imageUploadProvider;
+
   late TextEditingController _templateTitleController;
   late TextEditingController _templateBodyController;
   late TextEditingController _templateTagController;
@@ -58,6 +60,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
 
   List<String> _showHiddentNsfwOptions = ['Show', 'Hide', 'Blur'];
 
+  List<String> _imageUploadProviders = ['imgur', 'ipfs'];
   @override
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
@@ -90,6 +93,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                         _templateBodyController.value.text,
                     sec.settingKey_templateTag:
                         _templateTagController.value.text,
+                    sec.settingKey_imageUploadService: _imageUploadProvider
                   };
                   _settingsBloc.add(PushSettingsEvent(newSettings));
                 },
@@ -151,6 +155,11 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
             _pinCode = settings[sec.settingKey_pincode] != null
                 ? settings[sec.settingKey_pincode]!
                 : "";
+
+            _imageUploadProvider =
+                settings[sec.settingKey_imageUploadService] != null
+                    ? settings[sec.settingKey_imageUploadService]!
+                    : "imgur";
           }
 
           return Column(
@@ -273,6 +282,37 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                             : "set pin"))
                                   ],
                                 )
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Text("Image upload",
+                                  style: Theme.of(context).textTheme.headline3),
+                            ),
+                            DTubeFormCard(
+                              childs: [
+                                DropdownButtonFormField(
+                                  decoration: InputDecoration(
+                                    //filled: true,
+                                    //fillColor: Hexcolor('#ecedec'),
+                                    labelText: 'storage provider',
+                                    //border: new CustomBorderTextFieldSkin().getSkin(),
+                                  ),
+                                  value: _imageUploadProvider,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _imageUploadProvider =
+                                          newValue.toString();
+                                      // widget.justSaved = false;
+                                    });
+                                  },
+                                  items: _imageUploadProviders.map((option) {
+                                    return DropdownMenuItem(
+                                      child: new Text(option),
+                                      value: option,
+                                    );
+                                  }).toList(),
+                                ),
                               ],
                             ),
                           ],

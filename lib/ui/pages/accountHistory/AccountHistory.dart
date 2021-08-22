@@ -306,11 +306,11 @@ class ActivityItem extends StatelessWidget {
                         if (txData.data.author != null &&
                             txData.data.link != null) {
                           navigateToPostDetailPage(context, txData.data.author!,
-                              txData.data.link!, "none");
+                              txData.data.link!, "none", false);
                         }
                         if (txData.data.pa != null && txData.data.pp != null) {
                           navigateToPostDetailPage(context, txData.data.pa!,
-                              txData.data.pp!, "none");
+                              txData.data.pp!, "none", false);
                         }
                         if (txData.data.target != null) {
                           print(username);

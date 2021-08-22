@@ -3,15 +3,17 @@ import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 
 abstract class ThirdPartyUploaderRepository {
-  Future<String> getUploadServiceEndpoint();
+  Future<String> getUploadServiceEndpoint(String provider);
 
   Future<String> uploadFile(String localFilePath, String endpoint);
 }
 
 class ThirdPartyUploaderRepositoryImpl implements ThirdPartyUploaderRepository {
   @override
-  Future<String> getUploadServiceEndpoint() async {
-    // todo: support other providers
+  Future<String> getUploadServiceEndpoint(String provider) async {
+    if (provider == "imgur") {
+      return "https://api.imgur.com/3/image";
+    }
     return "https://api.imgur.com/3/image";
   }
 

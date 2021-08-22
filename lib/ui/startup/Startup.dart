@@ -54,6 +54,7 @@ class _StartUpState extends State<StartUp> {
                   SettingsBloc()..add(FetchSettingsEvent()),
               child: PinPadScreen());
         }
+
         if (state is SignInFailedState) {
           return LoginForm(message: state.message);
         }

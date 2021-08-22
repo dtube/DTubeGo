@@ -30,6 +30,8 @@ const settingKey_tsLastNotificationSeen = 'LASTNOT';
 
 const settingKey_pincode = "PINC";
 
+const settingKey_imageUploadService = "IMGUS";
+
 // const _txsKey = 'TXS';
 const _storage = FlutterSecureStorage();
 
@@ -42,6 +44,10 @@ Future<void> persistUsernameKey(String username, String priv) async {
 
 Future<void> persistNode(String node) async {
   await _storage.write(key: settingKey_avalonNode, value: node);
+}
+
+Future<void> persistImageUploadService(String service) async {
+  await _storage.write(key: settingKey_imageUploadService, value: service);
 }
 
 Future<void> persistPinCode(String pin) async {
@@ -71,11 +77,11 @@ Future<void> persistHiveSignerData(String accessToken, String expiresIn,
 // app settings
 
 Future<void> persistGeneralSettings(
-  String showHidden,
-  String showNsfw,
-) async {
+    String showHidden, String showNsfw, String imageUploadProvider) async {
   await _storage.write(key: settingKey_showHidden, value: showHidden);
   await _storage.write(key: settingKey_showNSFW, value: showNsfw);
+  await _storage.write(
+      key: settingKey_imageUploadService, value: imageUploadProvider);
 }
 
 Future<void> persistAvalonSettings(
@@ -123,6 +129,15 @@ Future<String> getUsername() async {
     return _username;
   } else {
     return "";
+  }
+}
+
+Future<String> getImageUploadService() async {
+  var _service = await _storage.read(key: settingKey_imageUploadService);
+  if (_service != null) {
+    return _service;
+  } else {
+    return "imgur";
   }
 }
 

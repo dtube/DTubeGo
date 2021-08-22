@@ -171,7 +171,13 @@ class Post {
       if (jsonString?.files?.ipfs?.img?.s360 != null) {
         thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s360!;
       } else {
-        thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s118!;
+        if (jsonString?.files?.ipfs?.img?.s118 != null) {
+          thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s118!;
+        } else {
+          if (jsonString?.thumbnailUrl != null) {
+            thumbUrl = jsonString!.thumbnailUrl!;
+          }
+        }
       }
     }
 
@@ -223,6 +229,7 @@ class PostJsonString {
   late int nsfw;
   late int oc;
   List<String>? refs;
+  String? thumbnailUrl;
 
   PostJsonString(
       {this.files,
@@ -233,7 +240,8 @@ class PostJsonString {
       required this.hide,
       required this.nsfw,
       required this.oc,
-      required this.refs});
+      required this.refs,
+      this.thumbnailUrl});
 
   PostJsonString.fromJson(Map<String, dynamic> json) {
     files = json['files'] != null ? new Files.fromJson(json['files']) : null;
@@ -250,6 +258,9 @@ class PostJsonString {
         refs?.add(v);
       });
     }
+    if (json['thumbnailUrl'] != null) {
+      thumbnailUrl = json['thumbnailUrl'];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -265,6 +276,7 @@ class PostJsonString {
     data['nsfw'] = this.nsfw;
     data['oc'] = this.oc;
     data['refs'] = this.refs;
+    data['thumbnailUrl'] = this.thumbnailUrl;
     return data;
   }
 }

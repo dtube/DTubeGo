@@ -37,7 +37,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               await sec.getHiveSignerAccessTokenExpiresIn(),
           sec.settingKey_hiveSignerAccessTokenRequestedOn:
               await sec.getHiveSignerAccessTokenRequestedOn(),
-          sec.settingKey_pincode: await sec.getPinCode()
+          sec.settingKey_pincode: await sec.getPinCode(),
+          sec.settingKey_imageUploadService: await sec.getImageUploadService()
         };
         yield SettingsLoadedState(settings: newSettings);
       } catch (e) {
@@ -48,9 +49,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       yield SettingsSavingState();
       try {
         await sec.persistGeneralSettings(
-          event.newSettings[sec.settingKey_showHidden]!,
-          event.newSettings[sec.settingKey_showNSFW]!,
-        );
+            event.newSettings[sec.settingKey_showHidden]!,
+            event.newSettings[sec.settingKey_showNSFW]!,
+            event.newSettings[sec.settingKey_imageUploadService]!);
         await sec.persistAvalonSettings(
           event.newSettings[sec.settingKey_defaultVotingWeight]!,
           event.newSettings[sec.settingKey_defaultVotingWeightComments]!,

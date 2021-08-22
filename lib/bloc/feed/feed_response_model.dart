@@ -139,21 +139,24 @@ class FeedItem {
     } else {
       videoUrl = "";
     }
-
-    if (jsonString?.files?.youtube != null) {
-      thumbUrl = "https://img.youtube.com/vi/" +
-          jsonString!.files!.youtube! +
-          "/mqdefault.jpg";
+    if (jsonString?.thumbnailUrl != null) {
+      thumbUrl = jsonString!.thumbnailUrl!;
     } else {
-      String _gateway = AppConfig.ipfsSnapUrl;
-
-      if (jsonString?.files?.ipfs?.img?.s360 != null) {
-        thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s360!;
-      } else if (jsonString?.files?.ipfs?.img?.s118 != null) {
-        thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s118!;
+      if (jsonString?.files?.youtube != null) {
+        thumbUrl = "https://img.youtube.com/vi/" +
+            jsonString!.files!.youtube! +
+            "/mqdefault.jpg";
       } else {
-        thumbUrl =
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Flag_of_None.svg/800px-Flag_of_None.svg.png';
+        String _gateway = AppConfig.ipfsSnapUrl;
+
+        if (jsonString?.files?.ipfs?.img?.s360 != null) {
+          thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s360!;
+        } else if (jsonString?.files?.ipfs?.img?.s118 != null) {
+          thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s118!;
+        } else {
+          thumbUrl =
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Flag_of_None.svg/800px-Flag_of_None.svg.png';
+        }
       }
     }
   }
@@ -192,6 +195,7 @@ class JsonString {
   late int hide;
   late int nsfw;
   late int oc;
+  String? thumbnailUrl;
   List<String>? refs;
 
   JsonString(
@@ -219,6 +223,9 @@ class JsonString {
       } else {
         hide = 0;
       }
+    }
+    if (json['thumbnailUrl'] != null) {
+      thumbnailUrl = json['thumbnailUrl'];
     }
     if (json['nsfw'] is int) {
       nsfw = json['nsfw'];
@@ -255,6 +262,9 @@ class JsonString {
     data['nsfw'] = this.nsfw;
     data['oc'] = this.oc;
     data['refs'] = this.refs;
+    if (this.thumbnailUrl != null) {
+      data['thumbnailUrl'] = this.thumbnailUrl!;
+    }
     return data;
   }
 }

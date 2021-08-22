@@ -105,7 +105,8 @@ class _NotificationsState extends State<Notifications> {
                     context,
                     notifications[pos].tx.data.author!,
                     notifications[pos].tx.data.link!,
-                    "none");
+                    "none",
+                    false);
               }
             },
           ),

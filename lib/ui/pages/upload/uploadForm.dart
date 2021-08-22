@@ -1,4 +1,8 @@
+import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
+import 'package:dtube_togo/realMain.dart';
+import 'package:dtube_togo/style/dtubeLoading.dart';
+import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
@@ -39,6 +43,7 @@ class _UploadFormState extends State<UploadForm> {
   late UploadData stateUploadData;
   late TransactionBloc _txBloc;
   late HivesignerBloc _hivesignerBloc;
+  late ThirdPartyUploaderBloc _thirdPartyUploaderBloc;
 
   _UploadFormState(this.stateUploadData);
 
@@ -68,19 +73,6 @@ class _UploadFormState extends State<UploadForm> {
     });
   }
 
-  void navigateToPostDetailPage(BuildContext context) async {
-    String? _username = await sec.getUsername();
-    stateUploadData.uploaded = true;
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return PostDetailPage(
-        author: _username,
-        link: stateUploadData.link,
-        recentlyUploaded: true,
-        directFocus: "noAutoplay",
-      );
-    }));
-  }
-
   @override
   void initState() {
     super.initState();
@@ -92,6 +84,7 @@ class _UploadFormState extends State<UploadForm> {
     _settingsBloc = BlocProvider.of<SettingsBloc>(context);
     _txBloc = BlocProvider.of<TransactionBloc>(context);
     _hivesignerBloc = BlocProvider.of<HivesignerBloc>(context);
+    _thirdPartyUploaderBloc = BlocProvider.of<ThirdPartyUploaderBloc>(context);
 
     _userBloc.add(FetchDTCVPEvent());
     _settingsBloc.add(FetchSettingsEvent());
@@ -106,6 +99,8 @@ class _UploadFormState extends State<UploadForm> {
   }
 
   Future getFile(bool video, bool camera) async {
+    String imageUploadProvider = await sec.getImageUploadService();
+
     XFile? _pickedFile;
 
     if (video) {
@@ -149,13 +144,6 @@ class _UploadFormState extends State<UploadForm> {
             ),
           );
         }
-
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (builder) => CameraScreen(
-        //               callback: childCallback,
-        //             )));
       } else {
         _pickedFile = await _picker.pickVideo(source: ImageSource.gallery);
       }
@@ -163,6 +151,8 @@ class _UploadFormState extends State<UploadForm> {
     } else {
       _pickedFile = await _picker.pickImage(source: ImageSource.gallery);
       if (_pickedFile != null) {
+        BlocProvider.of<ThirdPartyUploaderBloc>(context)
+            .add(UploadFile(filePath: _pickedFile.path));
         var _tempImage = File(_pickedFile.path);
         var decodedImage =
             await decodeImageFromList(_tempImage.readAsBytesSync());
@@ -207,7 +197,6 @@ class _UploadFormState extends State<UploadForm> {
                 storageType: "ipfs",
                 tag: stateUploadData.tag));
           }
-          navigateToPostDetailPage(context);
         }
       },
       child: BlocListener<UserBloc, UserState>(
@@ -279,9 +268,23 @@ class _UploadFormState extends State<UploadForm> {
                               backgroundColor: globalRed,
                               label: Text("upload",
                                   style: TextStyle(fontSize: 24)),
-                              onPressed: () {
-                                widget.callback(stateUploadData);
-                              },
+                              onPressed: stateUploadData.thumbnailLocation !=
+                                          "" &&
+                                      ((!stateUploadData.thumbnailLocation
+                                                  .contains('https') &&
+                                              stateUploadData.localThumbnail) ||
+                                          (stateUploadData.thumbnailLocation
+                                                  .contains('https') &&
+                                              !stateUploadData
+                                                  .localThumbnail)) &&
+                                      _formIsFilled
+                                  ? () {
+                                      widget.callback(stateUploadData);
+                                    }
+                                  : null,
+                            ),
+                            SizedBox(
+                              height: 100,
                             )
                           ],
                         )
@@ -423,30 +426,58 @@ class _UploadFormState extends State<UploadForm> {
     return Center(
       child: Column(
         children: [
-          Text("3. Thumbnail", style: TextStyle(fontSize: 18)),
-          InputChip(
-            label: Text(stateUploadData.thumbnailLocation == ""
-                ? "pick a custom thumbnail"
-                : "change thumbnail"),
-            onPressed: () {
-              getFile(false, false);
-            },
+          Column(
+            children: [
+              InputChip(
+                label: Text(stateUploadData.thumbnailLocation == ""
+                    ? "pick a custom thumbnail"
+                    : "change thumbnail"),
+                onPressed: () {
+                  getFile(false, false);
+                },
+              ),
+              BlocBuilder<ThirdPartyUploaderBloc, ThirdPartyUploaderState>(
+                  builder: (context, state) {
+                if (state is ThirdPartyUploaderUploadingState) {
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                            "please wait until thumbnail upload is finished"),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DTubeLogoPulse(
+                          size: 40,
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                if (state is ThirdPartyUploaderUploadedState) {
+                  stateUploadData.thumbnailLocation = state.uploadResponse;
+                  stateUploadData.localThumbnail = false;
+                }
+                return stateUploadData.thumbnailLocation != ""
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                              width: 250,
+                              child: stateUploadData.localThumbnail
+                                  ? Image.file(
+                                      File(stateUploadData.thumbnailLocation))
+                                  : CachedNetworkImage(
+                                      imageUrl:
+                                          stateUploadData.thumbnailLocation)),
+                          Container(width: 150, child: Text(_imageHints))
+                        ],
+                      )
+                    : SizedBox(height: 0);
+              }),
+            ],
           ),
-          stateUploadData.thumbnailLocation != ""
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                        width: 250,
-                        child: stateUploadData.localThumbnail
-                            ? Image.file(
-                                File(stateUploadData.thumbnailLocation))
-                            : CachedNetworkImage(
-                                imageUrl: stateUploadData.thumbnailLocation)),
-                    Container(width: 150, child: Text(_imageHints))
-                  ],
-                )
-              : SizedBox(height: 0),
         ],
       ),
     );

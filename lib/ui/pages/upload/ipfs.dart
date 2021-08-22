@@ -20,9 +20,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class WizardIPFS extends StatefulWidget {
-  const WizardIPFS({
-    Key? key,
-  }) : super(key: key);
+  WizardIPFS({Key? key, required this.uploaderCallback}) : super(key: key);
+  VoidCallback uploaderCallback;
 
   @override
   _WizardIPFSState createState() => _WizardIPFSState();
@@ -67,6 +66,7 @@ class _WizardIPFSState extends State<WizardIPFS> {
 
   void childCallback(UploadData ud) {
     setState(() {
+      widget.uploaderCallback();
       BlocProvider.of<TransactionBloc>(context)
           .add(TransactionPreprocessing(txType: ud.isPromoted ? 13 : 4));
       _uploadData = ud;
@@ -76,7 +76,6 @@ class _WizardIPFSState extends State<WizardIPFS> {
           thumbnailPath: _uploadData.thumbnailLocation,
           uploadData: _uploadData,
           context: context));
-      Navigator.of(context).pop();
     });
   }
 

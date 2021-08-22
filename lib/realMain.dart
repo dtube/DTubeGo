@@ -45,6 +45,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late TransactionBloc txBloc;
+
   @override
   void initState() {
     super.initState();

@@ -51,7 +51,8 @@ class _PostListCardUserFeedState extends State<PostListCardUserFeed> {
 
     return InkWell(
       onTap: () {
-        navigateToPostDetailPage(context, widget.author, widget.link, "none");
+        navigateToPostDetailPage(
+            context, widget.author, widget.link, "none", false);
       },
       child: Padding(
         padding: EdgeInsets.only(top: widget.indexOfList == 0 ? 180 : 0),

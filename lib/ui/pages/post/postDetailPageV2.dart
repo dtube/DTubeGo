@@ -83,41 +83,44 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 SettingsBloc()..add(FetchSettingsEvent()),
           ),
         ],
-        child: WillPopScope(
-            onWillPop: _onWillPop,
-            child: Scaffold(
-              // resizeToAvoidBottomInset: true,
-              extendBodyBehindAppBar: true,
-              // backgroundColor: Colors.transparent,
-              appBar:
-                  MediaQuery.of(context).orientation == Orientation.landscape
-                      ? null
-                      : AppBar(
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                          toolbarHeight: 28,
-                        ),
-              body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
-                if (state is PostLoadingState) {
-                  return Center(
-                      child: DTubeLogoPulse(
-                          size: MediaQuery.of(context).size.width / 3));
-                } else if (state is PostLoadedState) {
-                  reloadCount++;
-                  return
-                      // Padding(
-                      //   padding: const EdgeInsets.only(top: 100),
-                      //   child:
-                      PostDetails(
-                    post: state.post,
-                    directFocus: reloadCount <= 1 ? widget.directFocus : "none",
-                    //),
-                  );
-                } else {
-                  return Text("failed");
-                }
-              }),
-            )));
+        // child: WillPopScope(
+        //     onWillPop: _onWillPop,
+        child: Scaffold(
+          // resizeToAvoidBottomInset: true,
+          extendBodyBehindAppBar: true,
+          // backgroundColor: Colors.transparent,
+          appBar: MediaQuery.of(context).orientation == Orientation.landscape
+              ? null
+              : AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  toolbarHeight: 28,
+                ),
+          body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+            if (state is PostLoadingState) {
+              return Center(
+                  child: DTubeLogoPulse(
+                      size: MediaQuery.of(context).size.width / 3));
+            } else if (state is PostLoadedState) {
+              reloadCount++;
+              return
+                  // Padding(
+                  //   padding: const EdgeInsets.only(top: 100),
+                  //   child:
+                  PostDetails(
+                post: state.post,
+                directFocus: reloadCount <= 1 ? widget.directFocus : "none",
+                //),
+              );
+            } else {
+              return Center(
+                  child: DTubeLogoPulse(
+                      size: MediaQuery.of(context).size.width / 3));
+            }
+          }),
+        )
+        //)
+        );
   }
 }
 

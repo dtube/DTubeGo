@@ -80,7 +80,7 @@ class FeedList extends StatelessWidget {
                           _feedItems.first.link == state.feed.first.link) {
                         _feedItems.clear();
                       } else {
-                        _tempFeedItemList.removeAt(0);
+                        //_tempFeedItemList.removeAt(0);
                       }
                       _feedItems.addAll(_tempFeedItemList);
                     }

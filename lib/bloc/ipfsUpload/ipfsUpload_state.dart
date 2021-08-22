@@ -70,6 +70,21 @@ class IPFSUploadThumbnailUploadedState extends IPFSUploadState {
   List<Object> get props => [uploadResponse];
 }
 
+// general user states
+class OtherProviderThumbnailUploadingState extends IPFSUploadState {
+  OtherProviderThumbnailUploadingState();
+  @override
+  List<Object> get props => [];
+  //List<Object> get props => [];
+}
+
+class OtherProviderThumbnailUploadedState extends IPFSUploadState {
+  String resultMessage;
+  OtherProviderThumbnailUploadedState({required this.resultMessage});
+  @override
+  List<Object> get props => [resultMessage];
+}
+
 class IPFSUploadErrorState extends IPFSUploadState {
   String message;
 

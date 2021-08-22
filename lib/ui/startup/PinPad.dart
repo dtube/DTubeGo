@@ -35,9 +35,6 @@ class _PinPadScreenState extends State<PinPadScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(builder: (context, state) {
-      // if (state is SettingsLoadingState || state is SettingsSavingState) {
-      //   return Center(child: DTubeLogoPulse(size: 40));
-      // }
       if (state is SettingsLoadedState) {
         if (state.settings[settingKey_pincode] != "") {
           return PinPad(
@@ -45,9 +42,9 @@ class _PinPadScreenState extends State<PinPadScreen> {
           );
         } else {
           return MultiBlocProvider(providers: [
-            BlocProvider<UserBloc>(create: (context) {
-              return UserBloc(repository: UserRepositoryImpl());
-            }),
+            BlocProvider<UserBloc>(
+                create: (context) =>
+                    UserBloc(repository: UserRepositoryImpl())),
             BlocProvider<AuthBloc>(
               create: (BuildContext context) =>
                   AuthBloc(repository: AuthRepositoryImpl()),
@@ -59,6 +56,7 @@ class _PinPadScreenState extends State<PinPadScreen> {
         }
       }
       return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: globalBlue,
         body: Center(
             child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3)),
@@ -86,9 +84,9 @@ class _PinPadState extends State<PinPad> {
         context,
         MaterialPageRoute<void>(builder: (BuildContext context) {
           return MultiBlocProvider(providers: [
-            BlocProvider<UserBloc>(create: (context) {
-              return UserBloc(repository: UserRepositoryImpl());
-            }),
+            BlocProvider<UserBloc>(
+                create: (context) =>
+                    UserBloc(repository: UserRepositoryImpl())),
             BlocProvider<AuthBloc>(
               create: (BuildContext context) =>
                   AuthBloc(repository: AuthRepositoryImpl()),
@@ -116,6 +114,7 @@ class _PinPadState extends State<PinPad> {
     double deviceHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: globalBlue,
         body: Align(
             alignment: Alignment.center,

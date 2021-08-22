@@ -112,8 +112,8 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                       alignment: Alignment.centerRight,
                       child: InkWell(
                         onTap: () {
-                          navigateToPostDetailPage(
-                              context, widget.author, widget.link, "none");
+                          navigateToPostDetailPage(context, widget.author,
+                              widget.link, "none", false);
                         },
                         child: Transform.scale(
                           scale: 0.8,
@@ -145,7 +145,7 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
             child: InkWell(
               onTap: () {
                 navigateToPostDetailPage(
-                    context, widget.author, widget.link, "none");
+                    context, widget.author, widget.link, "none", false);
               },
               child: Text(
                 widget.title,
@@ -262,8 +262,8 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                                 : Colors.grey),
                       ),
                       onPressed: () {
-                        navigateToPostDetailPage(
-                            context, widget.author, widget.link, "newcomment");
+                        navigateToPostDetailPage(context, widget.author,
+                            widget.link, "newcomment", false);
                       },
                     ),
                   ),
@@ -289,7 +289,7 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                           onPressed: () {
                             if (!widget.alreadyVoted) {
                               navigateToPostDetailPage(context, widget.author,
-                                  widget.link, "upvote");
+                                  widget.link, "upvote", false);
                             }
                           },
                         ),
@@ -311,7 +311,7 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                           onPressed: () {
                             if (!widget.alreadyVoted) {
                               navigateToPostDetailPage(context, widget.author,
-                                  widget.link, "downvote");
+                                  widget.link, "downvote", false);
                             }
                           },
                         ),
