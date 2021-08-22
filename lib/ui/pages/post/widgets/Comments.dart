@@ -32,7 +32,12 @@ class CommentDisplay extends StatelessWidget {
                 width: 30,
                 height: 30,
                 child: AccountAvatarBase(
-                    username: root.author, size: 30, showVerified: true),
+                  username: root.author,
+                  avatarSize: 30,
+                  showVerified: true,
+                  showName: false,
+                  width: 40,
+                ),
               ),
               SizedBox(
                 width: 8,
@@ -91,7 +96,12 @@ class CommentDisplay extends StatelessWidget {
               width: 30,
               height: 30,
               child: AccountAvatarBase(
-                  username: root.author, size: 30, showVerified: true),
+                username: root.author,
+                avatarSize: 30,
+                showVerified: true,
+                showName: false,
+                width: 40,
+              ),
             ),
             SizedBox(
               width: 8,

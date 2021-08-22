@@ -59,46 +59,42 @@ class FeedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      //padding: EdgeInsets.only(top: (paddingTop)),
-      padding: EdgeInsets.only(top: (0.0)),
-      child: FutureBuilder<bool>(
-          future: getDisplayModes(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return buildLoading(context);
-            } else {
-              return Container(
-                height: MediaQuery.of(context).size.height,
-                child: BlocBuilder<FeedBloc, FeedState>(
-                  builder: (context, state) {
-                    if (state is FeedInitialState ||
-                        state is FeedLoadingState && _feedItems.isEmpty) {
-                      return buildLoading(context);
-                    } else if (state is FeedLoadedState) {
-                      List<FeedItem> _tempFeedItemList = state.feed;
+    return FutureBuilder<bool>(
+        future: getDisplayModes(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return buildLoading(context);
+          } else {
+            return Container(
+              height: MediaQuery.of(context).size.height,
+              child: BlocBuilder<FeedBloc, FeedState>(
+                builder: (context, state) {
+                  if (state is FeedInitialState ||
+                      state is FeedLoadingState && _feedItems.isEmpty) {
+                    return buildLoading(context);
+                  } else if (state is FeedLoadedState) {
+                    List<FeedItem> _tempFeedItemList = state.feed;
 
-                      if (state.feedType == feedType) {
-                        if (_feedItems.isNotEmpty &&
-                            _feedItems.first.link == state.feed.first.link) {
-                          _feedItems.clear();
-                        } else {
-                          _tempFeedItemList.removeAt(0);
-                        }
-                        _feedItems.addAll(_tempFeedItemList);
+                    if (state.feedType == feedType) {
+                      if (_feedItems.isNotEmpty &&
+                          _feedItems.first.link == state.feed.first.link) {
+                        _feedItems.clear();
+                      } else {
+                        _tempFeedItemList.removeAt(0);
                       }
-                      BlocProvider.of<FeedBloc>(context).isFetching = false;
-                    } else if (state is FeedErrorState) {
-                      return buildErrorUi(state.message);
+                      _feedItems.addAll(_tempFeedItemList);
                     }
-                    return buildPostList(
-                        _feedItems, bigThumbnail, true, context, feedType);
-                  },
-                ),
-              );
-            }
-          }),
-    );
+                    BlocProvider.of<FeedBloc>(context).isFetching = false;
+                  } else if (state is FeedErrorState) {
+                    return buildErrorUi(state.message);
+                  }
+                  return buildPostList(
+                      _feedItems, bigThumbnail, true, context, feedType);
+                },
+              ),
+            );
+          }
+        });
   }
 
   Widget buildLoading(BuildContext context) {
@@ -169,51 +165,38 @@ class FeedList extends StatelessWidget {
               height: 0,
             );
           } else {
-            double _topPadding = 0;
-            if (pos == 0) {
-              if (feedType == "UserFeed") {
-                _topPadding = 180;
-              } else {
-                _topPadding = 110;
-              }
-            }
-
             return BlocProvider<UserBloc>(
               create: (context) => UserBloc(repository: UserRepositoryImpl()),
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(8, _topPadding, 8, 0),
-                child: PostListCard(
-                  bigThumbnail: bigThumbnail,
-                  showAuthor: showAuthor,
-                  blur: (_nsfwMode == 'Blur' &&
-                              feed[pos].jsonString?.nsfw == 1) ||
-                          (_hiddenMode == 'Blur' &&
-                              feed[pos].summaryOfVotes < 0)
-                      ? true
-                      : false,
-                  title: feed[pos].jsonString!.title,
-                  description: feed[pos].jsonString!.desc != null
-                      ? feed[pos].jsonString!.desc!
-                      : "",
-                  author: feed[pos].author,
-                  link: feed[pos].link,
-                  publishDate: TimeAgo.timeInAgoTS(feed[pos].ts),
-                  dtcValue: (feed[pos].dist / 100).round().toString() + " DTC",
-                  duration: new Duration(
-                      seconds: int.tryParse(feed[pos].jsonString!.dur) != null
-                          ? int.parse(feed[pos].jsonString!.dur)
-                          : 0),
-                  thumbnailUrl: feed[pos].thumbUrl,
-                  videoUrl: feed[pos].videoUrl,
-                  videoSource: feed[pos].videoSource,
-                  alreadyVoted: feed[pos].alreadyVoted!,
-                  alreadyVotedDirection: feed[pos].alreadyVotedDirection!,
-                  upvotesCount: feed[pos].upvotes!.length,
-                  downvotesCount: feed[pos].downvotes!.length,
-                  indexOfList: pos,
-                  mainTag: feed[pos].jsonString!.tag,
-                  oc: feed[pos].jsonString!.oc == 1 ? true : false,
-                ),
+              child: PostListCard(
+                bigThumbnail: bigThumbnail,
+                showAuthor: showAuthor,
+                blur: (_nsfwMode == 'Blur' &&
+                            feed[pos].jsonString?.nsfw == 1) ||
+                        (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
+                    ? true
+                    : false,
+                title: feed[pos].jsonString!.title,
+                description: feed[pos].jsonString!.desc != null
+                    ? feed[pos].jsonString!.desc!
+                    : "",
+                author: feed[pos].author,
+                link: feed[pos].link,
+                publishDate: TimeAgo.timeInAgoTS(feed[pos].ts),
+                dtcValue: (feed[pos].dist / 100).round().toString() + " DTC",
+                duration: new Duration(
+                    seconds: int.tryParse(feed[pos].jsonString!.dur) != null
+                        ? int.parse(feed[pos].jsonString!.dur)
+                        : 0),
+                thumbnailUrl: feed[pos].thumbUrl,
+                videoUrl: feed[pos].videoUrl,
+                videoSource: feed[pos].videoSource,
+                alreadyVoted: feed[pos].alreadyVoted!,
+                alreadyVotedDirection: feed[pos].alreadyVotedDirection!,
+                upvotesCount: feed[pos].upvotes!.length,
+                downvotesCount: feed[pos].downvotes!.length,
+                indexOfList: pos,
+                mainTag: feed[pos].jsonString!.tag,
+                oc: feed[pos].jsonString!.oc == 1 ? true : false,
               ),
             );
           }
@@ -279,7 +262,7 @@ class PostListCard extends StatelessWidget {
     double deviceHeight = MediaQuery.of(context).size.height;
     if (bigThumbnail) {
       return Container(
-        height: (deviceWidth / 16 * 9) + 140,
+        height: (deviceWidth / 16 * 9) + 190 + (indexOfList == 0 ? 100 : 0),
         child: PostListCardMainFeed(
           blur: blur,
           thumbnailUrl: thumbnailUrl,
@@ -303,15 +286,17 @@ class PostListCard extends StatelessWidget {
       );
     } else {
       return PostListCardUserFeed(
-          blur: blur,
-          thumbnailUrl: thumbnailUrl,
-          title: title,
-          description: description,
-          author: author,
-          link: link,
-          publishDate: publishDate,
-          duration: duration,
-          dtcValue: dtcValue);
+        blur: blur,
+        thumbnailUrl: thumbnailUrl,
+        title: title,
+        description: description,
+        author: author,
+        link: link,
+        publishDate: publishDate,
+        duration: duration,
+        dtcValue: dtcValue,
+        indexOfList: indexOfList,
+      );
     }
   }
 }

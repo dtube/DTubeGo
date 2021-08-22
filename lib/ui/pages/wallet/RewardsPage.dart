@@ -184,8 +184,10 @@ class _RewardsCardState extends State<RewardsCard> {
                 height: 40,
                 child: AccountAvatarBase(
                   username: widget.reward.author,
-                  size: 40,
+                  avatarSize: 40,
                   showVerified: true,
+                  showName: false,
+                  width: 100,
                 )),
             SizedBox(width: 4),
             Column(

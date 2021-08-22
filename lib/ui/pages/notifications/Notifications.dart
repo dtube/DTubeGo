@@ -144,7 +144,12 @@ class CustomListItem extends StatelessWidget {
               create: (BuildContext context) =>
                   UserBloc(repository: UserRepositoryImpl()),
               child: AccountAvatarBase(
-                  username: sender, size: 30, showVerified: true),
+                username: sender,
+                avatarSize: 30,
+                showVerified: true,
+                showName: true,
+                width: 140,
+              ),
             ),
             Expanded(
               child: Column(
@@ -210,15 +215,15 @@ class NotificationTitle extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        Text(
-          sender,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14.0,
-          ),
-        ),
+        // Text(
+        //   sender,
+        //   maxLines: 2,
+        //   overflow: TextOverflow.ellipsis,
+        //   style: const TextStyle(
+        //     fontWeight: FontWeight.bold,
+        //     fontSize: 14.0,
+        //   ),
+        // ),
         const Padding(padding: EdgeInsets.only(bottom: 2.0)),
         Text(
           friendlyDescription,

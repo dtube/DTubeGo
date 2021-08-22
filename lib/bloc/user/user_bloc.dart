@@ -31,7 +31,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         User _user = await repository.getAccountData(
             _avalonApiNode, _username, _applicationUser);
 
-        bool _verified = await repository.getAccountVerification(_username);
+        bool _verified =
+            await repository.getAccountVerificationOffline(_username);
 
         yield UserLoadedState(user: _user, verified: _verified);
       } catch (e) {
@@ -44,7 +45,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         User user = await repository.getAccountData(
             _avalonApiNode, _applicationUser, _applicationUser);
         bool _verified =
-            await repository.getAccountVerification(_applicationUser);
+            await repository.getAccountVerificationOffline(_applicationUser);
 
         yield UserLoadedState(user: user, verified: _verified);
       } catch (e) {

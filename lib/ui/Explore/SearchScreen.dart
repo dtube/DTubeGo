@@ -184,19 +184,20 @@ class CustomListItem extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  BlocProvider<UserBloc>(
-                    create: (BuildContext context) =>
-                        UserBloc(repository: UserRepositoryImpl()),
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: AccountAvatar(
-                          username: name, size: 40, showVerified: true),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: AccountAvatarBase(
+                      username: name,
+                      avatarSize: 40,
+                      showVerified: true,
+                      showName: true,
+                      width: 100,
                     ),
                   ),
-                  Text(
-                    name,
-                    style: Theme.of(context).textTheme.headline4,
-                  )
+                  // Text(
+                  //   name,
+                  //   style: Theme.of(context).textTheme.headline4,
+                  // )
                 ],
               ),
               Column(

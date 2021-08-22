@@ -162,7 +162,11 @@ class _NavigationContainerState extends State<NavigationContainer> {
             backgroundColor: Colors.white,
             radius: 15,
             child: AccountAvatarBase(
-                username: "you", size: 25, showVerified: false),
+                username: "you",
+                avatarSize: 25,
+                showVerified: false,
+                showName: false,
+                width: 50),
           )),
     ];
   }

@@ -32,6 +32,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield SignInLoadingState();
       _avalonApiNode = await discoverAPINode();
       sec.persistNode(_avalonApiNode);
+      repository.fetchAndStoreVerifiedUsers();
+
       if (!_openedOnce && AppConfig.faqStartup) {
         yield NeverUsedTheAppBeforeState();
       } else {

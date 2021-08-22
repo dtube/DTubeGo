@@ -150,71 +150,81 @@ class _UserState extends State<UserPage> {
                     // Padding(
                     //   padding: const EdgeInsets.only(left: 16.0),
                     //   child:
-                    Container(
-                      width: deviceWidth * 0.5,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          user.jsonString?.additionals?.displayName != null
-                              ? OverlayText(
-                                  text: user
-                                      .jsonString!.additionals!.displayName!,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  sizeMultiply: 1.4,
-                                )
-                              : SizedBox(
-                                  height: 0,
-                                ),
-                          OverlayText(
-                            text: user.jsonString?.additionals?.displayName !=
-                                    null
-                                ? '(@' + user.name + ')'
-                                : user.name,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            sizeMultiply:
-                                user.jsonString?.additionals?.displayName !=
-                                        null
-                                    ? 1
-                                    : 1.8,
-                          ),
-                          user.jsonString?.profile?.location != null
-                              ? OverlayText(
-                                  text: user.jsonString!.profile!.location!,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  sizeMultiply: 0.8,
-                                  // style:
-                                  //     Theme.of(context).textTheme.bodyText2,
-                                )
-                              : SizedBox(
-                                  height: 0,
-                                ),
-                          user.jsonString?.profile?.about != null
-                              ? OverlayText(
-                                  text: user.jsonString!.profile!.about!,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  // style:
-                                  //     Theme.of(context).textTheme.bodyText2,
-                                )
-                              : SizedBox(
-                                  height: 0,
-                                ),
-                          user.jsonString?.profile?.website != null
-                              ? OpenableHyperlink(
-                                  url: user.jsonString!.profile!.website!,
-                                )
-                              : SizedBox(
-                                  height: 0,
-                                ),
-                        ],
+                    // Container(
+                    //   width: deviceWidth * 0.5,
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       user.jsonString?.additionals?.displayName != null
+                    //           ? OverlayText(
+                    //               text: user
+                    //                   .jsonString!.additionals!.displayName!,
+                    //               maxLines: 2,
+                    //               overflow: TextOverflow.ellipsis,
+                    //               sizeMultiply: 1.4,
+                    //             )
+                    //           : SizedBox(
+                    //               height: 0,
+                    //             ),
+                    //       OverlayText(
+                    //         text: user.jsonString?.additionals?.displayName !=
+                    //                 null
+                    //             ? '(@' + user.name + ')'
+                    //             : user.name,
+                    //         maxLines: 2,
+                    //         overflow: TextOverflow.ellipsis,
+                    //         sizeMultiply:
+                    //             user.jsonString?.additionals?.displayName !=
+                    //                     null
+                    //                 ? 1
+                    //                 : 1.8,
+                    //       ),
+                    //       user.jsonString?.profile?.location != null
+                    //           ? OverlayText(
+                    //               text: user.jsonString!.profile!.location!,
+                    //               maxLines: 2,
+                    //               overflow: TextOverflow.ellipsis,
+                    //               sizeMultiply: 0.8,
+                    //               // style:
+                    //               //     Theme.of(context).textTheme.bodyText2,
+                    //             )
+                    //           : SizedBox(
+                    //               height: 0,
+                    //             ),
+                    //       user.jsonString?.profile?.about != null
+                    //           ? OverlayText(
+                    //               text: user.jsonString!.profile!.about!,
+                    //               maxLines: 2,
+                    //               overflow: TextOverflow.ellipsis,
+                    //               // style:
+                    //               //     Theme.of(context).textTheme.bodyText2,
+                    //             )
+                    //           : SizedBox(
+                    //               height: 0,
+                    //             ),
+                    //       user.jsonString?.profile?.website != null
+                    //           ? OpenableHyperlink(
+                    //               url: user.jsonString!.profile!.website!,
+                    //             )
+                    //           : SizedBox(
+                    //               height: 0,
+                    //             ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // SizedBox(width: 8),
+                    Center(
+                      child: AccountAvatarBase(
+                        username: user.name,
+                        avatarSize: 90,
+                        showVerified: true,
+                        showName: true,
+                        showNameLeft: true,
+                        showFullUserInfo: true,
+                        nameFontSizeMultiply: 1.4,
+                        width: deviceWidth * 0.8,
                       ),
                     ),
-                    SizedBox(width: 8),
-                    AccountAvatarBase(
-                        username: user.name, size: 90, showVerified: true),
                   ],
                 ),
               ),

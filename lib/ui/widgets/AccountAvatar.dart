@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:dtube_togo/style/OpenableHyperlink.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_togo/style/styledCustomWidgets.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,22 +11,50 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AccountAvatarBase extends StatelessWidget {
-  const AccountAvatarBase(
+  AccountAvatarBase(
       {Key? key,
       required this.username,
-      required this.size,
-      required this.showVerified})
+      required this.avatarSize,
+      required this.showVerified,
+      required this.showName,
+      this.nameFontSizeMultiply,
+      this.showNameLeft,
+      this.showFullUserInfo,
+      required this.width})
       : super(key: key);
   final String username;
-  final double size;
+  final double avatarSize;
   final bool showVerified;
+  final bool showName;
+  double? nameFontSizeMultiply;
+  bool? showNameLeft;
+  bool? showFullUserInfo;
+  double width;
 
   @override
   Widget build(BuildContext context) {
+    if (nameFontSizeMultiply == null) {
+      nameFontSizeMultiply = 1;
+    }
+    if (showNameLeft == null) {
+      showNameLeft = false;
+    }
+    if (showFullUserInfo == null) {
+      showFullUserInfo = false;
+    }
+
     return BlocProvider(
       create: (context) => UserBloc(repository: UserRepositoryImpl()),
       child: AccountAvatar(
-          username: username, size: size, showVerified: showVerified),
+        username: username,
+        avatarSize: avatarSize,
+        showVerified: showVerified,
+        showName: showName,
+        nameFontSizeMultiply: nameFontSizeMultiply!,
+        showNameLeft: showNameLeft!,
+        showFullUserInfo: showFullUserInfo!,
+        width: width,
+      ),
     );
   }
 }
@@ -33,12 +63,22 @@ class AccountAvatar extends StatefulWidget {
   const AccountAvatar(
       {Key? key,
       required this.username,
-      required this.size,
-      required this.showVerified})
+      required this.avatarSize,
+      required this.showVerified,
+      required this.showName,
+      required this.nameFontSizeMultiply,
+      required this.showNameLeft,
+      required this.showFullUserInfo,
+      required this.width})
       : super(key: key);
   final String username;
-  final double size;
+  final double avatarSize;
   final bool showVerified;
+  final bool showName;
+  final double nameFontSizeMultiply;
+  final bool showNameLeft;
+  final bool showFullUserInfo;
+  final double width;
 
   @override
   _AccountAvatarState createState() => _AccountAvatarState();
@@ -55,68 +95,241 @@ class _AccountAvatarState extends State<AccountAvatar> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
     return BlocBuilder<UserBloc, UserState>(
       bloc: _userBlocAvatar,
       builder: (context, state) {
         if (state is UserLoadingState) {
           return CircularProgressIndicator();
-        } else if (state is UserLoadedState &&
-                state.user.jsonString != null &&
-                state.user.jsonString?.profile != null &&
-                state.user.jsonString?.profile?.avatar != ""
-            //  &&
-            // state.user.name == widget.username
-            ) {
+        } else if (state is UserLoadedState) {
           try {
-            return Stack(
-              children: [
-                CachedNetworkImage(
-                  imageUrl: state.user.jsonString!.profile!.avatar!
-                      .replaceAll("http:", "https:"),
-                  imageBuilder: (context, imageProvider) => Container(
-                    width: widget.size,
-                    height: widget.size,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: imageProvider, fit: BoxFit.cover),
-                    ),
+            return Container(
+              width: widget.width,
+              child: Row(
+                mainAxisAlignment: !widget.showName
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.start,
+                children: [
+                  widget.showName && widget.showNameLeft
+                      ? Row(
+                          children: [
+                            widget.showFullUserInfo
+                                ? FullInfo(
+                                    userData: state.user,
+                                    deviceWidth: deviceWidth,
+                                    nameFontSizeMultiply:
+                                        widget.nameFontSizeMultiply,
+                                    width:
+                                        widget.width - widget.avatarSize - 15,
+                                  )
+                                : ShowName(
+                                    userData: state.user,
+                                    sizeMultiply: 1,
+                                    width:
+                                        widget.width - widget.avatarSize - 15,
+                                  ),
+                            SizedBox(width: 8)
+                          ],
+                        )
+                      : SizedBox(
+                          width: 0,
+                        ),
+                  Stack(
+                    children: [
+                      state.user.jsonString != null &&
+                              state.user.jsonString?.profile != null &&
+                              state.user.jsonString?.profile?.avatar != ""
+                          ? CachedNetworkImage(
+                              imageUrl: state.user.jsonString!.profile!.avatar!
+                                  .replaceAll("http:", "https:"),
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                width: widget.avatarSize,
+                                height: widget.avatarSize,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: imageProvider, fit: BoxFit.cover),
+                                ),
+                              ),
+                              placeholder: (context, url) => Container(
+                                  width: widget.avatarSize,
+                                  height: widget.avatarSize,
+                                  child: AvatarLoadingPlaceholder(
+                                      size: widget.avatarSize)),
+                              errorWidget: (context, url, error) => Container(
+                                  width: widget.avatarSize,
+                                  height: widget.avatarSize,
+                                  child: AvatarLoadingPlaceholder(
+                                      size: widget.avatarSize)),
+                            )
+                          : AvatarLoadingPlaceholder(
+                              size: widget.avatarSize,
+                            ),
+                      state.verified && widget.showVerified
+                          ? Align(
+                              alignment: Alignment.bottomRight,
+                              child: CircleAvatar(
+                                  maxRadius: widget.avatarSize / 5,
+                                  backgroundColor: globalRed,
+                                  child: FaIcon(
+                                    FontAwesomeIcons.check,
+                                    color: globalAlmostWhite,
+                                    size: widget.avatarSize / 5,
+                                  )),
+                            )
+                          : SizedBox(height: 0),
+                    ],
                   ),
-                  placeholder: (context, url) => Container(
-                      width: widget.size,
-                      height: widget.size,
-                      child: AvatarLoadingPlaceholder(size: widget.size)),
-                  errorWidget: (context, url, error) => Container(
-                      width: widget.size,
-                      height: widget.size,
-                      child: AvatarLoadingPlaceholder(size: widget.size)),
-                ),
-                state.verified && widget.showVerified
-                    ? Align(
-                        alignment: Alignment.bottomRight,
-                        child: CircleAvatar(
-                            maxRadius: widget.size / 5,
-                            backgroundColor: globalRed,
-                            child: FaIcon(
-                              FontAwesomeIcons.check,
-                              color: globalAlmostWhite,
-                              size: widget.size / 5,
-                            )),
-                      )
-                    : SizedBox(height: 0),
-              ],
+                  widget.showName && !widget.showNameLeft
+                      ? Row(
+                          children: [
+                            SizedBox(width: 8),
+                            widget.showFullUserInfo
+                                ? FullInfo(
+                                    userData: state.user,
+                                    deviceWidth: deviceWidth,
+                                    nameFontSizeMultiply:
+                                        widget.nameFontSizeMultiply,
+                                    width:
+                                        widget.width - widget.avatarSize - 20,
+                                  )
+                                : ShowName(
+                                    userData: state.user,
+                                    sizeMultiply: 1,
+                                    width:
+                                        widget.width - widget.avatarSize - 20,
+                                  ),
+                          ],
+                        )
+                      : SizedBox(
+                          width: 0,
+                        )
+                ],
+              ),
             );
           } catch (e) {
             return AvatarLoadingPlaceholder(
-              size: widget.size,
+              size: widget.avatarSize,
             );
           }
         } else if (state is UserErrorState) {
-          return AvatarLoadingPlaceholder(size: widget.size);
+          print(state.toString() + " happened for");
+          return AvatarLoadingPlaceholder(size: widget.avatarSize);
         } else {
-          return AvatarLoadingPlaceholder(size: widget.size);
+          print(state.toString() + " happened");
+          return AvatarLoadingPlaceholder(size: widget.avatarSize);
         }
       },
+    );
+  }
+}
+
+class FullInfo extends StatelessWidget {
+  const FullInfo(
+      {Key? key,
+      required this.userData,
+      required this.deviceWidth,
+      required this.nameFontSizeMultiply,
+      required this.width})
+      : super(key: key);
+
+  final User userData;
+  final double deviceWidth;
+  final double nameFontSizeMultiply;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: deviceWidth * 0.5,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ShowName(
+            userData: userData,
+            sizeMultiply: nameFontSizeMultiply,
+            width: width,
+          ),
+          userData.jsonString?.profile?.location != null
+              ? OverlayText(
+                  text: userData.jsonString!.profile!.location!,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  sizeMultiply: 0.8,
+                  // style:
+                  //     Theme.of(context).textTheme.bodyText2,
+                )
+              : SizedBox(
+                  height: 0,
+                ),
+          userData.jsonString?.profile?.about != null
+              ? OverlayText(
+                  text: userData.jsonString!.profile!.about!,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  // style:
+                  //     Theme.of(context).textTheme.bodyText2,
+                )
+              : SizedBox(
+                  height: 0,
+                ),
+          userData.jsonString?.profile?.website != null
+              ? OpenableHyperlink(
+                  url: userData.jsonString!.profile!.website!,
+                )
+              : SizedBox(
+                  height: 0,
+                ),
+        ],
+      ),
+    );
+  }
+}
+
+class ShowName extends StatelessWidget {
+  const ShowName(
+      {Key? key,
+      required this.userData,
+      required this.sizeMultiply,
+      required this.width})
+      : super(key: key);
+
+  final User userData;
+  final double sizeMultiply;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          userData.jsonString?.additionals?.displayName != null
+              ? OverlayText(
+                  text: userData.jsonString!.additionals!.displayName!,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  sizeMultiply: sizeMultiply,
+                )
+              : SizedBox(
+                  height: 0,
+                ),
+          OverlayText(
+            text: userData.jsonString?.additionals?.displayName != null
+                ? '(@' + userData.name + ')'
+                : userData.name,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            sizeMultiply: userData.jsonString?.additionals?.displayName != null
+                ? 1
+                : sizeMultiply,
+          ),
+        ],
+      ),
     );
   }
 }

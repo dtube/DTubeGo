@@ -1,3 +1,5 @@
+import 'package:dtube_togo/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_togo/bloc/avalonConfig/avalonConfig_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_response_model.dart';
 
@@ -11,7 +13,8 @@ abstract class UserRepository {
   Future<User> getAccountData(
       String apiNode, String username, String applicationUser);
 
-  Future<bool> getAccountVerification(String username);
+  Future<bool> getAccountVerificationOnline(String username);
+  Future<bool> getAccountVerificationOffline(String username);
 
   Future<Map<String, int>> getVP(
       String apiNode, String username, String applicationUser);
@@ -34,7 +37,7 @@ class UserRepositoryImpl implements UserRepository {
     }
   }
 
-  Future<bool> getAccountVerification(String username) async {
+  Future<bool> getAccountVerificationOnline(String username) async {
     var response = await http.get(Uri.parse(
         AppConfig.originalDtuberCheckUrl.replaceAll("##USERNAME", username)));
     if (response.statusCode == 200) {
@@ -43,6 +46,10 @@ class UserRepositoryImpl implements UserRepository {
     } else {
       throw Exception();
     }
+  }
+
+  Future<bool> getAccountVerificationOffline(String username) async {
+    return globals.verifiedUsers.contains(username);
   }
 
   Future<Map<String, int>> getVP(

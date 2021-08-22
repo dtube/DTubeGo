@@ -261,21 +261,12 @@ class ActivityItem extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                            child: BlocProvider<UserBloc>(
-                              create: (BuildContext context) =>
-                                  UserBloc(repository: UserRepositoryImpl()),
-                              child: AccountAvatar(
-                                  username: txData.sender,
-                                  size: 40,
-                                  showVerified: true),
-                            ),
-                          ),
-                          Container(
-                            width: 90,
-                            child: Text(
-                              txData.sender,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodyText1,
+                            child: AccountAvatarBase(
+                              username: txData.sender,
+                              avatarSize: 40,
+                              showVerified: true,
+                              showName: true,
+                              width: 150,
                             ),
                           ),
                         ],
@@ -285,7 +276,7 @@ class ActivityItem extends StatelessWidget {
                       },
                     ),
                     Container(
-                      width: deviceWidth - 180,
+                      width: deviceWidth - 200,
                       child: Text(
                         friendlyDescription,
                         style: Theme.of(context).textTheme.bodyText1,

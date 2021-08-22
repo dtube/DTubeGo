@@ -1,3 +1,5 @@
+import 'package:dtube_togo/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_togo/bloc/auth/auth_response_model.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
@@ -18,6 +20,7 @@ abstract class AuthRepository {
   Future<bool> signOut();
   Future<bool> signInWithCredentials(
       String apiNode, String username, String privateKey);
+  void fetchAndStoreVerifiedUsers();
 }
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -89,5 +92,15 @@ class AuthRepositoryImpl implements AuthRepository {
         Uint8List.fromList(HEX.decode(_pk.publicKey.toCompressedHex())));
 
     return pub;
+  }
+
+  void fetchAndStoreVerifiedUsers() async {
+    var response = await http.get(Uri.parse(AppConfig.originalDtuberListUrl));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print(response.body);
+      globals.verifiedUsers = List.from(data);
+      print("test");
+    }
   }
 }

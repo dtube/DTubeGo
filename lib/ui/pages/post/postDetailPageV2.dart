@@ -229,15 +229,12 @@ class _PostDetailsState extends State<PostDetails> {
                                         child: Center(
                                             child: Text(widget.post.author)),
                                       ),
-                                      avatar: BlocProvider<UserBloc>(
-                                        create: (BuildContext context) =>
-                                            UserBloc(
-                                                repository:
-                                                    UserRepositoryImpl()),
-                                        child: AccountAvatar(
-                                            username: widget.post.author,
-                                            size: 40,
-                                            showVerified: true),
+                                      avatar: AccountAvatarBase(
+                                        username: widget.post.author,
+                                        avatarSize: 40,
+                                        showVerified: true,
+                                        showName: true,
+                                        width: 150,
                                       ),
                                       onPressed: () {
                                         navigateToUserDetailPage(
