@@ -23,6 +23,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       yield FeedInitialState();
     }
     if (event is FetchFeedEvent) {
+      print("FETCH " + event.feedType);
       yield FeedLoadingState();
       try {
         List<FeedItem> feed = [];

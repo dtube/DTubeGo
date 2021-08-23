@@ -66,17 +66,14 @@ class Shards {
 
 class Hits {
   late int total;
-  // Null maxScore;
+
   List<Hit>? hits;
 
-  Hits(
-      {required this.total,
-      //this.maxScore,
-      required this.hits});
+  Hits({required this.total, required this.hits});
 
   Hits.fromJson(Map<String, dynamic> json, int vpGrowth) {
     total = json['total']['value'];
-    //maxScore = json['max_score'];
+
     if (json['hits'] != null) {
       hits = [];
       json['hits'].forEach((v) {
@@ -89,7 +86,6 @@ class Hits {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['total']['value'] = this.total;
 
-    //data['max_score'] = this.maxScore;
     if (this.hits != null) {
       data['hits'] = this.hits!.map((v) => v.toJson()).toList();
     }
@@ -99,307 +95,177 @@ class Hits {
 
 class Total {
   late int value;
-  //String relation;
 
-  Total({required this.value
-      //, this.relation
-      });
+  Total({required this.value});
 
   Total.fromJson(Map<String, dynamic> json) {
     value = json['value'];
-    //relation = json['relation'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['value'] = this.value;
-    //data['relation'] = this.relation;
+
     return data;
   }
 }
 
 class Hit {
-  //late String sIndex;
-  // String sType;
   late String sId;
-  // Null nScore;
+
   Source? sSource;
-  //List<int> sort;
 
   Hit({
-    //required this.sIndex,
-    // this.sType,
     required this.sId,
-    // this.nScore,
     this.sSource,
-    //this.sort
   });
 
   Hit.fromJson(Map<String, dynamic> json, int vpGrowth) {
-    //sIndex = json['_index'];
-    // sType = json['_type'];
     sId = json['_id'];
-    // nScore = json['_score'];
+
     sSource = json['_source'] != null
         ? new Source.fromJson(json['_source'], vpGrowth)
         : null;
-    // sort = json['sort'].cast<int>();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    //data['_index'] = this.sIndex;
-    // data['_type'] = this.sType;
+
     data['_id'] = this.sId;
-    // data['_score'] = this.nScore;
+
     if (this.sSource != null) {
       data['_source'] = this.sSource!.toJson();
     }
-    //data['sort'] = this.sort;
+
     return data;
   }
 }
 
 class Source {
-  // List<String> approves;
-  late int balance;
-  // int baseBwGrowth;
-  // Bw bw;
-  late String createdBy;
-  late int createdOn;
+  //users
+  int? balance;
+  String? createdBy;
+  int? createdOn;
   List<String>? followers;
   List<String>? follows;
-  // Json json;
-  // List<Keys> keys;
-  late String name;
-  // int nodeAppr;
-  // String pub;
+  String? name;
   String? pubLeader;
-  late int vt;
-  late int vtTs;
-  // Bw pr;
-  // int uv;
+  int? vt;
+  int? vtTs;
+//posts
+  String? author;
+  String? link;
+  double? dist;
+  String? tags;
+  JsonData? jsonstring;
+  int? ts;
 
-  Source({
-    // this.approves,
-    required this.balance,
-    // this.baseBwGrowth,
-    // this.bw,
-    // required this.createdBy,
-    // required this.createdOn,
-    this.followers,
-    this.follows,
-    // this.json,
-    // this.keys,
-    required this.name,
-    // this.nodeAppr,
-    // this.pub,
-    this.pubLeader,
-    required this.vt,
-    //this.pr,
-    //this.uv
-  });
+  Source(
+      {this.balance,
+      this.followers,
+      this.follows,
+      this.name,
+      this.pubLeader,
+      this.vt,
+      this.author,
+      this.dist,
+      this.link,
+      this.tags,
+      this.ts});
 
   Source.fromJson(Map<String, dynamic> json, int vpGrowth) {
-    // approves = json['approves'].cast<String>();
-    balance = json['balance'];
-    // baseBwGrowth = json['baseBwGrowth'];
-    // bw = json['bw'] != null ? new Bw.fromJson(json['bw']) : null;
-    // createdBy = json['created']['by'];
-    // createdOn = json['created']['ts'];
-    followers = json['followers'].cast<String>();
-    follows = json['follows'].cast<String>();
-    // json = json['json'] != null ? new Json.fromJson(json['json']) : null;
-    // if (json['keys'] != null) {
-    //   keys = new List<Keys>();
-    //   json['keys'].forEach((v) {
-    //     keys.add(new Keys.fromJson(v));
-    //   });
-    // }
-    name = json['name'];
-    // nodeAppr = json['node_appr'];
-    // pub = json['pub'];
-    pubLeader = json['pub_leader'];
-    var currentVT = growInt(
-        json['vt']['v'], json['vt']['t'], (json['balance'] / vpGrowth), 0, 0);
-    vt = currentVT['v']!;
-    vtTs = json['vt']['t'];
-    // pr = json['pr'] != null ? new Bw.fromJson(json['pr']) : null;
-    // uv = json['uv'];
+    //users
+    balance = json['balance'] != null ? json['balance'] : 0;
+
+    followers =
+        json['followers'] != null ? json['followers'].cast<String>() : [];
+    follows = json['follows'] != null ? json['follows'].cast<String>() : [];
+
+    name = json['name'] != null ? json['name'] : "";
+
+    pubLeader = json['pub_leader'] != null ? json['pub_leader'] : "";
+    if (json['vt'] != null) {
+      var currentVT = growInt(
+          json['vt']['v'], json['vt']['t'], (json['balance'] / vpGrowth), 0, 0);
+      vt = currentVT['v'] != null ? currentVT['v'] : 0;
+      vtTs = json['vt']['t'];
+    }
+//posts
+    author = json['author'] != null ? json['author'] : "";
+    dist = json['dist'] != null ? json['dist'] + 0.0 : 0.0;
+    link = json['link'] != null ? json['link'] : "";
+    tags = json['tags'] != null ? json['tags'] : "";
+    ts = json['ts'] != null ? json['ts'] : 0;
+
+    jsonstring =
+        json['json'] != null ? new JsonData.fromJson(json['json']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    //data['approves'] = this.approves;
-    data['balance'] = this.balance;
-    //data['baseBwGrowth'] = this.baseBwGrowth;
-    // if (this.bw != null) {
-    //   data['bw'] = this.bw.toJson();
-    // }
-    // data['createdBy'] = this.createdBy;
-    // data['createdOn'] = this.createdOn;
+    //users
+    data['balance'] = this.balance != null ? this.balance : 0;
+    data['followers'] = this.followers != null ? this.followers : null;
+    data['follows'] = this.follows != null ? this.follows : null;
 
-    data['followers'] = this.followers;
-    data['follows'] = this.follows;
-    // if (this.json != null) {
-    //   data['json'] = this.json.toJson();
-    // }
-    // if (this.keys != null) {
-    //   data['keys'] = this.keys.map((v) => v.toJson()).toList();
-    // }
-    data['name'] = this.name;
-    //data['node_appr'] = this.nodeAppr;
-    //data['pub'] = this.pub;
+    data['name'] = this.name != null ? this.name : "";
 
-    data['pub_leader'] = this.pubLeader != null ? this.pubLeader : null;
-    data['vt'] = this.vt;
-    data['vtTs'] = this.vtTs;
-
-    // if (this.pr != null) {
-    //   data['pr'] = this.pr.toJson();
-    // }
-    // data['uv'] = this.uv;
+    data['pub_leader'] = this.pubLeader != null ? this.pubLeader : "";
+    data['vt'] = this.vt != null ? this.vt : 0;
+    data['vtTs'] = this.vtTs != null ? this.vtTs : 0;
+//posts
+    data['author'] = this.author != null ? this.author : "";
+    data['dist'] = this.dist != null ? this.dist : 0.0;
+    data['link'] = this.link != null ? this.link : "";
+    data['tags'] = this.tags != null ? this.tags : "";
+    data['ts'] = this.ts != null ? this.ts : 0;
+    if (this.jsonstring != null) {
+      data['json'] = this.jsonstring!.toJson();
+    }
     return data;
   }
 }
 
-// class Bw {
-//   late int t;
-//   late int v;
+class JsonData {
+  String? desc;
+  String? dur;
+  //Files files; // thumbnails makes more or less sense bc of ipfs
+  int? hide;
+  int? nsfw;
+  int? oc;
+  //String thumbnailUrl; // thumbnails makes more or less sense bc of ipfs
+  String? title;
 
-//   Bw({required this.t, required this.v});
+  List<String>? tags;
 
-//   Bw.fromJson(Map<String, dynamic> json) {
-//     t = json['t'];
-//     v = json['v'];
-//   }
+  JsonData(
+      {this.desc,
+      this.dur,
+      this.hide,
+      this.nsfw,
+      this.oc,
+      this.title,
+      this.tags});
 
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     data['t'] = this.t;
-//     data['v'] = this.v;
-//     return data;
-//   }
-// }
+  JsonData.fromJson(Map<String, dynamic> json) {
+    desc = json['desc'] != null ? json['desc'] : "";
+    dur = json['dur'] != null ? json['dur'].toString() : "0";
+    hide = json['hide'] != null ? json['hide'] : 0;
+    nsfw = json['nsfw'] != null ? json['nsfw'] : 0;
+    oc = json['oc'] != null ? json['oc'] : 0;
+    title = json['title'] != null ? json['title'] : "";
+    tags = json['tags'] != null ? json['tags'].cast<String>() : null;
+  }
 
-// class Created {
-//   late String by;
-//   late int ts;
-
-//   Created({required this.by, required this.ts});
-
-//   Created.fromJson(Map<String, dynamic> json) {
-//     by = json['by'];
-//     ts = json['ts'];
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     data['by'] = this.by;
-//     data['ts'] = this.ts;
-//     return data;
-//   }
-// }
-
-// class Json {
-//   Profile profile;
-//   Node node;
-
-//   Json({this.profile, this.node});
-
-//   Json.fromJson(Map<String, dynamic> json) {
-//     profile =
-//         json['profile'] != null ? new Profile.fromJson(json['profile']) : null;
-//     node = json['node'] != null ? new Node.fromJson(json['node']) : null;
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     if (this.profile != null) {
-//       data['profile'] = this.profile.toJson();
-//     }
-//     if (this.node != null) {
-//       data['node'] = this.node.toJson();
-//     }
-//     return data;
-//   }
-// }
-
-// class Profile {
-//   String about;
-//   String avatar;
-//   String coverImage;
-//   String hive;
-//   String location;
-//   String steem;
-//   String website;
-
-//   Profile(
-//       {this.about,
-//       this.avatar,
-//       this.coverImage,
-//       this.hive,
-//       this.location,
-//       this.steem,
-//       this.website});
-
-//   Profile.fromJson(Map<String, dynamic> json) {
-//     about = json['about'];
-//     avatar = json['avatar'];
-//     coverImage = json['cover_image'];
-//     hive = json['hive'];
-//     location = json['location'];
-//     steem = json['steem'];
-//     website = json['website'];
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     data['about'] = this.about;
-//     data['avatar'] = this.avatar;
-//     data['cover_image'] = this.coverImage;
-//     data['hive'] = this.hive;
-//     data['location'] = this.location;
-//     data['steem'] = this.steem;
-//     data['website'] = this.website;
-//     return data;
-//   }
-// }
-
-// class Node {
-//   String ws;
-
-//   Node({this.ws});
-
-//   Node.fromJson(Map<String, dynamic> json) {
-//     ws = json['ws'];
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     data['ws'] = this.ws;
-//     return data;
-//   }
-// }
-
-// class Keys {
-//   String id;
-//   String pub;
-//   List<int> types;
-
-//   Keys({this.id, this.pub, this.types});
-
-//   Keys.fromJson(Map<String, dynamic> json) {
-//     id = json['id'];
-//     pub = json['pub'];
-//     types = json['types'].cast<int>();
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     data['id'] = this.id;
-//     data['pub'] = this.pub;
-//     data['types'] = this.types;
-//     return data;
-//   }
-
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['desc'] = this.desc != null ? this.desc : "";
+    data['dur'] = this.dur != null ? this.dur : "";
+    data['hide'] = this.hide != null ? this.hide : 0;
+    data['nsfw'] = this.nsfw != null ? this.nsfw : 0;
+    data['oc'] = this.oc != null ? this.oc : 0;
+    data['title'] = this.title != null ? this.title : "";
+    data['tags'] = this.tags != null ? this.tags : "";
+    return data;
+  }
+}

@@ -22,12 +22,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       yield SearchLoadingState();
       try {
         SearchResults results = await repository.getSearchResults(
-            event.searchQuery, _avalonApiNode);
+            event.searchQuery, event.searchEntity, _avalonApiNode);
 
         yield SearchLoadedState(searchResults: results);
       } catch (e) {
         yield SearchErrorState(message: e.toString());
       }
+    }
+    if (event is SetSearchInitialState) {
+      yield SearchInitialState();
     }
   }
 }

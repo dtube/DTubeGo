@@ -30,8 +30,6 @@ class _FeedMainPageState extends State<FeedMainPage>
   @override
   void initState() {
     _tabController = new TabController(length: 4, vsync: this);
-    // BlocProvider.of<FeedBloc>(context).add(FetchFeedEvent(feedType: "NewFeed"));
-    //_tabController.addListener(_handleTabSelection);
     _tabController.addListener(() {
       setState(() {
         _selectedIndex = _tabController.index;
@@ -40,27 +38,33 @@ class _FeedMainPageState extends State<FeedMainPage>
       switch (_tabController.index) {
         case 0:
           BlocProvider.of<FeedBloc>(context)
-              .add(FetchFeedEvent(feedType: "NewFeed"));
+            ..isFetching = true
+            ..add(FetchFeedEvent(feedType: "NewFeed"));
           break;
         case 1:
           BlocProvider.of<FeedBloc>(context)
-              .add(FetchFeedEvent(feedType: "MyFeed"));
+            ..isFetching = true
+            ..add(FetchFeedEvent(feedType: "MyFeed"));
           break;
 
         case 2:
           BlocProvider.of<FeedBloc>(context)
-              .add(FetchFeedEvent(feedType: "HotFeed"));
+            ..isFetching = true
+            ..add(FetchFeedEvent(feedType: "HotFeed"));
           break;
         case 3:
           BlocProvider.of<FeedBloc>(context)
-              .add(FetchFeedEvent(feedType: "TrendingFeed"));
+            ..isFetching = true
+            ..add(FetchFeedEvent(feedType: "TrendingFeed"));
           break;
         default:
       }
     });
 
     super.initState();
-    BlocProvider.of<FeedBloc>(context).add(FetchFeedEvent(feedType: "NewFeed"));
+    BlocProvider.of<FeedBloc>(context)
+      ..isFetching = true
+      ..add(FetchFeedEvent(feedType: "NewFeed"));
   }
 
   @override
@@ -100,10 +104,6 @@ class _FeedMainPageState extends State<FeedMainPage>
                         bigThumbnail: true,
                         showAuthor: false,
                         scrollCallback: (bool) {}),
-                    // BlocProvider<SearchBloc>(
-                    //     create: (context) =>
-                    //         SearchBloc(repository: SearchRepositoryImpl()),
-                    //     child: SearchScreen()),
                   ],
                   controller: _tabController,
                 ),
@@ -111,18 +111,6 @@ class _FeedMainPageState extends State<FeedMainPage>
               // ),
             ],
           ),
-          // Align(
-          //   alignment: Alignment.topLeft,
-          //   child:
-          // Padding(
-          //   padding: const EdgeInsets.fromLTRB(0.0, 30, 0, 0),
-          //   child:
-          // Align(
-          //   alignment: Alignment.centerLeft,
-          //   child: RotatedBox(
-          //     quarterTurns: 3,
-          //     child:
-
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -134,12 +122,6 @@ class _FeedMainPageState extends State<FeedMainPage>
                   unselectedLabelColor: Colors.white,
                   labelColor: Colors.white,
                   indicatorColor: Colors.white.withAlpha(50),
-
-                  //indicatorPadding: EdgeInsets.zero,
-                  // indicator: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(10), // Creates border
-                  //     color: Colors.white.withAlpha(20)),
-                  //indicatorWeight: 6,
                   tabs: [
                     Tab(
                       child: OverlayText(text: _tabNames[0]),
@@ -161,10 +143,6 @@ class _FeedMainPageState extends State<FeedMainPage>
               ),
             ),
           ),
-          //   ),
-          // ),
-          //),
-          // ),
         ],
       ),
     );

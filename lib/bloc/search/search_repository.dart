@@ -5,13 +5,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 abstract class SearchRepository {
-  Future<SearchResults> getSearchResults(String searchQuery, String apiNode);
+  Future<SearchResults> getSearchResults(
+      String searchQuery, String searchEntity, String apiNode);
 }
 
 class SearchRepositoryImpl implements SearchRepository {
   @override
   Future<SearchResults> getSearchResults(
-      String searchQuery, String apiNode) async {
+      String searchQuery, String searchEntity, String apiNode) async {
     int vpGrowth = 0;
     var configResponse =
         await http.get(Uri.parse(apiNode + AppConfig.avalonConfig));
@@ -23,8 +24,19 @@ class SearchRepositoryImpl implements SearchRepository {
       throw Exception();
     }
 
-    var response = await http.get(Uri.parse(
-        AppConfig.searchAccountsUrl.replaceAll('##SEARCHSTRING', searchQuery)));
+    String _searchURL = "";
+    switch (searchEntity) {
+      case "Users":
+        _searchURL = AppConfig.searchAccountsUrl
+            .replaceAll('##SEARCHSTRING', searchQuery);
+        break;
+      case "Posts":
+        _searchURL =
+            AppConfig.searchPostsUrl.replaceAll('##SEARCHSTRING', searchQuery);
+        break;
+      default:
+    }
+    var response = await http.get(Uri.parse(_searchURL));
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);

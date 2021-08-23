@@ -5,10 +5,14 @@ import 'package:dtube_togo/bloc/config/txTypes.dart';
 import 'package:dtube_togo/bloc/search/search_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
+import 'package:dtube_togo/ui/Explore/ResultCards/PostResultCard.dart';
+import 'package:dtube_togo/ui/Explore/ResultCards/UserResultCard.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/utils/navigationShortcuts.dart';
 import 'package:dtube_togo/utils/shortBalanceStrings.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:intl/intl.dart';
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
@@ -28,8 +32,17 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   late SearchBloc searchBloc;
   late TextEditingController searchTextController;
+  String _searchEntity = "Users";
   final _debouncer = Debounce(milliseconds: 700);
   String currentSearch = "";
+  List<String> _searchEntities = ["Users", "Posts"];
+  List<IconData> _searchEntityIcons = [
+    FontAwesomeIcons.user,
+    FontAwesomeIcons.alignJustify
+  ];
+  int _selectedEntity = 0;
+  late SearchResults results;
+
   @override
   void initState() {
     super.initState();
@@ -51,39 +64,90 @@ class _SearchScreenState extends State<SearchScreen> {
         searchTextController.text != currentSearch) {
       _debouncer.run(() {
         currentSearch = searchTextController.text;
-        searchBloc.add(FetchSearchResultsEvent(searchTextController.text));
+        searchBloc.add(FetchSearchResultsEvent(
+            searchQuery: searchTextController.text,
+            searchEntity: _searchEntity));
       });
     }
   }
 
+  Widget _buildChips() {
+    List<Widget> chips = [];
+
+    for (int i = 0; i < _searchEntityIcons.length; i++) {
+      ChoiceChip choiceChip = ChoiceChip(
+        selected: _selectedEntity == i,
+        padding: EdgeInsets.zero,
+        label: FaIcon(
+          _searchEntityIcons[i],
+          size: 15,
+          color: Colors.white,
+        ),
+        elevation: 0,
+        pressElevation: 5,
+        shadowColor: Colors.teal,
+        backgroundColor: Colors.black54,
+        selectedColor: Colors.blue,
+        onSelected: (bool selected) async {
+          searchBloc.add(SetSearchInitialState());
+          //Future.delayed(Duration(milliseconds: 500));
+          setState(() {
+            if (selected) {
+              _selectedEntity = i;
+
+              _searchEntity = _searchEntities[i];
+              searchBloc.add(FetchSearchResultsEvent(
+                  searchQuery: searchTextController.text,
+                  searchEntity: _searchEntity));
+            }
+          });
+        },
+      );
+
+      chips.add(SizedBox(width: 40, height: 40, child: choiceChip));
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: chips,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //appBar: dtubeSubAppBar(true, "", context, null),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 50.0),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: searchTextController,
-                //maxLength: 100
-                //autofocus: true,
-                cursorColor: globalRed,
-                maxLines: 1,
+    double deviceWidth = MediaQuery.of(context).size.width;
+    return Padding(
+      padding: EdgeInsets.only(top: 100),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: deviceWidth - 140,
+                    child: TextField(
+                      controller: searchTextController,
+                      decoration: InputDecoration(hintText: "Search"),
+                      cursorColor: globalRed,
+                      maxLines: 1,
+                    ),
+                  ),
+                  SizedBox(width: 100, child: _buildChips()),
+                ],
               ),
-            ),
-            Container(
-              height: 500,
-              child: BlocBuilder<SearchBloc, SearchState>(
+              BlocBuilder<SearchBloc, SearchState>(
                 builder: (context, state) {
                   if (state is SearchInitialState) {
-                    return buildLoading();
+                    return buildBlank();
                   } else if (state is SearchLoadingState) {
                     return buildLoading();
                   } else if (state is SearchLoadedState) {
-                    return buildResultsList(state.searchResults);
+                    results = state.searchResults;
+                    return buildResultsList(results);
                   } else if (state is SearchErrorState) {
                     return buildErrorUi(state.message);
                   } else {
@@ -91,16 +155,28 @@ class _SearchScreenState extends State<SearchScreen> {
                   }
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget buildLoading() {
-    return Center(
-      child: CircularProgressIndicator(),
+    return Container(
+      height: 400,
+      child: Center(
+        child: DTubeLogoPulse(
+          size: 100,
+        ),
+      ),
+    );
+  }
+
+  Widget buildBlank() {
+    return Container(
+      height: 400,
+      child: SizedBox(height: 0),
     );
   }
 
@@ -117,104 +193,43 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget buildResultsList(SearchResults searchResults) {
-    return ListView.builder(
-      itemCount: searchResults.hits!.hits!.length,
-      itemBuilder: (ctx, pos) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: InkWell(
-            child: CustomListItem(
-              id: searchResults.hits!.hits![pos].sId,
-              name: searchResults.hits!.hits![pos].sSource!.name,
-              dtcBalance: searchResults.hits!.hits![pos].sSource!.balance,
-              vpBalance: searchResults.hits!.hits![pos].sSource!.vt,
-            ),
-
-            // onTap: () {
-            //   List<int> navigatableTxsUser = [1, 2, 7, 8];
-            //   List<int> navigatableTxsPost = [4, 5, 13, 19]
-            //   if (navigatableTxsUser.contains(notifications[pos].tx.type)) {
-            //     //load user and navigate
-            //   }
-            //   if (navigatableTxsPost.contains(notifications[pos].tx.type)) {
-            //     //load post and navigate to it
-
-            //     //           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //     // return PostDetailPage(
-            //     //   post: postData,
-            //     // );
-            //   }
-            //},
-          ),
-        );
-      },
-    );
-  }
-}
-
-class CustomListItem extends StatelessWidget {
-  const CustomListItem({
-    Key? key,
-    required this.id,
-    required this.name,
-    required this.dtcBalance,
-    required this.vpBalance,
-  }) : super(key: key);
-
-  final String id;
-  final String name;
-  final int dtcBalance;
-  final int vpBalance;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        navigateToUserDetailPage(context, name);
-      },
-      child: Card(
-        // height: 35,
-        margin: EdgeInsets.all(8.0),
-        color: globalBlue,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: AccountAvatarBase(
-                      username: name,
-                      avatarSize: 40,
-                      showVerified: true,
-                      showName: true,
-                      width: 100,
-                    ),
-                  ),
-                  // Text(
-                  //   name,
-                  //   style: Theme.of(context).textTheme.headline4,
-                  // )
-                ],
-              ),
-              Column(
-                children: [
-                  Text(
-                    shortDTC(dtcBalance) + 'DTC',
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                  Text(
-                    shortDTC(vpBalance) + 'VP',
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
+    return Container(
+      height: 800,
+      alignment: Alignment.topLeft,
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
+        itemCount: searchResults.hits!.hits!.length,
+        itemBuilder: (ctx, pos) {
+          switch (_searchEntity) {
+            case "Users":
+              return UserResultCard(
+                id: searchResults.hits!.hits![pos].sId,
+                name: searchResults.hits!.hits![pos].sSource!.name!,
+                dtcValue:
+                    searchResults.hits!.hits![pos].sSource!.balance! + 0.0,
+                vpBalance: searchResults.hits!.hits![pos].sSource!.vt! + 0.0,
+              );
+            case "Posts":
+              return PostResultCard(
+                id: searchResults.hits!.hits![pos].sId,
+                author: searchResults.hits!.hits![pos].sSource!.author!,
+                dist: searchResults.hits!.hits![pos].sSource!.dist!,
+                link: searchResults.hits!.hits![pos].sSource!.link!,
+                tags: searchResults.hits!.hits![pos].sSource!.tags!,
+                title:
+                    searchResults.hits!.hits![pos].sSource!.jsonstring!.title!,
+                ts: searchResults.hits!.hits![pos].sSource!.ts!,
+              );
+            default:
+              return UserResultCard(
+                id: searchResults.hits!.hits![pos].sId,
+                name: searchResults.hits!.hits![pos].sSource!.name!,
+                dtcValue:
+                    searchResults.hits!.hits![pos].sSource!.balance! + 0.0,
+                vpBalance: searchResults.hits!.hits![pos].sSource!.vt! + 0.0,
+              );
+          }
+        },
       ),
     );
   }

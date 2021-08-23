@@ -150,7 +150,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
   void uploaderCallback() {
     mainTabController.jumpToTab(0);
-    print("yoooooo");
   }
 
   @override

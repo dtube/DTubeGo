@@ -65,7 +65,10 @@ class AppConfig {
   static String signUpUrl = "https://signup.d.tube";
 
   static String searchAccountsUrl =
-      "https://search.d.tube/avalon.accounts/_search?q=name:*##SEARCHSTRING*&size=5&sort=balance:desc";
+      "https://search.d.tube/avalon.accounts/_search?q=name:*##SEARCHSTRING*&size=50&sort=balance:desc";
+
+  static String searchPostsUrl =
+      "https://search.d.tube/avalon.contents/_search?q=json.title:*##SEARCHSTRING*&size=50&sort=ts:desc";
 
   static bool faqStartup = false;
 }
