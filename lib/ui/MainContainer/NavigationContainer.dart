@@ -156,7 +156,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<FeedBloc>(context).add(FetchFeedEvent(feedType: "NewFeed"));
   }
 
   @override

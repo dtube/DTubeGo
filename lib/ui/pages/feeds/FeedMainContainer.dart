@@ -33,7 +33,6 @@ class _FeedMainPageState extends State<FeedMainPage>
     // BlocProvider.of<FeedBloc>(context).add(FetchFeedEvent(feedType: "NewFeed"));
     //_tabController.addListener(_handleTabSelection);
     _tabController.addListener(() {
-      //BlocProvider.of<FeedBloc>(context).add(InitFeedEvent());
       setState(() {
         _selectedIndex = _tabController.index;
       });
@@ -61,6 +60,7 @@ class _FeedMainPageState extends State<FeedMainPage>
     });
 
     super.initState();
+    BlocProvider.of<FeedBloc>(context).add(FetchFeedEvent(feedType: "NewFeed"));
   }
 
   @override
@@ -157,31 +157,6 @@ class _FeedMainPageState extends State<FeedMainPage>
                   controller: _tabController,
                   indicatorSize: TabBarIndicatorSize.tab,
                   labelPadding: EdgeInsets.all(0.0),
-
-                  // onTap: (index) {
-                  //   BlocProvider.of<FeedBloc>(context).add(InitFeedEvent());
-                  //   switch (index) {
-                  //     case 0:
-                  //       BlocProvider.of<FeedBloc>(context)
-                  //           .add(FetchFeedEvent(feedType: "NewFeed"));
-                  //       break;
-                  //     case 1:
-                  //       BlocProvider.of<FeedBloc>(context)
-                  //           .add(FetchFeedEvent(feedType: "MyFeed"));
-                  //       break;
-
-                  //     case 2:
-                  //       BlocProvider.of<FeedBloc>(context)
-                  //           .add(FetchFeedEvent(feedType: "HotFeed"));
-                  //       break;
-                  //     case 3:
-                  //       BlocProvider.of<FeedBloc>(context)
-                  //           .add(FetchFeedEvent(feedType: "TrendingFeed"));
-                  //       break;
-                  //     default:
-                  //   }
-                  //   setState(() {});
-                  // },
                 ),
               ),
             ),

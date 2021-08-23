@@ -72,16 +72,15 @@ class FeedList extends StatelessWidget {
                       state is FeedLoadingState && _feedItems.isEmpty) {
                     return buildLoading(context);
                   } else if (state is FeedLoadedState) {
-                    List<FeedItem> _tempFeedItemList = state.feed;
-
                     if (state.feedType == feedType) {
-                      if (_feedItems.isNotEmpty &&
-                          _feedItems.first.link == state.feed.first.link) {
-                        _feedItems.clear();
-                      } else {
-                        _tempFeedItemList.removeAt(0);
+                      if (_feedItems.isNotEmpty) {
+                        if (_feedItems.first.link == state.feed.first.link) {
+                          _feedItems.clear();
+                        } else {
+                          _feedItems.removeLast();
+                        }
                       }
-                      _feedItems.addAll(_tempFeedItemList);
+                      _feedItems.addAll(state.feed);
                     }
                     BlocProvider.of<FeedBloc>(context).isFetching = false;
                   } else if (state is FeedErrorState) {
