@@ -154,13 +154,17 @@ class FeedList extends StatelessWidget {
       itemBuilder: (ctx, pos) {
         // work on more sources
         if (feed[pos].jsonString!.files?.youtube != null ||
-            feed[pos].jsonString!.files?.ipfs != null) {
+            feed[pos].jsonString!.files?.ipfs != null ||
+            feed[pos].jsonString!.files?.sia != null) {
           if ((_nsfwMode == 'Hide' && feed[pos].jsonString?.nsfw == 1) ||
               (_hiddenMode == 'Hide' && feed[pos].summaryOfVotes < 0) ||
               (feed[pos].jsonString!.hide == 1 &&
                   feed[pos].author != _applicationUser)) {
-            return SizedBox(
-              height: 0,
+            return Padding(
+              padding: EdgeInsets.only(top: pos == 0 ? 120 : 8.0),
+              child: SizedBox(
+                height: 0,
+              ),
             );
           } else {
             return BlocProvider<UserBloc>(
@@ -199,6 +203,7 @@ class FeedList extends StatelessWidget {
                   mainTag: feed[pos].jsonString!.tag,
                   oc: feed[pos].jsonString!.oc == 1 ? true : false,
                 ),
+                //Text(pos.toString())
               ),
             );
           }

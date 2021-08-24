@@ -153,70 +153,67 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
             ),
           ),
         ),
-        AspectRatio(
-          aspectRatio: 8 / 5,
-          child: widget.blur
-              ? ClipRect(
-                  child: ImageFiltered(
-                    imageFilter: ImageFilter.blur(
-                      sigmaY: 5,
-                      sigmaX: 5,
-                    ),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.thumbnailUrl,
-                    ),
-                  ),
-                )
-              : InkWell(
-                  onTap: () {
-                    setState(() {
-                      _thumbnailTapped = true;
-                    });
-                  },
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      Visibility(
-                        visible: !_thumbnailTapped,
-                        child: AspectRatio(
-                          aspectRatio: 8 / 5,
-                          child: widget.thumbnailUrl != ''
-                              ? CachedNetworkImage(
-                                  imageUrl: widget.thumbnailUrl,
-                                  fit: BoxFit.fitWidth,
-                                )
-                              : Image.asset(
-                                  'assets/images/Image_of_none.svg.png',
-                                  fit: BoxFit.fitWidth,
+        InkWell(
+          onTap: () {
+            setState(() {
+              _thumbnailTapped = true;
+            });
+          },
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Visibility(
+                visible: !_thumbnailTapped,
+                child: AspectRatio(
+                  aspectRatio: 8 / 5,
+                  child: widget.thumbnailUrl != ''
+                      ? widget.blur
+                          ? ClipRect(
+                              child: ImageFiltered(
+                                imageFilter: ImageFilter.blur(
+                                  sigmaY: 5,
+                                  sigmaX: 5,
                                 ),
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.thumbnailUrl,
+                                ),
+                              ),
+                            )
+                          : CachedNetworkImage(
+                              imageUrl: widget.thumbnailUrl,
+                              fit: BoxFit.fitWidth,
+                            )
+                      : Image.asset(
+                          'assets/images/Image_of_none.svg.png',
+                          fit: BoxFit.fitWidth,
                         ),
-                      ),
-                      Center(
-                        child: Visibility(
-                          visible: _thumbnailTapped,
-                          child:
-                              (["sia", "ipfs"].contains(widget.videoSource) &&
-                                      widget.videoUrl != "")
-                                  ? BP(
-                                      videoUrl: widget.videoUrl,
-                                      autoplay: true,
-                                      looping: false,
-                                      localFile: false,
-                                      controls: true,
-                                      usedAsPreview: false,
-                                      allowFullscreen: false)
-                                  : (widget.videoSource == 'youtube' &&
-                                          widget.videoUrl != "")
-                                      ? YTPlayerIFrame(
-                                          videoUrl: widget.videoUrl,
-                                          autoplay: true,
-                                          allowFullscreen: false)
-                                      : Text("no player detected"),
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
+              ),
+              Center(
+                child: Visibility(
+                  visible: _thumbnailTapped,
+                  child: (["sia", "ipfs"].contains(widget.videoSource) &&
+                          widget.videoUrl != "")
+                      ? BP(
+                          videoUrl: widget.videoUrl,
+                          autoplay: true,
+                          looping: false,
+                          localFile: false,
+                          controls: true,
+                          usedAsPreview: false,
+                          allowFullscreen: false)
+                      : (widget.videoSource == 'youtube' &&
+                              widget.videoUrl != "")
+                          ? YTPlayerIFrame(
+                              videoUrl: widget.videoUrl,
+                              autoplay: true,
+                              allowFullscreen: false)
+                          : Text("no player detected"),
+                ),
+              ),
+            ],
+          ),
+          //),
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,

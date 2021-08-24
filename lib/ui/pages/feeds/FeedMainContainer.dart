@@ -31,33 +31,35 @@ class _FeedMainPageState extends State<FeedMainPage>
   void initState() {
     _tabController = new TabController(length: 4, vsync: this);
     _tabController.addListener(() {
-      setState(() {
-        _selectedIndex = _tabController.index;
-      });
-      print("Selected Index: " + _tabController.index.toString());
-      switch (_tabController.index) {
-        case 0:
-          BlocProvider.of<FeedBloc>(context)
-            ..isFetching = true
-            ..add(FetchFeedEvent(feedType: "NewFeed"));
-          break;
-        case 1:
-          BlocProvider.of<FeedBloc>(context)
-            ..isFetching = true
-            ..add(FetchFeedEvent(feedType: "MyFeed"));
-          break;
+      if (_tabController.indexIsChanging) {
+        setState(() {
+          _selectedIndex = _tabController.index;
+        });
+        print("Selected Index: " + _tabController.index.toString());
+        switch (_tabController.index) {
+          case 0:
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
+              ..add(FetchFeedEvent(feedType: "NewFeed"));
+            break;
+          case 1:
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
+              ..add(FetchFeedEvent(feedType: "MyFeed"));
+            break;
 
-        case 2:
-          BlocProvider.of<FeedBloc>(context)
-            ..isFetching = true
-            ..add(FetchFeedEvent(feedType: "HotFeed"));
-          break;
-        case 3:
-          BlocProvider.of<FeedBloc>(context)
-            ..isFetching = true
-            ..add(FetchFeedEvent(feedType: "TrendingFeed"));
-          break;
-        default:
+          case 2:
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
+              ..add(FetchFeedEvent(feedType: "HotFeed"));
+            break;
+          case 3:
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
+              ..add(FetchFeedEvent(feedType: "TrendingFeed"));
+            break;
+          default:
+        }
       }
     });
 
