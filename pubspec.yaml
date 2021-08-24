@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.1+17
+version: 1.0.1+18
 
 environment:
   sdk: ">=2.13.0 <3.0.0"
@@ -37,13 +37,13 @@ dependencies:
   ecdsa: ^0.0.2
 
   # UI - video related
-  webview_flutter: ^2.0.8
-  video_player: ^2.1.4
+  webview_flutter: ^2.0.12
+  video_player: ^2.1.14
   #youtube_explode_dart: ^1.9.6 #loading youtube metadata
-  youtube_explode_dart: ^1.10.2 #loading youtube metadata
-  better_player: ^0.0.72 # player for ipfs/sia/local files
+  youtube_explode_dart: ^1.10.4 #loading youtube metadata
+  better_player: ^0.0.73 # player for ipfs/sia/local files
   # youtube_plyr_iframe: ^2.0.6 # custom player for youtube
-  youtube_player_iframe: ^2.2.1
+  youtube_player_iframe: ^2.2.2
 
   # UI - markdown related
   flutter_markdown: ^0.6.2  # display markdown (only post description for now)
@@ -52,11 +52,11 @@ dependencies:
 
   # UI - image/video related
   #camera: ^0.8.1+3 # gives possibility to capture camera input in own widget
-  image_picker: ^0.8.1+3 # open file browser / record image/video
+  image_picker: ^0.8.3+3 # open file browser / record image/video
 
   # UI - specific elements related
   
-  font_awesome_flutter: ^9.0.0
+  font_awesome_flutter: ^9.1.0
   rflutter_alert: ^2.0.2
   flutter_speed_dial: ^4.1.0
   persistent_bottom_nav_bar: ^4.0.2
@@ -89,10 +89,10 @@ dependencies:
   
 
 # unsorted
-  flutter_bloc: ^7.1.0
+  flutter_bloc: ^7.2.0
   equatable: ^2.0.3
   disk_space: ^0.1.1
-  flutter_secure_storage: ^4.2.0
+  flutter_secure_storage: ^4.2.1
   intl: ^0.17.0
   video_compress: ^3.1.0
 

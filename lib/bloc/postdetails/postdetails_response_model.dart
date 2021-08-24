@@ -162,6 +162,8 @@ class Post {
       thumbUrl = "https://img.youtube.com/vi/" +
           jsonString!.files!.youtube! +
           "/mqdefault.jpg";
+    } else if (jsonString?.files?.sia != null) {
+      thumbUrl = jsonString!.thumbnailUrl;
     } else {
       String _gateway = AppConfig.ipfsVideoUrl;
       if (jsonString?.files?.ipfs!.gw != null) {

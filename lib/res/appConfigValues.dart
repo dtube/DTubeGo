@@ -68,7 +68,7 @@ class AppConfig {
       "https://search.d.tube/avalon.accounts/_search?q=name:*##SEARCHSTRING*&size=50&sort=balance:desc";
 
   static String searchPostsUrl =
-      "https://search.d.tube/avalon.contents/_search?q=json.title:*##SEARCHSTRING*&size=50&sort=ts:desc";
+      "https://search.d.tube/avalon.contents/_search?default_operator=OR&q=json.title:*##SEARCHSTRING*+author:*##SEARCHSTRING*+json.desc:*##SEARCHSTRING*&size=50&sort=ts:desc";
 
   static bool faqStartup = false;
 }

@@ -208,8 +208,11 @@ class FeedList extends StatelessWidget {
             );
           }
         } else {
-          return SizedBox(
-            height: 0,
+          return Padding(
+            padding: EdgeInsets.only(top: pos == 0 ? 120 : 8.0),
+            child: SizedBox(
+              height: 0,
+            ),
           );
         }
       },
