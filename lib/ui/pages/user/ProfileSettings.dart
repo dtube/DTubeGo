@@ -32,6 +32,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
   List<String> _settingsTypes = ["Common", "Additionals"];
   List<String> _accountTypes = [
     'Content Creator',
+    'Community / Group',
     'Investor / Curator',
     'Business Account'
   ];
