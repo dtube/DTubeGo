@@ -139,7 +139,7 @@ class FeedItem {
     } else {
       videoUrl = "";
     }
-    if (jsonString?.thumbnailUrl != null) {
+    if (jsonString?.thumbnailUrl != "" && jsonString?.thumbnailUrl != null) {
       thumbUrl = jsonString!.thumbnailUrl!;
     } else {
       if (jsonString?.files?.youtube != null) {
