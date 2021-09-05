@@ -1,3 +1,5 @@
+import 'package:sizer/sizer.dart';
+
 import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
@@ -56,21 +58,22 @@ class _MyAppState extends State<MyApp> {
     return AppBuilder(
       builder: (context) {
         return BlocProvider<TransactionBloc>(
-          create: (context) =>
-              TransactionBloc(repository: TransactionRepositoryImpl()),
-          child: MaterialApp(
-            title: 'DTube',
-            debugShowCheckedModeBanner: false,
-            theme: dtubeDarkTheme,
-            home: BlocProvider<AuthBloc>(
-              create: (context) {
-                return AuthBloc(repository: AuthRepositoryImpl())
-                  ..add(AppStartedEvent());
-              },
-              child: StartUp(),
-            ),
-          ),
-        );
+            create: (context) =>
+                TransactionBloc(repository: TransactionRepositoryImpl()),
+            child: Sizer(builder: (context, orientation, deviceType) {
+              return MaterialApp(
+                title: 'DTube',
+                debugShowCheckedModeBanner: false,
+                theme: dtubeDarkTheme,
+                home: BlocProvider<AuthBloc>(
+                  create: (context) {
+                    return AuthBloc(repository: AuthRepositoryImpl())
+                      ..add(AppStartedEvent());
+                  },
+                  child: StartUp(),
+                ),
+              );
+            }));
       },
     );
   }

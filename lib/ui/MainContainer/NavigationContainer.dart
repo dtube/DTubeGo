@@ -1,3 +1,5 @@
+import 'package:sizer/sizer.dart';
+
 import 'package:decorated_icon/decorated_icon.dart';
 
 import 'dart:async';
@@ -49,42 +51,33 @@ class _NavigationContainerState extends State<NavigationContainer> {
   bool _hideNavBar = false;
   ValueNotifier<bool> _notifier = ValueNotifier(false);
 
-  double topBarHeight = 90;
   int bottomSelectedIndex = 0;
   PersistentTabController mainTabController =
       PersistentTabController(initialIndex: 0);
+
+  double iconSize = 5.w;
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
         opacity: 0.0,
         icon: Center(
-          child: new DecoratedIcon(
-            FontAwesomeIcons.alignJustify,
+          child: new ShadowedIcon(
+            icon: FontAwesomeIcons.alignJustify,
             color: Colors.white,
-            size: 24,
-            shadows: [
-              BoxShadow(
-                blurRadius: 24.0,
-                color: Colors.black,
-              ),
-            ],
+            shadowColor: Colors.black,
+            size: iconSize,
           ),
         ),
       ),
       PersistentBottomNavBarItem(
         opacity: 0.0,
         icon: Center(
-          child: new DecoratedIcon(
-            FontAwesomeIcons.globeAfrica,
+          child: new ShadowedIcon(
+            icon: FontAwesomeIcons.globeAfrica,
             color: Colors.white,
-            size: 24,
-            shadows: [
-              BoxShadow(
-                blurRadius: 24.0,
-                color: Colors.black,
-              ),
-            ],
+            shadowColor: Colors.black,
+            size: iconSize,
           ),
         ),
       ),
@@ -95,13 +88,14 @@ class _NavigationContainerState extends State<NavigationContainer> {
               builder: (context, state) {
             if (state is TransactionPreprocessingState) {
               if (state.txType == 13 || state.txType == 4) {
-                return DTubeLogoPulseRotating(size: 40.0);
+                return DTubeLogoPulseRotating(size: iconSize);
               }
             }
             return Center(
               child: new FaIcon(
                 FontAwesomeIcons.plus,
                 color: Colors.white,
+                size: iconSize,
               ),
             );
           }),
@@ -110,16 +104,11 @@ class _NavigationContainerState extends State<NavigationContainer> {
       PersistentBottomNavBarItem(
         opacity: 0.0,
         icon: Center(
-          child: new DecoratedIcon(
-            FontAwesomeIcons.eye,
+          child: new ShadowedIcon(
+            icon: FontAwesomeIcons.eye,
             color: Colors.white,
-            size: 24,
-            shadows: [
-              BoxShadow(
-                blurRadius: 24.0,
-                color: Colors.black,
-              ),
-            ],
+            shadowColor: Colors.black,
+            size: iconSize,
           ),
         ),
         //  title: 'Hot',
@@ -128,13 +117,13 @@ class _NavigationContainerState extends State<NavigationContainer> {
           opacity: 0.0,
           icon: CircleAvatar(
             backgroundColor: Colors.white,
-            radius: 15,
+            radius: iconSize,
             child: AccountAvatarBase(
                 username: "you",
-                avatarSize: 25,
+                avatarSize: iconSize * 1.7,
                 showVerified: false,
                 showName: false,
-                width: 50),
+                width: iconSize * 1.7),
           )),
     ];
   }
@@ -172,8 +161,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
       ),
     ];
 
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
     BlocListener<TransactionBloc, TransactionState>(
       bloc: BlocProvider.of<TransactionBloc>(context),
       listener: (context, state) {
@@ -193,39 +180,28 @@ class _NavigationContainerState extends State<NavigationContainer> {
         shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(25),
-          ),
-        ),
         elevation: 0,
         titleSpacing: 0,
         title: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-          child: Stack(
-            children: [
-              Center(
-                child: GestureDetector(
+          padding: EdgeInsets.fromLTRB(3.w, 3.w, 3.w, 3.w),
+          child: Align(
+            alignment: Alignment.topRight,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
                     child: BalanceOverviewBase(),
                     onTap: () {
                       BlocProvider.of<UserBloc>(context).add(FetchDTCVPEvent());
                     }),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    BlocProvider<NotificationBloc>(
-                      create: (context) => NotificationBloc(
-                          repository: NotificationRepositoryImpl()),
-                      child: NotificationButton(),
-                    ),
-                    buildMainMenuSpeedDial(context)
-                  ],
+                BlocProvider<NotificationBloc>(
+                  create: (context) => NotificationBloc(
+                      repository: NotificationRepositoryImpl()),
+                  child: NotificationButton(),
                 ),
-              ),
-            ],
+                buildMainMenuSpeedDial(context)
+              ],
+            ),
           ),
         ),
       ),

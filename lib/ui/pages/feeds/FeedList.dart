@@ -1,3 +1,5 @@
+import 'package:sizer/sizer.dart';
+
 import 'dart:ui';
 
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
@@ -65,7 +67,7 @@ class FeedList extends StatelessWidget {
             return buildLoading(context);
           } else {
             return Container(
-              height: MediaQuery.of(context).size.height,
+              height: 100.h,
               child: BlocBuilder<FeedBloc, FeedState>(
                 builder: (context, state) {
                   if (state is FeedInitialState ||
@@ -99,7 +101,7 @@ class FeedList extends StatelessWidget {
     return Center(
         child: feedType == "UserFeed"
             ? SizedBox(height: 0, width: 0)
-            : DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
+            : DTubeLogoPulse(size: 33.w));
   }
 
   Widget buildErrorUi(String message) {
@@ -268,33 +270,28 @@ class PostListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
     if (bigThumbnail) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
-          height: (deviceWidth / 16 * 8) + 210,
-          child: PostListCardMainFeed(
-            blur: blur,
-            thumbnailUrl: thumbnailUrl,
-            title: title,
-            description: description,
-            author: author,
-            link: link,
-            publishDate: publishDate,
-            duration: duration,
-            dtcValue: dtcValue,
-            videoUrl: videoUrl,
-            videoSource: videoSource,
-            alreadyVoted: alreadyVoted,
-            alreadyVotedDirection: alreadyVotedDirection,
-            upvotesCount: upvotesCount,
-            downvotesCount: downvotesCount,
-            indexOfList: indexOfList,
-            mainTag: mainTag,
-            oc: oc,
-          ),
+        child: PostListCardMainFeed(
+          blur: blur,
+          thumbnailUrl: thumbnailUrl,
+          title: title,
+          description: description,
+          author: author,
+          link: link,
+          publishDate: publishDate,
+          duration: duration,
+          dtcValue: dtcValue,
+          videoUrl: videoUrl,
+          videoSource: videoSource,
+          alreadyVoted: alreadyVoted,
+          alreadyVotedDirection: alreadyVotedDirection,
+          upvotesCount: upvotesCount,
+          downvotesCount: downvotesCount,
+          indexOfList: indexOfList,
+          mainTag: mainTag,
+          oc: oc,
         ),
       );
     } else {

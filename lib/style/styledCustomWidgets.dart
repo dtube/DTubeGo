@@ -1,3 +1,4 @@
+import 'package:decorated_icon/decorated_icon.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -82,6 +83,35 @@ class OverlayText extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ShadowedIcon extends StatelessWidget {
+  double size;
+  IconData icon;
+  Color color;
+  Color shadowColor;
+  ShadowedIcon({
+    Key? key,
+    required this.size,
+    required this.icon,
+    required this.color,
+    required this.shadowColor,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return new DecoratedIcon(
+      icon,
+      color: color,
+      size: size,
+      shadows: [
+        BoxShadow(
+          blurRadius: size,
+          color: shadowColor,
+        ),
+      ],
     );
   }
 }

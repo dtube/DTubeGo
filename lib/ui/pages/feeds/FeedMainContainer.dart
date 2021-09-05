@@ -1,3 +1,5 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sizer/sizer.dart';
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/bloc/rewards/rewards_bloc_full.dart';
 import 'package:dtube_togo/bloc/search/search_bloc_full.dart';
@@ -25,6 +27,12 @@ class FeedMainPage extends StatefulWidget {
 class _FeedMainPageState extends State<FeedMainPage>
     with SingleTickerProviderStateMixin {
   List<String> _tabNames = ["New", "Follow", "Hot", "Trending"];
+  List<IconData> _tabIcons = [
+    FontAwesomeIcons.rss,
+    FontAwesomeIcons.userFriends,
+    FontAwesomeIcons.fire,
+    FontAwesomeIcons.chartLine
+  ];
   late TabController _tabController;
   int _selectedIndex = 0;
   @override
@@ -71,71 +79,74 @@ class _FeedMainPageState extends State<FeedMainPage>
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       //appBar: dtubeSubAppBar(true, "", context, null),
       resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
-          Column(
+          TabBarView(
             children: [
-              Expanded(
-                child:
-                    // Padding(
-                    //   padding: const EdgeInsets.all(8.0),
-                    //   child:
-                    TabBarView(
-                  children: [
-                    FeedList(
-                        feedType: 'NewFeed',
-                        bigThumbnail: true,
-                        showAuthor: false,
-                        scrollCallback: (bool) {}),
-                    FeedList(
-                        feedType: 'MyFeed',
-                        bigThumbnail: true,
-                        showAuthor: false,
-                        scrollCallback: (bool) {}),
-                    FeedList(
-                        feedType: 'HotFeed',
-                        bigThumbnail: true,
-                        showAuthor: false,
-                        scrollCallback: (bool) {}),
-                    FeedList(
-                        feedType: 'TrendingFeed',
-                        bigThumbnail: true,
-                        showAuthor: false,
-                        scrollCallback: (bool) {}),
-                  ],
-                  controller: _tabController,
-                ),
-              ),
-              // ),
+              FeedList(
+                  feedType: 'NewFeed',
+                  bigThumbnail: true,
+                  showAuthor: false,
+                  scrollCallback: (bool) {}),
+              FeedList(
+                  feedType: 'MyFeed',
+                  bigThumbnail: true,
+                  showAuthor: false,
+                  scrollCallback: (bool) {}),
+              FeedList(
+                  feedType: 'HotFeed',
+                  bigThumbnail: true,
+                  showAuthor: false,
+                  scrollCallback: (bool) {}),
+              FeedList(
+                  feedType: 'TrendingFeed',
+                  bigThumbnail: true,
+                  showAuthor: false,
+                  scrollCallback: (bool) {}),
             ],
+            controller: _tabController,
           ),
           Align(
-            alignment: Alignment.topCenter,
+            alignment: Alignment.topRight,
             child: Padding(
-              padding: const EdgeInsets.only(top: 75.0),
+              padding: EdgeInsets.only(top: 13.h, right: 4.w),
               child: Container(
-                width: deviceWidth,
-                height: 35,
+                width: 35.w,
                 child: TabBar(
                   unselectedLabelColor: Colors.white,
                   labelColor: Colors.white,
                   indicatorColor: Colors.white.withAlpha(50),
                   tabs: [
                     Tab(
-                      child: OverlayText(text: _tabNames[0]),
+                      child: ShadowedIcon(
+                          icon: _tabIcons[0],
+                          color: Colors.white,
+                          shadowColor: Colors.black,
+                          size: 5.w),
                     ),
                     Tab(
-                      child: OverlayText(text: _tabNames[1]),
+                      child: ShadowedIcon(
+                          icon: _tabIcons[1],
+                          color: Colors.white,
+                          shadowColor: Colors.black,
+                          size: 5.w),
                     ),
                     Tab(
-                      child: OverlayText(text: _tabNames[2]),
+                      child: ShadowedIcon(
+                          icon: _tabIcons[2],
+                          color: Colors.white,
+                          shadowColor: Colors.black,
+                          size: 5.w),
                     ),
                     Tab(
-                      child: OverlayText(text: _tabNames[3]),
+                      child: ShadowedIcon(
+                          icon: _tabIcons[3],
+                          color: Colors.white,
+                          shadowColor: Colors.black,
+                          size: 5.w),
                     ),
                   ],
                   controller: _tabController,
