@@ -65,11 +65,11 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                 children: [
                   OverlayText(
                     text: shortDTC(state.dtcBalance) + "DTC",
-                    sizeMultiply: 0.9,
+                    sizeMultiply: 0.7,
                   ),
                   OverlayText(
                     text: shortVP(state.vtBalance['v']!) + "VP",
-                    sizeMultiply: 0.9,
+                    sizeMultiply: 0.7,
                   ),
                 ]);
           } catch (e) {

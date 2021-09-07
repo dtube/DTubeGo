@@ -1,3 +1,4 @@
+import 'package:dtube_togo/ui/pages/feeds/FeedViewBase.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
@@ -10,7 +11,7 @@ import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/Explore/SearchScreen.dart';
-import 'package:dtube_togo/ui/pages/feeds/FeedList.dart';
+import 'package:dtube_togo/ui/pages/feeds/lists/FeedList.dart';
 
 import 'package:dtube_togo/ui/pages/wallet/RewardsPage.dart';
 import 'package:dtube_togo/ui/pages/wallet/WalletPage.dart';
@@ -26,7 +27,12 @@ class FeedMainPage extends StatefulWidget {
 
 class _FeedMainPageState extends State<FeedMainPage>
     with SingleTickerProviderStateMixin {
-  List<String> _tabNames = ["New", "Follow", "Hot", "Trending"];
+  List<String> _tabNames = [
+    "Fresh Videos",
+    "Follow Feed",
+    "Hot Videos",
+    "Trending Videos"
+  ];
   List<IconData> _tabIcons = [
     FontAwesomeIcons.rss,
     FontAwesomeIcons.userFriends,
@@ -38,13 +44,14 @@ class _FeedMainPageState extends State<FeedMainPage>
   @override
   void initState() {
     _tabController = new TabController(length: 4, vsync: this);
+
     _tabController.addListener(() {
-      if (_tabController.indexIsChanging) {
+      if (_tabController.index != _selectedIndex) {
         setState(() {
           _selectedIndex = _tabController.index;
         });
         print("Selected Index: " + _tabController.index.toString());
-        switch (_tabController.index) {
+        switch (_selectedIndex) {
           case 0:
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
@@ -86,24 +93,24 @@ class _FeedMainPageState extends State<FeedMainPage>
         children: [
           TabBarView(
             children: [
-              FeedList(
+              FeedViewBase(
                   feedType: 'NewFeed',
-                  bigThumbnail: true,
+                  largeFormat: true,
                   showAuthor: false,
                   scrollCallback: (bool) {}),
-              FeedList(
+              FeedViewBase(
                   feedType: 'MyFeed',
-                  bigThumbnail: true,
+                  largeFormat: true,
                   showAuthor: false,
                   scrollCallback: (bool) {}),
-              FeedList(
+              FeedViewBase(
                   feedType: 'HotFeed',
-                  bigThumbnail: true,
+                  largeFormat: true,
                   showAuthor: false,
                   scrollCallback: (bool) {}),
-              FeedList(
+              FeedViewBase(
                   feedType: 'TrendingFeed',
-                  bigThumbnail: true,
+                  largeFormat: true,
                   showAuthor: false,
                   scrollCallback: (bool) {}),
             ],
@@ -112,13 +119,15 @@ class _FeedMainPageState extends State<FeedMainPage>
           Align(
             alignment: Alignment.topRight,
             child: Padding(
-              padding: EdgeInsets.only(top: 13.h, right: 4.w),
+              padding: EdgeInsets.only(top: 11.h, right: 4.w),
+              //padding: EdgeInsets.only(top: 5.h),
               child: Container(
                 width: 35.w,
+                //color: Colors.black.withAlpha(20),
                 child: TabBar(
                   unselectedLabelColor: Colors.white,
                   labelColor: Colors.white,
-                  indicatorColor: Colors.white.withAlpha(50),
+                  indicatorColor: Colors.white,
                   tabs: [
                     Tab(
                       child: ShadowedIcon(
@@ -151,11 +160,22 @@ class _FeedMainPageState extends State<FeedMainPage>
                   ],
                   controller: _tabController,
                   indicatorSize: TabBarIndicatorSize.tab,
-                  labelPadding: EdgeInsets.all(0.0),
+                  labelPadding: EdgeInsets.zero,
                 ),
               ),
             ),
           ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(top: 8.h, left: 4.w),
+              //padding: EdgeInsets.only(top: 5.h),
+              child: OverlayText(
+                text: _tabNames[_selectedIndex],
+                sizeMultiply: 1,
+              ),
+            ),
+          )
         ],
       ),
     );

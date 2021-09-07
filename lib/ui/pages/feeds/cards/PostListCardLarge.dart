@@ -1,3 +1,4 @@
+import 'package:sizer/sizer.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
@@ -16,8 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class PostListCardMainFeed extends StatefulWidget {
-  const PostListCardMainFeed(
+class PostListCardLarge extends StatefulWidget {
+  const PostListCardLarge(
       {Key? key,
       required this.blur,
       required this.thumbnailUrl,
@@ -59,12 +60,12 @@ class PostListCardMainFeed extends StatefulWidget {
   final bool oc;
 
   @override
-  _PostListCardMainFeedState createState() => _PostListCardMainFeedState();
+  _PostListCardLargeState createState() => _PostListCardLargeState();
 }
 
-class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
-  double _avatarSize = 50;
-  double _tagSpace = 150;
+class _PostListCardLargeState extends State<PostListCardLarge> {
+  double _avatarSize = 10.w;
+  double _tagSpace = 20.w;
   bool _thumbnailTapped = false;
   @override
   void initState() {
@@ -73,9 +74,8 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -91,46 +91,39 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                 showVerified: true,
                 showName: true,
                 nameFontSizeMultiply: 1,
-                width: 200,
+                width: 40.w,
               ),
             ),
             SizedBox(width: 8),
             Container(
               width: _tagSpace,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   widget.oc
-                      ? Transform.scale(
-                          scale: 0.8,
-                          alignment: Alignment.centerRight,
-                          child: FaIcon(FontAwesomeIcons.award),
+                      ? FaIcon(
+                          FontAwesomeIcons.award,
+                          size: 5.w,
                         )
                       : SizedBox(width: 0),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: InkWell(
-                      onTap: () {
-                        navigateToPostDetailPage(
-                            context, widget.author, widget.link, "none", false);
-                      },
-                      child: Transform.scale(
-                        scale: 0.8,
-                        alignment: Alignment.centerRight,
-                        child: InputChip(
-                          label: Container(
-                            width: 50,
-                            //height: 40,
-                            child: Center(
-                              child: Text(
-                                widget.mainTag,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
+                  InkWell(
+                    onTap: () {
+                      navigateToPostDetailPage(
+                          context, widget.author, widget.link, "none", false);
+                    },
+                    child: InputChip(
+                      label: Container(
+                        width: 10.w,
+                        //height: 40,
+                        child: Center(
+                          child: Text(
+                            widget.mainTag,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
-                          onPressed: () {},
                         ),
                       ),
+                      onPressed: () {},
                     ),
                   ),
                 ],
@@ -140,7 +133,7 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
         ),
         SizedBox(height: 8),
         Container(
-          width: deviceWidth - 16,
+          width: 90.w,
           child: InkWell(
             onTap: () {
               navigateToPostDetailPage(
@@ -229,11 +222,11 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                           ? widget.duration.toString().substring(2, 7) + ' min'
                           : widget.duration.toString().substring(0, 7) +
                               ' hours'),
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodyText2,
                 ),
                 Text(
                   '${widget.dtcValue}',
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
               ],
             ),
@@ -270,6 +263,7 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                       InputChip(
                         label: Text(
                           widget.upvotesCount.toString(),
+                          style: Theme.of(context).textTheme.bodyText1,
                         ),
                         avatar: Padding(
                           padding: const EdgeInsets.only(left: 4.0),
@@ -294,6 +288,7 @@ class _PostListCardMainFeedState extends State<PostListCardMainFeed> {
                       InputChip(
                         label: Text(
                           widget.downvotesCount.toString(),
+                          style: Theme.of(context).textTheme.bodyText1,
                         ),
                         avatar: Padding(
                           padding: const EdgeInsets.only(left: 4.0),

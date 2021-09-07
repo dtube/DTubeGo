@@ -78,64 +78,60 @@ class _VotingButtonsState extends State<VotingButtons> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Transform.scale(
-              scale: widget.scale,
-              child: InputChip(
-                label: Text(
-                  widget.upvotes != null && widget.upvotes!.isNotEmpty
-                      ? (widget.upvotes!.length).toString()
-                      : '0',
-                ),
-                avatar: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: FaIcon(
-                    FontAwesomeIcons.thumbsUp,
-                    color: widget.alreadyVoted && widget.alreadyVotedDirection
-                        ? globalRed
-                        : Colors.grey,
-                  ),
-                ),
-                onPressed: () {
-                  if (!widget.alreadyVoted) {
-                    setState(() {
-                      _upvotePressed = !_upvotePressed;
-                      if (_upvotePressed) {
-                        _downvotePressed = false;
-                      }
-                    });
-                  }
-                },
+            InputChip(
+              label: Text(
+                widget.upvotes != null && widget.upvotes!.isNotEmpty
+                    ? (widget.upvotes!.length).toString()
+                    : '0',
+                style: Theme.of(context).textTheme.bodyText2,
               ),
+              avatar: Padding(
+                padding: const EdgeInsets.only(left: 4.0),
+                child: FaIcon(
+                  FontAwesomeIcons.thumbsUp,
+                  color: widget.alreadyVoted && widget.alreadyVotedDirection
+                      ? globalRed
+                      : Colors.grey,
+                ),
+              ),
+              onPressed: () {
+                if (!widget.alreadyVoted) {
+                  setState(() {
+                    _upvotePressed = !_upvotePressed;
+                    if (_upvotePressed) {
+                      _downvotePressed = false;
+                    }
+                  });
+                }
+              },
             ),
             SizedBox(
               width: 8,
             ),
-            Transform.scale(
-              scale: widget.scale,
-              child: InputChip(
-                label: Text(
-                    widget.downvotes != null && widget.downvotes!.isNotEmpty
-                        ? (widget.downvotes!.length).toString()
-                        : '0'),
-                avatar: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: FaIcon(FontAwesomeIcons.thumbsDown,
-                      color:
-                          widget.alreadyVoted && !widget.alreadyVotedDirection
-                              ? globalRed
-                              : Colors.grey),
-                ),
-                onPressed: () {
-                  if (!widget.alreadyVoted) {
-                    setState(() {
-                      _downvotePressed = !_downvotePressed;
-                      if (_downvotePressed) {
-                        _upvotePressed = false;
-                      }
-                    });
-                  }
-                },
+            InputChip(
+              label: Text(
+                widget.downvotes != null && widget.downvotes!.isNotEmpty
+                    ? (widget.downvotes!.length).toString()
+                    : '0',
+                style: Theme.of(context).textTheme.bodyText2,
               ),
+              avatar: Padding(
+                padding: const EdgeInsets.only(left: 4.0),
+                child: FaIcon(FontAwesomeIcons.thumbsDown,
+                    color: widget.alreadyVoted && !widget.alreadyVotedDirection
+                        ? globalRed
+                        : Colors.grey),
+              ),
+              onPressed: () {
+                if (!widget.alreadyVoted) {
+                  setState(() {
+                    _downvotePressed = !_downvotePressed;
+                    if (_downvotePressed) {
+                      _upvotePressed = false;
+                    }
+                  });
+                }
+              },
             ),
           ],
         ),

@@ -22,8 +22,9 @@ class SignedInState extends AuthState {
 
 class SignInFailedState extends AuthState {
   String message;
+  String username;
 
-  SignInFailedState({required this.message});
+  SignInFailedState({required this.message, required this.username});
 
   @override
   List<Object> get props => [message];

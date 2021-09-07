@@ -87,7 +87,7 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
           shadowColor: Colors.black,
           size: 5.w),
       activeIcon: FontAwesomeIcons.chevronLeft,
-      buttonSize: 40.0,
+      buttonSize: 15.w,
       direction: SpeedDialDirection.Down,
       visible: true,
       closeManually: false,

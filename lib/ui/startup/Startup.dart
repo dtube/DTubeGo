@@ -1,3 +1,5 @@
+import 'package:sizer/sizer.dart';
+
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
@@ -33,6 +35,7 @@ class _StartUpState extends State<StartUp> {
   @override
   void initState() {
     super.initState();
+    print(SizerUtil.width);
     // sec.deleteAllSettings(); // flush ALL app settings including logindata, hivesigner and so on
   }
 
@@ -56,7 +59,10 @@ class _StartUpState extends State<StartUp> {
         }
 
         if (state is SignInFailedState) {
-          return LoginForm(message: state.message);
+          return LoginForm(
+            message: state.message,
+            username: state.username,
+          );
         }
 
         if (state is SignOutCompleteState ||

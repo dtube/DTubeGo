@@ -46,7 +46,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               //sec.persistUsernameKey(event.username, event.privateKey);
               yield SignedInState();
             } else {
-              yield SignInFailedState(message: "login failed");
+              yield SignInFailedState(
+                  message: "login failed", username: _applicationUser);
             }
           } else {
             yield NoSignInInformationFoundState();
@@ -81,7 +82,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
           yield SignedInState();
         } else {
-          yield SignInFailedState(message: 'login failed');
+          yield SignInFailedState(
+              message: 'login failed', username: event.username);
         }
       } catch (e) {
         yield AuthErrorState(message: 'unknown error');

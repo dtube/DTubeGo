@@ -1,5 +1,8 @@
+import 'package:sizer/sizer.dart';
+
 import 'package:decorated_icon/decorated_icon.dart';
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
+import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/pages/notifications/Notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,20 +62,12 @@ class _NotificationButtonState extends State<NotificationButton> {
         ));
   }
 
-  DecoratedIcon buildNotificationIcon(bool newNotifications) {
-    return DecoratedIcon(
-      FontAwesomeIcons.bell,
+  Widget buildNotificationIcon(bool newNotifications) {
+    return ShadowedIcon(
+      icon: FontAwesomeIcons.bell,
       color: newNotifications ? Colors.red : Colors.white,
-      shadows: [
-        BoxShadow(
-          blurRadius: 24.0,
-          color: Colors.black,
-        ),
-        // BoxShadow(
-        //   blurRadius: 12.0,
-        //   color: Colors.white,
-        // ),
-      ],
+      shadowColor: Colors.black,
+      size: 5.w,
     );
   }
 }

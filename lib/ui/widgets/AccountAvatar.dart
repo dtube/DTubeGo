@@ -1,3 +1,5 @@
+import 'package:sizer/sizer.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
@@ -95,8 +97,6 @@ class _AccountAvatarState extends State<AccountAvatar> {
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
     return BlocBuilder<UserBloc, UserState>(
       bloc: _userBlocAvatar,
       builder: (context, state) {
@@ -117,17 +117,15 @@ class _AccountAvatarState extends State<AccountAvatar> {
                             widget.showFullUserInfo
                                 ? FullInfo(
                                     userData: state.user,
-                                    deviceWidth: deviceWidth,
                                     nameFontSizeMultiply:
                                         widget.nameFontSizeMultiply,
                                     width:
-                                        widget.width - widget.avatarSize - 15,
+                                        widget.width - widget.avatarSize - 5.w,
                                   )
                                 : ShowName(
                                     userData: state.user,
                                     sizeMultiply: 1,
-                                    width:
-                                        widget.width - widget.avatarSize - 15,
+                                    width: widget.width,
                                   ),
                             SizedBox(width: 8)
                           ],
@@ -171,12 +169,12 @@ class _AccountAvatarState extends State<AccountAvatar> {
                           ? Align(
                               alignment: Alignment.bottomRight,
                               child: CircleAvatar(
-                                  maxRadius: widget.avatarSize / 5,
+                                  maxRadius: widget.avatarSize / 8,
                                   backgroundColor: globalRed,
                                   child: FaIcon(
                                     FontAwesomeIcons.check,
                                     color: globalAlmostWhite,
-                                    size: widget.avatarSize / 5,
+                                    size: widget.avatarSize / 8,
                                   )),
                             )
                           : SizedBox(height: 0),
@@ -189,17 +187,14 @@ class _AccountAvatarState extends State<AccountAvatar> {
                             widget.showFullUserInfo
                                 ? FullInfo(
                                     userData: state.user,
-                                    deviceWidth: deviceWidth,
                                     nameFontSizeMultiply:
                                         widget.nameFontSizeMultiply,
-                                    width:
-                                        widget.width - widget.avatarSize - 20,
+                                    width: widget.width - widget.avatarSize,
                                   )
                                 : ShowName(
                                     userData: state.user,
-                                    sizeMultiply: 1,
-                                    width:
-                                        widget.width - widget.avatarSize - 20,
+                                    sizeMultiply: 0.8,
+                                    width: widget.width - widget.avatarSize,
                                   ),
                           ],
                         )
@@ -230,20 +225,19 @@ class FullInfo extends StatelessWidget {
   const FullInfo(
       {Key? key,
       required this.userData,
-      required this.deviceWidth,
       required this.nameFontSizeMultiply,
       required this.width})
       : super(key: key);
 
   final User userData;
-  final double deviceWidth;
+
   final double nameFontSizeMultiply;
   final double width;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: deviceWidth * 0.5,
+      width: width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -257,7 +251,7 @@ class FullInfo extends StatelessWidget {
                   text: userData.jsonString!.profile!.location!,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  sizeMultiply: 0.8,
+                  sizeMultiply: 1,
                   // style:
                   //     Theme.of(context).textTheme.bodyText2,
                 )
@@ -303,7 +297,7 @@ class ShowName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: width,
+      width: width - 8,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,7 +316,7 @@ class ShowName extends StatelessWidget {
             text: userData.jsonString?.additionals?.displayName != null
                 ? '(@' + userData.name + ')'
                 : userData.name,
-            maxLines: 2,
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
             sizeMultiply: userData.jsonString?.additionals?.displayName != null
                 ? 1

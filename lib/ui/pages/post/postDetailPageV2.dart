@@ -1,3 +1,5 @@
+import 'package:sizer/sizer.dart';
+
 import 'package:dtube_togo/utils/navigationShortcuts.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -186,8 +188,6 @@ class _PostDetailsState extends State<PostDetails> {
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
     const player = YoutubePlayerIFrame();
     return BlocListener<UserBloc, UserState>(
       listener: (context, state) {
@@ -215,36 +215,29 @@ class _PostDetailsState extends State<PostDetails> {
                             : Column(
                                 children: [
                                   Container(
-                                    alignment: Alignment.center,
-                                    padding: EdgeInsets.all(10.0),
-                                    child: Text(
-                                      widget.post.jsonString!.title,
-                                      style:
-                                          Theme.of(context).textTheme.headline1,
-                                    ),
-                                  ),
-                                  Container(
                                     alignment: Alignment.topRight,
                                     margin: EdgeInsets.all(5.0),
                                     child: InputChip(
                                       label: AccountAvatarBase(
                                         username: widget.post.author,
-                                        avatarSize: 30,
+                                        avatarSize: 50,
                                         showVerified: true,
                                         showName: true,
-                                        width: 130,
+                                        width: 25.w,
                                       ),
-                                      // avatar: AccountAvatarBase(
-                                      //   username: widget.post.author,
-                                      //   avatarSize: 40,
-                                      //   showVerified: true,
-                                      //   showName: true,
-                                      //   width: 150,
-                                      // ),
                                       onPressed: () {
                                         navigateToUserDetailPage(
                                             context, widget.post.author);
                                       },
+                                    ),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.topLeft,
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Text(
+                                      widget.post.jsonString!.title,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
                                     ),
                                   ),
                                 ],
@@ -275,7 +268,7 @@ class _PostDetailsState extends State<PostDetails> {
                                                   FontAwesomeIcons.award))
                                           : SizedBox(width: 0),
                                       Container(
-                                        width: deviceWidth * 0.6,
+                                        width: 60.w,
                                         height: 50,
                                         child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
@@ -286,9 +279,11 @@ class _PostDetailsState extends State<PostDetails> {
                                                     right: 8.0),
                                                 child: InputChip(
                                                     label: Text(
-                                                  widget.post.tags[index]
-                                                      .toString(),
-                                                )),
+                                                        widget.post.tags[index]
+                                                            .toString(),
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyText2)),
                                               );
                                             }),
                                       ),
@@ -296,10 +291,9 @@ class _PostDetailsState extends State<PostDetails> {
                                   )
                                 : SizedBox(height: 0),
                             Text(
-                              (widget.post.dist / 100).round().toString() +
-                                  " DTC",
-                              style: Theme.of(context).textTheme.headline2,
-                            ),
+                                (widget.post.dist / 100).round().toString() +
+                                    " DTC",
+                                style: Theme.of(context).textTheme.bodyText1),
                           ],
                         ),
                         Row(
@@ -327,7 +321,7 @@ class _PostDetailsState extends State<PostDetails> {
                                         _defaultVoteWeightPosts,
                                     defaultVotingTip: _defaultVoteTipPosts,
                                     currentVT: _currentVT,
-                                    scale: 1,
+                                    scale: 0.8,
                                     isPost: true,
                                     focusVote: widget.directFocus);
                               } else {
@@ -342,7 +336,7 @@ class _PostDetailsState extends State<PostDetails> {
                                 : ""),
                         Divider(),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             InputChip(
@@ -354,7 +348,7 @@ class _PostDetailsState extends State<PostDetails> {
                                     widget.post.link);
                               },
                             ),
-                            SizedBox(width: 10),
+                            SizedBox(width: 8),
                             ReplyButton(
                               icon: FaIcon(FontAwesomeIcons.comment),
                               author: widget.post.author,
@@ -368,25 +362,24 @@ class _PostDetailsState extends State<PostDetails> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 16),
+                        // SizedBox(height: 16),
                         widget.post.comments != null &&
                                 widget.post.comments!.length > 0
-                            ? Padding(
-                                padding: const EdgeInsets.only(right: 16.0),
-                                child: Container(
-                                  height: 200.0,
-                                  child: ListView.builder(
-                                    itemCount: widget.post.comments!.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) =>
-                                            CommentDisplay(
-                                                widget.post.comments![index],
-                                                _defaultVoteWeightComments,
-                                                _currentVT,
-                                                widget.post.author,
-                                                widget.post.link,
-                                                _defaultVoteTipComments),
-                                  ),
+                            ? Container(
+                                height: 200.w,
+                                child: ListView.builder(
+                                  itemCount: widget.post.comments!.length,
+                                  padding: EdgeInsets.zero,
+                                  itemBuilder:
+                                      (BuildContext context, int index) =>
+                                          CommentDisplay(
+                                              widget.post.comments![index],
+                                              _defaultVoteWeightComments,
+                                              _currentVT,
+                                              widget.post.author,
+                                              widget.post.link,
+                                              _defaultVoteTipComments,
+                                              context),
                                 ),
                               )
                             : SizedBox(height: 0),

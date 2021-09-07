@@ -1,3 +1,5 @@
+import 'package:sizer/sizer.dart';
+
 import 'package:dtube_togo/bloc/config/txTypes.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
@@ -137,40 +139,41 @@ class CustomListItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        height: 35,
+        height: 7.h,
+        width: 100.w,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            BlocProvider<UserBloc>(
-              create: (BuildContext context) =>
-                  UserBloc(repository: UserRepositoryImpl()),
-              child: AccountAvatarBase(
-                username: sender,
-                avatarSize: 30,
-                showVerified: true,
-                showName: true,
-                width: 140,
-              ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  NotificationTitle(
-                    sender: sender,
-                    tx: tx,
-                    username: username,
+            Row(
+              children: [
+                BlocProvider<UserBloc>(
+                  create: (BuildContext context) =>
+                      UserBloc(repository: UserRepositoryImpl()),
+                  child: AccountAvatarBase(
+                    username: sender,
+                    avatarSize: 10.w,
+                    showVerified: true,
+                    showName: true,
+                    width: 35.w,
                   ),
-                  NotificationDescription(tx: tx),
-                ],
-              ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                NotificationTitle(
+                  sender: sender,
+                  tx: tx,
+                  username: username,
+                ),
+              ],
             ),
             userNavigation || postNavigation
                 ? FaIcon(
                     userNavigation
                         ? FontAwesomeIcons.user
                         : FontAwesomeIcons.play,
-                    size: 15,
+                    size: 5.w,
                   )
                 : SizedBox(width: 0)
           ],
@@ -196,7 +199,7 @@ class NotificationTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     String username2 = "your";
 
-    String friendlyDescription = ' ' +
+    String friendlyDescription =
         txTypeFriendlyDescriptionNotifications[tx.type]!
             .replaceAll("##USERNAMES", username2)
             .replaceAll("##USERNAME", username);
@@ -213,57 +216,21 @@ class NotificationTitle extends StatelessWidget {
       default:
     }
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        // Text(
-        //   sender,
-        //   maxLines: 2,
-        //   overflow: TextOverflow.ellipsis,
-        //   style: const TextStyle(
-        //     fontWeight: FontWeight.bold,
-        //     fontSize: 14.0,
-        //   ),
-        // ),
-        const Padding(padding: EdgeInsets.only(bottom: 2.0)),
-        Text(
-          friendlyDescription,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            fontSize: 14.0,
-            //color: Colors.black54,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class NotificationDescription extends StatelessWidget {
-  const NotificationDescription({
-    Key? key,
-    required this.tx,
-  }) : super(key: key);
-
-  final Tx tx;
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const Padding(padding: EdgeInsets.only(bottom: 2.0)),
         Text(
-          DateFormat('yyyy-MM-dd kk:mm').format(
-              DateTime.fromMicrosecondsSinceEpoch(tx.ts * 1000).toLocal()),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            fontSize: 12.0,
-            //color: Colors.black54,
-          ),
-        ),
+            DateFormat('yyyy-MM-dd kk:mm').format(
+                    DateTime.fromMicrosecondsSinceEpoch(tx.ts * 1000)
+                        .toLocal()) +
+                ':',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.bodyText2),
+        Text(friendlyDescription,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.bodyText2),
       ],
     );
   }

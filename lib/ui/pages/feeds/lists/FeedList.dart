@@ -5,8 +5,8 @@ import 'dart:ui';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 
-import 'package:dtube_togo/ui/pages/feeds/PostListCardMainFeed.dart';
-import 'package:dtube_togo/ui/pages/feeds/PostListCardUserFeed.dart';
+import 'package:dtube_togo/ui/pages/feeds/cards/PostListCardLarge.dart';
+import 'package:dtube_togo/ui/pages/feeds/cards/PostListCardNarrow.dart';
 
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
@@ -22,7 +22,7 @@ typedef Bool2VoidFunc = void Function(bool);
 class FeedList extends StatelessWidget {
   String feedType;
   String? username;
-  bool bigThumbnail;
+  bool largeFormat;
   bool showAuthor;
 
   Bool2VoidFunc scrollCallback;
@@ -31,7 +31,7 @@ class FeedList extends StatelessWidget {
   FeedList({
     required this.feedType,
     this.username,
-    required this.bigThumbnail,
+    required this.largeFormat,
     required this.showAuthor,
     required this.scrollCallback,
     Key? key,
@@ -89,7 +89,7 @@ class FeedList extends StatelessWidget {
                     return buildErrorUi(state.message);
                   }
                   return buildPostList(
-                      _feedItems, bigThumbnail, true, context, feedType);
+                      _feedItems, largeFormat, true, context, feedType);
                 },
               ),
             );
@@ -163,7 +163,7 @@ class FeedList extends StatelessWidget {
               (feed[pos].jsonString!.hide == 1 &&
                   feed[pos].author != _applicationUser)) {
             return Padding(
-              padding: EdgeInsets.only(top: pos == 0 ? 120 : 8.0),
+              padding: EdgeInsets.only(top: pos == 0 ? 16.h : 8.0),
               child: SizedBox(
                 height: 0,
               ),
@@ -172,9 +172,9 @@ class FeedList extends StatelessWidget {
             return BlocProvider<UserBloc>(
               create: (context) => UserBloc(repository: UserRepositoryImpl()),
               child: Padding(
-                padding: EdgeInsets.only(top: pos == 0 ? 120 : 8.0),
+                padding: EdgeInsets.only(top: pos == 0 ? 16.h : 8.0),
                 child: PostListCard(
-                  bigThumbnail: bigThumbnail,
+                  largeFormat: largeFormat,
                   showAuthor: showAuthor,
                   blur: (_nsfwMode == 'Blur' &&
                               feed[pos].jsonString?.nsfw == 1) ||
@@ -210,11 +210,8 @@ class FeedList extends StatelessWidget {
             );
           }
         } else {
-          return Padding(
-            padding: EdgeInsets.only(top: pos == 0 ? 120 : 8.0),
-            child: SizedBox(
-              height: 0,
-            ),
+          return SizedBox(
+            height: 0,
           );
         }
       },
@@ -224,7 +221,7 @@ class FeedList extends StatelessWidget {
 
 class PostListCard extends StatelessWidget {
   final bool showAuthor;
-  final bool bigThumbnail;
+  final bool largeFormat;
   final bool blur;
   final String thumbnailUrl;
   final String title;
@@ -247,7 +244,7 @@ class PostListCard extends StatelessWidget {
   const PostListCard({
     Key? key,
     required this.showAuthor,
-    required this.bigThumbnail,
+    required this.largeFormat,
     required this.blur,
     required this.thumbnailUrl,
     required this.title,
@@ -270,10 +267,10 @@ class PostListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (bigThumbnail) {
+    if (largeFormat) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: PostListCardMainFeed(
+        child: PostListCardLarge(
           blur: blur,
           thumbnailUrl: thumbnailUrl,
           title: title,
@@ -295,7 +292,7 @@ class PostListCard extends StatelessWidget {
         ),
       );
     } else {
-      return PostListCardUserFeed(
+      return PostListCardNarrow(
         blur: blur,
         thumbnailUrl: thumbnailUrl,
         title: title,

@@ -13,10 +13,7 @@ class OpenableHyperlink extends StatelessWidget {
     return GestureDetector(
         child: Text(url,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-                decoration: TextDecoration.underline,
-                color: Colors.blue,
-                fontSize: 14)),
+            style: Theme.of(context).textTheme.overline),
         onTap: () async {
           await canLaunch(url)
               ? await launch(url)

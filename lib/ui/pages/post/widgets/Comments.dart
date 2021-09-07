@@ -1,3 +1,5 @@
+import 'package:sizer/sizer.dart';
+
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/ReplyButton.dart';
@@ -11,14 +13,21 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Create the Widget for the row
 class CommentDisplay extends StatelessWidget {
-  const CommentDisplay(this.entry, this.defaultVoteWeight, this._currentVT,
-      this.parentAuthor, this.parentLink, this.defaultVoteTip);
+  const CommentDisplay(
+      this.entry,
+      this.defaultVoteWeight,
+      this._currentVT,
+      this.parentAuthor,
+      this.parentLink,
+      this.defaultVoteTip,
+      this.parentContext);
   final Comment entry;
   final double defaultVoteWeight;
   final double defaultVoteTip;
   final String parentAuthor;
   final String parentLink;
   final int _currentVT;
+  final BuildContext parentContext;
 
   // This function recursively creates the multi-level list rows.
   Widget _buildTiles(Comment root) {
@@ -31,19 +40,19 @@ class CommentDisplay extends StatelessWidget {
             children: [
               AccountAvatarBase(
                 username: root.author,
-                avatarSize: 30,
+                avatarSize: 50,
                 showVerified: true,
                 showName: true,
-                width: 90,
+                width: 30.w,
               ),
               SizedBox(
                 width: 8,
               ),
               Container(
-                width: 200,
+                width: 60.w,
                 child: Text(
                   root.commentjson.description,
-                  style: TextStyle(fontSize: 12.0),
+                  style: Theme.of(parentContext).textTheme.bodyText2,
                 ),
               ),
             ],
@@ -60,7 +69,7 @@ class CommentDisplay extends StatelessWidget {
                 defaultVotingWeight: defaultVoteWeight,
                 defaultVotingTip: defaultVoteTip,
                 currentVT: _currentVT,
-                scale: 0.8,
+                scale: 0.5,
                 isPost: false,
                 focusVote: "",
               ),
@@ -94,19 +103,16 @@ class CommentDisplay extends StatelessWidget {
               children: [
                 AccountAvatarBase(
                   username: root.author,
-                  avatarSize: 30,
+                  avatarSize: 50,
                   showVerified: true,
                   showName: true,
-                  width: 100,
-                ),
-                SizedBox(
-                  width: 8,
+                  width: 30.w,
                 ),
                 Container(
-                  width: 200,
+                  width: 60.w,
                   child: Text(
                     root.commentjson.description,
-                    style: TextStyle(fontSize: 12.0),
+                    style: Theme.of(parentContext).textTheme.bodyText2,
                   ),
                 ),
               ],
@@ -123,7 +129,7 @@ class CommentDisplay extends StatelessWidget {
                   defaultVotingWeight: defaultVoteWeight,
                   defaultVotingTip: defaultVoteTip,
                   currentVT: _currentVT,
-                  scale: 0.8,
+                  scale: 0.5,
                   isPost: false,
                   focusVote: "",
                 ),
@@ -159,8 +165,6 @@ class CommentDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("comment display");
-    return _buildTiles(
-      entry,
-    );
+    return _buildTiles(entry);
   }
 }

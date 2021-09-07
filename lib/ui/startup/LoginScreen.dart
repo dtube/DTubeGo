@@ -1,3 +1,5 @@
+import 'package:sizer/sizer.dart';
+
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:dtube_togo/style/OpenableHyperlink.dart';
@@ -12,7 +14,8 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class LoginForm extends StatefulWidget {
   String? message;
-  LoginForm({Key? key, this.message}) : super(key: key);
+  String? username;
+  LoginForm({Key? key, this.message, this.username}) : super(key: key);
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -27,6 +30,9 @@ class _LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
     _loginBloc = BlocProvider.of<AuthBloc>(context);
+    if (widget.username != null) {
+      usernameController = TextEditingController(text: widget.username);
+    }
     //if logindata already stored
   }
 
@@ -56,150 +62,142 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       backgroundColor: globalBlue,
       body: Center(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
+          child: Form(
+            child: Column(
+              children: [
+                Image.asset('assets/images/dtube_logo_white.png', width: 40.w),
+                SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset('assets/images/dtube_logo_white.png',
-                        width: deviceWidth / 2),
-                    SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          width: 200,
-                          child: TextField(
-                            controller: usernameController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Username',
-                            ),
-                          ),
+                    Container(
+                      width: 40.w,
+                      child: TextField(
+                        controller: usernameController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Username',
                         ),
-                        // Row(
-                        //     children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              launch(AppConfig.signUpUrl);
-                            },
-                            child: Text(
-                              "Sign-Up",
-                            )),
-                      ],
+                      ),
                     ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          width: 200,
-                          child: TextField(
-                            obscureText: true,
-                            controller: privateKeyController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'key',
-                            ),
-                          ),
-                        ),
-                        ElevatedButton(
-                            onPressed: () => scanQR(),
-                            child: SizedBox(
-                                width: 40,
-                                child: Center(
-                                    child: FaIcon(FontAwesomeIcons.qrcode)))),
-                        // InputChip(
-                        //   label: Text("QR-Scan"),
-                        //   onPressed: () => scanQR(),
-                        // ),
-                      ],
+                    SizedBox(
+                      width: 5.w,
                     ),
-
-                    // ],
-                    // ),
-                    widget.message != null
-                        ? Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Wrap(
-                                  direction: Axis.horizontal,
-                                  children: [
-                                    FaIcon(
-                                      FontAwesomeIcons.exclamationTriangle,
-                                      color: globalRed,
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(widget.message!,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline2),
-                                  ],
-                                ),
-                                widget.message == 'login failed'
-                                    ? Container(
-                                        width: deviceWidth - 100,
-                                        child: Column(
-                                          children: [
-                                            SizedBox(height: 8),
-                                            Text(
-                                                "Please check your username & private key!\n\nSometimes a login with the private master key does not work. Then please try to login with a custom key. More info on how to create such a custom key:\n",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1),
-                                            OpenableHyperlink(
-                                                url:
-                                                    "https://d.tube/#!/wiki/faq/how-can-i-create-lesser-authority-keys")
-                                          ],
-                                        ),
-                                      )
-                                    : SizedBox(height: 0),
-                              ],
-                            ),
-                          )
-                        : SizedBox(height: 16),
-
-                    ValueListenableBuilder<TextEditingValue>(
-                        valueListenable: usernameController,
-                        builder: (context, value, child) {
-                          return ValueListenableBuilder<TextEditingValue>(
-                              valueListenable: privateKeyController,
-                              builder: (context, value, child) {
-                                return ElevatedButton(
-                                    onPressed: usernameController.value.text !=
-                                                "" &&
-                                            privateKeyController.value.text !=
-                                                ""
-                                        ? () {
-                                            _loginBloc.add(
-                                                SignInWithCredentialsEvent(
-                                                    usernameController
-                                                        .value.text,
-                                                    privateKeyController
-                                                        .value.text));
-                                          }
-                                        : null,
-                                    child: Text(
-                                      "Sign in",
-                                      style:
-                                          Theme.of(context).textTheme.headline1,
-                                    ));
-                              });
-                        }),
+                    ElevatedButton(
+                        onPressed: () {
+                          launch(AppConfig.signUpUrl);
+                        },
+                        child: Text(
+                          "Sign-Up",
+                        )),
                   ],
                 ),
-              ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 40.w,
+                      child: TextField(
+                        obscureText: true,
+                        controller: privateKeyController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'private master/custom key',
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5.w,
+                    ),
+                    ElevatedButton(
+                        onPressed: () => scanQR(),
+                        child: SizedBox(
+                            width: 40,
+                            child: Center(
+                                child: FaIcon(FontAwesomeIcons.qrcode)))),
+                    // InputChip(
+                    //   label: Text("QR-Scan"),
+                    //   onPressed: () => scanQR(),
+                    // ),
+                  ],
+                ),
+
+                // ],
+                // ),
+                widget.message != null
+                    ? Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Wrap(
+                              direction: Axis.horizontal,
+                              children: [
+                                FaIcon(
+                                  FontAwesomeIcons.exclamationTriangle,
+                                  color: globalRed,
+                                ),
+                                SizedBox(width: 8),
+                                Text(widget.message!,
+                                    style:
+                                        Theme.of(context).textTheme.headline2),
+                              ],
+                            ),
+                            widget.message == 'login failed'
+                                ? Container(
+                                    width: 90.w,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: 8),
+                                        Text(
+                                          "Please check your username & private key.\n\nWe also recommend to use a custom private key. More info on how to create one:\n",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        OpenableHyperlink(
+                                            url:
+                                                "https://d.tube/#!/wiki/faq/how-can-i-create-lesser-authority-keys")
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(height: 0),
+                          ],
+                        ),
+                      )
+                    : SizedBox(height: 16),
+
+                ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: usernameController,
+                    builder: (context, value, child) {
+                      return ValueListenableBuilder<TextEditingValue>(
+                          valueListenable: privateKeyController,
+                          builder: (context, value, child) {
+                            return ElevatedButton(
+                                onPressed: usernameController.value.text !=
+                                            "" &&
+                                        privateKeyController.value.text != ""
+                                    ? () {
+                                        _loginBloc.add(
+                                            SignInWithCredentialsEvent(
+                                                usernameController.value.text,
+                                                privateKeyController
+                                                    .value.text));
+                                      }
+                                    : null,
+                                child: Text(
+                                  "Sign in",
+                                  style: Theme.of(context).textTheme.headline1,
+                                ));
+                          });
+                    }),
+              ],
             ),
           ),
         ),

@@ -52,19 +52,12 @@ class _CollapsedDescriptionState extends State<CollapsedDescription> {
                 expanded: MarkdownBody(
                   data: widget.description,
                   styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                      .copyWith(
-                          p: Theme.of(context)
-                              .textTheme
-                              .bodyText1!
-                              .copyWith(fontSize: 14.0)),
+                      .copyWith(p: Theme.of(context).textTheme.bodyText1!),
                   onTapLink: (text, url, title) {
                     launch(url!);
                   },
                 ),
               ),
-              // Divider(
-              //   height: 1,
-              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -75,7 +68,7 @@ class _CollapsedDescriptionState extends State<CollapsedDescription> {
                       return InputChip(
                         label: Text(
                           controller.expanded ? "collapse" : "read more",
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyText2,
                         ),
                         onPressed: () {
                           controller.toggle();

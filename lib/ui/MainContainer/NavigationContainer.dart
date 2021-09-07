@@ -22,11 +22,11 @@ import 'package:dtube_togo/ui/MainContainer/BalanceOverview.dart';
 import 'package:dtube_togo/ui/MainContainer/MenuButton.dart';
 import 'package:dtube_togo/ui/Explore/ExploreTabContainer.dart';
 import 'package:dtube_togo/ui/Explore/SearchScreen.dart';
-import 'package:dtube_togo/ui/pages/feeds/FeedMainContainer.dart';
-import 'package:dtube_togo/ui/pages/feeds/MomentsList.dart';
+import 'package:dtube_togo/ui/pages/feeds/FeedTabContainer.dart';
+import 'package:dtube_togo/ui/pages/feeds/lists/MomentsList.dart';
 import 'package:dtube_togo/ui/pages/notifications/NotificationButton.dart';
 
-import 'package:dtube_togo/ui/pages/feeds/FeedList.dart';
+import 'package:dtube_togo/ui/pages/feeds/lists/FeedList.dart';
 
 import 'package:dtube_togo/ui/pages/notifications/Notifications.dart';
 import 'package:dtube_togo/ui/pages/upload/uploaderTabContainer.dart';
@@ -182,29 +182,31 @@ class _NavigationContainerState extends State<NavigationContainer> {
         automaticallyImplyLeading: false,
         elevation: 0,
         titleSpacing: 0,
-        title: Padding(
-          padding: EdgeInsets.fromLTRB(3.w, 3.w, 3.w, 3.w),
-          child: Align(
-            alignment: Alignment.topRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                GestureDetector(
-                    child: BalanceOverviewBase(),
-                    onTap: () {
-                      BlocProvider.of<UserBloc>(context).add(FetchDTCVPEvent());
-                    }),
-                BlocProvider<NotificationBloc>(
-                  create: (context) => NotificationBloc(
-                      repository: NotificationRepositoryImpl()),
-                  child: NotificationButton(),
-                ),
-                buildMainMenuSpeedDial(context)
-              ],
-            ),
+        title:
+            // Padding(
+            //   padding: EdgeInsets.fromLTRB(3.w, 3.w, 3.w, 3.w),
+            //   child:
+            Align(
+          alignment: Alignment.topRight,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                  child: BalanceOverviewBase(),
+                  onTap: () {
+                    BlocProvider.of<UserBloc>(context).add(FetchDTCVPEvent());
+                  }),
+              BlocProvider<NotificationBloc>(
+                create: (context) =>
+                    NotificationBloc(repository: NotificationRepositoryImpl()),
+                child: NotificationButton(),
+              ),
+              buildMainMenuSpeedDial(context)
+            ],
           ),
         ),
       ),
+      //),
       body: BlocListener<TransactionBloc, TransactionState>(
         bloc: BlocProvider.of<TransactionBloc>(context),
         listener: (context, state) {

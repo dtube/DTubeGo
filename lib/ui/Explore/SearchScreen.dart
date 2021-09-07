@@ -1,3 +1,5 @@
+import 'package:sizer/sizer.dart';
+
 import 'dart:async';
 
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
@@ -117,7 +119,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
     return Padding(
-      padding: EdgeInsets.only(top: 100),
+      padding: EdgeInsets.only(top: 18.h),
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),

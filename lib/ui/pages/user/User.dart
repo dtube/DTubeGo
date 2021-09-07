@@ -1,3 +1,4 @@
+import 'package:sizer/sizer.dart';
 import 'dart:async';
 
 import 'package:decorated_icon/decorated_icon.dart';
@@ -25,7 +26,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../feeds/FeedList.dart';
+import '../feeds/lists/FeedList.dart';
 
 class UserPage extends StatefulWidget {
   String? username;
@@ -119,9 +120,6 @@ class _UserState extends State<UserPage> {
   }
 
   Widget buildUserPage(User user, bool ownUsername) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
-
     return Stack(
       children: [
         Padding(
@@ -137,7 +135,7 @@ class _UserState extends State<UserPage> {
                     feedType: 'UserFeed',
                     username: user.name,
                     showAuthor: false,
-                    bigThumbnail: false,
+                    largeFormat: false,
                     scrollCallback: (bool) {},
                   )),
               Padding(
@@ -146,82 +144,16 @@ class _UserState extends State<UserPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Padding(
-                    //   padding: const EdgeInsets.only(left: 16.0),
-                    //   child:
-                    // Container(
-                    //   width: deviceWidth * 0.5,
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       user.jsonString?.additionals?.displayName != null
-                    //           ? OverlayText(
-                    //               text: user
-                    //                   .jsonString!.additionals!.displayName!,
-                    //               maxLines: 2,
-                    //               overflow: TextOverflow.ellipsis,
-                    //               sizeMultiply: 1.4,
-                    //             )
-                    //           : SizedBox(
-                    //               height: 0,
-                    //             ),
-                    //       OverlayText(
-                    //         text: user.jsonString?.additionals?.displayName !=
-                    //                 null
-                    //             ? '(@' + user.name + ')'
-                    //             : user.name,
-                    //         maxLines: 2,
-                    //         overflow: TextOverflow.ellipsis,
-                    //         sizeMultiply:
-                    //             user.jsonString?.additionals?.displayName !=
-                    //                     null
-                    //                 ? 1
-                    //                 : 1.8,
-                    //       ),
-                    //       user.jsonString?.profile?.location != null
-                    //           ? OverlayText(
-                    //               text: user.jsonString!.profile!.location!,
-                    //               maxLines: 2,
-                    //               overflow: TextOverflow.ellipsis,
-                    //               sizeMultiply: 0.8,
-                    //               // style:
-                    //               //     Theme.of(context).textTheme.bodyText2,
-                    //             )
-                    //           : SizedBox(
-                    //               height: 0,
-                    //             ),
-                    //       user.jsonString?.profile?.about != null
-                    //           ? OverlayText(
-                    //               text: user.jsonString!.profile!.about!,
-                    //               maxLines: 2,
-                    //               overflow: TextOverflow.ellipsis,
-                    //               // style:
-                    //               //     Theme.of(context).textTheme.bodyText2,
-                    //             )
-                    //           : SizedBox(
-                    //               height: 0,
-                    //             ),
-                    //       user.jsonString?.profile?.website != null
-                    //           ? OpenableHyperlink(
-                    //               url: user.jsonString!.profile!.website!,
-                    //             )
-                    //           : SizedBox(
-                    //               height: 0,
-                    //             ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // SizedBox(width: 8),
                     Center(
                       child: AccountAvatarBase(
                         username: user.name,
-                        avatarSize: 90,
+                        avatarSize: 17.h,
                         showVerified: true,
                         showName: true,
                         showNameLeft: true,
                         showFullUserInfo: true,
                         nameFontSizeMultiply: 1.4,
-                        width: deviceWidth * 0.8,
+                        width: 80.w,
                       ),
                     ),
                   ],
@@ -311,7 +243,7 @@ class _UserState extends State<UserPage> {
                           GestureDetector(
                               child: DecoratedIcon(
                                 FontAwesomeIcons.cogs,
-                                size: 25,
+                                size: 5.w,
                                 shadows: [
                                   BoxShadow(
                                     blurRadius: 24.0,
@@ -329,7 +261,7 @@ class _UserState extends State<UserPage> {
                           GestureDetector(
                               child: DecoratedIcon(
                                 FontAwesomeIcons.history,
-                                size: 25,
+                                size: 5.w,
                                 shadows: [
                                   BoxShadow(
                                     blurRadius: 24.0,
@@ -353,7 +285,7 @@ class _UserState extends State<UserPage> {
                           GestureDetector(
                               child: DecoratedIcon(
                                 FontAwesomeIcons.signOutAlt,
-                                size: 25,
+                                size: 5.w,
                                 shadows: [
                                   BoxShadow(
                                     blurRadius: 24.0,

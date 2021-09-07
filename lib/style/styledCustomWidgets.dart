@@ -73,12 +73,13 @@ class OverlayText extends StatelessWidget {
       maxLines: maxLines != null ? maxLines! : 1,
       overflow: overflow != null ? overflow! : TextOverflow.ellipsis,
       style: TextStyle(
-        fontSize: 14.0 * (sizeMultiply != null ? sizeMultiply! : 1),
+        fontSize: Theme.of(context).textTheme.bodyText1!.fontSize! *
+            (sizeMultiply != null ? sizeMultiply! : 1),
         color: Colors.white,
         shadows: [
           Shadow(
             offset: Offset(1.0, 1.0),
-            blurRadius: 13.0,
+            blurRadius: 2,
             color: Colors.black,
           ),
         ],
@@ -107,8 +108,10 @@ class ShadowedIcon extends StatelessWidget {
       color: color,
       size: size,
       shadows: [
-        BoxShadow(
-          blurRadius: size,
+        Shadow(
+          //blurRadius: size / 3,
+          offset: Offset(1.0, 1.0),
+          blurRadius: 2,
           color: shadowColor,
         ),
       ],

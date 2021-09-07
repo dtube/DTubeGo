@@ -1,3 +1,7 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+
 import 'package:sizer/sizer.dart';
 
 import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
@@ -35,9 +39,9 @@ const MaterialColor kPrimaryColor = const MaterialColor(
 );
 
 void realMain() {
-  runApp(
-    Phoenix(child: MyApp()),
-  );
+  runApp(Phoenix(
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -62,6 +66,17 @@ class _MyAppState extends State<MyApp> {
                 TransactionBloc(repository: TransactionRepositoryImpl()),
             child: Sizer(builder: (context, orientation, deviceType) {
               return MaterialApp(
+                builder: (context, widget) => ResponsiveWrapper.builder(
+                    BouncingScrollWrapper.builder(context, widget!),
+                    maxWidth: 1200,
+                    minWidth: 480,
+                    defaultScale: true,
+                    breakpoints: [
+                      ResponsiveBreakpoint.resize(480, name: MOBILE),
+                      ResponsiveBreakpoint.autoScale(800, name: TABLET),
+                      ResponsiveBreakpoint.resize(1000, name: DESKTOP),
+                    ],
+                    background: Container(color: Color(0xFFF5F5F5))),
                 title: 'DTube',
                 debugShowCheckedModeBanner: false,
                 theme: dtubeDarkTheme,

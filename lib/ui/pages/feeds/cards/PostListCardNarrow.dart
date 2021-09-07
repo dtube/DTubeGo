@@ -1,3 +1,5 @@
+import 'package:sizer/sizer.dart';
+
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,8 +10,8 @@ import 'package:dtube_togo/utils/navigationShortcuts.dart';
 
 import 'package:flutter/material.dart';
 
-class PostListCardUserFeed extends StatefulWidget {
-  const PostListCardUserFeed(
+class PostListCardNarrow extends StatefulWidget {
+  const PostListCardNarrow(
       {Key? key,
       required this.blur,
       required this.thumbnailUrl,
@@ -35,10 +37,10 @@ class PostListCardUserFeed extends StatefulWidget {
   final int indexOfList;
 
   @override
-  _PostListCardUserFeedState createState() => _PostListCardUserFeedState();
+  _PostListCardNarrowState createState() => _PostListCardNarrowState();
 }
 
-class _PostListCardUserFeedState extends State<PostListCardUserFeed> {
+class _PostListCardNarrowState extends State<PostListCardNarrow> {
   @override
   void initState() {
     super.initState();
@@ -46,23 +48,21 @@ class _PostListCardUserFeedState extends State<PostListCardUserFeed> {
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
-
     return InkWell(
       onTap: () {
         navigateToPostDetailPage(
             context, widget.author, widget.link, "none", false);
       },
       child: Padding(
-        padding: EdgeInsets.only(top: widget.indexOfList == 0 ? 180 : 0),
+        padding: EdgeInsets.only(top: widget.indexOfList == 0 ? 12.h : 0),
+        //padding: EdgeInsets.zero,
         child: Card(
           color: globalBGColor,
           elevation: 0,
           child: Container(
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
-                height: 75,
+                height: 8.h,
                 child: AspectRatio(
                   aspectRatio: 8 / 5,
                   child: widget.blur
@@ -86,8 +86,8 @@ class _PostListCardUserFeedState extends State<PostListCardUserFeed> {
               ),
               SizedBox(width: 8),
               Container(
-                width: (deviceWidth - 50) / 3 * 2,
-                height: 75,
+                width: 60.w,
+                height: 8.h,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,8 +95,8 @@ class _PostListCardUserFeedState extends State<PostListCardUserFeed> {
                   children: [
                     Text(
                       widget.title,
-                      style: Theme.of(context).textTheme.headline5,
-                      maxLines: 2,
+                      style: Theme.of(context).textTheme.bodyText1,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Align(
@@ -111,11 +111,11 @@ class _PostListCardUserFeedState extends State<PostListCardUserFeed> {
                                     : widget.duration
                                         .toString()
                                         .substring(0, 7)),
-                            style: Theme.of(context).textTheme.caption,
+                            style: Theme.of(context).textTheme.bodyText2,
                           ),
                           Text(
                             '${widget.dtcValue}',
-                            style: Theme.of(context).textTheme.headline5,
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
                         ],
                       ),

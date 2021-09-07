@@ -1,3 +1,5 @@
+import 'package:sizer/sizer.dart';
+
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_togo/utils/navigationShortcuts.dart';
@@ -5,8 +7,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 
-import 'package:dtube_togo/ui/pages/feeds/PostListCardMainFeed.dart';
-import 'package:dtube_togo/ui/pages/feeds/PostListCardUserFeed.dart';
+import 'package:dtube_togo/ui/pages/feeds/cards/PostListCardLarge.dart';
+import 'package:dtube_togo/ui/pages/feeds/cards/PostListCardNarrow.dart';
 
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
@@ -88,8 +90,7 @@ class StaggeredFeed extends StatelessWidget {
   }
 
   Widget buildLoading(BuildContext context) {
-    return Center(
-        child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
+    return Center(child: DTubeLogoPulse(size: 30.w));
   }
 
   Widget buildErrorUi(String message) {
@@ -129,7 +130,7 @@ class StaggeredFeed extends StatelessWidget {
               ));
           }
         }),
-      padding: EdgeInsets.only(top: 120),
+      padding: EdgeInsets.only(top: 19.h),
       crossAxisCount: 4,
       itemCount: feed.length,
       itemBuilder: (BuildContext context, int index) => GestureDetector(
