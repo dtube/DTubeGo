@@ -1,4 +1,4 @@
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_togo/bloc/config/txTypes.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';

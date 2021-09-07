@@ -1,3 +1,5 @@
+import 'package:responsive_sizer/responsive_sizer.dart';
+
 import 'dart:async';
 
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
@@ -63,13 +65,33 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                 //mainAxisAlignment: MainAxisAlignment.end,
 
                 children: [
-                  OverlayText(
-                    text: shortDTC(state.dtcBalance) + "DTC",
-                    sizeMultiply: 0.7,
+                  Row(
+                    children: [
+                      DTubeLogo(size: 5.w),
+                      SizedBox(
+                        width: 1.w,
+                      ),
+                      OverlayText(
+                        text: shortDTC(state.dtcBalance),
+                        sizeMultiply: 1,
+                        bold: true,
+                      ),
+                    ],
                   ),
-                  OverlayText(
-                    text: shortVP(state.vtBalance['v']!) + "VP",
-                    sizeMultiply: 0.7,
+                  Row(
+                    children: [
+                      FaIcon(
+                        FontAwesomeIcons.bolt,
+                        size: 4.w,
+                      ),
+                      SizedBox(
+                        width: 1.w,
+                      ),
+                      OverlayText(
+                          text: shortVP(state.vtBalance['v']!),
+                          sizeMultiply: 1,
+                          bold: true),
+                    ],
                   ),
                 ]);
           } catch (e) {

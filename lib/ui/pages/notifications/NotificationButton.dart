@@ -1,4 +1,4 @@
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:decorated_icon/decorated_icon.dart';
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';

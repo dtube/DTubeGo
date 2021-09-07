@@ -1,4 +1,4 @@
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_togo/bloc/feed/feed_bloc.dart';
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
@@ -122,7 +122,8 @@ class _ExploreMainPageState extends State<ExploreMainPage>
               //padding: EdgeInsets.only(top: 5.h),
               child: OverlayText(
                 text: _tabNames[_selectedIndex],
-                sizeMultiply: 1.2,
+                sizeMultiply: 1.4,
+                bold: true,
               ),
             ),
           )

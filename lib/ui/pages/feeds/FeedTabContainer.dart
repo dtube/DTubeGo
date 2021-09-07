@@ -1,6 +1,6 @@
 import 'package:dtube_togo/ui/pages/feeds/FeedViewBase.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/bloc/rewards/rewards_bloc_full.dart';
 import 'package:dtube_togo/bloc/search/search_bloc_full.dart';
@@ -172,7 +172,8 @@ class _FeedMainPageState extends State<FeedMainPage>
               //padding: EdgeInsets.only(top: 5.h),
               child: OverlayText(
                 text: _tabNames[_selectedIndex],
-                sizeMultiply: 1,
+                sizeMultiply: 1.4,
+                bold: true,
               ),
             ),
           )

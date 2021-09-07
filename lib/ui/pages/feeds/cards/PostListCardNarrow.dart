@@ -1,4 +1,4 @@
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'dart:ui';
 
@@ -9,6 +9,8 @@ import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
 import 'package:dtube_togo/utils/navigationShortcuts.dart';
 
 import 'package:flutter/material.dart';
+
+typedef ListOfString2VoidFunc = void Function(List<String>);
 
 class PostListCardNarrow extends StatefulWidget {
   const PostListCardNarrow(
@@ -22,7 +24,11 @@ class PostListCardNarrow extends StatefulWidget {
       required this.publishDate,
       required this.duration,
       required this.dtcValue,
-      required this.indexOfList})
+      required this.indexOfList,
+      required this.width,
+      required this.height,
+      required this.enableNavigation,
+      this.itemSelectedCallback})
       : super(key: key);
 
   final bool blur;
@@ -35,6 +41,11 @@ class PostListCardNarrow extends StatefulWidget {
   final Duration duration;
   final String dtcValue;
   final int indexOfList;
+  final double width;
+  final double height;
+  final bool enableNavigation;
+  final ListOfString2VoidFunc?
+      itemSelectedCallback; // only used in landscape mode for now
 
   @override
   _PostListCardNarrowState createState() => _PostListCardNarrowState();
@@ -50,8 +61,14 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        navigateToPostDetailPage(
-            context, widget.author, widget.link, "none", false);
+        if (widget.enableNavigation) {
+          navigateToPostDetailPage(
+              context, widget.author, widget.link, "none", false);
+        } else {
+          if (widget.itemSelectedCallback != null) {
+            widget.itemSelectedCallback!([widget.author, widget.link]);
+          }
+        }
       },
       child: Padding(
         padding: EdgeInsets.only(top: widget.indexOfList == 0 ? 12.h : 0),
@@ -62,7 +79,7 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
           child: Container(
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
-                height: 8.h,
+                height: widget.height,
                 child: AspectRatio(
                   aspectRatio: 8 / 5,
                   child: widget.blur
@@ -86,8 +103,8 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
               ),
               SizedBox(width: 8),
               Container(
-                width: 60.w,
-                height: 8.h,
+                width: widget.width * 0.7,
+                height: widget.height,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,

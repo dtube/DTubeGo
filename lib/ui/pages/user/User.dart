@@ -1,4 +1,4 @@
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:async';
 
 import 'package:decorated_icon/decorated_icon.dart';
@@ -123,184 +123,163 @@ class _UserState extends State<UserPage> {
     return Stack(
       children: [
         Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-                child: Stack(children: [
-              SizedBox(height: 8),
-              BlocProvider<FeedBloc>(
-                  create: (context) =>
-                      FeedBloc(repository: FeedRepositoryImpl())
-                        ..add(FetchUserFeedEvent(username: user.name)),
-                  child: FeedList(
-                    feedType: 'UserFeed',
-                    username: user.name,
-                    showAuthor: false,
-                    largeFormat: false,
-                    scrollCallback: (bool) {},
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(top: 90),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: AccountAvatarBase(
-                        username: user.name,
-                        avatarSize: 17.h,
-                        showVerified: true,
-                        showName: true,
-                        showNameLeft: true,
-                        showFullUserInfo: true,
-                        nameFontSizeMultiply: 1.4,
-                        width: 80.w,
-                      ),
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+              child: Stack(children: [
+            //SizedBox(height: 8),
+            BlocProvider<FeedBloc>(
+                create: (context) => FeedBloc(repository: FeedRepositoryImpl())
+                  ..add(FetchUserFeedEvent(username: user.name)),
+                child: FeedList(
+                  feedType: 'UserFeed',
+                  username: user.name,
+                  showAuthor: false,
+                  largeFormat: false,
+                  heightPerEntry: 10.h,
+                  width: 80.w,
+                  scrollCallback: (bool) {},
+                  enableNavigation: true,
+                )),
+            Padding(
+              padding: EdgeInsets.only(top: 11.h),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: AccountAvatarBase(
+                      username: user.name,
+                      avatarSize: 17.h,
+                      showVerified: true,
+                      showName: true,
+                      showNameLeft: true,
+                      showFullUserInfo: true,
+                      nameFontSizeMultiply: 1.4,
+                      width: 95.w,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Positioned(
-                bottom: 90,
-                right: 8,
-                child: !ownUsername
-                    ? Column(
-                        children: [
-                          GestureDetector(
-                              child: DecoratedIcon(
-                                FontAwesomeIcons.history,
-                                size: 25,
-                                shadows: [
-                                  BoxShadow(
-                                    blurRadius: 24.0,
-                                    color: Colors.black,
-                                  ),
-                                ],
-                              ),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return BlocProvider<AccountHistoryBloc>(
-                                      create: (context) => AccountHistoryBloc(
-                                          repository:
-                                              AccountHistoryRepositoryImpl()),
-                                      child: AccountHistoryScreen(
-                                        username: user.name,
-                                      ));
-                                }));
-                              }),
-                          SizedBox(height: 24),
-                          GestureDetector(
-                              child: DecoratedIcon(
-                                FontAwesomeIcons.exchangeAlt,
-                                size: 25,
-                                shadows: [
-                                  BoxShadow(
-                                    blurRadius: 24.0,
-                                    color: Colors.black,
-                                  ),
-                                ],
-                              ),
-                              onTap: () {
-                                showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        TransferDialog(
-                                          receiver: widget.username,
-                                          txBloc:
-                                              BlocProvider.of<TransactionBloc>(
-                                                  context),
-                                        ));
-                              }),
-                          SizedBox(height: 24),
-                          GestureDetector(
-                            child: DecoratedIcon(
-                              user.alreadyFollowing
-                                  ? FontAwesomeIcons.usersSlash
-                                  : FontAwesomeIcons.userFriends,
-                              size: 25,
-                              shadows: [
-                                BoxShadow(
-                                  blurRadius: 24.0,
-                                  color: Colors.black,
-                                ),
-                              ],
+            ),
+            Positioned(
+              top: 11.h,
+              right: 3.w,
+              child: !ownUsername
+                  ? Column(
+                      children: [
+                        GestureDetector(
+                            child: ShadowedIcon(
+                              icon: FontAwesomeIcons.history,
+                              size: 7.w,
+                              color: Colors.white,
+                              shadowColor: Colors.black,
                             ),
-                            onTap: () async {
-                              TxData txdata = TxData(
-                                target: widget.username,
-                              );
-                              Transaction newTx = Transaction(
-                                  type: user.alreadyFollowing ? 8 : 7,
-                                  data: txdata);
-                              BlocProvider.of<TransactionBloc>(context)
-                                  .add(SignAndSendTransactionEvent(newTx));
-                            },
-                          ),
-                        ],
-                      )
-                    : Column(
-                        children: [
-                          GestureDetector(
-                              child: DecoratedIcon(
-                                FontAwesomeIcons.cogs,
-                                size: 5.w,
-                                shadows: [
-                                  BoxShadow(
-                                    blurRadius: 24.0,
-                                    color: Colors.black,
-                                  ),
-                                ],
-                              ),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return ProfileSettingsContainer();
-                                }));
-                              }),
-                          SizedBox(height: 24),
-                          GestureDetector(
-                              child: DecoratedIcon(
-                                FontAwesomeIcons.history,
-                                size: 5.w,
-                                shadows: [
-                                  BoxShadow(
-                                    blurRadius: 24.0,
-                                    color: Colors.black,
-                                  ),
-                                ],
-                              ),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return BlocProvider<AccountHistoryBloc>(
-                                      create: (context) => AccountHistoryBloc(
-                                          repository:
-                                              AccountHistoryRepositoryImpl()),
-                                      child: AccountHistoryScreen(
-                                        username: widget.username,
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return BlocProvider<AccountHistoryBloc>(
+                                    create: (context) => AccountHistoryBloc(
+                                        repository:
+                                            AccountHistoryRepositoryImpl()),
+                                    child: AccountHistoryScreen(
+                                      username: user.name,
+                                    ));
+                              }));
+                            }),
+                        SizedBox(height: 3.h),
+                        GestureDetector(
+                            child: ShadowedIcon(
+                              icon: FontAwesomeIcons.exchangeAlt,
+                              size: 7.w,
+                              color: Colors.white,
+                              shadowColor: Colors.black,
+                            ),
+                            onTap: () {
+                              showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      TransferDialog(
+                                        receiver: widget.username,
+                                        txBloc:
+                                            BlocProvider.of<TransactionBloc>(
+                                                context),
                                       ));
-                                }));
-                              }),
-                          SizedBox(height: 24),
-                          GestureDetector(
-                              child: DecoratedIcon(
-                                FontAwesomeIcons.signOutAlt,
-                                size: 5.w,
-                                shadows: [
-                                  BoxShadow(
-                                    blurRadius: 24.0,
-                                    color: Colors.black,
-                                  ),
-                                ],
-                              ),
-                              onTap: () {
-                                BlocProvider.of<AuthBloc>(context)
-                                    .add(SignOutEvent(context: context));
-                              }),
-                        ],
-                      ),
-              ),
-            ]))),
+                            }),
+                        SizedBox(height: 3.h),
+                        GestureDetector(
+                          child: ShadowedIcon(
+                            icon: user.alreadyFollowing
+                                ? FontAwesomeIcons.usersSlash
+                                : FontAwesomeIcons.userFriends,
+                            size: 7.w,
+                            color: Colors.white,
+                            shadowColor: Colors.black,
+                          ),
+                          onTap: () async {
+                            TxData txdata = TxData(
+                              target: widget.username,
+                            );
+                            Transaction newTx = Transaction(
+                                type: user.alreadyFollowing ? 8 : 7,
+                                data: txdata);
+                            BlocProvider.of<TransactionBloc>(context)
+                                .add(SignAndSendTransactionEvent(newTx));
+                          },
+                        ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        GestureDetector(
+                            child: ShadowedIcon(
+                              icon: FontAwesomeIcons.cogs,
+                              size: 7.w,
+                              color: Colors.white,
+                              shadowColor: Colors.black,
+                            ),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return ProfileSettingsContainer();
+                              }));
+                            }),
+                        SizedBox(height: 3.h),
+                        GestureDetector(
+                            child: ShadowedIcon(
+                              icon: FontAwesomeIcons.history,
+                              size: 7.w,
+                              color: Colors.white,
+                              shadowColor: Colors.black,
+                            ),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return BlocProvider<AccountHistoryBloc>(
+                                    create: (context) => AccountHistoryBloc(
+                                        repository:
+                                            AccountHistoryRepositoryImpl()),
+                                    child: AccountHistoryScreen(
+                                      username: widget.username,
+                                    ));
+                              }));
+                            }),
+                        SizedBox(height: 3.h),
+                        GestureDetector(
+                            child: ShadowedIcon(
+                              icon: FontAwesomeIcons.signOutAlt,
+                              size: 7.w,
+                              color: Colors.white,
+                              shadowColor: Colors.black,
+                            ),
+                            onTap: () {
+                              BlocProvider.of<AuthBloc>(context)
+                                  .add(SignOutEvent(context: context));
+                            }),
+                      ],
+                    ),
+            ),
+          ])),
+        ),
       ],
     );
   }

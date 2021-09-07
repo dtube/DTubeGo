@@ -1,4 +1,4 @@
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'dart:ui';
 
@@ -18,12 +18,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 typedef Bool2VoidFunc = void Function(bool);
+typedef ListOfString2VoidFunc = void Function(List<String>);
 
 class FeedList extends StatelessWidget {
   String feedType;
   String? username;
   bool largeFormat;
   bool showAuthor;
+  double? topPaddingForFirstEntry;
+  double? width;
+  double? heightPerEntry;
+  bool enableNavigation;
+  ListOfString2VoidFunc?
+      itemSelectedCallback; // only used in landscape mode for now
 
   Bool2VoidFunc scrollCallback;
   late YoutubePlayerController _youtubePlayerController;
@@ -34,6 +41,11 @@ class FeedList extends StatelessWidget {
     required this.largeFormat,
     required this.showAuthor,
     required this.scrollCallback,
+    this.topPaddingForFirstEntry,
+    this.width,
+    this.heightPerEntry,
+    required this.enableNavigation,
+    this.itemSelectedCallback,
     Key? key,
   }) : super(key: key);
 
@@ -60,6 +72,18 @@ class FeedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (topPaddingForFirstEntry == null) {
+      topPaddingForFirstEntry = 16.h;
+    }
+
+    if (width == null) {
+      width = 100.w;
+    }
+
+    if (heightPerEntry == null) {
+      heightPerEntry = 10.h;
+    }
+
     return FutureBuilder<bool>(
         future: getDisplayModes(),
         builder: (context, snapshot) {
@@ -67,7 +91,7 @@ class FeedList extends StatelessWidget {
             return buildLoading(context);
           } else {
             return Container(
-              height: 100.h,
+              height: 150.h,
               child: BlocBuilder<FeedBloc, FeedState>(
                 builder: (context, state) {
                   if (state is FeedInitialState ||
@@ -163,7 +187,8 @@ class FeedList extends StatelessWidget {
               (feed[pos].jsonString!.hide == 1 &&
                   feed[pos].author != _applicationUser)) {
             return Padding(
-              padding: EdgeInsets.only(top: pos == 0 ? 16.h : 8.0),
+              padding: EdgeInsets.only(
+                  top: pos == 0 ? topPaddingForFirstEntry! : 8.0),
               child: SizedBox(
                 height: 0,
               ),
@@ -172,8 +197,11 @@ class FeedList extends StatelessWidget {
             return BlocProvider<UserBloc>(
               create: (context) => UserBloc(repository: UserRepositoryImpl()),
               child: Padding(
-                padding: EdgeInsets.only(top: pos == 0 ? 16.h : 8.0),
+                padding: EdgeInsets.only(
+                    top: pos == 0 ? topPaddingForFirstEntry! : 8.0),
                 child: PostListCard(
+                  width: width!,
+                  heightPerEntry: heightPerEntry!,
                   largeFormat: largeFormat,
                   showAuthor: showAuthor,
                   blur: (_nsfwMode == 'Blur' &&
@@ -204,6 +232,8 @@ class FeedList extends StatelessWidget {
                   indexOfList: pos,
                   mainTag: feed[pos].jsonString!.tag,
                   oc: feed[pos].jsonString!.oc == 1 ? true : false,
+                  enableNavigation: enableNavigation,
+                  itemSelectedCallback: itemSelectedCallback,
                 ),
                 //Text(pos.toString())
               ),
@@ -240,30 +270,39 @@ class PostListCard extends StatelessWidget {
   final int indexOfList;
   final String mainTag;
   final bool oc;
+  final double width;
+  final double heightPerEntry;
+  final bool enableNavigation;
+  ListOfString2VoidFunc?
+      itemSelectedCallback; // only used in landscape mode for now
 
-  const PostListCard({
-    Key? key,
-    required this.showAuthor,
-    required this.largeFormat,
-    required this.blur,
-    required this.thumbnailUrl,
-    required this.title,
-    required this.description,
-    required this.author,
-    required this.link,
-    required this.publishDate,
-    required this.duration,
-    required this.dtcValue,
-    required this.videoUrl,
-    required this.videoSource,
-    required this.alreadyVoted,
-    required this.alreadyVotedDirection,
-    required this.upvotesCount,
-    required this.downvotesCount,
-    required this.indexOfList,
-    required this.mainTag,
-    required this.oc,
-  }) : super(key: key);
+  PostListCard(
+      {Key? key,
+      required this.showAuthor,
+      required this.largeFormat,
+      required this.blur,
+      required this.thumbnailUrl,
+      required this.title,
+      required this.description,
+      required this.author,
+      required this.link,
+      required this.publishDate,
+      required this.duration,
+      required this.dtcValue,
+      required this.videoUrl,
+      required this.videoSource,
+      required this.alreadyVoted,
+      required this.alreadyVotedDirection,
+      required this.upvotesCount,
+      required this.downvotesCount,
+      required this.indexOfList,
+      required this.mainTag,
+      required this.oc,
+      required this.width,
+      required this.heightPerEntry,
+      required this.enableNavigation,
+      this.itemSelectedCallback})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -293,6 +332,8 @@ class PostListCard extends StatelessWidget {
       );
     } else {
       return PostListCardNarrow(
+        width: width,
+        height: heightPerEntry,
         blur: blur,
         thumbnailUrl: thumbnailUrl,
         title: title,
@@ -303,6 +344,8 @@ class PostListCard extends StatelessWidget {
         duration: duration,
         dtcValue: dtcValue,
         indexOfList: indexOfList,
+        enableNavigation: enableNavigation,
+        itemSelectedCallback: itemSelectedCallback,
       );
     }
   }

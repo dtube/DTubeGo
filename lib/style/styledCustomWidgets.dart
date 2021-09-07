@@ -1,5 +1,6 @@
 import 'package:decorated_icon/decorated_icon.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -57,13 +58,15 @@ class OverlayText extends StatelessWidget {
       required this.text,
       this.sizeMultiply,
       this.maxLines,
-      this.overflow})
+      this.overflow,
+      this.bold})
       : super(key: key);
 
   final String text;
   double? sizeMultiply;
   int? maxLines;
   TextOverflow? overflow;
+  bool? bold;
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +78,9 @@ class OverlayText extends StatelessWidget {
       style: TextStyle(
         fontSize: Theme.of(context).textTheme.bodyText1!.fontSize! *
             (sizeMultiply != null ? sizeMultiply! : 1),
+        fontWeight: bold != null && bold == true
+            ? FontWeight.bold
+            : Theme.of(context).textTheme.bodyText1!.fontWeight,
         color: Colors.white,
         shadows: [
           Shadow(

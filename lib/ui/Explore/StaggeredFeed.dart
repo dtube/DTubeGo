@@ -1,4 +1,4 @@
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';

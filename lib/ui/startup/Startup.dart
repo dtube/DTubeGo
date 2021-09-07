@@ -1,4 +1,4 @@
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
@@ -35,7 +35,7 @@ class _StartUpState extends State<StartUp> {
   @override
   void initState() {
     super.initState();
-    print(SizerUtil.width);
+    print(Device.width);
     // sec.deleteAllSettings(); // flush ALL app settings including logindata, hivesigner and so on
   }
 

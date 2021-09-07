@@ -1,4 +1,4 @@
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:flutter/material.dart';
 
@@ -91,80 +91,80 @@ final ThemeData dtubeDarkTheme = ThemeData(
   textTheme: TextTheme(
       headline1: TextStyle(
         color: globalTextColor,
-        fontSize: 20.sp,
-        fontWeight: FontWeight.w700,
+        fontSize: 30.sp,
+        fontWeight: FontWeight.w900,
         fontStyle: FontStyle.normal,
       ),
       headline2: TextStyle(
         color: globalTextColor,
-        fontSize: 20.sp,
-        fontWeight: FontWeight.w500,
+        fontSize: 30.sp,
+        fontWeight: FontWeight.w700,
         fontStyle: FontStyle.normal,
       ),
       headline3: TextStyle(
         color: globalTextColor,
-        fontSize: 20.sp,
-        fontWeight: FontWeight.w400,
+        fontSize: 25.sp,
+        fontWeight: FontWeight.w900,
         fontStyle: FontStyle.normal,
       ),
       headline4: TextStyle(
         color: globalTextColor,
-        fontSize: 18.sp,
-        fontWeight: FontWeight.w400,
+        fontSize: 25.sp,
+        fontWeight: FontWeight.w700,
         fontStyle: FontStyle.normal,
       ),
       headline5: TextStyle(
         color: globalTextColor,
-        fontSize: 15.sp,
-        fontWeight: FontWeight.w400,
+        fontSize: 20.sp,
+        fontWeight: FontWeight.w700,
         fontStyle: FontStyle.normal,
       ),
       headline6: TextStyle(
         color: globalTextColor,
-        fontSize: 12.sp,
-        fontWeight: FontWeight.w400,
+        fontSize: 17.sp,
+        fontWeight: FontWeight.w700,
         fontStyle: FontStyle.normal,
       ),
       subtitle1: TextStyle(
         color: globalTextColor,
-        fontSize: 12.sp,
-        fontWeight: FontWeight.w400,
+        fontSize: 17.sp,
+        fontWeight: FontWeight.w200,
         fontStyle: FontStyle.normal,
       ),
       bodyText1: TextStyle(
         color: globalTextColor,
-        fontSize: 10.sp,
+        fontSize: 17.sp,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
       ),
       bodyText2: TextStyle(
         color: globalTextColor,
-        fontSize: 8.sp,
+        fontSize: 15.sp,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
       ),
       caption: TextStyle(
         color: globalTextColor,
-        fontSize: 6.sp,
+        fontSize: 15.sp,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
       ),
       button: TextStyle(
         color: globalTextColor,
-        fontSize: 10.sp,
+        fontSize: 17.sp,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
       ),
       subtitle2: TextStyle(
         color: globalTextColor,
-        fontSize: 10.sp,
+        fontSize: 14.sp,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
       ),
       overline: TextStyle(
         decoration: TextDecoration.underline,
         color: Colors.blue,
-        fontSize: 8.sp,
+        fontSize: 17.sp,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
       )),

@@ -29,100 +29,70 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-class PostDetailPage extends StatefulWidget {
+class PostDetailPageInlineView extends StatefulWidget {
   String link;
   String author;
   bool recentlyUploaded;
   String directFocus;
 
-  PostDetailPage(
+  PostDetailPageInlineView(
       {required this.link,
       required this.author,
       required this.recentlyUploaded,
       required this.directFocus});
 
   @override
-  _PostDetailPageState createState() => _PostDetailPageState();
+  _PostDetailPageInlineViewState createState() =>
+      _PostDetailPageInlineViewState();
 }
 
-class _PostDetailPageState extends State<PostDetailPage> {
+class _PostDetailPageInlineViewState extends State<PostDetailPageInlineView> {
   int reloadCount = 0;
-  Future<bool> _onWillPop() async {
-    if (widget.recentlyUploaded) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MultiBlocProvider(providers: [
-                    BlocProvider<UserBloc>(create: (context) {
-                      return UserBloc(repository: UserRepositoryImpl());
-                    }),
-                    BlocProvider<AuthBloc>(
-                      create: (BuildContext context) =>
-                          AuthBloc(repository: AuthRepositoryImpl()),
-                    ),
-                  ], child: NavigationContainer())),
-          (route) => false);
-    } else {
-      Navigator.pop(context);
-    }
-    return true;
-  }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-        providers: [
-          BlocProvider<PostBloc>(
+      providers: [
+        BlocProvider<PostBloc>(
+          create: (BuildContext context) =>
+              PostBloc(repository: PostRepositoryImpl())
+                ..add(FetchPostEvent(widget.author, widget.link)),
+        ),
+        BlocProvider<UserBloc>(
             create: (BuildContext context) =>
-                PostBloc(repository: PostRepositoryImpl())
-                  ..add(FetchPostEvent(widget.author, widget.link)),
-          ),
-          BlocProvider<UserBloc>(
-              create: (BuildContext context) =>
-                  UserBloc(repository: UserRepositoryImpl())),
-          BlocProvider<SettingsBloc>(
-            create: (BuildContext context) =>
-                SettingsBloc()..add(FetchSettingsEvent()),
-          ),
-        ],
-        // child: WillPopScope(
-        //     onWillPop: _onWillPop,
-        child: Scaffold(
-          // resizeToAvoidBottomInset: true,
-          extendBodyBehindAppBar: true,
-          // backgroundColor: Colors.transparent,
-          appBar: MediaQuery.of(context).orientation == Orientation.landscape
-              ? null
-              : AppBar(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  toolbarHeight: 28,
-                ),
-          body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
-            if (state is PostLoadingState) {
-              return Center(
-                  child: DTubeLogoPulse(
-                      size: MediaQuery.of(context).size.width / 3));
-            } else if (state is PostLoadedState) {
-              reloadCount++;
-              return
-                  // Padding(
-                  //   padding: const EdgeInsets.only(top: 100),
-                  //   child:
-                  PostDetails(
-                post: state.post,
-                directFocus: reloadCount <= 1 ? widget.directFocus : "none",
-                //),
-              );
-            } else {
-              return Center(
-                  child: DTubeLogoPulse(
-                      size: MediaQuery.of(context).size.width / 3));
-            }
-          }),
-        )
-        //)
-        );
+                UserBloc(repository: UserRepositoryImpl())),
+        BlocProvider<SettingsBloc>(
+          create: (BuildContext context) =>
+              SettingsBloc()..add(FetchSettingsEvent()),
+        ),
+      ],
+      // child: WillPopScope(
+      //     onWillPop: _onWillPop,
+      child: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+        if (state is PostLoadingState) {
+          return Center(
+              child:
+                  DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
+        } else if (state is PostLoadedState) {
+          reloadCount++;
+          return
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 100),
+              //   child:
+              PostDetails(
+            post: state.post,
+            directFocus: reloadCount <= 1 ? widget.directFocus : "none",
+            //),
+          );
+        } else {
+          return Center(
+              child:
+                  DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
+        }
+      }),
+
+      //)
+    );
   }
 }
 

@@ -2,7 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
         return BlocProvider<TransactionBloc>(
             create: (context) =>
                 TransactionBloc(repository: TransactionRepositoryImpl()),
-            child: Sizer(builder: (context, orientation, deviceType) {
+            child: ResponsiveSizer(builder: (context, orientation, deviceType) {
               return MaterialApp(
                 builder: (context, widget) => ResponsiveWrapper.builder(
                     BouncingScrollWrapper.builder(context, widget!),

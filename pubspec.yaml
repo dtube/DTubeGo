@@ -90,7 +90,7 @@ dependencies:
 
 # unsorted
   device_preview: ^0.7.4
-  sizer: ^2.0.13
+  responsive_sizer: ^3.0.4+4
   responsive_framework: ^0.1.4
   flutter_bloc: ^7.1.0
   equatable: ^2.0.3

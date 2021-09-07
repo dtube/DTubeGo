@@ -1,4 +1,4 @@
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -124,7 +124,7 @@ class _AccountAvatarState extends State<AccountAvatar> {
                                   )
                                 : ShowName(
                                     userData: state.user,
-                                    sizeMultiply: 1,
+                                    sizeMultiply: widget.nameFontSizeMultiply,
                                     width: widget.width,
                                   ),
                             SizedBox(width: 8)
@@ -193,7 +193,7 @@ class _AccountAvatarState extends State<AccountAvatar> {
                                   )
                                 : ShowName(
                                     userData: state.user,
-                                    sizeMultiply: 0.8,
+                                    sizeMultiply: widget.nameFontSizeMultiply,
                                     width: widget.width - widget.avatarSize,
                                   ),
                           ],

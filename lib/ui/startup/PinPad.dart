@@ -1,7 +1,11 @@
+import 'package:dtube_togo/utils/ResponsiveLayout.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
+import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/MainContainer/NavigationContainer.dart';
 import 'package:dtube_togo/ui/widgets/PinPadWidget.dart';
 import 'package:dtube_togo/utils/secureStorage.dart';
@@ -110,30 +114,63 @@ class _PinPadState extends State<PinPad> {
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: globalBlue,
-        body: Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.all(30.0),
+        body: ResponsiveLayout(
+          portrait: Align(
+              alignment: Alignment.center,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  DTubeLogo(size: 50.w),
+                  SizedBox(height: 10.h),
+                  Container(
+                    width: 60.w,
+                    child: PinPadWidget(
+                      pinPutController: _pinPutController,
+                      requestFocus: true,
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("please enter your pin",
-                        style: Theme.of(context).textTheme.headline3),
-                  ),
-                  PinPadWidget(
-                    pinPutController: _pinPutController,
-                    requestFocus: true,
+                    child: Text("enter your pin",
+                        style: Theme.of(context).textTheme.headline5),
                   ),
                 ],
+              )),
+          landscape: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              DTubeLogo(size: 20.w),
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: Text("please enter your pin",
+              //       style: Theme.of(context).textTheme.headline5),
+              // ),
+              Container(
+                width: 60.w,
+                height: 20.w,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 40.w,
+                      child: PinPadWidget(
+                        pinPutController: _pinPutController,
+                        requestFocus: true,
+                      ),
+                    ),
+                    SizedBox(height: 5.h),
+                    Text("enter your pin",
+                        style: Theme.of(context).textTheme.headline5),
+                  ],
+                ),
               ),
-            )));
+            ],
+          ),
+        ));
   }
 }
