@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
-//import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
+// import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
 class YTPlayerIFrame extends StatefulWidget {
   const YTPlayerIFrame(
@@ -57,7 +57,7 @@ class _YTPlayerIFrameState extends State<YTPlayerIFrame> {
 
   @override
   void dispose() {
-    _controller.close();
+    // _controller.close();
     _controller.pause();
     super.dispose();
   }

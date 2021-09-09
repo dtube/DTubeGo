@@ -80,8 +80,8 @@ class _BPState extends State<BP> {
   @override
   void dispose() {
     super.dispose();
-    _videocontroller.dispose();
-    _betterPlayerController.dispose();
+    // _videocontroller.dispose();
+    // _betterPlayerController.dispose();
     _betterPlayerController.pause();
   }
 

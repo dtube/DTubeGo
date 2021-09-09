@@ -15,14 +15,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-Widget buildMainMenuSpeedDial(BuildContext context) {
+Widget buildMainMenuSpeedDial(BuildContext context, double iconSize) {
   List<SpeedDialChild> mainMenuButtonOptions = [
     SpeedDialChild(
         child: ShadowedIcon(
             icon: FontAwesomeIcons.wallet,
             color: Colors.white,
             shadowColor: Colors.black,
-            size: 5.w),
+            size: iconSize),
         foregroundColor: Colors.white,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -42,7 +42,7 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
             icon: FontAwesomeIcons.question,
             color: Colors.white,
             shadowColor: Colors.black,
-            size: 5.w),
+            size: iconSize),
         foregroundColor: Colors.white,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -63,7 +63,7 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
             icon: FontAwesomeIcons.cog,
             color: Colors.white,
             shadowColor: Colors.black,
-            size: 5.w),
+            size: iconSize),
         foregroundColor: Colors.white,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -85,9 +85,9 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
           icon: FontAwesomeIcons.bars,
           color: Colors.white,
           shadowColor: Colors.black,
-          size: 5.w),
+          size: iconSize),
       activeIcon: FontAwesomeIcons.chevronLeft,
-      buttonSize: 15.w,
+      buttonSize: iconSize * 3,
       direction: SpeedDialDirection.Down,
       visible: true,
       closeManually: false,

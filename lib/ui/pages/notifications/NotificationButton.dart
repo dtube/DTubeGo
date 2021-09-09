@@ -9,7 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NotificationButton extends StatefulWidget {
-  const NotificationButton({
+  double iconSize;
+  NotificationButton({
+    required this.iconSize,
     Key? key,
   }) : super(key: key);
 
@@ -43,31 +45,32 @@ class _NotificationButtonState extends State<NotificationButton> {
           child: BlocBuilder<NotificationBloc, NotificationState>(
               builder: (context, state) {
             if (state is NotificationInitialState) {
-              return buildNotificationIcon(false);
+              return buildNotificationIcon(false, widget.iconSize);
             } else if (state is NotificationLoadingState) {
-              return buildNotificationIcon(false);
+              return buildNotificationIcon(false, widget.iconSize);
             } else if (state is NotificationLoadedState) {
               if (state.notifications.isNotEmpty) {
-                return buildNotificationIcon(state.notifications.first.ts >
-                    state.tsLastNotificationSeen);
+                return buildNotificationIcon(
+                    state.notifications.first.ts > state.tsLastNotificationSeen,
+                    widget.iconSize);
               } else {
-                return buildNotificationIcon(false);
+                return buildNotificationIcon(false, widget.iconSize);
               }
             } else if (state is NotificationErrorState) {
-              return buildNotificationIcon(false);
+              return buildNotificationIcon(false, widget.iconSize);
             } else {
-              return buildNotificationIcon(false);
+              return buildNotificationIcon(false, widget.iconSize);
             }
           }),
         ));
   }
 
-  Widget buildNotificationIcon(bool newNotifications) {
+  Widget buildNotificationIcon(bool newNotifications, double iconSize) {
     return ShadowedIcon(
       icon: FontAwesomeIcons.bell,
       color: newNotifications ? Colors.red : Colors.white,
       shadowColor: Colors.black,
-      size: 5.w,
+      size: iconSize,
     );
   }
 }

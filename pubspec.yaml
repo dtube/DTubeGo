@@ -42,7 +42,7 @@ dependencies:
   #youtube_explode_dart: ^1.9.6 #loading youtube metadata
   youtube_explode_dart: ^1.10.4 #loading youtube metadata
   better_player: ^0.0.73 # player for ipfs/sia/local files
-  # youtube_plyr_iframe: ^2.0.6 # custom player for youtube
+  # youtube_plyr_iframe: ^2.0.7 # custom player for youtube
   youtube_player_iframe: ^2.2.2
 
   # UI - markdown related

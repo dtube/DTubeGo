@@ -4,6 +4,7 @@ import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
 import 'package:dtube_togo/utils/ResponsiveLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 typedef Bool2VoidFunc = void Function(bool);
 typedef ListOfString2VoidFunc = void Function(List<String>);
@@ -107,22 +108,36 @@ class PostView extends StatefulWidget {
 }
 
 class _PostViewState extends State<PostView> {
+  late YoutubePlayerController _controller;
+
+  @override
+  void initState() {
+    _controller = YoutubePlayerController(
+      initialVideoId: "jlTUhhHSX00",
+      params: YoutubePlayerParams(
+          showControls: true,
+          showFullscreenButton: false,
+          desktopMode: true,
+          privacyEnhanced: true,
+          useHybridComposition: true,
+          autoPlay: false),
+    );
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return widget.postAuthor != null
+    return widget.postAuthor != null && widget.postAuthor != ""
         ? Container(
             width: 60.w,
-            height: 100.h,
-            child: Column(
-              children: [
-                Text(widget.postAuthor!),
-                PostDetailPageInlineView(
-                  author: widget.postAuthor!,
-                  link: widget.postLink!,
-                  directFocus: "none",
-                  recentlyUploaded: false,
-                ),
-              ],
+            height: 300.h,
+            child: PostDetailPageInlineView(
+              author: widget.postAuthor!,
+              link: widget.postLink!,
+              directFocus: "none",
+              recentlyUploaded: false,
+              yTController: _controller,
             ),
           )
         : Container(

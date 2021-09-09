@@ -120,6 +120,11 @@ class _UserState extends State<UserPage> {
   }
 
   Widget buildUserPage(User user, bool ownUsername) {
+    double iconSize = 5.w;
+    if (Device.orientation == Orientation.landscape) {
+      iconSize = 5.h;
+    }
+
     return Stack(
       children: [
         Padding(
@@ -137,6 +142,8 @@ class _UserState extends State<UserPage> {
                   largeFormat: false,
                   heightPerEntry: 10.h,
                   width: 80.w,
+                  topPaddingForFirstEntry:
+                      Device.orientation == Orientation.landscape ? 25.h : null,
                   scrollCallback: (bool) {},
                   enableNavigation: true,
                 )),
@@ -162,7 +169,7 @@ class _UserState extends State<UserPage> {
               ),
             ),
             Positioned(
-              top: 11.h,
+              top: 45.h,
               right: 3.w,
               child: !ownUsername
                   ? Column(
@@ -170,7 +177,7 @@ class _UserState extends State<UserPage> {
                         GestureDetector(
                             child: ShadowedIcon(
                               icon: FontAwesomeIcons.history,
-                              size: 7.w,
+                              size: iconSize,
                               color: Colors.white,
                               shadowColor: Colors.black,
                             ),
@@ -186,11 +193,11 @@ class _UserState extends State<UserPage> {
                                     ));
                               }));
                             }),
-                        SizedBox(height: 3.h),
+                        SizedBox(height: iconSize / 2),
                         GestureDetector(
                             child: ShadowedIcon(
                               icon: FontAwesomeIcons.exchangeAlt,
-                              size: 7.w,
+                              size: iconSize,
                               color: Colors.white,
                               shadowColor: Colors.black,
                             ),
@@ -205,13 +212,13 @@ class _UserState extends State<UserPage> {
                                                 context),
                                       ));
                             }),
-                        SizedBox(height: 3.h),
+                        SizedBox(height: iconSize / 2),
                         GestureDetector(
                           child: ShadowedIcon(
                             icon: user.alreadyFollowing
                                 ? FontAwesomeIcons.usersSlash
                                 : FontAwesomeIcons.userFriends,
-                            size: 7.w,
+                            size: iconSize,
                             color: Colors.white,
                             shadowColor: Colors.black,
                           ),
@@ -233,7 +240,7 @@ class _UserState extends State<UserPage> {
                         GestureDetector(
                             child: ShadowedIcon(
                               icon: FontAwesomeIcons.cogs,
-                              size: 7.w,
+                              size: iconSize,
                               color: Colors.white,
                               shadowColor: Colors.black,
                             ),
@@ -247,7 +254,7 @@ class _UserState extends State<UserPage> {
                         GestureDetector(
                             child: ShadowedIcon(
                               icon: FontAwesomeIcons.history,
-                              size: 7.w,
+                              size: iconSize,
                               color: Colors.white,
                               shadowColor: Colors.black,
                             ),
@@ -263,11 +270,11 @@ class _UserState extends State<UserPage> {
                                     ));
                               }));
                             }),
-                        SizedBox(height: 3.h),
+                        SizedBox(height: iconSize / 2),
                         GestureDetector(
                             child: ShadowedIcon(
                               icon: FontAwesomeIcons.signOutAlt,
-                              size: 7.w,
+                              size: iconSize,
                               color: Colors.white,
                               shadowColor: Colors.black,
                             ),

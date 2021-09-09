@@ -1,4 +1,5 @@
 import 'package:dtube_togo/ui/pages/feeds/FeedViewBase.dart';
+import 'package:dtube_togo/utils/ResponsiveLayout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
@@ -86,6 +87,10 @@ class _FeedMainPageState extends State<FeedMainPage>
 
   @override
   Widget build(BuildContext context) {
+    double _iconSize = 5.w;
+    if (Device.orientation == Orientation.landscape) {
+      _iconSize = 5.h;
+    }
     return Scaffold(
       //appBar: dtubeSubAppBar(true, "", context, null),
       resizeToAvoidBottomInset: true,
@@ -116,53 +121,20 @@ class _FeedMainPageState extends State<FeedMainPage>
             ],
             controller: _tabController,
           ),
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(
+          ResponsiveLayout(
+            portrait: TabBarWithPosition(
+              tabIcons: _tabIcons,
+              iconSize: _iconSize,
+              tabController: _tabController,
+              alignment: Alignment.topRight,
               padding: EdgeInsets.only(top: 11.h, right: 4.w),
-              //padding: EdgeInsets.only(top: 5.h),
-              child: Container(
-                width: 35.w,
-                //color: Colors.black.withAlpha(20),
-                child: TabBar(
-                  unselectedLabelColor: Colors.white,
-                  labelColor: Colors.white,
-                  indicatorColor: Colors.white,
-                  tabs: [
-                    Tab(
-                      child: ShadowedIcon(
-                          icon: _tabIcons[0],
-                          color: Colors.white,
-                          shadowColor: Colors.black,
-                          size: 5.w),
-                    ),
-                    Tab(
-                      child: ShadowedIcon(
-                          icon: _tabIcons[1],
-                          color: Colors.white,
-                          shadowColor: Colors.black,
-                          size: 5.w),
-                    ),
-                    Tab(
-                      child: ShadowedIcon(
-                          icon: _tabIcons[2],
-                          color: Colors.white,
-                          shadowColor: Colors.black,
-                          size: 5.w),
-                    ),
-                    Tab(
-                      child: ShadowedIcon(
-                          icon: _tabIcons[3],
-                          color: Colors.white,
-                          shadowColor: Colors.black,
-                          size: 5.w),
-                    ),
-                  ],
-                  controller: _tabController,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  labelPadding: EdgeInsets.zero,
-                ),
-              ),
+            ),
+            landscape: TabBarWithPosition(
+              tabIcons: _tabIcons,
+              iconSize: _iconSize,
+              tabController: _tabController,
+              alignment: Alignment.topCenter,
+              padding: EdgeInsets.only(top: 4.h),
             ),
           ),
           Align(
@@ -178,6 +150,80 @@ class _FeedMainPageState extends State<FeedMainPage>
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class TabBarWithPosition extends StatelessWidget {
+  const TabBarWithPosition(
+      {Key? key,
+      required this.tabIcons,
+      required this.iconSize,
+      required this.tabController,
+      required this.alignment,
+      required this.padding})
+      : super(key: key);
+
+  final List<IconData> tabIcons;
+  final double iconSize;
+  final TabController tabController;
+  final Alignment alignment;
+  final EdgeInsets padding;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      // alignment: Device.orientation == Orientation.landscape
+      //     ? Alignment.topCenter
+      //     : Alignment.topRight,
+      alignment: alignment,
+      child: Padding(
+        padding: padding,
+        //padding: EdgeInsets.only(top: 11.h, right: 4.w),
+        //padding: EdgeInsets.only(top: 5.h),
+        child: Container(
+          width: 35.w,
+          //color: Colors.black.withAlpha(20),
+          child: TabBar(
+            unselectedLabelColor: Colors.white,
+            labelColor: Colors.white,
+            indicatorColor: Colors.white,
+            tabs: [
+              Tab(
+                child: ShadowedIcon(
+                    icon: tabIcons[0],
+                    color: Colors.white,
+                    shadowColor: Colors.black,
+                    size: iconSize),
+              ),
+              Tab(
+                child: ShadowedIcon(
+                    icon: tabIcons[1],
+                    color: Colors.white,
+                    shadowColor: Colors.black,
+                    size: iconSize),
+              ),
+              Tab(
+                child: ShadowedIcon(
+                    icon: tabIcons[2],
+                    color: Colors.white,
+                    shadowColor: Colors.black,
+                    size: iconSize),
+              ),
+              Tab(
+                child: ShadowedIcon(
+                    icon: tabIcons[3],
+                    color: Colors.white,
+                    shadowColor: Colors.black,
+                    size: iconSize),
+              ),
+            ],
+            controller: tabController,
+            indicatorSize: TabBarIndicatorSize.tab,
+            labelPadding: EdgeInsets.zero,
+          ),
+        ),
       ),
     );
   }

@@ -55,9 +55,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
   PersistentTabController mainTabController =
       PersistentTabController(initialIndex: 0);
 
-  double iconSize = 5.w;
-
-  List<PersistentBottomNavBarItem> _navBarsItems() {
+  List<PersistentBottomNavBarItem> _navBarsItems(double iconSize) {
     return [
       PersistentBottomNavBarItem(
         opacity: 0.0,
@@ -148,6 +146,11 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
   @override
   Widget build(BuildContext context) {
+    double iconSize = 5.w;
+    if (Device.orientation == Orientation.landscape) {
+      iconSize = 5.h;
+    }
+
     List<Widget> screens = [
       FeedMainPage(),
       ExploreMainPage(),
@@ -182,11 +185,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
         automaticallyImplyLeading: false,
         elevation: 0,
         titleSpacing: 0,
-        title:
-            // Padding(
-            //   padding: EdgeInsets.fromLTRB(3.w, 3.w, 3.w, 3.w),
-            //   child:
-            Align(
+        title: Align(
           alignment: Alignment.topRight,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -199,9 +198,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
               BlocProvider<NotificationBloc>(
                 create: (context) =>
                     NotificationBloc(repository: NotificationRepositoryImpl()),
-                child: NotificationButton(),
+                child: NotificationButton(iconSize: iconSize),
               ),
-              buildMainMenuSpeedDial(context)
+              buildMainMenuSpeedDial(context, iconSize)
             ],
           ),
         ),
@@ -222,7 +221,8 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
           controller: mainTabController,
           screens: screens,
-          items: _navBarsItems(),
+
+          items: _navBarsItems(iconSize),
           bottomScreenMargin: 0.0,
           // hideNavigationBar:
           //     val, // autohide would be cool - but still buggy https://github.com/BilalShahid13/PersistentBottomNavBar/issues/188
@@ -239,14 +239,16 @@ class _NavigationContainerState extends State<NavigationContainer> {
           ),
 
           popAllScreensOnTapOfSelectedTab: true,
+
           popActionScreens: PopActionScreensType.all,
           itemAnimationProperties: ItemAnimationProperties(
-            // Navigation Bar's items animation properties.
+            // Navigation Bar's items animation properties.12345
             duration: Duration(milliseconds: 200),
             curve: Curves.ease,
           ),
 
           navBarStyle: NavBarStyle.style15,
+
           onItemSelected: (index) {
             if (index == 2) {
               setState(() {

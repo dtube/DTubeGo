@@ -52,6 +52,10 @@ class _BalanceOverviewState extends State<BalanceOverview> {
 
   @override
   Widget build(BuildContext context) {
+    double _iconSize = 5.w;
+    if (Device.orientation == Orientation.landscape) {
+      _iconSize = 5.h;
+    }
     return BlocBuilder<UserBloc, UserState>(
       bloc: _userBloc,
       builder: (context, state) {
@@ -67,7 +71,7 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                 children: [
                   Row(
                     children: [
-                      DTubeLogo(size: 5.w),
+                      DTubeLogo(size: _iconSize),
                       SizedBox(
                         width: 1.w,
                       ),
@@ -82,7 +86,7 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                     children: [
                       FaIcon(
                         FontAwesomeIcons.bolt,
-                        size: 4.w,
+                        size: _iconSize,
                       ),
                       SizedBox(
                         width: 1.w,
