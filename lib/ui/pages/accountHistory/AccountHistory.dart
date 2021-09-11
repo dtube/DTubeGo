@@ -1,17 +1,10 @@
 import 'package:dtube_togo/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_togo/bloc/config/txTypes.dart';
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
-import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/utils/navigationShortCuts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:intl/intl.dart';
-import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

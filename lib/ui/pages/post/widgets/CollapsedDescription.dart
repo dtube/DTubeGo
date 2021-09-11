@@ -1,7 +1,3 @@
-// TODO: truncate description if too long - issue here is markdown since it's not calculateable before rendering
-// perhaps this can help: https://stackoverflow.com/questions/63019636/flutter-markdown-show-more-button
-
-import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
