@@ -89,6 +89,9 @@ dependencies:
   
 
 # unsorted
+  overlay_dialog: ^0.2.1
+  native_device_orientation: ^1.0.0
+  auto_orientation: ^2.1.0
   device_preview: ^0.7.4
   responsive_sizer: ^3.0.4+4
   responsive_framework: ^0.1.4

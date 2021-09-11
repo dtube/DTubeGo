@@ -154,8 +154,7 @@ class FeedItem {
         } else if (jsonString?.files?.ipfs?.img?.s118 != null) {
           thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s118!;
         } else {
-          thumbUrl =
-              'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Flag_of_None.svg/800px-Flag_of_None.svg.png';
+          thumbUrl = '';
         }
       }
     }

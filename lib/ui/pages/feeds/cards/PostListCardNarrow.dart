@@ -28,10 +28,12 @@ class PostListCardNarrow extends StatefulWidget {
       required this.width,
       required this.height,
       required this.enableNavigation,
-      this.itemSelectedCallback})
+      this.itemSelectedCallback,
+      required this.userPage})
       : super(key: key);
 
   final bool blur;
+  final bool userPage;
   final String thumbnailUrl;
   final String title;
   final String description;
@@ -70,78 +72,83 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
           }
         }
       },
-      child: Padding(
-        padding: EdgeInsets.only(top: widget.indexOfList == 0 ? 12.h : 0),
-        //padding: EdgeInsets.zero,
-        child: Card(
-          color: globalBGColor,
-          elevation: 0,
-          child: Container(
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Container(
-                height: widget.height,
-                child: AspectRatio(
-                  aspectRatio: 8 / 5,
-                  child: widget.blur
-                      ? ClipRect(
-                          child: ImageFiltered(
-                            imageFilter: ImageFilter.blur(
-                              sigmaY: 5,
-                              sigmaX: 5,
-                            ),
-                            child: CachedNetworkImage(
-                              imageUrl: widget.thumbnailUrl,
-                            ),
+      child: Card(
+        color: globalBGColor,
+        elevation: 0,
+        child: Container(
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Container(
+              height: widget.height,
+              // width: widget.width * 0.3,
+              child: AspectRatio(
+                aspectRatio: 8 / 5,
+                child: widget.blur
+                    ? ClipRect(
+                        child: ImageFiltered(
+                          imageFilter: ImageFilter.blur(
+                            sigmaY: 5,
+                            sigmaX: 5,
                           ),
-                        )
-                      : CachedNetworkImage(
-                          imageUrl: widget.thumbnailUrl,
-                          fit: BoxFit.fitWidth,
+                          child: CachedNetworkImage(
+                            imageUrl: widget.thumbnailUrl,
+                          ),
                         ),
-                ),
-                // ),
-              ),
-              SizedBox(width: 8),
-              Container(
-                width: widget.width * 0.7,
-                height: widget.height,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Text(
-                      widget.title,
-                      style: Theme.of(context).textTheme.bodyText1,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '${widget.publishDate} - ' +
-                                (widget.duration.inHours == 0
-                                    ? widget.duration.toString().substring(2, 7)
-                                    : widget.duration
-                                        .toString()
-                                        .substring(0, 7)),
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                          Text(
-                            '${widget.dtcValue}',
-                            style: Theme.of(context).textTheme.bodyText1,
-                          ),
-                        ],
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: widget.thumbnailUrl,
+                        fit: BoxFit.fitWidth,
                       ),
-                    ),
-                  ],
-                ),
               ),
-            ]),
-          ),
+              // ),
+            ),
+            SizedBox(width: 4),
+            Container(
+              width: widget.width * 0.6,
+              height: widget.height,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    widget.title,
+                    style: widget.userPage
+                        ? Theme.of(context).textTheme.bodyText1
+                        : Theme.of(context).textTheme.bodyText2,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  !widget.userPage
+                      ? Text(
+                          widget.author,
+                          style: Theme.of(context).textTheme.bodyText2,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      : SizedBox(height: 0),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${widget.publishDate} - ' +
+                              (widget.duration.inHours == 0
+                                  ? widget.duration.toString().substring(2, 7)
+                                  : widget.duration.toString().substring(0, 7)),
+                          style: Theme.of(context).textTheme.bodyText2,
+                        ),
+                        Text(
+                          '${widget.dtcValue}',
+                          style: Theme.of(context).textTheme.bodyText2,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ]),
         ),
       ),
     );

@@ -1,3 +1,6 @@
+import 'package:dtube_togo/style/styledCustomWidgets.dart';
+import 'package:dtube_togo/ui/pages/feeds/PostDetailPageInlineView.dart';
+import 'package:dtube_togo/ui/pages/feeds/widgets/FullScreenButton.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
@@ -159,29 +162,30 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
               Visibility(
                 visible: !_thumbnailTapped,
                 child: AspectRatio(
-                  aspectRatio: 8 / 5,
-                  child: widget.thumbnailUrl != ''
-                      ? widget.blur
-                          ? ClipRect(
-                              child: ImageFiltered(
-                                imageFilter: ImageFilter.blur(
-                                  sigmaY: 5,
-                                  sigmaX: 5,
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl: widget.thumbnailUrl,
+                    aspectRatio: 8 / 5,
+                    child: widget.blur
+                        ? ClipRect(
+                            child: ImageFiltered(
+                              imageFilter: ImageFilter.blur(
+                                sigmaY: 5,
+                                sigmaX: 5,
+                              ),
+                              child: CachedNetworkImage(
+                                fit: BoxFit.fitWidth,
+                                imageUrl: widget.thumbnailUrl,
+                                errorWidget: (context, url, error) => DTubeLogo(
+                                  size: 50,
                                 ),
                               ),
-                            )
-                          : CachedNetworkImage(
-                              imageUrl: widget.thumbnailUrl,
-                              fit: BoxFit.fitWidth,
-                            )
-                      : Image.asset(
-                          'assets/images/Image_of_none.svg.png',
-                          fit: BoxFit.fitWidth,
-                        ),
-                ),
+                            ),
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: widget.thumbnailUrl,
+                            fit: BoxFit.fitWidth,
+                            errorWidget: (context, url, error) => DTubeLogo(
+                              size: 50,
+                            ),
+                          )),
               ),
               Center(
                 child: Visibility(
@@ -203,6 +207,14 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                               autoplay: true,
                               allowFullscreen: false)
                           : Text("no player detected"),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: FullScreenButton(
+                  videoUrl: widget.videoUrl,
+                  videoSource: widget.videoSource,
+                  iconSize: 22,
                 ),
               ),
             ],

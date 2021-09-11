@@ -57,7 +57,7 @@ class _YTPlayerIFrameState extends State<YTPlayerIFrame> {
 
   @override
   void dispose() {
-    // _controller.close();
+    _controller.close();
     _controller.pause();
     super.dispose();
   }

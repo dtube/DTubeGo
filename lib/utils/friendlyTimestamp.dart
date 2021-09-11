@@ -17,6 +17,13 @@ class TimeAgo {
     return Jiffy(DateTime.fromMillisecondsSinceEpoch(ts)).fromNow();
   }
 
+  static String timeInAgoTSShort(int ts) {
+    // return Jiffy(DateTime.fromMillisecondsSinceEpoch(ts)).fromNow();
+    return Jiffy(DateTime.fromMillisecondsSinceEpoch(ts))
+        .fromNow()
+        .replaceAll("minute", "min");
+  }
+
   static String timeInAgoDate(DateTime date) {
     return Jiffy(date).fromNow();
   }

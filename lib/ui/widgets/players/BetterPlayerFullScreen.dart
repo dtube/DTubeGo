@@ -1,7 +1,6 @@
 import 'package:auto_orientation/auto_orientation.dart';
-import 'package:flutter/services.dart';
+import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
 import 'package:overlay_dialog/overlay_dialog.dart';
-
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -10,48 +9,37 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-class YoutubePlayerFullScreenPage extends StatefulWidget {
+class BetterPlayerFullScreenPage extends StatefulWidget {
   final String link;
 
-  const YoutubePlayerFullScreenPage({Key? key, required this.link})
+  const BetterPlayerFullScreenPage({Key? key, required this.link})
       : super(key: key);
   @override
-  _YoutubePlayerFullScreenPageState createState() =>
-      _YoutubePlayerFullScreenPageState(link);
+  _BetterPlayerFullScreenPageState createState() =>
+      _BetterPlayerFullScreenPageState(link);
 }
 
-class _YoutubePlayerFullScreenPageState
-    extends State<YoutubePlayerFullScreenPage> {
+class _BetterPlayerFullScreenPageState
+    extends State<BetterPlayerFullScreenPage> {
   late YoutubePlayerController _controller;
   final String link;
 
   bool full = false;
   final UniqueKey youtubeKey = UniqueKey();
 
-  _YoutubePlayerFullScreenPageState(this.link);
+  _BetterPlayerFullScreenPageState(this.link);
 
   @override
   void initState() {
-    _controller = YoutubePlayerController(
-      initialVideoId: widget.link,
-      params: YoutubePlayerParams(
-          showControls: false,
-          showFullscreenButton: false,
-          desktopMode: true,
-          privacyEnhanced: true,
-          useHybridComposition: true,
-          autoPlay: true),
-    );
     if (Device.orientation != Orientation.landscape) {
       AutoOrientation.landscapeAutoMode();
     }
+
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.pause();
-    _controller.close();
     AutoOrientation.fullAutoMode();
     super.dispose();
   }
@@ -64,27 +52,26 @@ class _YoutubePlayerFullScreenPageState
           child: Stack(
             children: [
               Align(
-                alignment: Alignment.topCenter,
-                child: YoutubePlayerControllerProvider(
-                  controller: _controller,
-                  child: YoutubePlayerIFrame(
-                    aspectRatio: 16 / 9,
-                  ),
-                ),
-              ),
+                  alignment: Alignment.topCenter,
+                  child: BP(
+                      videoUrl: link,
+                      looping: false,
+                      autoplay: true,
+                      localFile: false,
+                      controls: true,
+                      usedAsPreview: false,
+                      allowFullscreen: false)),
               Padding(
                 padding: EdgeInsets.only(top: 10.h),
-                child: IconButton(
-
-                    // style: ButtonStyle(
-                    //     backgroundColor:
-                    //         MaterialStateProperty.all(Colors.transparent)),
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.transparent)),
                     onPressed: () {
                       //Navigator.pop(context);
                       DialogHelper().hide(context);
-                      AutoOrientation.fullAutoMode();
                     },
-                    icon: FaIcon(FontAwesomeIcons.arrowLeft)),
+                    child: FaIcon(FontAwesomeIcons.arrowLeft)),
               ),
             ],
           ),

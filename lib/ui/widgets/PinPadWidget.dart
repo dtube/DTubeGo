@@ -23,6 +23,7 @@ class PinPadWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PinPut(
+      key: key,
       fieldsCount: 5,
       withCursor: true,
       textStyle: const TextStyle(fontSize: 25.0, color: Colors.white),

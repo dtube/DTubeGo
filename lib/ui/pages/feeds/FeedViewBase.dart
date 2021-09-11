@@ -73,8 +73,8 @@ class _FeedViewBaseState extends State<FeedViewBase> {
                   largeFormat: false,
                   showAuthor: widget.showAuthor,
                   scrollCallback: widget.scrollCallback,
-                  topPaddingForFirstEntry: 5.h,
-                  heightPerEntry: 10.h,
+                  topPaddingForFirstEntry: 15.h,
+                  heightPerEntry: 12.h,
                   width: 40.w,
                   enableNavigation: false,
                   itemSelectedCallback: showPost),
@@ -108,20 +108,8 @@ class PostView extends StatefulWidget {
 }
 
 class _PostViewState extends State<PostView> {
-  late YoutubePlayerController _controller;
-
   @override
   void initState() {
-    _controller = YoutubePlayerController(
-      initialVideoId: "jlTUhhHSX00",
-      params: YoutubePlayerParams(
-          showControls: true,
-          showFullscreenButton: false,
-          desktopMode: true,
-          privacyEnhanced: true,
-          useHybridComposition: true,
-          autoPlay: false),
-    );
     // TODO: implement initState
     super.initState();
   }
@@ -130,18 +118,17 @@ class _PostViewState extends State<PostView> {
   Widget build(BuildContext context) {
     return widget.postAuthor != null && widget.postAuthor != ""
         ? Container(
-            width: 60.w,
+            width: 52.w,
             height: 300.h,
             child: PostDetailPageInlineView(
               author: widget.postAuthor!,
               link: widget.postLink!,
               directFocus: "none",
               recentlyUploaded: false,
-              yTController: _controller,
             ),
           )
         : Container(
-            width: 60.w,
+            width: 50.w,
             height: 100.h,
             child: Center(child: Text("no post selected")));
   }

@@ -120,9 +120,9 @@ class _UserState extends State<UserPage> {
   }
 
   Widget buildUserPage(User user, bool ownUsername) {
-    double iconSize = 5.w;
+    double iconSize = 8.w;
     if (Device.orientation == Orientation.landscape) {
-      iconSize = 5.h;
+      iconSize = 6.h;
     }
 
     return Stack(
@@ -141,9 +141,9 @@ class _UserState extends State<UserPage> {
                   showAuthor: false,
                   largeFormat: false,
                   heightPerEntry: 10.h,
-                  width: 80.w,
+                  width: 95.w,
                   topPaddingForFirstEntry:
-                      Device.orientation == Orientation.landscape ? 25.h : null,
+                      Device.orientation == Orientation.landscape ? 38.h : 30.h,
                   scrollCallback: (bool) {},
                   enableNavigation: true,
                 )),
@@ -156,13 +156,17 @@ class _UserState extends State<UserPage> {
                   Center(
                     child: AccountAvatarBase(
                       username: user.name,
-                      avatarSize: 17.h,
+                      avatarSize: Device.orientation == Orientation.portrait
+                          ? 18.h
+                          : 25.h,
                       showVerified: true,
                       showName: true,
                       showNameLeft: true,
                       showFullUserInfo: true,
                       nameFontSizeMultiply: 1.4,
-                      width: 95.w,
+                      width: Device.orientation == Orientation.portrait
+                          ? 95.w
+                          : 70.w,
                     ),
                   ),
                 ],

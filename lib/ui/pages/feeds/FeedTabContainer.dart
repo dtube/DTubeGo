@@ -88,38 +88,46 @@ class _FeedMainPageState extends State<FeedMainPage>
   @override
   Widget build(BuildContext context) {
     double _iconSize = 5.w;
+    EdgeInsets _paddingTabBarView =
+        EdgeInsets.zero; // only used in landscape for now
     if (Device.orientation == Orientation.landscape) {
       _iconSize = 5.h;
+    }
+    if (Device.orientation == Orientation.landscape) {
+      _paddingTabBarView = EdgeInsets.only(left: _iconSize * 2 + 10);
     }
     return Scaffold(
       //appBar: dtubeSubAppBar(true, "", context, null),
       resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
-          TabBarView(
-            children: [
-              FeedViewBase(
-                  feedType: 'NewFeed',
-                  largeFormat: true,
-                  showAuthor: false,
-                  scrollCallback: (bool) {}),
-              FeedViewBase(
-                  feedType: 'MyFeed',
-                  largeFormat: true,
-                  showAuthor: false,
-                  scrollCallback: (bool) {}),
-              FeedViewBase(
-                  feedType: 'HotFeed',
-                  largeFormat: true,
-                  showAuthor: false,
-                  scrollCallback: (bool) {}),
-              FeedViewBase(
-                  feedType: 'TrendingFeed',
-                  largeFormat: true,
-                  showAuthor: false,
-                  scrollCallback: (bool) {}),
-            ],
-            controller: _tabController,
+          Padding(
+            padding: _paddingTabBarView,
+            child: TabBarView(
+              children: [
+                FeedViewBase(
+                    feedType: 'NewFeed',
+                    largeFormat: true,
+                    showAuthor: false,
+                    scrollCallback: (bool) {}),
+                FeedViewBase(
+                    feedType: 'MyFeed',
+                    largeFormat: true,
+                    showAuthor: false,
+                    scrollCallback: (bool) {}),
+                FeedViewBase(
+                    feedType: 'HotFeed',
+                    largeFormat: true,
+                    showAuthor: false,
+                    scrollCallback: (bool) {}),
+                FeedViewBase(
+                    feedType: 'TrendingFeed',
+                    largeFormat: true,
+                    showAuthor: false,
+                    scrollCallback: (bool) {}),
+              ],
+              controller: _tabController,
+            ),
           ),
           ResponsiveLayout(
             portrait: TabBarWithPosition(
@@ -128,13 +136,17 @@ class _FeedMainPageState extends State<FeedMainPage>
               tabController: _tabController,
               alignment: Alignment.topRight,
               padding: EdgeInsets.only(top: 11.h, right: 4.w),
+              rotation: 0,
+              menuSize: 35.w,
             ),
             landscape: TabBarWithPosition(
               tabIcons: _tabIcons,
               iconSize: _iconSize,
               tabController: _tabController,
-              alignment: Alignment.topCenter,
-              padding: EdgeInsets.only(top: 4.h),
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.zero,
+              rotation: 3,
+              menuSize: 80.h,
             ),
           ),
           Align(
@@ -162,7 +174,9 @@ class TabBarWithPosition extends StatelessWidget {
       required this.iconSize,
       required this.tabController,
       required this.alignment,
-      required this.padding})
+      required this.padding,
+      required this.rotation,
+      required this.menuSize})
       : super(key: key);
 
   final List<IconData> tabIcons;
@@ -170,58 +184,69 @@ class TabBarWithPosition extends StatelessWidget {
   final TabController tabController;
   final Alignment alignment;
   final EdgeInsets padding;
+  final int rotation;
+  final double menuSize;
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      // alignment: Device.orientation == Orientation.landscape
-      //     ? Alignment.topCenter
-      //     : Alignment.topRight,
       alignment: alignment,
       child: Padding(
         padding: padding,
-        //padding: EdgeInsets.only(top: 11.h, right: 4.w),
-        //padding: EdgeInsets.only(top: 5.h),
-        child: Container(
-          width: 35.w,
-          //color: Colors.black.withAlpha(20),
-          child: TabBar(
-            unselectedLabelColor: Colors.white,
-            labelColor: Colors.white,
-            indicatorColor: Colors.white,
-            tabs: [
-              Tab(
-                child: ShadowedIcon(
-                    icon: tabIcons[0],
-                    color: Colors.white,
-                    shadowColor: Colors.black,
-                    size: iconSize),
-              ),
-              Tab(
-                child: ShadowedIcon(
-                    icon: tabIcons[1],
-                    color: Colors.white,
-                    shadowColor: Colors.black,
-                    size: iconSize),
-              ),
-              Tab(
-                child: ShadowedIcon(
-                    icon: tabIcons[2],
-                    color: Colors.white,
-                    shadowColor: Colors.black,
-                    size: iconSize),
-              ),
-              Tab(
-                child: ShadowedIcon(
-                    icon: tabIcons[3],
-                    color: Colors.white,
-                    shadowColor: Colors.black,
-                    size: iconSize),
-              ),
-            ],
-            controller: tabController,
-            indicatorSize: TabBarIndicatorSize.tab,
-            labelPadding: EdgeInsets.zero,
+        child: RotatedBox(
+          quarterTurns: rotation,
+          child: Container(
+            width: menuSize,
+            child: TabBar(
+              unselectedLabelColor: Colors.white,
+              labelColor: Colors.white,
+              indicatorColor: Colors.white,
+              tabs: [
+                Tab(
+                  child: RotatedBox(
+                    quarterTurns: rotation == 3 ? 1 : 0,
+                    child: ShadowedIcon(
+                        icon: tabIcons[0],
+                        color: Colors.white,
+                        shadowColor: Colors.black,
+                        size: iconSize),
+                  ),
+                ),
+                Tab(
+                  child: RotatedBox(
+                    quarterTurns: rotation == 3 ? 1 : 0,
+                    child: ShadowedIcon(
+                        icon: tabIcons[1],
+                        color: Colors.white,
+                        shadowColor: Colors.black,
+                        size: iconSize),
+                  ),
+                ),
+                Tab(
+                  child: RotatedBox(
+                    quarterTurns: rotation == 3 ? 1 : 0,
+                    child: ShadowedIcon(
+                        icon: tabIcons[2],
+                        color: Colors.white,
+                        shadowColor: Colors.black,
+                        size: iconSize),
+                  ),
+                ),
+                Tab(
+                  child: RotatedBox(
+                    quarterTurns: rotation == 3 ? 1 : 0,
+                    child: ShadowedIcon(
+                        icon: tabIcons[3],
+                        color: Colors.white,
+                        shadowColor: Colors.black,
+                        size: iconSize),
+                  ),
+                ),
+              ],
+              controller: tabController,
+              indicatorSize: TabBarIndicatorSize.label,
+              labelPadding: EdgeInsets.zero,
+            ),
           ),
         ),
       ),

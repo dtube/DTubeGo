@@ -126,7 +126,7 @@ class FeedList extends StatelessWidget {
     return Center(
         child: feedType == "UserFeed"
             ? SizedBox(height: 0, width: 0)
-            : DTubeLogoPulse(size: 33.w));
+            : DTubeLogoPulse(size: 20.w));
   }
 
   Widget buildErrorUi(String message) {
@@ -189,7 +189,7 @@ class FeedList extends StatelessWidget {
                   feed[pos].author != _applicationUser)) {
             return Padding(
               padding: EdgeInsets.only(
-                  top: pos == 0 ? topPaddingForFirstEntry! : 8.0),
+                  top: pos == 0 ? topPaddingForFirstEntry! : 2.0),
               child: SizedBox(
                 height: 0,
               ),
@@ -199,7 +199,7 @@ class FeedList extends StatelessWidget {
               create: (context) => UserBloc(repository: UserRepositoryImpl()),
               child: Padding(
                 padding: EdgeInsets.only(
-                    top: pos == 0 ? topPaddingForFirstEntry! : 8.0),
+                    top: pos == 0 ? topPaddingForFirstEntry! : 2.0),
                 child: PostListCard(
                   width: width!,
                   heightPerEntry: heightPerEntry!,
@@ -217,7 +217,7 @@ class FeedList extends StatelessWidget {
                       : "",
                   author: feed[pos].author,
                   link: feed[pos].link,
-                  publishDate: TimeAgo.timeInAgoTS(feed[pos].ts),
+                  publishDate: TimeAgo.timeInAgoTSShort(feed[pos].ts),
                   dtcValue: (feed[pos].dist / 100).round().toString() + " DTC",
                   duration: new Duration(
                       seconds: int.tryParse(feed[pos].jsonString!.dur) != null
@@ -235,14 +235,19 @@ class FeedList extends StatelessWidget {
                   oc: feed[pos].jsonString!.oc == 1 ? true : false,
                   enableNavigation: enableNavigation,
                   itemSelectedCallback: itemSelectedCallback,
+                  feedType: feedType,
                 ),
                 //Text(pos.toString())
               ),
             );
           }
         } else {
-          return SizedBox(
-            height: 0,
+          return Padding(
+            padding:
+                EdgeInsets.only(top: pos == 0 ? topPaddingForFirstEntry! : 0.0),
+            child: SizedBox(
+              height: 0,
+            ),
           );
         }
       },
@@ -274,8 +279,8 @@ class PostListCard extends StatelessWidget {
   final double width;
   final double heightPerEntry;
   final bool enableNavigation;
-  ListOfString2VoidFunc?
-      itemSelectedCallback; // only used in landscape mode for now
+  ListOfString2VoidFunc? itemSelectedCallback;
+  final String feedType; // only used in landscape mode for now
 
   PostListCard(
       {Key? key,
@@ -302,7 +307,8 @@ class PostListCard extends StatelessWidget {
       required this.width,
       required this.heightPerEntry,
       required this.enableNavigation,
-      this.itemSelectedCallback})
+      this.itemSelectedCallback,
+      required this.feedType})
       : super(key: key);
 
   @override
@@ -347,6 +353,7 @@ class PostListCard extends StatelessWidget {
         indexOfList: indexOfList,
         enableNavigation: enableNavigation,
         itemSelectedCallback: itemSelectedCallback,
+        userPage: feedType == "UserFeed",
       );
     }
   }
