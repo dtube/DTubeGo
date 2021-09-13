@@ -734,7 +734,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.27.1"
+    version: "0.26.0"
   secp256k1:
     dependency: "direct main"
     description:
@@ -859,6 +859,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
+  story_view:
+    dependency: "direct main"
+    description:
+      name: story_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.1"
   stream_channel:
     dependency: transitive
     description:

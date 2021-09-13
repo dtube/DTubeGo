@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
 
 abstract class ThirdPartyUploaderState extends Equatable {}

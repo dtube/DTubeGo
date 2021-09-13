@@ -1,6 +1,4 @@
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 
 abstract class ThirdPartyUploaderEvent extends Equatable {}
 

@@ -1,11 +1,9 @@
-import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
+
 import 'package:dtube_togo/utils/navigationShortcuts.dart';
 
 import 'package:flutter/material.dart';

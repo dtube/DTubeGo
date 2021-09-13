@@ -1,7 +1,6 @@
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'dart:io';
 
-import 'package:better_player/better_player.dart';
 import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
 import 'package:dtube_togo/utils/GetAppDocDirectory.dart';
 import 'package:path_provider/path_provider.dart';
@@ -11,13 +10,10 @@ import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
-import 'package:dtube_togo/style/OpenableHyperlink.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class OnboardingJourney extends StatefulWidget {
   bool loggedIn;
@@ -211,13 +207,15 @@ class OnboardingVideo extends StatelessWidget {
             if (snapshot.data != null) {
               //return BetterPlayer.file(snapshot.data!);
               return BP(
-                  videoUrl: snapshot.data!,
-                  looping: false,
-                  autoplay: true,
-                  localFile: true,
-                  controls: false,
-                  usedAsPreview: false,
-                  allowFullscreen: false);
+                videoUrl: snapshot.data!,
+                looping: false,
+                autoplay: true,
+                localFile: true,
+                controls: false,
+                usedAsPreview: false,
+                allowFullscreen: false,
+                portraitVideoPadding: 50.0,
+              );
             } else {
               return const SizedBox();
             }

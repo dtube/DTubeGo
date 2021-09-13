@@ -7,13 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:dtube_togo/ui/MainContainer/NavigationContainer.dart';
 
-import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/CollapsedDescription.dart';
@@ -182,8 +180,9 @@ class _PostDetailsState extends State<PostDetails> {
 
   @override
   void dispose() {
-    _controller.close();
     _controller.pause();
+    _controller.close();
+
     super.dispose();
   }
 
@@ -254,6 +253,7 @@ class _PostDetailsState extends State<PostDetails> {
                                     controls: true,
                                     usedAsPreview: false,
                                     allowFullscreen: true,
+                                    portraitVideoPadding: 50.0,
                                   )
                                 : Text("no player detected"),
                         Row(
@@ -321,7 +321,6 @@ class _PostDetailsState extends State<PostDetails> {
                                     defaultVotingWeight:
                                         _defaultVoteWeightPosts,
                                     defaultVotingTip: _defaultVoteTipPosts,
-                                    currentVT: _currentVT,
                                     scale: 0.8,
                                     isPost: true,
                                     focusVote: widget.directFocus);

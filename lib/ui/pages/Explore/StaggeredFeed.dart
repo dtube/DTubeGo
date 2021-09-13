@@ -1,23 +1,17 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_togo/utils/navigationShortcuts.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/style/dtubeLoading.dart';
 
-import 'package:dtube_togo/ui/pages/feeds/cards/PostListCardLarge.dart';
-import 'package:dtube_togo/ui/pages/feeds/cards/PostListCardNarrow.dart';
+import 'package:dtube_togo/style/dtubeLoading.dart';
 
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_togo/utils/friendlyTimestamp.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 typedef Bool2VoidFunc = void Function(bool);
 

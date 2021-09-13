@@ -1,10 +1,7 @@
-import 'package:responsive_sizer/responsive_sizer.dart';
-
-import 'package:decorated_icon/decorated_icon.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
+
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 
 import 'package:dtube_togo/ui/pages/settings/SettingsTabContainer.dart';

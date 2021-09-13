@@ -22,6 +22,20 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     if (event is InitFeedEvent) {
       yield FeedInitialState();
     }
+    if (event is FetchMomentsEvent) {
+      yield FeedLoadingState();
+      try {
+        List<FeedItem> feed = event.feedType == "NewMoments"
+            ? await repository.getNewFeedFiltered(
+                _avalonApiNode, "&tags=DTubeGo-Moments", _applicationUser)
+            : await repository.getMyFeedFiltered(
+                _avalonApiNode, "&tags=DTubeGo-Moments", _applicationUser);
+        yield FeedLoadedState(feed: feed, feedType: event.feedType);
+      } catch (e) {
+        print(e.toString());
+        yield FeedErrorState(message: e.toString());
+      }
+    }
     if (event is FetchFeedEvent) {
       print("FETCH " + event.feedType);
       yield FeedLoadingState();

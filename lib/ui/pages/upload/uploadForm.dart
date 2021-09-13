@@ -1,16 +1,13 @@
 import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
-import 'package:dtube_togo/realMain.dart';
+
 import 'package:dtube_togo/style/dtubeLoading.dart';
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
+
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
-
-import 'package:flutter/services.dart';
 
 import 'dart:io';
 import 'package:disk_space/disk_space.dart';
@@ -27,7 +24,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 
 class UploadForm extends StatefulWidget {
   late UploadData uploadData;
@@ -61,6 +57,8 @@ class _UploadFormState extends State<UploadForm> {
   late UserBloc _userBloc;
   late SettingsBloc _settingsBloc;
   final _formKey = GlobalKey<FormState>();
+
+  bool uploadEnabled = true;
 
   bool hiveSignerValid = false;
   String hiveSignerUsername = "";
@@ -151,6 +149,7 @@ class _UploadFormState extends State<UploadForm> {
     } else {
       _pickedFile = await _picker.pickImage(source: ImageSource.gallery);
       if (_pickedFile != null) {
+        uploadEnabled = false;
         BlocProvider.of<ThirdPartyUploaderBloc>(context)
             .add(UploadFile(filePath: _pickedFile.path));
         var _tempImage = File(_pickedFile.path);
@@ -268,16 +267,7 @@ class _UploadFormState extends State<UploadForm> {
                               backgroundColor: globalRed,
                               label: Text("upload",
                                   style: TextStyle(fontSize: 24)),
-                              onPressed: stateUploadData.thumbnailLocation !=
-                                          "" &&
-                                      ((!stateUploadData.thumbnailLocation
-                                                  .contains('https') &&
-                                              stateUploadData.localThumbnail) ||
-                                          (stateUploadData.thumbnailLocation
-                                                  .contains('https') &&
-                                              !stateUploadData
-                                                  .localThumbnail)) &&
-                                      _formIsFilled
+                              onPressed: _formIsFilled
                                   ? () {
                                       widget.callback(stateUploadData);
                                     }
@@ -353,7 +343,7 @@ class _UploadFormState extends State<UploadForm> {
                   controls: true,
                   //key: UniqueKey(),
                   usedAsPreview: true,
-                  allowFullscreen: false,
+                  allowFullscreen: false, portraitVideoPadding: 50.0,
                 )
               : SizedBox(
                   height: 0,
@@ -371,7 +361,11 @@ class _UploadFormState extends State<UploadForm> {
           Text("2. Basic information", style: TextStyle(fontSize: 18)),
           TextFormField(
             cursorColor: globalRed,
-            decoration: new InputDecoration(labelText: "Title"),
+            decoration: new InputDecoration(
+              labelText: "Title",
+              labelStyle: Theme.of(context).textTheme.bodyText1,
+            ),
+            style: Theme.of(context).textTheme.bodyText1,
             controller: _titleController,
             onChanged: (val) {
               checkIfFormIsFilled();
@@ -388,7 +382,11 @@ class _UploadFormState extends State<UploadForm> {
           TextFormField(
             cursorColor: globalRed,
             maxLines: 5,
-            decoration: new InputDecoration(labelText: "Description"),
+            decoration: new InputDecoration(
+              labelText: "Description",
+              labelStyle: Theme.of(context).textTheme.bodyText1,
+            ),
+            style: Theme.of(context).textTheme.bodyText1,
             controller: _descController,
             onChanged: (val) {
               checkIfFormIsFilled();
@@ -403,7 +401,11 @@ class _UploadFormState extends State<UploadForm> {
           ),
           TextFormField(
             cursorColor: globalRed,
-            decoration: new InputDecoration(labelText: "Tag"),
+            decoration: new InputDecoration(
+              labelText: "Tag",
+              labelStyle: Theme.of(context).textTheme.bodyText1,
+            ),
+            style: Theme.of(context).textTheme.bodyText1,
             controller: _tagController,
             focusNode: _tagFocus,
             onChanged: (val) {
@@ -603,7 +605,7 @@ class _UploadFormState extends State<UploadForm> {
                   "initial vote: " +
                       stateUploadData.vpPercent.floor().toString() +
                       '%',
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
                 Text(
                   '(' +
@@ -613,7 +615,7 @@ class _UploadFormState extends State<UploadForm> {
                               1000)
                           .toStringAsFixed(2) +
                       'K VP)',
-                  style: TextStyle(fontSize: 14.0),
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
               ],
             )
@@ -650,7 +652,7 @@ class _UploadFormState extends State<UploadForm> {
                   "promote: " +
                       stateUploadData.burnDtc.floor().toString() +
                       ' DTC',
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
                 // TODO: calculate approx. VP of burn
                 // Text(

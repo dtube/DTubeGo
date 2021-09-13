@@ -69,8 +69,6 @@ class TransactionRepositoryImpl implements TransactionRepository {
             body: jsonEncode(tx.toJson()));
     print(jsonEncode(tx.toJson()));
     if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      print(response.body);
       return response.body;
     } else {
       print(response.body);

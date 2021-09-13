@@ -1,10 +1,9 @@
 import 'package:dtube_togo/ui/pages/feeds/lists/FeedList.dart';
 import 'package:dtube_togo/ui/pages/feeds/PostDetailPageInlineView.dart';
-import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
+
 import 'package:dtube_togo/utils/ResponsiveLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 typedef Bool2VoidFunc = void Function(bool);
 typedef ListOfString2VoidFunc = void Function(List<String>);

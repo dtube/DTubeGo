@@ -1,18 +1,10 @@
-import 'package:dtube_togo/bloc/hivesigner/hivesigner_response_model.dart';
-import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
-import 'package:hex/hex.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'dart:typed_data';
-
-import 'package:bs58/bs58.dart';
-import 'package:elliptic/elliptic.dart';
-import 'package:bs58check/bs58check.dart' as bs58check;
 
 abstract class HivesignerRepository {
   Future<bool> requestNewAccessToken(String username);
@@ -78,7 +70,6 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
       'Accept': 'application/json'
     };
 
-    final encoding = Encoding.getByName('utf-8');
     var response;
     try {
       response = await http

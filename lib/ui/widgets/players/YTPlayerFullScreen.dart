@@ -1,12 +1,10 @@
 import 'package:auto_orientation/auto_orientation.dart';
-import 'package:flutter/services.dart';
 import 'package:overlay_dialog/overlay_dialog.dart';
 
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 

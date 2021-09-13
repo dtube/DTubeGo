@@ -1,28 +1,19 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'dart:async';
-
-import 'package:decorated_icon/decorated_icon.dart';
 import 'package:dtube_togo/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_togo/style/OpenableHyperlink.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/pages/accountHistory/AccountHistory.dart';
 import 'package:dtube_togo/ui/pages/user/ProfileSettings.dart';
 import 'package:dtube_togo/ui/pages/wallet/transferDialog.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
-import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
 import 'package:flutter/rendering.dart';
-
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

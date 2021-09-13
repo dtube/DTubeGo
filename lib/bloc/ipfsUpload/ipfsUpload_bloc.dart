@@ -1,13 +1,8 @@
-import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
-import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_repository.dart'
-    as thirdPartyRepository;
-
 import 'dart:io';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/utils/randomPermlink.dart';
-import 'package:dtube_togo/utils/secureStorage.dart';
-import 'package:path/path.dart' as p;
+
 import 'package:bloc/bloc.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_event.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_state.dart';
@@ -30,7 +25,6 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
     late Map _uploadStatusResponse;
     late Map _thumbUploadStatusResponse;
     late UploadData _uploadData;
-    String imageUploadProvider = await sec.getImageUploadService();
 
     if (event is UploadVideo) {
       TransactionBloc txBloc = BlocProvider.of<TransactionBloc>(event.context);

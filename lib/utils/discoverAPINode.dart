@@ -5,6 +5,10 @@ import 'dart:collection';
 
 Future<String> discoverAPINode() async {
   var _nodes = AppConfig.apiNodes;
+  if (AppConfig.useDevNodes) {
+    _nodes = AppConfig.apiNodesDev;
+  }
+
   Map<String, int> _nodeResponses = {};
   Map<String, int> _sortedApiNodesByResponseTime = {};
 

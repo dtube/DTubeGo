@@ -1,19 +1,14 @@
+import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
+import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
+import 'package:dtube_togo/ui/pages/moments/momentsFeed.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:decorated_icon/decorated_icon.dart';
-
-import 'dart:async';
-import 'dart:isolate';
-import 'dart:ui';
-
-import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
-import 'package:dtube_togo/bloc/search/search_bloc_full.dart';
-import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
+
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/realMain.dart';
 
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
@@ -21,20 +16,16 @@ import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/MainContainer/BalanceOverview.dart';
 import 'package:dtube_togo/ui/MainContainer/MenuButton.dart';
 import 'package:dtube_togo/ui/pages/Explore/ExploreTabContainer.dart';
-import 'package:dtube_togo/ui/pages/Explore/SearchScreen.dart';
+
 import 'package:dtube_togo/ui/pages/feeds/FeedTabContainer.dart';
-import 'package:dtube_togo/ui/pages/feeds/lists/MomentsList.dart';
 import 'package:dtube_togo/ui/pages/notifications/NotificationButton.dart';
 
-import 'package:dtube_togo/ui/pages/feeds/lists/FeedList.dart';
-
-import 'package:dtube_togo/ui/pages/notifications/Notifications.dart';
 import 'package:dtube_togo/ui/pages/upload/uploaderTabContainer.dart';
 import 'package:dtube_togo/ui/pages/user/User.dart';
-import 'package:dtube_togo/ui/pages/wallet/WalletTabContainer.dart';
+
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
-import 'package:dtube_togo/utils/navigationShortcuts.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -86,7 +77,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
               builder: (context, state) {
             if (state is TransactionPreprocessingState) {
               if (state.txType == 13 || state.txType == 4) {
-                return DTubeLogoPulseRotating(size: iconSize);
+                return DTubeLogoPulseRotating(size: iconSize * 2);
               }
             }
             return Center(
@@ -158,7 +149,17 @@ class _NavigationContainerState extends State<NavigationContainer> {
         callback: uploaderCallback,
         // key: UniqueKey(),
       ),
-      MomentsList(),
+      MultiBlocProvider(providers: [
+        BlocProvider(
+            create: (context) => FeedBloc(repository: FeedRepositoryImpl())),
+        BlocProvider(
+            create: (context) =>
+                IPFSUploadBloc(repository: IPFSUploadRepositoryImpl())),
+        BlocProvider<ThirdPartyUploaderBloc>(
+          create: (BuildContext context) => ThirdPartyUploaderBloc(
+              repository: ThirdPartyUploaderRepositoryImpl()),
+        ),
+      ], child: MomentsPage()),
       UserPage(
         ownUserpage: true,
       ),

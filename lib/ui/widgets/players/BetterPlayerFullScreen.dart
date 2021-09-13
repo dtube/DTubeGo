@@ -54,13 +54,15 @@ class _BetterPlayerFullScreenPageState
               Align(
                   alignment: Alignment.topCenter,
                   child: BP(
-                      videoUrl: link,
-                      looping: false,
-                      autoplay: true,
-                      localFile: false,
-                      controls: true,
-                      usedAsPreview: false,
-                      allowFullscreen: false)),
+                    videoUrl: link,
+                    looping: false,
+                    autoplay: true,
+                    localFile: false,
+                    controls: true,
+                    usedAsPreview: false,
+                    allowFullscreen: false,
+                    portraitVideoPadding: 50.0,
+                  )),
               Padding(
                 padding: EdgeInsets.only(top: 10.h),
                 child: ElevatedButton(

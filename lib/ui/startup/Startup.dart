@@ -1,24 +1,18 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:dtube_togo/ui/startup/PinPad.dart';
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_togo/ui/startup/OnboardingJourney.dart';
 
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
-
-import 'package:dtube_togo/ui/MainContainer/NavigationContainer.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/ui/startup/LoginScreen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 bool ActivatedOnboardingJourney = false;
 

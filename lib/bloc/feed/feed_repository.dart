@@ -31,10 +31,66 @@ abstract class FeedRepository {
     String? fromLink,
     String applicationUser,
   );
+  Future<List<FeedItem>> getNewFeedFiltered(
+    String apiNode,
+    String filterString,
+    String applicationUser,
+  );
+  Future<List<FeedItem>> getMyFeedFiltered(
+    String apiNode,
+    String filterString,
+    String applicationUser,
+  );
 }
 
 class FeedRepositoryImpl implements FeedRepository {
   @override
+
+//moments feeds
+
+  Future<List<FeedItem>> getNewFeedFiltered(
+    String apiNode,
+    String filterString,
+    String applicationUser,
+  ) async {
+    String _url = apiNode +
+        AppConfig.newFeedUrlFiltered.replaceAll("##FILTERSTRING", filterString);
+
+    var response = await http.get(Uri.parse(_url));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+
+      List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+
+      return feed;
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future<List<FeedItem>> getMyFeedFiltered(
+    String apiNode,
+    String filterString,
+    String applicationUser,
+  ) async {
+    String _url = apiNode +
+        AppConfig.myFeedUrlFiltered
+            .replaceAll("##USERNAME", applicationUser)
+            .replaceAll("##FILTERSTRING", filterString);
+
+    var response = await http.get(Uri.parse(_url));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+
+      List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+      return feed;
+    } else {
+      throw Exception();
+    }
+  }
+
+  // common feeds
+
   Future<List<FeedItem>> getMyFeed(String apiNode, String applicationUser,
       String? fromAuthor, String? fromLink) async {
     String _url = apiNode +

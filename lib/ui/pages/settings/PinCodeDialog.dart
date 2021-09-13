@@ -1,9 +1,7 @@
 import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/ui/widgets/PinPadWidget.dart';
-import 'package:flutter/services.dart';
 
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

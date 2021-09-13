@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:decorated_icon/decorated_icon.dart';
 import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc.dart';
 import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
@@ -11,12 +9,9 @@ import 'package:dtube_togo/bloc/user/user_response_model.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/pages/settings/HiveSignerButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:image_picker/image_picker.dart';
 
 class ProfileSettingsContainer extends StatefulWidget {

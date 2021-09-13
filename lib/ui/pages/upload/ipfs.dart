@@ -2,9 +2,6 @@
 
 import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc.dart';
 import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
-import 'package:dtube_togo/utils/randomPermlink.dart';
 
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
@@ -12,12 +9,10 @@ import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_event.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 
-import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/ui/pages/upload/uploadForm.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class WizardIPFS extends StatefulWidget {
   WizardIPFS({Key? key, required this.uploaderCallback}) : super(key: key);

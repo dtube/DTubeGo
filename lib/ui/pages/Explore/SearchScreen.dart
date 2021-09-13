@@ -2,22 +2,15 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'dart:async';
 
-import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
-import 'package:dtube_togo/bloc/config/txTypes.dart';
 import 'package:dtube_togo/bloc/search/search_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/Explore/ResultCards/PostResultCard.dart';
-import 'package:dtube_togo/ui/Explore/ResultCards/UserResultCard.dart';
-import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
-import 'package:dtube_togo/utils/navigationShortcuts.dart';
-import 'package:dtube_togo/utils/shortBalanceStrings.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:intl/intl.dart';
-import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
+import 'package:dtube_togo/ui/pages/Explore/ResultCards/PostResultCard.dart';
+import 'package:dtube_togo/ui/pages/Explore/ResultCards/UserResultCard.dart';
+
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

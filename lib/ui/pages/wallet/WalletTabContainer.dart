@@ -1,8 +1,5 @@
 import 'package:dtube_togo/bloc/rewards/rewards_bloc_full.dart';
 
-import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-
 import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 

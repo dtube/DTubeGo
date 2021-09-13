@@ -11,18 +11,11 @@ import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/MainContainer/NavigationContainer.dart';
 import 'package:dtube_togo/ui/widgets/PinPadWidget.dart';
 import 'package:dtube_togo/utils/secureStorage.dart';
-import 'package:pinput/pin_put/pin_put.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
-import 'package:dtube_togo/res/appConfigValues.dart';
-import 'package:dtube_togo/style/OpenableHyperlink.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class PinPadScreen extends StatefulWidget {
   PinPadScreen({Key? key}) : super(key: key);

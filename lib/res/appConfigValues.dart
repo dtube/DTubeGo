@@ -1,8 +1,13 @@
 class AppConfig {
   static String myFeedUrlFirst = "/feed/##USERNAME";
   static String myFeedUrlMore = "/feed/##USERNAME/##AUTHOR/##LINK";
+  static String myFeedUrlFiltered =
+      "/feed/##USERNAME/filter:limit=500&##FILTERSTRING";
+
   static String newFeedUrlFirst = "/new";
   static String newFeedUrlMore = "/new/##AUTHOR/##LINK";
+
+  static String newFeedUrlFiltered = "/new/filter:limit=500&##FILTERSTRING";
 
   static String hotFeedUrlFirst = "/hot";
   static String hotFeedUrlMore = "/hot/##AUTHOR/##LINK";
@@ -45,12 +50,20 @@ class AppConfig {
   static String ipfsSnapUrl = 'https://snap1.d.tube/ipfs/';
   static String ipfsSnapUploadUrl = 'https://snap1.d.tube';
 
+  static bool useDevNodes =
+      true; //activate for new features which has not been integrated
+
+// development nodes for new features
+  static List<String> apiNodesDev = ['https://dtube.club/mainnetapi'];
+
+  // common api nodes
   static List<String> apiNodes = [
     'https://avalon.tibfox.com',
     'https://avalon.d.tube',
     // 'https://avalon.oneloved.tube',
     'https://dtube.fso.ovh'
   ];
+
   static int minFreeSpaceRecordVideoInMB = 10;
 
   static String hiveSignerCallbackUrlScheme = 'dtubetogo';

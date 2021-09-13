@@ -1,25 +1,19 @@
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/pages/feeds/widgets/FullScreenButton.dart';
-import 'package:dtube_togo/ui/widgets/players/BetterPlayerFullScreen.dart';
-import 'package:dtube_togo/ui/widgets/players/YTPlayerFullScreen.dart';
+
 import 'package:dtube_togo/ui/widgets/players/YTplayerIframe.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_togo/utils/navigationShortcuts.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter/material.dart';
 
-import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
+
 import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:dtube_togo/ui/MainContainer/NavigationContainer.dart';
-
-import 'package:dtube_togo/ui/pages/user/User.dart';
 import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/CollapsedDescription.dart';
@@ -33,8 +27,6 @@ import 'package:dtube_togo/style/dtubeLoading.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
-// import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
 class PostDetailPageInlineView extends StatefulWidget {
   String link;
@@ -176,6 +168,7 @@ class _PostDetailsState extends State<PostDetails> {
                             controls: true,
                             usedAsPreview: false,
                             allowFullscreen: false,
+                            portraitVideoPadding: 50.0,
                           )
                         : Text("no player detected"),
                 Row(
@@ -273,7 +266,6 @@ class _PostDetailsState extends State<PostDetails> {
                             downvotes: widget.post.downvotes,
                             defaultVotingWeight: _defaultVoteWeightPosts,
                             defaultVotingTip: _defaultVoteTipPosts,
-                            currentVT: _currentVT,
                             scale: 0.8,
                             isPost: true,
                             focusVote: widget.directFocus);

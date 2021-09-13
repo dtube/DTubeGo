@@ -16,7 +16,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   @override
   Stream<SearchState> mapEventToState(SearchEvent event) async* {
-    String? _applicationUser = await sec.getUsername();
     String _avalonApiNode = await sec.getNode();
     if (event is FetchSearchResultsEvent) {
       yield SearchLoadingState();

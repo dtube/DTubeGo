@@ -13,6 +13,7 @@ class BP extends StatefulWidget {
   final bool controls;
   final bool usedAsPreview;
   final bool allowFullscreen;
+  final double portraitVideoPadding;
 
   BP({
     required this.videoUrl,
@@ -22,6 +23,7 @@ class BP extends StatefulWidget {
     required this.controls,
     required this.usedAsPreview,
     required this.allowFullscreen,
+    required this.portraitVideoPadding,
     Key? key,
   }) : super(key: key);
 
@@ -102,8 +104,8 @@ class _BPState extends State<BP> {
           return Center(
             child: Padding(
               padding: EdgeInsets.only(
-                  left: _aspectRatio < 1 ? 50.0 : 0.0,
-                  right: _aspectRatio < 1 ? 50.0 : 0.0),
+                  left: _aspectRatio < 1 ? widget.portraitVideoPadding : 0.0,
+                  right: _aspectRatio < 1 ? widget.portraitVideoPadding : 0.0),
               child: Column(
                 children: [
                   AspectRatio(

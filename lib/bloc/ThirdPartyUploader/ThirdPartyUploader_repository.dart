@@ -1,5 +1,3 @@
-import 'package:dtube_togo/res/appConfigValues.dart';
-import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 
 abstract class ThirdPartyUploaderRepository {

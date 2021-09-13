@@ -1,23 +1,21 @@
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/pages/feeds/PostDetailPageInlineView.dart';
+
 import 'package:dtube_togo/ui/pages/feeds/widgets/FullScreenButton.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/style/dtubeLoading.dart';
+
 import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
 
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+
 import 'package:dtube_togo/ui/widgets/players/YTplayerIframe.dart';
-import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
-import 'package:dtube_togo/ui/pages/user/User.dart';
+
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_togo/utils/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PostListCardLarge extends StatefulWidget {
@@ -199,7 +197,9 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                           localFile: false,
                           controls: true,
                           usedAsPreview: false,
-                          allowFullscreen: false)
+                          allowFullscreen: false,
+                          portraitVideoPadding: 50.0,
+                        )
                       : (widget.videoSource == 'youtube' &&
                               widget.videoUrl != "")
                           ? YTPlayerIFrame(

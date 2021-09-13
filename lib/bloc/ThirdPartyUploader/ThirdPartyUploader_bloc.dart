@@ -1,7 +1,3 @@
-import 'dart:io';
-
-import 'package:dtube_togo/utils/randomPermlink.dart';
-import 'package:path/path.dart' as p;
 import 'package:bloc/bloc.dart';
 import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_event.dart';
 import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_state.dart';

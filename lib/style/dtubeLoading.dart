@@ -89,7 +89,6 @@ class _DTubeLogoPulseRotatingState extends State<DTubeLogoPulseRotating>
 
   @override
   Widget build(BuildContext context) {
-    double _circleWidth = widget.size;
     return AnimatedBuilder(
       animation: _rotationController,
       builder: (_, child) {

@@ -10,7 +10,7 @@ String shortDTC(int dtcBalance) {
   }
 
   if (dtcBalance < 10000) {
-    result = result;
+    result = result + ' ';
   } else if (_dtcBalanceK >= 1000) {
     result = result + 'M';
   } else {
@@ -30,7 +30,7 @@ String shortVP(int vpBalance) {
       result = _vpBalanceK.toStringAsFixed(1) + 'K';
     }
   } else {
-    result = vpBalance.toStringAsFixed(1);
+    result = vpBalance.toStringAsFixed(1) + ' ';
   }
   return result;
 }

@@ -43,8 +43,8 @@ class _BalanceOverviewState extends State<BalanceOverview> {
     super.initState();
     _userBloc = BlocProvider.of<UserBloc>(context);
     _userBloc.add(FetchDTCVPEvent()); // statements;
-    const oneSec = const Duration(seconds: 240);
-    new Timer.periodic(oneSec, (Timer t) {
+    const interval = const Duration(seconds: 240);
+    new Timer.periodic(interval, (Timer t) {
       _userBloc.add(FetchDTCVPEvent());
     });
     // Do something
@@ -65,15 +65,17 @@ class _BalanceOverviewState extends State<BalanceOverview> {
           return SizedBox(width: 0);
         } else if (state is UserDTCVPLoadedState) {
           try {
-            return Column(
-                //mainAxisAlignment: MainAxisAlignment.end,
-
-                children: [
+            return Container(
+              width: 18.w,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Column(children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       DTubeLogo(size: _iconSize),
                       SizedBox(
-                        width: 1.w,
+                        width: 2.5.w,
                       ),
                       OverlayText(
                         text: shortDTC(state.dtcBalance),
@@ -83,13 +85,14 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                     ],
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       FaIcon(
                         FontAwesomeIcons.bolt,
                         size: _iconSize,
                       ),
                       SizedBox(
-                        width: 1.w,
+                        width: 2.w,
                       ),
                       OverlayText(
                           text: shortVP(state.vtBalance['v']!),
@@ -97,7 +100,9 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                           bold: true),
                     ],
                   ),
-                ]);
+                ]),
+              ),
+            );
           } catch (e) {
             return FaIcon(FontAwesomeIcons.times);
           }

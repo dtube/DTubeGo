@@ -1,16 +1,12 @@
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
+
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
-// this file is needed until bs85 is null safety
-import 'package:flutter/services.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc.dart';
 import 'package:dtube_togo/bloc/auth/auth_repository.dart';
 import 'package:dtube_togo/style/ThemeData.dart';

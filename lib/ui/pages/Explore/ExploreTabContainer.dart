@@ -2,20 +2,13 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_togo/bloc/feed/feed_bloc.dart';
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_togo/bloc/rewards/rewards_bloc_full.dart';
+
 import 'package:dtube_togo/bloc/search/search_bloc_full.dart';
 
-import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-
-import 'package:dtube_togo/style/ThemeData.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/Explore/SearchScreen.dart';
-import 'package:dtube_togo/ui/Explore/StaggeredFeed.dart';
-import 'package:dtube_togo/ui/pages/feeds/lists/FeedList.dart';
+import 'package:dtube_togo/ui/pages/Explore/SearchScreen.dart';
+import 'package:dtube_togo/ui/pages/Explore/StaggeredFeed.dart';
 
-import 'package:dtube_togo/ui/pages/wallet/RewardsPage.dart';
-import 'package:dtube_togo/ui/pages/wallet/WalletPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
