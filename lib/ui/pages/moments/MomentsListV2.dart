@@ -28,9 +28,11 @@ typedef ListOfString2VoidFunc = void Function(List<String>);
 
 class MomentsList extends StatefulWidget {
   String feedType;
+  late StoryController storyController;
 
   MomentsList({
     required this.feedType,
+    required this.storyController,
     Key? key,
   }) : super(key: key);
 
@@ -42,8 +44,6 @@ class _MomentsListState extends State<MomentsList> {
   late FeedBloc postBloc;
 
   final ScrollController _scrollController = ScrollController();
-
-  final StoryController controller = StoryController();
 
   List<FeedItem> _feedItems = [];
   List<StoryItem> moments = [];
@@ -69,8 +69,15 @@ class _MomentsListState extends State<MomentsList> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
-    controller.dispose();
+    widget.storyController.pause();
+    widget.storyController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -101,7 +108,7 @@ class _MomentsListState extends State<MomentsList> {
                     for (var f in _feedItems) {
                       moments.add(new StoryItem.pageVideo(
                         f.videoUrl,
-                        controller: controller,
+                        controller: widget.storyController,
                         duration: Duration(seconds: 2),
                       ));
                     }
@@ -112,12 +119,12 @@ class _MomentsListState extends State<MomentsList> {
                 }
 
                 return StoriesView(
-                  feed: _feedItems,
-                  feedType: widget.feedType,
-                  appUser: _applicationUser!,
-                  defaultVotingTip: _defaultVotingTip!,
-                  defaultVotingWeight: _defaultVotingWeight!,
-                );
+                    feed: _feedItems,
+                    feedType: widget.feedType,
+                    appUser: _applicationUser!,
+                    defaultVotingTip: _defaultVotingTip!,
+                    defaultVotingWeight: _defaultVotingWeight!,
+                    controller: widget.storyController);
               },
             );
           }
@@ -151,13 +158,16 @@ class StoriesView extends StatefulWidget {
   String appUser;
 
   String feedType;
+  StoryController controller;
+
   StoriesView(
       {Key? key,
       required this.feed,
       required this.feedType,
       required this.appUser,
       required this.defaultVotingTip,
-      required this.defaultVotingWeight})
+      required this.defaultVotingWeight,
+      required this.controller})
       : super(key: key);
 
   @override
@@ -165,7 +175,6 @@ class StoriesView extends StatefulWidget {
 }
 
 class _StoriesViewState extends State<StoriesView> {
-  final StoryController controller = StoryController();
   List<StoryItem> momentItems = [];
 
   String author = "";
@@ -176,7 +185,7 @@ class _StoriesViewState extends State<StoriesView> {
   void initState() {
     widget.feed.forEach((f) {
       momentItems.add(StoryItem.pageVideo(f.videoUrl,
-          controller: controller,
+          controller: widget.controller,
           duration: Duration(
               seconds:
                   f.jsonString!.dur != "" ? int.parse(f.jsonString!.dur) : 5)));
@@ -188,6 +197,8 @@ class _StoriesViewState extends State<StoriesView> {
 
   @override
   void dispose() {
+    widget.controller.pause();
+    widget.controller.dispose();
     super.dispose();
   }
 
@@ -199,7 +210,7 @@ class _StoriesViewState extends State<StoriesView> {
           StoryView(
             storyItems: momentItems,
             repeat: true,
-            controller: controller,
+            controller: widget.controller,
             onStoryShow: (storyItem) {
               int _pos = momentItems.indexOf(storyItem);
 
@@ -268,31 +279,14 @@ class _StoriesViewState extends State<StoriesView> {
                 focusVote: "none",
                 vertical: true,
                 verticalModeCallbackVotingButtonsPressed: () {
-                  controller.pause();
+                  widget.controller.pause();
                 },
                 verticalModeCallbackVoteSent: () {
-                  controller.play();
+                  widget.controller.play();
                 },
               ),
             ),
           ),
-          MomentsOverlay(
-              alignment: Alignment.topLeft,
-              padding: EdgeInsets.only(left: 5.w, top: 15.h),
-              width: 25.w,
-              height: 25.h,
-              child: MultiBlocProvider(
-                  providers: [
-                    BlocProvider<UserBloc>(
-                      create: (BuildContext context) =>
-                          UserBloc(repository: UserRepositoryImpl())
-                            ..add(FetchDTCVPEvent()),
-                    ),
-                  ],
-                  child: MomentsUploadButton(
-                    defaultVotingWeight:
-                        double.parse(widget.defaultVotingWeight),
-                  )))
         ],
       );
     } else {

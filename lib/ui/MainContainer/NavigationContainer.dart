@@ -251,6 +251,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           navBarStyle: NavBarStyle.style15,
 
           onItemSelected: (index) {
+            print("index changed to " + index.toString());
             if (index == 2) {
               setState(() {
                 screens.removeAt(2);
@@ -259,6 +260,20 @@ class _NavigationContainerState extends State<NavigationContainer> {
                     2,
                     new UploaderMainPage(
                       callback: uploaderCallback,
+                      key: UniqueKey(),
+                    )
+                    //  index = index;
+                    );
+              });
+            }
+            if (index == 3) {
+              print("TEST");
+              setState(() {
+                screens.removeAt(3);
+
+                screens.insert(
+                    3,
+                    new MomentsPage(
                       key: UniqueKey(),
                     )
                     //  index = index;

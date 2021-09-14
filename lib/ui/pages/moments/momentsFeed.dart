@@ -16,6 +16,7 @@ import 'package:dtube_togo/style/styledCustomWidgets.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:story_view/controller/story_controller.dart';
 
 class MomentsPage extends StatefulWidget {
   MomentsPage({Key? key}) : super(key: key);
@@ -35,6 +36,7 @@ class _MomentsPageState extends State<MomentsPage>
     FontAwesomeIcons.userFriends,
   ];
   late TabController _tabController;
+  late StoryController storyController;
   int _selectedIndex = 0;
   @override
   void initState() {
@@ -67,6 +69,13 @@ class _MomentsPageState extends State<MomentsPage>
     BlocProvider.of<FeedBloc>(context)
       ..isFetching = true
       ..add(FetchMomentsEvent(feedType: "NewMoments"));
+    storyController = new StoryController();
+  }
+
+  @override
+  void dispose() {
+    storyController.dispose();
+    super.dispose();
   }
 
   @override
@@ -93,9 +102,11 @@ class _MomentsPageState extends State<MomentsPage>
                 children: [
                   MomentsList(
                     feedType: 'NewMoments',
+                    storyController: storyController,
                   ),
                   MomentsList(
                     feedType: 'FollowMoments',
+                    storyController: storyController,
                   ),
                 ],
                 controller: _tabController,
