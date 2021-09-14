@@ -19,17 +19,26 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   Stream<FeedState> mapEventToState(FeedEvent event) async* {
     String _avalonApiNode = await sec.getNode();
     String? _applicationUser = await sec.getUsername();
+
     if (event is InitFeedEvent) {
       yield FeedInitialState();
     }
     if (event is FetchMomentsEvent) {
+      String _tsRangeFilter = '&tsrange=' +
+          DateTime.now()
+              .add(Duration(days: -7))
+              .millisecondsSinceEpoch
+              .toString() +
+          ',' +
+          DateTime.now().millisecondsSinceEpoch.toString();
+
       yield FeedLoadingState();
       try {
         List<FeedItem> feed = event.feedType == "NewMoments"
-            ? await repository.getNewFeedFiltered(
-                _avalonApiNode, "&tags=DTubeGo-Moments", _applicationUser)
-            : await repository.getMyFeedFiltered(
-                _avalonApiNode, "&tags=DTubeGo-Moments", _applicationUser);
+            ? await repository.getNewFeedFiltered(_avalonApiNode,
+                "&tags=DTubeGo-Moments", _tsRangeFilter, _applicationUser)
+            : await repository.getMyFeedFiltered(_avalonApiNode,
+                "&tags=DTubeGo-Moments", _tsRangeFilter, _applicationUser);
         yield FeedLoadedState(feed: feed, feedType: event.feedType);
       } catch (e) {
         print(e.toString());

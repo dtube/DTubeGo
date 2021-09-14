@@ -187,8 +187,9 @@ class _StoriesViewState extends State<StoriesView> {
       momentItems.add(StoryItem.pageVideo(f.videoUrl,
           controller: widget.controller,
           duration: Duration(
-              seconds:
-                  f.jsonString!.dur != "" ? int.parse(f.jsonString!.dur) : 5)));
+              seconds: f.jsonString!.dur != ""
+                  ? int.parse(f.jsonString!.dur) + 1
+                  : 5)));
       author = widget.feed[0].author;
       title = widget.feed[0].jsonString!.title;
       super.initState();
@@ -211,6 +212,7 @@ class _StoriesViewState extends State<StoriesView> {
             storyItems: momentItems,
             repeat: true,
             controller: widget.controller,
+            inline: false,
             onStoryShow: (storyItem) {
               int _pos = momentItems.indexOf(storyItem);
 

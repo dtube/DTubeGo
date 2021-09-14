@@ -267,17 +267,31 @@ class _NavigationContainerState extends State<NavigationContainer> {
               });
             }
             if (index == 3) {
-              print("TEST");
               setState(() {
                 screens.removeAt(3);
 
                 screens.insert(
-                    3,
-                    new MomentsPage(
-                      key: UniqueKey(),
-                    )
-                    //  index = index;
-                    );
+                  3,
+                  new MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                            create: (context) =>
+                                FeedBloc(repository: FeedRepositoryImpl())),
+                        BlocProvider(
+                            create: (context) => IPFSUploadBloc(
+                                repository: IPFSUploadRepositoryImpl())),
+                        BlocProvider<ThirdPartyUploaderBloc>(
+                          create: (BuildContext context) =>
+                              ThirdPartyUploaderBloc(
+                                  repository:
+                                      ThirdPartyUploaderRepositoryImpl()),
+                        ),
+                      ],
+                      child: MomentsPage(
+                        key: UniqueKey(),
+                      )),
+                  //  index = index;
+                );
               });
             }
           },

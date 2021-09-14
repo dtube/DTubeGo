@@ -34,11 +34,13 @@ abstract class FeedRepository {
   Future<List<FeedItem>> getNewFeedFiltered(
     String apiNode,
     String filterString,
+    String tsRangeFilter,
     String applicationUser,
   );
   Future<List<FeedItem>> getMyFeedFiltered(
     String apiNode,
     String filterString,
+    String tsRangeFilter,
     String applicationUser,
   );
 }
@@ -51,6 +53,7 @@ class FeedRepositoryImpl implements FeedRepository {
   Future<List<FeedItem>> getNewFeedFiltered(
     String apiNode,
     String filterString,
+    String tsRangeFilter,
     String applicationUser,
   ) async {
     String _url = apiNode +
@@ -71,6 +74,7 @@ class FeedRepositoryImpl implements FeedRepository {
   Future<List<FeedItem>> getMyFeedFiltered(
     String apiNode,
     String filterString,
+    String tsRangeFilter,
     String applicationUser,
   ) async {
     String _url = apiNode +
