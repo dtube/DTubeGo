@@ -239,6 +239,7 @@ class _StoriesViewState extends State<StoriesView> {
               children: [
                 GestureDetector(
                   child: AccountAvatarBase(
+                      key: UniqueKey(),
                       username: author,
                       avatarSize: 10.h,
                       showVerified: true,
