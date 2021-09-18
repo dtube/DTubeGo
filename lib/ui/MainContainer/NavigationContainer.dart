@@ -1,7 +1,7 @@
 import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
-import 'package:dtube_togo/ui/pages/moments/momentsFeed.dart';
+import 'package:dtube_togo/ui/pages/moments/MomentsTabContainer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
@@ -149,17 +149,22 @@ class _NavigationContainerState extends State<NavigationContainer> {
         callback: uploaderCallback,
         // key: UniqueKey(),
       ),
-      MultiBlocProvider(providers: [
-        BlocProvider(
-            create: (context) => FeedBloc(repository: FeedRepositoryImpl())),
-        BlocProvider(
-            create: (context) =>
-                IPFSUploadBloc(repository: IPFSUploadRepositoryImpl())),
-        BlocProvider<ThirdPartyUploaderBloc>(
-          create: (BuildContext context) => ThirdPartyUploaderBloc(
-              repository: ThirdPartyUploaderRepositoryImpl()),
-        ),
-      ], child: MomentsPage()),
+      MultiBlocProvider(
+          providers: [
+            BlocProvider(
+                create: (context) =>
+                    FeedBloc(repository: FeedRepositoryImpl())),
+            BlocProvider(
+                create: (context) =>
+                    IPFSUploadBloc(repository: IPFSUploadRepositoryImpl())),
+            BlocProvider<ThirdPartyUploaderBloc>(
+              create: (BuildContext context) => ThirdPartyUploaderBloc(
+                  repository: ThirdPartyUploaderRepositoryImpl()),
+            ),
+          ],
+          child: MomentsPage(
+            play: true,
+          )),
       UserPage(
         ownUserpage: true,
       ),
@@ -231,7 +236,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           backgroundColor: Colors.transparent, // Default is Colors.white.
           handleAndroidBackButtonPress: true, // Default is true.
 
-          stateManagement: true, // Default is true.
+          stateManagement: false, // Default is true.
           hideNavigationBarWhenKeyboardShows:
               true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
           decoration: NavBarDecoration(
@@ -251,7 +256,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           navBarStyle: NavBarStyle.style15,
 
           onItemSelected: (index) {
-            print("index changed to " + index.toString());
+            bottomSelectedIndex = index;
             if (index == 2) {
               setState(() {
                 screens.removeAt(2);
@@ -289,6 +294,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
                       ],
                       child: MomentsPage(
                         key: UniqueKey(),
+                        play: true,
                       )),
                   //  index = index;
                 );

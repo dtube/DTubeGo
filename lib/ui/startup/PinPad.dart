@@ -8,7 +8,7 @@ import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/MainContainer/NavigationContainer.dart';
+import 'package:dtube_togo/ui/MainContainer/NavigationContainerV2.dart';
 import 'package:dtube_togo/ui/widgets/PinPadWidget.dart';
 import 'package:dtube_togo/utils/secureStorage.dart';
 import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';

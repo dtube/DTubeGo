@@ -47,7 +47,8 @@ Flushbar showCustomFlushbarOnSuccess(
             state.authorPerm!.substring(0, state.authorPerm!.indexOf('/')),
             state.authorPerm!.substring(state.authorPerm!.indexOf('/') + 1),
             "none",
-            true);
+            true,
+            () {});
       }
     },
     flushbarPosition: FlushbarPosition.TOP,

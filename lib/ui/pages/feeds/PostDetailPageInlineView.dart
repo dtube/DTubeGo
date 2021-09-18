@@ -183,7 +183,8 @@ class _PostDetailsState extends State<PostDetails> {
                         width: 15.w,
                       ),
                       onPressed: () {
-                        navigateToUserDetailPage(context, widget.post.author);
+                        navigateToUserDetailPage(
+                            context, widget.post.author, () {});
                       },
                     ),
                     FullScreenButton(

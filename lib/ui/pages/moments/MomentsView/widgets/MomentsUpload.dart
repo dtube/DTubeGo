@@ -8,9 +8,6 @@ import 'package:dtube_togo/res/appConfigValues.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc.dart';
-import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
-
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_event.dart';
@@ -18,7 +15,6 @@ import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 
-import 'package:dtube_togo/ui/pages/upload/uploadForm.dart';
 import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +24,14 @@ import 'package:video_compress/video_compress.dart';
 
 class MomentsUploadButton extends StatefulWidget {
   double defaultVotingWeight;
-  MomentsUploadButton({Key? key, required this.defaultVotingWeight})
+  VoidCallback clickedCallBack;
+  VoidCallback leaveDialogCallBack;
+
+  MomentsUploadButton(
+      {Key? key,
+      required this.defaultVotingWeight,
+      required this.clickedCallBack,
+      required this.leaveDialogCallBack})
       : super(key: key);
 
   @override
@@ -95,7 +98,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
     } while (_3rdPartyUploadBloc.state is ThirdPartyUploaderUploadingState);
     if (_3rdPartyUploadBloc.state is ThirdPartyUploaderUploadedState) {
       print(_3rdPartyUploadBloc.state.props[0].toString());
-      setState(() {
+      setState(() async {
         _uploadData.thumbnailLocation =
             _3rdPartyUploadBloc.state.props[0].toString();
         _uploadData.localThumbnail = false;
@@ -108,6 +111,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
             thumbnailPath: _uploadData.thumbnailLocation,
             uploadData: _uploadData,
             context: context));
+        widget.leaveDialogCallBack();
       });
     }
   }
@@ -208,6 +212,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
               ],
             ),
             onTap: () {
+              widget.clickedCallBack();
               getFile(true, true, state.vtBalance['v']!,
                   widget.defaultVotingWeight);
             },

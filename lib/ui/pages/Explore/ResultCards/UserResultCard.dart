@@ -22,7 +22,7 @@ class UserResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        navigateToUserDetailPage(context, name);
+        navigateToUserDetailPage(context, name, () {});
       },
       child: Card(
         // height: 35,

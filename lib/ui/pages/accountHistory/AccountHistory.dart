@@ -265,7 +265,7 @@ class ActivityItem extends StatelessWidget {
                         ],
                       ),
                       onTap: () {
-                        navigateToUserDetailPage(context, txData.sender);
+                        navigateToUserDetailPage(context, txData.sender, () {});
                       },
                     ),
                     Container(
@@ -299,24 +299,20 @@ class ActivityItem extends StatelessWidget {
                         if (txData.data.author != null &&
                             txData.data.link != null) {
                           navigateToPostDetailPage(context, txData.data.author!,
-                              txData.data.link!, "none", false);
+                              txData.data.link!, "none", false, () {});
                         }
                         if (txData.data.pa != null && txData.data.pp != null) {
                           navigateToPostDetailPage(context, txData.data.pa!,
-                              txData.data.pp!, "none", false);
+                              txData.data.pp!, "none", false, () {});
                         }
                         if (txData.data.target != null) {
                           print(username);
                           navigateToUserDetailPage(
-                            context,
-                            txData.data.target!,
-                          );
+                              context, txData.data.target!, () {});
                         }
                         if (txData.data.receiver != null) {
                           navigateToUserDetailPage(
-                            context,
-                            txData.data.receiver!,
-                          );
+                              context, txData.data.receiver!, () {});
                         }
                       },
                     ),

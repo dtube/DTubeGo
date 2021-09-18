@@ -23,10 +23,11 @@ class UserPage extends StatefulWidget {
   String? username;
   bool ownUserpage;
   bool? alreadyFollowing;
+  VoidCallback? onPop;
   @override
   _UserState createState() => _UserState();
 
-  UserPage({Key? key, this.username, required this.ownUserpage})
+  UserPage({Key? key, this.username, required this.ownUserpage, this.onPop})
       : super(key: key);
 }
 
@@ -49,45 +50,54 @@ class _UserState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //backgroundColor: Colors.transparent,
-      extendBodyBehindAppBar: true,
-      appBar: widget.ownUserpage
-          ? null
-          : AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              toolbarHeight: 28,
-            ),
-      body: Container(
-        child: BlocListener<UserBloc, UserState>(
-          listener: (context, state) {
-            if (state is UserErrorState) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                ),
-              );
-            }
-          },
-          child: BlocBuilder<UserBloc, UserState>(
-            builder: (context, state) {
-              if (state is UserInitialState) {
-                return buildLoading();
-              } else if (state is UserLoadingState) {
-                return buildLoading();
-              } else if (state is UserLoadedState) {
-                return buildUserPage(state.user, widget.ownUserpage);
-              } else if (state is UserErrorState) {
-                return buildErrorUi(state.message);
-              } else {
-                return buildErrorUi('test');
+    return new WillPopScope(
+      onWillPop: () async {
+        if (widget.onPop != null) {
+          widget.onPop!();
+        }
+
+        return true;
+      },
+      child: Scaffold(
+        //backgroundColor: Colors.transparent,
+        extendBodyBehindAppBar: true,
+        appBar: widget.ownUserpage
+            ? null
+            : AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                toolbarHeight: 28,
+              ),
+        body: Container(
+          child: BlocListener<UserBloc, UserState>(
+            listener: (context, state) {
+              if (state is UserErrorState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                  ),
+                );
               }
             },
+            child: BlocBuilder<UserBloc, UserState>(
+              builder: (context, state) {
+                if (state is UserInitialState) {
+                  return buildLoading();
+                } else if (state is UserLoadingState) {
+                  return buildLoading();
+                } else if (state is UserLoadedState) {
+                  return buildUserPage(state.user, widget.ownUserpage);
+                } else if (state is UserErrorState) {
+                  return buildErrorUi(state.message);
+                } else {
+                  return buildErrorUi('test');
+                }
+              },
+            ),
           ),
         ),
+        //),
       ),
-      //),
     );
   }
 

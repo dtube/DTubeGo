@@ -100,7 +100,8 @@ class _NotificationsState extends State<Notifications> {
               List<int> navigatableTxsUser = [1, 2, 7, 8];
               List<int> navigatableTxsPost = [4, 5, 13, 19];
               if (_userNavigationPossible) {
-                navigateToUserDetailPage(context, notifications[pos].tx.sender);
+                navigateToUserDetailPage(
+                    context, notifications[pos].tx.sender, () {});
               }
               if (_postNavigationPossible) {
                 navigateToPostDetailPage(
@@ -108,7 +109,8 @@ class _NotificationsState extends State<Notifications> {
                     notifications[pos].tx.data.author!,
                     notifications[pos].tx.data.link!,
                     "none",
-                    false);
+                    false,
+                    () {});
               }
             },
           ),

@@ -28,7 +28,8 @@ class FeedViewBase extends StatefulWidget {
   State<FeedViewBase> createState() => _FeedViewBaseState();
 }
 
-class _FeedViewBaseState extends State<FeedViewBase> {
+class _FeedViewBaseState extends State<FeedViewBase>
+    with AutomaticKeepAliveClientMixin<FeedViewBase> {
   String? postAuthor;
   String? postLink;
   ValueNotifier<List<String>> _notifierPost = ValueNotifier(["", ""]);
@@ -42,11 +43,15 @@ class _FeedViewBaseState extends State<FeedViewBase> {
     //});
   }
 
+  @override
   void dispose() {
     _notifierPost.dispose();
 
     super.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {

@@ -84,7 +84,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
           children: <Widget>[
             InkWell(
               onTap: () {
-                navigateToUserDetailPage(context, widget.author);
+                navigateToUserDetailPage(context, widget.author, () {});
               },
               child: AccountAvatarBase(
                 username: widget.author,
@@ -109,8 +109,8 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                       : SizedBox(width: 0),
                   InkWell(
                     onTap: () {
-                      navigateToPostDetailPage(
-                          context, widget.author, widget.link, "none", false);
+                      navigateToPostDetailPage(context, widget.author,
+                          widget.link, "none", false, () {});
                     },
                     child: InputChip(
                       label: Container(
@@ -138,7 +138,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
           child: InkWell(
             onTap: () {
               navigateToPostDetailPage(
-                  context, widget.author, widget.link, "none", false);
+                  context, widget.author, widget.link, "none", false, () {});
             },
             child: Text(
               widget.title,
@@ -263,7 +263,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                     ),
                     onPressed: () {
                       navigateToPostDetailPage(context, widget.author,
-                          widget.link, "newcomment", false);
+                          widget.link, "newcomment", false, () {});
                     },
                   ),
                 ),
@@ -290,7 +290,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                         onPressed: () {
                           if (!widget.alreadyVoted) {
                             navigateToPostDetailPage(context, widget.author,
-                                widget.link, "upvote", false);
+                                widget.link, "upvote", false, () {});
                           }
                         },
                       ),
@@ -313,7 +313,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                         onPressed: () {
                           if (!widget.alreadyVoted) {
                             navigateToPostDetailPage(context, widget.author,
-                                widget.link, "downvote", false);
+                                widget.link, "downvote", false, () {});
                           }
                         },
                       ),

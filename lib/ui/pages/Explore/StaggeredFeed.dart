@@ -129,8 +129,8 @@ class StaggeredFeed extends StatelessWidget {
       itemCount: feed.length,
       itemBuilder: (BuildContext context, int index) => GestureDetector(
         onTap: () {
-          navigateToPostDetailPage(
-              context, feed[index].author, feed[index].link, "none", false);
+          navigateToPostDetailPage(context, feed[index].author,
+              feed[index].link, "none", false, () {});
         },
         child: new CachedNetworkImage(
           imageUrl: feed[index].thumbUrl,

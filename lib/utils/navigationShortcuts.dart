@@ -7,18 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void navigateToPostDetailPage(BuildContext context, String author, String link,
-    String directFocus, bool recentlyUploaded) {
+    String directFocus, bool recentlyUploaded, VoidCallback onPop) {
   Navigator.push(context, MaterialPageRoute(builder: (context) {
     return PostDetailPage(
       author: author,
       link: link,
       recentlyUploaded: recentlyUploaded,
       directFocus: directFocus,
+      onPop: onPop,
     );
   }));
 }
 
-void navigateToUserDetailPage(BuildContext context, String username) {
+void navigateToUserDetailPage(
+    BuildContext context, String username, VoidCallback onPop) {
   Navigator.push(context, MaterialPageRoute(builder: (context) {
     return MultiBlocProvider(
       providers: [
@@ -40,6 +42,7 @@ void navigateToUserDetailPage(BuildContext context, String username) {
       child: UserPage(
         username: username,
         ownUserpage: false,
+        onPop: onPop,
       ),
     );
   }));

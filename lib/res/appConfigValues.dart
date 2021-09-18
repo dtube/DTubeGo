@@ -2,12 +2,12 @@ class AppConfig {
   static String myFeedUrlFirst = "/feed/##USERNAME";
   static String myFeedUrlMore = "/feed/##USERNAME/##AUTHOR/##LINK";
   static String myFeedUrlFiltered =
-      "/feed/##USERNAME/filter:limit=500&##FILTERSTRING";
+      "/feed/##USERNAME/filter:limit=500##FILTERSTRING";
 
   static String newFeedUrlFirst = "/new";
   static String newFeedUrlMore = "/new/##AUTHOR/##LINK";
 
-  static String newFeedUrlFiltered = "/new/filter:limit=500&##FILTERSTRING";
+  static String newFeedUrlFiltered = "/new/filter:limit=500##FILTERSTRING";
 
   static String hotFeedUrlFirst = "/hot";
   static String hotFeedUrlMore = "/hot/##AUTHOR/##LINK";

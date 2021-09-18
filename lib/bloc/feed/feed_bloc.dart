@@ -25,12 +25,12 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     }
     if (event is FetchMomentsEvent) {
       String _tsRangeFilter = '&tsrange=' +
-          DateTime.now()
+          (DateTime.now()
               .add(Duration(days: -7))
-              .millisecondsSinceEpoch
+              .millisecondsSinceEpoch/1000)
               .toString() +
           ',' +
-          DateTime.now().millisecondsSinceEpoch.toString();
+          (DateTime.now().millisecondsSinceEpoch/1000).toString();
 
       yield FeedLoadingState();
       try {

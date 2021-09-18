@@ -57,7 +57,8 @@ class FeedRepositoryImpl implements FeedRepository {
     String applicationUser,
   ) async {
     String _url = apiNode +
-        AppConfig.newFeedUrlFiltered.replaceAll("##FILTERSTRING", filterString);
+        AppConfig.newFeedUrlFiltered
+            .replaceAll("##FILTERSTRING", filterString + tsRangeFilter);
 
     var response = await http.get(Uri.parse(_url));
     if (response.statusCode == 200) {
@@ -80,7 +81,7 @@ class FeedRepositoryImpl implements FeedRepository {
     String _url = apiNode +
         AppConfig.myFeedUrlFiltered
             .replaceAll("##USERNAME", applicationUser)
-            .replaceAll("##FILTERSTRING", filterString);
+            .replaceAll("##FILTERSTRING", filterString + tsRangeFilter);
 
     var response = await http.get(Uri.parse(_url));
     if (response.statusCode == 200) {

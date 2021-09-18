@@ -63,7 +63,7 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
       onTap: () {
         if (widget.enableNavigation) {
           navigateToPostDetailPage(
-              context, widget.author, widget.link, "none", false);
+              context, widget.author, widget.link, "none", false, () {});
         } else {
           if (widget.itemSelectedCallback != null) {
             widget.itemSelectedCallback!([widget.author, widget.link]);

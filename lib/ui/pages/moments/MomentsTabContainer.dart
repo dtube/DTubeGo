@@ -1,12 +1,9 @@
 import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc.dart';
 import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
-import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc.dart';
-import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
-import 'package:dtube_togo/ui/pages/feeds/FeedViewBase.dart';
-import 'package:dtube_togo/ui/pages/moments/MomentsListV2.dart';
-import 'package:dtube_togo/ui/pages/moments/widgets/MomentsUpload.dart';
+import 'package:dtube_togo/ui/pages/moments/MomentsList.dart';
+
 import 'package:dtube_togo/utils/ResponsiveLayout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -16,10 +13,10 @@ import 'package:dtube_togo/style/styledCustomWidgets.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:story_view/controller/story_controller.dart';
 
 class MomentsPage extends StatefulWidget {
-  MomentsPage({Key? key}) : super(key: key);
+  bool play;
+  MomentsPage({Key? key, required this.play}) : super(key: key);
 
   @override
   _MomentsPageState createState() => _MomentsPageState();
@@ -36,7 +33,7 @@ class _MomentsPageState extends State<MomentsPage>
     FontAwesomeIcons.userFriends,
   ];
   late TabController _tabController;
-  late StoryController storyController;
+  // late StoryController storyController;
   int _selectedIndex = 0;
   @override
   void initState() {
@@ -47,7 +44,7 @@ class _MomentsPageState extends State<MomentsPage>
         setState(() {
           _selectedIndex = _tabController.index;
         });
-        print("Selected Index: " + _tabController.index.toString());
+
         switch (_selectedIndex) {
           case 0:
             BlocProvider.of<FeedBloc>(context)
@@ -69,12 +66,10 @@ class _MomentsPageState extends State<MomentsPage>
     BlocProvider.of<FeedBloc>(context)
       ..isFetching = true
       ..add(FetchMomentsEvent(feedType: "NewMoments"));
-    storyController = new StoryController();
   }
 
   @override
   void dispose() {
-    storyController.dispose();
     super.dispose();
   }
 
@@ -88,87 +83,81 @@ class _MomentsPageState extends State<MomentsPage>
         return Center(
             child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
       } else {
-        // return BlocBuilder<IPFSUploadBloc, IPFSUploadState>(
-        //     builder: (context, state) {
-        //   if (state is IPFSUploadVideoUploadedState ||
-        //       state is IPFSUploadInitialState) {
-
         return Scaffold(
-          //appBar: dtubeSubAppBar(true, "", context, null),
           resizeToAvoidBottomInset: true,
-          body: Stack(
-            children: [
-              TabBarView(
-                children: [
-                  MomentsList(
-                    feedType: 'NewMoments',
-                    storyController: storyController,
-                  ),
-                  MomentsList(
-                    feedType: 'FollowMoments',
-                    storyController: storyController,
-                  ),
-                ],
-                controller: _tabController,
-              ),
-              ResponsiveLayout(
-                portrait: TabBarWithPosition(
-                  tabIcons: _tabIcons,
-                  iconSize: _iconSize,
-                  tabController: _tabController,
-                  alignment: Alignment.topRight,
-                  padding: EdgeInsets.only(top: 13.h, right: 4.w),
-                  rotation: 0,
-                  menuSize: 35.w,
-                ),
-                landscape: TabBarWithPosition(
-                  tabIcons: _tabIcons,
-                  iconSize: _iconSize,
-                  tabController: _tabController,
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.zero,
-                  rotation: 3,
-                  menuSize: 80.h,
-                ),
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 8.h, left: 4.w),
-                  //padding: EdgeInsets.only(top: 5.h),
-                  child: OverlayText(
-                    text: _tabNames[_selectedIndex],
-                    sizeMultiply: 1.4,
-                    bold: true,
-                  ),
-                ),
-              ),
-              MomentsOverlay(
-                  alignment: Alignment.topLeft,
-                  padding: EdgeInsets.only(left: 5.w, top: 15.h),
-                  width: 25.w,
-                  height: 25.h,
-                  child: MultiBlocProvider(
-                      providers: [
-                        BlocProvider<UserBloc>(
-                          create: (BuildContext context) =>
-                              UserBloc(repository: UserRepositoryImpl())
-                                ..add(FetchDTCVPEvent()),
+          body: widget.play
+              ? Stack(
+                  children: [
+                    TabBarView(
+                      children: [
+                        MomentsList(
+                          feedType: 'NewMoments',
+                          goingInBackgroundCallback: () {
+                            setState(() {
+                              widget.play = false;
+                            });
+                          },
+                          goingInForegroundCallback: () {
+                            setState(() {
+                              widget.play = true;
+                            });
+                          },
+                        ),
+                        MomentsList(
+                          feedType: 'FollowMoments',
+                          goingInBackgroundCallback: () {
+                            setState(() {
+                              widget.play = true;
+                            });
+                          },
+                          goingInForegroundCallback: () {
+                            setState(() {
+                              widget.play = true;
+                            });
+                          },
                         ),
                       ],
-                      child: MomentsUploadButton(
-                        defaultVotingWeight:
-                            double.parse("25"), // TODO make it dynamic
-                      )))
-            ],
-          ),
+                      controller: _tabController,
+                    ),
+                    ResponsiveLayout(
+                      portrait: TabBarWithPosition(
+                        tabIcons: _tabIcons,
+                        iconSize: _iconSize,
+                        tabController: _tabController,
+                        alignment: Alignment.topRight,
+                        padding: EdgeInsets.only(top: 13.h, right: 4.w),
+                        rotation: 0,
+                        menuSize: 35.w,
+                      ),
+                      landscape: TabBarWithPosition(
+                        tabIcons: _tabIcons,
+                        iconSize: _iconSize,
+                        tabController: _tabController,
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.zero,
+                        rotation: 3,
+                        menuSize: 80.h,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 8.h, left: 4.w),
+                        //padding: EdgeInsets.only(top: 5.h),
+                        child: OverlayText(
+                          text: _tabNames[_selectedIndex],
+                          sizeMultiply: 1.4,
+                          bold: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : SizedBox(
+                  width: 0,
+                  height: 0,
+                ),
         );
-        // } else {
-        //   return Center(
-        //       child: DTubeLogoPulse(
-        //           size: MediaQuery.of(context).size.width / 3));
-        // }
-        // });
       }
     });
   }

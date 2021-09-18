@@ -68,11 +68,11 @@ class _FeedMainPageState extends State<FeedMainPage>
         }
       }
     });
-
-    super.initState();
     BlocProvider.of<FeedBloc>(context)
       ..isFetching = true
       ..add(FetchFeedEvent(feedType: "NewFeed"));
+
+    super.initState();
   }
 
   @override

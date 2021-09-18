@@ -30,7 +30,7 @@ class PostResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        navigateToPostDetailPage(context, author, link, "none", false);
+        navigateToPostDetailPage(context, author, link, "none", false, () {});
       },
       child: Card(
         // height: 35,
