@@ -17,3 +17,10 @@ class UploadVideo extends IPFSUploadEvent {
   @override
   List<Object> get props => List.empty();
 }
+
+class IPFSUploaderInitState extends IPFSUploadEvent {
+  IPFSUploaderInitState();
+
+  @override
+  List<Object> get props => List.empty();
+}

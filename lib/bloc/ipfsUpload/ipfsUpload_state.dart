@@ -64,10 +64,9 @@ class IPFSUploadThumbnailUploadingState extends IPFSUploadState {
 }
 
 class IPFSUploadThumbnailUploadedState extends IPFSUploadState {
-  Map uploadResponse;
-  IPFSUploadThumbnailUploadedState({required this.uploadResponse});
+  IPFSUploadThumbnailUploadedState();
   @override
-  List<Object> get props => [uploadResponse];
+  List<Object> get props => [];
 }
 
 // general user states

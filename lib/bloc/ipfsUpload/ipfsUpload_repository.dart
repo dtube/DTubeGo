@@ -17,8 +17,7 @@ abstract class IPFSUploadRepository {
   Future<String> createThumbnailFromVideo(String localFilePath);
   Future<String> getUploadEndpoint();
   Future<String> uploadVideo(String localFilePath, String endpoint);
-  Future<String> uploadThumbnail(
-      String localFilePath, String generatedFilePath);
+  Future<String> uploadThumbnail(String localFilePath);
   Future<Map> monitorVideoUploadStatus(String token, String endpoint);
   Future<Map> monitorThumbnailUploadStatus(String token);
 }
@@ -91,24 +90,33 @@ class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
     }
   }
 
-  Future<String> uploadThumbnail(
-      String localThumbnail, String generatedThumbnail) async {
-    String _url = AppConfig.ipfsSnapUploadUrl + '/uploadImage';
-    String _filePath =
-        localThumbnail != '' ? localThumbnail : generatedThumbnail;
+// TODO: support more providers
+  Future<String> uploadThumbnail(String localFilePath) async {
+    //String _url = endpoint;
+    String _url = "https://api.imgur.com/3/image";
+    ;
+    String authHeader = "Client-ID fc2dde68a83c037";
 
-    var formData = FormData.fromMap({
-      'files':
-          await MultipartFile.fromFile(_filePath, filename: basename(_filePath))
-    });
     var dio = Dio();
+    dio.options.headers["Authorization"] = authHeader;
+    String fileName = localFilePath.split('/').last;
 
-    var response = await dio.post(_url, data: formData);
+    FormData data = FormData.fromMap({
+      "image": await MultipartFile.fromFile(
+        localFilePath,
+        filename: fileName,
+      ),
+    });
+
+    var response = await dio.post(
+      _url,
+      data: data,
+    );
 
     if (response.statusCode == 200) {
-      var data = json.decode(response.data);
-      String token = data["token"];
-      return token;
+      var uploadedUrl = response.data['data']['link'];
+
+      return uploadedUrl;
     } else {
       throw Exception();
     }

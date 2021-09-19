@@ -15,7 +15,7 @@ class ThirdPartyUploaderRepositoryImpl implements ThirdPartyUploaderRepository {
     return "https://api.imgur.com/3/image";
   }
 
-// TODO: error handling
+// TODO: support more providers
   Future<String> uploadFile(String localFilePath, String endpoint) async {
     String _url = endpoint;
     String authHeader = "Client-ID fc2dde68a83c037";

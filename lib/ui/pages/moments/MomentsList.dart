@@ -1,7 +1,10 @@
 import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
+import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/ui/pages/moments/MomentsView/MomentsItem.dart';
 import 'package:dtube_togo/ui/pages/moments/MomentsView/MomentsView.dart';
 import 'package:dtube_togo/ui/pages/moments/MomentsView/controller/MomentsController.dart';
+import 'package:dtube_togo/ui/pages/moments/MomentsView/widgets/MomentsUpload.dart';
 import 'package:dtube_togo/ui/pages/moments/MomentsView/widgets/VideoPlayerMoments.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -50,15 +53,17 @@ class _MomentsListState extends State<MomentsList> {
   String? _nsfwMode;
   String? _hiddenMode;
   String? _applicationUser;
-  String? _defaultVotingWeight;
-  String? _defaultVotingTip;
+  String? _defaultPostVotingWeight;
+  String? _defaultPostVotingTip;
+  String? _defaultCommentsVotingWeight;
 
   Future<bool> getConfigValues() async {
     _hiddenMode = await sec.getShowHidden();
     _nsfwMode = await sec.getNSFW();
     _applicationUser = await sec.getUsername();
-    _defaultVotingWeight = await sec.getDefaultVote();
-    _defaultVotingTip = await sec.getDefaultVoteTip();
+    _defaultPostVotingWeight = await sec.getDefaultVote();
+    _defaultPostVotingTip = await sec.getDefaultVoteTip();
+    _defaultCommentsVotingWeight = await sec.getDefaultVoteComments();
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
     }
@@ -99,14 +104,23 @@ class _MomentsListState extends State<MomentsList> {
                     if (moments.isEmpty) {
                       for (var f in state.feed) {
                         moments.add(MomentsItem(
-                            VideoPlayerMoments(
-                              key: UniqueKey(),
-                              goingInBackgroundCallback:
-                                  widget.goingInBackgroundCallback,
-                              goingInForegroundCallback:
-                                  widget.goingInForegroundCallback,
-                              feedItem: f,
-                              parentStoryController: momentsController,
+                            BlocProvider<UserBloc>(
+                              create: (context) =>
+                                  UserBloc(repository: UserRepositoryImpl()),
+                              child: VideoPlayerMoments(
+                                momentsController: momentsController,
+                                defaultCommentsVotingWeight:
+                                    _defaultCommentsVotingWeight!,
+                                defaultPostsVotingWeight:
+                                    _defaultPostVotingWeight!,
+                                defaultPostsVotingTip: _defaultPostVotingTip!,
+                                key: UniqueKey(),
+                                goingInBackgroundCallback:
+                                    widget.goingInBackgroundCallback,
+                                goingInForegroundCallback:
+                                    widget.goingInForegroundCallback,
+                                feedItem: f,
+                              ),
                             ),
                             duration: Duration(
                                 seconds: f.jsonString!.dur != ""
@@ -124,8 +138,9 @@ class _MomentsListState extends State<MomentsList> {
                     momentItems: moments,
                     feedType: widget.feedType,
                     appUser: _applicationUser!,
-                    defaultVotingTip: _defaultVotingTip!,
-                    defaultVotingWeight: _defaultVotingWeight!,
+                    defaultPostsVotingTip: _defaultPostVotingTip!,
+                    defaultPostsVotingWeight: _defaultPostVotingWeight!,
+                    defaultCommentsVotingWeight: _defaultCommentsVotingWeight!,
                     controller: momentsController);
               },
             );
@@ -155,8 +170,9 @@ class _MomentsListState extends State<MomentsList> {
 
 class MomentsContainer extends StatefulWidget {
   List<MomentsItem> momentItems;
-  String defaultVotingWeight;
-  String defaultVotingTip;
+  String defaultPostsVotingWeight;
+  String defaultCommentsVotingWeight;
+  String defaultPostsVotingTip;
   String appUser;
 
   String feedType;
@@ -167,8 +183,9 @@ class MomentsContainer extends StatefulWidget {
       required this.momentItems,
       required this.feedType,
       required this.appUser,
-      required this.defaultVotingTip,
-      required this.defaultVotingWeight,
+      required this.defaultPostsVotingTip,
+      required this.defaultPostsVotingWeight,
+      required this.defaultCommentsVotingWeight,
       required this.controller})
       : super(key: key);
 
@@ -184,6 +201,7 @@ class _MomentsContainerState extends State<MomentsContainer> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<UserBloc>(context).add(FetchDTCVPEvent());
   }
 
   @override
@@ -205,19 +223,47 @@ class _MomentsContainerState extends State<MomentsContainer> {
             inline: false,
             onStoryShow: (momentsItem) {},
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-                padding: EdgeInsets.only(bottom: 30.h),
-                child: IconButton(
-                  icon: FaIcon(widget.controller.playbackNotifier.isPaused
-                      ? FontAwesomeIcons.play
-                      : FontAwesomeIcons.stop),
-                  onPressed: () {
-                    widget.controller.pause();
-                  },
-                )),
-          )
+          BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+            if (state is UserDTCVPLoadedState) {
+              return BlocBuilder<IPFSUploadBloc, IPFSUploadState>(
+                builder: (context, stateIPFS) {
+                  if (stateIPFS is IPFSUploadInitialState ||
+                      stateIPFS is IPFSUploadVideoUploadedState) {
+                    return MomentsOverlay(
+                        alignment: Alignment.topLeft,
+                        padding: EdgeInsets.only(left: 5.w, top: 15.h),
+                        width: 25.w,
+                        height: 25.h,
+                        child: MomentsUploadButton(
+                            currentVT: state.vtBalance['v']! + 0.0,
+                            defaultVotingWeight: double.parse(widget
+                                .defaultPostsVotingWeight), // todo make this dynamic
+                            clickedCallback: () {
+                              // setState(() {
+                              //   widget.momentsController.pause();
+                              //   _videoController.pause();
+                              // });
+                            },
+                            leaveDialogWithUploadCallback: () {
+                              // setState(() {
+                              //   widget.momentsController.pause();
+                              //   _videoController.pause();
+                              //   _momentUploading = true;
+                              // });
+                            },
+                            leaveDialogWithoutUploadCallback: () {
+                              //   widget.momentsController.play();
+                              //   _videoController.play();
+                              //   _momentUploading = false;
+                            }));
+                  } else {
+                    return DTubeLogoPulseRotating(size: 10.w);
+                  }
+                },
+              );
+            }
+            return SizedBox(height: 0, width: 0);
+          })
         ],
       );
     } else {

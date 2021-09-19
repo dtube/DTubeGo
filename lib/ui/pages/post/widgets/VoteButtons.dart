@@ -686,16 +686,17 @@ class _VotingSliderState extends State<VotingSlider> {
 }
 
 class VotingSliderStandalone extends StatefulWidget {
-  VotingSliderStandalone({
-    Key? key,
-    required this.author,
-    required this.link,
-    required this.downvote,
-    required this.defaultVote,
-    required this.defaultTip,
-    required this.currentVT,
-    required this.isPost,
-  }) : super(key: key);
+  VotingSliderStandalone(
+      {Key? key,
+      required this.author,
+      required this.link,
+      required this.downvote,
+      required this.defaultVote,
+      required this.defaultTip,
+      required this.currentVT,
+      required this.isPost,
+      this.sendCallback})
+      : super(key: key);
 
   String author;
   String link;
@@ -705,6 +706,7 @@ class VotingSliderStandalone extends StatefulWidget {
   bool isPost;
 
   bool downvote;
+  VoidCallback? sendCallback;
 
   @override
   _VotingSliderStandaloneState createState() => _VotingSliderStandaloneState();
@@ -872,6 +874,9 @@ class _VotingSliderStandaloneState extends State<VotingSliderStandalone> {
                                   setState(() {
                                     _sendButtonPressed = true;
                                   });
+                                  if (widget.sendCallback != null) {
+                                    widget.sendCallback!();
+                                  }
                                 },
                               ),
                             ],

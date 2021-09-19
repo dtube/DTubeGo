@@ -19,12 +19,16 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
   @override
   Stream<IPFSUploadState> mapEventToState(IPFSUploadEvent event) async* {
     String _uploadEndpoint = "";
-    String _thumbnailUploadToken = "";
+    String _thumbnailOnlineLocation = "";
     String _videoUploadToken = "";
+    String _newThumbnail = "";
     File _newFile;
     late Map _uploadStatusResponse;
-    late Map _thumbUploadStatusResponse;
+
     late UploadData _uploadData;
+    if (event is IPFSUploaderInitState) {
+      yield IPFSUploadInitialState();
+    }
 
     if (event is UploadVideo) {
       TransactionBloc txBloc = BlocProvider.of<TransactionBloc>(event.context);
@@ -34,8 +38,11 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
 
       _newFile = await repository.compressVideo(event.videoPath);
 
-      String _newThumbnail =
+      _newThumbnail =
           await repository.createThumbnailFromVideo(event.videoPath);
+      if (event.thumbnailPath != "") {
+        _newThumbnail = event.thumbnailPath;
+      }
 
       yield IPFSUploadVideoPreProcessedState(compressedFile: _newFile);
       try {
@@ -70,33 +77,15 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
                 statusInfo["ipfsAddSourceVideo"]["hash"];
 
             try {
-              if (_uploadData.localThumbnail == true) {
-                _thumbnailUploadToken = await repository.uploadThumbnail(
-                    event.thumbnailPath, _newThumbnail);
-                do {
-                  _thumbUploadStatusResponse = await repository
-                      .monitorThumbnailUploadStatus(_thumbnailUploadToken);
-                  print(_thumbUploadStatusResponse);
-                  yield IPFSUploadThumbnailUploadingState(
-                      uploadingResponse: _thumbUploadStatusResponse);
-                } while (_thumbUploadStatusResponse["ipfsAddSource"]["step"] !=
-                        "Success" ||
-                    _thumbUploadStatusResponse["ipfsAddOverlay"]["step"] !=
-                        "Success");
-                yield IPFSUploadThumbnailUploadedState(
-                    uploadResponse: _thumbUploadStatusResponse);
+              _thumbnailOnlineLocation =
+                  await repository.uploadThumbnail(_newThumbnail);
 
-                var statusInfo = _thumbUploadStatusResponse;
+              yield IPFSUploadThumbnailUploadedState();
 
-                _uploadData.thumbnail210Hash =
-                    statusInfo["ipfsAddSource"]["hash"];
-                _uploadData.thumbnail640Hash =
-                    statusInfo["ipfsAddOverlay"]["hash"];
-                _uploadData.thumbnailLocation =
-                    statusInfo["ipfsAddOverlay"]["hash"];
+              _uploadData.thumbnailLocation = _thumbnailOnlineLocation;
 
-                _uploadData.link = randomPermlink(11);
-              }
+              _uploadData.link = randomPermlink(11);
+
               txBloc.add(SendCommentEvent(_uploadData));
             } catch (e) {
               print(e.toString());

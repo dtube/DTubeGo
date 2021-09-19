@@ -1,8 +1,10 @@
 import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc.dart';
 import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
+import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:dtube_togo/ui/pages/moments/MomentsList.dart';
+import 'package:dtube_togo/ui/pages/moments/MomentsView/widgets/MomentsUpload.dart';
 
 import 'package:dtube_togo/utils/ResponsiveLayout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -84,7 +86,7 @@ class _MomentsPageState extends State<MomentsPage>
             child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
       } else {
         return Scaffold(
-          resizeToAvoidBottomInset: true,
+          resizeToAvoidBottomInset: false,
           body: widget.play
               ? Stack(
                   children: [

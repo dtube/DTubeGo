@@ -24,14 +24,18 @@ import 'package:video_compress/video_compress.dart';
 
 class MomentsUploadButton extends StatefulWidget {
   double defaultVotingWeight;
-  VoidCallback clickedCallBack;
-  VoidCallback leaveDialogCallBack;
+  double currentVT;
+  VoidCallback clickedCallback;
+  VoidCallback leaveDialogWithUploadCallback;
+  VoidCallback leaveDialogWithoutUploadCallback;
 
   MomentsUploadButton(
       {Key? key,
       required this.defaultVotingWeight,
-      required this.clickedCallBack,
-      required this.leaveDialogCallBack})
+      required this.clickedCallback,
+      required this.leaveDialogWithUploadCallback,
+      required this.leaveDialogWithoutUploadCallback,
+      required this.currentVT})
       : super(key: key);
 
   @override
@@ -42,6 +46,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
   late IPFSUploadBloc _uploadBloc;
   late ThirdPartyUploaderBloc _3rdPartyUploadBloc;
   late UserBloc _userBloc;
+  late double _vpBalance;
   File? _image;
   File? _video;
   final _picker = ImagePicker();
@@ -86,34 +91,14 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
     final info = await VideoCompress.getMediaInfo(videoPath);
 
     _uploadData.duration = (info.duration! / 1000).floor().toString();
-    File thumbnail = await VideoCompress.getFileThumbnail(
-      videoPath,
-    );
-    print(thumbnail.path);
 
-    BlocProvider.of<ThirdPartyUploaderBloc>(context)
-        .add(UploadFile(filePath: thumbnail.path));
-    do {
-      print("uploading in progress");
-    } while (_3rdPartyUploadBloc.state is ThirdPartyUploaderUploadingState);
-    if (_3rdPartyUploadBloc.state is ThirdPartyUploaderUploadedState) {
-      print(_3rdPartyUploadBloc.state.props[0].toString());
-      setState(() async {
-        _uploadData.thumbnailLocation =
-            _3rdPartyUploadBloc.state.props[0].toString();
-        _uploadData.localThumbnail = false;
+    _uploadBloc.add(UploadVideo(
+        videoPath: _uploadData.videoLocation,
+        thumbnailPath: _uploadData.thumbnailLocation,
+        uploadData: _uploadData,
+        context: context));
 
-        BlocProvider.of<TransactionBloc>(context).add(
-            TransactionPreprocessing(txType: _uploadData.isPromoted ? 13 : 4));
-
-        _uploadBloc.add(UploadVideo(
-            videoPath: _uploadData.videoLocation,
-            thumbnailPath: _uploadData.thumbnailLocation,
-            uploadData: _uploadData,
-            context: context));
-        widget.leaveDialogCallBack();
-      });
-    }
+    // widget.leaveDialogWithUploadCallback();
   }
 
   @override
@@ -175,13 +160,13 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
             ),
           );
         }
-      } else {
-        _pickedFile = await _picker.pickVideo(source: ImageSource.gallery);
       }
     }
 
     if (_pickedFile != null) {
       uploadMoment(_pickedFile.path, vpBalance, vpPercent);
+    } else {
+      widget.leaveDialogWithoutUploadCallback();
     }
   }
 
@@ -190,36 +175,30 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
     return BlocBuilder<UserBloc, UserState>(
       bloc: _userBloc,
       builder: (context, state) {
-        if (state is UserInitialState) {
-          return SizedBox(width: 0);
-        } else if (state is UserDTCVPLoadingState) {
-          return SizedBox(width: 0);
-        } else if (state is UserDTCVPLoadedState) {
-          return GestureDetector(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ShadowedIcon(
-                    size: 10.w,
-                    icon: FontAwesomeIcons.eye,
-                    color: Colors.white,
-                    shadowColor: Colors.black),
-                ShadowedIcon(
-                    size: 5.w,
-                    icon: FontAwesomeIcons.plus,
-                    color: Colors.white,
-                    shadowColor: Colors.black)
-              ],
-            ),
-            onTap: () {
-              widget.clickedCallBack();
-              getFile(true, true, state.vtBalance['v']!,
-                  widget.defaultVotingWeight);
-            },
-          );
-        } else {
-          return SizedBox(width: 0);
+        if (state is UserDTCVPLoadedState) {
+          _vpBalance = state.vtBalance['v']! + 0.0;
         }
+        return GestureDetector(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ShadowedIcon(
+                  size: 10.w,
+                  icon: FontAwesomeIcons.eye,
+                  color: Colors.white,
+                  shadowColor: Colors.black),
+              ShadowedIcon(
+                  size: 5.w,
+                  icon: FontAwesomeIcons.plus,
+                  color: Colors.white,
+                  shadowColor: Colors.black)
+            ],
+          ),
+          onTap: () async {
+            widget.clickedCallback();
+            getFile(true, true, _vpBalance.floor(), widget.defaultVotingWeight);
+          },
+        );
       },
     );
   }
