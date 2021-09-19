@@ -55,11 +55,18 @@ class FeedList extends StatelessWidget {
   String? _nsfwMode;
   String? _hiddenMode;
   String? _applicationUser;
+  String? _defaultCommentVotingWeight;
+  String? _defaultPostVotingWeight;
+  String? _defaultPostVotingTip;
 
-  Future<bool> getDisplayModes() async {
+  Future<bool> getSettings() async {
     _hiddenMode = await sec.getShowHidden();
     _nsfwMode = await sec.getNSFW();
     _applicationUser = await sec.getUsername();
+    _defaultCommentVotingWeight = await sec.getDefaultVoteComments();
+    _defaultPostVotingWeight = await sec.getDefaultVote();
+    _defaultPostVotingTip = await sec.getDefaultVoteTip();
+
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
     }
@@ -84,7 +91,7 @@ class FeedList extends StatelessWidget {
     }
 
     return FutureBuilder<bool>(
-        future: getDisplayModes(),
+        future: getSettings(),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return buildLoading(context);
@@ -234,6 +241,9 @@ class FeedList extends StatelessWidget {
                   enableNavigation: enableNavigation,
                   itemSelectedCallback: itemSelectedCallback,
                   feedType: feedType,
+                  defaultCommentVotingWeight: _defaultCommentVotingWeight,
+                  defaultPostVotingWeight: _defaultPostVotingWeight,
+                  defaultPostVotingTip: _defaultPostVotingTip,
                 ),
                 //Text(pos.toString())
               ),
@@ -279,6 +289,9 @@ class PostListCard extends StatelessWidget {
   final bool enableNavigation;
   ListOfString2VoidFunc? itemSelectedCallback;
   final String feedType; // only used in landscape mode for now
+  final String? defaultCommentVotingWeight;
+  final String? defaultPostVotingWeight;
+  final String? defaultPostVotingTip;
 
   PostListCard(
       {Key? key,
@@ -306,7 +319,10 @@ class PostListCard extends StatelessWidget {
       required this.heightPerEntry,
       required this.enableNavigation,
       this.itemSelectedCallback,
-      required this.feedType})
+      required this.feedType,
+      this.defaultCommentVotingWeight,
+      this.defaultPostVotingWeight,
+      this.defaultPostVotingTip})
       : super(key: key);
 
   @override
@@ -314,25 +330,32 @@ class PostListCard extends StatelessWidget {
     if (largeFormat) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: PostListCardLarge(
-          blur: blur,
-          thumbnailUrl: thumbnailUrl,
-          title: title,
-          description: description,
-          author: author,
-          link: link,
-          publishDate: publishDate,
-          duration: duration,
-          dtcValue: dtcValue,
-          videoUrl: videoUrl,
-          videoSource: videoSource,
-          alreadyVoted: alreadyVoted,
-          alreadyVotedDirection: alreadyVotedDirection,
-          upvotesCount: upvotesCount,
-          downvotesCount: downvotesCount,
-          indexOfList: indexOfList,
-          mainTag: mainTag,
-          oc: oc,
+        child: BlocProvider<UserBloc>(
+          create: (BuildContext context) =>
+              UserBloc(repository: UserRepositoryImpl()),
+          child: PostListCardLarge(
+            blur: blur,
+            thumbnailUrl: thumbnailUrl,
+            title: title,
+            description: description,
+            author: author,
+            link: link,
+            publishDate: publishDate,
+            duration: duration,
+            dtcValue: dtcValue,
+            videoUrl: videoUrl,
+            videoSource: videoSource,
+            alreadyVoted: alreadyVoted,
+            alreadyVotedDirection: alreadyVotedDirection,
+            upvotesCount: upvotesCount,
+            downvotesCount: downvotesCount,
+            indexOfList: indexOfList,
+            mainTag: mainTag,
+            oc: oc,
+            defaultCommentVotingWeight: defaultCommentVotingWeight!,
+            defaultPostVotingWeight: defaultPostVotingWeight!,
+            defaultPostVotingTip: defaultPostVotingTip!,
+          ),
         ),
       );
     } else {

@@ -66,7 +66,7 @@ class _BalanceOverviewState extends State<BalanceOverview> {
         } else if (state is UserDTCVPLoadedState) {
           try {
             return Container(
-              width: 18.w,
+              width: 25.w,
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Column(children: [

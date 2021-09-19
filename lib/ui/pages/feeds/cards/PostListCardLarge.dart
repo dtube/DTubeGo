@@ -1,6 +1,10 @@
+import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/style/styledCustomWidgets.dart';
 
 import 'package:dtube_togo/ui/pages/feeds/widgets/FullScreenButton.dart';
+import 'package:dtube_togo/ui/pages/post/widgets/VoteButtons.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 
@@ -38,7 +42,10 @@ class PostListCardLarge extends StatefulWidget {
       required this.downvotesCount,
       required this.indexOfList,
       required this.mainTag,
-      required this.oc})
+      required this.oc,
+      required this.defaultCommentVotingWeight,
+      required this.defaultPostVotingWeight,
+      required this.defaultPostVotingTip})
       : super(key: key);
 
   final bool blur;
@@ -59,6 +66,9 @@ class PostListCardLarge extends StatefulWidget {
   final int indexOfList;
   final String mainTag;
   final bool oc;
+  final String defaultCommentVotingWeight;
+  final String defaultPostVotingWeight;
+  final String defaultPostVotingTip;
 
   @override
   _PostListCardLargeState createState() => _PostListCardLargeState();
@@ -68,9 +78,30 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
   double _avatarSize = 10.w;
   double _tagSpace = 20.w;
   bool _thumbnailTapped = false;
+  TextEditingController _replyController = new TextEditingController();
+
+  late bool _showVotingBars;
+
+  late bool _votingDirection;
+
+  late bool _showCommentInput; // true = upvote | false = downvote
+
+  late UserBloc _userBloc;
+  int _currentVp = 0;
+
   @override
   void initState() {
     super.initState();
+    _showVotingBars = false;
+    _votingDirection = true;
+    _showCommentInput = false;
+    _userBloc = BlocProvider.of<UserBloc>(context);
+  }
+
+  @override
+  void dispose() {
+    _replyController.dispose();
+    super.dispose();
   }
 
   @override
@@ -209,6 +240,137 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                           : Text("no player detected"),
                 ),
               ),
+              Visibility(
+                  visible: _showVotingBars,
+                  child: AspectRatio(
+                    aspectRatio: 8 / 5,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: BlocBuilder<UserBloc, UserState>(
+                        bloc: _userBloc,
+                        builder: (context, state) {
+                          // TODO error handling
+
+                          if (state is UserDTCVPLoadingState) {
+                            return CircularProgressIndicator();
+                          }
+                          if (state is UserDTCVPLoadedState) {
+                            _currentVp = state.vtBalance["v"]!;
+                          }
+                          return AspectRatio(
+                            aspectRatio: 8 / 5,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                color: Colors.black.withAlpha(85),
+                                child: VotingSliderStandalone(
+                                  defaultVote: double.parse(
+                                      widget.defaultPostVotingWeight),
+                                  defaultTip:
+                                      double.parse(widget.defaultPostVotingTip),
+                                  author: widget.author,
+                                  link: widget.link,
+                                  downvote: !_votingDirection,
+                                  currentVT: _currentVp + 0.0,
+                                  isPost: true,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  )),
+              Visibility(
+                  visible: _showCommentInput,
+                  child: AspectRatio(
+                    aspectRatio: 8 / 5,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        color: Colors.black.withAlpha(75),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 80.w, // TODO: make this dynamic
+                              child: Padding(
+                                padding: EdgeInsets.all(5.w),
+                                child: TextField(
+                                  //key: UniqueKey(),
+                                  autofocus: _showCommentInput,
+                                  controller: _replyController,
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                              ),
+                            ),
+                            BlocBuilder<UserBloc, UserState>(
+                                bloc: _userBloc,
+                                builder: (context, state) {
+                                  // TODO error handling
+
+                                  if (state is UserDTCVPLoadingState) {
+                                    return CircularProgressIndicator();
+                                  }
+                                  if (state is UserDTCVPLoadedState) {
+                                    _currentVp = state.vtBalance["v"]!;
+                                  }
+
+                                  return Padding(
+                                    padding: EdgeInsets.all(5.w),
+                                    child: InputChip(
+                                      onPressed: () {
+                                        UploadData _uploadData = new UploadData(
+                                            link: "",
+                                            parentAuthor: widget.author,
+                                            parentPermlink: widget.link,
+                                            title: "",
+                                            description:
+                                                _replyController.value.text,
+                                            tag: "",
+                                            vpPercent: double.parse(widget
+                                                .defaultCommentVotingWeight),
+                                            vpBalance: _currentVp,
+                                            burnDtc: 0,
+                                            dtcBalance:
+                                                0, // TODO promoted comment implementation missing
+                                            isPromoted: false,
+                                            duration: "",
+                                            thumbnailLocation: "",
+                                            localThumbnail: false,
+                                            videoLocation: "",
+                                            localVideoFile: false,
+                                            originalContent: false,
+                                            nSFWContent: false,
+                                            unlistVideo: false,
+                                            isEditing: false,
+                                            videoSourceHash: "",
+                                            video240pHash: "",
+                                            video480pHash: "",
+                                            videoSpriteHash: "",
+                                            thumbnail640Hash: "",
+                                            thumbnail210Hash: "",
+                                            uploaded: false,
+                                            crossPostToHive: false);
+
+                                        BlocProvider.of<TransactionBloc>(
+                                                context)
+                                            .add(SendCommentEvent(_uploadData));
+                                        setState(() {
+                                          _showCommentInput = false;
+                                          _replyController.text = '';
+                                        });
+                                      },
+                                      label:
+                                          FaIcon(FontAwesomeIcons.paperPlane),
+                                    ),
+                                  );
+                                }),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )),
               Align(
                 alignment: Alignment.topRight,
                 child: FullScreenButton(
@@ -250,22 +412,31 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                   scale: 0.8,
                   alignment: Alignment.centerLeft,
                   child: InputChip(
-                    label: Text(
-                      '',
-                    ),
-                    avatar: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: FaIcon(FontAwesomeIcons.comment,
-                          color: widget.alreadyVoted &&
-                                  !widget.alreadyVotedDirection
-                              ? globalRed
-                              : Colors.grey),
-                    ),
-                    onPressed: () {
-                      navigateToPostDetailPage(context, widget.author,
-                          widget.link, "newcomment", false, () {});
-                    },
-                  ),
+                      label: Text(
+                        '',
+                      ),
+                      avatar: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: FaIcon(FontAwesomeIcons.comment,
+                            color: widget.alreadyVoted &&
+                                    !widget.alreadyVotedDirection
+                                ? globalRed
+                                : Colors.grey),
+                      ),
+                      onPressed: () {
+                        //   navigateToPostDetailPage(context, widget.author,
+                        //       widget.link, "newcomment", false, () {});
+                        // },
+                        setState(() {
+                          if (!_showCommentInput) {
+                            _showCommentInput = true;
+                            _showVotingBars = false;
+                            _userBloc.add(FetchDTCVPEvent());
+                          } else {
+                            _showCommentInput = false;
+                          }
+                        });
+                      }),
                 ),
                 Transform.scale(
                   scale: 0.8,
@@ -288,10 +459,22 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                           ),
                         ),
                         onPressed: () {
-                          if (!widget.alreadyVoted) {
-                            navigateToPostDetailPage(context, widget.author,
-                                widget.link, "upvote", false, () {});
-                          }
+                          // if (!widget.alreadyVoted) {
+                          //   navigateToPostDetailPage(context, widget.author,
+                          //       widget.link, "upvote", false, () {});
+                          // }
+                          setState(() {
+                            if (_showVotingBars && _votingDirection) {
+                              _showVotingBars = false;
+                            } else if (_showVotingBars && !_votingDirection) {
+                              _votingDirection = true;
+                            } else if (!_showVotingBars) {
+                              _userBloc.add(FetchDTCVPEvent());
+                              _showCommentInput = false;
+                              _showVotingBars = true;
+                              _votingDirection = true;
+                            }
+                          });
                         },
                       ),
                       SizedBox(
@@ -311,10 +494,18 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                   : Colors.grey),
                         ),
                         onPressed: () {
-                          if (!widget.alreadyVoted) {
-                            navigateToPostDetailPage(context, widget.author,
-                                widget.link, "downvote", false, () {});
-                          }
+                          setState(() {
+                            if (_showVotingBars && _votingDirection) {
+                              _votingDirection = false;
+                            } else if (!_showVotingBars) {
+                              _userBloc.add(FetchDTCVPEvent());
+                              _showCommentInput = false;
+                              _showVotingBars = true;
+                              _votingDirection = false;
+                            } else if (_showVotingBars && !_votingDirection) {
+                              _showVotingBars = false;
+                            }
+                          });
                         },
                       ),
                     ],

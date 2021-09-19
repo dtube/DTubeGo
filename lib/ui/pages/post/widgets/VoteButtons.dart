@@ -684,3 +684,208 @@ class _VotingSliderState extends State<VotingSlider> {
     }
   }
 }
+
+class VotingSliderStandalone extends StatefulWidget {
+  VotingSliderStandalone({
+    Key? key,
+    required this.author,
+    required this.link,
+    required this.downvote,
+    required this.defaultVote,
+    required this.defaultTip,
+    required this.currentVT,
+    required this.isPost,
+  }) : super(key: key);
+
+  String author;
+  String link;
+  double defaultVote;
+  double defaultTip;
+  double currentVT;
+  bool isPost;
+
+  bool downvote;
+
+  @override
+  _VotingSliderStandaloneState createState() => _VotingSliderStandaloneState();
+}
+
+class _VotingSliderStandaloneState extends State<VotingSliderStandalone> {
+  late double _vpValue;
+  late double _tipValue;
+  late TransactionBloc _txBloc;
+  late TextEditingController _tagController;
+  late bool _sendButtonPressed;
+
+  @override
+  void initState() {
+    super.initState();
+    _sendButtonPressed = false;
+    _txBloc = BlocProvider.of<TransactionBloc>(context);
+
+    _tagController = TextEditingController();
+    //_userBloc.add(FetchDTCVPEvent());
+    _vpValue = widget.defaultVote;
+    _tipValue = widget.defaultTip;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // verical only used in moments for now
+    return !_sendButtonPressed
+        ? Padding(
+            padding: EdgeInsets.only(top: 16.0),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: 80.w,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    OverlayText(
+                      text: widget.downvote ? "Downvote" : "Upvote",
+                      bold: true,
+                      sizeMultiply: 1.4,
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            OverlayText(
+                              text: "weight: ",
+                              bold: true,
+                              sizeMultiply: 1,
+                              maxLines: 2,
+                            ),
+                            OverlayText(
+                              text: (_vpValue.floor() *
+                                          (widget.downvote ? -1 : 1))
+                                      .toString() +
+                                  '%',
+                              bold: true,
+                              sizeMultiply: 1,
+                            ),
+                            RotatedBox(
+                              quarterTurns: 3,
+                              child: Slider(
+                                min: 1,
+                                max: 100.0,
+                                value: _vpValue,
+
+                                label: (widget.downvote ? "-" : "") +
+                                    _vpValue.floor().toString() +
+                                    "%",
+                                //divisions: 40,
+                                inactiveColor: globalBlue,
+                                activeColor: globalRed,
+                                onChanged: (dynamic value) {
+                                  setState(() {
+                                    _vpValue = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        widget.downvote
+                            ? SizedBox(width: 0)
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  OverlayText(
+                                    text: "vote tip: ",
+                                    bold: true,
+                                    sizeMultiply: 1,
+                                  ),
+                                  OverlayText(
+                                    text: _tipValue.floor().toString() + '%',
+                                    bold: true,
+                                    sizeMultiply: 1,
+                                  ),
+                                  RotatedBox(
+                                    quarterTurns: 3,
+                                    child: Slider(
+                                      min: 0.0,
+                                      max: 100.0,
+                                      value: _tipValue,
+                                      label: _tipValue.floor().toString() + "%",
+                                      //divisions: 20,
+                                      inactiveColor: globalBlue,
+                                      activeColor: globalRed,
+                                      onChanged: (dynamic value) {
+                                        setState(() {
+                                          _tipValue = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                        Container(
+                          width: 25.w,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              widget.isPost
+                                  ? TextFormField(
+                                      controller: _tagController,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                      decoration: new InputDecoration(
+                                        labelText: "curator tag",
+                                      ),
+                                    )
+                                  : SizedBox(width: 0),
+                              SizedBox(height: 8),
+                              ElevatedButton(
+                                child: Text("send"),
+                                onPressed: () {
+                                  var voteValue =
+                                      (widget.currentVT * (_vpValue / 100))
+                                          .floor();
+                                  int _txType = 5;
+                                  TxData txdata = TxData(
+                                    author: widget.author,
+                                    link: widget.link,
+                                    tag: _tagController.value.text,
+                                    vt: voteValue * (widget.downvote ? -1 : 1),
+                                  );
+
+                                  if (_tipValue > 0) {
+                                    _txType = 19;
+                                    txdata = TxData(
+                                        author: widget.author,
+                                        link: widget.link,
+                                        tag: _tagController.value.text,
+                                        vt: voteValue *
+                                            (widget.downvote ? -1 : 1),
+                                        tip: _tipValue.floor());
+                                  }
+                                  Transaction newTx =
+                                      Transaction(type: _txType, data: txdata);
+
+                                  _txBloc
+                                      .add(SignAndSendTransactionEvent(newTx));
+                                  setState(() {
+                                    _sendButtonPressed = true;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        : SizedBox(
+            width: 0,
+          );
+  }
+}
