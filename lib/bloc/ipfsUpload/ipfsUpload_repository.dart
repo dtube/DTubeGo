@@ -94,7 +94,7 @@ class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
   Future<String> uploadThumbnail(String localFilePath) async {
     //String _url = endpoint;
     String _url = "https://api.imgur.com/3/image";
-    ;
+
     String authHeader = "Client-ID fc2dde68a83c037";
 
     var dio = Dio();

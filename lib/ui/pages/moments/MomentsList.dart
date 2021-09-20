@@ -225,42 +225,33 @@ class _MomentsContainerState extends State<MomentsContainer> {
           ),
           BlocBuilder<UserBloc, UserState>(builder: (context, state) {
             if (state is UserDTCVPLoadedState) {
-              return BlocBuilder<IPFSUploadBloc, IPFSUploadState>(
-                builder: (context, stateIPFS) {
-                  if (stateIPFS is IPFSUploadInitialState ||
-                      stateIPFS is IPFSUploadVideoUploadedState) {
-                    return MomentsOverlay(
-                        alignment: Alignment.topLeft,
-                        padding: EdgeInsets.only(left: 5.w, top: 15.h),
-                        width: 25.w,
-                        height: 25.h,
-                        child: MomentsUploadButton(
-                            currentVT: state.vtBalance['v']! + 0.0,
-                            defaultVotingWeight: double.parse(widget
-                                .defaultPostsVotingWeight), // todo make this dynamic
-                            clickedCallback: () {
-                              // setState(() {
-                              //   widget.momentsController.pause();
-                              //   _videoController.pause();
-                              // });
-                            },
-                            leaveDialogWithUploadCallback: () {
-                              // setState(() {
-                              //   widget.momentsController.pause();
-                              //   _videoController.pause();
-                              //   _momentUploading = true;
-                              // });
-                            },
-                            leaveDialogWithoutUploadCallback: () {
-                              //   widget.momentsController.play();
-                              //   _videoController.play();
-                              //   _momentUploading = false;
-                            }));
-                  } else {
-                    return DTubeLogoPulseRotating(size: 10.w);
-                  }
-                },
-              );
+              return MomentsOverlay(
+                  alignment: Alignment.topLeft,
+                  padding: EdgeInsets.only(left: 5.w, top: 15.h),
+                  width: 25.w,
+                  height: 25.h,
+                  child: MomentsUploadButton(
+                      currentVT: state.vtBalance['v']! + 0.0,
+                      defaultVotingWeight: double.parse(widget
+                          .defaultPostsVotingWeight), // todo make this dynamic
+                      clickedCallback: () {
+                        // setState(() {
+                        //   widget.momentsController.pause();
+                        //   _videoController.pause();
+                        // });
+                      },
+                      leaveDialogWithUploadCallback: () {
+                        // setState(() {
+                        //   widget.momentsController.pause();
+                        //   _videoController.pause();
+                        //   _momentUploading = true;
+                        // });
+                      },
+                      leaveDialogWithoutUploadCallback: () {
+                        //   widget.momentsController.play();
+                        //   _videoController.play();
+                        //   _momentUploading = false;
+                      }));
             }
             return SizedBox(height: 0, width: 0);
           })

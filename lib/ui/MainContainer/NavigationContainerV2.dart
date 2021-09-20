@@ -29,7 +29,6 @@ import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class NavigationContainer extends StatefulWidget {
   NavigationContainer({Key? key}) : super(key: key);
@@ -42,11 +41,10 @@ class _NavigationContainerState extends State<NavigationContainer> {
   bool _hideNavBar = false;
   ValueNotifier<bool> _notifier = ValueNotifier(false);
   double iconSize = 10.w;
+  late List<Widget> _screens;
 
   int bottomSelectedIndex = 0;
   int _currentIndex = 0;
-  PersistentTabController mainTabController =
-      PersistentTabController(initialIndex: 0);
 
   List<BottomNavigationBarItem> navBarItems = [
     BottomNavigationBarItem(
@@ -133,12 +131,36 @@ class _NavigationContainerState extends State<NavigationContainer> {
   }
 
   void uploaderCallback() {
-    mainTabController.jumpToTab(0);
+    setState(() {
+      _currentIndex = 0;
+    });
   }
 
   @override
   void initState() {
     super.initState();
+    _screens = [
+      FeedMainPage(),
+      ExploreMainPage(),
+      UploaderMainPage(
+        callback: uploaderCallback,
+        key: UniqueKey(),
+      ),
+      MultiBlocProvider(providers: [
+        BlocProvider(
+            create: (context) => FeedBloc(repository: FeedRepositoryImpl())),
+        BlocProvider(
+            create: (context) =>
+                IPFSUploadBloc(repository: IPFSUploadRepositoryImpl())),
+        BlocProvider<ThirdPartyUploaderBloc>(
+          create: (BuildContext context) => ThirdPartyUploaderBloc(
+              repository: ThirdPartyUploaderRepositoryImpl()),
+        ),
+      ], child: MomentsPage(play: _currentIndex == 3)),
+      UserPage(
+        ownUserpage: true,
+      ),
+    ];
   }
 
   @override
@@ -198,6 +220,56 @@ class _NavigationContainerState extends State<NavigationContainer> {
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
+            if (index == 2) {
+              // reset uploader page
+              _screens.removeAt(2);
+              _screens.insert(
+                  2,
+                  new UploaderMainPage(
+                    callback: uploaderCallback,
+                    key: UniqueKey(),
+                  )
+                  //  index = index;
+                  );
+            }
+            if (index == 3) {
+              // reset moments page and set play = true
+
+              _screens.removeAt(3);
+
+              _screens.insert(
+                3,
+                new MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                          create: (context) =>
+                              FeedBloc(repository: FeedRepositoryImpl())),
+                      BlocProvider(
+                          create: (context) => IPFSUploadBloc(
+                              repository: IPFSUploadRepositoryImpl())),
+                      BlocProvider<ThirdPartyUploaderBloc>(
+                        create: (BuildContext context) =>
+                            ThirdPartyUploaderBloc(
+                                repository: ThirdPartyUploaderRepositoryImpl()),
+                      ),
+                    ],
+                    child: MomentsPage(
+                      key: UniqueKey(),
+                      play: true,
+                    )),
+                //  index = index;
+              );
+            } else {
+              // reset moments page and set play = false
+              _screens.removeAt(3);
+
+              _screens.insert(
+                  3,
+                  MomentsPage(
+                    key: UniqueKey(),
+                    play: false,
+                  ));
+            }
             _currentIndex = index;
           });
         },
@@ -212,29 +284,10 @@ class _NavigationContainerState extends State<NavigationContainer> {
               showCustomFlushbarOnError(state.message, context);
             }
           },
-          child: IndexedStack(children: [
-            FeedMainPage(),
-            ExploreMainPage(),
-            UploaderMainPage(
-              callback: uploaderCallback,
-              // key: UniqueKey(),
-            ),
-            MultiBlocProvider(providers: [
-              BlocProvider(
-                  create: (context) =>
-                      FeedBloc(repository: FeedRepositoryImpl())),
-              BlocProvider(
-                  create: (context) =>
-                      IPFSUploadBloc(repository: IPFSUploadRepositoryImpl())),
-              BlocProvider<ThirdPartyUploaderBloc>(
-                create: (BuildContext context) => ThirdPartyUploaderBloc(
-                    repository: ThirdPartyUploaderRepositoryImpl()),
-              ),
-            ], child: MomentsPage(play: _currentIndex == 3)),
-            UserPage(
-              ownUserpage: true,
-            ),
-          ], index: _currentIndex)),
+          child: IndexedStack(
+            children: _screens,
+            index: _currentIndex,
+          )),
     );
   }
 }

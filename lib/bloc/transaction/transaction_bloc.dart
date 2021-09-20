@@ -151,7 +151,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       // video
       if (_upload.videoLocation != "") {
         if (_upload.videoSourceHash != "") {
-          if (_upload.localThumbnail == true) {
+          if (_upload.thumbnailLocation == "") {
             jsonMetadata = {
               "files": {
                 "ipfs": {

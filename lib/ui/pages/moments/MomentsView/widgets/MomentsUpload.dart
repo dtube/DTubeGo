@@ -5,6 +5,7 @@ import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc.dart'
 import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/res/appConfigValues.dart';
+import 'package:dtube_togo/style/dtubeLoading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -94,7 +95,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
 
     _uploadBloc.add(UploadVideo(
         videoPath: _uploadData.videoLocation,
-        thumbnailPath: _uploadData.thumbnailLocation,
+        thumbnailPath: "",
         uploadData: _uploadData,
         context: context));
 
@@ -105,7 +106,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
   void initState() {
     super.initState();
     _uploadBloc = BlocProvider.of<IPFSUploadBloc>(context);
-    _3rdPartyUploadBloc = BlocProvider.of<ThirdPartyUploaderBloc>(context);
+    // _3rdPartyUploadBloc = BlocProvider.of<ThirdPartyUploaderBloc>(context);
     _userBloc = BlocProvider.of<UserBloc>(context);
 
     loadHiveSignerAccessToken();
@@ -172,34 +173,41 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserBloc, UserState>(
-      bloc: _userBloc,
-      builder: (context, state) {
-        if (state is UserDTCVPLoadedState) {
-          _vpBalance = state.vtBalance['v']! + 0.0;
-        }
-        return GestureDetector(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ShadowedIcon(
-                  size: 10.w,
-                  icon: FontAwesomeIcons.eye,
-                  color: Colors.white,
-                  shadowColor: Colors.black),
-              ShadowedIcon(
-                  size: 5.w,
-                  icon: FontAwesomeIcons.plus,
-                  color: Colors.white,
-                  shadowColor: Colors.black)
-            ],
-          ),
-          onTap: () async {
-            widget.clickedCallback();
-            getFile(true, true, _vpBalance.floor(), widget.defaultVotingWeight);
-          },
-        );
-      },
-    );
+    return BlocBuilder<IPFSUploadBloc, IPFSUploadState>(
+        builder: (context, state) {
+      if (!(state is IPFSUploadInitialState)) {
+        return DTubeLogoPulseRotating(size: 15.w);
+      }
+      return BlocBuilder<UserBloc, UserState>(
+        bloc: _userBloc,
+        builder: (context, state) {
+          if (state is UserDTCVPLoadedState) {
+            _vpBalance = state.vtBalance['v']! + 0.0;
+          }
+          return GestureDetector(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ShadowedIcon(
+                    size: 10.w,
+                    icon: FontAwesomeIcons.eye,
+                    color: Colors.white,
+                    shadowColor: Colors.black),
+                ShadowedIcon(
+                    size: 5.w,
+                    icon: FontAwesomeIcons.plus,
+                    color: Colors.white,
+                    shadowColor: Colors.black)
+              ],
+            ),
+            onTap: () async {
+              widget.clickedCallback();
+              getFile(
+                  true, true, _vpBalance.floor(), widget.defaultVotingWeight);
+            },
+          );
+        },
+      );
+    });
   }
 }

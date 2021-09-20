@@ -289,32 +289,33 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               child: Text("Image upload",
                                   style: Theme.of(context).textTheme.headline3),
                             ),
-                            DTubeFormCard(
-                              childs: [
-                                DropdownButtonFormField(
-                                  decoration: InputDecoration(
-                                    //filled: true,
-                                    //fillColor: Hexcolor('#ecedec'),
-                                    labelText: 'storage provider',
-                                    //border: new CustomBorderTextFieldSkin().getSkin(),
-                                  ),
-                                  value: _imageUploadProvider,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _imageUploadProvider =
-                                          newValue.toString();
-                                      // widget.justSaved = false;
-                                    });
-                                  },
-                                  items: _imageUploadProviders.map((option) {
-                                    return DropdownMenuItem(
-                                      child: new Text(option),
-                                      value: option,
-                                    );
-                                  }).toList(),
-                                ),
-                              ],
-                            ),
+                            // deactivated until we have more providers
+                            // DTubeFormCard(
+                            //   childs: [
+                            //     DropdownButtonFormField(
+                            //       decoration: InputDecoration(
+                            //         //filled: true,
+                            //         //fillColor: Hexcolor('#ecedec'),
+                            //         labelText: 'storage provider',
+                            //         //border: new CustomBorderTextFieldSkin().getSkin(),
+                            //       ),
+                            //       value: _imageUploadProvider,
+                            //       onChanged: (newValue) {
+                            //         setState(() {
+                            //           _imageUploadProvider =
+                            //               newValue.toString();
+                            //           // widget.justSaved = false;
+                            //         });
+                            //       },
+                            //       items: _imageUploadProviders.map((option) {
+                            //         return DropdownMenuItem(
+                            //           child: new Text(option),
+                            //           value: option,
+                            //         );
+                            //       }).toList(),
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                       ),
