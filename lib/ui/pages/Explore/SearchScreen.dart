@@ -1,3 +1,4 @@
+import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'dart:async';
@@ -30,13 +31,15 @@ class _SearchScreenState extends State<SearchScreen> {
   String _searchEntity = "Users";
   final _debouncer = Debounce(milliseconds: 700);
   String currentSearch = "";
-  List<String> _searchEntities = ["Users", "Posts"];
+  List<String> _searchEntities = ["Users", "Posts", "Tags"];
   List<IconData> _searchEntityIcons = [
     FontAwesomeIcons.user,
-    FontAwesomeIcons.alignJustify
+    FontAwesomeIcons.alignJustify,
+    FontAwesomeIcons.hashtag
   ];
   int _selectedEntity = 0;
-  late SearchResults results;
+  late SearchResults searchResults;
+  late List<FeedItem> hashtagResults;
 
   @override
   void initState() {
@@ -59,9 +62,15 @@ class _SearchScreenState extends State<SearchScreen> {
         searchTextController.text != currentSearch) {
       _debouncer.run(() {
         currentSearch = searchTextController.text;
-        searchBloc.add(FetchSearchResultsEvent(
-            searchQuery: searchTextController.text,
-            searchEntity: _searchEntity));
+        if (_selectedEntity == 2) {
+          BlocProvider.of<FeedBloc>(context)
+            ..isFetching = true
+            ..add(FetchTagSearchResults(tag: currentSearch));
+        } else {
+          searchBloc.add(FetchSearchResultsEvent(
+              searchQuery: searchTextController.text,
+              searchEntity: _searchEntity));
+        }
       });
     }
   }
@@ -75,7 +84,7 @@ class _SearchScreenState extends State<SearchScreen> {
         padding: EdgeInsets.zero,
         label: FaIcon(
           _searchEntityIcons[i],
-          size: 15,
+          size: Device.orientation == Orientation.portrait ? 5.w : 5.h,
           color: Colors.white,
         ),
         elevation: 0,
@@ -89,11 +98,17 @@ class _SearchScreenState extends State<SearchScreen> {
           setState(() {
             if (selected) {
               _selectedEntity = i;
-
               _searchEntity = _searchEntities[i];
-              searchBloc.add(FetchSearchResultsEvent(
-                  searchQuery: searchTextController.text,
-                  searchEntity: _searchEntity));
+              if (_selectedEntity == 2) {
+                BlocProvider.of<FeedBloc>(context)
+                  ..isFetching = true
+                  ..add(FetchTagSearchResults(tag: currentSearch));
+              } else {
+                _searchEntity = _searchEntities[i];
+                searchBloc.add(FetchSearchResultsEvent(
+                    searchQuery: searchTextController.text,
+                    searchEntity: _searchEntity));
+              }
             }
           });
         },
@@ -123,7 +138,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(
-                    width: deviceWidth - 140,
+                    width: 50.w,
                     child: TextField(
                       controller: searchTextController,
                       decoration: InputDecoration(hintText: "Search"),
@@ -132,25 +147,41 @@ class _SearchScreenState extends State<SearchScreen> {
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ),
-                  SizedBox(width: 100, child: _buildChips()),
+                  SizedBox(width: 30.w, child: _buildChips()),
                 ],
               ),
-              BlocBuilder<SearchBloc, SearchState>(
-                builder: (context, state) {
-                  if (state is SearchInitialState) {
-                    return buildBlank();
-                  } else if (state is SearchLoadingState) {
-                    return buildLoading();
-                  } else if (state is SearchLoadedState) {
-                    results = state.searchResults;
-                    return buildResultsList(results);
-                  } else if (state is SearchErrorState) {
-                    return buildErrorUi(state.message);
-                  } else {
-                    return buildErrorUi('test');
-                  }
-                },
-              ),
+              _selectedEntity == 2
+                  ? BlocBuilder<FeedBloc, FeedState>(builder: (context, state) {
+                      if (state is FeedInitialState ||
+                          state is FeedLoadingState) {
+                        return buildLoading();
+                      } else if (state is FeedLoadedState) {
+                        hashtagResults = state.feed;
+                        BlocProvider.of<FeedBloc>(context).isFetching = false;
+                        return buildResultsListForTagResults(hashtagResults);
+                      } else if (state is FeedErrorState) {
+                        return buildErrorUi(state.message);
+                      } else {
+                        return buildErrorUi('');
+                      }
+                    })
+                  : BlocBuilder<SearchBloc, SearchState>(
+                      builder: (context, state) {
+                        if (state is SearchInitialState) {
+                          return buildBlank();
+                        } else if (state is SearchLoadingState) {
+                          return buildLoading();
+                        } else if (state is SearchLoadedState) {
+                          searchResults = state.searchResults;
+                          return buildResultsListForSearchResults(
+                              searchResults);
+                        } else if (state is SearchErrorState) {
+                          return buildErrorUi(state.message);
+                        } else {
+                          return buildErrorUi('');
+                        }
+                      },
+                    ),
             ],
           ),
         ),
@@ -188,7 +219,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget buildResultsList(SearchResults searchResults) {
+  Widget buildResultsListForSearchResults(SearchResults searchResults) {
     return Container(
       height: 800,
       alignment: Alignment.topLeft,
@@ -227,6 +258,27 @@ class _SearchScreenState extends State<SearchScreen> {
           }
         },
       ),
+    );
+  }
+
+  Widget buildResultsListForTagResults(List<FeedItem> searchResults) {
+    return Container(
+      height: 800,
+      alignment: Alignment.topLeft,
+      child: ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: searchResults.length,
+          itemBuilder: (ctx, pos) {
+            return PostResultCard(
+              id: searchResults[pos].sId,
+              author: searchResults[pos].author,
+              dist: searchResults[pos].dist,
+              link: searchResults[pos].link,
+              tags: searchResults[pos].tags[0],
+              title: searchResults[pos].jsonString!.title,
+              ts: searchResults[pos].ts,
+            );
+          }),
     );
   }
 }

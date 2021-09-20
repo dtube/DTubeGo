@@ -25,12 +25,10 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     }
     if (event is FetchMomentsEvent) {
       String _tsRangeFilter = '&tsrange=' +
-          (DateTime.now()
-              .add(Duration(days: -7))
-              .millisecondsSinceEpoch/1000)
+          (DateTime.now().add(Duration(days: -7)).millisecondsSinceEpoch / 1000)
               .toString() +
           ',' +
-          (DateTime.now().millisecondsSinceEpoch/1000).toString();
+          (DateTime.now().millisecondsSinceEpoch / 1000).toString();
 
       yield FeedLoadingState();
       try {
@@ -40,6 +38,26 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             : await repository.getMyFeedFiltered(_avalonApiNode,
                 "&tags=DTubeGo-Moments", _tsRangeFilter, _applicationUser);
         yield FeedLoadedState(feed: feed, feedType: event.feedType);
+      } catch (e) {
+        print(e.toString());
+        yield FeedErrorState(message: e.toString());
+      }
+    }
+    if (event is FetchTagSearchResults) {
+      String _tsRangeFilter = '&tsrange=' +
+          (DateTime.now().add(Duration(days: -7)).millisecondsSinceEpoch / 1000)
+              .toString() +
+          ',' +
+          (DateTime.now().millisecondsSinceEpoch / 1000).toString();
+
+      yield FeedLoadingState();
+      try {
+        List<FeedItem> feed = await repository.getNewFeedFiltered(
+            _avalonApiNode,
+            "&tags=" + event.tag,
+            _tsRangeFilter,
+            _applicationUser);
+        yield FeedLoadedState(feed: feed, feedType: "tagSearch");
       } catch (e) {
         print(e.toString());
         yield FeedErrorState(message: e.toString());

@@ -89,7 +89,9 @@ class _ExploreMainPageState extends State<ExploreMainPage>
                         icon: _tabIcons[0],
                         color: Colors.white,
                         shadowColor: Colors.black,
-                        size: 5.w,
+                        size: Device.orientation == Orientation.portrait
+                            ? 5.w
+                            : 5.h,
                       ),
                     ),
                     Tab(
@@ -97,7 +99,9 @@ class _ExploreMainPageState extends State<ExploreMainPage>
                         icon: _tabIcons[1],
                         color: Colors.white,
                         shadowColor: Colors.black,
-                        size: 5.w,
+                        size: Device.orientation == Orientation.portrait
+                            ? 5.w
+                            : 5.h,
                       ),
                     ),
                   ],
