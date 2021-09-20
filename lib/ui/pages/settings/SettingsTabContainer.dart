@@ -193,21 +193,26 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                       SingleChildScrollView(
                         child: Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: Text("Display",
-                                  style: Theme.of(context).textTheme.headline3),
-                            ),
                             DTubeFormCard(
                               childs: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16.0),
+                                  child: Text("Display",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
+                                ),
                                 DropdownButtonFormField(
                                   decoration: InputDecoration(
-                                    //filled: true,
-                                    //fillColor: Hexcolor('#ecedec'),
-                                    labelText: 'negative videos',
-                                    //border: new CustomBorderTextFieldSkin().getSkin(),
-                                  ),
+                                      //filled: true,
+                                      //fillColor: Hexcolor('#ecedec'),
+                                      labelText: 'negative videos',
+                                      labelStyle:
+                                          Theme.of(context).textTheme.headline5
+                                      //border: new CustomBorderTextFieldSkin().getSkin(),
+                                      ),
                                   value: _showHidden,
+                                  style: Theme.of(context).textTheme.bodyText1,
                                   onChanged: (newValue) {
                                     setState(() {
                                       _showHidden = newValue.toString();
@@ -223,12 +228,15 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 ),
                                 DropdownButtonFormField(
                                   decoration: InputDecoration(
-                                    //filled: true,
-                                    //fillColor: Hexcolor('#ecedec'),
-                                    labelText: 'NSFW videos',
-                                    //border: new CustomBorderTextFieldSkin().getSkin(),
-                                  ),
+                                      //filled: true,
+                                      //fillColor: Hexcolor('#ecedec'),
+                                      labelText: 'NSFW videos',
+                                      labelStyle:
+                                          Theme.of(context).textTheme.headline5
+                                      //border: new CustomBorderTextFieldSkin().getSkin(),
+                                      ),
                                   value: _showNsfw,
+                                  style: Theme.of(context).textTheme.bodyText1,
                                   onChanged: (newValue) {
                                     setState(() {
                                       _showNsfw = newValue.toString();
@@ -244,13 +252,16 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 ),
                               ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: Text("Security",
-                                  style: Theme.of(context).textTheme.headline3),
-                            ),
+
                             DTubeFormCard(
                               childs: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16.0),
+                                  child: Text("Security",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
+                                ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -262,7 +273,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                           maxLines: 2,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5),
+                                              .bodyText1),
                                     ),
                                     ElevatedButton(
                                         onPressed: () {
@@ -284,12 +295,13 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 )
                               ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: Text("Image upload",
-                                  style: Theme.of(context).textTheme.headline3),
-                            ),
                             // deactivated until we have more providers
+                            // Padding(
+                            //   padding: const EdgeInsets.only(top: 16.0),
+                            //   child: Text("Image upload",
+                            //       style: Theme.of(context).textTheme.headline3),
+                            // ),
+
                             // DTubeFormCard(
                             //   childs: [
                             //     DropdownButtonFormField(
@@ -499,7 +511,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                   child: Text("Hivesigner settings",
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline3),
+                                          .headline5),
                                 ),
                                 Row(
                                   children: [
@@ -574,6 +586,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 TextFormField(
                                   controller: _templateTitleController,
                                   maxLines: 1,
+                                  style: Theme.of(context).textTheme.bodyText1,
                                 ),
                               ],
                             ),
@@ -595,6 +608,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 TextFormField(
                                   controller: _templateBodyController,
                                   maxLines: 15,
+                                  style: Theme.of(context).textTheme.bodyText1,
                                 ),
                               ],
                             ),
@@ -642,6 +656,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 TextFormField(
                                   controller: _templateTagController,
                                   maxLines: 1,
+                                  style: Theme.of(context).textTheme.bodyText1,
                                 ),
                               ],
                             ),

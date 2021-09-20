@@ -129,6 +129,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       decoration: InputDecoration(hintText: "Search"),
                       cursorColor: globalRed,
                       maxLines: 1,
+                      style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ),
                   SizedBox(width: 100, child: _buildChips()),

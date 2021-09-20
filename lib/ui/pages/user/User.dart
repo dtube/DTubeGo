@@ -70,6 +70,7 @@ class _UserState extends State<UserPage> {
               ),
         body: Container(
           child: BlocListener<UserBloc, UserState>(
+            bloc: userBloc,
             listener: (context, state) {
               if (state is UserErrorState) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -80,6 +81,7 @@ class _UserState extends State<UserPage> {
               }
             },
             child: BlocBuilder<UserBloc, UserState>(
+              bloc: userBloc,
               builder: (context, state) {
                 if (state is UserInitialState) {
                   return buildLoading();

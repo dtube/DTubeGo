@@ -53,6 +53,7 @@ class _HiveSignerButtonState extends State<HiveSignerButton> {
           maxLines: 1,
           decoration: new InputDecoration(labelText: "hive username"),
           controller: _usernameController,
+          style: Theme.of(context).textTheme.bodyText1,
           onChanged: (val) {
             checkIfFormIsFilled();
           },
@@ -76,7 +77,10 @@ class _HiveSignerButtonState extends State<HiveSignerButton> {
                     : FontAwesomeIcons.hive,
             size: 15,
           ),
-          label: Text("hivesigner"),
+          label: Text(
+            "hivesigner",
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
           onPressed: () {
             BlocProvider.of<HivesignerBloc>(context).add(CheckAccessToken(
                 hiveSignerUsername: _usernameController.value.text));
