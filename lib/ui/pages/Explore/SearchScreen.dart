@@ -18,14 +18,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  SearchScreenState createState() => SearchScreenState();
 
   SearchScreen({
     Key? key,
   }) : super(key: key);
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class SearchScreenState extends State<SearchScreen> {
   late SearchBloc searchBloc;
   late TextEditingController searchTextController;
   String _searchEntity = "Users";
@@ -55,6 +55,14 @@ class _SearchScreenState extends State<SearchScreen> {
     searchTextController.dispose();
     _debouncer.dispose();
     super.dispose();
+  }
+
+  void prefillForm(String search, int searchEntity) {
+    super.initState();
+    setState(() {
+      searchTextController.text = search;
+      _selectedEntity = searchEntity;
+    });
   }
 
   void _sendRequest() {

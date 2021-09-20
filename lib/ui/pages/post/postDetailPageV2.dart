@@ -1,3 +1,6 @@
+import 'package:dtube_togo/ui/MainContainer/NavigationContainerV2.dart';
+import 'package:dtube_togo/ui/pages/Explore/ExploreTabContainer.dart';
+import 'package:dtube_togo/ui/pages/Explore/SearchScreen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_togo/utils/navigationShortcuts.dart';
@@ -10,7 +13,7 @@ import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
 import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:dtube_togo/ui/MainContainer/NavigationContainer.dart';
+// import 'package:dtube_togo/ui/MainContainer/NavigationContainer.dart';
 
 import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
 import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
@@ -289,13 +292,16 @@ class _PostDetailsState extends State<PostDetails> {
                                               return Padding(
                                                 padding: const EdgeInsets.only(
                                                     right: 8.0),
-                                                child: InputChip(
-                                                    label: Text(
-                                                        widget.post.tags[index]
-                                                            .toString(),
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyText2)),
+                                                child: TagChip(
+                                                    tagName: widget
+                                                        .post.tags[index]
+                                                        .toString()
+                                                    // label: Text(
+                                                    //     ,
+                                                    //     style: Theme.of(context)
+                                                    //         .textTheme
+                                                    //         .bodyText2)
+                                                    ),
                                               );
                                             }),
                                       ),
@@ -402,6 +408,35 @@ class _PostDetailsState extends State<PostDetails> {
               ),
             ),
           )),
+    );
+  }
+}
+
+class TagChip extends StatelessWidget {
+  String tagName;
+  TagChip({Key? key, required this.tagName}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InputChip(
+      onPressed: () async {
+        Navigator.pop(context);
+        BottomNavigationBar navigationBar =
+            globalNavigationBarKey.currentWidget as BottomNavigationBar;
+
+        navigationBar.onTap!(1);
+        TabBar exploreTabBar = globalExploreTabBarKey.currentWidget as TabBar;
+        exploreTabBar.controller!.index = 1;
+        // TODO: prefill searchbar and set entity to 1
+        // currently not working but almost
+        Future.delayed(Duration(milliseconds: 50),
+            () => globalSearchScreenKey.currentState!.prefillForm(tagName, 2));
+      },
+      label: Text(tagName, style: Theme.of(context).textTheme.bodyText2),
+      // label: Text(
+      //     widget.post.tags[index]
+      //         .toString(),
+      //     )
     );
   }
 }
