@@ -123,7 +123,7 @@ class _RewardsListState extends State<RewardsList> {
             return Center(
                 child: Text(
               "nothing here",
-              style: Theme.of(context).textTheme.headline2,
+              style: Theme.of(context).textTheme.bodyText1,
             ));
           } else {
             return ListView.builder(
@@ -199,14 +199,14 @@ class _RewardsCardState extends State<RewardsCard> {
                         width: widthLabel,
                         child: Text(
                           "content:",
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context).textTheme.bodyText1,
                         )),
                     Container(
                         width: deviceWidth - 310,
                         child: Text(
                           widget.reward.author + '/' + widget.reward.link,
                           overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context).textTheme.bodyText1,
                         )),
                   ],
                 ),
@@ -216,11 +216,11 @@ class _RewardsCardState extends State<RewardsCard> {
                         width: widthLabel,
                         child: Text(
                           "spent:",
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context).textTheme.bodyText1,
                         )),
                     Text(
                       (widget.reward.vt / 1000).toStringAsFixed(2) + 'K',
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ],
                 ),
@@ -230,14 +230,14 @@ class _RewardsCardState extends State<RewardsCard> {
                         width: widthLabel,
                         child: Text(
                           "voted on:",
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context).textTheme.bodyText1,
                         )),
                     Text(
                       DateTime.fromMillisecondsSinceEpoch(widget.reward.ts)
                           .toLocal()
                           .toString()
                           .substring(0, 16),
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ],
                 ),
@@ -247,7 +247,7 @@ class _RewardsCardState extends State<RewardsCard> {
                         width: widthLabel,
                         child: Text(
                           "published on:",
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context).textTheme.bodyText1,
                         )),
                     Text(
                       DateTime.fromMillisecondsSinceEpoch(
@@ -255,7 +255,7 @@ class _RewardsCardState extends State<RewardsCard> {
                           .toLocal()
                           .toString()
                           .substring(0, 16),
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ],
                 ),
@@ -272,7 +272,7 @@ class _RewardsCardState extends State<RewardsCard> {
                           (widget.reward.claimable / 100).toStringAsFixed(2) +
                           ' DTC ' +
                           TimeAgo.timeInAgoTS(widget.reward.claimed!),
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.bodyText1,
                     )
                   : timestampGreater7Days(widget.reward.ts)
                       ? BlocProvider(
@@ -292,7 +292,7 @@ class _RewardsCardState extends State<RewardsCard> {
                                       .toStringAsFixed(2) +
                                   ' DTC claimable ' +
                                   TimeAgo.timeAgoClaimIn(widget.reward.ts),
-                              style: Theme.of(context).textTheme.headline5,
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                           ],
                         ),
@@ -348,7 +348,7 @@ class _ClaimRewardButtonState extends State<ClaimRewardButton> {
       if (state is TransactionSent) {
         return Text(
           "claimed " + (widget.claimable / 100).toStringAsFixed(2) + " DTC",
-          style: Theme.of(context).textTheme.headline5,
+          style: Theme.of(context).textTheme.bodyText1,
         );
       } else {
         if (state is TransactionSinging || state is TransactionSigned) {
