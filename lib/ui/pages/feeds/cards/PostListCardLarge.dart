@@ -5,6 +5,7 @@ import 'package:dtube_togo/style/styledCustomWidgets.dart';
 import 'package:dtube_togo/ui/pages/feeds/widgets/FullScreenButton.dart';
 import 'package:dtube_togo/ui/pages/post/widgets/VoteButtons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_togo/style/ThemeData.dart';
 
@@ -108,77 +109,8 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            InkWell(
-              onTap: () {
-                navigateToUserDetailPage(context, widget.author, () {});
-              },
-              child: AccountAvatarBase(
-                username: widget.author,
-                avatarSize: _avatarSize,
-                showVerified: true,
-                showName: true,
-                nameFontSizeMultiply: 1,
-                width: 40.w,
-              ),
-            ),
-            SizedBox(width: 8),
-            Container(
-              width: _tagSpace,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  widget.oc
-                      ? FaIcon(
-                          FontAwesomeIcons.award,
-                          size: 5.w,
-                        )
-                      : SizedBox(width: 0),
-                  InkWell(
-                    onTap: () {
-                      navigateToPostDetailPage(context, widget.author,
-                          widget.link, "none", false, () {});
-                    },
-                    child: InputChip(
-                      label: Container(
-                        width: 10.w,
-                        //height: 40,
-                        child: Center(
-                          child: Text(
-                            widget.mainTag,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyText1,
-                          ),
-                        ),
-                      ),
-                      onPressed: () {},
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 8),
-        Container(
-          width: 90.w,
-          child: InkWell(
-            onTap: () {
-              navigateToPostDetailPage(
-                  context, widget.author, widget.link, "none", false, () {});
-            },
-            child: Text(
-              widget.title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.headline6,
-            ),
-          ),
-        ),
         InkWell(
           onTap: () {
             setState(() {
@@ -262,7 +194,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                             child: Align(
                               alignment: Alignment.center,
                               child: Container(
-                                color: Colors.black.withAlpha(85),
+                                color: Colors.black.withAlpha(99),
                                 child: VotingSliderStandalone(
                                   defaultVote: double.parse(
                                       widget.defaultPostVotingWeight),
@@ -288,7 +220,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                     child: Align(
                       alignment: Alignment.center,
                       child: Container(
-                        color: Colors.black.withAlpha(75),
+                        color: Colors.black.withAlpha(95),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -373,148 +305,333 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                   )),
               Align(
                 alignment: Alignment.topRight,
-                child: FullScreenButton(
-                  videoUrl: widget.videoUrl,
-                  videoSource: widget.videoSource,
-                  iconSize: 22,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 2.h),
+                  child: FullScreenButton(
+                    videoUrl: widget.videoUrl,
+                    videoSource: widget.videoSource,
+                    iconSize: 22,
+                  ),
                 ),
               ),
             ],
           ),
           //),
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
+
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '${widget.publishDate} - ' +
-                      (widget.duration.inHours == 0
-                          ? widget.duration.toString().substring(2, 7) + ' min'
-                          : widget.duration.toString().substring(0, 7) +
-                              ' hours'),
-                  style: Theme.of(context).textTheme.bodyText2,
+                InkWell(
+                  onTap: () {
+                    navigateToUserDetailPage(context, widget.author, () {});
+                  },
+                  child: AccountAvatarBase(
+                    username: widget.author,
+                    avatarSize: _avatarSize,
+                    showVerified: true,
+                    showName: false,
+                    nameFontSizeMultiply: 1,
+                    width: 10.w,
+                  ),
                 ),
-                Text(
-                  '${widget.dtcValue}',
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Transform.scale(
-                  scale: 0.8,
-                  alignment: Alignment.centerLeft,
-                  child: InputChip(
-                      label: Text(
-                        '',
-                      ),
-                      avatar: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: FaIcon(FontAwesomeIcons.comment,
-                            color: widget.alreadyVoted &&
-                                    !widget.alreadyVotedDirection
-                                ? globalRed
-                                : Colors.grey),
-                      ),
-                      onPressed: () {
-                        //   navigateToPostDetailPage(context, widget.author,
-                        //       widget.link, "newcomment", false, () {});
-                        // },
-                        setState(() {
-                          if (!_showCommentInput) {
-                            _showCommentInput = true;
-                            _showVotingBars = false;
-                            _userBloc.add(FetchDTCVPEvent());
-                          } else {
-                            _showCommentInput = false;
-                          }
-                        });
-                      }),
-                ),
-                Transform.scale(
-                  scale: 0.8,
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    children: [
-                      InputChip(
-                        label: Text(
-                          widget.upvotesCount.toString(),
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                        avatar: Padding(
-                          padding: const EdgeInsets.only(left: 4.0),
-                          child: FaIcon(
-                            FontAwesomeIcons.thumbsUp,
-                            color: widget.alreadyVoted &&
-                                    widget.alreadyVotedDirection
-                                ? globalRed
-                                : Colors.grey,
-                          ),
-                        ),
-                        onPressed: () {
-                          // if (!widget.alreadyVoted) {
-                          //   navigateToPostDetailPage(context, widget.author,
-                          //       widget.link, "upvote", false, () {});
-                          // }
-                          setState(() {
-                            if (_showVotingBars && _votingDirection) {
-                              _showVotingBars = false;
-                            } else if (_showVotingBars && !_votingDirection) {
-                              _votingDirection = true;
-                            } else if (!_showVotingBars) {
-                              _userBloc.add(FetchDTCVPEvent());
-                              _showCommentInput = false;
-                              _showVotingBars = true;
-                              _votingDirection = true;
-                            }
-                          });
-                        },
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      InputChip(
-                        label: Text(
-                          widget.downvotesCount.toString(),
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                        avatar: Padding(
-                          padding: const EdgeInsets.only(left: 4.0),
-                          child: FaIcon(FontAwesomeIcons.thumbsDown,
-                              color: widget.alreadyVoted &&
-                                      !widget.alreadyVotedDirection
-                                  ? globalRed
-                                  : Colors.grey),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            if (_showVotingBars && _votingDirection) {
-                              _votingDirection = false;
-                            } else if (!_showVotingBars) {
-                              _userBloc.add(FetchDTCVPEvent());
-                              _showCommentInput = false;
-                              _showVotingBars = true;
-                              _votingDirection = false;
-                            } else if (_showVotingBars && !_votingDirection) {
-                              _showVotingBars = false;
-                            }
-                          });
-                        },
-                      ),
-                    ],
+                SizedBox(width: 2.w),
+                Container(
+                  width: 65.w,
+                  child: InkWell(
+                    onTap: () {
+                      navigateToPostDetailPage(context, widget.author,
+                          widget.link, "none", false, () {});
+                    },
+                    child: Text(
+                      widget.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
                   ),
                 ),
               ],
             ),
+            SizedBox(height: 2.h),
+            Container(
+              width: 32.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  widget.oc
+                      ? Padding(
+                          padding: EdgeInsets.only(right: 2.w),
+                          child: FaIcon(
+                            FontAwesomeIcons.award,
+                            size: 5.w,
+                          ),
+                        )
+                      : SizedBox(width: 7.w),
+                  InkWell(
+                    onTap: () {
+                      navigateToPostDetailPage(context, widget.author,
+                          widget.link, "none", false, () {});
+                    },
+                    child: InputChip(
+                      padding: EdgeInsets.zero,
+                      label: Container(
+                        width: 10.w,
+                        child: Center(
+                          child: Text(
+                            widget.mainTag,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                  SpeedDial(
+                      // icon: FontAwesomeIcons.bars,
+                      child: ShadowedIcon(
+                          icon: FontAwesomeIcons.bars,
+                          color: Colors.white,
+                          shadowColor: Colors.black,
+                          size: 5.w),
+                      activeIcon: FontAwesomeIcons.chevronLeft,
+                      buttonSize: 5.w * 2,
+                      direction: SpeedDialDirection.Up,
+                      visible: true,
+                      closeManually: false,
+                      curve: Curves.bounceIn,
+                      overlayColor: Colors.white,
+                      overlayOpacity: 0,
+                      onOpen: () => print('OPENING DIAL'),
+                      onClose: () => print('DIAL CLOSED'),
+                      tooltip: 'menu',
+                      heroTag: 'submenu' + widget.title,
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.white,
+                      elevation: 0.0,
+                      shape: CircleBorder(),
+                      gradientBoxShape: BoxShape.circle,
+                      children: [
+                        SpeedDialChild(
+                            child: ShadowedIcon(
+                                icon: FontAwesomeIcons.comment,
+                                color: Colors.white,
+                                shadowColor: Colors.black,
+                                size: 5.w),
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                            // label: '',
+                            // labelStyle: TextStyle(fontSize: 14.0),
+                            // labelBackgroundColor: Colors.transparent,
+                            onTap: () {
+                              setState(() {
+                                if (!_showCommentInput) {
+                                  _showCommentInput = true;
+                                  _showVotingBars = false;
+                                  _userBloc.add(FetchDTCVPEvent());
+                                } else {
+                                  _showCommentInput = false;
+                                }
+                              });
+                            }),
+                        SpeedDialChild(
+                            child: ShadowedIcon(
+                                icon: FontAwesomeIcons.thumbsDown,
+                                color: Colors.white,
+                                shadowColor: Colors.black,
+                                size: 5.w),
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                            // label: '',
+                            // labelStyle: TextStyle(fontSize: 14.0),
+                            // labelBackgroundColor: Colors.transparent,
+                            onTap: () {
+                              setState(() {
+                                if (_showVotingBars && _votingDirection) {
+                                  _votingDirection = false;
+                                } else if (!_showVotingBars) {
+                                  _userBloc.add(FetchDTCVPEvent());
+                                  _showCommentInput = false;
+                                  _showVotingBars = true;
+                                  _votingDirection = false;
+                                } else if (_showVotingBars &&
+                                    !_votingDirection) {
+                                  _showVotingBars = false;
+                                }
+                              });
+                            }),
+                        SpeedDialChild(
+                            child: ShadowedIcon(
+                                icon: FontAwesomeIcons.thumbsUp,
+                                color: Colors.white,
+                                shadowColor: Colors.black,
+                                size: 5.w),
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                            // label: '',
+                            // labelStyle: TextStyle(fontSize: 14.0),
+                            // labelBackgroundColor: Colors.transparent,
+                            onTap: () {
+                              setState(() {
+                                if (_showVotingBars && _votingDirection) {
+                                  _showVotingBars = false;
+                                } else if (_showVotingBars &&
+                                    !_votingDirection) {
+                                  _votingDirection = true;
+                                } else if (!_showVotingBars) {
+                                  _userBloc.add(FetchDTCVPEvent());
+                                  _showCommentInput = false;
+                                  _showVotingBars = true;
+                                  _votingDirection = true;
+                                }
+                              });
+                            }),
+                      ]),
+                ],
+              ),
+            ),
           ],
         ),
+        Padding(
+          padding: EdgeInsets.only(left: 12.w),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '@${widget.author} | ' +
+                    '${widget.publishDate} - ' +
+                    (widget.duration.inHours == 0
+                        ? widget.duration.toString().substring(2, 7) + ' min'
+                        : widget.duration.toString().substring(0, 7) +
+                            ' hours'),
+                style: Theme.of(context).textTheme.bodyText2,
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 5.w),
+                child: Text(
+                  '${widget.dtcValue}',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 2.h),
+
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: [
+        //     Transform.scale(
+        //       scale: 0.8,
+        //       alignment: Alignment.centerLeft,
+        //       child: InputChip(
+        //           label: Text(
+        //             '',
+        //           ),
+        //           avatar: Padding(
+        //             padding: const EdgeInsets.only(left: 8.0),
+        //             child: FaIcon(FontAwesomeIcons.comment,
+        //                 color: widget.alreadyVoted &&
+        //                         !widget.alreadyVotedDirection
+        //                     ? globalRed
+        //                     : Colors.grey),
+        //           ),
+        //           onPressed: () {
+        //             setState(() {
+        //               if (!_showCommentInput) {
+        //                 _showCommentInput = true;
+        //                 _showVotingBars = false;
+        //                 _userBloc.add(FetchDTCVPEvent());
+        //               } else {
+        //                 _showCommentInput = false;
+        //               }
+        //             });
+        //           }),
+        //     ),
+        //     Transform.scale(
+        //       scale: 0.8,
+        //       alignment: Alignment.centerRight,
+        //       child: Row(
+        //         children: [
+        //           InputChip(
+        //             label: Text(
+        //               widget.upvotesCount.toString(),
+        //               style: Theme.of(context).textTheme.bodyText1,
+        //             ),
+        //             avatar: Padding(
+        //               padding: const EdgeInsets.only(left: 4.0),
+        //               child: FaIcon(
+        //                 FontAwesomeIcons.thumbsUp,
+        //                 color: widget.alreadyVoted &&
+        //                         widget.alreadyVotedDirection
+        //                     ? globalRed
+        //                     : Colors.grey,
+        //               ),
+        //             ),
+        //             onPressed: () {
+        //               // if (!widget.alreadyVoted) {
+        //               //   navigateToPostDetailPage(context, widget.author,
+        //               //       widget.link, "upvote", false, () {});
+        //               // }
+        //               setState(() {
+        //                 if (_showVotingBars && _votingDirection) {
+        //                   _showVotingBars = false;
+        //                 } else if (_showVotingBars && !_votingDirection) {
+        //                   _votingDirection = true;
+        //                 } else if (!_showVotingBars) {
+        //                   _userBloc.add(FetchDTCVPEvent());
+        //                   _showCommentInput = false;
+        //                   _showVotingBars = true;
+        //                   _votingDirection = true;
+        //                 }
+        //               });
+        //             },
+        //           ),
+        //           SizedBox(
+        //             width: 8,
+        //           ),
+        //           InputChip(
+        //             label: Text(
+        //               widget.downvotesCount.toString(),
+        //               style: Theme.of(context).textTheme.bodyText1,
+        //             ),
+        //             avatar: Padding(
+        //               padding: const EdgeInsets.only(left: 4.0),
+        //               child: FaIcon(FontAwesomeIcons.thumbsDown,
+        //                   color: widget.alreadyVoted &&
+        //                           !widget.alreadyVotedDirection
+        //                       ? globalRed
+        //                       : Colors.grey),
+        //             ),
+        //             onPressed: () {
+        //               setState(() {
+        //                 if (_showVotingBars && _votingDirection) {
+        //                   _votingDirection = false;
+        //                 } else if (!_showVotingBars) {
+        //                   _userBloc.add(FetchDTCVPEvent());
+        //                   _showCommentInput = false;
+        //                   _showVotingBars = true;
+        //                   _votingDirection = false;
+        //                 } else if (_showVotingBars && !_votingDirection) {
+        //                   _showVotingBars = false;
+        //                 }
+        //               });
+        //             },
+        //           ),
+        //         ],
+        //       ),
+        //   ),
+        // ],
+        //),
       ],
     );
   }
