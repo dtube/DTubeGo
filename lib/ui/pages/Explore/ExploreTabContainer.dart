@@ -13,9 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-var globalExploreTabBarKey = new GlobalKey<State<ExploreMainPage>>();
-var globalSearchScreenKey = new GlobalKey<SearchScreenState>();
-
 class ExploreMainPage extends StatefulWidget {
   ExploreMainPage({Key? key}) : super(key: key);
 
@@ -71,7 +68,7 @@ class _ExploreMainPageState extends State<ExploreMainPage>
                     BlocProvider<SearchBloc>(
                         create: (context) =>
                             SearchBloc(repository: SearchRepositoryImpl()),
-                        child: SearchScreen(key: globalSearchScreenKey)),
+                        child: SearchScreen()),
                   ],
                   controller: _tabController,
                 ),
@@ -89,7 +86,6 @@ class _ExploreMainPageState extends State<ExploreMainPage>
                 width: 17.w,
                 //color: Colors.black.withAlpha(20),
                 child: TabBar(
-                  key: globalExploreTabBarKey,
                   unselectedLabelColor: Colors.white,
                   labelColor: Colors.white,
                   indicatorColor: Colors.white,

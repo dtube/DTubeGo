@@ -4,6 +4,7 @@ import 'package:dtube_go/style/styledCustomWidgets.dart';
 
 import 'package:dtube_go/ui/pages/feeds/widgets/FullScreenButton.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
+import 'package:dtube_go/ui/widgets/TagChip.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -370,30 +371,34 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                           ),
                         )
                       : SizedBox(width: 7.w),
-                  InkWell(
-                    onTap: () {
-                      navigateToPostDetailPage(context, widget.author,
-                          widget.link, "none", false, () {});
-                    },
-                    child: InputChip(
-                      padding: EdgeInsets.zero,
-                      label: Container(
-                        width: 10.w,
-                        child: Center(
-                          child: Text(
-                            widget.mainTag,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                        ),
-                      ),
-                      onPressed: () {},
-                    ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     navigateToPostDetailPage(context, widget.author,
+                  //         widget.link, "none", false, () {});
+                  //   },
+                  //   child: InputChip(
+                  //     padding: EdgeInsets.zero,
+                  //     label: Container(
+                  //       width: 10.w,
+                  //       child: Center(
+                  //         child: Text(
+                  //           widget.mainTag,
+                  //           overflow: TextOverflow.ellipsis,
+                  //           style: Theme.of(context).textTheme.bodyText2,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     onPressed: () {},
+                  //   ),
+                  // ),
+                  TagChip(
+                    tagName: widget.mainTag,
+                    width: 11.w,
                   ),
                   SpeedDial(
                       // icon: FontAwesomeIcons.bars,
                       child: ShadowedIcon(
-                          icon: FontAwesomeIcons.bars,
+                          icon: FontAwesomeIcons.ellipsisV,
                           color: Colors.white,
                           shadowColor: Colors.black,
                           size: 5.w),

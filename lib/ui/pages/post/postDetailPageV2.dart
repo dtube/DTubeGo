@@ -1,5 +1,6 @@
 import 'package:dtube_go/ui/MainContainer/NavigationContainerV2.dart';
 import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
+import 'package:dtube_go/ui/widgets/TagChip.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/utils/navigationShortcuts.dart';
@@ -214,7 +215,7 @@ class _PostDetailsState extends State<PostDetails> {
           controller: _controller,
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.only(top: 100.0),
+              padding: EdgeInsets.only(top: 5.h),
               child: Stack(
                 children: <Widget>[
                   Padding(
@@ -292,6 +293,7 @@ class _PostDetailsState extends State<PostDetails> {
                                                 padding: const EdgeInsets.only(
                                                     right: 8.0),
                                                 child: TagChip(
+                                                    width: 10.w,
                                                     tagName: widget
                                                         .post.tags[index]
                                                         .toString()
@@ -407,35 +409,6 @@ class _PostDetailsState extends State<PostDetails> {
               ),
             ),
           )),
-    );
-  }
-}
-
-class TagChip extends StatelessWidget {
-  String tagName;
-  TagChip({Key? key, required this.tagName}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InputChip(
-      onPressed: () async {
-        Navigator.pop(context);
-        BottomNavigationBar navigationBar =
-            globalNavigationBarKey.currentWidget as BottomNavigationBar;
-
-        navigationBar.onTap!(1);
-        TabBar exploreTabBar = globalExploreTabBarKey.currentWidget as TabBar;
-        exploreTabBar.controller!.index = 1;
-        // TODO: prefill searchbar and set entity to 1
-        // currently not working but almost
-        Future.delayed(Duration(milliseconds: 50),
-            () => globalSearchScreenKey.currentState!.prefillForm(tagName, 2));
-      },
-      label: Text(tagName, style: Theme.of(context).textTheme.bodyText2),
-      // label: Text(
-      //     widget.post.tags[index]
-      //         .toString(),
-      //     )
     );
   }
 }

@@ -29,8 +29,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-var globalNavigationBarKey = new GlobalKey<State<BottomNavigationBar>>();
-
 class NavigationContainer extends StatefulWidget {
   NavigationContainer({Key? key}) : super(key: key);
 
@@ -214,7 +212,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        key: globalNavigationBarKey,
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.transparent,
         elevation: 0,

@@ -58,6 +58,10 @@ class SearchScreenState extends State<SearchScreen> {
   }
 
   void prefillForm(String search, int searchEntity) {
+    searchBloc = BlocProvider.of<SearchBloc>(context);
+    searchTextController = TextEditingController();
+    searchTextController.addListener(_sendRequest);
+    print("SEAAAARCH: " + search);
     super.initState();
     setState(() {
       searchTextController.text = search;
@@ -133,7 +137,6 @@ class SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
     return Padding(
       padding: EdgeInsets.only(top: 18.h),
       child: SingleChildScrollView(
