@@ -1,16 +1,16 @@
-import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
-import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
-import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
-import 'package:dtube_togo/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/ui/pages/upload/uploadForm.dart';
+import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
+import 'package:dtube_go/bloc/settings/settings_bloc.dart';
+import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
+import 'package:dtube_go/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/bloc/user/user_bloc.dart';
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/ui/pages/upload/uploadForm.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 class Wizard3rdParty extends StatefulWidget {
   Wizard3rdParty({Key? key, required this.uploaderCallback}) : super(key: key);

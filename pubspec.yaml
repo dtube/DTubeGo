@@ -1,5 +1,5 @@
-name: dtube_togo
-description: A new Flutter project.
+name: dtube_go
+description: Client to interact with the avalon blockchain
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.2+24
+version: 1.0.2+25
 
 environment:
   sdk: ">=2.13.0 <3.0.0"

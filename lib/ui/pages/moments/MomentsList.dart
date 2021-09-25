@@ -1,19 +1,16 @@
-import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/ui/pages/moments/MomentsView/MomentsItem.dart';
-import 'package:dtube_togo/ui/pages/moments/MomentsView/MomentsView.dart';
-import 'package:dtube_togo/ui/pages/moments/MomentsView/controller/MomentsController.dart';
-import 'package:dtube_togo/ui/pages/moments/MomentsView/widgets/MomentsUpload.dart';
-import 'package:dtube_togo/ui/pages/moments/MomentsView/widgets/VideoPlayerMoments.dart';
-
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/ui/pages/moments/MomentsView/MomentsItem.dart';
+import 'package:dtube_go/ui/pages/moments/MomentsView/MomentsView.dart';
+import 'package:dtube_go/ui/pages/moments/MomentsView/controller/MomentsController.dart';
+import 'package:dtube_go/ui/pages/moments/MomentsView/widgets/MomentsUpload.dart';
+import 'package:dtube_go/ui/pages/moments/MomentsView/widgets/VideoPlayerMoments.dart';
 
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_togo/style/dtubeLoading.dart';
+import 'package:dtube_go/style/dtubeLoading.dart';
 
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

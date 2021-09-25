@@ -1,4 +1,4 @@
-import 'package:dtube_togo/bloc/search/search_response_model.dart';
+import 'package:dtube_go/bloc/search/search_response_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class SearchState extends Equatable {}

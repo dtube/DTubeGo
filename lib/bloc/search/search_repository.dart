@@ -1,6 +1,6 @@
-import 'package:dtube_togo/bloc/avalonConfig/avalonConfig_bloc_full.dart';
-import 'package:dtube_togo/bloc/search/search_response_model.dart';
-import 'package:dtube_togo/res/appConfigValues.dart';
+import 'package:dtube_go/bloc/avalonConfig/avalonConfig_bloc_full.dart';
+import 'package:dtube_go/bloc/search/search_response_model.dart';
+import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

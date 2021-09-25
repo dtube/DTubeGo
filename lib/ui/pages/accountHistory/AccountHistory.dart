@@ -1,9 +1,9 @@
-import 'package:dtube_togo/bloc/accountHistory/accountHistory_bloc_full.dart';
-import 'package:dtube_togo/bloc/config/txTypes.dart';
-import 'package:dtube_togo/style/dtubeLoading.dart';
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
-import 'package:dtube_togo/utils/navigationShortCuts.dart';
+import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
+import 'package:dtube_go/bloc/config/txTypes.dart';
+import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
+import 'package:dtube_go/utils/navigationShortCuts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:flutter/material.dart';

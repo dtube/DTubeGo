@@ -1,9 +1,8 @@
-import 'package:dtube_togo/ui/pages/moments/MomentsView/MomentsItem.dart';
-import 'package:dtube_togo/ui/pages/moments/MomentsView/controller/MomentsController.dart';
+import 'package:dtube_go/ui/pages/moments/MomentsView/MomentsItem.dart';
+import 'package:dtube_go/ui/pages/moments/MomentsView/controller/MomentsController.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'dart:async';
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:collection/collection.dart' show IterableExtension;

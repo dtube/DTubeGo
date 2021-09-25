@@ -1,12 +1,12 @@
-import 'package:dtube_togo/bloc/rewards/rewards_bloc.dart';
-import 'package:dtube_togo/bloc/rewards/rewards_bloc_full.dart';
-import 'package:dtube_togo/bloc/rewards/rewards_event.dart';
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/style/dtubeLoading.dart';
-import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
-import 'package:dtube_togo/ui/pages/post/postDetailPageV2.dart';
-import 'package:dtube_togo/utils/friendlyTimestamp.dart';
+import 'package:dtube_go/bloc/rewards/rewards_bloc.dart';
+import 'package:dtube_go/bloc/rewards/rewards_bloc_full.dart';
+import 'package:dtube_go/bloc/rewards/rewards_event.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
+import 'package:dtube_go/ui/pages/post/postDetailPageV2.dart';
+import 'package:dtube_go/utils/friendlyTimestamp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,4 +1,4 @@
-import 'package:dtube_togo/bloc/thirdpartyloader/thirdpartyloader_response_model.dart';
+import 'package:dtube_go/bloc/thirdpartyloader/thirdpartyloader_response_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ThirdPartyMetadataState extends Equatable {}

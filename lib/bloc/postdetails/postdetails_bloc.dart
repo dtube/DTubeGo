@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:dtube_togo/bloc/postdetails/postdetails_event.dart';
-import 'package:dtube_togo/bloc/postdetails/postdetails_repository.dart';
-import 'package:dtube_togo/bloc/postdetails/postdetails_response_model.dart';
-import 'package:dtube_togo/bloc/postdetails/postdetails_state.dart';
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/bloc/postdetails/postdetails_event.dart';
+import 'package:dtube_go/bloc/postdetails/postdetails_repository.dart';
+import 'package:dtube_go/bloc/postdetails/postdetails_response_model.dart';
+import 'package:dtube_go/bloc/postdetails/postdetails_state.dart';
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 class PostBloc extends Bloc<PostEvent, PostState> {
   PostRepository repository;

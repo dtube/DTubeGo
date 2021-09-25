@@ -1,5 +1,5 @@
-import 'package:dtube_togo/bloc/transaction/transaction_response_model.dart';
-import 'package:dtube_togo/bloc/user/user_response_model.dart';
+import 'package:dtube_go/bloc/transaction/transaction_response_model.dart';
+import 'package:dtube_go/bloc/user/user_response_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class TransactionEvent extends Equatable {}

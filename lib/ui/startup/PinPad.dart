@@ -1,18 +1,18 @@
 import 'dart:math';
 
-import 'package:dtube_togo/utils/ResponsiveLayout.dart';
+import 'package:dtube_go/utils/ResponsiveLayout.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/style/dtubeLoading.dart';
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/MainContainer/NavigationContainerV2.dart';
-import 'package:dtube_togo/ui/widgets/PinPadWidget.dart';
-import 'package:dtube_togo/utils/secureStorage.dart';
-import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/MainContainer/NavigationContainerV2.dart';
+import 'package:dtube_go/ui/widgets/PinPadWidget.dart';
+import 'package:dtube_go/utils/secureStorage.dart';
+import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';

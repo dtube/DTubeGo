@@ -1,4 +1,4 @@
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 

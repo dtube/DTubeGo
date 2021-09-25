@@ -2,16 +2,16 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
-import 'package:dtube_togo/bloc/auth/auth_bloc.dart';
-import 'package:dtube_togo/bloc/auth/auth_repository.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/ui/startup/Startup.dart';
-import 'package:dtube_togo/utils/AppBuilder.dart';
+import 'package:dtube_go/bloc/auth/auth_bloc.dart';
+import 'package:dtube_go/bloc/auth/auth_repository.dart';
+import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/startup/Startup.dart';
+import 'package:dtube_go/utils/AppBuilder.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

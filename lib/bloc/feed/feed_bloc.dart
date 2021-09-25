@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:dtube_togo/bloc/feed/feed_state.dart';
-import 'package:dtube_togo/bloc/feed/feed_event.dart';
-import 'package:dtube_togo/bloc/feed/feed_response_model.dart';
-import 'package:dtube_togo/bloc/feed/feed_repository.dart';
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/bloc/feed/feed_state.dart';
+import 'package:dtube_go/bloc/feed/feed_event.dart';
+import 'package:dtube_go/bloc/feed/feed_response_model.dart';
+import 'package:dtube_go/bloc/feed/feed_repository.dart';
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
   FeedRepository repository;

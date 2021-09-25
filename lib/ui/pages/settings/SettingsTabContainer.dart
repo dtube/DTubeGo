@@ -1,15 +1,15 @@
-import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
-import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/style/dtubeLoading.dart';
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/pages/settings/HiveSignerButton.dart';
-import 'package:dtube_togo/ui/pages/settings/PinCodeDialog.dart';
+import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
+import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
+import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/pages/settings/HiveSignerButton.dart';
+import 'package:dtube_go/ui/pages/settings/PinCodeDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 class SettingsTabContainer extends StatefulWidget {
   SettingsTabContainer({Key? key}) : super(key: key);

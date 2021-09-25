@@ -1,9 +1,9 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
-import 'package:dtube_togo/res/appConfigValues.dart';
-import 'package:dtube_togo/style/OpenableHyperlink.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
+import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/style/OpenableHyperlink.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';

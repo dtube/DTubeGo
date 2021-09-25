@@ -1,17 +1,14 @@
-import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc.dart';
-import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
-import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/style/dtubeLoading.dart';
-import 'package:dtube_togo/ui/pages/moments/MomentsList.dart';
-import 'package:dtube_togo/ui/pages/moments/MomentsView/widgets/MomentsUpload.dart';
+import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc.dart';
+import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
+import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/ui/pages/moments/MomentsList.dart';
 
-import 'package:dtube_togo/utils/ResponsiveLayout.dart';
+import 'package:dtube_go/utils/ResponsiveLayout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
+import 'package:dtube_go/style/styledCustomWidgets.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

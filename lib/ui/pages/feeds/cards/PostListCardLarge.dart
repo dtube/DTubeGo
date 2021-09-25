@@ -1,24 +1,23 @@
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/style/styledCustomWidgets.dart';
 
-import 'package:dtube_togo/ui/pages/feeds/widgets/FullScreenButton.dart';
-import 'package:dtube_togo/ui/pages/post/widgets/VoteButtons.dart';
+import 'package:dtube_go/ui/pages/feeds/widgets/FullScreenButton.dart';
+import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
 
-import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
+import 'package:dtube_go/ui/widgets/players/BetterPlayer.dart';
 
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:dtube_togo/ui/widgets/players/YTplayerIframe.dart';
+import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
 
-import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
-import 'package:dtube_togo/utils/navigationShortcuts.dart';
+import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
+import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

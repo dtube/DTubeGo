@@ -1,13 +1,13 @@
-import 'package:dtube_togo/res/appConfigValues.dart';
+import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
-import 'package:dtube_togo/bloc/auth/auth_event.dart';
-import 'package:dtube_togo/bloc/auth/auth_state.dart';
-import 'package:dtube_togo/bloc/auth/auth_repository.dart';
+import 'package:dtube_go/bloc/auth/auth_event.dart';
+import 'package:dtube_go/bloc/auth/auth_state.dart';
+import 'package:dtube_go/bloc/auth/auth_repository.dart';
 
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:bloc/bloc.dart';
-import 'package:dtube_togo/utils/discoverAPINode.dart';
+import 'package:dtube_go/utils/discoverAPINode.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 

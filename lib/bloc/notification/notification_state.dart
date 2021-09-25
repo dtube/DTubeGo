@@ -1,4 +1,4 @@
-import 'package:dtube_togo/bloc/notification/notification_response_model.dart';
+import 'package:dtube_go/bloc/notification/notification_response_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class NotificationState extends Equatable {}

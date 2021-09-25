@@ -1,11 +1,10 @@
-import 'package:path/path.dart';
 //TODO: connect to local ipfs deamon:
 // - https://github.com/hanerx/ipfs-dart
 // - https://github.com/ngngardner/dart_ipfs_client
 
 import 'dart:io';
 
-import 'package:dtube_togo/res/appConfigValues.dart';
+import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:http/http.dart' as http;
 

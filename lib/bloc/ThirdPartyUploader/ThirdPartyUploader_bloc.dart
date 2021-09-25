@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
-import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_event.dart';
-import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_state.dart';
+import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_event.dart';
+import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_state.dart';
 
-import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_repository.dart';
+import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 class ThirdPartyUploaderBloc
     extends Bloc<ThirdPartyUploaderEvent, ThirdPartyUploaderState> {

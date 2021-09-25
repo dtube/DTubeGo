@@ -1,15 +1,14 @@
 import 'dart:io';
-import 'package:dtube_togo/bloc/transaction/transaction_bloc.dart';
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_togo/utils/randomPermlink.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/utils/randomPermlink.dart';
 
 import 'package:bloc/bloc.dart';
-import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_event.dart';
-import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_state.dart';
+import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_event.dart';
+import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_state.dart';
 
-import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_repository.dart';
+import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
 
 class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
   IPFSUploadRepository repository;

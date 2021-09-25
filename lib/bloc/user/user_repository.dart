@@ -1,10 +1,10 @@
-import 'package:dtube_togo/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
-import 'package:dtube_togo/bloc/avalonConfig/avalonConfig_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_response_model.dart';
+import 'package:dtube_go/bloc/avalonConfig/avalonConfig_bloc_full.dart';
+import 'package:dtube_go/bloc/user/user_response_model.dart';
 
-import 'package:dtube_togo/res/appConfigValues.dart';
-import 'package:dtube_togo/utils/growInt.dart';
+import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/utils/growInt.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 // import 'package:base58check/base58.dart';

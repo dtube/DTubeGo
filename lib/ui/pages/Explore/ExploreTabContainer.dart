@@ -1,13 +1,13 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_togo/bloc/feed/feed_bloc.dart';
-import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_go/bloc/feed/feed_bloc.dart';
+import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 
-import 'package:dtube_togo/bloc/search/search_bloc_full.dart';
+import 'package:dtube_go/bloc/search/search_bloc_full.dart';
 
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/pages/Explore/SearchScreen.dart';
-import 'package:dtube_togo/ui/pages/Explore/StaggeredFeed.dart';
+import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/pages/Explore/SearchScreen.dart';
+import 'package:dtube_go/ui/pages/Explore/StaggeredFeed.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

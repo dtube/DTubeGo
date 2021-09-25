@@ -1,5 +1,5 @@
 import 'package:decorated_icon/decorated_icon.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

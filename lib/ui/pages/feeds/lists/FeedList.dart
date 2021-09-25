@@ -1,14 +1,14 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/style/dtubeLoading.dart';
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/style/dtubeLoading.dart';
 
-import 'package:dtube_togo/ui/pages/feeds/cards/PostListCardLarge.dart';
-import 'package:dtube_togo/ui/pages/feeds/cards/PostListCardNarrow.dart';
+import 'package:dtube_go/ui/pages/feeds/cards/PostListCardLarge.dart';
+import 'package:dtube_go/ui/pages/feeds/cards/PostListCardNarrow.dart';
 
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
-import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_togo/utils/friendlyTimestamp.dart';
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_go/utils/friendlyTimestamp.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

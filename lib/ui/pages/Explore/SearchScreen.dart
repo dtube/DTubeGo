@@ -1,15 +1,15 @@
-import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'dart:async';
 
-import 'package:dtube_togo/bloc/search/search_bloc_full.dart';
+import 'package:dtube_go/bloc/search/search_bloc_full.dart';
 
-import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/style/dtubeLoading.dart';
+import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/style/dtubeLoading.dart';
 
-import 'package:dtube_togo/ui/pages/Explore/ResultCards/PostResultCard.dart';
-import 'package:dtube_togo/ui/pages/Explore/ResultCards/UserResultCard.dart';
+import 'package:dtube_go/ui/pages/Explore/ResultCards/PostResultCard.dart';
+import 'package:dtube_go/ui/pages/Explore/ResultCards/UserResultCard.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

@@ -1,30 +1,30 @@
-import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
-import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_togo/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
-import 'package:dtube_togo/ui/pages/moments/MomentsTabContainer.dart';
+import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
+import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
+import 'package:dtube_go/ui/pages/moments/MomentsTabContainer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
+import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
 
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 
-import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/style/dtubeLoading.dart';
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/MainContainer/BalanceOverview.dart';
-import 'package:dtube_togo/ui/MainContainer/MenuButton.dart';
-import 'package:dtube_togo/ui/pages/Explore/ExploreTabContainer.dart';
+import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/MainContainer/BalanceOverview.dart';
+import 'package:dtube_go/ui/MainContainer/MenuButton.dart';
+import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
 
-import 'package:dtube_togo/ui/pages/feeds/FeedTabContainer.dart';
-import 'package:dtube_togo/ui/pages/notifications/NotificationButton.dart';
+import 'package:dtube_go/ui/pages/feeds/FeedTabContainer.dart';
+import 'package:dtube_go/ui/pages/notifications/NotificationButton.dart';
 
-import 'package:dtube_togo/ui/pages/upload/uploaderTabContainer.dart';
-import 'package:dtube_togo/ui/pages/user/User.dart';
+import 'package:dtube_go/ui/pages/upload/uploaderTabContainer.dart';
+import 'package:dtube_go/ui/pages/user/User.dart';
 
-import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
-import 'package:dtube_togo/ui/widgets/customSnackbar.dart';
+import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
+import 'package:dtube_go/ui/widgets/customSnackbar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

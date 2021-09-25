@@ -1,4 +1,4 @@
-import 'package:dtube_togo/utils/growInt.dart';
+import 'package:dtube_go/utils/growInt.dart';
 
 class SearchResults {
   late int took;

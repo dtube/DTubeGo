@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:dtube_togo/bloc/avalonConfig/avalonConfig_event.dart';
-import 'package:dtube_togo/bloc/avalonConfig/avalonConfig_repository.dart';
-import 'package:dtube_togo/bloc/avalonConfig/avalonConfig_response_model.dart';
-import 'package:dtube_togo/bloc/avalonConfig/avalonConfig_state.dart';
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/bloc/avalonConfig/avalonConfig_event.dart';
+import 'package:dtube_go/bloc/avalonConfig/avalonConfig_repository.dart';
+import 'package:dtube_go/bloc/avalonConfig/avalonConfig_response_model.dart';
+import 'package:dtube_go/bloc/avalonConfig/avalonConfig_state.dart';
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 class AvalonConfigBloc extends Bloc<AvalonConfigEvent, AvalonConfigState> {
   AvalonConfigRepository repository;

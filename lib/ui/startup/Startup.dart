@@ -1,16 +1,16 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_togo/bloc/settings/settings_bloc.dart';
-import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
-import 'package:dtube_togo/res/appConfigValues.dart';
-import 'package:dtube_togo/ui/startup/PinPad.dart';
+import 'package:dtube_go/bloc/settings/settings_bloc.dart';
+import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
+import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/ui/startup/PinPad.dart';
 
-import 'package:dtube_togo/ui/startup/OnboardingJourney.dart';
+import 'package:dtube_go/ui/startup/OnboardingJourney.dart';
 
-import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/style/dtubeLoading.dart';
-import 'package:dtube_togo/ui/startup/LoginScreen.dart';
+import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
+import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/ui/startup/LoginScreen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 

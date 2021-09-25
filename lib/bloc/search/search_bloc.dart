@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:dtube_togo/bloc/search/search_event.dart';
-import 'package:dtube_togo/bloc/search/search_state.dart';
-import 'package:dtube_togo/bloc/search/search_response_model.dart';
-import 'package:dtube_togo/bloc/search/search_repository.dart';
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/bloc/search/search_event.dart';
+import 'package:dtube_go/bloc/search/search_state.dart';
+import 'package:dtube_go/bloc/search/search_response_model.dart';
+import 'package:dtube_go/bloc/search/search_repository.dart';
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchRepository repository;

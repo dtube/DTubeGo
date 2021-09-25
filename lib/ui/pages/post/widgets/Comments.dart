@@ -1,11 +1,11 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
-import 'package:dtube_togo/ui/pages/post/widgets/ReplyButton.dart';
-import 'package:dtube_togo/ui/pages/post/widgets/VoteButtons.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
+import 'package:dtube_go/ui/pages/post/widgets/ReplyButton.dart';
+import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
 
-import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
+import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

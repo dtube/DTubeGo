@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
 
-import 'package:dtube_togo/bloc/hivesigner/hivesigner_event.dart';
-import 'package:dtube_togo/bloc/hivesigner/hivesigner_state.dart';
-import 'package:dtube_togo/bloc/hivesigner/hivesigner_repository.dart';
+import 'package:dtube_go/bloc/hivesigner/hivesigner_event.dart';
+import 'package:dtube_go/bloc/hivesigner/hivesigner_state.dart';
+import 'package:dtube_go/bloc/hivesigner/hivesigner_repository.dart';
 
 import 'package:bloc/bloc.dart';
 

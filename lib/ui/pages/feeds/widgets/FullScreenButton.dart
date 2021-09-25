@@ -1,8 +1,8 @@
 import 'package:overlay_dialog/overlay_dialog.dart';
 
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/widgets/players/BetterPlayerFullScreen.dart';
-import 'package:dtube_togo/ui/widgets/players/YTPlayerFullScreen.dart';
+import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/players/BetterPlayerFullScreen.dart';
+import 'package:dtube_go/ui/widgets/players/YTPlayerFullScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

@@ -1,16 +1,16 @@
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'dart:io';
 
-import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
-import 'package:dtube_togo/utils/GetAppDocDirectory.dart';
+import 'package:dtube_go/ui/widgets/players/BetterPlayer.dart';
+import 'package:dtube_go/utils/GetAppDocDirectory.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/startup/LoginScreen.dart';
+import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/startup/LoginScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
-import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';

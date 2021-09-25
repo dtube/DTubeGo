@@ -1,7 +1,7 @@
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:another_flushbar/flushbar.dart';
-import 'package:dtube_togo/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

@@ -1,4 +1,4 @@
-import 'package:dtube_togo/res/appConfigValues.dart';
+import 'package:dtube_go/res/appConfigValues.dart';
 
 class ApiResultModel {
   late String status;

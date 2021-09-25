@@ -1,17 +1,17 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:dtube_togo/bloc/accountHistory/accountHistory_bloc_full.dart';
-import 'package:dtube_togo/bloc/auth/auth_bloc.dart';
-import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
-import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
-import 'package:dtube_togo/ui/pages/accountHistory/AccountHistory.dart';
-import 'package:dtube_togo/ui/pages/user/ProfileSettings.dart';
-import 'package:dtube_togo/ui/pages/wallet/transferDialog.dart';
-import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
+import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
+import 'package:dtube_go/bloc/auth/auth_bloc.dart';
+import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
+import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/pages/accountHistory/AccountHistory.dart';
+import 'package:dtube_go/ui/pages/user/ProfileSettings.dart';
+import 'package:dtube_go/ui/pages/wallet/transferDialog.dart';
+import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';

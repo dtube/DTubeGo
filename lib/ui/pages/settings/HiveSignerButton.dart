@@ -1,6 +1,6 @@
-import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
+import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

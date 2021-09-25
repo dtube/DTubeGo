@@ -1,30 +1,29 @@
-import 'package:dtube_togo/ui/MainContainer/NavigationContainerV2.dart';
-import 'package:dtube_togo/ui/pages/Explore/ExploreTabContainer.dart';
-import 'package:dtube_togo/ui/pages/Explore/SearchScreen.dart';
+import 'package:dtube_go/ui/MainContainer/NavigationContainerV2.dart';
+import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_togo/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
-import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
-import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
+import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
+import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// import 'package:dtube_togo/ui/MainContainer/NavigationContainer.dart';
+// import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
 
-import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
-import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
-import 'package:dtube_togo/ui/pages/post/widgets/CollapsedDescription.dart';
-import 'package:dtube_togo/ui/pages/post/widgets/Comments.dart';
-import 'package:dtube_togo/ui/pages/post/widgets/ReplyButton.dart';
-import 'package:dtube_togo/ui/pages/post/widgets/VoteButtons.dart';
+import 'package:dtube_go/ui/widgets/players/BetterPlayer.dart';
+import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
+import 'package:dtube_go/ui/pages/post/widgets/CollapsedDescription.dart';
+import 'package:dtube_go/ui/pages/post/widgets/Comments.dart';
+import 'package:dtube_go/ui/pages/post/widgets/ReplyButton.dart';
+import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
 
-import 'package:dtube_togo/utils/secureStorage.dart';
+import 'package:dtube_go/utils/secureStorage.dart';
 
-import 'package:dtube_togo/style/dtubeLoading.dart';
+import 'package:dtube_go/style/dtubeLoading.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';

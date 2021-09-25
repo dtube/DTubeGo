@@ -1,5 +1,5 @@
-import 'package:dtube_togo/bloc/rewards/rewards_response_model.dart';
-import 'package:dtube_togo/res/appConfigValues.dart';
+import 'package:dtube_go/bloc/rewards/rewards_response_model.dart';
+import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

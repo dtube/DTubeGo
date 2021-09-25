@@ -1,9 +1,9 @@
-import 'package:dtube_togo/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
-import 'package:dtube_togo/bloc/auth/auth_response_model.dart';
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/bloc/auth/auth_response_model.dart';
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
-import 'package:dtube_togo/res/appConfigValues.dart';
+import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:hex/hex.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

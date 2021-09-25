@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 
-import 'package:dtube_togo/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/navigationShortcuts.dart';
 
 import 'package:flutter/material.dart';
 

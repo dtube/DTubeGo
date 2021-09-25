@@ -1,4 +1,4 @@
-import 'package:dtube_togo/bloc/feed/feed_response_model.dart';
+import 'package:dtube_go/bloc/feed/feed_response_model.dart';
 
 import 'package:equatable/equatable.dart';
 

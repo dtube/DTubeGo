@@ -1,24 +1,24 @@
-import 'package:dtube_togo/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
-import 'package:dtube_togo/bloc/hivesigner/hivesigner_bloc_full.dart';
+import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
+import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
 
-import 'package:dtube_togo/style/dtubeLoading.dart';
+import 'package:dtube_go/style/dtubeLoading.dart';
 
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_togo/res/appConfigValues.dart';
-import 'package:dtube_togo/style/ThemeData.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 
 import 'dart:io';
 import 'package:disk_space/disk_space.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
-import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
-import 'package:dtube_togo/ui/widgets/players/YTplayerIframe.dart';
+import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/ui/widgets/players/BetterPlayer.dart';
+import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
 
-import 'package:dtube_togo/utils/secureStorage.dart';
+import 'package:dtube_go/utils/secureStorage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';

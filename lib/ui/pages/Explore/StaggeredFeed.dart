@@ -1,13 +1,13 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dtube_togo/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-import 'package:dtube_togo/style/dtubeLoading.dart';
+import 'package:dtube_go/style/dtubeLoading.dart';
 
-import 'package:dtube_togo/utils/SecureStorage.dart' as sec;
-import 'package:dtube_togo/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

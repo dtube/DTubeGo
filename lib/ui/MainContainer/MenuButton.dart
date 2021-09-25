@@ -1,12 +1,12 @@
-import 'package:dtube_togo/bloc/auth/auth_bloc_full.dart';
-import 'package:dtube_togo/bloc/notification/notification_bloc_full.dart';
-import 'package:dtube_togo/bloc/settings/settings_bloc_full.dart';
+import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
+import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
+import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
+import 'package:dtube_go/style/styledCustomWidgets.dart';
 
-import 'package:dtube_togo/ui/pages/settings/SettingsTabContainer.dart';
-import 'package:dtube_togo/ui/pages/wallet/WalletTabContainer.dart';
-import 'package:dtube_togo/ui/startup/OnboardingJourney.dart';
+import 'package:dtube_go/ui/pages/settings/SettingsTabContainer.dart';
+import 'package:dtube_go/ui/pages/wallet/WalletTabContainer.dart';
+import 'package:dtube_go/ui/startup/OnboardingJourney.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';

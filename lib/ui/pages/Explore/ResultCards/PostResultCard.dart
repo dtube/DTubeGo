@@ -1,8 +1,8 @@
-import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/ui/widgets/AccountAvatar.dart';
-import 'package:dtube_togo/utils/friendlyTimestamp.dart';
-import 'package:dtube_togo/utils/navigationShortcuts.dart';
-import 'package:dtube_togo/utils/shortBalanceStrings.dart';
+import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
+import 'package:dtube_go/utils/friendlyTimestamp.dart';
+import 'package:dtube_go/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/shortBalanceStrings.dart';
 import 'package:flutter/material.dart';
 
 class PostResultCard extends StatelessWidget {

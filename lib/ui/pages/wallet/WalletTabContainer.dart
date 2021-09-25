@@ -1,10 +1,10 @@
-import 'package:dtube_togo/bloc/rewards/rewards_bloc_full.dart';
+import 'package:dtube_go/bloc/rewards/rewards_bloc_full.dart';
 
-import 'package:dtube_togo/style/ThemeData.dart';
-import 'package:dtube_togo/style/styledCustomWidgets.dart';
+import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/style/styledCustomWidgets.dart';
 
-import 'package:dtube_togo/ui/pages/wallet/RewardsPage.dart';
-import 'package:dtube_togo/ui/pages/wallet/WalletPage.dart';
+import 'package:dtube_go/ui/pages/wallet/RewardsPage.dart';
+import 'package:dtube_go/ui/pages/wallet/WalletPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

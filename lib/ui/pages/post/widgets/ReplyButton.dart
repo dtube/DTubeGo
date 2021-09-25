@@ -1,8 +1,8 @@
-import 'package:dtube_togo/bloc/postdetails/postdetails_bloc.dart';
-import 'package:dtube_togo/bloc/postdetails/postdetails_bloc_full.dart';
-import 'package:dtube_togo/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/bloc/postdetails/postdetails_bloc.dart';
+import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 
-import 'package:dtube_togo/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';

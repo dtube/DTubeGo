@@ -1,5 +1,5 @@
 import 'package:auto_orientation/auto_orientation.dart';
-import 'package:dtube_togo/ui/widgets/players/BetterPlayer.dart';
+import 'package:dtube_go/ui/widgets/players/BetterPlayer.dart';
 import 'package:overlay_dialog/overlay_dialog.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
