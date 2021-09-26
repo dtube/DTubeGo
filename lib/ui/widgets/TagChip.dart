@@ -1,3 +1,4 @@
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -17,8 +18,15 @@ class TagChip extends StatelessWidget {
       padding: EdgeInsets.zero,
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return BlocProvider(
-            create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<UserBloc>(
+                  create: (context) =>
+                      UserBloc(repository: UserRepositoryImpl())),
+              BlocProvider(
+                  create: (context) =>
+                      FeedBloc(repository: FeedRepositoryImpl())),
+            ],
             child: TagList(
               tagName: tagName,
             ),

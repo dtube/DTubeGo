@@ -45,7 +45,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     }
     if (event is FetchTagSearchResults) {
       String _tsRangeFilter = '&tsrange=' +
-          (DateTime.now().add(Duration(days: -7)).millisecondsSinceEpoch / 1000)
+          (DateTime.now().add(Duration(days: -90)).millisecondsSinceEpoch /
+                  1000)
               .toString() +
           ',' +
           (DateTime.now().millisecondsSinceEpoch / 1000).toString();

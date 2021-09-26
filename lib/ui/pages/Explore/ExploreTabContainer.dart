@@ -65,10 +65,14 @@ class _ExploreMainPageState extends State<ExploreMainPage>
                             FeedBloc(repository: FeedRepositoryImpl())
                               ..add(FetchFeedEvent(feedType: "HotFeed")),
                         child: StaggeredFeed()),
-                    BlocProvider<SearchBloc>(
-                        create: (context) =>
-                            SearchBloc(repository: SearchRepositoryImpl()),
-                        child: SearchScreen()),
+                    MultiBlocProvider(providers: [
+                      BlocProvider<SearchBloc>(
+                          create: (context) =>
+                              SearchBloc(repository: SearchRepositoryImpl())),
+                      BlocProvider(
+                          create: (context) =>
+                              FeedBloc(repository: FeedRepositoryImpl())),
+                    ], child: SearchScreen()),
                   ],
                   controller: _tabController,
                 ),

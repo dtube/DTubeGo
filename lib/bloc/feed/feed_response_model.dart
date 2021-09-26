@@ -209,10 +209,10 @@ class JsonString {
 
   JsonString.fromJson(Map<String, dynamic> json) {
     files = json['files'] != null ? new Files.fromJson(json['files']) : null;
-    title = json['title'];
-    desc = json['desc'];
+    title = json['title'] != null ? json['title'] : "";
+    desc = json['desc'] != null ? json['desc'] : "";
     dur = json['dur'].toString();
-    tag = json['tag'];
+    tag = json['tag'] != null ? json['tag'] : "";
     if (json['hide'] is int) {
       hide = json['hide'];
     } else {
@@ -234,7 +234,7 @@ class JsonString {
         nsfw = 0;
       }
     }
-    if (json['hide'] is int) {
+    if (json['oc'] is int) {
       oc = json['oc'];
     } else {
       if (json["oc"] == true) {
@@ -253,13 +253,18 @@ class JsonString {
       data['files'] = this.files!.toJson();
     }
     data['title'] = this.title;
-    data['desc'] = this.desc;
+
     data['dur'] = this.dur;
     data['tag'] = this.tag;
     data['hide'] = this.hide;
     data['nsfw'] = this.nsfw;
     data['oc'] = this.oc;
     data['refs'] = this.refs;
+
+    data['desc'] = this.desc != null ? this.desc : "";
+
+    data['tag'] = this.tag;
+
     if (this.thumbnailUrl != null) {
       data['thumbnailUrl'] = this.thumbnailUrl!;
     }

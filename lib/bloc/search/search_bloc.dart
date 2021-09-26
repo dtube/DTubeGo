@@ -17,11 +17,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   @override
   Stream<SearchState> mapEventToState(SearchEvent event) async* {
     String _avalonApiNode = await sec.getNode();
+    String _currentUser = await sec.getUsername();
     if (event is FetchSearchResultsEvent) {
       yield SearchLoadingState();
       try {
         SearchResults results = await repository.getSearchResults(
-            event.searchQuery, event.searchEntity, _avalonApiNode);
+            event.searchQuery,
+            event.searchEntity,
+            _avalonApiNode,
+            _currentUser);
 
         yield SearchLoadedState(searchResults: results);
       } catch (e) {

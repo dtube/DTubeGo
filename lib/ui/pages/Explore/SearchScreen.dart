@@ -1,4 +1,6 @@
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_go/ui/pages/feeds/cards/PostListCardLarge.dart';
+import 'package:dtube_go/utils/friendlyTimestamp.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'dart:async';
@@ -111,15 +113,16 @@ class SearchScreenState extends State<SearchScreen> {
             if (selected) {
               _selectedEntity = i;
               _searchEntity = _searchEntities[i];
-              if (_selectedEntity == 2) {
-                BlocProvider.of<FeedBloc>(context)
-                  ..isFetching = true
-                  ..add(FetchTagSearchResults(tag: currentSearch));
-              } else {
-                _searchEntity = _searchEntities[i];
-                searchBloc.add(FetchSearchResultsEvent(
-                    searchQuery: searchTextController.text,
-                    searchEntity: _searchEntity));
+              if (searchTextController.text.length > 2) {
+                if (_selectedEntity == 2) {
+                  BlocProvider.of<FeedBloc>(context)
+                    ..isFetching = true
+                    ..add(FetchTagSearchResults(tag: currentSearch));
+                } else {
+                  searchBloc.add(FetchSearchResultsEvent(
+                      searchQuery: searchTextController.text,
+                      searchEntity: _searchEntity));
+                }
               }
             }
           });
@@ -163,7 +166,9 @@ class SearchScreenState extends State<SearchScreen> {
               ),
               _selectedEntity == 2
                   ? BlocBuilder<FeedBloc, FeedState>(builder: (context, state) {
-                      if (state is FeedInitialState ||
+                      if (state is FeedInitialState){
+                         return buildBlank();
+                      }else if(
                           state is FeedLoadingState) {
                         return buildLoading();
                       } else if (state is FeedLoadedState) {
@@ -248,15 +253,58 @@ class SearchScreenState extends State<SearchScreen> {
                 vpBalance: searchResults.hits!.hits![pos].sSource!.vt! + 0.0,
               );
             case "Posts":
-              return PostResultCard(
-                id: searchResults.hits!.hits![pos].sId,
+              // return PostResultCard(
+              //   id: searchResults.hits!.hits![pos].sId,
+              //   author: searchResults.hits!.hits![pos].sSource!.author!,
+              //   dist: searchResults.hits!.hits![pos].sSource!.dist!,
+              //   link: searchResults.hits!.hits![pos].sSource!.link!,
+              //   tags: searchResults.hits!.hits![pos].sSource!.tags!,
+              //   title:
+              //       searchResults.hits!.hits![pos].sSource!.jsonstring!.title!,
+              //   ts: searchResults.hits!.hits![pos].sSource!.ts!,
+              // );
+              return PostListCardLarge(
+                alreadyVoted:
+                    searchResults.hits!.hits![pos].sSource!.alreadyVoted!,
+                alreadyVotedDirection: searchResults
+                    .hits!.hits![pos].sSource!.alreadyVotedDirection!,
                 author: searchResults.hits!.hits![pos].sSource!.author!,
-                dist: searchResults.hits!.hits![pos].sSource!.dist!,
+                blur: false,
+                defaultCommentVotingWeight: "25",
+                defaultPostVotingTip: "25",
+                defaultPostVotingWeight: "25",
+                description:
+                    searchResults.hits!.hits![pos].sSource!.jsonstring!.desc!,
+                downvotesCount:
+                    searchResults.hits!.hits![pos].sSource!.downvotes!.length,
+                dtcValue: (searchResults.hits!.hits![pos].sSource!.dist! / 100)
+                        .round()
+                        .toString() +
+                    " DTC",
+                duration: new Duration(
+                    seconds: int.tryParse(searchResults
+                                .hits!.hits![pos].sSource!.jsonstring!.dur!) !=
+                            null
+                        ? int.parse(searchResults
+                            .hits!.hits![pos].sSource!.jsonstring!.dur!)
+                        : 0),
+                indexOfList: pos,
                 link: searchResults.hits!.hits![pos].sSource!.link!,
-                tags: searchResults.hits!.hits![pos].sSource!.tags!,
+                mainTag:
+                    searchResults.hits!.hits![pos].sSource!.jsonstring!.tag!,
+                oc: searchResults.hits!.hits![pos].sSource!.jsonstring!.oc == 1
+                    ? true
+                    : false,
+                publishDate: TimeAgo.timeInAgoTSShort(
+                    searchResults.hits!.hits![pos].sSource!.ts!),
+                thumbnailUrl: searchResults.hits!.hits![pos].sSource!.thumbUrl,
                 title:
                     searchResults.hits!.hits![pos].sSource!.jsonstring!.title!,
-                ts: searchResults.hits!.hits![pos].sSource!.ts!,
+                upvotesCount:
+                    searchResults.hits!.hits![pos].sSource!.upvotes!.length,
+                videoSource:
+                    searchResults.hits!.hits![pos].sSource!.videoSource,
+                videoUrl: searchResults.hits!.hits![pos].sSource!.videoUrl,
               );
             default:
               return UserResultCard(
@@ -280,14 +328,35 @@ class SearchScreenState extends State<SearchScreen> {
           padding: EdgeInsets.zero,
           itemCount: searchResults.length,
           itemBuilder: (ctx, pos) {
-            return PostResultCard(
-              id: searchResults[pos].sId,
+            return PostListCardLarge(
+              alreadyVoted: searchResults[pos].alreadyVoted!,
+              alreadyVotedDirection: searchResults[pos].alreadyVotedDirection!,
               author: searchResults[pos].author,
-              dist: searchResults[pos].dist,
+              blur: false,
+              defaultCommentVotingWeight: "25",
+              defaultPostVotingTip: "25",
+              defaultPostVotingWeight: "25",
+              description: searchResults[pos].jsonString!.desc!,
+              downvotesCount: searchResults[pos].downvotes != null
+                  ? searchResults[pos].downvotes!.length
+                  : 0,
+              dtcValue:
+                  (searchResults[pos].dist / 100).round().toString() + " DTC",
+              duration: new Duration(
+                  seconds:
+                      int.tryParse(searchResults[pos].jsonString!.dur) != null
+                          ? int.parse(searchResults[pos].jsonString!.dur)
+                          : 0),
+              indexOfList: pos,
               link: searchResults[pos].link,
-              tags: searchResults[pos].tags[0],
+              mainTag: searchResults[pos].jsonString!.tag,
+              oc: searchResults[pos].jsonString!.oc == 1 ? true : false,
+              publishDate: TimeAgo.timeInAgoTSShort(searchResults[pos].ts),
+              thumbnailUrl: searchResults[pos].thumbUrl,
               title: searchResults[pos].jsonString!.title,
-              ts: searchResults[pos].ts,
+              upvotesCount: searchResults[pos].upvotes!.length,
+              videoSource: searchResults[pos].videoSource,
+              videoUrl: searchResults[pos].videoUrl,
             );
           }),
     );

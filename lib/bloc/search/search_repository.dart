@@ -5,14 +5,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 abstract class SearchRepository {
-  Future<SearchResults> getSearchResults(
-      String searchQuery, String searchEntity, String apiNode);
+  Future<SearchResults> getSearchResults(String searchQuery,
+      String searchEntity, String apiNode, String currentUser);
 }
 
 class SearchRepositoryImpl implements SearchRepository {
   @override
-  Future<SearchResults> getSearchResults(
-      String searchQuery, String searchEntity, String apiNode) async {
+  Future<SearchResults> getSearchResults(String searchQuery,
+      String searchEntity, String apiNode, String currentUser) async {
     int vpGrowth = 0;
     var configResponse =
         await http.get(Uri.parse(apiNode + AppConfig.avalonConfig));
@@ -42,7 +42,8 @@ class SearchRepositoryImpl implements SearchRepository {
       var data = json.decode(response.body);
       print(response.body);
       // filter here for specfic notification types
-      SearchResults results = SearchResults.fromJson(data, vpGrowth);
+      SearchResults results =
+          SearchResults.fromJson(data, vpGrowth, currentUser);
       return results;
     } else {
       throw Exception();
