@@ -360,7 +360,7 @@ class _PostDetailsState extends State<PostDetails> {
                             InputChip(
                               label: FaIcon(FontAwesomeIcons.shareAlt),
                               onPressed: () {
-                                Share.share('https://d.tube/c/' +
+                                Share.share('https://d.tube/#!/v/' +
                                     widget.post.author +
                                     '/' +
                                     widget.post.link);
