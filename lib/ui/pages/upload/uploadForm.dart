@@ -59,6 +59,7 @@ class _UploadFormState extends State<UploadForm> {
   final _formKey = GlobalKey<FormState>();
 
   bool uploadEnabled = true;
+  bool showVideoPreview = false;
 
   bool hiveSignerValid = false;
   String hiveSignerUsername = "";
@@ -301,7 +302,7 @@ class _UploadFormState extends State<UploadForm> {
     } else {
       return Column(
         children: [
-          Text("1. Video file", style: TextStyle(fontSize: 18)),
+          Text("1. Video file", style: Theme.of(context).textTheme.headline5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -310,7 +311,8 @@ class _UploadFormState extends State<UploadForm> {
                   children: [
                     Icon(FontAwesomeIcons.solidFolderOpen),
                     SizedBox(width: 8),
-                    Text(_video == null ? "pick video" : "change video file"),
+                    Text(_video == null ? "pick video" : "change video file",
+                        style: Theme.of(context).textTheme.bodyText2),
                   ],
                 ),
                 onPressed: () {
@@ -322,8 +324,8 @@ class _UploadFormState extends State<UploadForm> {
                   children: [
                     Icon(FontAwesomeIcons.video),
                     SizedBox(width: 8),
-                    Text(
-                        _video == null ? "record video" : "record a new video"),
+                    Text(_video == null ? "record video" : "record a new video",
+                        style: Theme.of(context).textTheme.bodyText2),
                   ],
                 ),
                 onPressed: () {
@@ -335,16 +337,34 @@ class _UploadFormState extends State<UploadForm> {
           stateUploadData.videoLocation != ""
               // TODO: react on possibly wrong orientation with videos in landscape
               // e.g. open issue on https://github.com/jhomlala/betterplayer/issues
-              ? BP(
-                  videoUrl: _video!.path,
-                  looping: false,
-                  autoplay: false,
-                  localFile: true,
-                  controls: true,
-                  //key: UniqueKey(),
-                  usedAsPreview: true,
-                  allowFullscreen: false, portraitVideoPadding: 50.0,
-                )
+              ? Column(children: [
+                  showVideoPreview
+                      ? BP(
+                          videoUrl: _video!.path,
+                          looping: false,
+                          autoplay: false,
+                          localFile: true,
+                          controls: true,
+                          //key: UniqueKey(),
+                          usedAsPreview: true,
+                          allowFullscreen: false, portraitVideoPadding: 50.0,
+                        )
+                      : SizedBox(height: 0),
+                  InputChip(
+                      selectedColor: globalRed,
+                      label: Text(
+                        (showVideoPreview ? 'hide' : 'show') + " video preview",
+                        style: Theme.of(context).textTheme.bodyText2,
+                      ),
+                      avatar: FaIcon(showVideoPreview
+                          ? FontAwesomeIcons.checkSquare
+                          : FontAwesomeIcons.square),
+                      onSelected: (bool) {
+                        setState(() {
+                          showVideoPreview = !showVideoPreview;
+                        });
+                      }),
+                ])
               : SizedBox(
                   height: 0,
                 ),
@@ -358,7 +378,8 @@ class _UploadFormState extends State<UploadForm> {
       key: _formKey,
       child: Column(
         children: [
-          Text("2. Basic information", style: TextStyle(fontSize: 18)),
+          Text("2. Basic information",
+              style: Theme.of(context).textTheme.headline5),
           TextFormField(
             cursorColor: globalRed,
             decoration: new InputDecoration(
