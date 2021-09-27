@@ -142,7 +142,7 @@ class _FeedMainPageState extends State<FeedMainPage>
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
-              padding: EdgeInsets.only(top: 8.h, left: 4.w),
+              padding: EdgeInsets.only(top: 6.h, left: 4.w),
               //padding: EdgeInsets.only(top: 5.h),
               child: OverlayText(
                 text: _tabNames[_selectedIndex],

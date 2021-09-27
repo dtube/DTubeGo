@@ -139,8 +139,14 @@ class _NavigationContainerState extends State<NavigationContainer> {
   void initState() {
     super.initState();
     _screens = [
-      FeedMainPage(),
-      ExploreMainPage(),
+      BlocProvider(
+        create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
+        child: FeedMainPage(),
+      ),
+      BlocProvider(
+        create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
+        child: ExploreMainPage(),
+      ),
       UploaderMainPage(
         callback: uploaderCallback,
         key: UniqueKey(),
@@ -149,6 +155,8 @@ class _NavigationContainerState extends State<NavigationContainer> {
         BlocProvider(
             create: (context) => FeedBloc(repository: FeedRepositoryImpl())),
         BlocProvider(
+            create: (context) => UserBloc(repository: UserRepositoryImpl())),
+        BlocProvider(
             create: (context) =>
                 IPFSUploadBloc(repository: IPFSUploadRepositoryImpl())),
         BlocProvider<ThirdPartyUploaderBloc>(
@@ -156,8 +164,11 @@ class _NavigationContainerState extends State<NavigationContainer> {
               repository: ThirdPartyUploaderRepositoryImpl()),
         ),
       ], child: MomentsPage(play: _currentIndex == 3)),
-      UserPage(
-        ownUserpage: true,
+      BlocProvider(
+        create: (context) => UserBloc(repository: UserRepositoryImpl()),
+        child: UserPage(
+          ownUserpage: true,
+        ),
       ),
     ];
   }
@@ -211,67 +222,84 @@ class _NavigationContainerState extends State<NavigationContainer> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        items: navBarItems,
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            if (index == 2) {
-              // reset uploader page
-              _screens.removeAt(2);
-              _screens.insert(
-                  2,
-                  new UploaderMainPage(
-                    callback: uploaderCallback,
-                    key: UniqueKey(),
-                  )
-                  //  index = index;
-                  );
-            }
-            if (index == 3) {
-              // reset moments page and set play = true
-
-              _screens.removeAt(3);
-
-              _screens.insert(
-                3,
-                new MultiBlocProvider(
-                    providers: [
-                      BlocProvider(
-                          create: (context) =>
-                              FeedBloc(repository: FeedRepositoryImpl())),
-                      BlocProvider(
-                          create: (context) => IPFSUploadBloc(
-                              repository: IPFSUploadRepositoryImpl())),
-                      BlocProvider<ThirdPartyUploaderBloc>(
-                        create: (BuildContext context) =>
-                            ThirdPartyUploaderBloc(
-                                repository: ThirdPartyUploaderRepositoryImpl()),
-                      ),
-                    ],
-                    child: MomentsPage(
+      bottomNavigationBar: Container(
+        height: 10.h,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            gradient: LinearGradient(
+                begin: FractionalOffset.topCenter,
+                end: FractionalOffset.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.0),
+                  Colors.black,
+                ],
+                stops: [
+                  0.0,
+                  1.0
+                ])),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          items: navBarItems,
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              if (index == 2) {
+                // reset uploader page
+                _screens.removeAt(2);
+                _screens.insert(
+                    2,
+                    new UploaderMainPage(
+                      callback: uploaderCallback,
                       key: UniqueKey(),
-                      play: true,
-                    )),
-                //  index = index;
-              );
-            } else {
-              // reset moments page and set play = false
-              _screens.removeAt(3);
+                    )
+                    //  index = index;
+                    );
+              }
+              if (index == 3) {
+                // reset moments page and set play = true
 
-              _screens.insert(
+                _screens.removeAt(3);
+
+                _screens.insert(
                   3,
-                  MomentsPage(
-                    key: UniqueKey(),
-                    play: false,
-                  ));
-            }
-            _currentIndex = index;
-          });
-        },
+                  new MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                            create: (context) =>
+                                FeedBloc(repository: FeedRepositoryImpl())),
+                        BlocProvider(
+                            create: (context) => IPFSUploadBloc(
+                                repository: IPFSUploadRepositoryImpl())),
+                        BlocProvider<ThirdPartyUploaderBloc>(
+                          create: (BuildContext context) =>
+                              ThirdPartyUploaderBloc(
+                                  repository:
+                                      ThirdPartyUploaderRepositoryImpl()),
+                        ),
+                      ],
+                      child: MomentsPage(
+                        key: UniqueKey(),
+                        play: true,
+                      )),
+                  //  index = index;
+                );
+              } else {
+                // reset moments page and set play = false
+                _screens.removeAt(3);
+
+                _screens.insert(
+                    3,
+                    MomentsPage(
+                      key: UniqueKey(),
+                      play: false,
+                    ));
+              }
+              _currentIndex = index;
+            });
+          },
+        ),
       ),
       body: BlocListener<TransactionBloc, TransactionState>(
           bloc: BlocProvider.of<TransactionBloc>(context),

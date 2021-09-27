@@ -73,7 +73,7 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      DTubeLogo(size: _iconSize),
+                      DTubeLogoShadowed(size: _iconSize),
                       SizedBox(
                         width: 2.5.w,
                       ),
@@ -87,8 +87,10 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      FaIcon(
-                        FontAwesomeIcons.bolt,
+                      ShadowedIcon(
+                        icon: FontAwesomeIcons.bolt,
+                        shadowColor: Colors.black,
+                        color: Colors.white,
                         size: _iconSize,
                       ),
                       SizedBox(

@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
@@ -25,6 +26,7 @@ class FeedList extends StatelessWidget {
   bool largeFormat;
   bool showAuthor;
   double? topPaddingForFirstEntry;
+  double? sidepadding;
   double? width;
   double? heightPerEntry;
   bool enableNavigation;
@@ -41,6 +43,7 @@ class FeedList extends StatelessWidget {
     required this.showAuthor,
     required this.scrollCallback,
     this.topPaddingForFirstEntry,
+    this.sidepadding,
     this.width,
     this.heightPerEntry,
     required this.enableNavigation,
@@ -118,8 +121,42 @@ class FeedList extends StatelessWidget {
                   } else if (state is FeedErrorState) {
                     return buildErrorUi(state.message);
                   }
-                  return buildPostList(
-                      _feedItems, largeFormat, true, context, feedType);
+                  return Container(
+                    height: 100.h,
+                    width: 120.w,
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: sidepadding != null ? sidepadding! : 0.0,
+                            right: sidepadding != null ? sidepadding! : 0.0,
+                          ),
+                          child: buildPostList(
+                              _feedItems, largeFormat, true, context, feedType),
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Container(
+                            height: feedType == "UserFeed" ? 35.h : 15.h,
+                            width: 120.w,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                gradient: LinearGradient(
+                                    begin: FractionalOffset.topCenter,
+                                    end: FractionalOffset.bottomCenter,
+                                    colors: [
+                                      Colors.black,
+                                      Colors.black.withOpacity(0.0),
+                                    ],
+                                    stops: [
+                                      0.0,
+                                      1.0
+                                    ])),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
             );

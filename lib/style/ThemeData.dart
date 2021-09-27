@@ -7,6 +7,7 @@ Color globalRed = Color.fromRGBO(240, 26, 48, 1);
 Color globalAlmostWhite = Color.fromRGBO(230, 230, 230, 1);
 Color globalAlmostBlack = Color.fromRGBO(29, 35, 51, 1);
 Color globalBGColor = Color.fromRGBO(29, 35, 51, 1);
+Color globalBGColorNoOpacity = Color.fromRGBO(29, 35, 51, 0);
 
 Color globalTextColor = Colors.white;
 

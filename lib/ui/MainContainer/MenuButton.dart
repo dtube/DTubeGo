@@ -94,7 +94,7 @@ Widget buildMainMenuSpeedDial(BuildContext context, double iconSize) {
       onOpen: () => print('OPENING DIAL'),
       onClose: () => print('DIAL CLOSED'),
       tooltip: 'menu',
-      heroTag: 'menu button',
+      heroTag: 'main menu button',
       backgroundColor: Colors.transparent,
       foregroundColor: Colors.white,
       elevation: 0.0,

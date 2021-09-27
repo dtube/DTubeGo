@@ -1,3 +1,7 @@
+import 'package:simple_shadow/simple_shadow.dart';
+
+import 'dart:ui';
+
 import 'package:decorated_icon/decorated_icon.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +33,29 @@ class DTubeLogo extends StatelessWidget {
       'assets/images/dtube_logo_white.png',
       fit: BoxFit.fitWidth,
       width: size,
+    );
+  }
+}
+
+class DTubeLogoShadowed extends StatelessWidget {
+  double size;
+  DTubeLogoShadowed({Key? key, required this.size}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      child: FittedBox(
+        fit: BoxFit.fitWidth,
+        child: SimpleShadow(
+          child: Image.asset('assets/images/dtube_logo_white.png'),
+          opacity: 0.5, // Default: 0.5
+          color: Colors.black, // Default: Black
+          offset: Offset(200, 200), // Default: Offset(2, 2)
+          sigma: 80,
+          // Default: 2
+        ),
+      ),
     );
   }
 }
@@ -82,9 +109,11 @@ class OverlayText extends StatelessWidget {
             : Theme.of(context).textTheme.bodyText1!.fontWeight,
         color: Colors.white,
         shadows: [
+          Shadow(color: Colors.black, offset: Offset(0, 0), blurRadius: 2),
+          //Shadow(color: Colors.white, offset: Offset(0, 0), blurRadius: 10),
           Shadow(
-            offset: Offset(1.0, 1.0),
-            blurRadius: 2,
+            offset: Offset(4.0, 3.0),
+            blurRadius: 10,
             color: Colors.black,
           ),
         ],
@@ -113,10 +142,11 @@ class ShadowedIcon extends StatelessWidget {
       color: color,
       size: size,
       shadows: [
+        Shadow(color: shadowColor, offset: Offset(0, 0), blurRadius: 2),
+        //Shadow(color: Colors.white, offset: Offset(0, 0), blurRadius: 10),
         Shadow(
-          //blurRadius: size / 3,
-          offset: Offset(1.0, 1.0),
-          blurRadius: 2,
+          offset: Offset(4.0, 3.0),
+          blurRadius: 10,
           color: shadowColor,
         ),
       ],
