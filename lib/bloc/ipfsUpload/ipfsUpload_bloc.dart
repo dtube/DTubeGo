@@ -9,6 +9,7 @@ import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_state.dart';
 
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:video_compress/video_compress.dart';
 
 class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
   IPFSUploadRepository repository;
@@ -36,6 +37,8 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
       yield IPFSUploadVideoPreProcessingState();
 
       _newFile = await repository.compressVideo(event.videoPath);
+      MediaInfo _metadata = await VideoCompress.getMediaInfo(event.videoPath);
+      _uploadData.duration = (_metadata.duration!).floor().toString();
 
       _newThumbnail =
           await repository.createThumbnailFromVideo(event.videoPath);

@@ -90,7 +90,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
 
     final info = await VideoCompress.getMediaInfo(videoPath);
 
-    _uploadData.duration = (info.duration! / 1000).floor().toString();
+    _uploadData.duration = (info.duration!).floor().toString();
 
     _uploadBloc.add(UploadVideo(
         videoPath: _uploadData.videoLocation,
