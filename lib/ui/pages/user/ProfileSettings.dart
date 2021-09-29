@@ -167,18 +167,24 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                 DTubeFormCard(
                                   childs: [
                                     TextFormField(
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
                                       controller: _aboutController,
                                       decoration:
                                           new InputDecoration(labelText: "Bio"),
                                       maxLines: 3,
                                     ),
                                     TextFormField(
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
                                       controller: _locationController,
                                       decoration: new InputDecoration(
                                           labelText: "Location"),
                                       maxLines: 1,
                                     ),
                                     TextFormField(
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
                                       controller: _websiteController,
                                       decoration: new InputDecoration(
                                           labelText: "Website"),
@@ -215,6 +221,9 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                           return Column(
                                             children: [
                                               TextFormField(
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1,
                                                 controller: _avatarController,
                                                 decoration: new InputDecoration(
                                                     labelText:
@@ -228,6 +237,9 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                         return Column(
                                           children: [
                                             TextFormField(
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1,
                                               controller: _avatarController,
                                               decoration: new InputDecoration(
                                                   labelText:
@@ -262,6 +274,9 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                           return Column(
                                             children: [
                                               TextFormField(
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1,
                                                 controller:
                                                     _coverImageController,
                                                 decoration: new InputDecoration(
@@ -276,6 +291,9 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                         return Column(
                                           children: [
                                             TextFormField(
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1,
                                               controller: _coverImageController,
                                               decoration: new InputDecoration(
                                                   labelText: "Cover Image URL"),
@@ -308,12 +326,16 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                 DTubeFormCard(
                                   childs: [
                                     TextFormField(
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
                                       controller: _displayNameController,
                                       decoration: new InputDecoration(
                                           labelText: "Custom Display Name"),
                                       maxLines: 1,
                                     ),
                                     DropdownButtonFormField(
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
                                       decoration: InputDecoration(
                                         labelText: 'Account Type',
                                       ),

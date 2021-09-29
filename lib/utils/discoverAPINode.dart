@@ -17,7 +17,7 @@ Future<String> discoverAPINode() async {
       var _beforeRequestMicroSeconds = DateTime.now().microsecondsSinceEpoch;
       var response = await http
           .get(Uri.parse(node + '/count'))
-          .timeout(Duration(seconds: 1), onTimeout: () {
+          .timeout(Duration(milliseconds: 3000), onTimeout: () {
         // Time has run out, do what you wanted to do.
         return http.Response('Error', 500); // Replace 500 with your http code.
       });

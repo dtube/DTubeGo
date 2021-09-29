@@ -252,7 +252,10 @@ class _UserState extends State<UserPage> {
                           onTap: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return ProfileSettingsContainer();
+                              return BlocProvider<UserBloc>(
+                                  create: (context) => UserBloc(
+                                      repository: UserRepositoryImpl()),
+                                  child: ProfileSettingsContainer());
                             }));
                           }),
                       SizedBox(height: 3.h),
