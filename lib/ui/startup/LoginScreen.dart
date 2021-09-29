@@ -77,6 +77,7 @@ class _LoginFormState extends State<LoginForm> {
                     Container(
                       width: 40.w,
                       child: TextField(
+                        style: Theme.of(context).textTheme.bodyText1,
                         controller: usernameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -103,6 +104,7 @@ class _LoginFormState extends State<LoginForm> {
                     Container(
                       width: 40.w,
                       child: TextField(
+                        style: Theme.of(context).textTheme.bodyText1,
                         obscureText: true,
                         controller: privateKeyController,
                         decoration: InputDecoration(
