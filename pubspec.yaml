@@ -59,6 +59,7 @@ dependencies:
   responsive_sizer: ^3.0.4+4 # measuring sizes related to the screen size
   auto_orientation: ^2.1.0 # rotate screen from code
   overlay_dialog: ^0.2.1 # used as workaround for fullscreen video
+  responsive_framework: ^0.1.4 #detect device type
 
   # UI - specific elements related
   intl: ^0.17.0 # convert datetime to friendly strings
