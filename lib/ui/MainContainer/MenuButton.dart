@@ -1,6 +1,7 @@
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
+import 'package:dtube_go/res/appConfigValues.dart';
 
 import 'package:dtube_go/style/styledCustomWidgets.dart';
 
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 Widget buildMainMenuSpeedDial(BuildContext context, double iconSize) {
   List<SpeedDialChild> mainMenuButtonOptions = [
@@ -47,13 +49,20 @@ Widget buildMainMenuSpeedDial(BuildContext context, double iconSize) {
         // labelStyle: TextStyle(fontSize: 14.0),
         // labelBackgroundColor: Colors.transparent,
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return BlocProvider<AuthBloc>(
-                create: (context) => AuthBloc(repository: AuthRepositoryImpl()),
-                child: OnboardingJourney(
-                  loggedIn: true,
-                ));
-          }));
+          AppConfig.faqVisible
+              ? Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return BlocProvider<AuthBloc>(
+                      create: (context) =>
+                          AuthBloc(repository: AuthRepositoryImpl()),
+                      child: OnboardingJourney(
+                        loggedIn: true,
+                      ));
+                }))
+              : showDialog(
+                  context: context,
+                  builder: (context) {
+                    return VersionDialog();
+                  });
         }),
     SpeedDialChild(
         child: ShadowedIcon(
@@ -101,4 +110,59 @@ Widget buildMainMenuSpeedDial(BuildContext context, double iconSize) {
       shape: CircleBorder(),
       gradientBoxShape: BoxShape.circle,
       children: mainMenuButtonOptions);
+}
+
+class VersionDialog extends StatefulWidget {
+  const VersionDialog({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<VersionDialog> createState() => _VersionDialogState();
+}
+
+class _VersionDialogState extends State<VersionDialog> {
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+    buildSignature: 'Unknown',
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _initPackageInfo();
+  }
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(
+        'Version info',
+        style: Theme.of(context).textTheme.headline5,
+      ),
+      content: Text(
+          _packageInfo.version + ' (Build: ' + _packageInfo.buildNumber + ')',
+          style: Theme.of(context).textTheme.bodyText1),
+      actions: <Widget>[
+        TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Thanks',
+              style: Theme.of(context).textTheme.bodyText1,
+            )),
+      ],
+    );
+  }
 }
