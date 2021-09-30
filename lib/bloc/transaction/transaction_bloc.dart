@@ -1,3 +1,4 @@
+import 'package:dtube_go/utils/globalVariables.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:dtube_go/bloc/config/txTypes.dart';
@@ -108,6 +109,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     }
 
     if (event is SendCommentEvent) {
+      String _hiveAuthor = await sec.getHiveSignerUsername();
       UploadData _upload = event.uploadData;
       String result = "";
 
@@ -120,7 +122,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         link: _upload.link,
       );
 
-      //comments
+      //no video location => comment
       if (_upload.videoLocation == "") {
         jsonMetadata = {
           "title": _upload.title,
@@ -155,9 +157,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               burn: _upload.burnDtc.floor());
         }
       }
-      // video
+      // video location => post
       if (_upload.videoLocation != "") {
+        // we have a source hash => ipfs uploaded video
         if (_upload.videoSourceHash != "") {
+          // we have NO thumbnail location defined => ipfs uploaded image
           if (_upload.thumbnailLocation == "") {
             jsonMetadata = {
               "files": {
@@ -185,9 +189,15 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               "app": "dtube.go.app_" +
                   packageInfo.version +
                   '+' +
-                  packageInfo.buildNumber
+                  packageInfo.buildNumber,
+              "refs": [
+                _upload.crossPostToHive
+                    ? "hive/" + _hiveAuthor + "/" + _upload.link
+                    : null
+              ]
             };
           } else {
+            // we have a thumbnail location defined => no ipfs uploaded image so third party thumbnail
             jsonMetadata = {
               "files": {
                 "ipfs": {
@@ -212,10 +222,17 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               "app": "dtube.go.app_" +
                   packageInfo.version +
                   '+' +
-                  packageInfo.buildNumber
+                  packageInfo.buildNumber,
+              "refs": [
+                _upload.crossPostToHive
+                    ? "hive/" + _hiveAuthor + "/" + _upload.link
+                    : null
+              ]
             };
           }
         } else {
+          // we have NO source hash => third party video
+          // and we have A defined thumbnail location => take the uploaded thumbnail
           if (_upload.thumbnailLocation != "" && !_upload.localThumbnail) {
             jsonMetadata = {
               "files": {"youtube": _upload.videoLocation},
@@ -231,9 +248,16 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               "app": "dtube.go.app_" +
                   packageInfo.version +
                   '+' +
-                  packageInfo.buildNumber
+                  packageInfo.buildNumber,
+              "refs": [
+                _upload.crossPostToHive
+                    ? "hive/" + _hiveAuthor + "/" + _upload.link
+                    : null
+              ]
             };
           } else {
+            // we have NO source hash => third party video
+            // and we have NO defined thumbnail location => take the youtube thumbnail (default)
             jsonMetadata = {
               "files": {"youtube": _upload.videoLocation},
               "title": _upload.title,
@@ -246,7 +270,12 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               "app": "dtube.go.app_" +
                   packageInfo.version +
                   '+' +
-                  packageInfo.buildNumber
+                  packageInfo.buildNumber,
+              "refs": [
+                _upload.crossPostToHive
+                    ? "hive/" + _hiveAuthor + "/" + _upload.link
+                    : null
+              ]
             };
           }
         }
