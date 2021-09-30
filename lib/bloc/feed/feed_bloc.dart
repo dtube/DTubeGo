@@ -107,12 +107,23 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         yield FeedErrorState(message: e.toString());
       }
     }
-
     if (event is FetchUserFeedEvent) {
+      // perhaps use the ts range to filter old content - but then we have to deal with paging...
+      // String _tsRangeFilter = '&tsrange=' +
+      //     (DateTime.now().add(Duration(days: -90)).millisecondsSinceEpoch /
+      //             1000)
+      //         .toString() +
+      //     ',' +
+      //     (DateTime.now().millisecondsSinceEpoch / 1000).toString();
+
       yield FeedLoadingState();
       try {
-        List<FeedItem> feed = await repository.getUserFeed(_avalonApiNode,
-            event.username, event.fromAuthor, event.fromLink, _applicationUser);
+        List<FeedItem> feed = await repository.getNewFeedFiltered(
+            _avalonApiNode,
+            "&authors=" + event.username,
+            "" // tsrange currently not used here to load all uploads of the user
+            ,
+            _applicationUser);
         yield FeedLoadedState(feed: feed, feedType: "UserFeed");
       } catch (e) {
         print(e.toString());

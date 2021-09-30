@@ -146,6 +146,7 @@ class _UserState extends State<UserPage> {
                 topPaddingForFirstEntry:
                     Device.orientation == Orientation.landscape ? 38.h : 30.h,
                 sidepadding: 10.w,
+                bottompadding: 10.h,
                 scrollCallback: (bool) {},
                 enableNavigation: true,
               )),

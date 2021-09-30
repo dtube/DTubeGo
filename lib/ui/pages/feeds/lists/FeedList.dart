@@ -27,6 +27,7 @@ class FeedList extends StatelessWidget {
   bool showAuthor;
   double? topPaddingForFirstEntry;
   double? sidepadding;
+  double? bottompadding;
   double? width;
   double? heightPerEntry;
   bool enableNavigation;
@@ -44,6 +45,7 @@ class FeedList extends StatelessWidget {
     required this.scrollCallback,
     this.topPaddingForFirstEntry,
     this.sidepadding,
+    this.bottompadding,
     this.width,
     this.heightPerEntry,
     required this.enableNavigation,
@@ -100,7 +102,7 @@ class FeedList extends StatelessWidget {
             return buildLoading(context);
           } else {
             return Container(
-              height: 150.h,
+              height: 110.h,
               child: BlocBuilder<FeedBloc, FeedState>(
                 builder: (context, state) {
                   if (state is FeedInitialState ||
@@ -194,30 +196,26 @@ class FeedList extends StatelessWidget {
         ..addListener(() {
           if (_scrollController.offset >=
                   _scrollController.position.maxScrollExtent &&
-              !BlocProvider.of<FeedBloc>(context).isFetching) {
+              !BlocProvider.of<FeedBloc>(context).isFetching &&
+              feedType != "UserFeed") {
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
-              ..add(feedType != "UserFeed"
-                  ? FetchFeedEvent(
-                      //feedType: widget.feedType,
-                      feedType: feedType,
-                      fromAuthor: feed[feed.length - 1].author,
-                      fromLink: feed[feed.length - 1].link)
-                  : FetchUserFeedEvent(
-                      username: username!,
-                      fromLink: feed[feed.length - 1].link));
+              ..add(FetchFeedEvent(
+                  //feedType: widget.feedType,
+                  feedType: feedType,
+                  fromAuthor: feed[feed.length - 1].author,
+                  fromLink: feed[feed.length - 1].link));
           }
           if (_scrollController.offset <=
                   _scrollController.position.minScrollExtent &&
-              !BlocProvider.of<FeedBloc>(context).isFetching) {
+              !BlocProvider.of<FeedBloc>(context).isFetching &&
+              feedType != "UserFeed") {
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
-              ..add(feedType != "UserFeed"
-                  ? FetchFeedEvent(
-                      //feedType: widget.feedType,
-                      feedType: feedType,
-                    )
-                  : FetchUserFeedEvent(username: username!));
+              ..add(FetchFeedEvent(
+                //feedType: widget.feedType,
+                feedType: feedType,
+              ));
           }
         }),
       itemBuilder: (ctx, pos) {
@@ -241,7 +239,12 @@ class FeedList extends StatelessWidget {
               create: (context) => UserBloc(repository: UserRepositoryImpl()),
               child: Padding(
                 padding: EdgeInsets.only(
-                    top: pos == 0 ? topPaddingForFirstEntry! : 2.0),
+                    top: pos == 0 && topPaddingForFirstEntry != null
+                        ? topPaddingForFirstEntry!
+                        : 2.0,
+                    bottom: pos == feed.length && bottompadding != null
+                        ? bottompadding!
+                        : 2.0),
                 child: PostListCard(
                   width: width!,
                   heightPerEntry: heightPerEntry!,
