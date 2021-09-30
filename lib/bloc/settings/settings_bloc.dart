@@ -38,7 +38,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           sec.settingKey_hiveSignerAccessTokenRequestedOn:
               await sec.getHiveSignerAccessTokenRequestedOn(),
           sec.settingKey_pincode: await sec.getPinCode(),
-          sec.settingKey_imageUploadService: await sec.getImageUploadService()
+          sec.settingKey_imageUploadService: await sec.getImageUploadService(),
+          sec.settingKey_ExploreTags: await sec.getExploreTags(),
         };
         yield SettingsLoadedState(settings: newSettings);
       } catch (e) {
@@ -63,6 +64,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           event.newSettings[sec.settingKey_templateBody]!,
           event.newSettings[sec.settingKey_templateTag]!,
         );
+        await sec
+            .persistExploreTags(event.newSettings[sec.settingKey_ExploreTags]!);
 
         yield SettingsSavedState(settings: event.newSettings);
       } catch (e) {

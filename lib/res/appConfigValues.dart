@@ -85,4 +85,21 @@ class AppConfig {
 
   static bool faqStartup = false;
   static bool faqVisible = false;
+
+  static List<String> possibleExploreTags = [
+    "dtube",
+    "dtubeGo",
+    "vlog",
+    "travel",
+    "music",
+    "howto",
+    "tutorial",
+    "art",
+    "drawing",
+    "tech",
+    "entertainment",
+    "funny",
+    "crypto",
+    "news"
+  ];
 }

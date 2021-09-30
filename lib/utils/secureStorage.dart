@@ -32,6 +32,8 @@ const settingKey_pincode = "PINC";
 
 const settingKey_imageUploadService = "IMGUS";
 
+const settingKey_ExploreTags = "EXPTAGS";
+
 // const _txsKey = 'TXS';
 const _storage = FlutterSecureStorage();
 
@@ -44,6 +46,10 @@ Future<void> persistUsernameKey(String username, String priv) async {
 
 Future<void> persistNode(String node) async {
   await _storage.write(key: settingKey_avalonNode, value: node);
+}
+
+Future<void> persistExploreTags(String tags) async {
+  await _storage.write(key: settingKey_ExploreTags, value: tags);
 }
 
 Future<void> persistImageUploadService(String service) async {
@@ -154,6 +160,15 @@ Future<String> getTemplateTitle() async {
   var _title = await _storage.read(key: settingKey_templateTitle);
   if (_title != null) {
     return _title;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getExploreTags() async {
+  var _tags = await _storage.read(key: settingKey_ExploreTags);
+  if (_tags != null) {
+    return _tags;
   } else {
     return "";
   }

@@ -1,3 +1,7 @@
+import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/ui/widgets/TagChip.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
@@ -32,8 +36,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   late String _showHidden;
   late String _showNsfw;
   late String _hiveUsername;
-  late String _postTemplateBody;
-  late String _postTemplateTitle;
+
   late String _pinCode;
 
   late String _imageUploadProvider;
@@ -41,6 +44,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   late TextEditingController _templateTitleController;
   late TextEditingController _templateBodyController;
   late TextEditingController _templateTagController;
+
+  late List<String> _selectedExploreTags;
 
   // late Map<String, String> currentSettings;
 
@@ -63,8 +68,6 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   List<String> _imageUploadProviders = ['imgur', 'ipfs'];
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       // Todo abstract this to dtubeSubAppBar
       appBar: AppBar(
@@ -93,7 +96,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                         _templateBodyController.value.text,
                     sec.settingKey_templateTag:
                         _templateTagController.value.text,
-                    sec.settingKey_imageUploadService: _imageUploadProvider
+                    sec.settingKey_imageUploadService: _imageUploadProvider,
+                    sec.settingKey_ExploreTags: _selectedExploreTags.join(",")
                   };
                   _settingsBloc.add(PushSettingsEvent(newSettings));
                 },
@@ -160,6 +164,10 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                 settings[sec.settingKey_imageUploadService] != null
                     ? settings[sec.settingKey_imageUploadService]!
                     : "imgur";
+
+            _selectedExploreTags = settings[sec.settingKey_ExploreTags] != null
+                ? settings[sec.settingKey_ExploreTags]!.split((','))
+                : [];
           }
 
           return Column(
@@ -328,6 +336,59 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             //     ),
                             //   ],
                             // ),
+                            DTubeFormCard(
+                              childs: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16.0),
+                                  child: Text("Interests",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                        "define your interests to auto filter the explore page",
+                                        maxLines: 2,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1),
+                                  ],
+                                ),
+                                Wrap(children: [
+                                  for (var _possibleTag
+                                      in AppConfig.possibleExploreTags)
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: InputChip(
+                                        label: Text(_possibleTag),
+                                        selectedColor: globalRed,
+                                        labelStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                        //!.copyWith(color: globalAlmostWhite)
+                                        ,
+                                        backgroundColor: globalBGColorNoOpacity,
+                                        selected: _selectedExploreTags
+                                            .contains(_possibleTag),
+                                        onSelected: (value) {
+                                          print(_possibleTag);
+                                          setState(() {
+                                            if (value == true) {
+                                              _selectedExploreTags
+                                                  .add(_possibleTag);
+                                            } else {
+                                              _selectedExploreTags
+                                                  .remove(_possibleTag);
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    )
+                                ]),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -516,7 +577,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 Row(
                                   children: [
                                     Container(
-                                      width: deviceWidth * 0.8,
+                                      width: 80.w,
                                       child: Column(
                                         children: [
                                           Text(
@@ -631,7 +692,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                   height: 8,
                                 ),
                                 Container(
-                                  width: deviceWidth * 0.9,
+                                  width: 90.w,
                                   height: 200,
                                   child: MarkdownBody(
                                       data: _templateBodyController.value.text),

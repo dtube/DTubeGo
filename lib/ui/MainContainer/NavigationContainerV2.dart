@@ -39,7 +39,7 @@ class NavigationContainer extends StatefulWidget {
 class _NavigationContainerState extends State<NavigationContainer> {
   bool _hideNavBar = false;
   ValueNotifier<bool> _notifier = ValueNotifier(false);
-  double iconSize = 10.w;
+
   late List<Widget> _screens;
 
   int bottomSelectedIndex = 0;
