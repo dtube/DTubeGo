@@ -81,6 +81,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
               child: GestureDetector(
                 child: FaIcon(FontAwesomeIcons.save),
                 onTap: () async {
+                  _selectedExploreTags.remove("");
                   Map<String, String> newSettings = {
                     sec.settingKey_defaultVotingWeight: _defaultVote.toString(),
                     sec.settingKey_defaultVotingWeightComments:

@@ -16,9 +16,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 typedef Bool2VoidFunc = void Function(bool);
 
 class StaggeredFeed extends StatelessWidget {
-  StaggeredFeed({
-    Key? key,
-  }) : super(key: key);
+  String searchTags;
+  StaggeredFeed({Key? key, required this.searchTags}) : super(key: key);
 
   late FeedBloc postBloc;
   final ScrollController _scrollController = ScrollController();
@@ -103,6 +102,7 @@ class StaggeredFeed extends StatelessWidget {
     return StaggeredGridView.countBuilder(
       controller: _scrollController
         ..addListener(() {
+          // TODO: implement adding items if end of list && tagsearch
           if (_scrollController.offset >=
                   _scrollController.position.maxScrollExtent &&
               !BlocProvider.of<FeedBloc>(context).isFetching) {
@@ -113,15 +113,14 @@ class StaggeredFeed extends StatelessWidget {
                   fromAuthor: feed[feed.length - 1].author,
                   fromLink: feed[feed.length - 1].link));
           }
+
           if (_scrollController.offset <=
                   _scrollController.position.minScrollExtent &&
               !BlocProvider.of<FeedBloc>(context).isFetching) {
             _feedItems.clear();
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
-              ..add(FetchFeedEvent(
-                feedType: "HotFeed",
-              ));
+              ..add(FetchTagSearchResults(tag: searchTags));
           }
         }),
       padding: EdgeInsets.only(top: 19.h),
