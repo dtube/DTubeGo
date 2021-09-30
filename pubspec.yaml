@@ -54,23 +54,31 @@ dependencies:
   #camera: ^0.8.1+3 # gives possibility to capture camera input in own widget
   image_picker: ^0.8.3+3 # open file browser / record image/video
 
+  # UI - responsive design
+  native_device_orientation: ^1.0.0 # get the real device orientation
+  responsive_sizer: ^3.0.4+4 # measuring sizes related to the screen size
+  auto_orientation: ^2.1.0 # rotate screen from code
+  overlay_dialog: ^0.2.1 # used as workaround for fullscreen video
+
   # UI - specific elements related
+  intl: ^0.17.0 # convert datetime to friendly strings
+
+  font_awesome_flutter: ^9.1.0 # icons
+  rflutter_alert: ^2.0.2 
+  flutter_speed_dial: ^4.1.0 # drop out menu
   
-  font_awesome_flutter: ^9.1.0
-  rflutter_alert: ^2.0.2
-  flutter_speed_dial: ^4.1.0
-  persistent_bottom_nav_bar: ^4.0.2
-  another_flushbar: ^1.10.24
-  loadmore: ^2.0.1
+  another_flushbar: ^1.10.24 # global snackbar to inform the user about transactions
+  loadmore: ^2.0.1 # collapsable widget for long video descriptions
   jiffy: ^4.1.0 # library to display time in a user friendly way
   # scroll_snap_list: ^0.8.1 # not needed for now (snapping lists like instagram explore page)
   share_plus: ^2.1.4 # share post
   introduction_screen: ^2.1.0 # onboarding screen
-  material_floating_search_bar: ^0.3.4
+  #material_floating_search_bar: ^0.3.4 
   flutter_barcode_scanner: ^2.0.0 #qr scan
-  decorated_icon: ^1.2.1
-  flutter_staggered_grid_view: ^0.4.0
-  pinput: ^1.2.0
+  decorated_icon: ^1.2.1 # shadows for icons
+  simple_shadow: ^0.2.0 #shadows for png files (dtube icon)
+  flutter_staggered_grid_view: ^0.4.0 # explore page 
+  pinput: ^1.2.0 # pin input field on startup
     
   # NETWORK - cache related
   cached_network_image: ^3.1.0
@@ -85,24 +93,24 @@ dependencies:
   # OTHERS - global stuff
   flutter_phoenix: ^1.0.0 # for restarting the app on purpose (e.g. logout)
   flutter_launcher_icons: ^0.9.0 # creating app icons
+  package_info_plus: ^1.0.6 # reading version and build number from pubspec
+ 
+  # state management and storage 
+  flutter_bloc: ^7.1.0
+  flutter_secure_storage: ^4.2.1
 
-  
+  # video processing 
+  video_compress: ^3.1.0 # compression & spize/aspect ratio & thumbnail generator
+
+  # os related
+  disk_space: ^0.1.1 # get free memory before recording video
 
 # unsorted
-  package_info_plus: ^1.0.6
-  simple_shadow: ^0.2.0
-  overlay_dialog: ^0.2.1
-  native_device_orientation: ^1.0.0
-  auto_orientation: ^2.1.0
-  device_preview: ^0.7.4
-  responsive_sizer: ^3.0.4+4
-  responsive_framework: ^0.1.4
-  flutter_bloc: ^7.1.0
   equatable: ^2.0.3
-  disk_space: ^0.1.1
-  flutter_secure_storage: ^4.2.1
-  intl: ^0.17.0
-  video_compress: ^3.1.0
+ 
+  
+  
+  
 
 dev_dependencies:
   flutter_test:

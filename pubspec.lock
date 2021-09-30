@@ -176,20 +176,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.1"
-  device_frame:
-    dependency: transitive
-    description:
-      name: device_frame
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.2"
-  device_preview:
-    dependency: "direct main"
-    description:
-      name: device_preview
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.7.4"
   dio:
     dependency: "direct main"
     description:
@@ -307,11 +293,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.1"
-  flutter_localizations:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   flutter_markdown:
     dependency: "direct main"
     description:
@@ -354,13 +335,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.0"
-  flutter_svg:
-    dependency: transitive
-    description:
-      name: flutter_svg
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.22.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -511,13 +485,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.10"
-  material_floating_search_bar:
-    dependency: "direct main"
-    description:
-      name: material_floating_search_bar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.4"
   meta:
     dependency: transitive
     description:
@@ -623,20 +590,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
-  path_drawing:
-    dependency: transitive
-    description:
-      name: path_drawing
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.5.1"
-  path_parsing:
-    dependency: transitive
-    description:
-      name: path_parsing
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.1"
   path_provider:
     dependency: transitive
     description:
@@ -679,13 +632,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.1"
-  persistent_bottom_nav_bar:
-    dependency: "direct main"
-    description:
-      name: persistent_bottom_nav_bar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.2"
   petitparser:
     dependency: transitive
     description:
@@ -749,13 +695,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.1"
-  responsive_framework:
-    dependency: "direct main"
-    description:
-      name: responsive_framework
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4"
   responsive_sizer:
     dependency: "direct main"
     description:
@@ -826,48 +765,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
-  shared_preferences:
-    dependency: transitive
-    description:
-      name: shared_preferences
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.7"
-  shared_preferences_linux:
-    dependency: transitive
-    description:
-      name: shared_preferences_linux
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.2"
-  shared_preferences_macos:
-    dependency: transitive
-    description:
-      name: shared_preferences_macos
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.2"
-  shared_preferences_platform_interface:
-    dependency: transitive
-    description:
-      name: shared_preferences_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
-  shared_preferences_web:
-    dependency: transitive
-    description:
-      name: shared_preferences_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.2"
-  shared_preferences_windows:
-    dependency: transitive
-    description:
-      name: shared_preferences_windows
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.2"
   simple_shadow:
     dependency: "direct main"
     description:
