@@ -89,6 +89,7 @@ dependencies:
   
 
 # unsorted
+  package_info_plus: ^1.0.6
   simple_shadow: ^0.2.0
   overlay_dialog: ^0.2.1
   native_device_orientation: ^1.0.0

@@ -1,3 +1,5 @@
+import 'package:package_info_plus/package_info_plus.dart';
+
 import 'package:dtube_go/bloc/config/txTypes.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
@@ -26,6 +28,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     final String _avalonApiNode = await sec.getNode();
     final String? _applicationUser = await sec.getUsername();
     final String? _privKey = await sec.getPrivateKey();
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     if (event is SetInitState) {
       yield TransactionInitialState();
@@ -123,6 +126,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           "title": _upload.title,
           "description": _upload.description,
           "tag": _upload.tag,
+          "app": "dtube.go.app_" +
+              packageInfo.version +
+              '+' +
+              packageInfo.buildNumber
         };
 
         _txData = new TxData(
@@ -174,7 +181,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               "tag": _upload.tag,
               "hide": _upload.unlistVideo ? 1 : 0,
               "nsfw": _upload.nSFWContent ? 1 : 0,
-              "oc": _upload.originalContent ? 1 : 0
+              "oc": _upload.originalContent ? 1 : 0,
+              "app": "dtube.go.app_" +
+                  packageInfo.version +
+                  '+' +
+                  packageInfo.buildNumber
             };
           } else {
             jsonMetadata = {
@@ -197,7 +208,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               "nsfw": _upload.nSFWContent ? 1 : 0,
               "oc": _upload.originalContent ? 1 : 0,
               "thumbnailUrlExternal": _upload.thumbnailLocation,
-              "thumbnailUrl": _upload.thumbnailLocation
+              "thumbnailUrl": _upload.thumbnailLocation,
+              "app": "dtube.go.app_" +
+                  packageInfo.version +
+                  '+' +
+                  packageInfo.buildNumber
             };
           }
         } else {
@@ -212,7 +227,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               "nsfw": _upload.nSFWContent ? 1 : 0,
               "oc": _upload.originalContent ? 1 : 0,
               "thumbnailUrlExternal": _upload.thumbnailLocation,
-              "thumbnailUrl": _upload.thumbnailLocation
+              "thumbnailUrl": _upload.thumbnailLocation,
+              "app": "dtube.go.app_" +
+                  packageInfo.version +
+                  '+' +
+                  packageInfo.buildNumber
             };
           } else {
             jsonMetadata = {
@@ -223,7 +242,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               "tag": _upload.tag,
               "hide": _upload.unlistVideo ? 1 : 0,
               "nsfw": _upload.nSFWContent ? 1 : 0,
-              "oc": _upload.originalContent ? 1 : 0
+              "oc": _upload.originalContent ? 1 : 0,
+              "app": "dtube.go.app_" +
+                  packageInfo.version +
+                  '+' +
+                  packageInfo.buildNumber
             };
           }
         }
