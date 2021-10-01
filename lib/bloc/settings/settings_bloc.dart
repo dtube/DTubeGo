@@ -4,6 +4,7 @@ import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:bloc/bloc.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   SettingsBloc() : super(SettingsInitialState());
@@ -68,6 +69,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
             .persistExploreTags(event.newSettings[sec.settingKey_ExploreTags]!);
 
         yield SettingsSavedState(settings: event.newSettings);
+        Phoenix.rebirth(event.context);
       } catch (e) {
         yield SettingsErrorState(message: 'unknown error');
       }

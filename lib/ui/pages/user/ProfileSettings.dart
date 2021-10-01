@@ -465,7 +465,7 @@ class _UploadImageButtonState extends State<UploadImageButton> {
     BlocProvider.of<ThirdPartyUploaderBloc>(context)
         .add(SetThirdPartyUploaderInitState());
     XFile? _pickedFile;
-    BlocProvider.of<ThirdPartyUploaderBloc>(context);
+
     final _picker = ImagePicker();
     _pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (_pickedFile != null) {

@@ -1,5 +1,6 @@
 import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/ui/widgets/TagChip.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
@@ -100,7 +101,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                     sec.settingKey_imageUploadService: _imageUploadProvider,
                     sec.settingKey_ExploreTags: _selectedExploreTags.join(",")
                   };
-                  _settingsBloc.add(PushSettingsEvent(newSettings));
+                  _settingsBloc.add(PushSettingsEvent(
+                      newSettings: newSettings, context: context));
                 },
               ),
             ),
@@ -735,7 +737,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
         } else if (state is SettingsErrorState) {
           return buildErrorUi(state.message);
         } else if (state is SettingsSavedState) {
-          Navigator.of(context).pop();
+          print("saved settings");
           // setState(() {
           //   _justSaved = true;
           // });
