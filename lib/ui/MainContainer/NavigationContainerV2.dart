@@ -1,6 +1,7 @@
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsTabContainer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -53,7 +54,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           icon: FontAwesomeIcons.alignJustify,
           color: Colors.white,
           shadowColor: Colors.black,
-          size: 5.w,
+          size: globalIconSizeMedium,
         ),
       ),
     ),
@@ -65,7 +66,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           icon: FontAwesomeIcons.globeAfrica,
           color: Colors.white,
           shadowColor: Colors.black,
-          size: 5.w,
+          size: globalIconSizeMedium,
         ),
       ),
     ),
@@ -85,7 +86,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
               icon: FontAwesomeIcons.plus,
               color: Colors.white,
               shadowColor: Colors.black,
-              size: 5.w,
+              size: globalIconSizeMedium,
             ),
           );
         }),
@@ -99,7 +100,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           icon: FontAwesomeIcons.eye,
           color: Colors.white,
           shadowColor: Colors.black,
-          size: 5.w,
+          size: globalIconSizeMedium,
         ),
       ),
     ),
@@ -109,13 +110,13 @@ class _NavigationContainerState extends State<NavigationContainer> {
       label: '',
       icon: CircleAvatar(
         backgroundColor: Colors.white,
-        radius: 5.w,
+        radius: globalIconSizeMedium,
         child: AccountAvatarBase(
             username: "you",
-            avatarSize: 8.w,
+            avatarSize: globalIconSizeMedium + 15.sp,
             showVerified: false,
             showName: false,
-            width: 8.w),
+            width: globalIconSizeMedium + 15.sp),
       ),
     ),
   ];
@@ -175,11 +176,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
   @override
   Widget build(BuildContext context) {
-    double iconSize = 5.w;
-    if (Device.orientation == Orientation.landscape) {
-      iconSize = 5.h;
-    }
-
     BlocListener<TransactionBloc, TransactionState>(
       bloc: BlocProvider.of<TransactionBloc>(context),
       listener: (context, state) {
@@ -215,9 +211,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
               BlocProvider<NotificationBloc>(
                 create: (context) =>
                     NotificationBloc(repository: NotificationRepositoryImpl()),
-                child: NotificationButton(iconSize: iconSize),
+                child: NotificationButton(iconSize: globalIconSizeMedium),
               ),
-              buildMainMenuSpeedDial(context, iconSize)
+              buildMainMenuSpeedDial(context, globalIconSizeMedium)
             ],
           ),
         ),

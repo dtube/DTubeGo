@@ -36,9 +36,10 @@ class _LoginFormState extends State<LoginForm> {
     //if logindata already stored
   }
 
+// QR scan is not shown until the QR generator on the website is fixed
   Future<void> scanQR() async {
     String barcodeScanRes;
-    // Platform messages may fail, so we use a try/catch PlatformException.
+
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
@@ -47,9 +48,6 @@ class _LoginFormState extends State<LoginForm> {
       barcodeScanRes = 'Failed to get platform version.';
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
 
     setState(() {
@@ -69,68 +67,59 @@ class _LoginFormState extends State<LoginForm> {
           child: Form(
             child: Column(
               children: [
-                Image.asset('assets/images/dtube_logo_white.png', width: 40.w),
-                SizedBox(height: 8),
+                Padding(
+                  padding: EdgeInsets.only(top: 20.h, bottom: 5.h),
+                  child: Image.asset('assets/images/dtube_logo_white.png',
+                      width: 60.w),
+                ),
+                Text("Login with your DTube credentials",
+                    style: Theme.of(context).textTheme.headline6),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: 40.w,
+                      width: 80.w,
                       child: TextField(
                         style: Theme.of(context).textTheme.bodyText1,
                         controller: usernameController,
+                        cursorColor: globalRed,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Username',
-                        ),
+                            border: OutlineInputBorder(),
+                            labelText: 'Username',
+                            labelStyle: Theme.of(context).textTheme.bodyText1),
                       ),
                     ),
-                    SizedBox(
-                      width: 5.w,
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          launch(AppConfig.signUpUrl);
-                        },
-                        child: Text(
-                          "Sign-Up",
-                        )),
                   ],
                 ),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: 40.w,
+                      width: 80.w,
                       child: TextField(
                         style: Theme.of(context).textTheme.bodyText1,
                         obscureText: true,
+                        cursorColor: globalRed,
                         controller: privateKeyController,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'private master/custom key',
-                        ),
+                            border: OutlineInputBorder(),
+                            labelText: 'Private Key',
+                            labelStyle: Theme.of(context).textTheme.bodyText1),
                       ),
                     ),
-                    SizedBox(
-                      width: 5.w,
-                    ),
-                    ElevatedButton(
-                        onPressed: () => scanQR(),
-                        child: SizedBox(
-                            width: 40,
-                            child: Center(
-                                child: FaIcon(FontAwesomeIcons.qrcode)))),
-                    // InputChip(
-                    //   label: Text("QR-Scan"),
-                    //   onPressed: () => scanQR(),
+
+                    // hidden until QR code is generated properly
+                    // SizedBox(
+                    //   width: 5.w,
                     // ),
+                    // ElevatedButton(
+                    //     onPressed: () => scanQR(),
+                    //     child: SizedBox(
+                    //         width: 40,
+                    //         child: Center(
+                    //             child: FaIcon(FontAwesomeIcons.qrcode)))),
                   ],
                 ),
-
-                // ],
-                // ),
                 widget.message != null
                     ? Padding(
                         padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
@@ -174,7 +163,6 @@ class _LoginFormState extends State<LoginForm> {
                         ),
                       )
                     : SizedBox(height: 16),
-
                 ValueListenableBuilder<TextEditingValue>(
                     valueListenable: usernameController,
                     builder: (context, value, child) {
@@ -195,10 +183,40 @@ class _LoginFormState extends State<LoginForm> {
                                     : null,
                                 child: Text(
                                   "Sign in",
-                                  style: Theme.of(context).textTheme.headline1,
+                                  style: Theme.of(context).textTheme.headline5,
                                 ));
                           });
                     }),
+                Padding(
+                  padding: EdgeInsets.only(top: 15.h),
+                  child: Text("You don't have an account on DTube?",
+                      style: Theme.of(context).textTheme.bodyText1),
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      launch(AppConfig.signUpUrl);
+                    },
+                    child: Text(
+                      "register for free!",
+                      style: Theme.of(context).textTheme.bodyText1,
+                    )),
+                Padding(
+                  padding: EdgeInsets.only(top: 2.h),
+                  child: Text("You want to know more about DTube?",
+                      style: Theme.of(context).textTheme.bodyText1),
+                ),
+                InputChip(
+                    backgroundColor: globalAlmostWhite,
+                    onPressed: () {
+                      launch(AppConfig.signUpUrl);
+                    },
+                    label: Text(
+                      "read the whitepaper!",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1!
+                          .copyWith(color: globalBlue),
+                    )),
               ],
             ),
           ),
