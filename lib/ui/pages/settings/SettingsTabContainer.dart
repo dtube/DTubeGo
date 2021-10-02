@@ -46,6 +46,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   late TextEditingController _templateBodyController;
   late TextEditingController _templateTagController;
 
+  late String _previewBody;
+
   late List<String> _selectedExploreTags;
 
   List<String> _showHiddentNsfwOptions = ['Show', 'Hide', 'Blur'];
@@ -74,6 +76,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
     _templateBodyController = TextEditingController(text: "");
     _templateTitleController = TextEditingController(text: "");
     _templateTagController = TextEditingController(text: "");
+
+    _previewBody = "";
 
     super.initState();
   }
@@ -182,6 +186,10 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                 text: settings[sec.settingKey_templateBody] != null
                     ? settings[sec.settingKey_templateBody]!
                     : "");
+            _previewBody = settings[sec.settingKey_templateBody] != null
+                ? settings[sec.settingKey_templateBody]!
+                : "";
+
             _templateTagController = new TextEditingController(
                 text: settings[sec.settingKey_templateTag] != null
                     ? settings[sec.settingKey_templateTag]!
@@ -280,7 +288,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             DTubeFormCard(
                               childs: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 16.0),
+                                  padding: EdgeInsets.only(top: 1.h),
                                   child: Text("Display",
                                       style: Theme.of(context)
                                           .textTheme
@@ -340,7 +348,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             DTubeFormCard(
                               childs: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 16.0),
+                                  padding: EdgeInsets.only(top: 1.h),
                                   child: Text("Security",
                                       style: Theme.of(context)
                                           .textTheme
@@ -351,7 +359,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                      width: 200,
+                                      width: 60.w,
                                       child: Text(
                                           "secure your app with a 5 digit pin",
                                           maxLines: 2,
@@ -435,8 +443,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                   for (var _possibleTag
                                       in AppConfig.possibleExploreTags)
                                     Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 8.0),
+                                      padding: EdgeInsets.only(right: 1.w),
                                       child: InputChip(
                                         label: Text(_possibleTag),
                                         selectedColor: globalRed,
@@ -475,7 +482,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             DTubeFormCard(
                               childs: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 16.0),
+                                  padding: EdgeInsets.only(top: 1.h),
                                   child: Text("Voting weight",
                                       style: Theme.of(context)
                                           .textTheme
@@ -485,7 +492,9 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                         "default voting weight (posts):",
-                                        style: TextStyle(color: Colors.grey))),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6)),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -519,7 +528,9 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                         "default voting weight (comments):",
-                                        style: TextStyle(color: Colors.grey))),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6)),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -557,14 +568,15 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             DTubeFormCard(
                               childs: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 16.0),
+                                  padding: EdgeInsets.only(top: 1.h),
                                   child: Text("Vote tipping",
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline5),
                                 ),
                                 Text("default voting tip (posts):",
-                                    style: TextStyle(color: Colors.grey)),
+                                    style:
+                                        Theme.of(context).textTheme.headline6),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -598,7 +610,9 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                         "default voting tip (comments):",
-                                        style: TextStyle(color: Colors.grey))),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6)),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -645,8 +659,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 Row(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 16.0, bottom: 8.0),
+                                      padding: EdgeInsets.only(
+                                          top: 1.h, bottom: 1.h),
                                       child: Text(
                                           "Video upload default settings",
                                           style: Theme.of(context)
@@ -798,8 +812,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               childs: [
                                 Row(children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 16.0, bottom: 8.0),
+                                    padding:
+                                        EdgeInsets.only(top: 1.h, bottom: 1.h),
                                     child: Text(
                                         "Moments upload default settings",
                                         style: Theme.of(context)
@@ -956,8 +970,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             DTubeFormCard(
                               childs: [
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, bottom: 8.0),
+                                  padding:
+                                      EdgeInsets.only(top: 1.h, bottom: 1.h),
                                   child: Text("Hivesigner settings",
                                       style: Theme.of(context)
                                           .textTheme
@@ -966,7 +980,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 Row(
                                   children: [
                                     Container(
-                                      width: 80.w,
+                                      width: 100.w,
                                       child: Column(
                                         children: [
                                           Text(
@@ -1012,8 +1026,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                         child: Column(
                           children: [
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 16.0, bottom: 8.0),
+                              padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
                               child: Text(
                                   "This template will be preselected for new uploads:",
                                   style: Theme.of(context).textTheme.bodyText1),
@@ -1021,12 +1034,12 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             DTubeFormCard(
                               childs: [
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, bottom: 16),
+                                  padding:
+                                      EdgeInsets.only(top: 1.h, bottom: 1.h),
                                   child: Text("Title",
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline5),
+                                          .headline6),
                                 ),
                                 Divider(
                                   height: 1,
@@ -1035,6 +1048,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 ),
                                 TextFormField(
                                   controller: _templateTitleController,
+                                  cursorColor: globalRed,
                                   maxLines: 1,
                                   style: Theme.of(context).textTheme.bodyText1,
                                 ),
@@ -1043,12 +1057,12 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             DTubeFormCard(
                               childs: [
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, bottom: 16.0),
+                                  padding:
+                                      EdgeInsets.only(top: 1.h, bottom: 1.h),
                                   child: Text("Body",
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline5),
+                                          .headline6),
                                 ),
                                 Divider(
                                   height: 1,
@@ -1057,7 +1071,36 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 ),
                                 TextFormField(
                                   controller: _templateBodyController,
-                                  maxLines: 15,
+                                  cursorColor: globalRed,
+                                  maxLines: 6,
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                  onChanged: (String text) {
+                                    setState(() {
+                                      _previewBody = text;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                            DTubeFormCard(
+                              childs: [
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 1.h, bottom: 1.h),
+                                  child: Text("Tag",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                ),
+                                Divider(
+                                  height: 1,
+                                  thickness: 1,
+                                  color: Colors.black,
+                                ),
+                                TextFormField(
+                                  controller: _templateTagController,
+                                  cursorColor: globalRed,
+                                  maxLines: 1,
                                   style: Theme.of(context).textTheme.bodyText1,
                                 ),
                               ],
@@ -1065,12 +1108,12 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             DTubeFormCard(
                               childs: [
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, bottom: 16.0),
+                                  padding:
+                                      EdgeInsets.only(top: 1.h, bottom: 1.h),
                                   child: Text("Preview",
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline5),
+                                          .headline6),
                                 ),
                                 Divider(
                                   height: 1,
@@ -1083,31 +1126,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 Container(
                                   width: 90.w,
                                   height: 200,
-                                  child: MarkdownBody(
-                                      data: _templateBodyController.value.text),
+                                  child: MarkdownBody(data: _previewBody),
                                 )
-                              ],
-                            ),
-                            DTubeFormCard(
-                              childs: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, bottom: 16.0),
-                                  child: Text("Tag",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5),
-                                ),
-                                Divider(
-                                  height: 1,
-                                  thickness: 1,
-                                  color: Colors.black,
-                                ),
-                                TextFormField(
-                                  controller: _templateTagController,
-                                  maxLines: 1,
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                ),
                               ],
                             ),
                           ],
