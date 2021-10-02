@@ -25,7 +25,7 @@ class SettingsTabContainer extends StatefulWidget {
 
 class _SettingsTabContainerState extends State<SettingsTabContainer>
     with SingleTickerProviderStateMixin {
-  List<String> settingsTypes = ["General", "Avalon", "Cross-Posting"];
+  List<String> settingsTypes = ["General", "Avalon", "Uploads"];
   late TabController _tabController;
   late SettingsBloc _settingsBloc;
   late Map<String, String> settings;
@@ -48,7 +48,21 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
 
   late List<String> _selectedExploreTags;
 
-  // late Map<String, String> currentSettings;
+  List<String> _showHiddentNsfwOptions = ['Show', 'Hide', 'Blur'];
+
+  bool _defaultUploadOC = false;
+  bool _defaultUploadUnlist = false;
+  bool _defaultUploadNSFW = false;
+  bool _defaultUploadCrossPost = false;
+  double _defaultUploadVotingWeight = 5;
+
+  bool _defaultMomentsOC = false;
+  bool _defaultMomentsUnlist = false;
+  bool _defaultMomentsNSFW = false;
+  bool _defaultMomentsCrossPost = false;
+  double _defaultMomentVotingWeight = 5;
+
+  List<String> _imageUploadProviders = ['imgur', 'ipfs'];
 
   @override
   void initState() {
@@ -64,9 +78,6 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
     super.initState();
   }
 
-  List<String> _showHiddentNsfwOptions = ['Show', 'Hide', 'Blur'];
-
-  List<String> _imageUploadProviders = ['imgur', 'ipfs'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,7 +110,26 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                     sec.settingKey_templateTag:
                         _templateTagController.value.text,
                     sec.settingKey_imageUploadService: _imageUploadProvider,
-                    sec.settingKey_ExploreTags: _selectedExploreTags.join(",")
+                    sec.settingKey_ExploreTags: _selectedExploreTags.join(","),
+                    sec.settingKey_DefaultUploadNSFW:
+                        _defaultUploadNSFW.toString(),
+                    sec.settingKey_DefaultUploadOC: _defaultUploadOC.toString(),
+                    sec.settingKey_DefaultUploadUnlist:
+                        _defaultUploadUnlist.toString(),
+                    sec.settingKey_DefaultUploadCrosspost:
+                        _defaultUploadCrossPost.toString(),
+                    sec.settingKey_DefaultMomentNSFW:
+                        _defaultMomentsNSFW.toString(),
+                    sec.settingKey_DefaultMomentOC:
+                        _defaultMomentsOC.toString(),
+                    sec.settingKey_DefaultMomentUnlist:
+                        _defaultMomentsUnlist.toString(),
+                    sec.settingKey_DefaultMomentCrosspost:
+                        _defaultMomentsCrossPost.toString(),
+                    sec.settingKey_DefaultUploadVotingWeigth:
+                        _defaultUploadVotingWeight.toString(),
+                    sec.settingKey_DefaultMomentVotingWeigth:
+                        _defaultMomentVotingWeight.toString(),
                   };
                   _settingsBloc.add(PushSettingsEvent(
                       newSettings: newSettings, context: context));
@@ -171,6 +201,49 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
             _selectedExploreTags = settings[sec.settingKey_ExploreTags] != null
                 ? settings[sec.settingKey_ExploreTags]!.split((','))
                 : [];
+
+            _defaultUploadNSFW =
+                settings[sec.settingKey_DefaultUploadNSFW] != null
+                    ? settings[sec.settingKey_DefaultUploadNSFW]! == 'true'
+                    : false;
+            _defaultUploadOC = settings[sec.settingKey_DefaultUploadOC] != null
+                ? settings[sec.settingKey_DefaultUploadOC]! == 'true'
+                : false;
+            _defaultUploadUnlist =
+                settings[sec.settingKey_DefaultUploadUnlist] != null
+                    ? settings[sec.settingKey_DefaultUploadUnlist]! == 'true'
+                    : false;
+            _defaultUploadCrossPost =
+                settings[sec.settingKey_DefaultUploadCrosspost] != null
+                    ? settings[sec.settingKey_DefaultUploadCrosspost]! == 'true'
+                    : false;
+
+            _defaultMomentsNSFW =
+                settings[sec.settingKey_DefaultMomentNSFW] != null
+                    ? settings[sec.settingKey_DefaultMomentNSFW]! == 'true'
+                    : false;
+            _defaultMomentsOC = settings[sec.settingKey_DefaultMomentOC] != null
+                ? settings[sec.settingKey_DefaultMomentOC]! == 'true'
+                : false;
+            _defaultMomentsUnlist =
+                settings[sec.settingKey_DefaultMomentUnlist] != null
+                    ? settings[sec.settingKey_DefaultMomentUnlist]! == 'true'
+                    : false;
+            _defaultMomentsCrossPost =
+                settings[sec.settingKey_DefaultMomentCrosspost] != null
+                    ? settings[sec.settingKey_DefaultMomentCrosspost]! == 'true'
+                    : false;
+
+            _defaultUploadVotingWeight =
+                settings[sec.settingKey_DefaultUploadVotingWeigth] != null
+                    ? double.parse(
+                        settings[sec.settingKey_DefaultUploadVotingWeigth]!)
+                    : 5.0;
+            _defaultMomentVotingWeight =
+                settings[sec.settingKey_DefaultMomentVotingWeigth] != null
+                    ? double.parse(
+                        settings[sec.settingKey_DefaultMomentVotingWeigth]!)
+                    : 5.0;
           }
 
           return Column(
@@ -187,7 +260,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                     text: 'Avalon',
                   ),
                   Tab(
-                    text: 'Cross-Posting',
+                    text: 'Posting',
                   ),
                   Tab(
                     text: 'Template',
@@ -567,6 +640,319 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                         child: Column(
                           children: [
                             SizedBox(height: 16),
+                            DTubeFormCard(
+                              childs: [
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 16.0, bottom: 8.0),
+                                      child: Text(
+                                          "Video upload default settings",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  "Define default values for video uploads. You can always change those values in the upload process! You can also set a template (see tabs above).",
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                                SizedBox(height: 2.h),
+                                Wrap(
+                                  direction: Axis.horizontal,
+                                  runAlignment: WrapAlignment.spaceEvenly,
+                                  children: [
+                                    ChoiceChip(
+                                        selected: _defaultUploadOC,
+                                        label: Text('original content'),
+                                        labelStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                        avatar: _defaultUploadOC
+                                            ? FaIcon(
+                                                FontAwesomeIcons.check,
+                                                size: 15,
+                                              )
+                                            : null,
+                                        backgroundColor:
+                                            Colors.grey.withAlpha(30),
+                                        selectedColor: Colors.green[700],
+                                        onSelected: (bool selected) {
+                                          setState(() {
+                                            _defaultUploadOC =
+                                                !_defaultUploadOC;
+                                          });
+                                        }),
+                                    ChoiceChip(
+                                        selected: _defaultUploadNSFW,
+                                        label: Text('nsfw content'),
+                                        labelStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                        avatar: _defaultUploadNSFW
+                                            ? FaIcon(
+                                                FontAwesomeIcons.check,
+                                                size: 15,
+                                              )
+                                            : null,
+                                        backgroundColor:
+                                            Colors.grey.withAlpha(30),
+                                        selectedColor: Colors.green[700],
+                                        onSelected: (bool selected) {
+                                          setState(() {
+                                            _defaultUploadNSFW =
+                                                !_defaultUploadNSFW;
+                                          });
+                                        }),
+                                    ChoiceChip(
+                                        selected: _defaultUploadUnlist,
+                                        label: Text('unlist video'),
+                                        labelStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                        avatar: _defaultUploadUnlist
+                                            ? FaIcon(
+                                                FontAwesomeIcons.check,
+                                                size: 15,
+                                              )
+                                            : null,
+                                        backgroundColor:
+                                            Colors.grey.withAlpha(30),
+                                        selectedColor: Colors.green[700],
+                                        onSelected: (bool selected) {
+                                          setState(() {
+                                            _defaultUploadUnlist =
+                                                !_defaultUploadUnlist;
+                                          });
+                                        }),
+                                    _hiveUsername != ""
+                                        ? ChoiceChip(
+                                            selected: _defaultUploadCrossPost,
+                                            label: Text('cross-post to hive'),
+                                            labelStyle: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
+                                            avatar: _defaultUploadCrossPost
+                                                ? FaIcon(
+                                                    FontAwesomeIcons.check,
+                                                    size: 15,
+                                                  )
+                                                : null,
+                                            backgroundColor:
+                                                Colors.grey.withAlpha(30),
+                                            selectedColor: Colors.green[700],
+                                            onSelected: (bool selected) {
+                                              setState(() {
+                                                _defaultUploadCrossPost =
+                                                    !_defaultUploadCrossPost;
+                                              });
+                                            })
+                                        : SizedBox(
+                                            width: 0,
+                                          ),
+                                  ],
+                                ),
+                                Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text("default voting weight:",
+                                        style: TextStyle(color: Colors.grey))),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Slider(
+                                        min: 1.0,
+                                        max: 100.0,
+                                        value: _defaultUploadVotingWeight,
+                                        label: _defaultUploadVotingWeight
+                                                .floor()
+                                                .toString() +
+                                            "%",
+                                        divisions: 20,
+                                        inactiveColor: globalBlue,
+                                        activeColor: globalRed,
+                                        onChanged: (dynamic value) {
+                                          setState(() {
+                                            _defaultUploadVotingWeight = value;
+                                            //  widget.justSaved = false;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Text(
+                                      _defaultUploadVotingWeight
+                                              .floor()
+                                              .toString() +
+                                          "%",
+                                      style: TextStyle(fontSize: 18),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                            DTubeFormCard(
+                              childs: [
+                                Row(children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 16.0, bottom: 8.0),
+                                    child: Text(
+                                        "Moments upload default settings",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                ]),
+                                Text(
+                                  "Define how your moments should get posted.",
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                                SizedBox(height: 2.h),
+                                Wrap(
+                                  direction: Axis.horizontal,
+                                  runAlignment: WrapAlignment.spaceEvenly,
+                                  children: [
+                                    ChoiceChip(
+                                        selected: _defaultMomentsOC,
+                                        label: Text('original content'),
+                                        labelStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                        avatar: _defaultMomentsOC
+                                            ? FaIcon(
+                                                FontAwesomeIcons.check,
+                                                size: 15,
+                                              )
+                                            : null,
+                                        backgroundColor:
+                                            Colors.grey.withAlpha(30),
+                                        selectedColor: Colors.green[700],
+                                        onSelected: (bool selected) {
+                                          setState(() {
+                                            _defaultMomentsOC =
+                                                !_defaultMomentsOC;
+                                          });
+                                        }),
+                                    ChoiceChip(
+                                        selected: _defaultMomentsNSFW,
+                                        label: Text('nsfw content'),
+                                        labelStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                        avatar: _defaultMomentsNSFW
+                                            ? FaIcon(
+                                                FontAwesomeIcons.check,
+                                                size: 15,
+                                              )
+                                            : null,
+                                        backgroundColor:
+                                            Colors.grey.withAlpha(30),
+                                        selectedColor: Colors.green[700],
+                                        onSelected: (bool selected) {
+                                          setState(() {
+                                            _defaultMomentsNSFW =
+                                                !_defaultMomentsNSFW;
+                                          });
+                                        }),
+                                    ChoiceChip(
+                                        selected: _defaultMomentsUnlist,
+                                        label: Text('unlist video'),
+                                        labelStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                        avatar: _defaultMomentsUnlist
+                                            ? FaIcon(
+                                                FontAwesomeIcons.check,
+                                                size: 15,
+                                              )
+                                            : null,
+                                        backgroundColor:
+                                            Colors.grey.withAlpha(30),
+                                        selectedColor: Colors.green[700],
+                                        onSelected: (bool selected) {
+                                          setState(() {
+                                            _defaultMomentsUnlist =
+                                                !_defaultMomentsUnlist;
+                                          });
+                                        }),
+                                    _hiveUsername != ""
+                                        ? ChoiceChip(
+                                            selected: _defaultMomentsCrossPost,
+                                            label: Text('cross-post to hive'),
+                                            labelStyle: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
+                                            avatar: _defaultMomentsCrossPost
+                                                ? FaIcon(
+                                                    FontAwesomeIcons.check,
+                                                    size: 15,
+                                                  )
+                                                : null,
+                                            backgroundColor:
+                                                Colors.grey.withAlpha(30),
+                                            selectedColor: Colors.green[700],
+                                            onSelected: (bool selected) {
+                                              setState(() {
+                                                _defaultMomentsCrossPost =
+                                                    !_defaultMomentsCrossPost;
+                                              });
+                                            })
+                                        : SizedBox(
+                                            width: 0,
+                                          ),
+                                  ],
+                                ),
+                                Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text("self voting weight:",
+                                        style: TextStyle(color: Colors.grey))),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Slider(
+                                        min: 1.0,
+                                        max: 100.0,
+                                        value: _defaultMomentVotingWeight,
+                                        label: _defaultMomentVotingWeight
+                                                .floor()
+                                                .toString() +
+                                            "%",
+                                        divisions: 20,
+                                        inactiveColor: globalBlue,
+                                        activeColor: globalRed,
+                                        onChanged: (dynamic value) {
+                                          setState(() {
+                                            _defaultMomentVotingWeight = value;
+                                            //  widget.justSaved = false;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Text(
+                                      _defaultMomentVotingWeight
+                                              .floor()
+                                              .toString() +
+                                          "%",
+                                      style: TextStyle(fontSize: 18),
+                                    )
+                                  ],
+                                ),
+                                Text(
+                                  "You can not change those values in the upload process!",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1!
+                                      .copyWith(color: globalRed),
+                                ),
+                              ],
+                            ),
                             DTubeFormCard(
                               childs: [
                                 Padding(

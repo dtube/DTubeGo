@@ -212,8 +212,8 @@ class _UploadFormState extends State<UploadForm> {
           listener: (context, stateSettings) {
             if (stateSettings is SettingsLoadedState) {
               setState(() {
-                stateUploadData.vpPercent = double.parse(
-                    stateSettings.settings[settingKey_defaultVotingWeight]!);
+                stateUploadData.vpPercent = double.parse(stateSettings
+                    .settings[settingKey_DefaultUploadVotingWeigth]!);
                 if (_titleController.text.isEmpty) {
                   _titleController.text =
                       stateSettings.settings[settingKey_templateTitle]!;
@@ -226,6 +226,22 @@ class _UploadFormState extends State<UploadForm> {
                   _tagController.text =
                       stateSettings.settings[settingKey_templateTag]!;
                 }
+                stateUploadData.nSFWContent =
+                    stateSettings.settings[settingKey_DefaultUploadNSFW]! ==
+                        "true";
+
+                stateUploadData.originalContent =
+                    stateSettings.settings[settingKey_DefaultUploadOC]! ==
+                        "true";
+
+                stateUploadData.unlistVideo =
+                    stateSettings.settings[settingKey_DefaultUploadUnlist]! ==
+                        "true";
+
+                stateUploadData.crossPostToHive = stateSettings
+                        .settings[settingKey_DefaultUploadCrosspost]! ==
+                    "true";
+
                 if (stateSettings.settings[settingKey_hiveSignerUsername] !=
                         null &&
                     stateSettings.settings[settingKey_hiveSignerUsername] !=

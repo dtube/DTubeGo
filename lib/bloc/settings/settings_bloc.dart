@@ -41,6 +41,18 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           sec.settingKey_pincode: await sec.getPinCode(),
           sec.settingKey_imageUploadService: await sec.getImageUploadService(),
           sec.settingKey_ExploreTags: await sec.getExploreTags(),
+          sec.settingKey_DefaultUploadNSFW: await sec.getUploadNSFW(),
+          sec.settingKey_DefaultUploadOC: await sec.getUploadOC(),
+          sec.settingKey_DefaultUploadUnlist: await sec.getUploadUnlist(),
+          sec.settingKey_DefaultUploadCrosspost: await sec.getUploadCrosspost(),
+          sec.settingKey_DefaultMomentNSFW: await sec.getMomentNSFW(),
+          sec.settingKey_DefaultMomentOC: await sec.getMomentOC(),
+          sec.settingKey_DefaultMomentUnlist: await sec.getMomentUnlist(),
+          sec.settingKey_DefaultMomentCrosspost: await sec.getMomentCrosspost(),
+          sec.settingKey_DefaultUploadVotingWeigth:
+              await sec.getUploadVotingWeight(),
+          sec.settingKey_DefaultMomentVotingWeigth:
+              await sec.getMomentVotingWeight(),
         };
         yield SettingsLoadedState(settings: newSettings);
       } catch (e) {
@@ -64,6 +76,18 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           event.newSettings[sec.settingKey_templateTitle]!,
           event.newSettings[sec.settingKey_templateBody]!,
           event.newSettings[sec.settingKey_templateTag]!,
+        );
+        await sec.persistDefaultUploadAndMomentSettings(
+          event.newSettings[sec.settingKey_DefaultUploadVotingWeigth]!,
+          event.newSettings[sec.settingKey_DefaultMomentVotingWeigth]!,
+          event.newSettings[sec.settingKey_DefaultUploadNSFW]!,
+          event.newSettings[sec.settingKey_DefaultUploadOC]!,
+          event.newSettings[sec.settingKey_DefaultUploadUnlist]!,
+          event.newSettings[sec.settingKey_DefaultUploadCrosspost]!,
+          event.newSettings[sec.settingKey_DefaultMomentNSFW]!,
+          event.newSettings[sec.settingKey_DefaultMomentOC]!,
+          event.newSettings[sec.settingKey_DefaultMomentUnlist]!,
+          event.newSettings[sec.settingKey_DefaultMomentCrosspost]!,
         );
         await sec
             .persistExploreTags(event.newSettings[sec.settingKey_ExploreTags]!);

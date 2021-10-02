@@ -26,6 +26,18 @@ const settingKey_templateTitle = 'TEMPLATETITLE';
 const settingKey_templateBody = 'TEMPLATEBODY';
 const settingKey_templateTag = 'TEMPLATETAG';
 
+const settingKey_DefaultUploadNSFW = "DFUNSFW";
+const settingKey_DefaultUploadOC = "DFUOC";
+const settingKey_DefaultUploadUnlist = "DFUNLIST";
+const settingKey_DefaultUploadCrosspost = "DFUCP";
+const settingKey_DefaultUploadVotingWeigth = "DFUVW";
+
+const settingKey_DefaultMomentNSFW = "DFMNSFW";
+const settingKey_DefaultMomentOC = "DFMOC";
+const settingKey_DefaultMomentUnlist = "DFMNLIST";
+const settingKey_DefaultMomentCrosspost = "DFMCP";
+const settingKey_DefaultMomentVotingWeigth = "DFMVW";
+
 const settingKey_tsLastNotificationSeen = 'LASTNOT';
 
 const settingKey_pincode = "PINC";
@@ -118,6 +130,38 @@ Future<void> persistTemplateSettings(
   await _storage.write(key: settingKey_templateTag, value: templateTag);
 }
 
+Future<void> persistDefaultUploadAndMomentSettings(
+  String uploadVotingWeight,
+  String momentVotingWeight,
+  String uploadNSFW,
+  String uploadOC,
+  String uploadUnlist,
+  String uploadCrosspost,
+  String momentNSFW,
+  String momentOC,
+  String momentUnlist,
+  String momentCrosspost,
+) async {
+  await _storage.write(key: settingKey_DefaultUploadNSFW, value: uploadNSFW);
+  await _storage.write(key: settingKey_DefaultUploadOC, value: uploadOC);
+  await _storage.write(
+      key: settingKey_DefaultUploadUnlist, value: uploadUnlist);
+  await _storage.write(
+      key: settingKey_DefaultUploadCrosspost, value: uploadCrosspost);
+
+  await _storage.write(key: settingKey_DefaultMomentNSFW, value: momentNSFW);
+  await _storage.write(key: settingKey_DefaultMomentOC, value: momentOC);
+  await _storage.write(
+      key: settingKey_DefaultMomentUnlist, value: momentUnlist);
+  await _storage.write(
+      key: settingKey_DefaultMomentCrosspost, value: momentCrosspost);
+  await _storage.write(
+      key: settingKey_DefaultUploadVotingWeigth, value: uploadVotingWeight);
+
+  await _storage.write(
+      key: settingKey_DefaultMomentVotingWeigth, value: momentVotingWeight);
+}
+
 // GET
 
 Future<bool> getOpenedOnce() async {
@@ -130,72 +174,162 @@ Future<bool> getOpenedOnce() async {
 }
 
 Future<String> getUsername() async {
-  var _username = await _storage.read(key: authKey_usernameKey);
-  if (_username != null) {
-    return _username;
+  var _setting = await _storage.read(key: authKey_usernameKey);
+  if (_setting != null) {
+    return _setting;
   } else {
     return "";
   }
 }
 
 Future<String> getImageUploadService() async {
-  var _service = await _storage.read(key: settingKey_imageUploadService);
-  if (_service != null) {
-    return _service;
+  var _setting = await _storage.read(key: settingKey_imageUploadService);
+  if (_setting != null) {
+    return _setting;
   } else {
     return "imgur";
   }
 }
 
 Future<String> getPinCode() async {
-  var _pin = await _storage.read(key: settingKey_pincode);
-  if (_pin != null) {
-    return _pin;
+  var _setting = await _storage.read(key: settingKey_pincode);
+  if (_setting != null) {
+    return _setting;
   } else {
     return "";
   }
 }
 
 Future<String> getTemplateTitle() async {
-  var _title = await _storage.read(key: settingKey_templateTitle);
-  if (_title != null) {
-    return _title;
+  var _setting = await _storage.read(key: settingKey_templateTitle);
+  if (_setting != null) {
+    return _setting;
   } else {
     return "";
   }
 }
 
 Future<String> getExploreTags() async {
-  var _tags = await _storage.read(key: settingKey_ExploreTags);
-  if (_tags != null) {
-    return _tags;
+  var _setting = await _storage.read(key: settingKey_ExploreTags);
+  if (_setting != null) {
+    return _setting;
   } else {
     return "";
   }
 }
 
 Future<String> getTemplateBody() async {
-  var _body = await _storage.read(key: settingKey_templateBody);
-  if (_body != null) {
-    return _body;
+  var _setting = await _storage.read(key: settingKey_templateBody);
+  if (_setting != null) {
+    return _setting;
   } else {
     return "";
   }
 }
 
 Future<String> getTemplateTag() async {
-  var _tag = await _storage.read(key: settingKey_templateTag);
-  if (_tag != null) {
-    return _tag;
+  var _setting = await _storage.read(key: settingKey_templateTag);
+  if (_setting != null) {
+    return _setting;
   } else {
     return "";
   }
 }
 
+Future<String> getUploadNSFW() async {
+  var _setting = await _storage.read(key: settingKey_DefaultUploadNSFW);
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getUploadOC() async {
+  var _setting = await _storage.read(key: settingKey_DefaultUploadOC);
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getUploadUnlist() async {
+  var _setting = await _storage.read(key: settingKey_DefaultUploadUnlist);
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getUploadCrosspost() async {
+  var _setting = await _storage.read(key: settingKey_DefaultUploadCrosspost);
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getMomentNSFW() async {
+  var _setting = await _storage.read(key: settingKey_DefaultMomentNSFW);
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getMomentOC() async {
+  var _setting = await _storage.read(key: settingKey_DefaultMomentOC);
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getMomentUnlist() async {
+  var _setting = await _storage.read(key: settingKey_DefaultMomentUnlist);
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getMomentCrosspost() async {
+  var _setting = await _storage.read(key: settingKey_DefaultMomentCrosspost);
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getUploadVotingWeight() async {
+  var _setting = await _storage.read(key: settingKey_DefaultUploadVotingWeigth);
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "5.0";
+  }
+}
+
+Future<String> getMomentVotingWeight() async {
+  var _setting = await _storage.read(key: settingKey_DefaultMomentVotingWeigth);
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "5.0";
+  }
+}
+
 Future<String> getPrivateKey() async {
-  var _privKey = await _storage.read(key: authKey_privKey);
-  if (_privKey != null) {
-    return _privKey;
+  var _setting = await _storage.read(key: authKey_privKey);
+  if (_setting != null) {
+    return _setting;
   } else {
     return "";
   }
@@ -245,75 +379,73 @@ Future<String> getHiveSignerUsername() async {
 }
 
 Future<String> getNode() async {
-  var _node = await _storage.read(key: settingKey_avalonNode);
-  if (_node != null) {
-    return _node;
+  var _setting = await _storage.read(key: settingKey_avalonNode);
+  if (_setting != null) {
+    return _setting;
   } else {
     return 'https://avalon.d.tube';
   }
 }
 
 Future<String> getLastNotification() async {
-  var _lastNotification =
-      await _storage.read(key: settingKey_tsLastNotificationSeen);
-  if (_lastNotification != null) {
-    return _lastNotification;
+  var _setting = await _storage.read(key: settingKey_tsLastNotificationSeen);
+  if (_setting != null) {
+    return _setting;
   } else {
     return '0';
   }
 }
 
 Future<String> getDefaultVote() async {
-  var _voteWeight = await _storage.read(key: settingKey_defaultVotingWeight);
-  if (_voteWeight != null) {
-    return _voteWeight;
+  var _setting = await _storage.read(key: settingKey_defaultVotingWeight);
+  if (_setting != null) {
+    return _setting;
   } else {
     return '5';
   }
 }
 
 Future<String> getDefaultVoteComments() async {
-  var _voteWeight =
+  var _setting =
       await _storage.read(key: settingKey_defaultVotingWeightComments);
-  if (_voteWeight != null) {
-    return _voteWeight;
+  if (_setting != null) {
+    return _setting;
   } else {
     return '5';
   }
 }
 
 Future<String> getDefaultVoteTip() async {
-  var _voteWeight = await _storage.read(key: settingKey_defaultVotingTip);
-  if (_voteWeight != null) {
-    return _voteWeight;
+  var _setting = await _storage.read(key: settingKey_defaultVotingTip);
+  if (_setting != null) {
+    return _setting;
   } else {
     return '25';
   }
 }
 
 Future<String> getDefaultVoteTipComments() async {
-  var _voteWeight =
-      await _storage.read(key: settingKey_defaultVotingTipComments);
-  if (_voteWeight != null) {
-    return _voteWeight;
+  var _setting = await _storage.read(key: settingKey_defaultVotingTipComments);
+  if (_setting != null) {
+    return _setting;
   } else {
     return '25';
   }
 }
 
 Future<String> getShowHidden() async {
-  var _hiddenMode = await _storage.read(key: settingKey_showHidden);
-  if (_hiddenMode != null) {
-    return _hiddenMode;
+  var _setting = await _storage.read(key: settingKey_showHidden);
+  if (_setting != null) {
+    return _setting;
   } else {
     return 'Hide';
   }
 }
 
 Future<String> getNSFW() async {
-  var _nsfwMode = await _storage.read(key: settingKey_showNSFW);
-  if (_nsfwMode != null) {
-    return _nsfwMode;
+  var _setting = await _storage.read(key: settingKey_showNSFW);
+  if (_setting != null) {
+    return _setting;
   } else {
     return 'Hide';
   }
