@@ -76,89 +76,89 @@ class _MomentsPageState extends State<MomentsPage>
   Widget build(BuildContext context) {
     double _iconSize = 5.w;
 
-    return BlocBuilder<ThirdPartyUploaderBloc, ThirdPartyUploaderState>(
-        builder: (context, state) {
-      if (state is ThirdPartyUploaderUploadingState) {
-        return Center(
-            child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
-      } else {
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: widget.play
-              ? Stack(
+    // return BlocBuilder<ThirdPartyUploaderBloc, ThirdPartyUploaderState>(
+    //     builder: (context, state) {
+    //   if (state is ThirdPartyUploaderUploadingState) {
+    //     return Center(
+    //         child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
+    //   } else {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: widget.play
+          ? Stack(
+              children: [
+                TabBarView(
                   children: [
-                    TabBarView(
-                      children: [
-                        MomentsList(
-                          feedType: 'NewMoments',
-                          goingInBackgroundCallback: () {
-                            setState(() {
-                              widget.play = false;
-                            });
-                          },
-                          goingInForegroundCallback: () {
-                            setState(() {
-                              widget.play = true;
-                            });
-                          },
-                        ),
-                        MomentsList(
-                          feedType: 'FollowMoments',
-                          goingInBackgroundCallback: () {
-                            setState(() {
-                              widget.play = true;
-                            });
-                          },
-                          goingInForegroundCallback: () {
-                            setState(() {
-                              widget.play = true;
-                            });
-                          },
-                        ),
-                      ],
-                      controller: _tabController,
+                    MomentsList(
+                      feedType: 'NewMoments',
+                      goingInBackgroundCallback: () {
+                        setState(() {
+                          widget.play = false;
+                        });
+                      },
+                      goingInForegroundCallback: () {
+                        setState(() {
+                          widget.play = true;
+                        });
+                      },
                     ),
-                    ResponsiveLayout(
-                      portrait: TabBarWithPosition(
-                        tabIcons: _tabIcons,
-                        iconSize: _iconSize,
-                        tabController: _tabController,
-                        alignment: Alignment.topRight,
-                        padding: EdgeInsets.only(top: 13.h, right: 4.w),
-                        rotation: 0,
-                        menuSize: 35.w,
-                      ),
-                      landscape: TabBarWithPosition(
-                        tabIcons: _tabIcons,
-                        iconSize: _iconSize,
-                        tabController: _tabController,
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.zero,
-                        rotation: 3,
-                        menuSize: 80.h,
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 8.h, left: 4.w),
-                        //padding: EdgeInsets.only(top: 5.h),
-                        child: OverlayText(
-                          text: _tabNames[_selectedIndex],
-                          sizeMultiply: 1.4,
-                          bold: true,
-                        ),
-                      ),
+                    MomentsList(
+                      feedType: 'FollowMoments',
+                      goingInBackgroundCallback: () {
+                        setState(() {
+                          widget.play = true;
+                        });
+                      },
+                      goingInForegroundCallback: () {
+                        setState(() {
+                          widget.play = true;
+                        });
+                      },
                     ),
                   ],
-                )
-              : SizedBox(
-                  width: 0,
-                  height: 0,
+                  controller: _tabController,
                 ),
-        );
-      }
-    });
+                ResponsiveLayout(
+                  portrait: TabBarWithPosition(
+                    tabIcons: _tabIcons,
+                    iconSize: _iconSize,
+                    tabController: _tabController,
+                    alignment: Alignment.topRight,
+                    padding: EdgeInsets.only(top: 13.h, right: 4.w),
+                    rotation: 0,
+                    menuSize: 35.w,
+                  ),
+                  landscape: TabBarWithPosition(
+                    tabIcons: _tabIcons,
+                    iconSize: _iconSize,
+                    tabController: _tabController,
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.zero,
+                    rotation: 3,
+                    menuSize: 80.h,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 8.h, left: 4.w),
+                    //padding: EdgeInsets.only(top: 5.h),
+                    child: OverlayText(
+                      text: _tabNames[_selectedIndex],
+                      sizeMultiply: 1.4,
+                      bold: true,
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : SizedBox(
+              width: 0,
+              height: 0,
+            ),
+    );
+    // }
+    // });
   }
 }
 

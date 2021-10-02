@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/feeds/FeedViewBase.dart';
 import 'package:dtube_go/utils/ResponsiveLayout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -77,15 +78,9 @@ class _FeedMainPageState extends State<FeedMainPage>
 
   @override
   Widget build(BuildContext context) {
-    double _iconSize = 5.w;
     EdgeInsets _paddingTabBarView =
         EdgeInsets.zero; // only used in landscape for now
-    if (Device.orientation == Orientation.landscape) {
-      _iconSize = 5.h;
-    }
-    if (Device.orientation == Orientation.landscape) {
-      _paddingTabBarView = EdgeInsets.only(left: _iconSize * 2 + 10);
-    }
+
     return Scaffold(
       //appBar: dtubeSubAppBar(true, "", context, null),
       resizeToAvoidBottomInset: true,
@@ -122,16 +117,16 @@ class _FeedMainPageState extends State<FeedMainPage>
           ResponsiveLayout(
             portrait: TabBarWithPosition(
               tabIcons: _tabIcons,
-              iconSize: _iconSize,
+              iconSize: globalIconSizeMedium,
               tabController: _tabController,
               alignment: Alignment.topRight,
               padding: EdgeInsets.only(top: 11.h, right: 4.w),
               rotation: 0,
-              menuSize: 35.w,
+              menuSize: globalIconSizeMedium * 6,
             ),
             landscape: TabBarWithPosition(
               tabIcons: _tabIcons,
-              iconSize: _iconSize,
+              iconSize: globalIconSizeMedium,
               tabController: _tabController,
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.zero,

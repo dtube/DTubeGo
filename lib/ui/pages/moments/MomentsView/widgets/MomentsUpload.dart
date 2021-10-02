@@ -44,7 +44,7 @@ class MomentsUploadButton extends StatefulWidget {
 
 class _MomentsUploadButtontate extends State<MomentsUploadButton> {
   late IPFSUploadBloc _uploadBloc;
-  late ThirdPartyUploaderBloc _3rdPartyUploadBloc;
+
   late UserBloc _userBloc;
   late double _vpBalance;
   File? _image;
@@ -105,7 +105,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
   void initState() {
     super.initState();
     _uploadBloc = BlocProvider.of<IPFSUploadBloc>(context);
-    // _3rdPartyUploadBloc = BlocProvider.of<ThirdPartyUploaderBloc>(context);
+
     _userBloc = BlocProvider.of<UserBloc>(context);
 
     loadHiveSignerAccessToken();

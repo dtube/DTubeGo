@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
@@ -71,6 +72,7 @@ class CommentDisplay extends StatelessWidget {
                 scale: 0.5,
                 isPost: false,
                 focusVote: "",
+                iconColor: Colors.white,
               ),
               Align(
                 alignment: Alignment.topRight,
@@ -129,6 +131,7 @@ class CommentDisplay extends StatelessWidget {
                   defaultVotingTip: defaultVoteTip,
                   scale: 0.5,
                   isPost: false,
+                  iconColor: Colors.white,
                   focusVote: "",
                 ),
                 Align(

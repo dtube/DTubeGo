@@ -153,3 +153,35 @@ class ShadowedIcon extends StatelessWidget {
     );
   }
 }
+
+class HighlightedIcon extends StatelessWidget {
+  double size;
+  IconData icon;
+  Color color;
+  Color highlightColor;
+  double highlightBlur;
+  HighlightedIcon({
+    Key? key,
+    required this.size,
+    required this.icon,
+    required this.color,
+    required this.highlightColor,
+    required this.highlightBlur,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return new DecoratedIcon(
+      icon,
+      color: color,
+      size: size,
+      shadows: [
+        Shadow(
+            color: highlightColor,
+            offset: Offset(0, 0),
+            blurRadius: highlightBlur),
+        //Shadow(color: Colors.white, offset: Offset(0, 0), blurRadius: 10),
+      ],
+    );
+  }
+}

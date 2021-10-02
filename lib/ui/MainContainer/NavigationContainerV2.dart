@@ -110,13 +110,13 @@ class _NavigationContainerState extends State<NavigationContainer> {
       label: '',
       icon: CircleAvatar(
         backgroundColor: Colors.white,
-        radius: globalIconSizeMedium,
+        radius: globalIconSizeMedium * 0.6,
         child: AccountAvatarBase(
             username: "you",
-            avatarSize: globalIconSizeMedium + 15.sp,
+            avatarSize: globalIconSizeMedium,
             showVerified: false,
             showName: false,
-            width: globalIconSizeMedium + 15.sp),
+            width: globalIconSizeMedium),
       ),
     ),
   ];
@@ -213,7 +213,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
                     NotificationBloc(repository: NotificationRepositoryImpl()),
                 child: NotificationButton(iconSize: globalIconSizeMedium),
               ),
-              buildMainMenuSpeedDial(context, globalIconSizeMedium)
+              buildMainMenuSpeedDial(context)
             ],
           ),
         ),

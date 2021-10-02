@@ -38,7 +38,7 @@ class TagChip extends StatelessWidget {
           child: Center(
               child: Text(
             tagName,
-            style: Theme.of(context).textTheme.bodyText2,
+            style: Theme.of(context).textTheme.bodyText1,
             overflow: TextOverflow.ellipsis,
           ))),
     );

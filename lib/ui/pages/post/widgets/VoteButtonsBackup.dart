@@ -1,5 +1,4 @@
 import 'package:dtube_go/style/styledCustomWidgets.dart';
-import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
@@ -208,37 +207,12 @@ class _VotingButtonsState extends State<VotingButtons> {
                         ),
                         onPressed: () {
                           if (!widget.alreadyVoted) {
-                            // setState(() {
-                            //   _upvotePressed = !_upvotePressed;
-                            //   if (_upvotePressed) {
-                            //     _downvotePressed = false;
-                            //   }
-                            // });
-                            showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  MultiBlocProvider(
-                                providers: [
-                                  BlocProvider<PostBloc>(
-                                      create: (context) => PostBloc(
-                                          repository: PostRepositoryImpl())),
-                                  BlocProvider<UserBloc>(
-                                      create: (context) => UserBloc(
-                                          repository: UserRepositoryImpl())),
-                                ],
-                                child: VotingDialog(
-                                  txBloc:
-                                      BlocProvider.of<TransactionBloc>(context),
-                                  defaultVote: widget.defaultVotingWeight,
-                                  defaultTip: widget.defaultVotingTip,
-                                  author: widget.author,
-                                  link: widget.link,
-                                  downvote: false,
-                                  currentVT: state.vtBalance['v']! + 0.0,
-                                  isPost: widget.isPost,
-                                ),
-                              ),
-                            );
+                            setState(() {
+                              _upvotePressed = !_upvotePressed;
+                              if (_upvotePressed) {
+                                _downvotePressed = false;
+                              }
+                            });
                           }
                         },
                       ),
@@ -263,50 +237,31 @@ class _VotingButtonsState extends State<VotingButtons> {
                         ),
                         onPressed: () {
                           if (!widget.alreadyVoted) {
-                            showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  MultiBlocProvider(
-                                providers: [
-                                  BlocProvider<PostBloc>(
-                                      create: (context) => PostBloc(
-                                          repository: PostRepositoryImpl())),
-                                  BlocProvider<UserBloc>(
-                                      create: (context) => UserBloc(
-                                          repository: UserRepositoryImpl())),
-                                ],
-                                child: VotingDialog(
-                                  txBloc:
-                                      BlocProvider.of<TransactionBloc>(context),
-                                  defaultVote: widget.defaultVotingWeight,
-                                  defaultTip: widget.defaultVotingTip,
-                                  author: widget.author,
-                                  link: widget.link,
-                                  downvote: true,
-                                  currentVT: state.vtBalance['v']! + 0.0,
-                                  isPost: widget.isPost,
-                                ),
-                              ),
-                            );
+                            setState(() {
+                              _downvotePressed = !_downvotePressed;
+                              if (_downvotePressed) {
+                                _upvotePressed = false;
+                              }
+                            });
                           }
                         },
                       ),
                     ],
                   ),
                 ),
-                //SizedBox(height: 10),
-                // Visibility(
-                //   visible: _upvotePressed || _downvotePressed,
-                //   child: VotingSlider(
-                //     defaultVote: widget.defaultVotingWeight,
-                //     defaultTip: widget.defaultVotingTip,
-                //     author: widget.author,
-                //     link: widget.link,
-                //     downvote: _downvotePressed,
-                //     currentVT: state.vtBalance['v']! + 0.0,
-                //     isPost: widget.isPost,
-                //   ),
-                // ),
+                SizedBox(height: 10),
+                Visibility(
+                  visible: _upvotePressed || _downvotePressed,
+                  child: VotingSlider(
+                    defaultVote: widget.defaultVotingWeight,
+                    defaultTip: widget.defaultVotingTip,
+                    author: widget.author,
+                    link: widget.link,
+                    downvote: _downvotePressed,
+                    currentVT: state.vtBalance['v']! + 0.0,
+                    isPost: widget.isPost,
+                  ),
+                ),
               ]);
             }
           } else if (state is UserErrorState) {

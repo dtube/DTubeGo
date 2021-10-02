@@ -1,5 +1,6 @@
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/style/styledCustomWidgets.dart';
 
 import 'package:dtube_go/ui/pages/feeds/widgets/FullScreenButton.dart';
@@ -220,12 +221,29 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                     child: Align(
                       alignment: Alignment.center,
                       child: Container(
-                        color: Colors.black.withAlpha(95),
+                        //color: Colors.black.withAlpha(95),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            gradient: LinearGradient(
+                                begin: FractionalOffset.topCenter,
+                                end: FractionalOffset.bottomCenter,
+                                colors: [
+                                  Colors.black.withOpacity(0.0),
+                                  Colors.black.withAlpha(95),
+                                  Colors.black.withAlpha(95),
+                                  Colors.black.withOpacity(0.0),
+                                ],
+                                stops: [
+                                  0.0,
+                                  0.2,
+                                  0.8,
+                                  1.0
+                                ])),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              width: 80.w, // TODO: make this dynamic
+                              width: 80.w,
                               child: Padding(
                                 padding: EdgeInsets.all(5.w),
                                 child: TextField(
@@ -233,6 +251,16 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                   autofocus: _showCommentInput,
                                   controller: _replyController,
                                   style: Theme.of(context).textTheme.bodyText1,
+                                  cursorColor: globalRed,
+                                  maxLines: 4,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Share some feedback',
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                      labelStyle: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
                                 ),
                               ),
                             ),
@@ -248,54 +276,82 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                     _currentVp = state.vtBalance["v"]!;
                                   }
 
-                                  return Padding(
-                                    padding: EdgeInsets.all(5.w),
-                                    child: InputChip(
-                                      onPressed: () {
-                                        UploadData _uploadData = new UploadData(
-                                            link: "",
-                                            parentAuthor: widget.author,
-                                            parentPermlink: widget.link,
-                                            title: "",
-                                            description:
-                                                _replyController.value.text,
-                                            tag: "",
-                                            vpPercent: double.parse(widget
-                                                .defaultCommentVotingWeight),
-                                            vpBalance: _currentVp,
-                                            burnDtc: 0,
-                                            dtcBalance:
-                                                0, // TODO promoted comment implementation missing
-                                            isPromoted: false,
-                                            duration: "",
-                                            thumbnailLocation: "",
-                                            localThumbnail: false,
-                                            videoLocation: "",
-                                            localVideoFile: false,
-                                            originalContent: false,
-                                            nSFWContent: false,
-                                            unlistVideo: false,
-                                            isEditing: false,
-                                            videoSourceHash: "",
-                                            video240pHash: "",
-                                            video480pHash: "",
-                                            videoSpriteHash: "",
-                                            thumbnail640Hash: "",
-                                            thumbnail210Hash: "",
-                                            uploaded: false,
-                                            crossPostToHive: false);
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      InputChip(
+                                        padding: EdgeInsets.zero,
+                                        onPressed: () {
+                                          UploadData _uploadData =
+                                              new UploadData(
+                                                  link: "",
+                                                  parentAuthor: widget.author,
+                                                  parentPermlink: widget.link,
+                                                  title: "",
+                                                  description: _replyController
+                                                      .value.text,
+                                                  tag: "",
+                                                  vpPercent: double.parse(widget
+                                                      .defaultCommentVotingWeight),
+                                                  vpBalance: _currentVp,
+                                                  burnDtc: 0,
+                                                  dtcBalance:
+                                                      0, // TODO promoted comment implementation missing
+                                                  isPromoted: false,
+                                                  duration: "",
+                                                  thumbnailLocation: "",
+                                                  localThumbnail: false,
+                                                  videoLocation: "",
+                                                  localVideoFile: false,
+                                                  originalContent: false,
+                                                  nSFWContent: false,
+                                                  unlistVideo: false,
+                                                  isEditing: false,
+                                                  videoSourceHash: "",
+                                                  video240pHash: "",
+                                                  video480pHash: "",
+                                                  videoSpriteHash: "",
+                                                  thumbnail640Hash: "",
+                                                  thumbnail210Hash: "",
+                                                  uploaded: false,
+                                                  crossPostToHive: false);
 
-                                        BlocProvider.of<TransactionBloc>(
-                                                context)
-                                            .add(SendCommentEvent(_uploadData));
-                                        setState(() {
-                                          _showCommentInput = false;
-                                          _replyController.text = '';
-                                        });
-                                      },
-                                      label:
-                                          FaIcon(FontAwesomeIcons.paperPlane),
-                                    ),
+                                          BlocProvider.of<TransactionBloc>(
+                                                  context)
+                                              .add(SendCommentEvent(
+                                                  _uploadData));
+                                          setState(() {
+                                            _showCommentInput = false;
+                                            _replyController.text = '';
+                                          });
+                                        },
+                                        backgroundColor: globalRed,
+                                        label: Padding(
+                                          padding: EdgeInsets.all(
+                                              globalIconSizeBig / 4),
+                                          child: FaIcon(
+                                            FontAwesomeIcons.paperPlane,
+                                            size: globalIconSizeBig,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 2.h),
+                                        child: InputChip(
+                                          label: Text(
+                                            "cancel",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              _showCommentInput = false;
+                                            });
+                                          },
+                                        ),
+                                      )
+                                    ],
                                   );
                                 }),
                           ],
@@ -310,7 +366,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                   child: FullScreenButton(
                     videoUrl: widget.videoUrl,
                     videoSource: widget.videoSource,
-                    iconSize: 22,
+                    iconSize: globalIconSizeSmall,
                   ),
                 ),
               ),
@@ -318,7 +374,6 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
           ),
           //),
         ),
-
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -358,146 +413,154 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
             ),
             SizedBox(height: 2.h),
             Container(
-              width: 32.w,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              width: 38.w,
+              child: Stack(
                 children: [
-                  widget.oc
-                      ? Padding(
-                          padding: EdgeInsets.only(right: 2.w),
-                          child: FaIcon(
-                            FontAwesomeIcons.award,
-                            size: 5.w,
-                          ),
-                        )
-                      : SizedBox(width: 7.w),
-                  // InkWell(
-                  //   onTap: () {
-                  //     navigateToPostDetailPage(context, widget.author,
-                  //         widget.link, "none", false, () {});
-                  //   },
-                  //   child: InputChip(
-                  //     padding: EdgeInsets.zero,
-                  //     label: Container(
-                  //       width: 10.w,
-                  //       child: Center(
-                  //         child: Text(
-                  //           widget.mainTag,
-                  //           overflow: TextOverflow.ellipsis,
-                  //           style: Theme.of(context).textTheme.bodyText2,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     onPressed: () {},
-                  //   ),
-                  // ),
-                  TagChip(
-                    tagName: widget.mainTag,
-                    width: 11.w,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      widget.oc
+                          ? Padding(
+                              padding: EdgeInsets.only(right: 2.w),
+                              child: FaIcon(
+                                FontAwesomeIcons.award,
+                                size: globalIconSizeSmall,
+                              ),
+                            )
+                          : SizedBox(width: globalIconSizeSmall),
+                      TagChip(
+                        tagName: widget.mainTag,
+                        width: 20.w,
+                      ),
+                    ],
                   ),
-                  SpeedDial(
-                      // icon: FontAwesomeIcons.bars,
-                      child: ShadowedIcon(
-                          icon: FontAwesomeIcons.ellipsisV,
-                          color: Colors.white,
-                          shadowColor: Colors.black,
-                          size: 5.w),
-                      activeIcon: FontAwesomeIcons.chevronLeft,
-                      buttonSize: 5.w * 2,
-                      direction: SpeedDialDirection.Up,
-                      visible: true,
-                      closeManually: false,
-                      curve: Curves.bounceIn,
-                      overlayColor: Colors.white,
-                      overlayOpacity: 0,
-                      onOpen: () => print('OPENING DIAL'),
-                      onClose: () => print('DIAL CLOSED'),
-                      tooltip: 'menu',
-                      heroTag: 'submenu' + widget.title,
-                      backgroundColor: Colors.transparent,
-                      foregroundColor: Colors.white,
-                      elevation: 0.0,
-                      shape: CircleBorder(),
-                      gradientBoxShape: BoxShape.circle,
-                      children: [
-                        SpeedDialChild(
-                            child: ShadowedIcon(
-                                icon: FontAwesomeIcons.comment,
-                                color: Colors.white,
-                                shadowColor: Colors.black,
-                                size: 5.w),
-                            foregroundColor: Colors.white,
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            // label: '',
-                            // labelStyle: TextStyle(fontSize: 14.0),
-                            // labelBackgroundColor: Colors.transparent,
-                            onTap: () {
-                              setState(() {
-                                if (!_showCommentInput) {
-                                  _showCommentInput = true;
-                                  _showVotingBars = false;
-                                  _userBloc.add(FetchDTCVPEvent());
-                                } else {
-                                  _showCommentInput = false;
-                                }
-                              });
-                            }),
-                        SpeedDialChild(
-                            child: ShadowedIcon(
-                                icon: FontAwesomeIcons.thumbsDown,
-                                color: Colors.white,
-                                shadowColor: Colors.black,
-                                size: 5.w),
-                            foregroundColor: Colors.white,
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            // label: '',
-                            // labelStyle: TextStyle(fontSize: 14.0),
-                            // labelBackgroundColor: Colors.transparent,
-                            onTap: () {
-                              setState(() {
-                                if (_showVotingBars && _votingDirection) {
-                                  _votingDirection = false;
-                                } else if (!_showVotingBars) {
-                                  _userBloc.add(FetchDTCVPEvent());
-                                  _showCommentInput = false;
-                                  _showVotingBars = true;
-                                  _votingDirection = false;
-                                } else if (_showVotingBars &&
-                                    !_votingDirection) {
-                                  _showVotingBars = false;
-                                }
-                              });
-                            }),
-                        SpeedDialChild(
-                            child: ShadowedIcon(
-                                icon: FontAwesomeIcons.thumbsUp,
-                                color: Colors.white,
-                                shadowColor: Colors.black,
-                                size: 5.w),
-                            foregroundColor: Colors.white,
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            // label: '',
-                            // labelStyle: TextStyle(fontSize: 14.0),
-                            // labelBackgroundColor: Colors.transparent,
-                            onTap: () {
-                              setState(() {
-                                if (_showVotingBars && _votingDirection) {
-                                  _showVotingBars = false;
-                                } else if (_showVotingBars &&
-                                    !_votingDirection) {
-                                  _votingDirection = true;
-                                } else if (!_showVotingBars) {
-                                  _userBloc.add(FetchDTCVPEvent());
-                                  _showCommentInput = false;
-                                  _showVotingBars = true;
-                                  _votingDirection = true;
-                                }
-                              });
-                            }),
-                      ]),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: SpeedDial(
+                        // icon: FontAwesomeIcons.bars,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 7.w),
+                          child: ShadowedIcon(
+                              icon: FontAwesomeIcons.ellipsisV,
+                              color: Colors.white,
+                              shadowColor: Colors.black,
+                              size: globalIconSizeSmall),
+                        ),
+                        activeChild: Padding(
+                          padding: EdgeInsets.only(left: 7.w),
+                          child: ShadowedIcon(
+                              icon: FontAwesomeIcons.sortDown,
+                              color: Colors.white,
+                              shadowColor: Colors.black,
+                              size: globalIconSizeSmall),
+                        ),
+                        buttonSize: globalIconSizeSmall * 2,
+                        useRotationAnimation: false,
+                        direction: SpeedDialDirection.Up,
+                        visible: true,
+                        spacing: 5.h,
+                        closeManually: false,
+                        curve: Curves.bounceIn,
+                        overlayColor: Colors.white,
+                        overlayOpacity: 0,
+                        onOpen: () => print('OPENING DIAL'),
+                        onClose: () => print('DIAL CLOSED'),
+                        tooltip: 'menu',
+                        heroTag: 'submenu' + widget.title,
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.white,
+                        elevation: 0.0,
+                        // shape: CircleBorder(),
+                        // gradientBoxShape: BoxShape.circle,
+                        children: [
+                          SpeedDialChild(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 7.w),
+                                child: ShadowedIcon(
+                                    icon: FontAwesomeIcons.comment,
+                                    color: Colors.white,
+                                    shadowColor: Colors.black,
+                                    size: globalIconSizeMedium),
+                              ),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              backgroundColor: Colors.transparent,
+                              // label: '',
+                              // labelStyle: TextStyle(fontSize: 14.0),
+                              // labelBackgroundColor: Colors.transparent,
+                              onTap: () {
+                                setState(() {
+                                  if (!_showCommentInput) {
+                                    _showCommentInput = true;
+                                    _showVotingBars = false;
+                                    _userBloc.add(FetchDTCVPEvent());
+                                  } else {
+                                    _showCommentInput = false;
+                                  }
+                                });
+                              }),
+                          SpeedDialChild(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 7.w),
+                                child: ShadowedIcon(
+                                    icon: FontAwesomeIcons.thumbsDown,
+                                    color: Colors.white,
+                                    shadowColor: Colors.black,
+                                    size: globalIconSizeMedium),
+                              ),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              backgroundColor: Colors.transparent,
+                              // label: '',
+                              // labelStyle: TextStyle(fontSize: 14.0),
+                              // labelBackgroundColor: Colors.transparent,
+                              onTap: () {
+                                setState(() {
+                                  if (_showVotingBars && _votingDirection) {
+                                    _votingDirection = false;
+                                  } else if (!_showVotingBars) {
+                                    _userBloc.add(FetchDTCVPEvent());
+                                    _showCommentInput = false;
+                                    _showVotingBars = true;
+                                    _votingDirection = false;
+                                  } else if (_showVotingBars &&
+                                      !_votingDirection) {
+                                    _showVotingBars = false;
+                                  }
+                                });
+                              }),
+                          SpeedDialChild(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 7.w),
+                                child: ShadowedIcon(
+                                    icon: FontAwesomeIcons.thumbsUp,
+                                    color: Colors.white,
+                                    shadowColor: Colors.black,
+                                    size: globalIconSizeMedium),
+                              ),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              backgroundColor: Colors.transparent,
+                              // label: '',
+                              // labelStyle: TextStyle(fontSize: 14.0),
+                              // labelBackgroundColor: Colors.transparent,
+                              onTap: () {
+                                setState(() {
+                                  if (_showVotingBars && _votingDirection) {
+                                    _showVotingBars = false;
+                                  } else if (_showVotingBars &&
+                                      !_votingDirection) {
+                                    _votingDirection = true;
+                                  } else if (!_showVotingBars) {
+                                    _userBloc.add(FetchDTCVPEvent());
+                                    _showCommentInput = false;
+                                    _showVotingBars = true;
+                                    _votingDirection = true;
+                                  }
+                                });
+                              }),
+                        ]),
+                  ),
                 ],
               ),
             ),
@@ -529,113 +592,6 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
           ),
         ),
         SizedBox(height: 2.h),
-
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: [
-        //     Transform.scale(
-        //       scale: 0.8,
-        //       alignment: Alignment.centerLeft,
-        //       child: InputChip(
-        //           label: Text(
-        //             '',
-        //           ),
-        //           avatar: Padding(
-        //             padding: const EdgeInsets.only(left: 8.0),
-        //             child: FaIcon(FontAwesomeIcons.comment,
-        //                 color: widget.alreadyVoted &&
-        //                         !widget.alreadyVotedDirection
-        //                     ? globalRed
-        //                     : Colors.grey),
-        //           ),
-        //           onPressed: () {
-        //             setState(() {
-        //               if (!_showCommentInput) {
-        //                 _showCommentInput = true;
-        //                 _showVotingBars = false;
-        //                 _userBloc.add(FetchDTCVPEvent());
-        //               } else {
-        //                 _showCommentInput = false;
-        //               }
-        //             });
-        //           }),
-        //     ),
-        //     Transform.scale(
-        //       scale: 0.8,
-        //       alignment: Alignment.centerRight,
-        //       child: Row(
-        //         children: [
-        //           InputChip(
-        //             label: Text(
-        //               widget.upvotesCount.toString(),
-        //               style: Theme.of(context).textTheme.bodyText1,
-        //             ),
-        //             avatar: Padding(
-        //               padding: const EdgeInsets.only(left: 4.0),
-        //               child: FaIcon(
-        //                 FontAwesomeIcons.thumbsUp,
-        //                 color: widget.alreadyVoted &&
-        //                         widget.alreadyVotedDirection
-        //                     ? globalRed
-        //                     : Colors.grey,
-        //               ),
-        //             ),
-        //             onPressed: () {
-        //               // if (!widget.alreadyVoted) {
-        //               //   navigateToPostDetailPage(context, widget.author,
-        //               //       widget.link, "upvote", false, () {});
-        //               // }
-        //               setState(() {
-        //                 if (_showVotingBars && _votingDirection) {
-        //                   _showVotingBars = false;
-        //                 } else if (_showVotingBars && !_votingDirection) {
-        //                   _votingDirection = true;
-        //                 } else if (!_showVotingBars) {
-        //                   _userBloc.add(FetchDTCVPEvent());
-        //                   _showCommentInput = false;
-        //                   _showVotingBars = true;
-        //                   _votingDirection = true;
-        //                 }
-        //               });
-        //             },
-        //           ),
-        //           SizedBox(
-        //             width: 8,
-        //           ),
-        //           InputChip(
-        //             label: Text(
-        //               widget.downvotesCount.toString(),
-        //               style: Theme.of(context).textTheme.bodyText1,
-        //             ),
-        //             avatar: Padding(
-        //               padding: const EdgeInsets.only(left: 4.0),
-        //               child: FaIcon(FontAwesomeIcons.thumbsDown,
-        //                   color: widget.alreadyVoted &&
-        //                           !widget.alreadyVotedDirection
-        //                       ? globalRed
-        //                       : Colors.grey),
-        //             ),
-        //             onPressed: () {
-        //               setState(() {
-        //                 if (_showVotingBars && _votingDirection) {
-        //                   _votingDirection = false;
-        //                 } else if (!_showVotingBars) {
-        //                   _userBloc.add(FetchDTCVPEvent());
-        //                   _showCommentInput = false;
-        //                   _showVotingBars = true;
-        //                   _votingDirection = false;
-        //                 } else if (_showVotingBars && !_votingDirection) {
-        //                   _showVotingBars = false;
-        //                 }
-        //               });
-        //             },
-        //           ),
-        //         ],
-        //       ),
-        //   ),
-        // ],
-        //),
       ],
     );
   }

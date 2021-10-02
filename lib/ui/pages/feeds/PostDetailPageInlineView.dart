@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/feeds/widgets/FullScreenButton.dart';
 
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
@@ -269,6 +270,7 @@ class _PostDetailsState extends State<PostDetails> {
                             defaultVotingTip: _defaultVoteTipPosts,
                             scale: 0.8,
                             isPost: true,
+                            iconColor: Colors.white,
                             focusVote: widget.directFocus);
                       } else {
                         return SizedBox(height: 0);

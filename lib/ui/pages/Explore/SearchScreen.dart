@@ -63,7 +63,7 @@ class SearchScreenState extends State<SearchScreen> {
     searchBloc = BlocProvider.of<SearchBloc>(context);
     searchTextController = TextEditingController();
     searchTextController.addListener(_sendRequest);
-    print("SEAAAARCH: " + search);
+
     super.initState();
     setState(() {
       searchTextController.text = search;
@@ -98,7 +98,7 @@ class SearchScreenState extends State<SearchScreen> {
         padding: EdgeInsets.zero,
         label: FaIcon(
           _searchEntityIcons[i],
-          size: Device.orientation == Orientation.portrait ? 5.w : 5.h,
+          size: globalIconSizeSmall,
           color: Colors.white,
         ),
         elevation: 0,
@@ -108,6 +108,7 @@ class SearchScreenState extends State<SearchScreen> {
         selectedColor: Colors.blue,
         onSelected: (bool selected) async {
           searchBloc.add(SetSearchInitialState());
+
           //Future.delayed(Duration(milliseconds: 500));
           setState(() {
             if (selected) {
@@ -152,7 +153,7 @@ class SearchScreenState extends State<SearchScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(
-                    width: 50.w,
+                    width: 60.w,
                     child: TextField(
                       controller: searchTextController,
                       decoration: InputDecoration(hintText: "Search"),
@@ -161,15 +162,14 @@ class SearchScreenState extends State<SearchScreen> {
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ),
-                  SizedBox(width: 30.w, child: _buildChips()),
+                  SizedBox(width: 40.w, child: _buildChips()),
                 ],
               ),
               _selectedEntity == 2
                   ? BlocBuilder<FeedBloc, FeedState>(builder: (context, state) {
-                      if (state is FeedInitialState){
-                         return buildBlank();
-                      }else if(
-                          state is FeedLoadingState) {
+                      if (state is FeedInitialState) {
+                        return buildBlank();
+                      } else if (state is FeedLoadingState) {
                         return buildLoading();
                       } else if (state is FeedLoadedState) {
                         hashtagResults = state.feed;
@@ -253,16 +253,6 @@ class SearchScreenState extends State<SearchScreen> {
                 vpBalance: searchResults.hits!.hits![pos].sSource!.vt! + 0.0,
               );
             case "Posts":
-              // return PostResultCard(
-              //   id: searchResults.hits!.hits![pos].sId,
-              //   author: searchResults.hits!.hits![pos].sSource!.author!,
-              //   dist: searchResults.hits!.hits![pos].sSource!.dist!,
-              //   link: searchResults.hits!.hits![pos].sSource!.link!,
-              //   tags: searchResults.hits!.hits![pos].sSource!.tags!,
-              //   title:
-              //       searchResults.hits!.hits![pos].sSource!.jsonstring!.title!,
-              //   ts: searchResults.hits!.hits![pos].sSource!.ts!,
-              // );
               return PostListCardLarge(
                 alreadyVoted:
                     searchResults.hits!.hits![pos].sSource!.alreadyVoted!,

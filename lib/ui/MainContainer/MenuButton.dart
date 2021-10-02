@@ -2,6 +2,7 @@ import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 
 import 'package:dtube_go/style/styledCustomWidgets.dart';
 
@@ -14,14 +15,14 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-Widget buildMainMenuSpeedDial(BuildContext context, double iconSize) {
+Widget buildMainMenuSpeedDial(BuildContext context) {
   List<SpeedDialChild> mainMenuButtonOptions = [
     SpeedDialChild(
         child: ShadowedIcon(
             icon: FontAwesomeIcons.wallet,
             color: Colors.white,
             shadowColor: Colors.black,
-            size: iconSize * 1.5),
+            size: globalIconSizeMedium),
         foregroundColor: Colors.white,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -41,7 +42,7 @@ Widget buildMainMenuSpeedDial(BuildContext context, double iconSize) {
             icon: FontAwesomeIcons.question,
             color: Colors.white,
             shadowColor: Colors.black,
-            size: iconSize * 1.5),
+            size: globalIconSizeMedium),
         foregroundColor: Colors.white,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -69,7 +70,7 @@ Widget buildMainMenuSpeedDial(BuildContext context, double iconSize) {
             icon: FontAwesomeIcons.cog,
             color: Colors.white,
             shadowColor: Colors.black,
-            size: iconSize * 1.5),
+            size: globalIconSizeMedium),
         foregroundColor: Colors.white,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -91,9 +92,9 @@ Widget buildMainMenuSpeedDial(BuildContext context, double iconSize) {
           icon: FontAwesomeIcons.bars,
           color: Colors.white,
           shadowColor: Colors.black,
-          size: iconSize),
+          size: globalIconSizeMedium),
       activeIcon: FontAwesomeIcons.chevronLeft,
-      //buttonSize: iconSize * 3,
+      //buttonSize: globalIconSizeMedium * 3,
       direction: SpeedDialDirection.Down,
       visible: true,
       closeManually: false,

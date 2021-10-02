@@ -1,3 +1,4 @@
+import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc.dart';
@@ -253,10 +254,13 @@ class _UserState extends State<UserPage> {
                           onTap: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return BlocProvider<UserBloc>(
-                                  create: (context) => UserBloc(
-                                      repository: UserRepositoryImpl()),
-                                  child: ProfileSettingsContainer());
+                              return BlocProvider<ThirdPartyUploaderBloc>(
+                                  create: (BuildContext context) =>
+                                      ThirdPartyUploaderBloc(
+                                          repository:
+                                              ThirdPartyUploaderRepositoryImpl()),
+                                  child: ProfileSettingsContainer(
+                                      userBloc: userBloc));
                             }));
                           }),
                       SizedBox(height: 3.h),

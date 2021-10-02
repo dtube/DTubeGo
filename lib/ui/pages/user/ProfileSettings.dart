@@ -15,7 +15,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileSettingsContainer extends StatefulWidget {
-  ProfileSettingsContainer({Key? key}) : super(key: key);
+  ProfileSettingsContainer({Key? key, required this.userBloc})
+      : super(key: key);
+  UserBloc userBloc;
 
   @override
   _ProfileSettingsContainerState createState() =>
@@ -52,7 +54,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
   @override
   void initState() {
     _tabController = new TabController(length: 2, vsync: this);
-    _userBloc = BlocProvider.of<UserBloc>(context);
+    _userBloc = widget.userBloc;
     _userBloc.add(FetchMyAccountDataEvent()); // statements;
     _displayNameController = TextEditingController(text: "");
     _locationController = TextEditingController(text: "");
@@ -67,9 +69,6 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       // Todo abstract this to dtubeSubAppBar
       appBar: AppBar(
@@ -81,297 +80,325 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
       resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
-          BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-            if (state is UserLoadingState) {
-              return Center(
-                child:
-                    DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3),
-              );
-            } else if (state is UserLoadedState) {
-              if (!_userDataLoaded) {
-                _userDataLoaded = true;
+          BlocBuilder<UserBloc, UserState>(
+              bloc: _userBloc,
+              builder: (context, state) {
+                if (state is UserLoadingState) {
+                  return Center(
+                    child: DTubeLogoPulse(
+                        size: MediaQuery.of(context).size.width / 3),
+                  );
+                } else if (state is UserLoadedState) {
+                  if (!_userDataLoaded) {
+                    _userDataLoaded = true;
 
-                _originalUserData = state.user;
-                _newUserData = state.user;
+                    _originalUserData = state.user;
+                    _newUserData = state.user;
 
-                if (_originalUserData.jsonString?.profile?.about != null) {
-                  _aboutController.text =
-                      _originalUserData.jsonString!.profile!.about!;
-                }
+                    if (_originalUserData.jsonString?.profile?.about != null) {
+                      _aboutController.text =
+                          _originalUserData.jsonString!.profile!.about!;
+                    }
 
-                if (_originalUserData.jsonString?.profile?.website != null) {
-                  _websiteController.text =
-                      _originalUserData.jsonString!.profile!.website!;
-                }
+                    if (_originalUserData.jsonString?.profile?.website !=
+                        null) {
+                      _websiteController.text =
+                          _originalUserData.jsonString!.profile!.website!;
+                    }
 
-                if (_originalUserData.jsonString?.profile?.location != null) {
-                  _locationController.text =
-                      _originalUserData.jsonString!.profile!.location!;
-                }
+                    if (_originalUserData.jsonString?.profile?.location !=
+                        null) {
+                      _locationController.text =
+                          _originalUserData.jsonString!.profile!.location!;
+                    }
 
-                if (_originalUserData.jsonString?.profile?.avatar != null) {
-                  _avatarController.text =
-                      _originalUserData.jsonString!.profile!.avatar!;
-                }
-                if (_originalUserData.jsonString?.profile?.coverImage != null) {
-                  _coverImageController.text =
-                      _originalUserData.jsonString!.profile!.coverImage!;
-                }
+                    if (_originalUserData.jsonString?.profile?.avatar != null) {
+                      _avatarController.text =
+                          _originalUserData.jsonString!.profile!.avatar!;
+                    }
+                    if (_originalUserData.jsonString?.profile?.coverImage !=
+                        null) {
+                      _coverImageController.text =
+                          _originalUserData.jsonString!.profile!.coverImage!;
+                    }
 
-                // additionals
-                if (_originalUserData.jsonString?.additionals?.displayName !=
-                    null) {
-                  _displayNameController.text =
-                      _originalUserData.jsonString!.additionals!.displayName!;
-                }
-                if (_originalUserData.jsonString?.additionals?.accountType !=
-                    null) {
-                  _accountType =
-                      _originalUserData.jsonString!.additionals!.accountType!;
-                }
-              }
+                    // additionals
+                    if (_originalUserData
+                            .jsonString?.additionals?.displayName !=
+                        null) {
+                      _displayNameController.text = _originalUserData
+                          .jsonString!.additionals!.displayName!;
+                    }
+                    if (_originalUserData
+                            .jsonString?.additionals?.accountType !=
+                        null) {
+                      _accountType = _originalUserData
+                          .jsonString!.additionals!.accountType!;
+                    }
+                  }
 
-              return Column(
-                children: [
-                  TabBar(
-                    unselectedLabelColor: Colors.grey,
-                    labelColor: globalAlmostWhite,
-                    indicatorColor: globalRed,
-                    tabs: [
-                      Tab(
-                        text: _settingsTypes[0],
-                      ),
-                      Tab(
-                        text: _settingsTypes[1],
-                      ),
-                    ],
-                    controller: _tabController,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TabBarView(
-                        children: [
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Basic data",
-                                    style:
-                                        Theme.of(context).textTheme.headline3,
-                                  ),
-                                ),
-                                DTubeFormCard(
-                                  childs: [
-                                    TextFormField(
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                      controller: _aboutController,
-                                      decoration:
-                                          new InputDecoration(labelText: "Bio"),
-                                      maxLines: 3,
-                                    ),
-                                    TextFormField(
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                      controller: _locationController,
-                                      decoration: new InputDecoration(
-                                          labelText: "Location"),
-                                      maxLines: 1,
-                                    ),
-                                    TextFormField(
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                      controller: _websiteController,
-                                      decoration: new InputDecoration(
-                                          labelText: "Website"),
-                                      maxLines: 1,
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Images",
-                                    style:
-                                        Theme.of(context).textTheme.headline3,
-                                  ),
-                                ),
-                                BlocProvider<ThirdPartyUploaderBloc>(
-                                  create: (BuildContext context) =>
-                                      ThirdPartyUploaderBloc(
-                                          repository:
-                                              ThirdPartyUploaderRepositoryImpl()),
-                                  child: DTubeFormCard(
-                                    childs: [
-                                      BlocBuilder<ThirdPartyUploaderBloc,
-                                              ThirdPartyUploaderState>(
-                                          builder: (context, state) {
-                                        if (state
-                                            is ThirdPartyUploaderUploadingState) {
-                                          return CircularProgressIndicator();
-                                        }
-                                        if (state
-                                            is ThirdPartyUploaderUploadedState) {
-                                          _avatarController.text =
-                                              state.uploadResponse;
-                                          return Column(
-                                            children: [
-                                              TextFormField(
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1,
-                                                controller: _avatarController,
-                                                decoration: new InputDecoration(
-                                                    labelText:
-                                                        "Avatar Image URL"),
-                                                maxLines: 1,
-                                              ),
-                                              UploadImageButton(),
-                                            ],
-                                          );
-                                        }
-                                        return Column(
-                                          children: [
-                                            TextFormField(
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1,
-                                              controller: _avatarController,
-                                              decoration: new InputDecoration(
-                                                  labelText:
-                                                      "Avatar Image URL"),
-                                              maxLines: 1,
-                                            ),
-                                            UploadImageButton(),
-                                          ],
-                                        );
-                                      }),
-                                    ],
-                                  ),
-                                ),
-                                BlocProvider<ThirdPartyUploaderBloc>(
-                                  create: (BuildContext context) =>
-                                      ThirdPartyUploaderBloc(
-                                          repository:
-                                              ThirdPartyUploaderRepositoryImpl()),
-                                  child: DTubeFormCard(
-                                    childs: [
-                                      BlocBuilder<ThirdPartyUploaderBloc,
-                                              ThirdPartyUploaderState>(
-                                          builder: (context, state) {
-                                        if (state
-                                            is ThirdPartyUploaderUploadingState) {
-                                          return CircularProgressIndicator();
-                                        }
-                                        if (state
-                                            is ThirdPartyUploaderUploadedState) {
-                                          _coverImageController.text =
-                                              state.uploadResponse;
-                                          return Column(
-                                            children: [
-                                              TextFormField(
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1,
-                                                controller:
-                                                    _coverImageController,
-                                                decoration: new InputDecoration(
-                                                    labelText:
-                                                        "Cover Image URL"),
-                                                maxLines: 1,
-                                              ),
-                                              UploadImageButton(),
-                                            ],
-                                          );
-                                        }
-                                        return Column(
-                                          children: [
-                                            TextFormField(
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1,
-                                              controller: _coverImageController,
-                                              decoration: new InputDecoration(
-                                                  labelText: "Cover Image URL"),
-                                              maxLines: 1,
-                                            ),
-                                            UploadImageButton(),
-                                          ],
-                                        );
-                                      }),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 100,
-                                )
-                              ],
-                            ),
+                  return Column(
+                    children: [
+                      TabBar(
+                        unselectedLabelColor: Colors.grey,
+                        labelColor: globalAlmostWhite,
+                        indicatorColor: globalRed,
+                        tabs: [
+                          Tab(
+                            text: _settingsTypes[0],
                           ),
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, bottom: 8.0),
-                                  child: Text("Custom Type",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1),
-                                ),
-                                DTubeFormCard(
-                                  childs: [
-                                    TextFormField(
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                      controller: _displayNameController,
-                                      decoration: new InputDecoration(
-                                          labelText: "Custom Display Name"),
-                                      maxLines: 1,
-                                    ),
-                                    DropdownButtonFormField(
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                      decoration: InputDecoration(
-                                        labelText: 'Account Type',
-                                      ),
-                                      value: _accountType,
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          _accountType = newValue.toString();
-                                          // widget.justSaved = false;
-                                        });
-                                      },
-                                      items: _accountTypes.map((option) {
-                                        return DropdownMenuItem(
-                                          child: new Text(option),
-                                          value: option,
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                          Tab(
+                            text: _settingsTypes[1],
                           ),
                         ],
                         controller: _tabController,
+                        indicatorSize: TabBarIndicatorSize.tab,
                       ),
-                    ),
-                  ),
-                ],
-              );
-            } else if (state is UserErrorState) {
-              return buildErrorUi(state.message);
-            }
-            return Center(
-                child: DTubeLogoPulse(
-                    size: MediaQuery.of(context).size.width / 3));
-          }),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TabBarView(
+                            children: [
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Basic data",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline3,
+                                      ),
+                                    ),
+                                    DTubeFormCard(
+                                      childs: [
+                                        TextFormField(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                          controller: _aboutController,
+                                          cursorColor: Colors.red,
+                                          decoration: new InputDecoration(
+                                              labelText: "Bio"),
+                                          maxLines: 3,
+                                        ),
+                                        TextFormField(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                          controller: _locationController,
+                                          cursorColor: Colors.red,
+                                          decoration: new InputDecoration(
+                                              labelText: "Location"),
+                                          maxLines: 1,
+                                        ),
+                                        TextFormField(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                          controller: _websiteController,
+                                          cursorColor: Colors.red,
+                                          decoration: new InputDecoration(
+                                              labelText: "Website"),
+                                          maxLines: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Images",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline3,
+                                      ),
+                                    ),
+                                    BlocProvider<ThirdPartyUploaderBloc>(
+                                      create: (BuildContext context) =>
+                                          ThirdPartyUploaderBloc(
+                                              repository:
+                                                  ThirdPartyUploaderRepositoryImpl()),
+                                      child: DTubeFormCard(
+                                        childs: [
+                                          BlocBuilder<ThirdPartyUploaderBloc,
+                                                  ThirdPartyUploaderState>(
+                                              builder: (context, state) {
+                                            if (state
+                                                is ThirdPartyUploaderUploadingState) {
+                                              return CircularProgressIndicator();
+                                            }
+                                            if (state
+                                                is ThirdPartyUploaderUploadedState) {
+                                              _avatarController.text =
+                                                  state.uploadResponse;
+                                              return Column(
+                                                children: [
+                                                  TextFormField(
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText1,
+                                                    controller:
+                                                        _avatarController,
+                                                    cursorColor: Colors.red,
+                                                    decoration: new InputDecoration(
+                                                        labelText:
+                                                            "Avatar Image URL"),
+                                                    maxLines: 1,
+                                                  ),
+                                                  UploadImageButton(),
+                                                ],
+                                              );
+                                            }
+                                            return Column(
+                                              children: [
+                                                TextFormField(
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1,
+                                                  controller: _avatarController,
+                                                  cursorColor: Colors.red,
+                                                  decoration: new InputDecoration(
+                                                      labelText:
+                                                          "Avatar Image URL"),
+                                                  maxLines: 1,
+                                                ),
+                                                UploadImageButton(),
+                                              ],
+                                            );
+                                          }),
+                                        ],
+                                      ),
+                                    ),
+                                    BlocProvider<ThirdPartyUploaderBloc>(
+                                      create: (BuildContext context) =>
+                                          ThirdPartyUploaderBloc(
+                                              repository:
+                                                  ThirdPartyUploaderRepositoryImpl()),
+                                      child: DTubeFormCard(
+                                        childs: [
+                                          BlocBuilder<ThirdPartyUploaderBloc,
+                                                  ThirdPartyUploaderState>(
+                                              builder: (context, state) {
+                                            if (state
+                                                is ThirdPartyUploaderUploadingState) {
+                                              return CircularProgressIndicator();
+                                            }
+                                            if (state
+                                                is ThirdPartyUploaderUploadedState) {
+                                              _coverImageController.text =
+                                                  state.uploadResponse;
+                                              return Column(
+                                                children: [
+                                                  TextFormField(
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText1,
+                                                    cursorColor: Colors.red,
+                                                    controller:
+                                                        _coverImageController,
+                                                    decoration:
+                                                        new InputDecoration(
+                                                            labelText:
+                                                                "Cover Image URL"),
+                                                    maxLines: 1,
+                                                  ),
+                                                  UploadImageButton(),
+                                                ],
+                                              );
+                                            }
+                                            return Column(
+                                              children: [
+                                                TextFormField(
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1,
+                                                  controller:
+                                                      _coverImageController,
+                                                  cursorColor: Colors.red,
+                                                  decoration:
+                                                      new InputDecoration(
+                                                          labelText:
+                                                              "Cover Image URL"),
+                                                  maxLines: 1,
+                                                ),
+                                                UploadImageButton(),
+                                              ],
+                                            );
+                                          }),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 100,
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 16.0, bottom: 8.0),
+                                      child: Text("Custom Type",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1),
+                                    ),
+                                    DTubeFormCard(
+                                      childs: [
+                                        TextFormField(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                          controller: _displayNameController,
+                                          cursorColor: Colors.red,
+                                          decoration: new InputDecoration(
+                                              labelText: "Custom Display Name"),
+                                          maxLines: 1,
+                                        ),
+                                        DropdownButtonFormField(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                          decoration: InputDecoration(
+                                            labelText: 'Account Type',
+                                          ),
+                                          value: _accountType,
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              _accountType =
+                                                  newValue.toString();
+                                              // widget.justSaved = false;
+                                            });
+                                          },
+                                          items: _accountTypes.map((option) {
+                                            return DropdownMenuItem(
+                                              child: new Text(option),
+                                              value: option,
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                            controller: _tabController,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                } else if (state is UserErrorState) {
+                  return buildErrorUi(state.message);
+                }
+                return Center(
+                    child: DTubeLogoPulse(
+                        size: MediaQuery.of(context).size.width / 3));
+              }),
           // Save button
           Align(
             alignment: Alignment.bottomRight,

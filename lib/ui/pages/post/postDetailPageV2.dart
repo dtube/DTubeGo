@@ -1,5 +1,9 @@
+import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/MainContainer/NavigationContainerV2.dart';
 import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
+import 'package:dtube_go/ui/widgets/GiftDialog.dart';
+import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/TagChip.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -213,199 +217,223 @@ class _PostDetailsState extends State<PostDetails> {
       },
       child: YoutubePlayerControllerProvider(
           controller: _controller,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(top: 5.h),
-              child: Stack(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        MediaQuery.of(context).orientation ==
-                                Orientation.landscape
-                            ? SizedBox(height: 0)
-                            : Column(
-                                children: [
-                                  Container(
-                                    alignment: Alignment.topRight,
-                                    margin: EdgeInsets.all(5.0),
-                                    child: InputChip(
-                                      label: AccountAvatarBase(
-                                        username: widget.post.author,
-                                        avatarSize: 50,
-                                        showVerified: true,
-                                        showName: true,
-                                        width: 25.w,
+          child: Container(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(top: 5.h),
+                child: Stack(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          MediaQuery.of(context).orientation ==
+                                  Orientation.landscape
+                              ? SizedBox(height: 0)
+                              : Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.topRight,
+                                      margin: EdgeInsets.all(5.0),
+                                      child: InputChip(
+                                        label: AccountAvatarBase(
+                                          username: widget.post.author,
+                                          avatarSize: 50,
+                                          showVerified: true,
+                                          showName: true,
+                                          width: 40.w,
+                                        ),
+                                        onPressed: () {
+                                          navigateToUserDetailPage(context,
+                                              widget.post.author, () {});
+                                        },
                                       ),
-                                      onPressed: () {
-                                        navigateToUserDetailPage(
-                                            context, widget.post.author, () {});
-                                      },
                                     ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    padding: EdgeInsets.all(10.0),
-                                    child: Text(
-                                      widget.post.jsonString!.title,
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                        widget.post.videoSource == "youtube"
-                            ? player
-                            : ["ipfs", "sia"].contains(widget.post.videoSource)
-                                ? BP(
-                                    videoUrl: widget.post.videoUrl!,
-                                    autoplay: !(widget.directFocus != "none"),
-                                    looping: false,
-                                    localFile: false,
-                                    controls: true,
-                                    usedAsPreview: false,
-                                    allowFullscreen: true,
-                                    portraitVideoPadding: 50.0,
-                                  )
-                                : Text("no player detected"),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            widget.post.tags.length > 0
-                                ? Row(
-                                    children: [
-                                      widget.post.jsonString!.oc == 1
-                                          ? SizedBox(
-                                              width: 23,
-                                              child: FaIcon(
-                                                  FontAwesomeIcons.award))
-                                          : SizedBox(width: 0),
-                                      Container(
-                                        width: 60.w,
-                                        height: 50,
-                                        child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: widget.post.tags.length,
-                                            itemBuilder: (context, index) {
-                                              return Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 8.0),
-                                                child: TagChip(
-                                                    width: 10.w,
-                                                    tagName: widget
-                                                        .post.tags[index]
-                                                        .toString()
-                                                    // label: Text(
-                                                    //     ,
-                                                    //     style: Theme.of(context)
-                                                    //         .textTheme
-                                                    //         .bodyText2)
-                                                    ),
-                                              );
-                                            }),
+                                    Container(
+                                      alignment: Alignment.topLeft,
+                                      padding: EdgeInsets.all(10.0),
+                                      child: Text(
+                                        widget.post.jsonString!.title,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
                                       ),
-                                    ],
-                                  )
-                                : SizedBox(height: 0),
-                            Text(
-                                (widget.post.dist / 100).round().toString() +
-                                    " DTC",
-                                style: Theme.of(context).textTheme.bodyText1),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            BlocBuilder<SettingsBloc, SettingsState>(
-                                builder: (context, state) {
-                              if (state is SettingsLoadedState) {
-                                _defaultVoteWeightPosts = double.parse(state
-                                    .settings[settingKey_defaultVotingWeight]!);
-                                _defaultVoteTipPosts = double.parse(state
-                                    .settings[settingKey_defaultVotingWeight]!);
-                                _defaultVoteWeightComments = double.parse(state
-                                        .settings[
-                                    settingKey_defaultVotingWeightComments]!);
-                                return VotingButtons(
-                                    author: widget.post.author,
-                                    link: widget.post.link,
-                                    alreadyVoted: widget.post.alreadyVoted!,
-                                    alreadyVotedDirection:
-                                        widget.post.alreadyVotedDirection!,
-                                    upvotes: widget.post.upvotes,
-                                    downvotes: widget.post.downvotes,
-                                    defaultVotingWeight:
-                                        _defaultVoteWeightPosts,
-                                    defaultVotingTip: _defaultVoteTipPosts,
-                                    scale: 0.8,
-                                    isPost: true,
-                                    focusVote: widget.directFocus);
-                              } else {
-                                return SizedBox(height: 0);
-                              }
-                            }),
-                          ],
-                        ),
-                        CollapsedDescription(
-                            description: widget.post.jsonString!.desc != null
-                                ? widget.post.jsonString!.desc!
-                                : ""),
-                        Divider(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            InputChip(
-                              label: FaIcon(FontAwesomeIcons.shareAlt),
-                              onPressed: () {
-                                Share.share('https://d.tube/#!/v/' +
-                                    widget.post.author +
-                                    '/' +
-                                    widget.post.link);
-                              },
-                            ),
-                            SizedBox(width: 8),
-                            ReplyButton(
-                              icon: FaIcon(FontAwesomeIcons.comment),
-                              author: widget.post.author,
-                              link: widget.post.link,
-                              parentAuthor: widget.post.author,
-                              parentLink: widget.post.link,
-                              votingWeight: _defaultVoteWeightComments,
-                              scale: 1,
-                              focusOnNewComment:
-                                  widget.directFocus == "newcomment",
-                            ),
-                          ],
-                        ),
-                        // SizedBox(height: 16),
-                        widget.post.comments != null &&
-                                widget.post.comments!.length > 0
-                            ? Container(
-                                height: 200.w,
-                                child: ListView.builder(
-                                  itemCount: widget.post.comments!.length,
-                                  padding: EdgeInsets.zero,
-                                  itemBuilder:
-                                      (BuildContext context, int index) =>
-                                          CommentDisplay(
-                                              widget.post.comments![index],
-                                              _defaultVoteWeightComments,
-                                              _currentVT,
-                                              widget.post.author,
-                                              widget.post.link,
-                                              _defaultVoteTipComments,
-                                              context),
+                                    ),
+                                  ],
                                 ),
-                              )
-                            : SizedBox(height: 0),
-                        SizedBox(height: 200)
-                      ],
+                          widget.post.videoSource == "youtube"
+                              ? player
+                              : ["ipfs", "sia"]
+                                      .contains(widget.post.videoSource)
+                                  ? BP(
+                                      videoUrl: widget.post.videoUrl!,
+                                      autoplay: !(widget.directFocus != "none"),
+                                      looping: false,
+                                      localFile: false,
+                                      controls: true,
+                                      usedAsPreview: false,
+                                      allowFullscreen: true,
+                                      portraitVideoPadding: 50.0,
+                                    )
+                                  : Text("no player detected"),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              widget.post.tags.length > 0
+                                  ? Row(
+                                      children: [
+                                        widget.post.jsonString!.oc == 1
+                                            ? SizedBox(
+                                                width: globalIconSizeSmall,
+                                                child: FaIcon(
+                                                    FontAwesomeIcons.award,
+                                                    size: globalIconSizeSmall))
+                                            : SizedBox(width: 0),
+                                        Container(
+                                          width: 60.w,
+                                          height: 5.h,
+                                          child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount:
+                                                  widget.post.tags.length,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 8.0),
+                                                  child: TagChip(
+                                                      width: 20.w,
+                                                      tagName: widget
+                                                          .post.tags[index]
+                                                          .toString()),
+                                                );
+                                              }),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox(height: 0),
+                              Text(
+                                  (widget.post.dist / 100).round().toString() +
+                                      " DTC",
+                                  style: Theme.of(context).textTheme.bodyText1),
+                            ],
+                          ),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              BlocBuilder<SettingsBloc, SettingsState>(
+                                  builder: (context, state) {
+                                if (state is SettingsLoadedState) {
+                                  _defaultVoteWeightPosts = double.parse(
+                                      state.settings[
+                                          settingKey_defaultVotingWeight]!);
+                                  _defaultVoteTipPosts = double.parse(
+                                      state.settings[
+                                          settingKey_defaultVotingWeight]!);
+                                  _defaultVoteWeightComments = double.parse(state
+                                          .settings[
+                                      settingKey_defaultVotingWeightComments]!);
+                                  return VotingButtons(
+                                      author: widget.post.author,
+                                      link: widget.post.link,
+                                      alreadyVoted: widget.post.alreadyVoted!,
+                                      alreadyVotedDirection:
+                                          widget.post.alreadyVotedDirection!,
+                                      upvotes: widget.post.upvotes,
+                                      downvotes: widget.post.downvotes,
+                                      defaultVotingWeight:
+                                          _defaultVoteWeightPosts,
+                                      defaultVotingTip: _defaultVoteTipPosts,
+                                      scale: 0.8,
+                                      isPost: true,
+                                      iconColor: Colors.white,
+                                      focusVote: widget.directFocus);
+                                } else {
+                                  return SizedBox(height: 0);
+                                }
+                              }),
+                              SizedBox(width: 8),
+                              InputChip(
+                                label: FaIcon(FontAwesomeIcons.gift),
+                                onPressed: () {
+                                  showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        GiftDialog(
+                                      txBloc: BlocProvider.of<TransactionBloc>(
+                                          context),
+                                      receiver: widget.post.author,
+                                      originLink: widget.post.link,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          CollapsedDescription(
+                              description: widget.post.jsonString!.desc != null
+                                  ? widget.post.jsonString!.desc!
+                                  : ""),
+                          Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InputChip(
+                                label: FaIcon(FontAwesomeIcons.shareAlt),
+                                onPressed: () {
+                                  Share.share('https://d.tube/#!/v/' +
+                                      widget.post.author +
+                                      '/' +
+                                      widget.post.link);
+                                },
+                              ),
+                              SizedBox(width: 8),
+                              ReplyButton(
+                                icon: FaIcon(FontAwesomeIcons.comment),
+                                author: widget.post.author,
+                                link: widget.post.link,
+                                parentAuthor: widget.post.author,
+                                parentLink: widget.post.link,
+                                votingWeight: _defaultVoteWeightComments,
+                                scale: 1,
+                                focusOnNewComment:
+                                    widget.directFocus == "newcomment",
+                              ),
+                            ],
+                          ),
+                          // SizedBox(height: 16),
+                          widget.post.comments != null &&
+                                  widget.post.comments!.length > 0
+                              ? Container(
+                                  height: 200.w,
+                                  child: ListView.builder(
+                                    itemCount: widget.post.comments!.length,
+                                    padding: EdgeInsets.zero,
+                                    itemBuilder:
+                                        (BuildContext context, int index) =>
+                                            CommentDisplay(
+                                                widget.post.comments![index],
+                                                _defaultVoteWeightComments,
+                                                _currentVT,
+                                                widget.post.author,
+                                                widget.post.link,
+                                                _defaultVoteTipComments,
+                                                context),
+                                  ),
+                                )
+                              : SizedBox(height: 0),
+                          SizedBox(height: 200)
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           )),

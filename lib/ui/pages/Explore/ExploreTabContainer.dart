@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/style/dtubeLoading.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -60,17 +61,15 @@ class _ExploreMainPageState extends State<ExploreMainPage>
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       body: FutureBuilder(
         future: getExploreTags(),
-        builder: (context, projectSnap) {
-          if (projectSnap.connectionState == ConnectionState.none ||
-              projectSnap.connectionState == ConnectionState.waiting) {
+        builder: (context, exploreTagsSnapshot) {
+          if (exploreTagsSnapshot.connectionState == ConnectionState.none ||
+              exploreTagsSnapshot.connectionState == ConnectionState.waiting) {
             //print('project snapshot data is: ${projectSnap.data}');
-            return DTubeLogoPulse(size: 40.w);
+            return Container();
           }
 
           return Stack(
@@ -118,7 +117,7 @@ class _ExploreMainPageState extends State<ExploreMainPage>
                   padding: EdgeInsets.only(top: 11.h, right: 4.w),
                   //padding: EdgeInsets.only(top: 5.h),
                   child: Container(
-                    width: 17.w,
+                    width: globalIconSizeMedium * 3,
                     //color: Colors.black.withAlpha(20),
                     child: TabBar(
                       unselectedLabelColor: Colors.white,
@@ -127,23 +126,17 @@ class _ExploreMainPageState extends State<ExploreMainPage>
                       tabs: [
                         Tab(
                           child: ShadowedIcon(
-                            icon: _tabIcons[0],
-                            color: Colors.white,
-                            shadowColor: Colors.black,
-                            size: Device.orientation == Orientation.portrait
-                                ? 5.w
-                                : 5.h,
-                          ),
+                              icon: _tabIcons[0],
+                              color: Colors.white,
+                              shadowColor: Colors.black,
+                              size: globalIconSizeMedium),
                         ),
                         Tab(
                           child: ShadowedIcon(
-                            icon: _tabIcons[1],
-                            color: Colors.white,
-                            shadowColor: Colors.black,
-                            size: Device.orientation == Orientation.portrait
-                                ? 5.w
-                                : 5.h,
-                          ),
+                              icon: _tabIcons[1],
+                              color: Colors.white,
+                              shadowColor: Colors.black,
+                              size: globalIconSizeMedium),
                         ),
                       ],
                       controller: _tabController,
