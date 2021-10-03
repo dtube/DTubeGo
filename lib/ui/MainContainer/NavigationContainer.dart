@@ -22,7 +22,7 @@ import 'package:dtube_go/ui/pages/upload/uploaderTabContainer.dart';
 import 'package:dtube_go/ui/pages/user/User.dart';
 
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
-import 'package:dtube_go/ui/widgets/customSnackbar.dart';
+import 'package:dtube_go/ui/widgets/system/customSnackbar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,8 +1,8 @@
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/ui/widgets/tags/TagList.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_go/ui/widgets/TagList.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

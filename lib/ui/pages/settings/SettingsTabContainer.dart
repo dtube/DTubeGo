@@ -1,6 +1,4 @@
 import 'package:dtube_go/res/appConfigValues.dart';
-import 'package:dtube_go/ui/widgets/TagChip.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';

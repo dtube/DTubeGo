@@ -50,11 +50,16 @@ class AppConfig {
   static String ipfsSnapUrl = 'https://snap1.d.tube/ipfs/';
   static String ipfsSnapUploadUrl = 'https://snap1.d.tube';
 
+  static Duration nodeDescoveryTimeout = Duration(seconds: 3);
+
   static bool useDevNodes =
       true; //activate for new features which has not been integrated
 
 // development nodes for new features
-  static List<String> apiNodesDev = ['https://dtube.club/mainnetapi'];
+  static List<String> apiNodesDev = [
+    'https://dtube.club/mainnetapi',
+    'https://avalon.tibfox.com'
+  ];
 
   // common api nodes
   static List<String> apiNodes = [

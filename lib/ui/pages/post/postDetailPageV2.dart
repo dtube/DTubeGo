@@ -2,9 +2,9 @@ import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
 import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
-import 'package:dtube_go/ui/widgets/GiftDialog.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
-import 'package:dtube_go/ui/widgets/TagChip.dart';
+import 'package:dtube_go/ui/widgets/gifts/GiftBoxWidget.dart';
+import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/utils/navigationShortcuts.dart';
@@ -358,20 +358,11 @@ class _PostDetailsState extends State<PostDetails> {
                                 }
                               }),
                               SizedBox(width: 8),
-                              InputChip(
-                                label: FaIcon(FontAwesomeIcons.gift),
-                                onPressed: () {
-                                  showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        GiftDialog(
-                                      txBloc: BlocProvider.of<TransactionBloc>(
-                                          context),
-                                      receiver: widget.post.author,
-                                      originLink: widget.post.link,
-                                    ),
-                                  );
-                                },
+                              GiftboxWidget(
+                                receiver: widget.post.author,
+                                link: widget.post.link,
+                                txBloc:
+                                    BlocProvider.of<TransactionBloc>(context),
                               ),
                             ],
                           ),

@@ -5,7 +5,8 @@ import 'package:dtube_go/style/styledCustomWidgets.dart';
 
 import 'package:dtube_go/ui/pages/feeds/widgets/FullScreenButton.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
-import 'package:dtube_go/ui/widgets/TagChip.dart';
+import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -81,12 +82,15 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
   double _tagSpace = 20.w;
   bool _thumbnailTapped = false;
   TextEditingController _replyController = new TextEditingController();
+  TextEditingController _giftMemoController = new TextEditingController();
+  TextEditingController _giftDTCController = new TextEditingController();
 
   late bool _showVotingBars;
 
-  late bool _votingDirection;
+  late bool _votingDirection; // true = upvote | false = downvote
 
-  late bool _showCommentInput; // true = upvote | false = downvote
+  late bool _showCommentInput;
+  late bool _showGiftInput;
 
   late UserBloc _userBloc;
   int _currentVp = 0;
@@ -97,6 +101,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
     _showVotingBars = false;
     _votingDirection = true;
     _showCommentInput = false;
+    _showGiftInput = false;
     _userBloc = BlocProvider.of<UserBloc>(context);
   }
 
@@ -173,6 +178,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                           : Text("no player detected"),
                 ),
               ),
+              // VOTING DIALOG
               Visibility(
                   visible: _showVotingBars,
                   child: AspectRatio(
@@ -206,6 +212,11 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                   downvote: !_votingDirection,
                                   currentVT: _currentVp + 0.0,
                                   isPost: true,
+                                  cancelCallback: () {
+                                    setState(() {
+                                      _showVotingBars = false;
+                                    });
+                                  },
                                 ),
                               ),
                             ),
@@ -214,6 +225,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                       ),
                     ),
                   )),
+              // COMMENT DIALOG
               Visibility(
                   visible: _showCommentInput,
                   child: AspectRatio(
@@ -245,24 +257,12 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                             Container(
                               width: 80.w,
                               child: Padding(
-                                padding: EdgeInsets.all(5.w),
-                                child: TextField(
-                                  //key: UniqueKey(),
-                                  autofocus: _showCommentInput,
-                                  controller: _replyController,
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                  cursorColor: globalRed,
-                                  maxLines: 4,
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Share some feedback',
-                                      floatingLabelBehavior:
-                                          FloatingLabelBehavior.always,
-                                      labelStyle: Theme.of(context)
-                                          .textTheme
-                                          .headline5),
-                                ),
-                              ),
+                                  padding: EdgeInsets.all(5.w),
+                                  child: OverlayTextInput(
+                                    autoFocus: _showCommentInput,
+                                    label: 'Share some feedback',
+                                    textEditingController: _replyController,
+                                  )),
                             ),
                             BlocBuilder<UserBloc, UserState>(
                                 bloc: _userBloc,
@@ -359,6 +359,140 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                       ),
                     ),
                   )),
+              // GIFT DIALOG
+              Visibility(
+                  visible: _showGiftInput,
+                  child: AspectRatio(
+                    aspectRatio: 8 / 5,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        //color: Colors.black.withAlpha(95),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            gradient: LinearGradient(
+                                begin: FractionalOffset.topCenter,
+                                end: FractionalOffset.bottomCenter,
+                                colors: [
+                                  Colors.black.withOpacity(0.0),
+                                  Colors.black.withAlpha(95),
+                                  Colors.black.withAlpha(95),
+                                  Colors.black.withOpacity(0.0),
+                                ],
+                                stops: [
+                                  0.0,
+                                  0.2,
+                                  0.8,
+                                  1.0
+                                ])),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                SizedBox(height: 5.h),
+                                Container(
+                                  width: 80.w,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 40.w,
+                                        child: OverlayNumberInput(
+                                          autoFocus: _showGiftInput,
+                                          textEditingController:
+                                              _giftDTCController,
+                                          label: "your gift",
+                                        ),
+                                      ),
+                                      Text(" DTC",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5)
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  width: 80.w,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(5.w),
+                                    child: OverlayTextInput(
+                                        autoFocus: false,
+                                        textEditingController:
+                                            _giftMemoController,
+                                        label: "Add some kind words"),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                InputChip(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () async {
+                                    String _memo = "";
+
+                                    if (widget.link != "") {
+                                      _memo =
+                                          "Gift sent through https://d.tube/#!/v/${widget.author}/${widget.link!}";
+                                      if (_giftMemoController.value.text !=
+                                          "") {
+                                        _memo = _memo +
+                                            ": ${_giftMemoController.value.text}";
+                                      }
+                                    } else {
+                                      _memo = _giftMemoController.value.text;
+                                    }
+                                    TxData txdata = TxData(
+                                        receiver: widget.author,
+                                        amount: (double.parse(_giftDTCController
+                                                    .value.text) *
+                                                100)
+                                            .floor(),
+                                        memo: _memo);
+                                    Transaction newTx =
+                                        Transaction(type: 3, data: txdata);
+                                    BlocProvider.of<TransactionBloc>(context)
+                                        .add(
+                                            SignAndSendTransactionEvent(newTx));
+                                    setState(() {
+                                      _showGiftInput = false;
+                                    });
+                                  },
+                                  backgroundColor: globalRed,
+                                  label: Padding(
+                                    padding:
+                                        EdgeInsets.all(globalIconSizeBig / 4),
+                                    child: FaIcon(
+                                      FontAwesomeIcons.paperPlane,
+                                      size: globalIconSizeBig,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 2.h),
+                                  child: InputChip(
+                                    label: Text(
+                                      "cancel",
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _showGiftInput = false;
+                                      });
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )),
+
               Align(
                 alignment: Alignment.topRight,
                 child: Padding(
@@ -437,7 +571,6 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: SpeedDial(
-                        // icon: FontAwesomeIcons.bars,
                         child: Padding(
                           padding: EdgeInsets.only(left: 7.w),
                           child: ShadowedIcon(
@@ -458,7 +591,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                         useRotationAnimation: false,
                         direction: SpeedDialDirection.Up,
                         visible: true,
-                        spacing: 5.h,
+                        spacing: 0.0,
                         closeManually: false,
                         curve: Curves.bounceIn,
                         overlayColor: Colors.white,
@@ -470,9 +603,8 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                         backgroundColor: Colors.transparent,
                         foregroundColor: Colors.white,
                         elevation: 0.0,
-                        // shape: CircleBorder(),
-                        // gradientBoxShape: BoxShape.circle,
                         children: [
+                          // COMMENT BUTTON
                           SpeedDialChild(
                               child: Padding(
                                 padding: EdgeInsets.only(left: 7.w),
@@ -485,9 +617,6 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                               foregroundColor: Colors.white,
                               elevation: 0,
                               backgroundColor: Colors.transparent,
-                              // label: '',
-                              // labelStyle: TextStyle(fontSize: 14.0),
-                              // labelBackgroundColor: Colors.transparent,
                               onTap: () {
                                 setState(() {
                                   if (!_showCommentInput) {
@@ -499,6 +628,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                   }
                                 });
                               }),
+                          // DOWNVOTE BUTTON
                           SpeedDialChild(
                               child: Padding(
                                 padding: EdgeInsets.only(left: 7.w),
@@ -511,9 +641,6 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                               foregroundColor: Colors.white,
                               elevation: 0,
                               backgroundColor: Colors.transparent,
-                              // label: '',
-                              // labelStyle: TextStyle(fontSize: 14.0),
-                              // labelBackgroundColor: Colors.transparent,
                               onTap: () {
                                 setState(() {
                                   if (_showVotingBars && _votingDirection) {
@@ -529,6 +656,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                   }
                                 });
                               }),
+                          // UPVOTE BUTTON
                           SpeedDialChild(
                               child: Padding(
                                 padding: EdgeInsets.only(left: 7.w),
@@ -541,9 +669,6 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                               foregroundColor: Colors.white,
                               elevation: 0,
                               backgroundColor: Colors.transparent,
-                              // label: '',
-                              // labelStyle: TextStyle(fontSize: 14.0),
-                              // labelBackgroundColor: Colors.transparent,
                               onTap: () {
                                 setState(() {
                                   if (_showVotingBars && _votingDirection) {
@@ -556,6 +681,29 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                     _showCommentInput = false;
                                     _showVotingBars = true;
                                     _votingDirection = true;
+                                  }
+                                });
+                              }),
+                          // GIFT BUTTON
+                          SpeedDialChild(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 7.w),
+                                child: ShadowedIcon(
+                                    icon: FontAwesomeIcons.gift,
+                                    color: Colors.white,
+                                    shadowColor: Colors.black,
+                                    size: globalIconSizeMedium),
+                              ),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              backgroundColor: Colors.transparent,
+                              onTap: () {
+                                setState(() {
+                                  if (!_showGiftInput) {
+                                    _userBloc.add(FetchDTCVPEvent());
+                                    _showCommentInput = false;
+                                    _showVotingBars = false;
+                                    _showGiftInput = true;
                                   }
                                 });
                               }),

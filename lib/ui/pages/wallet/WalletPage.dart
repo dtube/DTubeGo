@@ -2,7 +2,7 @@ import 'package:dtube_go/bloc/rewards/rewards_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/wallet/transferDialog.dart';
-import 'package:dtube_go/ui/widgets/customSnackbar.dart';
+import 'package:dtube_go/ui/widgets/system/customSnackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -98,32 +98,10 @@ class _WalletHistoryListState extends State<WalletHistoryList> {
   void initState() {
     super.initState();
     _transactionBloc = BlocProvider.of<TransactionBloc>(context);
-    // _rewardsBloc.add(FetchRewardsEvent(rewardState: widget.rewardsState));
   }
 
   @override
   Widget build(BuildContext context) {
-    // return BlocBuilder<RewardsBloc, RewardsState>(
-    //   builder: (context, state) {
-    //     if (state is RewardsLoadingState) {
-    //       return Center(child: DTubeLogoPulse());
-    //     }
-    //     if (state is RewardsLoadedState) {
-    //       List<Reward> _rewards = state.rewardList;
-    //       return ListView.builder(
-    //           padding: EdgeInsets.zero,
-    //           shrinkWrap: true,
-    //           physics: ClampingScrollPhysics(),
-    //           itemCount: _rewards.length,
-    //           itemBuilder: (ctx, pos) {
-    //             return HistoryCard(
-    //               reward: _rewards[pos],
-    //             );
-    //           });
-    //     }
-    //     return Text("Test");
-    //   },
-    // );
     return Column(
       children: [
         Align(
@@ -142,144 +120,5 @@ class _WalletHistoryListState extends State<WalletHistoryList> {
         Text("History will come soon"),
       ],
     );
-  }
-}
-
-class HistoryCard extends StatefulWidget {
-  HistoryCard({
-    Key? key,
-    required this.reward,
-  }) : super(key: key);
-
-  late Reward reward;
-
-  @override
-  _HistoryCardState createState() => _HistoryCardState();
-}
-
-class _HistoryCardState extends State<HistoryCard> {
-  double widthLabel = 100;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // return GestureDetector(
-    //   onTap: () {
-    //     navigateToPostDetailPage(
-    //         context, widget.reward.author, widget.reward.link);
-    //   },
-    //   child: Card(
-    //       child: Padding(
-    //     padding: const EdgeInsets.all(4.0),
-    //     child: Row(
-    //       children: [
-    //         AccoutnAvatarBase(username: widget.reward.author),
-    //         SizedBox(width: 8),
-    //         Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             Row(
-    //               children: [
-    //                 SizedBox(
-    //                     width: widthLabel,
-    //                     child: Text(
-    //                       "content:",
-    //                       style: Theme.of(context).textTheme.subtitle2,
-    //                     )),
-    //                 Container(
-    //                     width: MediaQuery.of(context).size.width - 310,
-    //                     child: Text(
-    //                       widget.reward.author + '/' + widget.reward.link,
-    //                       overflow: TextOverflow.ellipsis,
-    //                       style: Theme.of(context).textTheme.caption,
-    //                     )),
-    //               ],
-    //             ),
-    //             Row(
-    //               children: [
-    //                 SizedBox(
-    //                     width: widthLabel,
-    //                     child: Text(
-    //                       "spent:",
-    //                       style: Theme.of(context).textTheme.subtitle2,
-    //                     )),
-    //                 Text(
-    //                   (widget.reward.vt / 1000).toStringAsFixed(2) + 'K',
-    //                   style: Theme.of(context).textTheme.caption,
-    //                 ),
-    //               ],
-    //             ),
-    //             Row(
-    //               children: [
-    //                 SizedBox(
-    //                     width: widthLabel,
-    //                     child: Text(
-    //                       "voted on:",
-    //                       style: Theme.of(context).textTheme.subtitle2,
-    //                     )),
-    //                 Text(
-    //                   DateTime.fromMillisecondsSinceEpoch(widget.reward.ts)
-    //                       .toLocal()
-    //                       .toString()
-    //                       .substring(0, 16),
-    //                   style: Theme.of(context).textTheme.caption,
-    //                 ),
-    //               ],
-    //             ),
-    //             Row(
-    //               children: [
-    //                 SizedBox(
-    //                     width: widthLabel,
-    //                     child: Text(
-    //                       "published on:",
-    //                       style: Theme.of(context).textTheme.subtitle2,
-    //                     )),
-    //                 Text(
-    //                   DateTime.fromMillisecondsSinceEpoch(
-    //                           widget.reward.contentTs)
-    //                       .toLocal()
-    //                       .toString()
-    //                       .substring(0, 16),
-    //                   style: Theme.of(context).textTheme.caption,
-    //                 ),
-    //               ],
-    //             ),
-    //           ],
-    //         ),
-    //         Container(
-    //           width: 100,
-    //           child: widget.reward.claimed != null
-    //               ? Text("already claimed " +
-    //                   (widget.reward.claimable / 100).toStringAsFixed(2) +
-    //                   ' DTC ' +
-    //                   friendlyTimestamp(widget.reward.claimed!))
-    //               : timestampGreater7Days(widget.reward.ts)
-    //                   ? BlocProvider(
-    //                       create: (context) => TransactionBloc(
-    //                           repository: TransactionRepositoryImpl()),
-    //                       // child: ClaimRewardButton(
-    //                       //   author: widget.reward.author,
-    //                       //   claimable: widget.reward.claimable,
-    //                       //   link: widget.reward.link,
-    //                       // ),
-    //                     )
-    //                   : Column(
-    //                       children: [
-    //                         Text((widget.reward.claimable / 100)
-    //                                 .toStringAsFixed(2) +
-    //                             ' DTC claimable ' +
-    //                             timestamp7Days(widget.reward.ts)),
-    //                       ],
-    //                     ),
-    //         ),
-    //       ],
-    //     ),
-    //   )),
-    // );
-    return Text("none");
   }
 }

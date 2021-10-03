@@ -742,7 +742,8 @@ class VotingSliderStandalone extends StatefulWidget {
       required this.defaultTip,
       required this.currentVT,
       required this.isPost,
-      this.sendCallback})
+      this.sendCallback,
+      this.cancelCallback})
       : super(key: key);
 
   String author;
@@ -754,6 +755,7 @@ class VotingSliderStandalone extends StatefulWidget {
 
   bool downvote;
   VoidCallback? sendCallback;
+  VoidCallback? cancelCallback;
 
   @override
   _VotingSliderStandaloneState createState() => _VotingSliderStandaloneState();
@@ -874,18 +876,17 @@ class _VotingSliderStandaloneState extends State<VotingSliderStandalone> {
                                 ],
                               ),
                         Container(
-                          width: 25.w,
+                          width: 35.w,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               widget.isPost
-                                  ? TextFormField(
-                                      controller: _tagController,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                      decoration: new InputDecoration(
-                                        labelText: "curator tag",
-                                      ),
+                                  ? Container(
+                                      height: 50,
+                                      child: OverlayTextInput(
+                                          textEditingController: _tagController,
+                                          label: "curator tag",
+                                          autoFocus: false),
                                     )
                                   : SizedBox(width: 0),
                               SizedBox(height: 8),
@@ -926,6 +927,22 @@ class _VotingSliderStandaloneState extends State<VotingSliderStandalone> {
                                   }
                                 },
                               ),
+                              widget.cancelCallback != null
+                                  ? Padding(
+                                      padding: EdgeInsets.only(top: 8),
+                                      child: InputChip(
+                                        label: Text(
+                                          "cancel",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                        ),
+                                        onPressed: () {
+                                          widget.cancelCallback!();
+                                        },
+                                      ),
+                                    )
+                                  : SizedBox(height: 0)
                             ],
                           ),
                         ),
