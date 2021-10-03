@@ -26,9 +26,6 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
         foregroundColor: Colors.white,
         elevation: 0,
         backgroundColor: Colors.transparent,
-        // label: '',
-        // labelStyle: TextStyle(fontSize: 14.0),
-        // labelBackgroundColor: Colors.transparent,
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return BlocProvider<NotificationBloc>(
@@ -46,9 +43,6 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
         foregroundColor: Colors.white,
         elevation: 0,
         backgroundColor: Colors.transparent,
-        // label: '',
-        // labelStyle: TextStyle(fontSize: 14.0),
-        // labelBackgroundColor: Colors.transparent,
         onTap: () {
           AppConfig.faqVisible
               ? Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -74,9 +68,6 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
         foregroundColor: Colors.white,
         elevation: 0,
         backgroundColor: Colors.transparent,
-        // label: '',
-        // labelStyle: TextStyle(fontSize: 14.0),
-        // labelBackgroundColor: Colors.transparent,
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return BlocProvider<SettingsBloc>(
@@ -87,14 +78,12 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
   ];
 
   return SpeedDial(
-      // icon: FontAwesomeIcons.bars,
       child: ShadowedIcon(
           icon: FontAwesomeIcons.bars,
           color: Colors.white,
           shadowColor: Colors.black,
           size: globalIconSizeMedium),
       activeIcon: FontAwesomeIcons.chevronLeft,
-      //buttonSize: globalIconSizeMedium * 3,
       direction: SpeedDialDirection.Down,
       visible: true,
       closeManually: false,
@@ -113,6 +102,7 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
       children: mainMenuButtonOptions);
 }
 
+// dialog to show current app version and build
 class VersionDialog extends StatefulWidget {
   const VersionDialog({
     Key? key,

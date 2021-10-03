@@ -1,3 +1,5 @@
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+
 import 'package:auto_orientation/auto_orientation.dart';
 import 'package:overlay_dialog/overlay_dialog.dart';
 
@@ -43,6 +45,7 @@ class _YoutubePlayerFullScreenPageState
     if (Device.orientation != Orientation.landscape) {
       AutoOrientation.landscapeAutoMode();
     }
+
     super.initState();
   }
 
@@ -58,33 +61,31 @@ class _YoutubePlayerFullScreenPageState
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.black,
-        body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: YoutubePlayerControllerProvider(
-                  controller: _controller,
-                  child: YoutubePlayerIFrame(
-                    aspectRatio: 16 / 9,
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: YoutubePlayerControllerProvider(
+                    controller: _controller,
+                    child: YoutubePlayerIFrame(
+                      aspectRatio: 16 / 9,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10.h),
-                child: IconButton(
-
-                    // style: ButtonStyle(
-                    //     backgroundColor:
-                    //         MaterialStateProperty.all(Colors.transparent)),
-                    onPressed: () {
-                      //Navigator.pop(context);
-                      DialogHelper().hide(context);
-                      AutoOrientation.fullAutoMode();
-                    },
-                    icon: FaIcon(FontAwesomeIcons.arrowLeft)),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(top: 10.h),
+                  child: IconButton(
+                      onPressed: () {
+                        DialogHelper().hide(context);
+                        AutoOrientation.fullAutoMode();
+                      },
+                      icon: FaIcon(FontAwesomeIcons.arrowLeft)),
+                ),
+              ],
+            ),
           ),
         ));
   }

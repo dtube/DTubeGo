@@ -1,5 +1,5 @@
 //This contains a dummy entry point, and is opted out
-// DO NOT DELETE THIS next comment!
+// DO NOT DELETE THE FOLLOWING COMMENT!
 // @dart=2.9
 
 //if bs58 is null safety we can remove this dirty workarround

@@ -24,24 +24,7 @@ class FullScreenButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
         iconSize: iconSize,
-        // style: ButtonStyle(
-        //     backgroundColor:
-        //         MaterialStateProperty.all(Colors.transparent)),
         onPressed: () {
-          // pushDynamicScreen(
-          //   context,
-          //   screen: videoSource == "youtube"
-          //       ? YoutubePlayerFullScreenPage(
-          //           link: videoUrl,
-          //         )
-          //       : ["ipfs", "sia"].contains(videoSource)
-          //           ? BetterPlayerFullScreenPage(
-          //               link: videoUrl,
-          //             )
-          //           : Text("no player detected"),
-          //   withNavBar: false, // OPTIONAL VALUE. True by default.
-          //   // pageTransitionAnimation: PageTransitionAnimation.cupertino,
-          // );
           DialogHelper().show(
               context,
               DialogWidget.custom(

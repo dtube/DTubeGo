@@ -162,7 +162,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                           controls: true,
                           usedAsPreview: false,
                           allowFullscreen: false,
-                          portraitVideoPadding: 50.0,
+                          portraitVideoPadding: 30.w,
                         )
                       : (widget.videoSource == 'youtube' &&
                               widget.videoUrl != "")

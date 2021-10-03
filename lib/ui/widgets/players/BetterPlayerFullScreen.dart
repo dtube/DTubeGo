@@ -31,16 +31,16 @@ class _BetterPlayerFullScreenPageState
 
   @override
   void initState() {
-    if (Device.orientation != Orientation.landscape) {
-      AutoOrientation.landscapeAutoMode();
-    }
+    // if (Device.orientation != Orientation.landscape) {
+    //   AutoOrientation.landscapeAutoMode();
+    // }
 
     super.initState();
   }
 
   @override
   void dispose() {
-    AutoOrientation.fullAutoMode();
+//    AutoOrientation.fullAutoMode();
     super.dispose();
   }
 
@@ -48,35 +48,31 @@ class _BetterPlayerFullScreenPageState
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.black,
-        body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Align(
-                  alignment: Alignment.topCenter,
-                  child: BP(
-                    videoUrl: link,
-                    looping: false,
-                    autoplay: true,
-                    localFile: false,
-                    controls: true,
-                    usedAsPreview: false,
-                    allowFullscreen: false,
-                    portraitVideoPadding: 50.0,
-                  )),
-              Padding(
-                padding: EdgeInsets.only(top: 10.h),
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.transparent)),
-                    onPressed: () {
-                      //Navigator.pop(context);
-                      DialogHelper().hide(context);
-                    },
-                    child: FaIcon(FontAwesomeIcons.arrowLeft)),
-              ),
-            ],
-          ),
+        body: Stack(
+          children: [
+            BP(
+              videoUrl: link,
+              looping: false,
+              autoplay: true,
+              localFile: false,
+              controls: true,
+              usedAsPreview: false,
+              allowFullscreen: false,
+              portraitVideoPadding: 0.0,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 10.h),
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.transparent)),
+                  onPressed: () {
+                    //Navigator.pop(context);
+                    DialogHelper().hide(context);
+                  },
+                  child: FaIcon(FontAwesomeIcons.arrowLeft)),
+            ),
+          ],
         ));
   }
 }

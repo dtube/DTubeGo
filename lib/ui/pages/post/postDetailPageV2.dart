@@ -1,6 +1,6 @@
 import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/ui/MainContainer/NavigationContainerV2.dart';
+import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
 import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
 import 'package:dtube_go/ui/widgets/GiftDialog.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';

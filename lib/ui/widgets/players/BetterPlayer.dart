@@ -14,6 +14,7 @@ class BP extends StatefulWidget {
   final bool usedAsPreview;
   final bool allowFullscreen;
   final double portraitVideoPadding;
+  bool? openInFullscreen;
 
   BP({
     required this.videoUrl,
@@ -24,6 +25,7 @@ class BP extends StatefulWidget {
     required this.usedAsPreview,
     required this.allowFullscreen,
     required this.portraitVideoPadding,
+    this.openInFullscreen,
     Key? key,
   }) : super(key: key);
 
@@ -55,8 +57,11 @@ class _BPState extends State<BP> {
 
       _betterPlayerController = BetterPlayerController(
         BetterPlayerConfiguration(
+          fullScreenByDefault: widget.openInFullscreen != null
+              ? widget.openInFullscreen!
+              : false,
+          autoDetectFullscreenDeviceOrientation: true,
           controlsConfiguration: BetterPlayerControlsConfiguration(
-              //showControls: widget.controls,
               enablePlayPause: true,
               enableSkips: false,
               showControlsOnInitialize: false,
