@@ -1,6 +1,4 @@
-import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsTabContainer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -38,14 +36,12 @@ class NavigationContainer extends StatefulWidget {
 }
 
 class _NavigationContainerState extends State<NavigationContainer> {
-  bool _hideNavBar = false;
-  ValueNotifier<bool> _notifier = ValueNotifier(false);
-
   late List<Widget> _screens;
 
   int bottomSelectedIndex = 0;
   int _currentIndex = 0;
 
+  // list of navigation buttons
   List<BottomNavigationBarItem> navBarItems = [
     BottomNavigationBarItem(
       label: '',
@@ -58,7 +54,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
         ),
       ),
     ),
-
     BottomNavigationBarItem(
       label: '',
       icon: Center(
@@ -70,7 +65,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
         ),
       ),
     ),
-
     BottomNavigationBarItem(
       label: '',
       icon: Center(
@@ -92,7 +86,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
         }),
       ),
     ),
-
     BottomNavigationBarItem(
       label: '',
       icon: Center(
@@ -104,8 +97,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
         ),
       ),
     ),
-    //  title: 'Hot',
-
     BottomNavigationBarItem(
       label: '',
       icon: CircleAvatar(
@@ -126,10 +117,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
     keepPage: true,
   );
 
-  void scrollCallback(bool hide) {
-    _notifier.value = hide;
-  }
-
   void uploaderCallback() {
     setState(() {
       _currentIndex = 0;
@@ -139,6 +126,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
   @override
   void initState() {
     super.initState();
+    // list of all available screens
     _screens = [
       BlocProvider(
         create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
@@ -152,19 +140,18 @@ class _NavigationContainerState extends State<NavigationContainer> {
         callback: uploaderCallback,
         key: UniqueKey(),
       ),
-      MultiBlocProvider(providers: [
-        BlocProvider(
-            create: (context) => FeedBloc(repository: FeedRepositoryImpl())),
-        BlocProvider(
-            create: (context) => UserBloc(repository: UserRepositoryImpl())),
-        BlocProvider(
-            create: (context) =>
-                IPFSUploadBloc(repository: IPFSUploadRepositoryImpl())),
-        BlocProvider<ThirdPartyUploaderBloc>(
-          create: (BuildContext context) => ThirdPartyUploaderBloc(
-              repository: ThirdPartyUploaderRepositoryImpl()),
-        ),
-      ], child: MomentsPage(play: _currentIndex == 3)),
+      MultiBlocProvider(
+          providers: [
+            BlocProvider(
+                create: (context) =>
+                    FeedBloc(repository: FeedRepositoryImpl())),
+            BlocProvider(
+                create: (context) =>
+                    UserBloc(repository: UserRepositoryImpl())),
+          ],
+          child: MomentsPage(
+              play: _currentIndex ==
+                  3)), // start auto play the first moment if this is the current visible screen
       BlocProvider(
         create: (context) => UserBloc(repository: UserRepositoryImpl()),
         child: UserPage(
@@ -176,18 +163,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
   @override
   Widget build(BuildContext context) {
-    BlocListener<TransactionBloc, TransactionState>(
-      bloc: BlocProvider.of<TransactionBloc>(context),
-      listener: (context, state) {
-        if (state is TransactionSent) {
-          print("test test");
-          showCustomFlushbarOnSuccess(state, context);
-        }
-        if (state is TransactionError) {
-          showCustomFlushbarOnError(state.message, context);
-        }
-      },
-    );
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
@@ -242,6 +217,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           onTap: (index) {
             setState(() {
               if (index == 2) {
+                // if the user navigated to the uploader screen
                 // reset uploader page
                 _screens.removeAt(2);
                 _screens.insert(
@@ -249,10 +225,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
                     new UploaderMainPage(
                       callback: uploaderCallback,
                       key: UniqueKey(),
-                    )
-                    //  index = index;
-                    );
+                    ));
               }
+              // if the user navigated to the moments page
               if (index == 3) {
                 // reset moments page and set play = true
 
@@ -265,15 +240,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
                         BlocProvider(
                             create: (context) =>
                                 FeedBloc(repository: FeedRepositoryImpl())),
-                        BlocProvider(
-                            create: (context) => IPFSUploadBloc(
-                                repository: IPFSUploadRepositoryImpl())),
-                        BlocProvider<ThirdPartyUploaderBloc>(
-                          create: (BuildContext context) =>
-                              ThirdPartyUploaderBloc(
-                                  repository:
-                                      ThirdPartyUploaderRepositoryImpl()),
-                        ),
                       ],
                       child: MomentsPage(
                         key: UniqueKey(),
@@ -282,6 +248,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
                   //  index = index;
                 );
               } else {
+                // if the user navigated to any other screen than the moments page
                 // reset moments page and set play = false
                 _screens.removeAt(3);
 
@@ -292,25 +259,37 @@ class _NavigationContainerState extends State<NavigationContainer> {
                       play: false,
                     ));
               }
-              _currentIndex = index;
+              // if there is a current background upload > show snachbar and do not navigate to the screen
+              if (BlocProvider.of<TransactionBloc>(context).state
+                      is TransactionPreprocessingState &&
+                  index == 2) {
+                showCustomFlushbarOnError(
+                    "please wait until upload is finished", context);
+              } else {
+                _currentIndex = index;
+              }
             });
           },
         ),
       ),
-      body: BlocListener<TransactionBloc, TransactionState>(
-          bloc: BlocProvider.of<TransactionBloc>(context),
-          listener: (context, state) {
-            if (state is TransactionSent) {
-              showCustomFlushbarOnSuccess(state, context);
-            }
-            if (state is TransactionError) {
-              showCustomFlushbarOnError(state.message, context);
-            }
-          },
-          child: IndexedStack(
-            children: _screens,
-            index: _currentIndex,
-          )),
+      body:
+          // show global snack bar to notify the user about transactions
+          BlocListener<TransactionBloc, TransactionState>(
+              bloc: BlocProvider.of<TransactionBloc>(context),
+              listener: (context, state) {
+                if (state is TransactionSent) {
+                  showCustomFlushbarOnSuccess(state, context);
+                }
+                if (state is TransactionError) {
+                  showCustomFlushbarOnError(state.message, context);
+                }
+              },
+              child:
+                  // show all pages as indexedStack to keep the state of every screen
+                  IndexedStack(
+                children: _screens,
+                index: _currentIndex,
+              )),
     );
   }
 }

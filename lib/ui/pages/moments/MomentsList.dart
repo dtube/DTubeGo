@@ -54,6 +54,14 @@ class _MomentsListState extends State<MomentsList> {
   String? _defaultPostVotingTip;
   String? _defaultCommentsVotingWeight;
 
+  String? _defaultMomentsVotingWeight;
+  String? _momentsUploadNSFW;
+  String? _momentsUploadOC;
+  String? _momentsUploadUnlist;
+  String? _momentsUploadCrosspost;
+  late UserBloc _userBloc;
+  double _currentVp = 0.0;
+
   Future<bool> getConfigValues() async {
     _hiddenMode = await sec.getShowHidden();
     _nsfwMode = await sec.getNSFW();
@@ -61,6 +69,12 @@ class _MomentsListState extends State<MomentsList> {
     _defaultPostVotingWeight = await sec.getDefaultVote();
     _defaultPostVotingTip = await sec.getDefaultVoteTip();
     _defaultCommentsVotingWeight = await sec.getDefaultVoteComments();
+    _defaultMomentsVotingWeight = await sec.getMomentVotingWeight();
+    _momentsUploadNSFW = await sec.getMomentNSFW();
+    _momentsUploadOC = await sec.getMomentOC();
+    _momentsUploadUnlist = await sec.getMomentUnlist();
+    _momentsUploadCrosspost = await sec.getMomentCrosspost();
+
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
     }
@@ -73,7 +87,8 @@ class _MomentsListState extends State<MomentsList> {
   @override
   void initState() {
     momentsController = new MomentsController();
-
+    _userBloc = BlocProvider.of<UserBloc>(context);
+    _userBloc.add(FetchDTCVPEvent());
     super.initState();
   }
 
@@ -91,56 +106,83 @@ class _MomentsListState extends State<MomentsList> {
           if (snapshot.connectionState != ConnectionState.done) {
             return buildLoading(context);
           } else {
-            return BlocBuilder<FeedBloc, FeedState>(
-              builder: (context, state) {
-                if (state is FeedInitialState ||
-                    state is FeedLoadingState && _feedItems.isEmpty) {
-                  return buildLoading(context);
-                } else if (state is FeedLoadedState) {
-                  if (state.feedType == widget.feedType) {
-                    if (moments.isEmpty) {
-                      for (var f in state.feed) {
-                        moments.add(MomentsItem(
-                            BlocProvider<UserBloc>(
-                              create: (context) =>
-                                  UserBloc(repository: UserRepositoryImpl()),
-                              child: VideoPlayerMoments(
-                                momentsController: momentsController,
-                                defaultCommentsVotingWeight:
-                                    _defaultCommentsVotingWeight!,
-                                defaultPostsVotingWeight:
-                                    _defaultPostVotingWeight!,
-                                defaultPostsVotingTip: _defaultPostVotingTip!,
-                                key: UniqueKey(),
-                                goingInBackgroundCallback:
-                                    widget.goingInBackgroundCallback,
-                                goingInForegroundCallback:
-                                    widget.goingInForegroundCallback,
-                                feedItem: f,
-                              ),
-                            ),
-                            duration: Duration(
-                                seconds: f.jsonString!.dur != ""
-                                    ? int.parse(f.jsonString!.dur) + 1
-                                    : 5)));
-                      }
-                    }
-                  }
-                  BlocProvider.of<FeedBloc>(context).isFetching = false;
-                } else if (state is FeedErrorState) {
-                  return buildErrorUi(state.message);
-                }
+            return BlocBuilder<UserBloc, UserState>(
+                bloc: _userBloc,
+                builder: (context, state) {
+                  // TODO error handling
 
-                return MomentsContainer(
-                    momentItems: moments,
-                    feedType: widget.feedType,
-                    appUser: _applicationUser!,
-                    defaultPostsVotingTip: _defaultPostVotingTip!,
-                    defaultPostsVotingWeight: _defaultPostVotingWeight!,
-                    defaultCommentsVotingWeight: _defaultCommentsVotingWeight!,
-                    controller: momentsController);
-              },
-            );
+                  if (state is UserDTCVPLoadingState) {
+                    return CircularProgressIndicator();
+                  }
+                  if (state is UserDTCVPLoadedState) {
+                    _currentVp = state.vtBalance["v"]! + 0.0;
+                  }
+
+                  return BlocBuilder<FeedBloc, FeedState>(
+                    builder: (context, state) {
+                      if (state is FeedInitialState ||
+                          state is FeedLoadingState && _feedItems.isEmpty) {
+                        return buildLoading(context);
+                      } else if (state is FeedLoadedState) {
+                        if (state.feedType == widget.feedType) {
+                          if (moments.isEmpty) {
+                            for (var f in state.feed) {
+                              moments.add(MomentsItem(
+                                  VideoPlayerMoments(
+                                    momentsController: momentsController,
+                                    defaultCommentsVotingWeight:
+                                        _defaultCommentsVotingWeight!,
+                                    defaultPostsVotingWeight:
+                                        _defaultPostVotingWeight!,
+                                    defaultPostsVotingTip:
+                                        _defaultPostVotingTip!,
+                                    key: UniqueKey(),
+                                    goingInBackgroundCallback:
+                                        widget.goingInBackgroundCallback,
+                                    goingInForegroundCallback:
+                                        widget.goingInForegroundCallback,
+                                    feedItem: f,
+                                    momentsVotingWeight:
+                                        _defaultMomentsVotingWeight!,
+                                    momentsUploadNSFW: _momentsUploadNSFW!,
+                                    momentsUploadOC: _momentsUploadOC!,
+                                    momentsUploadUnlist: _momentsUploadUnlist!,
+                                    momentsUploadCrosspost:
+                                        _momentsUploadCrosspost!,
+                                    currentVP: _currentVp,
+                                    userBloc:
+                                        BlocProvider.of<UserBloc>(context),
+                                  ),
+                                  duration: Duration(
+                                      seconds: f.jsonString!.dur != ""
+                                          ? int.parse(f.jsonString!.dur) + 1
+                                          : 5)));
+                            }
+                          }
+                        }
+                        BlocProvider.of<FeedBloc>(context).isFetching = false;
+                      } else if (state is FeedErrorState) {
+                        return buildErrorUi(state.message);
+                      }
+
+                      return MomentsContainer(
+                          momentItems: moments,
+                          feedType: widget.feedType,
+                          appUser: _applicationUser!,
+                          defaultPostsVotingTip: _defaultPostVotingTip!,
+                          defaultPostsVotingWeight: _defaultPostVotingWeight!,
+                          defaultCommentsVotingWeight:
+                              _defaultCommentsVotingWeight!,
+                          defaultMomentsVotingWeight:
+                              _defaultMomentsVotingWeight!,
+                          momentsUploadNSFW: _momentsUploadNSFW!,
+                          momentsUploadOC: _momentsUploadOC!,
+                          momentsUploadUnlist: _momentsUploadUnlist!,
+                          momentsUploadCrosspost: _momentsUploadCrosspost!,
+                          controller: momentsController);
+                    },
+                  );
+                });
           }
         });
   }
@@ -170,6 +212,12 @@ class MomentsContainer extends StatefulWidget {
   String defaultPostsVotingWeight;
   String defaultCommentsVotingWeight;
   String defaultPostsVotingTip;
+  String defaultMomentsVotingWeight;
+  String momentsUploadNSFW;
+  String momentsUploadOC;
+  String momentsUploadUnlist;
+  String momentsUploadCrosspost;
+
   String appUser;
 
   String feedType;
@@ -183,6 +231,11 @@ class MomentsContainer extends StatefulWidget {
       required this.defaultPostsVotingTip,
       required this.defaultPostsVotingWeight,
       required this.defaultCommentsVotingWeight,
+      required this.defaultMomentsVotingWeight,
+      required this.momentsUploadNSFW,
+      required this.momentsUploadOC,
+      required this.momentsUploadUnlist,
+      required this.momentsUploadCrosspost,
       required this.controller})
       : super(key: key);
 
@@ -198,7 +251,7 @@ class _MomentsContainerState extends State<MomentsContainer> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<UserBloc>(context).add(FetchDTCVPEvent());
+    // BlocProvider.of<UserBloc>(context).add(FetchDTCVPEvent());
   }
 
   @override
@@ -228,27 +281,34 @@ class _MomentsContainerState extends State<MomentsContainer> {
                   width: 25.w,
                   height: 25.h,
                   child: MomentsUploadButton(
-                      currentVT: state.vtBalance['v']! + 0.0,
-                      defaultVotingWeight: double.parse(widget
-                          .defaultPostsVotingWeight), // todo make this dynamic
-                      clickedCallback: () {
-                        // setState(() {
-                        //   widget.momentsController.pause();
-                        //   _videoController.pause();
-                        // });
-                      },
-                      leaveDialogWithUploadCallback: () {
-                        // setState(() {
-                        //   widget.momentsController.pause();
-                        //   _videoController.pause();
-                        //   _momentUploading = true;
-                        // });
-                      },
-                      leaveDialogWithoutUploadCallback: () {
-                        //   widget.momentsController.play();
-                        //   _videoController.play();
-                        //   _momentUploading = false;
-                      }));
+                    currentVT: state.vtBalance['v']! + 0.0,
+                    defaultVotingWeight: double.parse(widget
+                        .defaultMomentsVotingWeight), // todo make this dynamic
+                    clickedCallback: () {
+                      // setState(() {
+                      //   widget.momentsController.pause();
+                      //   _videoController.pause();
+                      // });
+                    },
+                    leaveDialogWithUploadCallback: () {
+                      // setState(() {
+                      //   widget.momentsController.pause();
+                      //   _videoController.pause();
+                      //   _momentUploading = true;
+                      // });
+                    },
+                    leaveDialogWithoutUploadCallback: () {
+                      //   widget.momentsController.play();
+                      //   _videoController.play();
+                      //   _momentUploading = false;
+                    },
+                    momentsVotingWeight: widget.defaultMomentsVotingWeight,
+                    momentsUploadNSFW: widget.momentsUploadNSFW,
+                    momentsUploadOC: widget.momentsUploadOC,
+                    momentsUploadUnlist: widget.momentsUploadUnlist,
+
+                    momentsUploadCrosspost: widget.momentsUploadCrosspost,
+                  ));
             }
             return SizedBox(height: 0, width: 0);
           })
@@ -271,27 +331,34 @@ class _MomentsContainerState extends State<MomentsContainer> {
                   width: 25.w,
                   height: 25.h,
                   child: MomentsUploadButton(
-                      currentVT: state.vtBalance['v']! + 0.0,
-                      defaultVotingWeight: double.parse(widget
-                          .defaultPostsVotingWeight), // todo make this dynamic
-                      clickedCallback: () {
-                        // setState(() {
-                        //   widget.momentsController.pause();
-                        //   _videoController.pause();
-                        // });
-                      },
-                      leaveDialogWithUploadCallback: () {
-                        // setState(() {
-                        //   widget.momentsController.pause();
-                        //   _videoController.pause();
-                        //   _momentUploading = true;
-                        // });
-                      },
-                      leaveDialogWithoutUploadCallback: () {
-                        //   widget.momentsController.play();
-                        //   _videoController.play();
-                        //   _momentUploading = false;
-                      }));
+                    currentVT: state.vtBalance['v']! + 0.0,
+                    defaultVotingWeight: double.parse(widget
+                        .defaultPostsVotingWeight), // todo make this dynamic
+                    clickedCallback: () {
+                      // setState(() {
+                      //   widget.momentsController.pause();
+                      //   _videoController.pause();
+                      // });
+                    },
+                    leaveDialogWithUploadCallback: () {
+                      // setState(() {
+                      //   widget.momentsController.pause();
+                      //   _videoController.pause();
+                      //   _momentUploading = true;
+                      // });
+                    },
+                    leaveDialogWithoutUploadCallback: () {
+                      //   widget.momentsController.play();
+                      //   _videoController.play();
+                      //   _momentUploading = false;
+                    },
+                    momentsVotingWeight: widget.defaultMomentsVotingWeight,
+                    momentsUploadNSFW: widget.momentsUploadNSFW,
+                    momentsUploadOC: widget.momentsUploadOC,
+                    momentsUploadUnlist: widget.momentsUploadUnlist,
+
+                    momentsUploadCrosspost: widget.momentsUploadCrosspost,
+                  ));
             }
             return SizedBox(height: 0, width: 0);
           })

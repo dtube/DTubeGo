@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_go/utils/ResponsiveLayout.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -8,7 +9,7 @@ import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/dtubeLoading.dart';
 import 'package:dtube_go/style/styledCustomWidgets.dart';
-import 'package:dtube_go/ui/MainContainer/NavigationContainerV2.dart';
+import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
 import 'package:dtube_go/ui/widgets/PinPadWidget.dart';
 import 'package:dtube_go/utils/secureStorage.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
@@ -27,7 +28,6 @@ class PinPadScreen extends StatefulWidget {
 class _PinPadScreenState extends State<PinPadScreen> {
   @override
   void initState() {
-    BlocProvider.of<SettingsBloc>(context).add(FetchSettingsEvent());
     super.initState();
   }
 
@@ -36,10 +36,13 @@ class _PinPadScreenState extends State<PinPadScreen> {
     return BlocBuilder<SettingsBloc, SettingsState>(builder: (context, state) {
       if (state is SettingsLoadedState) {
         if (state.settings[settingKey_pincode] != "") {
+          // if the pin is set -> show PinPad
           return PinPad(
             storedPin: state.settings[settingKey_pincode],
           );
         } else {
+          // if there is no pin set to secure the app -> forward directly to the main navigation container
+          // with providing all necessary blocs
           return MultiBlocProvider(providers: [
             BlocProvider<UserBloc>(
                 create: (context) =>
@@ -49,11 +52,17 @@ class _PinPadScreenState extends State<PinPadScreen> {
                   AuthBloc(repository: AuthRepositoryImpl()),
             ),
             BlocProvider(
+              create: (context) =>
+                  IPFSUploadBloc(repository: IPFSUploadRepositoryImpl()),
+            ),
+            BlocProvider(
               create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
             ),
           ], child: NavigationContainer());
         }
       }
+
+      // as long as the settings are not loaded show a loading screen
       return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: globalBlue,
@@ -73,7 +82,6 @@ class PinPad extends StatefulWidget {
 }
 
 class _PinPadState extends State<PinPad> {
-  late AuthBloc _loginBloc;
   TextEditingController _pinPutController = new TextEditingController();
   String _pinMessage = "enter your pin";
   final _shakeKey = GlobalKey<ShakeWidgetState>();
@@ -81,6 +89,10 @@ class _PinPadState extends State<PinPad> {
   void _checkLastCharacter() {
     if (_pinPutController.text.length == 5) {
       if (_pinPutController.text == widget.storedPin) {
+        // if the pin is correct
+        // forward the user to the main navigation container with providing all necessary blocs
+        // but set the navigation container additionally as the "first screen"
+        // to avoid bringing the user back to the pin dialog if the hardware back button is pressed
         Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(builder: (BuildContext context) {
@@ -93,12 +105,17 @@ class _PinPadState extends State<PinPad> {
                     AuthBloc(repository: AuthRepositoryImpl()),
               ),
               BlocProvider(
+                create: (context) =>
+                    IPFSUploadBloc(repository: IPFSUploadRepositoryImpl()),
+              ),
+              BlocProvider(
                 create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
               ),
             ], child: NavigationContainer());
           }),
         );
       } else {
+        // if the pin is not correct
         setState(() {
           _pinPutController.text = "";
           _pinMessage = "please try again";
@@ -111,8 +128,6 @@ class _PinPadState extends State<PinPad> {
   @override
   void initState() {
     super.initState();
-    //  _loginBloc = BlocProvider.of<AuthBloc>(context);
-    //if logindata already stored
     _pinPutController.addListener(_checkLastCharacter);
   }
 
@@ -148,11 +163,6 @@ class _PinPadState extends State<PinPad> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               DTubeLogo(size: 20.w),
-              // Padding(
-              //   padding: const EdgeInsets.all(8.0),
-              //   child: Text("please enter your pin",
-              //       style: Theme.of(context).textTheme.headline5),
-              // ),
               Container(
                 width: 60.w,
                 height: 20.w,
@@ -188,6 +198,7 @@ class _PinPadState extends State<PinPad> {
   }
 }
 
+// class for shaking th error message when pin is incorrect
 abstract class AnimationControllerState<T extends StatefulWidget>
     extends State<T> with SingleTickerProviderStateMixin {
   AnimationControllerState(this.animationDuration);

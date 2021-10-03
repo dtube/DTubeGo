@@ -62,8 +62,10 @@ class _WizardIPFSState extends State<WizardIPFS> {
   void childCallback(UploadData ud) {
     setState(() {
       widget.uploaderCallback();
+      // this will turn the global "+" icon to a rotating DTube Logo and deactivate further uploas until current is finished
       BlocProvider.of<TransactionBloc>(context)
           .add(TransactionPreprocessing(txType: ud.isPromoted ? 13 : 4));
+
       _uploadData = ud;
       _uploadPressed = true;
       _uploadBloc.add(UploadVideo(

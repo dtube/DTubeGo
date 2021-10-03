@@ -1,6 +1,3 @@
-import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc.dart';
-import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
-import 'package:dtube_go/style/dtubeLoading.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsList.dart';
 
 import 'package:dtube_go/utils/ResponsiveLayout.dart';
@@ -76,12 +73,6 @@ class _MomentsPageState extends State<MomentsPage>
   Widget build(BuildContext context) {
     double _iconSize = 5.w;
 
-    // return BlocBuilder<ThirdPartyUploaderBloc, ThirdPartyUploaderState>(
-    //     builder: (context, state) {
-    //   if (state is ThirdPartyUploaderUploadingState) {
-    //     return Center(
-    //         child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
-    //   } else {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: widget.play
@@ -142,7 +133,6 @@ class _MomentsPageState extends State<MomentsPage>
                   alignment: Alignment.topLeft,
                   child: Padding(
                     padding: EdgeInsets.only(top: 8.h, left: 4.w),
-                    //padding: EdgeInsets.only(top: 5.h),
                     child: OverlayText(
                       text: _tabNames[_selectedIndex],
                       sizeMultiply: 1.4,
@@ -157,8 +147,6 @@ class _MomentsPageState extends State<MomentsPage>
               height: 0,
             ),
     );
-    // }
-    // });
   }
 }
 

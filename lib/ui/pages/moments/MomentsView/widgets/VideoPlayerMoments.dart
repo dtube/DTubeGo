@@ -28,6 +28,15 @@ class VideoPlayerMoments extends StatefulWidget {
   String defaultPostsVotingTip;
   String defaultCommentsVotingWeight;
 
+  String momentsVotingWeight;
+  String momentsUploadNSFW;
+  String momentsUploadOC;
+  String momentsUploadUnlist;
+  String momentsUploadCrosspost;
+  double currentVP;
+
+  UserBloc userBloc;
+
   VideoPlayerMoments(
       {Key? key, //required this.link,
       required this.feedItem,
@@ -36,7 +45,14 @@ class VideoPlayerMoments extends StatefulWidget {
       required this.goingInForegroundCallback,
       required this.defaultCommentsVotingWeight,
       required this.defaultPostsVotingTip,
-      required this.defaultPostsVotingWeight})
+      required this.defaultPostsVotingWeight,
+      required this.momentsVotingWeight,
+      required this.momentsUploadNSFW,
+      required this.momentsUploadOC,
+      required this.momentsUploadUnlist,
+      required this.momentsUploadCrosspost,
+      required this.userBloc,
+      required this.currentVP})
       : super(key: key);
   @override
   _VideoPlayerMomentsState createState() => _VideoPlayerMomentsState();
@@ -49,11 +65,8 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
 
   late bool _showVotingBars;
 
-  late UserBloc _userBloc;
-
   late bool _showCommentInput;
 
-  late int _currentVp;
   TextEditingController _replyController = new TextEditingController();
 
   late bool _momentUploading;
@@ -61,14 +74,12 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
   @override
   void initState() {
     super.initState();
-    _currentVp = 0;
+
     _votingDirection = true;
     _showVotingBars = false;
 
     _showCommentInput = false;
     _momentUploading = false;
-    _userBloc = BlocProvider.of<UserBloc>(context);
-    _userBloc.add(FetchDTCVPEvent());
 
     widget.momentsController.pause();
     _videoController = VideoPlayerController.network(widget.feedItem.videoUrl)
@@ -192,7 +203,6 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             } else if (_showVotingBars && !_votingDirection) {
                               _votingDirection = true;
                             } else if (!_showVotingBars) {
-                              // _userBloc.add(FetchDTCVPEvent());
                               _showCommentInput = false;
                               _showVotingBars = true;
                               _votingDirection = true;
@@ -217,7 +227,6 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             if (_showVotingBars && _votingDirection) {
                               _votingDirection = false;
                             } else if (!_showVotingBars) {
-                              // _userBloc.add(FetchDTCVPEvent());
                               _showCommentInput = false;
                               _showVotingBars = true;
                               _votingDirection = false;
@@ -244,7 +253,6 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             if (!_showCommentInput) {
                               _showCommentInput = true;
                               _showVotingBars = false;
-                              _userBloc.add(FetchDTCVPEvent());
                             } else {
                               _showCommentInput = false;
                             }
@@ -263,67 +271,51 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
               ),
             ),
             Visibility(
-                visible: _showVotingBars,
-                child: AspectRatio(
-                  aspectRatio: 5 / 8,
-                  child: Stack(
-                    children: [
-                      GestureDetector(
-                        child: Container(
-                          color: Colors.transparent,
-                        ),
-                        onTap: () {
-                          setState(() {
-                            _showVotingBars = false;
-                            widget.momentsController.play();
-                            _videoController.play();
-                          });
-                        },
+              visible: _showVotingBars,
+              child: AspectRatio(
+                aspectRatio: 5 / 8,
+                child: Stack(
+                  children: [
+                    GestureDetector(
+                      child: Container(
+                        color: Colors.transparent,
                       ),
-                      Align(
+                      onTap: () {
+                        setState(() {
+                          _showVotingBars = false;
+                          widget.momentsController.play();
+                          _videoController.play();
+                        });
+                      },
+                    ),
+                    AspectRatio(
+                      aspectRatio: 8 / 5,
+                      child: Align(
                         alignment: Alignment.center,
-                        child: BlocBuilder<UserBloc, UserState>(
-                          bloc: _userBloc,
-                          builder: (context, state) {
-                            // TODO error handling
-
-                            if (state is UserDTCVPLoadingState) {
-                              return CircularProgressIndicator();
-                            } else if (state is UserDTCVPLoadedState) {
-                              return AspectRatio(
-                                aspectRatio: 8 / 5,
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    color: Colors.black.withAlpha(85),
-                                    child: VotingSliderStandalone(
-                                      defaultVote: double.parse(
-                                          widget.defaultPostsVotingWeight),
-                                      defaultTip: double.parse(
-                                          widget.defaultPostsVotingTip),
-                                      author: widget.feedItem.author,
-                                      link: widget.feedItem.link,
-                                      downvote: !_votingDirection,
-                                      currentVT: state.vtBalance["v"]! + 0.0,
-                                      isPost: true,
-                                      sendCallback: () {
-                                        widget.momentsController.play();
-                                        _videoController.play();
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              );
-                            } else {
-                              return CircularProgressIndicator();
-                            }
-                          },
+                        child: Container(
+                          color: Colors.black.withAlpha(85),
+                          child: VotingSliderStandalone(
+                            defaultVote:
+                                double.parse(widget.defaultPostsVotingWeight),
+                            defaultTip:
+                                double.parse(widget.defaultPostsVotingTip),
+                            author: widget.feedItem.author,
+                            link: widget.feedItem.link,
+                            downvote: !_votingDirection,
+                            currentVT: widget.currentVP,
+                            isPost: true,
+                            sendCallback: () {
+                              widget.momentsController.play();
+                              _videoController.play();
+                            },
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                )),
-
+                    ),
+                  ],
+                ),
+              ),
+            ),
             Visibility(
                 visible: _showCommentInput,
                 child: AspectRatio(
@@ -356,80 +348,63 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                                   child: TextField(
                                     //key: UniqueKey(),
                                     autofocus: _showCommentInput,
+                                    cursorColor: globalRed,
                                     controller: _replyController,
+                                    maxLines: 4,
                                     style:
                                         Theme.of(context).textTheme.bodyText1,
                                   ),
                                 ),
                               ),
-                              BlocBuilder<UserBloc, UserState>(
-                                  bloc: _userBloc,
-                                  builder: (context, state) {
-                                    // TODO error handling
+                              Padding(
+                                  padding: EdgeInsets.all(5.w),
+                                  child: InputChip(
+                                    onPressed: () {
+                                      UploadData _uploadData = new UploadData(
+                                        link: "",
+                                        parentAuthor: widget.feedItem.author,
+                                        parentPermlink: widget.feedItem.link,
+                                        title: "",
+                                        description:
+                                            _replyController.value.text,
+                                        tag: "",
+                                        vpPercent: double.parse(
+                                            widget.defaultCommentsVotingWeight),
+                                        vpBalance: widget.currentVP.floor(),
+                                        burnDtc: 0,
+                                        dtcBalance:
+                                            0, // TODO promoted comment implementation missing
+                                        isPromoted: false,
+                                        duration: "",
+                                        thumbnailLocation: "",
+                                        localThumbnail: false,
+                                        videoLocation: "",
+                                        localVideoFile: false,
+                                        originalContent: false,
+                                        nSFWContent: false,
+                                        unlistVideo: false,
+                                        isEditing: false,
+                                        videoSourceHash: "",
+                                        video240pHash: "",
+                                        video480pHash: "",
+                                        videoSpriteHash: "",
+                                        thumbnail640Hash: "",
+                                        thumbnail210Hash: "",
+                                        uploaded: false,
+                                        crossPostToHive: false,
+                                      );
 
-                                    if (state is UserDTCVPLoadingState) {
-                                      return CircularProgressIndicator();
-                                    }
-                                    if (state is UserDTCVPLoadedState) {
-                                      _currentVp = state.vtBalance["v"]!;
-                                    }
-
-                                    return Padding(
-                                      padding: EdgeInsets.all(5.w),
-                                      child: InputChip(
-                                        onPressed: () {
-                                          UploadData _uploadData =
-                                              new UploadData(
-                                                  link: "",
-                                                  parentAuthor:
-                                                      widget.feedItem.author,
-                                                  parentPermlink:
-                                                      widget.feedItem.link,
-                                                  title: "",
-                                                  description: _replyController
-                                                      .value.text,
-                                                  tag: "",
-                                                  vpPercent: double.parse(widget
-                                                      .defaultCommentsVotingWeight),
-                                                  vpBalance: _currentVp,
-                                                  burnDtc: 0,
-                                                  dtcBalance:
-                                                      0, // TODO promoted comment implementation missing
-                                                  isPromoted: false,
-                                                  duration: "",
-                                                  thumbnailLocation: "",
-                                                  localThumbnail: false,
-                                                  videoLocation: "",
-                                                  localVideoFile: false,
-                                                  originalContent: false,
-                                                  nSFWContent: false,
-                                                  unlistVideo: false,
-                                                  isEditing: false,
-                                                  videoSourceHash: "",
-                                                  video240pHash: "",
-                                                  video480pHash: "",
-                                                  videoSpriteHash: "",
-                                                  thumbnail640Hash: "",
-                                                  thumbnail210Hash: "",
-                                                  uploaded: false,
-                                                  crossPostToHive: false);
-
-                                          BlocProvider.of<TransactionBloc>(
-                                                  context)
-                                              .add(SendCommentEvent(
-                                                  _uploadData));
-                                          setState(() {
-                                            _showCommentInput = false;
-                                            _replyController.text = '';
-                                            widget.momentsController.play();
-                                            _videoController.play();
-                                          });
-                                        },
-                                        label:
-                                            FaIcon(FontAwesomeIcons.paperPlane),
-                                      ),
-                                    );
-                                  }),
+                                      BlocProvider.of<TransactionBloc>(context)
+                                          .add(SendCommentEvent(_uploadData));
+                                      setState(() {
+                                        _showCommentInput = false;
+                                        _replyController.text = '';
+                                        widget.momentsController.play();
+                                        _videoController.play();
+                                      });
+                                    },
+                                    label: FaIcon(FontAwesomeIcons.paperPlane),
+                                  )),
                             ],
                           ),
                         ),
@@ -437,8 +412,6 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                     ],
                   ),
                 )),
-
-            // TODO error handling
           ],
         ),
       ),

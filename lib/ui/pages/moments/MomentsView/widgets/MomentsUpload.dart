@@ -28,6 +28,11 @@ class MomentsUploadButton extends StatefulWidget {
   VoidCallback clickedCallback;
   VoidCallback leaveDialogWithUploadCallback;
   VoidCallback leaveDialogWithoutUploadCallback;
+  String momentsVotingWeight;
+  String momentsUploadNSFW;
+  String momentsUploadOC;
+  String momentsUploadUnlist;
+  String momentsUploadCrosspost;
 
   MomentsUploadButton(
       {Key? key,
@@ -35,7 +40,12 @@ class MomentsUploadButton extends StatefulWidget {
       required this.clickedCallback,
       required this.leaveDialogWithUploadCallback,
       required this.leaveDialogWithoutUploadCallback,
-      required this.currentVT})
+      required this.currentVT,
+      required this.momentsVotingWeight,
+      required this.momentsUploadNSFW,
+      required this.momentsUploadOC,
+      required this.momentsUploadUnlist,
+      required this.momentsUploadCrosspost})
       : super(key: key);
 
   @override
@@ -45,8 +55,6 @@ class MomentsUploadButton extends StatefulWidget {
 class _MomentsUploadButtontate extends State<MomentsUploadButton> {
   late IPFSUploadBloc _uploadBloc;
 
-  late UserBloc _userBloc;
-  late double _vpBalance;
   File? _image;
   File? _video;
   final _picker = ImagePicker();
@@ -83,15 +91,28 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
       uploaded: false,
       crossPostToHive: false);
 
-  void uploadMoment(String videoPath, int vpBalance, double vpPercent) async {
+  void uploadMoment(
+      String videoPath,
+      int vpBalance,
+      double vpPercent,
+      String momentsUploadNSFW,
+      String momentsUploadOC,
+      String momentsUploadUnlist,
+      String momentsUploadCrosspost) async {
     _uploadData.videoLocation = videoPath;
     _uploadData.vpBalance = vpBalance;
     _uploadData.vpPercent = vpPercent;
+    _uploadData.nSFWContent = momentsUploadNSFW == "true";
+    _uploadData.originalContent = momentsUploadOC == "true";
+    _uploadData.unlistVideo = momentsUploadUnlist == "true";
+    _uploadData.crossPostToHive = momentsUploadCrosspost == "true";
 
     final info = await VideoCompress.getMediaInfo(videoPath);
 
     _uploadData.duration = (info.duration! / 1000).floor().toString();
-
+    // this will turn the global "+" icon to a rotating DTube Logo and deactivate further uploas until current is finished
+    BlocProvider.of<TransactionBloc>(context)
+        .add(TransactionPreprocessing(txType: _uploadData.isPromoted ? 13 : 4));
     _uploadBloc.add(UploadVideo(
         videoPath: _uploadData.videoLocation,
         thumbnailPath: "",
@@ -105,9 +126,6 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
   void initState() {
     super.initState();
     _uploadBloc = BlocProvider.of<IPFSUploadBloc>(context);
-    // _3rdPartyUploadBloc = BlocProvider.of<ThirdPartyUploaderBloc>(context);
-    _userBloc = BlocProvider.of<UserBloc>(context);
-
     loadHiveSignerAccessToken();
   }
 
@@ -164,7 +182,14 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
     }
 
     if (_pickedFile != null) {
-      uploadMoment(_pickedFile.path, vpBalance, vpPercent);
+      uploadMoment(
+          _pickedFile.path,
+          widget.currentVT.floor(),
+          double.parse(widget.momentsVotingWeight),
+          widget.momentsUploadNSFW,
+          widget.momentsUploadOC,
+          widget.momentsUploadUnlist,
+          widget.momentsUploadCrosspost);
     } else {
       widget.leaveDialogWithoutUploadCallback();
     }
@@ -173,40 +198,33 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<IPFSUploadBloc, IPFSUploadState>(
-        builder: (context, state) {
-      if (!(state is IPFSUploadInitialState)) {
-        return DTubeLogoPulseRotating(size: 15.w);
-      }
-      return BlocBuilder<UserBloc, UserState>(
-        bloc: _userBloc,
-        builder: (context, state) {
-          if (state is UserDTCVPLoadedState) {
-            _vpBalance = state.vtBalance['v']! + 0.0;
-          }
-          return GestureDetector(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ShadowedIcon(
-                    size: 10.w,
-                    icon: FontAwesomeIcons.eye,
-                    color: Colors.white,
-                    shadowColor: Colors.black),
-                ShadowedIcon(
-                    size: 5.w,
-                    icon: FontAwesomeIcons.plus,
-                    color: Colors.white,
-                    shadowColor: Colors.black)
-              ],
-            ),
-            onTap: () async {
-              widget.clickedCallback();
-              getFile(
-                  true, true, _vpBalance.floor(), widget.defaultVotingWeight);
-            },
-          );
-        },
-      );
-    });
+      builder: (context, state) {
+        if (!(state is IPFSUploadInitialState)) {
+          return DTubeLogoPulseRotating(size: 15.w);
+        }
+        return GestureDetector(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ShadowedIcon(
+                  size: 10.w,
+                  icon: FontAwesomeIcons.eye,
+                  color: Colors.white,
+                  shadowColor: Colors.black),
+              ShadowedIcon(
+                  size: 5.w,
+                  icon: FontAwesomeIcons.plus,
+                  color: Colors.white,
+                  shadowColor: Colors.black)
+            ],
+          ),
+          onTap: () async {
+            widget.clickedCallback();
+            getFile(true, true, widget.currentVT.floor(),
+                widget.defaultVotingWeight);
+          },
+        );
+      },
+    );
   }
 }

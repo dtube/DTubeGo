@@ -27,8 +27,6 @@ class _UploaderMainPageState extends State<UploaderMainPage>
     with SingleTickerProviderStateMixin {
   List<String> uploadOptions = ["IPFS", "3rd Party"];
 
-// TODO: only forward ipfs and tx bloc here to the upload form -> to react on state changes within upload button from the background upload
-
   late TabController _tabController;
 
   @override
@@ -74,10 +72,6 @@ class _UploaderMainPageState extends State<UploaderMainPage>
                         BlocProvider(
                           create: (context) =>
                               UserBloc(repository: UserRepositoryImpl()),
-                        ),
-                        BlocProvider(
-                          create: (context) => IPFSUploadBloc(
-                              repository: IPFSUploadRepositoryImpl()),
                         ),
                         BlocProvider(
                           create: (context) => HivesignerBloc(

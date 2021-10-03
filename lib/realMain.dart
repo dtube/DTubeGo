@@ -35,9 +35,13 @@ const MaterialColor kPrimaryColor = const MaterialColor(
 );
 
 void realMain() {
-  runApp(Phoenix(
-    child: MyApp(),
-  ));
+  runApp(
+    // embedding MyApp into a Pheonix widget to be able to restart the app from within the app itself
+    // used for saving the global settings to reinitialize everything based on those settings
+    Phoenix(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -46,8 +50,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late TransactionBloc txBloc;
-
   @override
   void initState() {
     super.initState();
@@ -78,6 +80,7 @@ class _MyAppState extends State<MyApp> {
                 theme: dtubeDarkTheme,
                 home: BlocProvider<AuthBloc>(
                   create: (context) {
+                    // add the AppStartedEvent to try to login with perhaps existing login credentails and forward to the startup "dialog"
                     return AuthBloc(repository: AuthRepositoryImpl())
                       ..add(AppStartedEvent());
                   },

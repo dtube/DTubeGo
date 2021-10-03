@@ -14,8 +14,6 @@ import 'package:dtube_go/ui/startup/LoginScreen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
-bool ActivatedOnboardingJourney = false;
-
 class StartUp extends StatefulWidget {
   StartUp({Key? key}) : super(key: key);
 
@@ -37,33 +35,35 @@ class _StartUpState extends State<StartUp> {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
+        // if the app has never been opened before -> show faq
         if (AppConfig.faqStartup) {
-          if (ActivatedOnboardingJourney) {
-            if (state is NeverUsedTheAppBeforeState) {
-              return OnboardingJourney(loggedIn: false);
-            }
+          // currently disabled because of missing faq content
+          if (state is NeverUsedTheAppBeforeState) {
+            return OnboardingJourney(loggedIn: false);
           }
         }
-
+        // if the user has been authenticated before using login credentials -> show Pinpad
         if (state is SignedInState) {
           return BlocProvider<SettingsBloc>(
-              create: (BuildContext context) =>
-                  SettingsBloc()..add(FetchSettingsEvent()),
+              create: (BuildContext context) => SettingsBloc()
+                ..add(
+                    FetchSettingsEvent()), // add event FetchSettingsEvent to prepare the data for the pinpad dialog
               child: PinPadScreen());
         }
-
+        // if credentials are wrong or key got deleted -> show login form with the prefilled username
         if (state is SignInFailedState) {
           return LoginForm(
             message: state.message,
             username: state.username,
           );
         }
-
+        // if the user logged out or no login credentials have been found in the secure storage -> show login form
         if (state is SignOutCompleteState ||
             state is NoSignInInformationFoundState) {
           return LoginForm();
         }
 
+        // as long as there are no informations from the authentication logic -> show loading animation
         return Scaffold(
           backgroundColor: globalBlue,
           body: Center(
