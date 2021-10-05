@@ -1,3 +1,5 @@
+import 'package:responsive_sizer/responsive_sizer.dart';
+
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/utils/navigationShortcuts.dart';
@@ -39,12 +41,12 @@ class UserResultCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: AccountAvatarBase(
-                      username: name,
-                      avatarSize: 45,
-                      showVerified: true,
-                      showName: true,
-                      width: 150,
-                    ),
+                        username: name,
+                        avatarSize: 10.w,
+                        showVerified: true,
+                        showName: true,
+                        width: 70.w,
+                        height: 5.h),
                   ),
                   // Text(
                   //   name,

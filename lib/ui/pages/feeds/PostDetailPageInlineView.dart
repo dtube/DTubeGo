@@ -177,12 +177,12 @@ class _PostDetailsState extends State<PostDetails> {
                   children: [
                     InputChip(
                       label: AccountAvatarBase(
-                        username: widget.post.author,
-                        avatarSize: 5.h,
-                        showVerified: true,
-                        showName: true,
-                        width: 15.w,
-                      ),
+                          username: widget.post.author,
+                          avatarSize: 5.h,
+                          showVerified: true,
+                          showName: true,
+                          width: 15.w,
+                          height: 5.h),
                       onPressed: () {
                         navigateToUserDetailPage(
                             context, widget.post.author, () {});

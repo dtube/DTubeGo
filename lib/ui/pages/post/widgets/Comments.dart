@@ -41,10 +41,11 @@ class CommentDisplay extends StatelessWidget {
             children: [
               AccountAvatarBase(
                 username: root.author,
-                avatarSize: 50,
+                avatarSize: 12.w,
                 showVerified: true,
                 showName: true,
-                width: 30.w,
+                width: 35.w,
+                height: 8.h,
               ),
               SizedBox(
                 width: 8,
@@ -53,7 +54,7 @@ class CommentDisplay extends StatelessWidget {
                 width: 60.w,
                 child: Text(
                   root.commentjson.description,
-                  style: Theme.of(parentContext).textTheme.bodyText2,
+                  style: Theme.of(parentContext).textTheme.bodyText1,
                 ),
               ),
             ],
@@ -104,16 +105,17 @@ class CommentDisplay extends StatelessWidget {
               children: [
                 AccountAvatarBase(
                   username: root.author,
-                  avatarSize: 50,
+                  avatarSize: 12.w,
                   showVerified: true,
                   showName: true,
-                  width: 30.w,
+                  width: 35.w,
+                  height: 8.h,
                 ),
                 Container(
                   width: 60.w,
                   child: Text(
                     root.commentjson.description,
-                    style: Theme.of(parentContext).textTheme.bodyText2,
+                    style: Theme.of(parentContext).textTheme.bodyText1,
                   ),
                 ),
               ],

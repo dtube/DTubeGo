@@ -114,8 +114,16 @@ class Data {
       this.author});
 
   Data.fromJson(Map<String, dynamic> json) {
-    link = json['link'] != null ? json['link'] : '';
-    author = json['author'] != null ? json['author'] : '';
+    link = json['pp'] != null
+        ? json['pp']
+        : json['link'] != null
+            ? json['link']
+            : '';
+    author = json['pa'] != null
+        ? json['pa']
+        : json['author'] != null
+            ? json['author']
+            : '';
 
     vt = json['vt'] != null ? json['vt'] : 0;
 

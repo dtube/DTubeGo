@@ -242,10 +242,11 @@ class _PostDetailsState extends State<PostDetails> {
                                       child: InputChip(
                                         label: AccountAvatarBase(
                                           username: widget.post.author,
-                                          avatarSize: 50,
+                                          avatarSize: 15.w,
                                           showVerified: true,
                                           showName: true,
                                           width: 40.w,
+                                          height: 5.h,
                                         ),
                                         onPressed: () {
                                           navigateToUserDetailPage(context,
@@ -415,20 +416,31 @@ class _PostDetailsState extends State<PostDetails> {
                           widget.post.comments != null &&
                                   widget.post.comments!.length > 0
                               ? Container(
-                                  height: 200.w,
+                                  height: 50.h,
                                   child: ListView.builder(
                                     itemCount: widget.post.comments!.length,
                                     padding: EdgeInsets.zero,
                                     itemBuilder:
                                         (BuildContext context, int index) =>
-                                            CommentDisplay(
-                                                widget.post.comments![index],
-                                                _defaultVoteWeightComments,
-                                                _currentVT,
-                                                widget.post.author,
-                                                widget.post.link,
-                                                _defaultVoteTipComments,
-                                                context),
+                                            Column(
+                                      children: [
+                                        CommentDisplay(
+                                            widget.post.comments![index],
+                                            _defaultVoteWeightComments,
+                                            _currentVT,
+                                            widget.post.author,
+                                            widget.post.link,
+                                            _defaultVoteTipComments,
+                                            context),
+                                        SizedBox(
+                                            height: index ==
+                                                    widget.post.comments!
+                                                            .length -
+                                                        1
+                                                ? 200
+                                                : 0)
+                                      ],
+                                    ),
                                   ),
                                 )
                               : SizedBox(height: 0),
@@ -506,11 +518,13 @@ class _VotesOverviewState extends State<VotesOverview> {
                                   height: 10.w,
                                   width: 10.w,
                                   child: AccountAvatarBase(
-                                      username: _allVotes[index].u,
-                                      avatarSize: 10.w,
-                                      showVerified: true,
-                                      showName: false,
-                                      width: 10.w),
+                                    username: _allVotes[index].u,
+                                    avatarSize: 10.w,
+                                    showVerified: true,
+                                    showName: false,
+                                    width: 10.w,
+                                    height: 5.h,
+                                  ),
                                 ),
                                 SizedBox(width: 2.w),
                                 Container(

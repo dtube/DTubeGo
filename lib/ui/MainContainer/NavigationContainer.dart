@@ -107,7 +107,8 @@ class _NavigationContainerState extends State<NavigationContainer> {
             avatarSize: globalIconSizeMedium,
             showVerified: false,
             showName: false,
-            width: globalIconSizeMedium),
+            width: globalIconSizeMedium,
+            height: globalIconSizeMedium),
       ),
     ),
   ];

@@ -22,7 +22,8 @@ class AccountAvatarBase extends StatelessWidget {
       this.nameFontSizeMultiply,
       this.showNameLeft,
       this.showFullUserInfo,
-      required this.width})
+      required this.width,
+      required this.height})
       : super(key: key);
   final String username;
   final double avatarSize;
@@ -32,6 +33,7 @@ class AccountAvatarBase extends StatelessWidget {
   bool? showNameLeft;
   bool? showFullUserInfo;
   double width;
+  double height;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +58,7 @@ class AccountAvatarBase extends StatelessWidget {
         showNameLeft: showNameLeft!,
         showFullUserInfo: showFullUserInfo!,
         width: width,
+        height: height,
       ),
     );
   }
@@ -71,7 +74,8 @@ class AccountAvatar extends StatefulWidget {
       required this.nameFontSizeMultiply,
       required this.showNameLeft,
       required this.showFullUserInfo,
-      required this.width})
+      required this.width,
+      required this.height})
       : super(key: key);
   final String username;
   final double avatarSize;
@@ -81,6 +85,7 @@ class AccountAvatar extends StatefulWidget {
   final bool showNameLeft;
   final bool showFullUserInfo;
   final double width;
+  final double height;
 
   @override
   _AccountAvatarState createState() => _AccountAvatarState();
@@ -106,6 +111,7 @@ class _AccountAvatarState extends State<AccountAvatar> {
           try {
             return Container(
               width: widget.width,
+              height: widget.height,
               child: Row(
                 mainAxisAlignment: !widget.showName
                     ? MainAxisAlignment.center
@@ -319,7 +325,7 @@ class ShowName extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             sizeMultiply: userData.jsonString?.additionals?.displayName != null
-                ? 1
+                ? 0.8
                 : sizeMultiply,
           ),
         ],

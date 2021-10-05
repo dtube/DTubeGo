@@ -1,3 +1,5 @@
+import 'package:responsive_sizer/responsive_sizer.dart';
+
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/utils/friendlyTimestamp.dart';
@@ -44,12 +46,12 @@ class PostResultCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AccountAvatarBase(
-                    username: author,
-                    avatarSize: 45,
-                    showVerified: true,
-                    showName: true,
-                    width: 150,
-                  ),
+                      username: author,
+                      avatarSize: 20.w,
+                      showVerified: true,
+                      showName: true,
+                      width: 30.w,
+                      height: 10.h),
                   Text(
                     TimeAgo.timeInAgoTS(ts),
                     style: Theme.of(context).textTheme.bodyText1,

@@ -171,6 +171,9 @@ class _UserState extends State<UserPage> {
                     width: Device.orientation == Orientation.portrait
                         ? 95.w
                         : 70.w,
+                    height: Device.orientation == Orientation.portrait
+                        ? 18.h
+                        : 25.h,
                   ),
                 ),
               ],

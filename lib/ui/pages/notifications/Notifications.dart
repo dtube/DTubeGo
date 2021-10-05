@@ -75,7 +75,7 @@ class _NotificationsState extends State<Notifications> {
 
   Widget buildnotificationList(
       List<AvalonNotification> notifications, String username) {
-    List<int> navigatableTxsUser = [1, 2, 7, 8];
+    List<int> navigatableTxsUser = [1, 2, 3, 7, 8];
     List<int> navigatableTxsPost = [4, 5, 13, 19];
 
     return ListView.builder(
@@ -97,8 +97,6 @@ class _NotificationsState extends State<Notifications> {
               postNavigation: _postNavigationPossible,
             ),
             onTap: () {
-              List<int> navigatableTxsUser = [1, 2, 7, 8];
-              List<int> navigatableTxsPost = [4, 5, 13, 19];
               if (_userNavigationPossible) {
                 navigateToUserDetailPage(
                     context, notifications[pos].tx.sender, () {});
@@ -141,7 +139,7 @@ class CustomListItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        height: 7.h,
+        height: 10.h,
         width: 100.w,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -154,10 +152,11 @@ class CustomListItem extends StatelessWidget {
                       UserBloc(repository: UserRepositoryImpl()),
                   child: AccountAvatarBase(
                     username: sender,
-                    avatarSize: 10.w,
+                    avatarSize: 15.w,
                     showVerified: true,
                     showName: true,
                     width: 35.w,
+                    height: 7.h,
                   ),
                 ),
                 SizedBox(
@@ -220,6 +219,7 @@ class NotificationTitle extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
             DateFormat('yyyy-MM-dd kk:mm').format(
@@ -228,11 +228,11 @@ class NotificationTitle extends StatelessWidget {
                 ':',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyText2),
+            style: Theme.of(context).textTheme.bodyText1),
         Text(friendlyDescription,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyText2),
+            style: Theme.of(context).textTheme.bodyText1),
       ],
     );
   }

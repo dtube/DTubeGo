@@ -1,3 +1,5 @@
+import 'package:responsive_sizer/responsive_sizer.dart';
+
 import 'package:dtube_go/bloc/rewards/rewards_bloc.dart';
 import 'package:dtube_go/bloc/rewards/rewards_bloc_full.dart';
 import 'package:dtube_go/bloc/rewards/rewards_event.dart';
@@ -184,10 +186,11 @@ class _RewardsCardState extends State<RewardsCard> {
                 height: 40,
                 child: AccountAvatarBase(
                   username: widget.reward.author,
-                  avatarSize: 40,
+                  avatarSize: 8.w,
                   showVerified: true,
                   showName: false,
-                  width: 100,
+                  width: 8.w,
+                  height: 8.w,
                 )),
             SizedBox(width: 4),
             Column(

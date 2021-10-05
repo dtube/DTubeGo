@@ -519,13 +519,13 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                     navigateToUserDetailPage(context, widget.author, () {});
                   },
                   child: AccountAvatarBase(
-                    username: widget.author,
-                    avatarSize: _avatarSize,
-                    showVerified: true,
-                    showName: false,
-                    nameFontSizeMultiply: 1,
-                    width: 10.w,
-                  ),
+                      username: widget.author,
+                      avatarSize: _avatarSize,
+                      showVerified: true,
+                      showName: false,
+                      nameFontSizeMultiply: 1,
+                      width: 10.w,
+                      height: _avatarSize),
                 ),
                 SizedBox(width: 2.w),
                 Container(

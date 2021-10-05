@@ -156,11 +156,13 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                           widget.goingInForegroundCallback);
                     },
                     child: AccountAvatarBase(
-                        username: widget.feedItem.author,
-                        avatarSize: 10.h,
-                        showVerified: true,
-                        showName: true,
-                        width: 60.w),
+                      username: widget.feedItem.author,
+                      avatarSize: 10.h,
+                      showVerified: true,
+                      showName: true,
+                      width: 60.w,
+                      height: 10.h,
+                    ),
                   ),
                 ),
               ),

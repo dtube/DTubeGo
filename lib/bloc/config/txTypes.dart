@@ -25,7 +25,7 @@ var txTypeFriendlyDescriptionNotifications = {
   0: 'NEW_ACCOUNT',
   1: 'voted for ##USERNAME as chain leader', //'APPROVE_NODE_OWNER',
   2: 'unvoted ##USERNAME as chain leader', //'DISAPROVE_NODE_OWNER',
-  3: 'sent ##USERNAME\n##DTCAMOUNTDTC', //'TRANSFER',
+  3: 'sent ##USERNAME ##DTCAMOUNTDTC', //'TRANSFER',
   4: 'commented on ##USERNAMES content', // 'COMMENT',
   5: 'voted on ##USERNAMES content', // 'VOTE',
   6: 'USER_JSON',

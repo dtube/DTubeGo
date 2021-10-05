@@ -1,3 +1,5 @@
+import 'package:responsive_sizer/responsive_sizer.dart';
+
 import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_go/bloc/config/txTypes.dart';
 import 'package:dtube_go/style/dtubeLoading.dart';
@@ -255,12 +257,12 @@ class ActivityItem extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                             child: AccountAvatarBase(
-                              username: txData.sender,
-                              avatarSize: 40,
-                              showVerified: true,
-                              showName: true,
-                              width: 150,
-                            ),
+                                username: txData.sender,
+                                avatarSize: 20.w,
+                                showVerified: true,
+                                showName: true,
+                                width: 30.w,
+                                height: 10.h),
                           ),
                         ],
                       ),
