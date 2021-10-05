@@ -53,6 +53,7 @@ dependencies:
   # UI - image/video related
   #camera: ^0.8.1+3 # gives possibility to capture camera input in own widget
   image_picker: ^0.8.3+3 # open file browser / record image/video
+  image_cropper: ^1.4.1 # cropping tool for thumbnails
 
   # UI - responsive design
   native_device_orientation: ^1.0.0 # get the real device orientation

@@ -1,7 +1,7 @@
+import 'package:responsive_sizer/responsive_sizer.dart';
+
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
-
-import 'package:dtube_go/style/dtubeLoading.dart';
 
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
@@ -19,6 +19,7 @@ import 'package:dtube_go/ui/widgets/players/BetterPlayer.dart';
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
 
 import 'package:dtube_go/utils/secureStorage.dart';
+import 'package:dtube_go/utils/imageCropper.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -150,9 +151,9 @@ class _UploadFormState extends State<UploadForm> {
     } else {
       _pickedFile = await _picker.pickImage(source: ImageSource.gallery);
       if (_pickedFile != null) {
-        uploadEnabled = false;
-        BlocProvider.of<ThirdPartyUploaderBloc>(context)
-            .add(UploadFile(filePath: _pickedFile.path));
+        // uploadEnabled = false;
+        // BlocProvider.of<ThirdPartyUploaderBloc>(context)
+        //     .add(UploadFile(filePath: _pickedFile.path));
         var _tempImage = File(_pickedFile.path);
         var decodedImage =
             await decodeImageFromList(_tempImage.readAsBytesSync());
@@ -160,7 +161,7 @@ class _UploadFormState extends State<UploadForm> {
         print(decodedImage.height);
         if (decodedImage.height != decodedImage.width / 16 * 9) {
           _imageHints =
-              "We recommend to use a thumbnail with an aspect ration of 16:9. Yours is different.";
+              "We recommend to use a thumbnail with an aspect ratio of 16:9. Yours is different but you can crop it now:";
         }
       }
     }
@@ -328,7 +329,7 @@ class _UploadFormState extends State<UploadForm> {
                     Icon(FontAwesomeIcons.solidFolderOpen),
                     SizedBox(width: 8),
                     Text(_video == null ? "pick video" : "change video file",
-                        style: Theme.of(context).textTheme.bodyText2),
+                        style: Theme.of(context).textTheme.bodyText1),
                   ],
                 ),
                 onPressed: () {
@@ -341,7 +342,7 @@ class _UploadFormState extends State<UploadForm> {
                     Icon(FontAwesomeIcons.video),
                     SizedBox(width: 8),
                     Text(_video == null ? "record video" : "record a new video",
-                        style: Theme.of(context).textTheme.bodyText2),
+                        style: Theme.of(context).textTheme.bodyText1),
                   ],
                 ),
                 onPressed: () {
@@ -370,7 +371,7 @@ class _UploadFormState extends State<UploadForm> {
                       selectedColor: globalRed,
                       label: Text(
                         (showVideoPreview ? 'hide' : 'show') + " video preview",
-                        style: Theme.of(context).textTheme.bodyText2,
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
                       avatar: FaIcon(showVideoPreview
                           ? FontAwesomeIcons.checkSquare
@@ -468,53 +469,83 @@ class _UploadFormState extends State<UploadForm> {
           Column(
             children: [
               InputChip(
-                label: Text(stateUploadData.thumbnailLocation == ""
-                    ? "pick a custom thumbnail"
-                    : "change thumbnail"),
+                label: Text(
+                    stateUploadData.thumbnailLocation == ""
+                        ? "pick a custom thumbnail"
+                        : "change thumbnail",
+                    style: Theme.of(context).textTheme.bodyText1),
                 onPressed: () {
                   getFile(false, false);
                 },
               ),
-              BlocBuilder<ThirdPartyUploaderBloc, ThirdPartyUploaderState>(
-                  builder: (context, state) {
-                if (state is ThirdPartyUploaderUploadingState) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                            "please wait until thumbnail upload is finished"),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: DTubeLogoPulse(
-                          size: 40,
-                        ),
-                      ),
-                    ],
-                  );
-                }
-                if (state is ThirdPartyUploaderUploadedState) {
-                  stateUploadData.thumbnailLocation = state.uploadResponse;
-                  stateUploadData.localThumbnail = false;
-                }
-                return stateUploadData.thumbnailLocation != ""
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                              width: 250,
-                              child: stateUploadData.localThumbnail
-                                  ? Image.file(
-                                      File(stateUploadData.thumbnailLocation))
-                                  : CachedNetworkImage(
-                                      imageUrl:
-                                          stateUploadData.thumbnailLocation)),
-                          Container(width: 150, child: Text(_imageHints))
-                        ],
-                      )
-                    : SizedBox(height: 0);
-              }),
+              // BlocBuilder<ThirdPartyUploaderBloc, ThirdPartyUploaderState>(
+              //     builder: (context, state) {
+              //   if (state is ThirdPartyUploaderUploadingState) {
+              //     return Column(
+              //       children: [
+              //         Padding(
+              //           padding: const EdgeInsets.all(8.0),
+              //           child: Text(
+              //               "please wait until thumbnail upload is finished"),
+              //         ),
+              //         Padding(
+              //           padding: const EdgeInsets.all(8.0),
+              //           child: DTubeLogoPulse(
+              //             size: 40,
+              //           ),
+              //         ),
+              //       ],
+              //     );
+              //   }
+              //   if (state is ThirdPartyUploaderUploadedState) {
+              //     stateUploadData.thumbnailLocation = state.uploadResponse;
+              //     stateUploadData.localThumbnail = false;
+              //   }
+              //return
+              stateUploadData.thumbnailLocation != ""
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                            width: 80.w,
+                            child: stateUploadData.localThumbnail
+                                ? Image.file(
+                                    File(stateUploadData.thumbnailLocation))
+                                : CachedNetworkImage(
+                                    imageUrl:
+                                        stateUploadData.thumbnailLocation)),
+                        _imageHints != ""
+                            ? Column(
+                                children: [
+                                  Container(
+                                      width: 80.w,
+                                      child: Text(_imageHints,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1)),
+                                  InputChip(
+                                    backgroundColor: globalRed,
+                                    label: Text("crop thumbnail",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1),
+                                    onPressed: () async {
+                                      File croppedFile = await cropImage(File(
+                                          stateUploadData.thumbnailLocation));
+                                      setState(() {
+                                        stateUploadData.thumbnailLocation =
+                                            croppedFile.path;
+                                      });
+                                    },
+                                  )
+                                ],
+                              )
+                            : SizedBox(height: 0)
+                      ],
+                    )
+                  : SizedBox(height: 0)
+              //       ;
+              // }),
             ],
           ),
         ],
@@ -535,7 +566,8 @@ class _UploadFormState extends State<UploadForm> {
           children: [
             ChoiceChip(
                 selected: stateUploadData.originalContent,
-                label: Text('original content'),
+                label: Text('original content',
+                    style: Theme.of(context).textTheme.bodyText1),
                 labelStyle: TextStyle(color: Colors.white),
                 avatar: stateUploadData.originalContent
                     ? FaIcon(
@@ -553,7 +585,8 @@ class _UploadFormState extends State<UploadForm> {
                 }),
             ChoiceChip(
                 selected: stateUploadData.nSFWContent,
-                label: Text('nsfw content'),
+                label: Text('nsfw content',
+                    style: Theme.of(context).textTheme.bodyText1),
                 labelStyle: TextStyle(color: Colors.white),
                 avatar: stateUploadData.nSFWContent
                     ? FaIcon(
@@ -570,7 +603,8 @@ class _UploadFormState extends State<UploadForm> {
                 }),
             ChoiceChip(
                 selected: stateUploadData.unlistVideo,
-                label: Text('unlist video'),
+                label: Text('unlist video',
+                    style: Theme.of(context).textTheme.bodyText1),
                 labelStyle: TextStyle(color: Colors.white),
                 avatar: stateUploadData.unlistVideo
                     ? FaIcon(
@@ -588,7 +622,8 @@ class _UploadFormState extends State<UploadForm> {
             hiveSignerUsername != ""
                 ? ChoiceChip(
                     selected: stateUploadData.crossPostToHive,
-                    label: Text('cross-post to hive'),
+                    label: Text('cross-post to hive',
+                        style: Theme.of(context).textTheme.bodyText1),
                     labelStyle: TextStyle(color: Colors.white),
                     avatar: stateUploadData.crossPostToHive
                         ? FaIcon(
