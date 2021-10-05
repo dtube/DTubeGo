@@ -34,11 +34,20 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         List<AvalonNotification> notifications =
             await repository.getNotifications(
                 _avalonApiNode, event.notificationTypes, _applicationUser);
+        int _newNotifications = 0;
+        if (notifications.length > 0) {
+          for (var n in notifications) {
+            if (n.ts > int.parse(_tsLastNotificationSeen)) {
+              _newNotifications++;
+            }
+          }
+        }
 
         yield NotificationLoadedState(
             notifications: notifications,
             username: "you",
-            tsLastNotificationSeen: int.parse(_tsLastNotificationSeen));
+            tsLastNotificationSeen: int.parse(_tsLastNotificationSeen),
+            newNotificationsCount: _newNotifications);
       } catch (e) {
         yield NotificationErrorState(message: e.toString());
       }

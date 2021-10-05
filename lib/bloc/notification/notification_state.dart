@@ -17,11 +17,13 @@ class NotificationLoadedState extends NotificationState {
   List<AvalonNotification> notifications;
   String username;
   int tsLastNotificationSeen;
+  int newNotificationsCount;
 
   NotificationLoadedState(
       {required this.notifications,
       required this.username,
-      required this.tsLastNotificationSeen});
+      required this.tsLastNotificationSeen,
+      required this.newNotificationsCount});
 
   @override
   List<Object> get props => [notifications, username];

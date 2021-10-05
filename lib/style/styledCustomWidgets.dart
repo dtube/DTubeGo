@@ -86,7 +86,8 @@ class OverlayText extends StatelessWidget {
       this.sizeMultiply,
       this.maxLines,
       this.overflow,
-      this.bold})
+      this.bold,
+      this.color})
       : super(key: key);
 
   final String text;
@@ -94,6 +95,7 @@ class OverlayText extends StatelessWidget {
   int? maxLines;
   TextOverflow? overflow;
   bool? bold;
+  Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +110,7 @@ class OverlayText extends StatelessWidget {
         fontWeight: bold != null && bold == true
             ? FontWeight.bold
             : Theme.of(context).textTheme.bodyText1!.fontWeight,
-        color: Colors.white,
+        color: color != null ? color : Colors.white,
         shadows: [
           Shadow(color: Colors.black, offset: Offset(0, 0), blurRadius: 2),
           //Shadow(color: Colors.white, offset: Offset(0, 0), blurRadius: 10),

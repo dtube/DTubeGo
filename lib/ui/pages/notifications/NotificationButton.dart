@@ -42,32 +42,49 @@ class _NotificationButtonState extends State<NotificationButton> {
           child: BlocBuilder<NotificationBloc, NotificationState>(
               builder: (context, state) {
             if (state is NotificationInitialState) {
-              return buildNotificationIcon(false, widget.iconSize);
+              return buildNotificationIcon(false, widget.iconSize, 0);
             } else if (state is NotificationLoadingState) {
-              return buildNotificationIcon(false, widget.iconSize);
+              return buildNotificationIcon(false, widget.iconSize, 0);
             } else if (state is NotificationLoadedState) {
               if (state.notifications.isNotEmpty) {
                 return buildNotificationIcon(
                     state.notifications.first.ts > state.tsLastNotificationSeen,
-                    widget.iconSize);
+                    widget.iconSize,
+                    state.newNotificationsCount);
               } else {
-                return buildNotificationIcon(false, widget.iconSize);
+                return buildNotificationIcon(false, widget.iconSize, 0);
               }
             } else if (state is NotificationErrorState) {
-              return buildNotificationIcon(false, widget.iconSize);
+              return buildNotificationIcon(false, widget.iconSize, 0);
             } else {
-              return buildNotificationIcon(false, widget.iconSize);
+              return buildNotificationIcon(false, widget.iconSize, 0);
             }
           }),
         ));
   }
 
-  Widget buildNotificationIcon(bool newNotifications, double iconSize) {
-    return ShadowedIcon(
-      icon: FontAwesomeIcons.bell,
-      color: newNotifications ? Colors.red : Colors.white,
-      shadowColor: Colors.black,
-      size: iconSize,
+  Widget buildNotificationIcon(
+      bool newNotifications, double iconSize, int newNotificationsCount) {
+    return Stack(
+      children: [
+        Center(
+          child: ShadowedIcon(
+            icon: FontAwesomeIcons.bell,
+            color: newNotifications ? Colors.red : Colors.white,
+            shadowColor: Colors.black,
+            size: iconSize,
+          ),
+        ),
+        newNotificationsCount > 0
+            ? Center(
+                child: OverlayText(
+                  text: newNotificationsCount.toString(),
+                  sizeMultiply: 0.8,
+                  bold: true,
+                ),
+              )
+            : Container(),
+      ],
     );
   }
 }
