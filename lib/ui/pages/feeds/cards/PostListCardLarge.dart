@@ -435,7 +435,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
 
                                     if (widget.link != "") {
                                       _memo =
-                                          "Gift sent through https://d.tube/#!/v/${widget.author}/${widget.link!}";
+                                          "Gift sent through https://d.tube/#!/v/${widget.author}/${widget.link}";
                                       if (_giftMemoController.value.text !=
                                           "") {
                                         _memo = _memo +
