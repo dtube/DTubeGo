@@ -23,7 +23,6 @@ class SettingsTabContainer extends StatefulWidget {
 
 class _SettingsTabContainerState extends State<SettingsTabContainer>
     with SingleTickerProviderStateMixin {
-  List<String> settingsTypes = ["General", "Avalon", "Uploads"];
   late TabController _tabController;
   late SettingsBloc _settingsBloc;
   late Map<String, String> settings;
@@ -61,6 +60,17 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   bool _defaultMomentsNSFW = false;
   bool _defaultMomentsCrossPost = false;
   double _defaultMomentVotingWeight = 5;
+
+  bool _showDisplayHints = false;
+  bool _showSecurityHints = false;
+  bool _showInterestsHints = false;
+
+  bool _showVotingWeightHints = false;
+  bool _showVotingTipHints = false;
+
+  bool _showVotingUploadDefaultsHints = false;
+  bool _showVotingMomentDefaultsHints = false;
+  bool _showHivesignerHints = false;
 
   List<String> _imageUploadProviders = ['imgur', 'ipfs'];
 
@@ -285,18 +295,39 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           children: [
                             DTubeFormCard(
                               childs: [
+                                Stack(
+                                  children: [
+                                    ShowHintIcon(
+                                      onPressed: () {
+                                        setState(() {
+                                          _showDisplayHints =
+                                              !_showDisplayHints;
+                                        });
+                                      },
+                                      alignment: Alignment.topRight,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 1.h),
+                                      child: Text("Display",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                    ),
+                                  ],
+                                ),
                                 Padding(
                                   padding: EdgeInsets.only(top: 1.h),
-                                  child: Text("Display",
+                                  child: Text(
+                                      "How do you want to see those kind of videos in the app?",
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline5),
+                                          .bodyText1),
                                 ),
                                 DropdownButtonFormField(
                                   decoration: InputDecoration(
                                       //filled: true,
                                       //fillColor: Hexcolor('#ecedec'),
-                                      labelText: 'negative videos',
+                                      labelText: 'negative videos:',
                                       labelStyle:
                                           Theme.of(context).textTheme.headline5
                                       //border: new CustomBorderTextFieldSkin().getSkin(),
@@ -316,11 +347,15 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                     );
                                   }).toList(),
                                 ),
+                                VisibilityHintText(
+                                    showHint: _showDisplayHints,
+                                    hintText:
+                                        "If a video has a higher sum of VP spent for downvotes than for upvotes it counts as a \"negative\" video."),
                                 DropdownButtonFormField(
                                   decoration: InputDecoration(
                                       //filled: true,
                                       //fillColor: Hexcolor('#ecedec'),
-                                      labelText: 'NSFW videos',
+                                      labelText: 'NSFW videos:',
                                       labelStyle:
                                           Theme.of(context).textTheme.headline5
                                       //border: new CustomBorderTextFieldSkin().getSkin(),
@@ -340,17 +375,34 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                     );
                                   }).toList(),
                                 ),
+                                VisibilityHintText(
+                                    showHint: _showDisplayHints,
+                                    hintText:
+                                        "The author can tag the new video as NSFW (not safe for work). But also curators can vote with the NSFW curator tag. If this tag has more VP spent than the original video tag the video will also count as \"NSFW\"."),
                               ],
                             ),
 
                             DTubeFormCard(
                               childs: [
-                                Padding(
-                                  padding: EdgeInsets.only(top: 1.h),
-                                  child: Text("Security",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5),
+                                Stack(
+                                  children: [
+                                    ShowHintIcon(
+                                      onPressed: () {
+                                        setState(() {
+                                          _showSecurityHints =
+                                              !_showSecurityHints;
+                                        });
+                                      },
+                                      alignment: Alignment.topRight,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 1.h),
+                                      child: Text("Security",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                    ),
+                                  ],
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -382,7 +434,11 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                             ? "change pin"
                                             : "set pin"))
                                   ],
-                                )
+                                ),
+                                VisibilityHintText(
+                                    showHint: _showSecurityHints,
+                                    hintText:
+                                        "Your login data is stored in a secure storage on your device. The app will automatically login you when you start the app. To prevent anyone else to use your account on your device, make sure to set this pin."),
                               ],
                             ),
                             // deactivated until we have more providers
@@ -420,13 +476,24 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             // ),
                             DTubeFormCard(
                               childs: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 16.0),
-                                  child: Text("Interests",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5),
-                                ),
+                                Stack(children: [
+                                  ShowHintIcon(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showInterestsHints =
+                                            !_showInterestsHints;
+                                      });
+                                    },
+                                    alignment: Alignment.topRight,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 16.0),
+                                    child: Text("Interests",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                ]),
                                 Row(
                                   children: [
                                     Text(
@@ -468,6 +535,10 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                       ),
                                     )
                                 ]),
+                                VisibilityHintText(
+                                    showHint: _showInterestsHints,
+                                    hintText:
+                                        "The explore page of DTube (globe icon) shows the newest videos filtered by the above ativated tags. If you do not activate any of those tags the explore page will display all trending videos by default."),
                               ],
                             ),
                           ],
@@ -479,13 +550,24 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             SizedBox(height: 16),
                             DTubeFormCard(
                               childs: [
-                                Padding(
-                                  padding: EdgeInsets.only(top: 1.h),
-                                  child: Text("Voting weight",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5),
-                                ),
+                                Stack(children: [
+                                  ShowHintIcon(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showVotingWeightHints =
+                                            !_showVotingWeightHints;
+                                      });
+                                    },
+                                    alignment: Alignment.topRight,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 1.h),
+                                    child: Text("Voting weight",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                ]),
                                 Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
@@ -561,17 +643,33 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                     )
                                   ],
                                 ),
+                                VisibilityHintText(
+                                  showHint: _showVotingWeightHints,
+                                  hintText:
+                                      "Those settings set the default setting of the vote sliders. The voting weight defines how much of your VP you want to spend for the vote.",
+                                ),
                               ],
                             ),
                             DTubeFormCard(
                               childs: [
-                                Padding(
-                                  padding: EdgeInsets.only(top: 1.h),
-                                  child: Text("Vote tipping",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5),
-                                ),
+                                Stack(children: [
+                                  ShowHintIcon(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showVotingTipHints =
+                                            !_showVotingTipHints;
+                                      });
+                                    },
+                                    alignment: Alignment.topRight,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 1.h),
+                                    child: Text("Vote tipping",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                ]),
                                 Text("default voting tip (posts):",
                                     style:
                                         Theme.of(context).textTheme.headline6),
@@ -643,6 +741,11 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                     )
                                   ],
                                 ),
+                                VisibilityHintText(
+                                  showHint: _showVotingTipHints,
+                                  hintText:
+                                      "Those settings set the default setting of the tipping sliders. Every vote can generate DTC for you as curation rewards. By tipping you give away x % of those rewards to the content creator you are voting on.",
+                                ),
                               ],
                             ),
                           ],
@@ -654,24 +757,25 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             SizedBox(height: 16),
                             DTubeFormCard(
                               childs: [
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          top: 1.h, bottom: 1.h),
-                                      child: Text(
-                                          "Video upload default settings",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  "Define default values for video uploads. You can always change those values in the upload process! You can also set a template (see tabs above).",
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                ),
-                                SizedBox(height: 2.h),
+                                Stack(children: [
+                                  ShowHintIcon(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showVotingUploadDefaultsHints =
+                                            !_showVotingUploadDefaultsHints;
+                                      });
+                                    },
+                                    alignment: Alignment.topRight,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 1.h, bottom: 1.h),
+                                    child: Text("Video upload default settings",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                ]),
                                 Wrap(
                                   direction: Axis.horizontal,
                                   runAlignment: WrapAlignment.spaceEvenly,
@@ -804,24 +908,44 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                     )
                                   ],
                                 ),
+                                VisibilityHintText(
+                                  showHint: _showVotingUploadDefaultsHints,
+                                  hintText:
+                                      "Those are defaults so you can always change those values in the upload process. can also set a template (see tabs above).",
+                                ),
                               ],
                             ),
                             DTubeFormCard(
                               childs: [
-                                Row(children: [
+                                Stack(children: [
+                                  ShowHintIcon(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showVotingMomentDefaultsHints =
+                                            !_showVotingMomentDefaultsHints;
+                                      });
+                                    },
+                                    alignment: Alignment.topRight,
+                                  ),
                                   Padding(
                                     padding:
                                         EdgeInsets.only(top: 1.h, bottom: 1.h),
-                                    child: Text(
-                                        "Moments upload default settings",
+                                    child: Text("Moments upload settings",
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5),
                                   ),
                                 ]),
                                 Text(
-                                  "Define how your moments should get posted.",
+                                  "Define how your moments are being posted.",
                                   style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                                Text(
+                                  "You can not change those values in the upload process!",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1!
+                                      .copyWith(color: globalRed),
                                 ),
                                 SizedBox(height: 2.h),
                                 Wrap(
@@ -956,25 +1080,34 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                     )
                                   ],
                                 ),
-                                Text(
-                                  "You can not change those values in the upload process!",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1!
-                                      .copyWith(color: globalRed),
+                                VisibilityHintText(
+                                  showHint: _showVotingMomentDefaultsHints,
+                                  hintText:
+                                      "To keep the posting process of moments as quick as possible there are no extra settings in the uploader. That's why you should set the desired values here.",
                                 ),
                               ],
                             ),
                             DTubeFormCard(
                               childs: [
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(top: 1.h, bottom: 1.h),
-                                  child: Text("Hivesigner settings",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5),
-                                ),
+                                Stack(children: [
+                                  ShowHintIcon(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showHivesignerHints =
+                                            !_showHivesignerHints;
+                                      });
+                                    },
+                                    alignment: Alignment.topRight,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 1.h, bottom: 1.h),
+                                    child: Text("Hivesigner settings",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                ]),
                                 Row(
                                   children: [
                                     Container(
@@ -998,17 +1131,11 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                               ),
                                             ),
                                           ),
-                                          Text(
-                                              "For security reasons you have to renew the connection every 7 days.",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1),
-                                          SizedBox(height: 8),
-                                          Text(
-                                              "This authorizing does not include voting, commenting or any other functionality of the hive blockchain.",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1),
+                                          VisibilityHintText(
+                                            showHint: _showHivesignerHints,
+                                            hintText:
+                                                "This authorizing does not include voting, commenting or any other functionality of the hive blockchain! For security reasons you have to renew the connection every 7 days.",
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -1161,6 +1288,58 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
         child: Text(
           message,
           style: TextStyle(color: Colors.red),
+        ),
+      ),
+    );
+  }
+}
+
+class ShowHintIcon extends StatelessWidget {
+  ShowHintIcon({Key? key, required this.onPressed, required this.alignment})
+      : super(key: key);
+
+  VoidCallback onPressed;
+  Alignment alignment;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: alignment,
+      child: InkWell(
+        onTap: () {
+          onPressed();
+        },
+        child: FaIcon(FontAwesomeIcons.question, size: globalIconSizeSmall),
+      ),
+    );
+  }
+}
+
+class VisibilityHintText extends StatefulWidget {
+  const VisibilityHintText(
+      {Key? key, required this.showHint, required this.hintText})
+      : super(key: key);
+
+  final bool showHint;
+  final String hintText;
+
+  @override
+  State<VisibilityHintText> createState() => _VisibilityHintTextState();
+}
+
+class _VisibilityHintTextState extends State<VisibilityHintText> {
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: widget.showHint,
+      child: Padding(
+        padding: EdgeInsets.only(top: 1.h),
+        child: Text(
+          widget.hintText,
+          style: Theme.of(context)
+              .textTheme
+              .bodyText1!
+              .copyWith(fontStyle: FontStyle.italic),
         ),
       ),
     );

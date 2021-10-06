@@ -81,6 +81,7 @@ class AppConfig {
       'https://hivesigner.com/api/broadcast';
 
   static String signUpUrl = "https://signup.d.tube";
+  static String readmoreUrl = "https://token.d.tube";
 
   static String searchAccountsUrl =
       "https://search.d.tube/avalon.accounts/_search?q=name:*##SEARCHSTRING*&size=50&sort=balance:desc";
@@ -94,17 +95,49 @@ class AppConfig {
   static List<String> possibleExploreTags = [
     "dtube",
     "dtubeGo",
-    "vlog",
+    // outside
+
     "travel",
-    "music",
+    "gardening",
+    "nature",
+    "animals",
+
+    // knowhow
     "howto",
     "tutorial",
-    "art",
-    "drawing",
+    "DIY",
+    "cooking",
+    // tech
     "tech",
+    "blockchain",
+    "crypto",
+    // news
+    "news",
+    "politics",
+    // entertainment
     "entertainment",
     "funny",
-    "crypto",
-    "news"
+    "gaming",
+    "dailyvlog",
+    "vlog",
+    // art
+    "art",
+    "painting",
+    "music",
+    "dance",
+    // lifestyle
+    "fashion",
+    "lifestyle",
+    "health",
+    "sports",
+
+    "skate",
+    // others
+    "psychology",
+    "horology",
+    // communities
+    "skatehive",
+    "cleanplanet",
+    "onelovedtube"
   ];
 }

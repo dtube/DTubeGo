@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+
 import 'package:responsive_framework/responsive_framework.dart';
 
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -52,6 +54,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+    //sec.deleteAllSettings(); // uncomment of you need to reset the secure storage
     super.initState();
   }
 

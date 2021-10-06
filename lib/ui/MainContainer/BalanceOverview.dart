@@ -69,40 +69,45 @@ class _BalanceOverviewState extends State<BalanceOverview> {
               width: 25.w,
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Column(children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      DTubeLogoShadowed(size: _iconSize),
-                      SizedBox(
-                        width: 2.5.w,
-                      ),
-                      OverlayText(
-                        text: shortDTC(state.dtcBalance),
-                        sizeMultiply: 1,
-                        bold: true,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      ShadowedIcon(
-                        icon: FontAwesomeIcons.bolt,
-                        shadowColor: Colors.black,
-                        color: Colors.white,
-                        size: _iconSize,
-                      ),
-                      SizedBox(
-                        width: 2.w,
-                      ),
-                      OverlayText(
-                          text: shortVP(state.vtBalance['v']!),
+                child: Padding(
+                  padding: EdgeInsets.only(right: 2.w),
+                  child:
+                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                            width: 5.w,
+                            height: 5.w,
+                            child: DTubeLogoShadowed(size: _iconSize)),
+                        Container(
+                          width: 5.w,
+                          height: 5.w,
+                          child: ShadowedIcon(
+                            icon: FontAwesomeIcons.bolt,
+                            shadowColor: Colors.black,
+                            color: Colors.white,
+                            size: _iconSize,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        OverlayText(
+                          text: shortDTC(state.dtcBalance),
                           sizeMultiply: 1,
-                          bold: true),
-                    ],
-                  ),
-                ]),
+                          bold: true,
+                        ),
+                        OverlayText(
+                            text: shortVP(state.vtBalance['v']!),
+                            sizeMultiply: 1,
+                            bold: true),
+                      ],
+                    ),
+                  ]),
+                ),
               ),
             );
           } catch (e) {

@@ -67,7 +67,14 @@ class _PinPadScreenState extends State<PinPadScreen> {
         resizeToAvoidBottomInset: false,
         backgroundColor: globalBlue,
         body: Center(
-            child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3)),
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            DTubeLogoPulse(size: 30.w),
+            Text("loading your settings...",
+                style: Theme.of(context).textTheme.bodyText1)
+          ],
+        )),
       );
     });
   }

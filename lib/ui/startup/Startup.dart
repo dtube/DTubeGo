@@ -67,8 +67,17 @@ class _StartUpState extends State<StartUp> {
         return Scaffold(
           backgroundColor: globalBlue,
           body: Center(
-              child:
-                  DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3)),
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              DTubeLogoPulse(size: 30.w),
+              Text(
+                "searching for the best node...",
+                style: Theme.of(context).textTheme.bodyText1,
+                textAlign: TextAlign.center,
+              )
+            ],
+          )),
         );
       },
     );

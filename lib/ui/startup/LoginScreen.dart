@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
@@ -43,7 +45,6 @@ class _LoginFormState extends State<LoginForm> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
-      print("KEEEEEEEY: " + barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -208,10 +209,10 @@ class _LoginFormState extends State<LoginForm> {
                 InputChip(
                     backgroundColor: globalAlmostWhite,
                     onPressed: () {
-                      launch(AppConfig.signUpUrl);
+                      launch(AppConfig.readmoreUrl);
                     },
                     label: Text(
-                      "read the whitepaper!",
+                      "read this!",
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1!
