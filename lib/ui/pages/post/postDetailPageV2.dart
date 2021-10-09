@@ -314,6 +314,9 @@ class _PostDetailsState extends State<PostDetails> {
                                                       const EdgeInsets.only(
                                                           right: 8.0),
                                                   child: TagChip(
+                                                      waitBeforeFadeIn:
+                                                          Duration(seconds: 1),
+                                                      fadeInFromLeft: true,
                                                       width: 20.w,
                                                       tagName: widget
                                                           .post.tags[index]

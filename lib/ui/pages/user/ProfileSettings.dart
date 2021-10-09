@@ -156,6 +156,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                         controller: _tabController,
                         indicatorSize: TabBarIndicatorSize.tab,
                       ),
+                      // COMMON SETTINGS
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -174,6 +175,8 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                       ),
                                     ),
                                     DTubeFormCard(
+                                      waitBeforeFadeIn:
+                                          Duration(milliseconds: 200),
                                       childs: [
                                         TextFormField(
                                           style: Theme.of(context)
@@ -222,6 +225,8 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                               repository:
                                                   ThirdPartyUploaderRepositoryImpl()),
                                       child: DTubeFormCard(
+                                        waitBeforeFadeIn:
+                                            Duration(milliseconds: 400),
                                         childs: [
                                           BlocBuilder<ThirdPartyUploaderBloc,
                                                   ThirdPartyUploaderState>(
@@ -278,6 +283,8 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                               repository:
                                                   ThirdPartyUploaderRepositoryImpl()),
                                       child: DTubeFormCard(
+                                        waitBeforeFadeIn:
+                                            Duration(milliseconds: 600),
                                         childs: [
                                           BlocBuilder<ThirdPartyUploaderBloc,
                                                   ThirdPartyUploaderState>(
@@ -337,6 +344,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                   ],
                                 ),
                               ),
+                              // ADDITIONAL SETTINGS
                               SingleChildScrollView(
                                 child: Column(
                                   children: [
@@ -349,6 +357,8 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                               .bodyText1),
                                     ),
                                     DTubeFormCard(
+                                      waitBeforeFadeIn:
+                                          Duration(milliseconds: 200),
                                       childs: [
                                         TextFormField(
                                           style: Theme.of(context)

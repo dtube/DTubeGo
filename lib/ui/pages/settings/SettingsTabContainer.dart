@@ -1,5 +1,6 @@
 import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
+import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
@@ -103,50 +104,59 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
           actions: [
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 16, 16.0, 0),
-              child: GestureDetector(
-                child: FaIcon(FontAwesomeIcons.save),
-                onTap: () async {
-                  _selectedExploreTags.remove("");
-                  Map<String, String> newSettings = {
-                    sec.settingKey_defaultVotingWeight: _defaultVote.toString(),
-                    sec.settingKey_defaultVotingWeightComments:
-                        _defaultVoteComments.toString(),
-                    sec.settingKey_defaultVotingTip: _defaultTip.toString(),
-                    sec.settingKey_defaultVotingTipComments:
-                        _defaultTipComments.toString(),
-                    sec.settingKey_showHidden: _showHidden,
-                    sec.settingKey_showNSFW: _showNsfw,
-                    sec.settingKey_templateTitle:
-                        _templateTitleController.value.text,
-                    sec.settingKey_templateBody:
-                        _templateBodyController.value.text,
-                    sec.settingKey_templateTag:
-                        _templateTagController.value.text,
-                    sec.settingKey_imageUploadService: _imageUploadProvider,
-                    sec.settingKey_ExploreTags: _selectedExploreTags.join(","),
-                    sec.settingKey_DefaultUploadNSFW:
-                        _defaultUploadNSFW.toString(),
-                    sec.settingKey_DefaultUploadOC: _defaultUploadOC.toString(),
-                    sec.settingKey_DefaultUploadUnlist:
-                        _defaultUploadUnlist.toString(),
-                    sec.settingKey_DefaultUploadCrosspost:
-                        _defaultUploadCrossPost.toString(),
-                    sec.settingKey_DefaultMomentNSFW:
-                        _defaultMomentsNSFW.toString(),
-                    sec.settingKey_DefaultMomentOC:
-                        _defaultMomentsOC.toString(),
-                    sec.settingKey_DefaultMomentUnlist:
-                        _defaultMomentsUnlist.toString(),
-                    sec.settingKey_DefaultMomentCrosspost:
-                        _defaultMomentsCrossPost.toString(),
-                    sec.settingKey_DefaultUploadVotingWeigth:
-                        _defaultUploadVotingWeight.toString(),
-                    sec.settingKey_DefaultMomentVotingWeigth:
-                        _defaultMomentVotingWeight.toString(),
-                  };
-                  _settingsBloc.add(PushSettingsEvent(
-                      newSettings: newSettings, context: context));
-                },
+              child: HeartBeat(
+                preferences: AnimationPreferences(
+                    autoPlay: AnimationPlayStates.Loop,
+                    offset: Duration(seconds: 3),
+                    duration: Duration(seconds: 1)),
+                child: GestureDetector(
+                  child: FaIcon(FontAwesomeIcons.save),
+                  onTap: () async {
+                    _selectedExploreTags.remove("");
+                    Map<String, String> newSettings = {
+                      sec.settingKey_defaultVotingWeight:
+                          _defaultVote.toString(),
+                      sec.settingKey_defaultVotingWeightComments:
+                          _defaultVoteComments.toString(),
+                      sec.settingKey_defaultVotingTip: _defaultTip.toString(),
+                      sec.settingKey_defaultVotingTipComments:
+                          _defaultTipComments.toString(),
+                      sec.settingKey_showHidden: _showHidden,
+                      sec.settingKey_showNSFW: _showNsfw,
+                      sec.settingKey_templateTitle:
+                          _templateTitleController.value.text,
+                      sec.settingKey_templateBody:
+                          _templateBodyController.value.text,
+                      sec.settingKey_templateTag:
+                          _templateTagController.value.text,
+                      sec.settingKey_imageUploadService: _imageUploadProvider,
+                      sec.settingKey_ExploreTags:
+                          _selectedExploreTags.join(","),
+                      sec.settingKey_DefaultUploadNSFW:
+                          _defaultUploadNSFW.toString(),
+                      sec.settingKey_DefaultUploadOC:
+                          _defaultUploadOC.toString(),
+                      sec.settingKey_DefaultUploadUnlist:
+                          _defaultUploadUnlist.toString(),
+                      sec.settingKey_DefaultUploadCrosspost:
+                          _defaultUploadCrossPost.toString(),
+                      sec.settingKey_DefaultMomentNSFW:
+                          _defaultMomentsNSFW.toString(),
+                      sec.settingKey_DefaultMomentOC:
+                          _defaultMomentsOC.toString(),
+                      sec.settingKey_DefaultMomentUnlist:
+                          _defaultMomentsUnlist.toString(),
+                      sec.settingKey_DefaultMomentCrosspost:
+                          _defaultMomentsCrossPost.toString(),
+                      sec.settingKey_DefaultUploadVotingWeigth:
+                          _defaultUploadVotingWeight.toString(),
+                      sec.settingKey_DefaultMomentVotingWeigth:
+                          _defaultMomentVotingWeight.toString(),
+                    };
+                    _settingsBloc.add(PushSettingsEvent(
+                        newSettings: newSettings, context: context));
+                  },
+                ),
               ),
             ),
           ]),
@@ -293,10 +303,12 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                   padding: const EdgeInsets.all(8.0),
                   child: TabBarView(
                     children: [
+                      // GENERAL SETTINGS
                       SingleChildScrollView(
                         child: Column(
                           children: [
                             DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 200),
                               childs: [
                                 Stack(
                                   children: [
@@ -386,6 +398,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
 
                             DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 400),
                               childs: [
                                 Stack(
                                   children: [
@@ -478,6 +491,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             //   ],
                             // ),
                             DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 600),
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -547,11 +561,14 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           ],
                         ),
                       ),
+
+                      // AVALON SETTINGS
                       SingleChildScrollView(
                         child: Column(
                           children: [
                             SizedBox(height: 16),
                             DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 200),
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -654,6 +671,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               ],
                             ),
                             DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 400),
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -754,11 +772,13 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           ],
                         ),
                       ),
+                      // POSTING SETTINGS
                       SingleChildScrollView(
                         child: Column(
                           children: [
                             SizedBox(height: 16),
                             DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 200),
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -919,6 +939,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               ],
                             ),
                             DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 400),
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -1091,6 +1112,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               ],
                             ),
                             DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 600),
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -1150,6 +1172,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           ],
                         ),
                       ),
+                      // TEMPLATE
                       SingleChildScrollView(
                         child: Column(
                           children: [
@@ -1160,6 +1183,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                   style: Theme.of(context).textTheme.bodyText1),
                             ),
                             DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 200),
                               childs: [
                                 Padding(
                                   padding:
@@ -1183,6 +1207,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               ],
                             ),
                             DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 400),
                               childs: [
                                 Padding(
                                   padding:
@@ -1211,6 +1236,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               ],
                             ),
                             DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 600),
                               childs: [
                                 Padding(
                                   padding:
@@ -1234,6 +1260,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               ],
                             ),
                             DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 800),
                               childs: [
                                 Padding(
                                   padding:
@@ -1314,7 +1341,14 @@ class ShowHintIcon extends StatelessWidget {
         onTap: () {
           onPressed();
         },
-        child: FaIcon(FontAwesomeIcons.question, size: globalIconSizeSmall),
+        child: Swing(
+          preferences: AnimationPreferences(
+            autoPlay: AnimationPlayStates.Loop,
+            magnitude: 0.4,
+            offset: Duration(seconds: 4),
+          ),
+          child: FaIcon(FontAwesomeIcons.question, size: globalIconSizeSmall),
+        ),
       ),
     );
   }
@@ -1339,12 +1373,19 @@ class _VisibilityHintTextState extends State<VisibilityHintText> {
       visible: widget.showHint,
       child: Padding(
         padding: EdgeInsets.only(top: 1.h),
-        child: Text(
-          widget.hintText,
-          style: Theme.of(context)
-              .textTheme
-              .bodyText1!
-              .copyWith(fontStyle: FontStyle.italic),
+        child: FadeIn(
+          preferences: AnimationPreferences(
+              autoPlay: widget.showHint
+                  ? AnimationPlayStates.Forward
+                  : AnimationPlayStates.None,
+              duration: Duration(seconds: 2)),
+          child: Text(
+            widget.hintText,
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1!
+                .copyWith(fontStyle: FontStyle.italic),
+          ),
         ),
       ),
     );

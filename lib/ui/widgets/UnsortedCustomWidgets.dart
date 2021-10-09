@@ -1,6 +1,7 @@
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animator/flutter_animator.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
 import 'dart:ui';
@@ -27,18 +28,24 @@ AppBar dtubeSubAppBar(
 }
 
 class DTubeFormCard extends StatelessWidget {
-  DTubeFormCard({Key? key, required this.childs}) : super(key: key);
+  DTubeFormCard(
+      {Key? key, required this.childs, required this.waitBeforeFadeIn})
+      : super(key: key);
   List<Widget> childs;
+  Duration waitBeforeFadeIn;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: globalBlue,
-      elevation: 8,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, children: childs),
+    return SlideInLeft(
+      preferences: AnimationPreferences(offset: waitBeforeFadeIn),
+      child: Card(
+        color: globalBlue,
+        elevation: 8,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, children: childs),
+        ),
       ),
     );
   }

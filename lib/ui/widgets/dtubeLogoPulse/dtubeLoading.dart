@@ -1,3 +1,4 @@
+import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'dart:math';
@@ -123,7 +124,7 @@ class DtubeLogoPulseWithSubtitle extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: 3.h),
           child: Text(subtitle, style: Theme.of(context).textTheme.bodyText1),
-        )
+        ),
       ],
     ));
   }

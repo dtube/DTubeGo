@@ -11,6 +11,7 @@ import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
 import 'package:dtube_go/utils/randomGenerator.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -527,32 +528,41 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
           children: <Widget>[
             Row(
               children: [
-                InkWell(
-                  onTap: () {
-                    navigateToUserDetailPage(context, widget.author, () {});
-                  },
-                  child: AccountAvatarBase(
-                      username: widget.author,
-                      avatarSize: _avatarSize,
-                      showVerified: true,
-                      showName: false,
-                      nameFontSizeMultiply: 1,
-                      width: 10.w,
-                      height: _avatarSize),
-                ),
-                SizedBox(width: 2.w),
-                Container(
-                  width: 65.w,
+                FadeIn(
+                  preferences: AnimationPreferences(
+                      offset: Duration(milliseconds: 500),
+                      duration: Duration(seconds: 1)),
                   child: InkWell(
                     onTap: () {
-                      navigateToPostDetailPage(context, widget.author,
-                          widget.link, "none", false, () {});
+                      navigateToUserDetailPage(context, widget.author, () {});
                     },
-                    child: Text(
-                      widget.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.headline6,
+                    child: AccountAvatarBase(
+                        username: widget.author,
+                        avatarSize: _avatarSize,
+                        showVerified: true,
+                        showName: false,
+                        nameFontSizeMultiply: 1,
+                        width: 10.w,
+                        height: _avatarSize),
+                  ),
+                ),
+                SizedBox(width: 2.w),
+                FadeInLeftBig(
+                  preferences:
+                      AnimationPreferences(offset: Duration(seconds: 1)),
+                  child: Container(
+                    width: 65.w,
+                    child: InkWell(
+                      onTap: () {
+                        navigateToPostDetailPage(context, widget.author,
+                            widget.link, "none", false, () {});
+                      },
+                      child: Text(
+                        widget.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
                     ),
                   ),
                 ),
@@ -567,15 +577,22 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       widget.oc
-                          ? Padding(
-                              padding: EdgeInsets.only(right: 2.w),
-                              child: FaIcon(
-                                FontAwesomeIcons.award,
-                                size: globalIconSizeSmall,
+                          ? FadeIn(
+                              preferences: AnimationPreferences(
+                                  offset: Duration(milliseconds: 700),
+                                  duration: Duration(seconds: 1)),
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 2.w),
+                                child: FaIcon(
+                                  FontAwesomeIcons.award,
+                                  size: globalIconSizeSmall,
+                                ),
                               ),
                             )
                           : SizedBox(width: globalIconSizeSmall),
                       TagChip(
+                        waitBeforeFadeIn: Duration(milliseconds: 1200),
+                        fadeInFromLeft: false,
                         tagName: widget.mainTag,
                         width: 20.w,
                       ),
@@ -586,11 +603,25 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                     child: SpeedDial(
                         child: Padding(
                           padding: EdgeInsets.only(left: 7.w),
-                          child: ShadowedIcon(
-                              icon: FontAwesomeIcons.ellipsisV,
-                              color: Colors.white,
-                              shadowColor: Colors.black,
-                              size: globalIconSizeSmall),
+                          child: FadeIn(
+                            preferences: AnimationPreferences(
+                                offset: Duration(milliseconds: 700),
+                                duration: Duration(seconds: 1)),
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 2.w),
+                              child: HeartBeat(
+                                preferences: AnimationPreferences(
+                                    magnitude: 1.2,
+                                    offset: Duration(seconds: 3),
+                                    autoPlay: AnimationPlayStates.Loop),
+                                child: ShadowedIcon(
+                                    icon: FontAwesomeIcons.ellipsisV,
+                                    color: Colors.white,
+                                    shadowColor: Colors.black,
+                                    size: globalIconSizeSmall),
+                              ),
+                            ),
+                          ),
                         ),
                         activeChild: Padding(
                           padding: EdgeInsets.only(left: 7.w),
@@ -625,7 +656,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                     icon: FontAwesomeIcons.comment,
                                     color: Colors.white,
                                     shadowColor: Colors.black,
-                                    size: globalIconSizeMedium),
+                                    size: globalIconSizeBig),
                               ),
                               foregroundColor: Colors.white,
                               elevation: 0,
@@ -649,7 +680,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                     icon: FontAwesomeIcons.thumbsDown,
                                     color: Colors.white,
                                     shadowColor: Colors.black,
-                                    size: globalIconSizeMedium),
+                                    size: globalIconSizeBig),
                               ),
                               foregroundColor: Colors.white,
                               elevation: 0,
@@ -677,7 +708,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                     icon: FontAwesomeIcons.thumbsUp,
                                     color: Colors.white,
                                     shadowColor: Colors.black,
-                                    size: globalIconSizeMedium),
+                                    size: globalIconSizeBig),
                               ),
                               foregroundColor: Colors.white,
                               elevation: 0,
@@ -705,7 +736,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                     icon: FontAwesomeIcons.gift,
                                     color: Colors.white,
                                     shadowColor: Colors.black,
-                                    size: globalIconSizeMedium),
+                                    size: globalIconSizeBig),
                               ),
                               foregroundColor: Colors.white,
                               elevation: 0,
@@ -727,29 +758,33 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
             ),
           ],
         ),
-        Padding(
-          padding: EdgeInsets.only(left: 12.w),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '@${widget.author} | ' +
-                    '${widget.publishDate} - ' +
-                    (widget.duration.inHours == 0
-                        ? widget.duration.toString().substring(2, 7) + ' min'
-                        : widget.duration.toString().substring(0, 7) +
-                            ' hours'),
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 5.w),
-                child: Text(
-                  '${widget.dtcValue}',
-                  style: Theme.of(context).textTheme.bodyText1,
+        FadeInDown(
+          preferences:
+              AnimationPreferences(offset: Duration(milliseconds: 1300)),
+          child: Padding(
+            padding: EdgeInsets.only(left: 12.w),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '@${widget.author} | ' +
+                      '${widget.publishDate} - ' +
+                      (widget.duration.inHours == 0
+                          ? widget.duration.toString().substring(2, 7) + ' min'
+                          : widget.duration.toString().substring(0, 7) +
+                              ' hours'),
+                  style: Theme.of(context).textTheme.bodyText2,
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(right: 5.w),
+                  child: Text(
+                    '${widget.dtcValue}',
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(height: 2.h),

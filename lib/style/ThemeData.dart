@@ -10,9 +10,9 @@ Color globalBGColor = Color.fromRGBO(29, 35, 51, 1);
 Color globalBGColorNoOpacity = Color.fromRGBO(29, 35, 51, 0);
 
 Color globalTextColor = Colors.white;
-double globalIconSizeSmall = 20;
+double globalIconSizeSmall = 25;
 double globalIconSizeMedium = 30;
-double globalIconSizeBig = 25;
+double globalIconSizeBig = 35;
 
 final ThemeData dtubeDarkTheme = ThemeData(
   primarySwatch: MaterialColor(4280361249, {
