@@ -1,5 +1,5 @@
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

@@ -1,6 +1,7 @@
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsTabContainer.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
@@ -9,8 +10,8 @@ import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 
-import 'package:dtube_go/style/dtubeLoading.dart';
-import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/MainContainer/BalanceOverview.dart';
 import 'package:dtube_go/ui/MainContainer/MenuButton.dart';
 import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
@@ -72,7 +73,10 @@ class _NavigationContainerState extends State<NavigationContainer> {
             builder: (context, state) {
           if (state is TransactionPreprocessingState) {
             if (state.txType == 13 || state.txType == 4) {
-              return DTubeLogoPulseRotating(size: 10.w);
+              return DtubeLogoPulseWithSubtitle(
+                subtitle: "loading feed..",
+                size: 10.w,
+              );
             }
           }
           return Center(
@@ -195,7 +199,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
         ),
       ),
       bottomNavigationBar: Container(
-        height: 10.h,
+        height: globalIconSizeMedium * 2.5,
         decoration: BoxDecoration(
             color: Colors.white,
             gradient: LinearGradient(

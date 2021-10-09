@@ -1,8 +1,9 @@
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 
 import 'package:dtube_go/ui/pages/feeds/cards/PostListCardLarge.dart';
 import 'package:dtube_go/ui/pages/feeds/cards/PostListCardNarrow.dart';
@@ -167,10 +168,12 @@ class FeedList extends StatelessWidget {
   }
 
   Widget buildLoading(BuildContext context) {
-    return Center(
-        child: feedType == "UserFeed"
-            ? SizedBox(height: 0, width: 0)
-            : DTubeLogoPulse(size: 20.w));
+    return feedType == "UserFeed"
+        ? SizedBox(height: 0, width: 0)
+        : DtubeLogoPulseWithSubtitle(
+            subtitle: "loading feed..",
+            size: 20.w,
+          );
   }
 
   Widget buildErrorUi(String message) {

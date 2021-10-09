@@ -1,4 +1,5 @@
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/pages/feeds/cards/PostListCardLarge.dart';
 import 'package:dtube_go/utils/friendlyTimestamp.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -8,7 +9,7 @@ import 'dart:async';
 import 'package:dtube_go/bloc/search/search_bloc_full.dart';
 
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 
 import 'package:dtube_go/ui/pages/Explore/ResultCards/PostResultCard.dart';
 import 'package:dtube_go/ui/pages/Explore/ResultCards/UserResultCard.dart';
@@ -121,10 +122,9 @@ class TagListState extends State<TagList> {
   Widget buildLoading() {
     return Container(
       height: 400,
-      child: Center(
-        child: DTubeLogoPulse(
-          size: 100,
-        ),
+      child: DtubeLogoPulseWithSubtitle(
+        subtitle: "loading posts..",
+        size: 30.w,
       ),
     );
   }

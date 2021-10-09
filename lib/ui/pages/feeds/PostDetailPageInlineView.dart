@@ -24,7 +24,7 @@ import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
 
 import 'package:dtube_go/utils/secureStorage.dart';
 
-import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';

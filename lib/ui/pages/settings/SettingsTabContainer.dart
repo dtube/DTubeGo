@@ -1,11 +1,12 @@
 import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/style/dtubeLoading.dart';
-import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/pages/settings/HiveSignerButton.dart';
 import 'package:dtube_go/ui/pages/settings/PinCodeDialog.dart';
 import 'package:flutter/material.dart';
@@ -153,8 +154,10 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
       body: BlocBuilder<SettingsBloc, SettingsState>(builder: (context, state) {
         if (state is SettingsLoadingState || state is SettingsSavingState) {
           return Center(
-            child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3),
-          );
+              child: DtubeLogoPulseWithSubtitle(
+            subtitle: "loading settings..",
+            size: 30.w,
+          ));
         } else if (state is SettingsLoadedState) {
           if (settings.length == 1) {
             settings = state.settings;
@@ -1275,8 +1278,10 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
         } else {
           return Text("unknown state");
         }
-        return Center(
-            child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
+        return DtubeLogoPulseWithSubtitle(
+          subtitle: "loading settings..",
+          size: 30.w,
+        );
       }),
     );
   }

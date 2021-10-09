@@ -478,30 +478,7 @@ class _UploadFormState extends State<UploadForm> {
                   getFile(false, false);
                 },
               ),
-              // BlocBuilder<ThirdPartyUploaderBloc, ThirdPartyUploaderState>(
-              //     builder: (context, state) {
-              //   if (state is ThirdPartyUploaderUploadingState) {
-              //     return Column(
-              //       children: [
-              //         Padding(
-              //           padding: const EdgeInsets.all(8.0),
-              //           child: Text(
-              //               "please wait until thumbnail upload is finished"),
-              //         ),
-              //         Padding(
-              //           padding: const EdgeInsets.all(8.0),
-              //           child: DTubeLogoPulse(
-              //             size: 40,
-              //           ),
-              //         ),
-              //       ],
-              //     );
-              //   }
-              //   if (state is ThirdPartyUploaderUploadedState) {
-              //     stateUploadData.thumbnailLocation = state.uploadResponse;
-              //     stateUploadData.localThumbnail = false;
-              //   }
-              //return
+
               stateUploadData.thumbnailLocation != ""
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,

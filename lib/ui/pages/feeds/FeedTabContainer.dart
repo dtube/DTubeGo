@@ -1,11 +1,13 @@
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/feeds/FeedViewBase.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/utils/ResponsiveLayout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 
-import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

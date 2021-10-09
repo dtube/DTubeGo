@@ -1,9 +1,11 @@
 import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
 import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/ui/widgets/gifts/GiftBoxWidget.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
 import 'package:dtube_go/utils/friendlyTimestamp.dart';
@@ -31,7 +33,7 @@ import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
 
 import 'package:dtube_go/utils/secureStorage.dart';
 
-import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
@@ -119,9 +121,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   ),
             body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
               if (state is PostLoadingState) {
-                return Center(
-                    child: DTubeLogoPulse(
-                        size: MediaQuery.of(context).size.width / 3));
+                return DtubeLogoPulseWithSubtitle(
+                  subtitle: "loading post details...",
+                  size: 30.w,
+                );
               } else if (state is PostLoadedState) {
                 reloadCount++;
                 return
@@ -134,9 +137,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   //),
                 );
               } else {
-                return Center(
-                    child: DTubeLogoPulse(
-                        size: MediaQuery.of(context).size.width / 3));
+                return DtubeLogoPulseWithSubtitle(
+                  subtitle: "loading post details...",
+                  size: 30.w,
+                );
               }
             }),
           )

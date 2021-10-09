@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/settings/settings_bloc.dart';
@@ -9,7 +10,7 @@ import 'package:dtube_go/ui/startup/OnboardingJourney.dart';
 
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/startup/LoginScreen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -66,18 +67,10 @@ class _StartUpState extends State<StartUp> {
         // as long as there are no informations from the authentication logic -> show loading animation
         return Scaffold(
           backgroundColor: globalBlue,
-          body: Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              DTubeLogoPulse(size: 30.w),
-              Text(
-                "searching for the best node...",
-                style: Theme.of(context).textTheme.bodyText1,
-                textAlign: TextAlign.center,
-              )
-            ],
-          )),
+          body: DtubeLogoPulseWithSubtitle(
+            subtitle: "searching for the best node...",
+            size: 30.w,
+          ),
         );
       },
     );

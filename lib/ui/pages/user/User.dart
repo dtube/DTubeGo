@@ -1,10 +1,11 @@
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/pages/accountHistory/AccountHistory.dart';
 import 'package:dtube_go/ui/pages/user/ProfileSettings.dart';
 import 'package:dtube_go/ui/pages/wallet/transferDialog.dart';

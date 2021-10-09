@@ -5,7 +5,8 @@ import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc.dart';
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/res/appConfigValues.dart';
-import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -13,7 +14,7 @@ import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_event.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:flutter/material.dart';

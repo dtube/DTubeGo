@@ -27,8 +27,8 @@ class Post {
   late String sId;
   late String author;
   late String link;
-  // Null? pa;
-  // Null? pp;
+  late String? pa;
+  late String? pp;
   PostJsonString? jsonString;
   // List<Null> child;
   //List<Votes>? votes;
@@ -67,6 +67,8 @@ class Post {
     sId = json['_id'];
     author = json['author'];
     link = json['link'];
+    pa = json['pa'] != null ? json['pa'] : "";
+    pp = json['pp'] != null ? json['pp'] : "";
 
     jsonString =
         json['json'] != null ? new PostJsonString.fromJson(json['json']) : null;
@@ -150,7 +152,7 @@ class Post {
           videoUrl = _gateway + jsonString!.files!.ipfs!.vid!.src!;
         }
       }
-    } else if (jsonString!.files!.sia?.vid?.src != null) {
+    } else if (jsonString!.files?.sia?.vid?.src != null) {
       videoSource = "sia";
       videoUrl = AppConfig.siaVideoUrl + jsonString!.files!.sia!.vid!.src!;
       print(videoUrl);
@@ -250,7 +252,7 @@ class PostJsonString {
     dur = json['dur'].toString();
     title = json['title'];
     desc = json['description'] == null ? json['desc'] : json['description'];
-    tag = json['tag'];
+    tag = json['tag'] != null ? json['tag'] : "";
     hide = json['hide'];
     nsfw = json['nsfw'];
     oc = json['oc'];

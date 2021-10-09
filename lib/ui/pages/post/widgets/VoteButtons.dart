@@ -1,5 +1,8 @@
-import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
+import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';

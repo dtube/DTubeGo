@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/rewards/rewards_bloc.dart';
@@ -5,7 +6,7 @@ import 'package:dtube_go/bloc/rewards/rewards_bloc_full.dart';
 import 'package:dtube_go/bloc/rewards/rewards_event.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/pages/post/postDetailPageV2.dart';
 import 'package:dtube_go/utils/friendlyTimestamp.dart';
@@ -115,9 +116,10 @@ class _RewardsListState extends State<RewardsList> {
     return BlocBuilder<RewardsBloc, RewardsState>(
       builder: (context, state) {
         if (state is RewardsLoadingState) {
-          return Center(
-              child:
-                  DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3));
+          return DtubeLogoPulseWithSubtitle(
+            subtitle: "loading rewars..",
+            size: 30.w,
+          );
         }
         if (state is RewardsLoadedState) {
           List<Reward> _rewards = state.rewardList;

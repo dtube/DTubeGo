@@ -779,6 +779,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
+  shimmer_animation:
+    dependency: "direct main"
+    description:
+      name: shimmer_animation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0+1"
   simple_shadow:
     dependency: "direct main"
     description:

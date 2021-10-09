@@ -130,7 +130,6 @@ class AppConfig {
     "lifestyle",
     "health",
     "sports",
-
     "skate",
     // others
     "psychology",

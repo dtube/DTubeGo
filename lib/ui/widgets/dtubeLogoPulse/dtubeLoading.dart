@@ -1,8 +1,10 @@
+import 'package:responsive_sizer/responsive_sizer.dart';
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'ThemeData.dart';
+import '../../../style/ThemeData.dart';
 
 class DTubeLogoPulse extends StatefulWidget {
   DTubeLogoPulse({Key? key, required this.size}) : super(key: key);
@@ -99,5 +101,30 @@ class _DTubeLogoPulseRotatingState extends State<DTubeLogoPulseRotating>
             ));
       },
     );
+  }
+}
+
+class DtubeLogoPulseWithSubtitle extends StatelessWidget {
+  DtubeLogoPulseWithSubtitle(
+      {Key? key, required this.subtitle, required this.size})
+      : super(key: key);
+  String subtitle;
+  double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        DTubeLogoPulse(
+          size: size,
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 3.h),
+          child: Text(subtitle, style: Theme.of(context).textTheme.bodyText1),
+        )
+      ],
+    ));
   }
 }

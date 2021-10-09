@@ -1,14 +1,15 @@
 import 'dart:math';
 
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/utils/ResponsiveLayout.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/style/dtubeLoading.dart';
-import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
 import 'package:dtube_go/ui/widgets/PinPadWidget.dart';
 import 'package:dtube_go/utils/secureStorage.dart';
@@ -64,18 +65,12 @@ class _PinPadScreenState extends State<PinPadScreen> {
 
       // as long as the settings are not loaded show a loading screen
       return Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: globalBlue,
-        body: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            DTubeLogoPulse(size: 30.w),
-            Text("loading your settings...",
-                style: Theme.of(context).textTheme.bodyText1)
-          ],
-        )),
-      );
+          resizeToAvoidBottomInset: false,
+          backgroundColor: globalBlue,
+          body: DtubeLogoPulseWithSubtitle(
+            subtitle: "loading your settings..",
+            size: 30.w,
+          ));
     });
   }
 }

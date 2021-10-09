@@ -1,10 +1,11 @@
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'dart:io';
 
 import 'package:dtube_go/ui/widgets/players/BetterPlayer.dart';
 import 'package:dtube_go/utils/GetAppDocDirectory.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/startup/LoginScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';

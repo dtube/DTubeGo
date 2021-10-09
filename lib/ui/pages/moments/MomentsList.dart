@@ -1,5 +1,6 @@
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/MomentsItem.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/MomentsView.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/controller/MomentsController.dart';
@@ -8,7 +9,7 @@ import 'package:dtube_go/ui/pages/moments/MomentsView/widgets/VideoPlayerMoments
 
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_go/style/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
@@ -189,9 +190,13 @@ class _MomentsListState extends State<MomentsList> {
 
   Widget buildLoading(BuildContext context) {
     return Center(
-        child: widget.feedType == "UserFeed"
-            ? SizedBox(height: 0, width: 0)
-            : DTubeLogoPulse(size: 20.w));
+      child: widget.feedType == "UserFeed"
+          ? SizedBox(height: 0, width: 0)
+          : DtubeLogoPulseWithSubtitle(
+              subtitle: "loading moments..",
+              size: 40.w,
+            ),
+    );
   }
 
   Widget buildErrorUi(String message) {

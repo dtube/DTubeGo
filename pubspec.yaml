@@ -81,6 +81,7 @@ dependencies:
   simple_shadow: ^0.2.0 #shadows for png files (dtube icon)
   flutter_staggered_grid_view: ^0.4.0 # explore page 
   pinput: ^1.2.0 # pin input field on startup
+  shimmer_animation: ^2.1.0+1 # glow animation over images
     
   # NETWORK - cache related
   cached_network_image: ^3.1.0

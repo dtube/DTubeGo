@@ -2,8 +2,8 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_go/bloc/config/txTypes.dart';
-import 'package:dtube_go/style/dtubeLoading.dart';
-import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/utils/navigationShortCuts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -118,8 +118,9 @@ class _HistoryState extends State<History> {
   }
 
   Widget buildLoading() {
-    return Center(
-      child: DTubeLogoPulse(size: MediaQuery.of(context).size.width / 3),
+    return DtubeLogoPulseWithSubtitle(
+      subtitle: "loading history..",
+      size: 10.w,
     );
   }
 

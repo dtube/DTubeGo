@@ -1,3 +1,6 @@
+import 'package:dtube_go/style/ThemeData.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
+
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/tags/TagList.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -34,13 +37,15 @@ class TagChip extends StatelessWidget {
         }));
       },
       label: Container(
-          width: width,
-          child: Center(
-              child: Text(
+        width: width,
+        child: Center(
+          child: Text(
             tagName,
             style: Theme.of(context).textTheme.bodyText1,
             overflow: TextOverflow.ellipsis,
-          ))),
+          ),
+        ),
+      ),
     );
   }
 }

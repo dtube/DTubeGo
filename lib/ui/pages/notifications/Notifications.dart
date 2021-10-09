@@ -2,7 +2,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/config/txTypes.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -104,7 +104,9 @@ class _NotificationsState extends State<Notifications> {
               if (_postNavigationPossible) {
                 navigateToPostDetailPage(
                     context,
-                    notifications[pos].tx.data.author!,
+                    notifications[pos].tx.data.author! != ""
+                        ? notifications[pos].tx.data.author!
+                        : notifications[pos].tx.sender,
                     notifications[pos].tx.data.link!,
                     "none",
                     false,
@@ -155,8 +157,8 @@ class CustomListItem extends StatelessWidget {
                     avatarSize: 15.w,
                     showVerified: true,
                     showName: true,
-                    width: 35.w,
-                    height: 7.h,
+                    width: 40.w,
+                    height: 8.h,
                   ),
                 ),
                 SizedBox(

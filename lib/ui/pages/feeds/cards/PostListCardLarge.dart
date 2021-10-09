@@ -1,11 +1,15 @@
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/style/styledCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 
 import 'package:dtube_go/ui/pages/feeds/widgets/FullScreenButton.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
+import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
+import 'package:dtube_go/utils/randomGenerator.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -24,6 +28,7 @@ import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class PostListCardLarge extends StatefulWidget {
   const PostListCardLarge(
@@ -129,30 +134,38 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
               Visibility(
                 visible: !_thumbnailTapped,
                 child: AspectRatio(
-                    aspectRatio: 8 / 5,
-                    child: widget.blur
-                        ? ClipRect(
-                            child: ImageFiltered(
-                              imageFilter: ImageFilter.blur(
-                                sigmaY: 5,
-                                sigmaX: 5,
-                              ),
-                              child: CachedNetworkImage(
-                                fit: BoxFit.fitWidth,
-                                imageUrl: widget.thumbnailUrl,
-                                errorWidget: (context, url, error) => DTubeLogo(
-                                  size: 50,
-                                ),
+                  aspectRatio: 8 / 5,
+                  child: widget.blur
+                      ? ClipRect(
+                          child: ImageFiltered(
+                            imageFilter: ImageFilter.blur(
+                              sigmaY: 5,
+                              sigmaX: 5,
+                            ),
+                            child: CachedNetworkImage(
+                              fit: BoxFit.fitWidth,
+                              imageUrl: widget.thumbnailUrl,
+                              errorWidget: (context, url, error) => DTubeLogo(
+                                size: 50,
                               ),
                             ),
-                          )
-                        : CachedNetworkImage(
+                          ),
+                        )
+                      : Shimmer(
+                          duration: Duration(seconds: 5), //Default value
+                          interval: Duration(seconds: generateRandom(3, 15)),
+                          color: globalAlmostWhite,
+
+                          colorOpacity: 0.2, //Default value
+                          child: CachedNetworkImage(
                             imageUrl: widget.thumbnailUrl,
                             fit: BoxFit.fitWidth,
                             errorWidget: (context, url, error) => DTubeLogo(
                               size: 50,
                             ),
-                          )),
+                          ),
+                        ),
+                ),
               ),
               Center(
                 child: Visibility(

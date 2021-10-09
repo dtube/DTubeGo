@@ -10,9 +10,9 @@ Color globalBGColor = Color.fromRGBO(29, 35, 51, 1);
 Color globalBGColorNoOpacity = Color.fromRGBO(29, 35, 51, 0);
 
 Color globalTextColor = Colors.white;
-double globalIconSizeSmall = 20;
-double globalIconSizeMedium = 30;
-double globalIconSizeBig = 25;
+double globalIconSizeSmall = 20.sp;
+double globalIconSizeMedium = 23.sp;
+double globalIconSizeBig = 25.sp;
 
 final ThemeData dtubeDarkTheme = ThemeData(
   primarySwatch: MaterialColor(4280361249, {
@@ -95,105 +95,105 @@ final ThemeData dtubeDarkTheme = ThemeData(
   textTheme: TextTheme(
       headline1: TextStyle(
         color: globalTextColor,
-        fontSize: 30,
+        fontSize: 30.sp,
         fontWeight: FontWeight.w900,
         fontStyle: FontStyle.normal,
       ),
       headline2: TextStyle(
         color: globalTextColor,
-        fontSize: 30,
+        fontSize: 30.sp,
         fontWeight: FontWeight.w700,
         fontStyle: FontStyle.normal,
       ),
       headline3: TextStyle(
         color: globalTextColor,
-        fontSize: 25,
+        fontSize: 25.sp,
         fontWeight: FontWeight.w900,
         fontStyle: FontStyle.normal,
       ),
       headline4: TextStyle(
         color: globalTextColor,
-        fontSize: 25,
+        fontSize: 25.sp,
         fontWeight: FontWeight.w700,
         fontStyle: FontStyle.normal,
       ),
       headline5: TextStyle(
         color: globalTextColor,
-        fontSize: 20,
+        fontSize: 20.sp,
         fontWeight: FontWeight.w700,
         fontStyle: FontStyle.normal,
       ),
       headline6: TextStyle(
         color: globalTextColor,
-        fontSize: 17,
+        fontSize: 17.sp,
         fontWeight: FontWeight.w700,
         fontStyle: FontStyle.normal,
       ),
       subtitle1: TextStyle(
         color: globalTextColor,
-        fontSize: 17,
+        fontSize: 17.sp,
         fontWeight: FontWeight.w200,
         fontStyle: FontStyle.normal,
       ),
       bodyText1: TextStyle(
         color: globalTextColor,
-        fontSize: 17,
+        fontSize: 17.sp,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
       ),
       bodyText2: TextStyle(
         color: globalTextColor,
-        fontSize: 15,
+        fontSize: 15.sp,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
       ),
       caption: TextStyle(
         color: globalTextColor,
-        fontSize: 15,
+        fontSize: 15.sp,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
       ),
       button: TextStyle(
         color: globalTextColor,
-        fontSize: 17,
+        fontSize: 17.sp,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
       ),
       subtitle2: TextStyle(
         color: globalTextColor,
-        fontSize: 14,
+        fontSize: 14.sp,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
       ),
       overline: TextStyle(
         decoration: TextDecoration.underline,
         color: Colors.blue,
-        fontSize: 17,
+        fontSize: 17.sp,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
       )),
   inputDecorationTheme: InputDecorationTheme(
     labelStyle: TextStyle(
       color: globalTextColor,
-      fontSize: 16,
+      fontSize: 16.sp,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
     helperStyle: TextStyle(
       color: globalTextColor,
-      fontSize: 16,
+      fontSize: 16.sp,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
     hintStyle: TextStyle(
       color: globalTextColor,
-      fontSize: 16,
+      fontSize: 16.sp,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
     errorStyle: TextStyle(
       color: globalTextColor,
-      fontSize: 16,
+      fontSize: 16.sp,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
@@ -205,19 +205,19 @@ final ThemeData dtubeDarkTheme = ThemeData(
     isCollapsed: false,
     prefixStyle: TextStyle(
       color: globalTextColor,
-      fontSize: 16,
+      fontSize: 16.sp,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
     suffixStyle: TextStyle(
       color: globalTextColor,
-      fontSize: 16,
+      fontSize: 16.sp,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
     counterStyle: TextStyle(
       color: globalTextColor,
-      fontSize: 16,
+      fontSize: 16.sp,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
@@ -305,7 +305,7 @@ final ThemeData dtubeDarkTheme = ThemeData(
     showValueIndicator: ShowValueIndicator.onlyForDiscrete,
     valueIndicatorTextStyle: TextStyle(
       color: Color(0xffcdcdcd),
-      fontSize: 14,
+      fontSize: 14.sp,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
@@ -323,14 +323,14 @@ final ThemeData dtubeDarkTheme = ThemeData(
     labelPadding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 8.0, right: 8.0),
     labelStyle: TextStyle(
       color: Color(0xdeffffff),
-      fontSize: 14,
+      fontSize: 14.sp,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
     padding: EdgeInsets.only(top: 4.0, bottom: 4.0, left: 4.0, right: 4.0),
     secondaryLabelStyle: TextStyle(
       color: Color(0xff223153),
-      fontSize: 14,
+      fontSize: 14.sp,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
