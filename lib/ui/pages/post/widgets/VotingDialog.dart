@@ -1,5 +1,9 @@
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
+import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
+import 'package:dtube_go/utils/shortBalanceStrings.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -21,7 +25,7 @@ class VotingDialog extends StatefulWidget {
       required this.downvote,
       required this.defaultVote,
       required this.defaultTip,
-      required this.currentVT,
+      //required this.currentVT,
       required this.isPost,
       this.vertical,
       this.verticalModeCallbackVotingButtonsPressed})
@@ -32,7 +36,7 @@ class VotingDialog extends StatefulWidget {
   String link;
   double defaultVote;
   double defaultTip;
-  double currentVT;
+  // double currentVT;
   bool isPost;
   bool? vertical; // only used in moments for now
 
@@ -68,16 +72,36 @@ class _VotingDialogState extends State<VotingDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: globalAlmostBlack,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
-      content: Builder(
-        builder: (context) {
-          return Container(
-            height: 65.h,
-            width: 100.w,
-            child: SingleChildScrollView(
+    // return AlertDialog(
+    //   backgroundColor: globalAlmostBlack,
+    //   shape: RoundedRectangleBorder(
+    //       borderRadius: BorderRadius.all(Radius.circular(20.0))),
+    //   content: Builder(builder: (context) {
+    //     return Container(
+    //       height: 65.h,
+    //       width: 100.w,
+    return PopUpDialogWithTitleLogo(
+      titleWidgetPadding: 5.w,
+      titleWidgetSize: 20.w,
+      callbackOK: () {},
+      titleWidget: FaIcon(
+        widget.downvote
+            ? FontAwesomeIcons.thumbsDown
+            : FontAwesomeIcons.thumbsUp,
+        size: 20.w,
+        color: globalBGColor,
+      ),
+      child: BlocBuilder<UserBloc, UserState>(
+        bloc: _userBloc,
+        builder: (context, state) {
+          if (state is UserInitialState) {
+            return DtubeLogoPulseWithSubtitle(
+                subtitle: "loading your balance...", size: 30.w);
+          } else if (state is UserDTCVPLoadingState) {
+            return DtubeLogoPulseWithSubtitle(
+                subtitle: "loading your balance...", size: 30.w);
+          } else if (state is UserDTCVPLoadedState) {
+            return SingleChildScrollView(
               child: BlocListener<TransactionBloc, TransactionState>(
                 listener: (context, state) {
                   if (state is TransactionSent) {
@@ -86,16 +110,12 @@ class _VotingDialogState extends State<VotingDialog> {
                 },
                 child: !_sendButtonPressed
                     ? Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          FaIcon(
-                            widget.downvote
-                                ? FontAwesomeIcons.thumbsDown
-                                : FontAwesomeIcons.thumbsUp,
-                            size: 25.w,
-                            color: globalAlmostWhite,
-                          ),
                           Padding(
-                            padding: EdgeInsets.only(top: 5.h),
+                            padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -140,6 +160,14 @@ class _VotingDialogState extends State<VotingDialog> {
                                         },
                                       ),
                                     ),
+                                    Text(
+                                        shortVP((state.vtBalance['v']! /
+                                                100 *
+                                                _vpValue)
+                                            .floor()),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6),
                                   ],
                                 ),
                                 widget.downvote
@@ -186,92 +214,75 @@ class _VotingDialogState extends State<VotingDialog> {
                                                 },
                                               ),
                                             ),
+                                            Text("",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6),
                                           ],
                                         ),
                                       ),
                               ],
                             ),
                           ),
-                          Container(
-                            width: 50.w,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                widget.isPost
-                                    ? TextFormField(
-                                        controller: _tagController,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                        decoration: new InputDecoration(
-                                            labelText: "curator tag",
-                                            labelStyle: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1),
-                                      )
-                                    : SizedBox(width: 0),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 4.h),
-                                  child: BlocBuilder<UserBloc, UserState>(
-                                      builder: (context, state) {
-                                    if (state is UserDTCVPLoadedState) {
-                                      _currentVT =
-                                          state.vtBalance["v"]!.toDouble();
-                                      return InputChip(
-                                          backgroundColor: globalRed,
-                                          onPressed: () {
-                                            var voteValue =
-                                                (_currentVT * (_vpValue / 100))
-                                                    .floor();
-                                            int _txType = 5;
-                                            TxData txdata = TxData(
-                                              author: widget.author,
-                                              link: widget.link,
-                                              tag: _tagController.value.text,
-                                              vt: voteValue *
-                                                  (widget.downvote ? -1 : 1),
-                                            );
-
-                                            if (_tipValue > 0) {
-                                              _txType = 19;
-                                              txdata = TxData(
-                                                  author: widget.author,
-                                                  link: widget.link,
-                                                  tag:
-                                                      _tagController.value.text,
-                                                  vt: voteValue *
-                                                      (widget.downvote
-                                                          ? -1
-                                                          : 1),
-                                                  tip: _tipValue.floor());
-                                            }
-                                            Transaction newTx = Transaction(
-                                                type: _txType, data: txdata);
-
-                                            _txBloc.add(
-                                                SignAndSendTransactionEvent(
-                                                    newTx));
-                                            widget
-                                                .verticalModeCallbackVotingButtonsPressed;
-                                            setState(() {
-                                              _sendButtonPressed = true;
-                                            });
-                                          },
-                                          label: Text(
-                                            "send",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5,
-                                          ));
-                                    } else {
-                                      return SizedBox(
-                                        width: 0,
-                                      );
-                                    }
-                                  }),
+                          widget.isPost
+                              ? Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 20.w,
+                                      right: 20.w,
+                                      top: 1.h,
+                                      bottom: 2.h),
+                                  child: Container(
+                                    height: 8.h,
+                                    child: OverlayTextInput(
+                                      textEditingController: _tagController,
+                                      label: "curator tag",
+                                      autoFocus: false,
+                                    ),
+                                  ),
                                 )
-                              ],
+                              : SizedBox(width: 0),
+                          InkWell(
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                              decoration: BoxDecoration(
+                                color: globalRed,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(20.0),
+                                    bottomRight: Radius.circular(20.0)),
+                              ),
+                              child: Text(
+                                "Send Vote",
+                                style: Theme.of(context).textTheme.headline4,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
+                            onTap: () async {
+                              var voteValue =
+                                  (state.vtBalance['v']! * (_vpValue / 100))
+                                      .floor();
+                              int _txType = 5;
+                              TxData txdata = TxData(
+                                author: widget.author,
+                                link: widget.link,
+                                tag: _tagController.value.text,
+                                vt: voteValue * (widget.downvote ? -1 : 1),
+                              );
+
+                              if (_tipValue > 0) {
+                                _txType = 19;
+                                txdata = TxData(
+                                    author: widget.author,
+                                    link: widget.link,
+                                    tag: _tagController.value.text,
+                                    vt: voteValue * (widget.downvote ? -1 : 1),
+                                    tip: _tipValue.floor());
+                              }
+                              Transaction newTx =
+                                  Transaction(type: _txType, data: txdata);
+
+                              _txBloc.add(SignAndSendTransactionEvent(newTx));
+                              Navigator.of(context).pop();
+                            },
                           ),
                         ],
                       )
@@ -282,10 +293,15 @@ class _VotingDialogState extends State<VotingDialog> {
                         ),
                       ),
               ),
-            ),
-          );
+            );
+          } else {
+            return DtubeLogoPulseWithSubtitle(
+                subtitle: "loading your balance...", size: 30.w);
+          }
         },
       ),
     );
+    //   }),
+    // );
   }
 }

@@ -258,7 +258,10 @@ class _PostDetailsState extends State<PostDetails> {
                             state.settings[settingKey_defaultVotingWeight]!);
                         _defaultVoteWeightComments = double.parse(state
                             .settings[settingKey_defaultVotingWeightComments]!);
-                        return VotingButtons(
+                        return BlocProvider<UserBloc>(
+                          create: (BuildContext context) =>
+                              UserBloc(repository: UserRepositoryImpl()),
+                          child: VotingButtons(
                             author: widget.post.author,
                             link: widget.post.link,
                             alreadyVoted: widget.post.alreadyVoted!,
@@ -271,7 +274,10 @@ class _PostDetailsState extends State<PostDetails> {
                             scale: 0.8,
                             isPost: true,
                             iconColor: Colors.white,
-                            focusVote: widget.directFocus);
+                            focusVote: widget.directFocus,
+                            fadeInFromLeft: false,
+                          ),
+                        );
                       } else {
                         return SizedBox(height: 0);
                       }
@@ -306,6 +312,7 @@ class _PostDetailsState extends State<PostDetails> {
                       votingWeight: _defaultVoteWeightComments,
                       scale: 1,
                       focusOnNewComment: widget.directFocus == "newcomment",
+                      isMainPost: true,
                     ),
                   ],
                 ),

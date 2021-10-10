@@ -1,6 +1,9 @@
+import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
+import 'package:dtube_go/ui/widgets/Comments/CommentDialog.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 
 import 'package:dtube_go/ui/pages/feeds/widgets/FullScreenButton.dart';
@@ -8,6 +11,8 @@ import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
 import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/gifts/GiftDialog.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
 import 'package:dtube_go/utils/randomGenerator.dart';
 import 'package:flutter/services.dart';
@@ -205,36 +210,41 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                           // TODO error handling
 
                           if (state is UserDTCVPLoadingState) {
-                            return CircularProgressIndicator();
+                            return DtubeLogoPulseWithSubtitle(
+                                subtitle: "loading your balances...",
+                                size: 20.w);
                           }
                           if (state is UserDTCVPLoadedState) {
                             _currentVp = state.vtBalance["v"]!;
-                          }
-                          return AspectRatio(
-                            aspectRatio: 8 / 5,
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Container(
-                                color: Colors.black.withAlpha(99),
-                                child: VotingSliderStandalone(
-                                  defaultVote: double.parse(
-                                      widget.defaultPostVotingWeight),
-                                  defaultTip:
-                                      double.parse(widget.defaultPostVotingTip),
-                                  author: widget.author,
-                                  link: widget.link,
-                                  downvote: !_votingDirection,
-                                  currentVT: _currentVp + 0.0,
-                                  isPost: true,
-                                  cancelCallback: () {
-                                    setState(() {
-                                      _showVotingBars = false;
-                                    });
-                                  },
+
+                            return AspectRatio(
+                              aspectRatio: 8 / 5,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  color: Colors.black.withAlpha(99),
+                                  child: VotingSliderStandalone(
+                                    defaultVote: double.parse(
+                                        widget.defaultPostVotingWeight),
+                                    defaultTip: double.parse(
+                                        widget.defaultPostVotingTip),
+                                    author: widget.author,
+                                    link: widget.link,
+                                    downvote: !_votingDirection,
+                                    currentVT: _currentVp + 0.0,
+                                    isPost: true,
+                                    cancelCallback: () {
+                                      setState(() {
+                                        _showVotingBars = false;
+                                      });
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
+                            );
+                          }
+                          return DtubeLogoPulseWithSubtitle(
+                              subtitle: "loading your balances...", size: 20.w);
                         },
                       ),
                     ),
@@ -662,15 +672,22 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                               elevation: 0,
                               backgroundColor: Colors.transparent,
                               onTap: () {
-                                setState(() {
-                                  if (!_showCommentInput) {
-                                    _showCommentInput = true;
-                                    _showVotingBars = false;
-                                    _userBloc.add(FetchDTCVPEvent());
-                                  } else {
-                                    _showCommentInput = false;
-                                  }
-                                });
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      BlocProvider<UserBloc>(
+                                    create: (context) => UserBloc(
+                                        repository: UserRepositoryImpl()),
+                                    child: CommentDialog(
+                                      txBloc: BlocProvider.of<TransactionBloc>(
+                                          context),
+                                      originAuthor: widget.author,
+                                      originLink: widget.link,
+                                      defaultCommentVote: double.parse(
+                                          widget.defaultCommentVotingWeight),
+                                    ),
+                                  ),
+                                );
                               }),
                           // DOWNVOTE BUTTON
                           SpeedDialChild(
@@ -686,21 +703,41 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                               elevation: 0,
                               backgroundColor: Colors.transparent,
                               onTap: () {
-                                setState(() {
-                                  if (_showVotingBars && _votingDirection) {
-                                    _votingDirection = false;
-                                  } else if (!_showVotingBars) {
-                                    _userBloc.add(FetchDTCVPEvent());
-                                    _showCommentInput = false;
-                                    _showVotingBars = true;
-                                    _votingDirection = false;
-                                  } else if (_showVotingBars &&
-                                      !_votingDirection) {
-                                    _showVotingBars = false;
-                                  }
-                                });
+                                if (!widget.alreadyVoted) {
+                                  showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider<PostBloc>(
+                                            create: (context) => PostBloc(
+                                                repository:
+                                                    PostRepositoryImpl())),
+                                        BlocProvider<UserBloc>(
+                                            create: (context) => UserBloc(
+                                                repository:
+                                                    UserRepositoryImpl())),
+                                      ],
+                                      child: VotingDialog(
+                                        txBloc:
+                                            BlocProvider.of<TransactionBloc>(
+                                                context),
+                                        defaultVote: double.parse(
+                                            widget.defaultPostVotingWeight),
+                                        defaultTip: double.parse(
+                                            widget.defaultPostVotingTip),
+                                        author: widget.author,
+                                        link: widget.link,
+                                        downvote: true,
+                                        //currentVT: state.vtBalance['v']! + 0.0,
+                                        isPost: true,
+                                      ),
+                                    ),
+                                  );
+                                }
                               }),
                           // UPVOTE BUTTON
+
                           SpeedDialChild(
                               child: Padding(
                                 padding: EdgeInsets.only(left: 7.w),
@@ -714,19 +751,38 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                               elevation: 0,
                               backgroundColor: Colors.transparent,
                               onTap: () {
-                                setState(() {
-                                  if (_showVotingBars && _votingDirection) {
-                                    _showVotingBars = false;
-                                  } else if (_showVotingBars &&
-                                      !_votingDirection) {
-                                    _votingDirection = true;
-                                  } else if (!_showVotingBars) {
-                                    _userBloc.add(FetchDTCVPEvent());
-                                    _showCommentInput = false;
-                                    _showVotingBars = true;
-                                    _votingDirection = true;
-                                  }
-                                });
+                                if (!widget.alreadyVoted) {
+                                  showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider<PostBloc>(
+                                            create: (context) => PostBloc(
+                                                repository:
+                                                    PostRepositoryImpl())),
+                                        BlocProvider<UserBloc>(
+                                            create: (context) => UserBloc(
+                                                repository:
+                                                    UserRepositoryImpl())),
+                                      ],
+                                      child: VotingDialog(
+                                        txBloc:
+                                            BlocProvider.of<TransactionBloc>(
+                                                context),
+                                        defaultVote: double.parse(
+                                            widget.defaultPostVotingWeight),
+                                        defaultTip: double.parse(
+                                            widget.defaultPostVotingTip),
+                                        author: widget.author,
+                                        link: widget.link,
+                                        downvote: false,
+                                        //currentVT: state.vtBalance['v']! + 0.0,
+                                        isPost: true,
+                                      ),
+                                    ),
+                                  );
+                                }
                               }),
                           // GIFT BUTTON
                           SpeedDialChild(
@@ -742,14 +798,15 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                               elevation: 0,
                               backgroundColor: Colors.transparent,
                               onTap: () {
-                                setState(() {
-                                  if (!_showGiftInput) {
-                                    _userBloc.add(FetchDTCVPEvent());
-                                    _showCommentInput = false;
-                                    _showVotingBars = false;
-                                    _showGiftInput = true;
-                                  }
-                                });
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => GiftDialog(
+                                    txBloc: BlocProvider.of<TransactionBloc>(
+                                        context),
+                                    receiver: widget.author,
+                                    originLink: widget.link,
+                                  ),
+                                );
                               }),
                         ]),
                   ),

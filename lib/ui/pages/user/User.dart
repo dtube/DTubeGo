@@ -1,5 +1,6 @@
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
+import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc.dart';
@@ -152,6 +153,26 @@ class _UserState extends State<UserPage> {
                 scrollCallback: (bool) {},
                 enableNavigation: true,
               )),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              height: 35.h,
+              width: 200.w,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  gradient: LinearGradient(
+                      begin: FractionalOffset.topCenter,
+                      end: FractionalOffset.bottomCenter,
+                      colors: [
+                        Colors.black,
+                        Colors.black.withOpacity(0.0),
+                      ],
+                      stops: [
+                        0.0,
+                        1.0
+                      ])),
+            ),
+          ),
           Padding(
             padding: EdgeInsets.only(top: 11.h),
             child: Row(
@@ -159,27 +180,32 @@ class _UserState extends State<UserPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Center(
-                  child: AccountAvatarBase(
-                    username: user.name,
-                    avatarSize: Device.orientation == Orientation.portrait
-                        ? 18.h
-                        : 25.h,
-                    showVerified: true,
-                    showName: true,
-                    showNameLeft: true,
-                    showFullUserInfo: true,
-                    nameFontSizeMultiply: 1.4,
-                    width: Device.orientation == Orientation.portrait
-                        ? 95.w
-                        : 70.w,
-                    height: Device.orientation == Orientation.portrait
-                        ? 18.h
-                        : 25.h,
+                  child: FadeIn(
+                    preferences: AnimationPreferences(
+                        offset: Duration(milliseconds: 1100)),
+                    child: AccountAvatarBase(
+                      username: user.name,
+                      avatarSize: Device.orientation == Orientation.portrait
+                          ? 18.h
+                          : 25.h,
+                      showVerified: true,
+                      showName: true,
+                      showNameLeft: true,
+                      showFullUserInfo: true,
+                      nameFontSizeMultiply: 1.4,
+                      width: Device.orientation == Orientation.portrait
+                          ? 95.w
+                          : 70.w,
+                      height: Device.orientation == Orientation.portrait
+                          ? 18.h
+                          : 25.h,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
+
           Positioned(
             top: 45.h,
             right: 3.w,

@@ -3,6 +3,7 @@ import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
+import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class ReplyButton extends StatefulWidget {
   final double votingWeight;
   final double scale;
   bool focusOnNewComment;
+  bool isMainPost;
 
   //final Comment comment;
 
@@ -29,7 +31,8 @@ class ReplyButton extends StatefulWidget {
       required this.parentLink,
       required this.votingWeight,
       required this.scale,
-      required this.focusOnNewComment})
+      required this.focusOnNewComment,
+      required this.isMainPost})
       : super(key: key);
 
   @override
@@ -77,13 +80,22 @@ class _ReplyButtonState extends State<ReplyButton> {
         children: [
           Transform.scale(
             scale: widget.scale,
-            child: InputChip(
-              label: widget.icon,
-              onPressed: () {
-                setState(() {
-                  _replyPressed = !_replyPressed;
-                });
-              },
+            child: RubberBand(
+              preferences: AnimationPreferences(
+                  autoPlay: !_replyPressed && widget.isMainPost
+                      ? AnimationPlayStates.Loop
+                      : AnimationPlayStates.None,
+                  offset: Duration(seconds: 6),
+                  duration: Duration(seconds: 1),
+                  magnitude: 0.7),
+              child: InputChip(
+                label: widget.icon,
+                onPressed: () {
+                  setState(() {
+                    _replyPressed = !_replyPressed;
+                  });
+                },
+              ),
             ),
           ),
           Visibility(

@@ -140,8 +140,8 @@ class FeedList extends StatelessWidget {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Container(
-                            height: feedType == "UserFeed" ? 35.h : 15.h,
-                            width: 120.w,
+                            height: feedType == "UserFeed" ? 0.h : 15.h,
+                            width: 200.w,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 gradient: LinearGradient(

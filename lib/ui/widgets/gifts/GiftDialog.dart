@@ -1,3 +1,5 @@
+import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
+import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -39,103 +41,108 @@ class _GiftDialogState extends State<GiftDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
-      // title: const Text('Send a gift'),
-      backgroundColor: globalAlmostBlack,
-      content: Builder(
+    return PopUpDialogWithTitleLogo(
+      titleWidgetPadding: 5.w,
+      titleWidgetSize: 20.w,
+      callbackOK: () {},
+      titleWidget: FaIcon(
+        FontAwesomeIcons.gift,
+        size: 20.w,
+        color: globalBGColor,
+      ),
+      child: Builder(
         builder: (context) {
-          return Container(
-            height: 45.h,
-            width: 100.w,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 5.h),
-                    child: FaIcon(
-                      FontAwesomeIcons.gift,
-                      size: 30.w,
-                      color: globalAlmostWhite,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 3.h),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 30.w,
-                          child: TextField(
-                            cursorColor: globalRed,
-                            decoration:
-                                new InputDecoration(labelText: "Amount"),
-                            style: Theme.of(context).textTheme.bodyText1,
-                            controller: _amountController,
-                            keyboardType:
-                                TextInputType.numberWithOptions(decimal: true),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r"^\d+\.?\d{0,2}")),
-                            ],
-                          ),
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 30.w,
+                        child: OverlayNumberInput(
+                          autoFocus: true,
+                          textEditingController: _amountController,
+                          label: "Amount",
+
+                          // cursorColor: globalRed,
+                          // decoration: new InputDecoration(labelText: "Amount"),
+                          // style: Theme.of(context).textTheme.bodyText1,
+                          // controller: _amountController,
+                          // keyboardType:
+                          //     TextInputType.numberWithOptions(decimal: true),
+                          // inputFormatters: [
+                          //   FilteringTextInputFormatter.allow(
+                          //       RegExp(r"^\d+\.?\d{0,2}")),
+                          // ],
                         ),
-                        Text(
-                          "DTC",
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                      ],
+                      ),
+                      Text(
+                        " DTC",
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: 1.h, bottom: 1.h, left: 2.w, right: 2.w),
+                  child: Container(
+                    height: 10.h,
+                    child: OverlayTextInput(
+                      autoFocus: true,
+                      textEditingController: _memoController,
+                      label: "you can add some kind words to your gift",
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 2.h),
-                    child: TextField(
-                      cursorColor: globalRed,
-                      decoration: new InputDecoration(
-                          labelText:
-                              "you can add some kind words to your gift"),
-                      controller: _memoController,
-                      style: Theme.of(context).textTheme.bodyText1,
+                ),
+                InkWell(
+                    child: Container(
+                      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                      decoration: BoxDecoration(
+                        color: globalRed,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20.0),
+                            bottomRight: Radius.circular(20.0)),
+                      ),
+                      child: Text(
+                        "Send Gift",
+                        style: Theme.of(context).textTheme.headline4,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                    onTap: () {
+                      String _memo = "";
+
+                      if (widget.originLink != "") {
+                        _memo =
+                            "Gift sent through https://d.tube/#!/v/${widget.receiver}/${widget.originLink!}";
+                        if (_memoController.value.text != "") {
+                          _memo = _memo + ": ${_memoController.value.text}";
+                        }
+                      } else {
+                        _memo = _memoController.value.text;
+                      }
+                      TxData txdata = TxData(
+                          receiver: widget.receiver,
+                          amount:
+                              (double.parse(_amountController.value.text) * 100)
+                                  .floor(),
+                          memo: _memo);
+                      Transaction newTx = Transaction(type: 3, data: txdata);
+                      _txBloc.add(SignAndSendTransactionEvent(newTx));
+                      Navigator.of(context).pop();
+                    }),
+              ],
             ),
           );
         },
       ),
-      actionsAlignment: MainAxisAlignment.center,
-      actions: <Widget>[
-        InputChip(
-          backgroundColor: globalRed,
-          onPressed: () async {
-            String _memo = "";
-
-            if (widget.originLink != "") {
-              _memo =
-                  "Gift sent through https://d.tube/#!/v/${widget.receiver}/${widget.originLink!}";
-              if (_memoController.value.text != "") {
-                _memo = _memo + ": ${_memoController.value.text}";
-              }
-            } else {
-              _memo = _memoController.value.text;
-            }
-            TxData txdata = TxData(
-                receiver: widget.receiver,
-                amount:
-                    (double.parse(_amountController.value.text) * 100).floor(),
-                memo: _memo);
-            Transaction newTx = Transaction(type: 3, data: txdata);
-            _txBloc.add(SignAndSendTransactionEvent(newTx));
-            Navigator.of(context).pop();
-          },
-          label: Text(
-            'Send',
-            style: Theme.of(context).textTheme.headline5,
-          ),
-        ),
-      ],
     );
   }
 }

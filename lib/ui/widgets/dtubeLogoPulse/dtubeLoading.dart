@@ -114,18 +114,21 @@ class DtubeLogoPulseWithSubtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        DTubeLogoPulse(
-          size: size,
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 3.h),
-          child: Text(subtitle, style: Theme.of(context).textTheme.bodyText1),
-        ),
-      ],
-    ));
+    return Container(
+      height: 30.h,
+      child: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          DTubeLogoPulse(
+            size: size,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 3.h),
+            child: Text(subtitle, style: Theme.of(context).textTheme.bodyText1),
+          ),
+        ],
+      )),
+    );
   }
 }

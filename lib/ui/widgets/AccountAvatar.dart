@@ -1,4 +1,5 @@
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
+import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -173,16 +174,20 @@ class _AccountAvatarState extends State<AccountAvatar> {
                               size: widget.avatarSize,
                             ),
                       state.verified && widget.showVerified
-                          ? Align(
-                              alignment: Alignment.bottomRight,
-                              child: CircleAvatar(
-                                  maxRadius: widget.avatarSize / 8,
-                                  backgroundColor: globalRed,
-                                  child: FaIcon(
-                                    FontAwesomeIcons.check,
-                                    color: globalAlmostWhite,
-                                    size: widget.avatarSize / 8,
-                                  )),
+                          ? BounceIn(
+                              preferences: AnimationPreferences(
+                                  offset: Duration(milliseconds: 1000)),
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: CircleAvatar(
+                                    maxRadius: widget.avatarSize / 8,
+                                    backgroundColor: globalRed,
+                                    child: FaIcon(
+                                      FontAwesomeIcons.check,
+                                      color: globalAlmostWhite,
+                                      size: widget.avatarSize / 8,
+                                    )),
+                              ),
                             )
                           : SizedBox(height: 0),
                     ],
@@ -254,32 +259,43 @@ class FullInfo extends StatelessWidget {
             width: width,
           ),
           userData.jsonString?.profile?.location != null
-              ? OverlayText(
-                  text: userData.jsonString!.profile!.location!,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  sizeMultiply: 1,
-                  // style:
-                  //     Theme.of(context).textTheme.bodyText2,
+              ? FadeInLeft(
+                  preferences: AnimationPreferences(
+                      offset: Duration(milliseconds: 1400)),
+                  child: OverlayText(
+                    text: userData.jsonString!.profile!.location!,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    sizeMultiply: 1,
+                    // style:
+                    //     Theme.of(context).textTheme.bodyText2,
+                  ),
                 )
               : SizedBox(
                   height: 0,
                 ),
           userData.jsonString?.profile?.about != null
-              ? OverlayText(
-                  text: userData.jsonString!.profile!.about!,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  // style:
-                  //     Theme.of(context).textTheme.bodyText2,
+              ? FadeInLeft(
+                  preferences: AnimationPreferences(
+                      offset: Duration(milliseconds: 1700)),
+                  child: OverlayText(
+                    text: userData.jsonString!.profile!.about!,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    // style:
+                    //     Theme.of(context).textTheme.bodyText2,
+                  ),
                 )
               : SizedBox(
                   height: 0,
                 ),
           userData.jsonString?.profile?.website != null
-              ? OpenableHyperlink(
-                  url: userData.jsonString!.profile!.website!,
-                )
+              ? FadeIn(
+                  preferences: AnimationPreferences(
+                      offset: Duration(milliseconds: 2200)),
+                  child: OpenableHyperlink(
+                    url: userData.jsonString!.profile!.website!,
+                  ))
               : SizedBox(
                   height: 0,
                 ),

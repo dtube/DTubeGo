@@ -76,6 +76,26 @@ class _ExploreMainPageState extends State<ExploreMainPage>
 
           return Stack(
             children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  height: 15.h,
+                  width: 200.w,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      gradient: LinearGradient(
+                          begin: FractionalOffset.topCenter,
+                          end: FractionalOffset.bottomCenter,
+                          colors: [
+                            Colors.black,
+                            Colors.black.withOpacity(0.0),
+                          ],
+                          stops: [
+                            0.0,
+                            1.0
+                          ])),
+                ),
+              ),
               Column(
                 children: [
                   Expanded(
@@ -148,6 +168,7 @@ class _ExploreMainPageState extends State<ExploreMainPage>
                   ),
                 ),
               ),
+
               Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
@@ -159,7 +180,8 @@ class _ExploreMainPageState extends State<ExploreMainPage>
                     bold: true,
                   ),
                 ),
-              )
+              ),
+
               //),
               // ),
             ],

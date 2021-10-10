@@ -1,3 +1,4 @@
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -61,19 +62,23 @@ class CommentDisplay extends StatelessWidget {
           ),
           Stack(
             children: [
-              VotingButtons(
-                author: root.author,
-                link: root.link,
-                alreadyVoted: root.alreadyVoted,
-                alreadyVotedDirection: root.alreadyVotedDirection,
-                upvotes: root.upvotes,
-                downvotes: root.downvotes,
-                defaultVotingWeight: defaultVoteWeight,
-                defaultVotingTip: defaultVoteTip,
-                scale: 0.5,
-                isPost: false,
-                focusVote: "",
-                iconColor: Colors.white,
+              BlocProvider<UserBloc>(
+                create: (BuildContext context) =>
+                    UserBloc(repository: UserRepositoryImpl()),
+                child: VotingButtons(
+                    author: root.author,
+                    link: root.link,
+                    alreadyVoted: root.alreadyVoted,
+                    alreadyVotedDirection: root.alreadyVotedDirection,
+                    upvotes: root.upvotes,
+                    downvotes: root.downvotes,
+                    defaultVotingWeight: defaultVoteWeight,
+                    defaultVotingTip: defaultVoteTip,
+                    scale: 0.5,
+                    isPost: false,
+                    focusVote: "",
+                    iconColor: Colors.white,
+                    fadeInFromLeft: true),
               ),
               Align(
                 alignment: Alignment.topRight,
@@ -89,6 +94,7 @@ class CommentDisplay extends StatelessWidget {
                     votingWeight: defaultVoteWeight,
                     scale: 0.8,
                     focusOnNewComment: false,
+                    isMainPost: false,
                   ),
                 ),
               ),
@@ -123,19 +129,19 @@ class CommentDisplay extends StatelessWidget {
             Stack(
               children: [
                 VotingButtons(
-                  author: root.author,
-                  link: root.link,
-                  alreadyVoted: root.alreadyVoted,
-                  alreadyVotedDirection: root.alreadyVotedDirection,
-                  upvotes: root.upvotes,
-                  downvotes: root.downvotes,
-                  defaultVotingWeight: defaultVoteWeight,
-                  defaultVotingTip: defaultVoteTip,
-                  scale: 0.5,
-                  isPost: false,
-                  iconColor: Colors.white,
-                  focusVote: "",
-                ),
+                    author: root.author,
+                    link: root.link,
+                    alreadyVoted: root.alreadyVoted,
+                    alreadyVotedDirection: root.alreadyVotedDirection,
+                    upvotes: root.upvotes,
+                    downvotes: root.downvotes,
+                    defaultVotingWeight: defaultVoteWeight,
+                    defaultVotingTip: defaultVoteTip,
+                    scale: 0.5,
+                    isPost: false,
+                    iconColor: Colors.white,
+                    focusVote: "",
+                    fadeInFromLeft: true),
                 Align(
                   alignment: Alignment.topRight,
                   child: BlocProvider(
@@ -150,6 +156,7 @@ class CommentDisplay extends StatelessWidget {
                       votingWeight: defaultVoteWeight,
                       scale: 0.8,
                       focusOnNewComment: false,
+                      isMainPost: false,
                     ),
                   ),
                 ),

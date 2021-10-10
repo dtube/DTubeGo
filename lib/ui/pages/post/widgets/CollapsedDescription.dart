@@ -1,3 +1,4 @@
+import 'package:flutter_animator/flutter_animator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
@@ -61,14 +62,18 @@ class _CollapsedDescriptionState extends State<CollapsedDescription> {
                     builder: (context) {
                       var controller =
                           ExpandableController.of(context, required: true)!;
-                      return InputChip(
-                        label: Text(
-                          controller.expanded ? "collapse" : "read more",
-                          style: Theme.of(context).textTheme.bodyText2,
+                      return FadeIn(
+                        preferences:
+                            AnimationPreferences(offset: Duration(seconds: 1)),
+                        child: InputChip(
+                          label: Text(
+                            controller.expanded ? "collapse" : "read more",
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                          onPressed: () {
+                            controller.toggle();
+                          },
                         ),
-                        onPressed: () {
-                          controller.toggle();
-                        },
                       );
                     },
                   ),
