@@ -11,18 +11,15 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
 
   FeedBloc({required this.repository}) : super(FeedInitialState());
 
-  // @override
-
-  // FeedState get initialState => FeedInitialState();
-
   @override
   Stream<FeedState> mapEventToState(FeedEvent event) async* {
     String _avalonApiNode = await sec.getNode();
     String? _applicationUser = await sec.getUsername();
-
+    // event to reset the feed state
     if (event is InitFeedEvent) {
       yield FeedInitialState();
     }
+    // event to fetch moments
     if (event is FetchMomentsEvent) {
       String _tsRangeFilter = '&tsrange=' +
           (DateTime.now().add(Duration(days: -7)).millisecondsSinceEpoch / 1000)
@@ -43,6 +40,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         yield FeedErrorState(message: e.toString());
       }
     }
+    // even to fetch tag list entries of the last 90 days
     if (event is FetchTagSearchResults) {
       String _tsRangeFilter = '&tsrange=' +
           (DateTime.now().add(Duration(days: -90)).millisecondsSinceEpoch /
@@ -64,6 +62,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         yield FeedErrorState(message: e.toString());
       }
     }
+    // event to fetch posts of a specific feed
     if (event is FetchFeedEvent) {
       print("FETCH " + event.feedType);
       yield FeedLoadingState();
@@ -84,20 +83,14 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             break;
           case 'TrendingFeed':
             {
-              feed = await repository.getTrendingFeed(
-                  _avalonApiNode,
-                  event.fromAuthor,
-                  event.fromLink,
-                  _applicationUser); // statements;
+              feed = await repository.getTrendingFeed(_avalonApiNode,
+                  event.fromAuthor, event.fromLink, _applicationUser);
             }
             break;
           case 'NewFeed':
             {
-              feed = await repository.getNewFeed(
-                  _avalonApiNode,
-                  event.fromAuthor,
-                  event.fromLink,
-                  _applicationUser); // statements;
+              feed = await repository.getNewFeed(_avalonApiNode,
+                  event.fromAuthor, event.fromLink, _applicationUser);
             }
             break;
         }
@@ -107,15 +100,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         yield FeedErrorState(message: e.toString());
       }
     }
+    // event to fetch videos of a specific user
     if (event is FetchUserFeedEvent) {
-      // perhaps use the ts range to filter old content - but then we have to deal with paging...
-      // String _tsRangeFilter = '&tsrange=' +
-      //     (DateTime.now().add(Duration(days: -90)).millisecondsSinceEpoch /
-      //             1000)
-      //         .toString() +
-      //     ',' +
-      //     (DateTime.now().millisecondsSinceEpoch / 1000).toString();
-
       yield FeedLoadingState();
       try {
         List<FeedItem> feed = await repository.getNewFeedFiltered(

@@ -832,7 +832,7 @@ class _VotingSliderStandaloneState extends State<VotingSliderStandalone> {
                     OverlayText(
                       text: widget.downvote ? "Downvote" : "Upvote",
                       bold: true,
-                      sizeMultiply: 1.4,
+                      sizeMultiply: 1.8,
                     ),
                     SizedBox(height: 8),
                     Row(

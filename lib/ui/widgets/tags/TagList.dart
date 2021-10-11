@@ -89,7 +89,7 @@ class TagListState extends State<TagList> {
                     child: Column(
                       children: [
                         Text(
-                          "other current videos with the tag \"${widget.tagName}\"",
+                          "videos with the tag \"${widget.tagName}\" of the last 90 days",
                           style: Theme.of(context).textTheme.headline5,
                         ),
                         BlocBuilder<FeedBloc, FeedState>(

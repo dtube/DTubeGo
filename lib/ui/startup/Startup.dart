@@ -67,9 +67,11 @@ class _StartUpState extends State<StartUp> {
         // as long as there are no informations from the authentication logic -> show loading animation
         return Scaffold(
           backgroundColor: globalBlue,
-          body: DtubeLogoPulseWithSubtitle(
-            subtitle: "searching for the best node...",
-            size: 30.w,
+          body: Center(
+            child: DtubeLogoPulseWithSubtitle(
+              subtitle: "searching for the best node...",
+              size: 40.w,
+            ),
           ),
         );
       },

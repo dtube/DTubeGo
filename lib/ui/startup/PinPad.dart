@@ -67,9 +67,11 @@ class _PinPadScreenState extends State<PinPadScreen> {
       return Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: globalBlue,
-          body: DtubeLogoPulseWithSubtitle(
-            subtitle: "loading your settings..",
-            size: 30.w,
+          body: Center(
+            child: DtubeLogoPulseWithSubtitle(
+              subtitle: "loading your settings..",
+              size: 40.w,
+            ),
           ));
     });
   }

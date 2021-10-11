@@ -559,7 +559,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                 SizedBox(width: 2.w),
                 FadeInLeftBig(
                   preferences:
-                      AnimationPreferences(offset: Duration(seconds: 1)),
+                      AnimationPreferences(offset: Duration(milliseconds: 300)),
                   child: Container(
                     width: 65.w,
                     child: InkWell(
@@ -601,7 +601,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                             )
                           : SizedBox(width: globalIconSizeSmall),
                       TagChip(
-                        waitBeforeFadeIn: Duration(milliseconds: 1200),
+                        waitBeforeFadeIn: Duration(milliseconds: 600),
                         fadeInFromLeft: false,
                         tagName: widget.mainTag,
                         width: 20.w,
