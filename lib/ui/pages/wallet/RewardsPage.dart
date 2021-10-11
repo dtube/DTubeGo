@@ -1,4 +1,5 @@
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/rewards/rewards_bloc.dart';
@@ -117,7 +118,7 @@ class _RewardsListState extends State<RewardsList> {
       builder: (context, state) {
         if (state is RewardsLoadingState) {
           return DtubeLogoPulseWithSubtitle(
-            subtitle: "loading rewars..",
+            subtitle: "loading rewards..",
             size: 30.w,
           );
         }
@@ -138,6 +139,7 @@ class _RewardsListState extends State<RewardsList> {
                 itemBuilder: (ctx, pos) {
                   return RewardsCard(
                     reward: _rewards[pos],
+                    parentWidget: this.widget,
                   );
                 });
           }
@@ -149,19 +151,18 @@ class _RewardsListState extends State<RewardsList> {
 }
 
 class RewardsCard extends StatefulWidget {
-  RewardsCard({
-    Key? key,
-    required this.reward,
-  }) : super(key: key);
+  RewardsCard({Key? key, required this.reward, required this.parentWidget})
+      : super(key: key);
 
   late Reward reward;
+  late Widget parentWidget;
 
   @override
   _RewardsCardState createState() => _RewardsCardState();
 }
 
 class _RewardsCardState extends State<RewardsCard> {
-  double widthLabel = 100;
+  double widthLabel = 23.w;
 
   @override
   void initState() {
@@ -184,17 +185,17 @@ class _RewardsCardState extends State<RewardsCard> {
         child: Row(
           children: [
             SizedBox(
-                width: 40,
-                height: 40,
+                width: 10.w,
+                height: 10.w,
                 child: AccountAvatarBase(
                   username: widget.reward.author,
                   avatarSize: 8.w,
                   showVerified: true,
                   showName: false,
                   width: 8.w,
-                  height: 8.w,
+                  height: 2.h,
                 )),
-            SizedBox(width: 4),
+            SizedBox(width: 1.w),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -266,18 +267,34 @@ class _RewardsCardState extends State<RewardsCard> {
                 ),
               ],
             ),
-            SizedBox(
-              width: 8,
-            ),
             Container(
-              width: 80,
+              width: 32.w,
               child: widget.reward.claimed != null
-                  ? Text(
-                      "already claimed " +
-                          (widget.reward.claimable / 100).toStringAsFixed(2) +
-                          ' DTC ' +
+                  ? Column(
+                      children: [
+                        Text(
+                          "already claimed ",
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              (widget.reward.claimable / 100)
+                                  .toStringAsFixed(2),
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 1.w),
+                              child: DTubeLogoShadowed(size: 5.w),
+                            ),
+                          ],
+                        ),
+                        Text(
                           TimeAgo.timeInAgoTS(widget.reward.claimed!),
-                      style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                      ],
                     )
                   : timestampGreater7Days(widget.reward.ts)
                       ? BlocProvider(
@@ -288,15 +305,32 @@ class _RewardsCardState extends State<RewardsCard> {
                             author: widget.reward.author,
                             claimable: widget.reward.claimable,
                             link: widget.reward.link,
+                            topLevelWidget: widget.parentWidget,
                           ),
                         )
                       : Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  (widget.reward.claimable / 100)
+                                      .toStringAsFixed(2),
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 1.w),
+                                  child: DTubeLogoShadowed(size: 5.w),
+                                ),
+                              ],
+                            ),
                             Text(
-                              (widget.reward.claimable / 100)
-                                      .toStringAsFixed(2) +
-                                  ' DTC claimable ' +
-                                  TimeAgo.timeAgoClaimIn(widget.reward.ts),
+                              'claimable ',
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                            Text(
+                              TimeAgo.timeAgoClaimIn(widget.reward.ts),
                               style: Theme.of(context).textTheme.bodyText1,
                             ),
                           ],
@@ -322,16 +356,18 @@ class _RewardsCardState extends State<RewardsCard> {
 }
 
 class ClaimRewardButton extends StatefulWidget {
-  const ClaimRewardButton({
-    Key? key,
-    required this.author,
-    required this.link,
-    required this.claimable,
-  }) : super(key: key);
+  ClaimRewardButton(
+      {Key? key,
+      required this.author,
+      required this.link,
+      required this.claimable,
+      required this.topLevelWidget})
+      : super(key: key);
 
   final String author;
   final String link;
   final double claimable;
+  late Widget topLevelWidget;
 
   @override
   _ClaimRewardButtonState createState() => _ClaimRewardButtonState();
@@ -351,9 +387,27 @@ class _ClaimRewardButtonState extends State<ClaimRewardButton> {
     return BlocBuilder<TransactionBloc, TransactionState>(
         builder: (context, state) {
       if (state is TransactionSent) {
-        return Text(
-          "claimed " + (widget.claimable / 100).toStringAsFixed(2) + " DTC",
-          style: Theme.of(context).textTheme.bodyText1,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'claimed',
+              style: Theme.of(context).textTheme.headline5,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  (widget.claimable / 100).toStringAsFixed(2),
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 1.w),
+                  child: DTubeLogoShadowed(size: 5.w),
+                ),
+              ],
+            ),
+          ],
         );
       } else {
         if (state is TransactionSinging || state is TransactionSigned) {
@@ -368,9 +422,29 @@ class _ClaimRewardButtonState extends State<ClaimRewardButton> {
               Transaction newTx = Transaction(type: 17, data: txdata);
               _txBloc.add(SignAndSendTransactionEvent(newTx));
             },
-            child: Text('claim \n' +
-                (widget.claimable / 100).toStringAsFixed(2) +
-                ' DTC'),
+            child: Padding(
+              padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
+              child: Column(
+                children: [
+                  Text(
+                    'claim',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        (widget.claimable / 100).toStringAsFixed(2),
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 1.w),
+                        child: DTubeLogoShadowed(size: 5.w),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           );
         }
       }

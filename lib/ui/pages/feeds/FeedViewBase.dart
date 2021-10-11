@@ -70,7 +70,7 @@ class _FeedViewBaseState extends State<FeedViewBase>
           mainAxisSize: MainAxisSize.max,
           children: [
             Container(
-              width: 40.w,
+              width: 44.w,
 
               child: FeedList(
                   feedType: widget.feedType,
@@ -78,12 +78,13 @@ class _FeedViewBaseState extends State<FeedViewBase>
                   showAuthor: widget.showAuthor,
                   scrollCallback: widget.scrollCallback,
                   topPaddingForFirstEntry: 15.h,
-                  heightPerEntry: 12.h,
-                  width: 40.w,
+                  heightPerEntry: 15.h,
+                  width: 46.w,
                   enableNavigation: false,
                   itemSelectedCallback: showPost),
               // child: Text("test")
             ),
+            VerticalDivider(),
             ValueListenableBuilder(
                 valueListenable: _notifierPost,
                 builder:
@@ -122,13 +123,17 @@ class _PostViewState extends State<PostView> {
   Widget build(BuildContext context) {
     return widget.postAuthor != null && widget.postAuthor != ""
         ? Container(
-            width: 52.w,
+            width: 53.w,
             height: 300.h,
-            child: PostDetailPageInlineView(
-              author: widget.postAuthor!,
-              link: widget.postLink!,
-              directFocus: "none",
-              recentlyUploaded: false,
+            decoration: BoxDecoration(border: Border()),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: PostDetailPageInlineView(
+                author: widget.postAuthor!,
+                link: widget.postLink!,
+                directFocus: "none",
+                recentlyUploaded: false,
+              ),
             ),
           )
         : Container(

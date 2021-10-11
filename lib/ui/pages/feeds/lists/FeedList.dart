@@ -170,9 +170,11 @@ class FeedList extends StatelessWidget {
   Widget buildLoading(BuildContext context) {
     return feedType == "UserFeed"
         ? SizedBox(height: 0, width: 0)
-        : DtubeLogoPulseWithSubtitle(
-            subtitle: "loading feed..",
-            size: 20.w,
+        : Center(
+            child: DtubeLogoPulseWithSubtitle(
+              subtitle: "loading feed..",
+              size: 40.w,
+            ),
           );
   }
 
@@ -266,7 +268,7 @@ class FeedList extends StatelessWidget {
                   author: feed[pos].author,
                   link: feed[pos].link,
                   publishDate: TimeAgo.timeInAgoTSShort(feed[pos].ts),
-                  dtcValue: (feed[pos].dist / 100).round().toString() + " DTC",
+                  dtcValue: (feed[pos].dist / 100).round().toString(),
                   duration: new Duration(
                       seconds: int.tryParse(feed[pos].jsonString!.dur) != null
                           ? int.parse(feed[pos].jsonString!.dur)
@@ -331,7 +333,7 @@ class PostListCard extends StatelessWidget {
   final double heightPerEntry;
   final bool enableNavigation;
   ListOfString2VoidFunc? itemSelectedCallback;
-  final String feedType; // only used in landscape mode for now
+  final String feedType;
   final String? defaultCommentVotingWeight;
   final String? defaultPostVotingWeight;
   final String? defaultPostVotingTip;
@@ -402,22 +404,25 @@ class PostListCard extends StatelessWidget {
         ),
       );
     } else {
-      return PostListCardNarrow(
-        width: width,
-        height: heightPerEntry,
-        blur: blur,
-        thumbnailUrl: thumbnailUrl,
-        title: title,
-        description: description,
-        author: author,
-        link: link,
-        publishDate: publishDate,
-        duration: duration,
-        dtcValue: dtcValue,
-        indexOfList: indexOfList,
-        enableNavigation: enableNavigation,
-        itemSelectedCallback: itemSelectedCallback,
-        userPage: feedType == "UserFeed",
+      return Padding(
+        padding: EdgeInsets.only(left: 5.w),
+        child: PostListCardNarrow(
+          width: width,
+          height: heightPerEntry,
+          blur: blur,
+          thumbnailUrl: thumbnailUrl,
+          title: title,
+          description: description,
+          author: author,
+          link: link,
+          publishDate: publishDate,
+          duration: duration,
+          dtcValue: dtcValue,
+          indexOfList: indexOfList,
+          enableNavigation: enableNavigation,
+          itemSelectedCallback: itemSelectedCallback,
+          userPage: feedType == "UserFeed",
+        ),
       );
     }
   }

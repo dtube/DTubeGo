@@ -212,7 +212,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                           if (state is UserDTCVPLoadingState) {
                             return DtubeLogoPulseWithSubtitle(
                                 subtitle: "loading your balances...",
-                                size: 20.w);
+                                size: 30.w);
                           }
                           if (state is UserDTCVPLoadedState) {
                             _currentVp = state.vtBalance["v"]!;
@@ -834,10 +834,19 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                   style: Theme.of(context).textTheme.bodyText2,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 5.w),
-                  child: Text(
-                    '${widget.dtcValue}',
-                    style: Theme.of(context).textTheme.bodyText1,
+                  padding: EdgeInsets.only(right: 0.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        '${widget.dtcValue}',
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 2.w),
+                        child: DTubeLogoShadowed(size: 5.w),
+                      ),
+                    ],
                   ),
                 ),
               ],

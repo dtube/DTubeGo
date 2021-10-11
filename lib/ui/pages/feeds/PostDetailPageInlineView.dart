@@ -2,6 +2,7 @@ import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/feeds/widgets/FullScreenButton.dart';
 
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
+import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
 
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -182,7 +183,7 @@ class _PostDetailsState extends State<PostDetails> {
                           showVerified: true,
                           showName: true,
                           width: 15.w,
-                          height: 5.h),
+                          height: 10.h),
                       onPressed: () {
                         navigateToUserDetailPage(
                             context, widget.post.author, () {});
@@ -229,13 +230,13 @@ class _PostDetailsState extends State<PostDetails> {
                                       return Padding(
                                         padding:
                                             const EdgeInsets.only(right: 8.0),
-                                        child: InputChip(
-                                            label: Text(
-                                                widget.post.tags[index]
-                                                    .toString(),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText2)),
+                                        child: TagChip(
+                                          waitBeforeFadeIn:
+                                              Duration(milliseconds: 600),
+                                          fadeInFromLeft: false,
+                                          tagName: widget.post.tags[index],
+                                          width: 20.w,
+                                        ),
                                       );
                                     }),
                               ),

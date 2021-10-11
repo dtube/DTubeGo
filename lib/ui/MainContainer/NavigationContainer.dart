@@ -73,8 +73,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
             builder: (context, state) {
           if (state is TransactionPreprocessingState) {
             if (state.txType == 13 || state.txType == 4) {
-              return DtubeLogoPulseWithSubtitle(
-                subtitle: "loading feed..",
+              return DTubeLogoPulseRotating(
                 size: 10.w,
               );
             }

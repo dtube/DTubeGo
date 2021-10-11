@@ -3,10 +3,12 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 
 import 'package:dtube_go/utils/navigationShortcuts.dart';
 
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 typedef ListOfString2VoidFunc = void Function(List<String>);
 
@@ -77,7 +79,7 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
               height: widget.height,
-              // width: widget.width * 0.3,
+
               child: AspectRatio(
                 aspectRatio: 8 / 5,
                 child: widget.blur
@@ -101,7 +103,7 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
             ),
             SizedBox(width: 4),
             Container(
-              width: widget.width * 0.6,
+              width: widget.userPage ? widget.width * 0.6 : widget.width * 0.5,
               height: widget.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,7 +121,7 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
                   !widget.userPage
                       ? Text(
                           widget.author,
-                          style: Theme.of(context).textTheme.bodyText2,
+                          style: Theme.of(context).textTheme.subtitle2,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )
@@ -134,11 +136,23 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
                               (widget.duration.inHours == 0
                                   ? widget.duration.toString().substring(2, 7)
                                   : widget.duration.toString().substring(0, 7)),
-                          style: Theme.of(context).textTheme.bodyText2,
+                          style: !widget.userPage
+                              ? Theme.of(context).textTheme.subtitle2
+                              : Theme.of(context).textTheme.bodyText2,
                         ),
-                        Text(
-                          '${widget.dtcValue}',
-                          style: Theme.of(context).textTheme.bodyText2,
+                        Row(
+                          children: [
+                            Text(
+                              '${widget.dtcValue}',
+                              style: !widget.userPage
+                                  ? Theme.of(context).textTheme.bodyText2
+                                  : Theme.of(context).textTheme.bodyText2,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 0.5.w),
+                              child: DTubeLogoShadowed(size: 2.w),
+                            ),
+                          ],
                         ),
                       ],
                     ),

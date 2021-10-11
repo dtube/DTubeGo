@@ -123,9 +123,11 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   ),
             body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
               if (state is PostLoadingState) {
-                return DtubeLogoPulseWithSubtitle(
-                  subtitle: "loading post details...",
-                  size: 30.w,
+                return Center(
+                  child: DtubeLogoPulseWithSubtitle(
+                    subtitle: "loading post details...",
+                    size: 30.w,
+                  ),
                 );
               } else if (state is PostLoadedState) {
                 reloadCount++;
@@ -139,9 +141,11 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   //),
                 );
               } else {
-                return DtubeLogoPulseWithSubtitle(
-                  subtitle: "loading post details...",
-                  size: 30.w,
+                return Center(
+                  child: DtubeLogoPulseWithSubtitle(
+                    subtitle: "loading post details...",
+                    size: 30.w,
+                  ),
                 );
               }
             }),
@@ -258,7 +262,7 @@ class _PostDetailsState extends State<PostDetails> {
                                             width: 15.w +
                                                 (widget.post.author.length *
                                                     2.5.w),
-                                            height: 15.w,
+                                            height: 5.h,
                                           ),
                                           onPressed: () {
                                             navigateToUserDetailPage(context,
@@ -349,13 +353,21 @@ class _PostDetailsState extends State<PostDetails> {
                                   preferences: AnimationPreferences(
                                       offset: Duration(milliseconds: 1200)),
                                   child: InputChip(
-                                    label: Text(
-                                      (widget.post.dist / 100)
+                                    label: Row(
+                                      children: [
+                                        Text(
+                                          (widget.post.dist / 100)
                                               .round()
-                                              .toString() +
-                                          " DTC",
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
+                                              .toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 2.w),
+                                          child: DTubeLogoShadowed(size: 5.w),
+                                        ),
+                                      ],
                                     ),
                                     onPressed: () {
                                       showDialog<String>(
@@ -460,7 +472,7 @@ class _PostDetailsState extends State<PostDetails> {
                                       scale: 1,
                                       focusOnNewComment:
                                           widget.directFocus == "newcomment",
-                                          isMainPost: true,
+                                      isMainPost: true,
                                     ),
                                   ],
                                 ),
