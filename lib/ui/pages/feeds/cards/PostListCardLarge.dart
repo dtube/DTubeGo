@@ -244,7 +244,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                             );
                           }
                           return DtubeLogoPulseWithSubtitle(
-                              subtitle: "loading your balances...", size: 20.w);
+                              subtitle: "loading your balances...", size: 30.w);
                         },
                       ),
                     ),
