@@ -69,9 +69,9 @@ class _LoginFormState extends State<LoginForm> {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: 20.h, bottom: 5.h),
+                  padding: EdgeInsets.only(bottom: 5.h),
                   child: Image.asset('assets/images/dtube_logo_white.png',
-                      width: 60.w),
+                      width: 40.w),
                 ),
                 Text("Login with your DTube credentials",
                     style: Theme.of(context).textTheme.headline6),
@@ -189,7 +189,7 @@ class _LoginFormState extends State<LoginForm> {
                           });
                     }),
                 Padding(
-                  padding: EdgeInsets.only(top: 15.h),
+                  padding: EdgeInsets.only(top: 5.h),
                   child: Text("You don't have an account on DTube?",
                       style: Theme.of(context).textTheme.bodyText1),
                 ),
