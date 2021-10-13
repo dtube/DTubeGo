@@ -133,8 +133,11 @@ class _RewardsListState extends State<RewardsList> {
           } else {
             return ListView.builder(
                 padding: EdgeInsets.zero,
+                addAutomaticKeepAlives: true,
                 shrinkWrap: true,
                 physics: ClampingScrollPhysics(),
+                key: new PageStorageKey(
+                    'rewards' + widget.rewardsState + 'listview'),
                 itemCount: _rewards.length,
                 itemBuilder: (ctx, pos) {
                   return RewardsCard(
@@ -161,8 +164,12 @@ class RewardsCard extends StatefulWidget {
   _RewardsCardState createState() => _RewardsCardState();
 }
 
-class _RewardsCardState extends State<RewardsCard> {
+class _RewardsCardState extends State<RewardsCard>
+    with AutomaticKeepAliveClientMixin {
   double widthLabel = 23.w;
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -205,14 +212,14 @@ class _RewardsCardState extends State<RewardsCard> {
                         width: widthLabel,
                         child: Text(
                           "content:",
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyText2,
                         )),
                     Container(
                         width: deviceWidth - 310,
                         child: Text(
                           widget.reward.author + '/' + widget.reward.link,
                           overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyText2,
                         )),
                   ],
                 ),
@@ -222,11 +229,11 @@ class _RewardsCardState extends State<RewardsCard> {
                         width: widthLabel,
                         child: Text(
                           "spent:",
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyText2,
                         )),
                     Text(
                       (widget.reward.vt / 1000).toStringAsFixed(2) + 'K',
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyText2,
                     ),
                   ],
                 ),
@@ -236,14 +243,14 @@ class _RewardsCardState extends State<RewardsCard> {
                         width: widthLabel,
                         child: Text(
                           "voted on:",
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyText2,
                         )),
                     Text(
                       DateTime.fromMillisecondsSinceEpoch(widget.reward.ts)
                           .toLocal()
                           .toString()
                           .substring(0, 16),
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyText2,
                     ),
                   ],
                 ),
@@ -253,7 +260,7 @@ class _RewardsCardState extends State<RewardsCard> {
                         width: widthLabel,
                         child: Text(
                           "published on:",
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyText2,
                         )),
                     Text(
                       DateTime.fromMillisecondsSinceEpoch(
@@ -261,20 +268,21 @@ class _RewardsCardState extends State<RewardsCard> {
                           .toLocal()
                           .toString()
                           .substring(0, 16),
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyText2,
                     ),
                   ],
                 ),
               ],
             ),
             Container(
-              width: 32.w,
+              width: 28.w,
               child: widget.reward.claimed != null
                   ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           "already claimed ",
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyText2,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -282,7 +290,7 @@ class _RewardsCardState extends State<RewardsCard> {
                             Text(
                               (widget.reward.claimable / 100)
                                   .toStringAsFixed(2),
-                              style: Theme.of(context).textTheme.headline5,
+                              style: Theme.of(context).textTheme.headline6,
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 1.w),
@@ -292,7 +300,7 @@ class _RewardsCardState extends State<RewardsCard> {
                         ),
                         Text(
                           TimeAgo.timeInAgoTS(widget.reward.claimed!),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyText2,
                         ),
                       ],
                     )
@@ -317,7 +325,7 @@ class _RewardsCardState extends State<RewardsCard> {
                                 Text(
                                   (widget.reward.claimable / 100)
                                       .toStringAsFixed(2),
-                                  style: Theme.of(context).textTheme.headline5,
+                                  style: Theme.of(context).textTheme.headline6,
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(left: 1.w),
@@ -327,11 +335,11 @@ class _RewardsCardState extends State<RewardsCard> {
                             ),
                             Text(
                               'claimable ',
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.bodyText2,
                             ),
                             Text(
                               TimeAgo.timeAgoClaimIn(widget.reward.ts),
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.bodyText2,
                             ),
                           ],
                         ),
@@ -392,14 +400,14 @@ class _ClaimRewardButtonState extends State<ClaimRewardButton> {
           children: [
             Text(
               'claimed',
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headline6,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   (widget.claimable / 100).toStringAsFixed(2),
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 1.w),
@@ -425,16 +433,18 @@ class _ClaimRewardButtonState extends State<ClaimRewardButton> {
             child: Padding(
               padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     'claim',
-                    style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         (widget.claimable / 100).toStringAsFixed(2),
-                        style: Theme.of(context).textTheme.headline5,
+                        style: Theme.of(context).textTheme.headline6,
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 1.w),

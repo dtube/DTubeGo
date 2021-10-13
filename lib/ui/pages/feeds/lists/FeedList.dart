@@ -193,6 +193,8 @@ class FeedList extends StatelessWidget {
   Widget buildPostList(List<FeedItem> feed, bool bigThumbnail, bool showAuthor,
       BuildContext context, String gpostType) {
     return ListView.builder(
+      key: new PageStorageKey(gpostType + 'listview'),
+      addAutomaticKeepAlives: true,
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: ClampingScrollPhysics(),
@@ -308,7 +310,7 @@ class FeedList extends StatelessWidget {
   }
 }
 
-class PostListCard extends StatelessWidget {
+class PostListCard extends StatefulWidget {
   final bool showAuthor;
   final bool largeFormat;
   final bool blur;
@@ -371,35 +373,44 @@ class PostListCard extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<PostListCard> createState() => _PostListCardState();
+}
+
+class _PostListCardState extends State<PostListCard>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+  @override
   Widget build(BuildContext context) {
-    if (largeFormat) {
+    if (widget.largeFormat) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: BlocProvider<UserBloc>(
           create: (BuildContext context) =>
               UserBloc(repository: UserRepositoryImpl()),
           child: PostListCardLarge(
-            blur: blur,
-            thumbnailUrl: thumbnailUrl,
-            title: title,
-            description: description,
-            author: author,
-            link: link,
-            publishDate: publishDate,
-            duration: duration,
-            dtcValue: dtcValue,
-            videoUrl: videoUrl,
-            videoSource: videoSource,
-            alreadyVoted: alreadyVoted,
-            alreadyVotedDirection: alreadyVotedDirection,
-            upvotesCount: upvotesCount,
-            downvotesCount: downvotesCount,
-            indexOfList: indexOfList,
-            mainTag: mainTag,
-            oc: oc,
-            defaultCommentVotingWeight: defaultCommentVotingWeight!,
-            defaultPostVotingWeight: defaultPostVotingWeight!,
-            defaultPostVotingTip: defaultPostVotingTip!,
+            blur: widget.blur,
+            thumbnailUrl: widget.thumbnailUrl,
+            title: widget.title,
+            description: widget.description,
+            author: widget.author,
+            link: widget.link,
+            publishDate: widget.publishDate,
+            duration: widget.duration,
+            dtcValue: widget.dtcValue,
+            videoUrl: widget.videoUrl,
+            videoSource: widget.videoSource,
+            alreadyVoted: widget.alreadyVoted,
+            alreadyVotedDirection: widget.alreadyVotedDirection,
+            upvotesCount: widget.upvotesCount,
+            downvotesCount: widget.downvotesCount,
+            indexOfList: widget.indexOfList,
+            mainTag: widget.mainTag,
+            oc: widget.oc,
+            defaultCommentVotingWeight: widget.defaultCommentVotingWeight!,
+            defaultPostVotingWeight: widget.defaultPostVotingWeight!,
+            defaultPostVotingTip: widget.defaultPostVotingTip!,
           ),
         ),
       );
@@ -407,21 +418,21 @@ class PostListCard extends StatelessWidget {
       return Padding(
         padding: EdgeInsets.only(left: 5.w),
         child: PostListCardNarrow(
-          width: width,
-          height: heightPerEntry,
-          blur: blur,
-          thumbnailUrl: thumbnailUrl,
-          title: title,
-          description: description,
-          author: author,
-          link: link,
-          publishDate: publishDate,
-          duration: duration,
-          dtcValue: dtcValue,
-          indexOfList: indexOfList,
-          enableNavigation: enableNavigation,
-          itemSelectedCallback: itemSelectedCallback,
-          userPage: feedType == "UserFeed",
+          width: widget.width,
+          height: widget.heightPerEntry,
+          blur: widget.blur,
+          thumbnailUrl: widget.thumbnailUrl,
+          title: widget.title,
+          description: widget.description,
+          author: widget.author,
+          link: widget.link,
+          publishDate: widget.publishDate,
+          duration: widget.duration,
+          dtcValue: widget.dtcValue,
+          indexOfList: widget.indexOfList,
+          enableNavigation: widget.enableNavigation,
+          itemSelectedCallback: widget.itemSelectedCallback,
+          userPage: widget.feedType == "UserFeed",
         ),
       );
     }

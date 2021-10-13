@@ -561,7 +561,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                   preferences:
                       AnimationPreferences(offset: Duration(milliseconds: 300)),
                   child: Container(
-                    width: 65.w,
+                    width: 45.w,
                     child: InkWell(
                       onTap: () {
                         navigateToPostDetailPage(context, widget.author,

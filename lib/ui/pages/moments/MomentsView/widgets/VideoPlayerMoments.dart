@@ -117,9 +117,11 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                       widget.momentsController.play();
                       _videoController.play();
                     },
-                    child: AspectRatio(
-                      aspectRatio: _videoController.value.aspectRatio,
-                      child: VideoPlayer(_videoController),
+                    child: Center(
+                      child: AspectRatio(
+                        aspectRatio: _videoController.value.aspectRatio,
+                        child: VideoPlayer(_videoController),
+                      ),
                     ),
                   )
                 : Container(),
