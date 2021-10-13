@@ -147,70 +147,69 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
         if (_freeSpace! > AppConfig.minFreeSpaceRecordVideoInMB) {
           _pickedFile = await _picker.pickVideo(
               source: ImageSource.camera, maxDuration: Duration(seconds: 60));
-          // if (_pickedFile == null) {
-          showDialog<String>(
-            context: context,
-            builder: (BuildContext context) => PopUpDialogWithTitleLogo(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text("Amazing!",
-                          style: Theme.of(context).textTheme.headline4,
-                          textAlign: TextAlign.center),
-                      SizedBox(height: 2.h),
-                      Text(
-                          "Your moment is uploading right now and this could take some time...",
-                          style: Theme.of(context).textTheme.bodyText1,
-                          textAlign: TextAlign.center),
-                      Text(
-                          "It is safe to browse DTube Go in the meantime. Go share some feedback and votes on other videos of the community.",
-                          style: Theme.of(context).textTheme.bodyText1,
-                          textAlign: TextAlign.center),
-                      SizedBox(height: 3.h),
-                      Text(
-                          "Make sure to not close the app or lock your screen until the upload is finished!",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline6!
-                              .copyWith(color: globalRed),
-                          textAlign: TextAlign.center),
-                      SizedBox(height: 2.h),
-                      InkWell(
-                          child: Container(
-                            padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                            decoration: BoxDecoration(
-                              color: globalRed,
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(20.0),
-                                  bottomRight: Radius.circular(20.0)),
+          if (_pickedFile != null) {
+            showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => PopUpDialogWithTitleLogo(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Amazing!",
+                            style: Theme.of(context).textTheme.headline4,
+                            textAlign: TextAlign.center),
+                        SizedBox(height: 2.h),
+                        Text(
+                            "Your moment is uploading right now and this could take some time...",
+                            style: Theme.of(context).textTheme.bodyText1,
+                            textAlign: TextAlign.center),
+                        Text(
+                            "It is safe to browse DTube Go in the meantime. Go share some feedback and votes on other videos of the community.",
+                            style: Theme.of(context).textTheme.bodyText1,
+                            textAlign: TextAlign.center),
+                        SizedBox(height: 3.h),
+                        Text(
+                            "Make sure to not close the app or lock your screen until the upload is finished!",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6!
+                                .copyWith(color: globalRed),
+                            textAlign: TextAlign.center),
+                        SizedBox(height: 2.h),
+                        InkWell(
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                              decoration: BoxDecoration(
+                                color: globalRed,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(20.0),
+                                    bottomRight: Radius.circular(20.0)),
+                              ),
+                              child: Text(
+                                "Allright!",
+                                style: Theme.of(context).textTheme.headline4,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                            child: Text(
-                              "Allright!",
-                              style: Theme.of(context).textTheme.headline4,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          }),
-                    ],
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            }),
+                      ],
+                    ),
                   ),
-                ),
-                titleWidget: Center(
-                  child: FaIcon(
-                    FontAwesomeIcons.cloudUploadAlt,
-                    size: 8.h,
+                  titleWidget: Center(
+                    child: FaIcon(
+                      FontAwesomeIcons.cloudUploadAlt,
+                      size: 8.h,
+                    ),
                   ),
-                ),
-                callbackOK: () {},
-                titleWidgetPadding: 10.w,
-                titleWidgetSize: 10.w),
-          );
-
-          //}
+                  callbackOK: () {},
+                  titleWidgetPadding: 10.w,
+                  titleWidgetSize: 10.w),
+            );
+          }
         } else {
           showDialog(
             context: context,
