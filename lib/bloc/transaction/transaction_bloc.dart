@@ -344,7 +344,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                   postBody: _upload.description,
                   permlink: _upload.link,
                   dtubeUrl: _upload.link,
-                  thumbnailUrl: _upload.thumbnail640Hash,
+                  thumbnailUrl: _upload.thumbnailLocation,
                   videoUrl: _upload.videoSourceHash,
                   storageType: "ipfs",
                   tag: _upload.tag));
