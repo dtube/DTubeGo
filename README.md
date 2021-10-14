@@ -1,5 +1,8 @@
 # DTube Go
 
+DTube mobile client created in dart and flutter!
+![](https://about.d.tube/img/kit/Logo_Black.png)
+
 ## Table of contents
 * [General info](#general-info)
 * [Technologies](#technologies)
