@@ -17,10 +17,10 @@ The blockchain is maintained by several block producering and observer nodes and
 The blockchains token is called DTube Coin (DTC).
 
 DTube Go is created with:
-* [Flutter](https://github.com/flutter/flutter)
-* [flutter_bloc](https://github.com/felangel/bloc/tree/master/packages/flutter_bloc)
-* [better_player](https://github.com/jhomlala/betterplayer)
-* [youtube_player_iframe](https://github.com/sarbagyastha/youtube_player_flutter)
+* [Flutter](https://github.com/flutter/flutter) basic development framework
+* [flutter_bloc](https://github.com/felangel/bloc/tree/master/packages/flutter_bloc) state management we decided to use
+* [better_player](https://github.com/jhomlala/betterplayer) as player for videos stored on ipfs / sia 
+* [youtube_player_iframe](https://github.com/sarbagyastha/youtube_player_flutter) as player for videos stored on youtube
 * various other cryptography and UI related packages (see pubspec.yaml)
 
 ## Contribution
