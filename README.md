@@ -5,7 +5,7 @@ The Readme still in progress. Same goes for the code documentation and various c
 ## Table of contents
 * [General info](#general-info)
 * [Technologies](#technologies)
-* [Avalon](#avalon)
+* [Contribution](#contribution)
 
 ## General info
 This is a flutter based DTube client to interact with the Avalon blockchain. (https://github.com/dtube/avalon/)
@@ -22,3 +22,5 @@ DTube Go is created with:
 * [better_player](https://github.com/jhomlala/betterplayer)
 * [youtube_player_iframe](https://github.com/sarbagyastha/youtube_player_flutter)
 * various other cryptography and UI related packages (see pubspec.yaml)
+
+## Contribution
