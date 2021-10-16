@@ -98,9 +98,8 @@ class AuthRepositoryImpl implements AuthRepository {
     var response = await http.get(Uri.parse(AppConfig.originalDtuberListUrl));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-      print(response.body);
+
       globals.verifiedUsers = List.from(data);
-      print("test");
     }
   }
 }

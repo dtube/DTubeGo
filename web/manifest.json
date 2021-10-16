@@ -1,6 +1,6 @@
 {
-    "name": "dtube_togo",
-    "short_name": "dtube_togo",
+    "name": "dtube.go.app",
+    "short_name": "dtube.go.app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
