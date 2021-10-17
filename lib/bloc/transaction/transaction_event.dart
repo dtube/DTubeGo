@@ -50,7 +50,9 @@ class TransactionPreprocessing extends TransactionEvent {
 // used only for uploading videos
 class TransactionPreprocessingFailed extends TransactionEvent {
   String errorMessage;
-  TransactionPreprocessingFailed({required this.errorMessage});
+  final int txType;
+  TransactionPreprocessingFailed(
+      {required this.errorMessage, required this.txType});
   @override
   List<Object> get props => List.empty();
 }

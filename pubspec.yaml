@@ -84,6 +84,7 @@ dependencies:
   shimmer_animation: ^2.1.0+1 # glow animation over images
   flutter_animator: ^3.2.0 # various transform animations
   animations: ^2.0.1
+  wave: ^0.2.0 # wave animation for upload button, login screen and more
     
   # NETWORK - cache related
   cached_network_image: ^3.1.0

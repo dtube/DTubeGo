@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
+import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_response_model.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/utils/randomPermlink.dart';
@@ -23,7 +25,7 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
     String _videoUploadToken = "";
     String _newThumbnail = "";
     File _newFile;
-    late Map _uploadStatusResponse;
+    late Map<String, dynamic> _uploadStatusResponse;
 
     late UploadData _uploadData;
     if (event is IPFSUploaderInitState) {
@@ -31,10 +33,14 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
     }
 
     if (event is UploadVideo) {
+      AppStateBloc appStateBloc = BlocProvider.of<AppStateBloc>(event.context);
       TransactionBloc txBloc = BlocProvider.of<TransactionBloc>(event.context);
-
-      _uploadData = event.uploadData;
       yield IPFSUploadVideoPreProcessingState();
+      _uploadData = event.uploadData;
+      // notify AppStateBloc about starting the transcoding and thumbnail creation
+      // will turn the "+" to a rotating DTube Logo
+      appStateBloc
+          .add(UploadStateChangedEvent(uploadState: UploadStartedState()));
 
       _newFile = await repository.compressVideo(event.videoPath);
       MediaInfo _metadata = await VideoCompress.getMediaInfo(event.videoPath);
@@ -45,7 +51,9 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
       if (event.thumbnailPath != "") {
         _newThumbnail = event.thumbnailPath;
       }
-
+      // notify AppStateBloc about finishing transcoding and thumbnail creation
+      appStateBloc.add(UploadStateChangedEvent(
+          uploadState: UploadProcessingState(progressPercent: 10)));
       yield IPFSUploadVideoPreProcessedState(compressedFile: _newFile);
       try {
         _uploadEndpoint = await repository.getUploadEndpoint();
@@ -61,7 +69,24 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
             do {
               _uploadStatusResponse = await repository.monitorVideoUploadStatus(
                   _videoUploadToken, _uploadEndpoint);
-              print(_uploadStatusResponse);
+              UploadStatusResponse resp =
+                  new UploadStatusResponse.fromJson(_uploadStatusResponse);
+              if (resp.sprite.spriteCreation.progress < 100) {
+                appStateBloc.add(UploadStateChangedEvent(
+                    uploadState: UploadProcessingState(progressPercent: 20)));
+              }
+              if (resp.sprite.spriteCreation.progress == 100 &&
+                  resp.encodedVideos[0].encode.progress < 100) {
+                appStateBloc.add(UploadStateChangedEvent(
+                    uploadState: UploadProcessingState(progressPercent: 40)));
+              }
+              if (resp.sprite.spriteCreation.progress == 100 &&
+                  resp.encodedVideos[0].encode.progress == 100 &&
+                  resp.encodedVideos[1].encode.progress < 100) {
+                appStateBloc.add(UploadStateChangedEvent(
+                    uploadState: UploadProcessingState(progressPercent: 80)));
+              }
+
               yield IPFSUploadVideoPostProcessingState(
                   processingResponse: _uploadStatusResponse);
             } while (_uploadStatusResponse["finished"] == false);
@@ -87,33 +112,55 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
               _uploadData.thumbnailLocation = _thumbnailOnlineLocation;
 
               _uploadData.link = randomPermlink(11);
+              // notify AppStateBloc about finishing ipfs upload
+              appStateBloc.add(
+                  UploadStateChangedEvent(uploadState: UploadFinishedState()));
 
               txBloc.add(SendCommentEvent(_uploadData));
             } catch (e) {
-              print(e.toString());
+              // notify AppStateBloc about failed ipfs upload
+              appStateBloc.add(
+                  UploadStateChangedEvent(uploadState: UploadFailedState()));
+
               yield IPFSUploadErrorState(message: e.toString());
-              txBloc.add(TransactionPreprocessingFailed(
-                  errorMessage:
-                      "\nPlease report this error to the dtube team with a screenshot!\n\n" +
-                          e.toString()));
+              // notify tyBloc about failed ipfs upload -> will show global flushbar
+              txBloc.add(
+                TransactionPreprocessingFailed(
+                    errorMessage:
+                        "\nPlease report this error to the dtube team with a screenshot!\n\n" +
+                            e.toString(),
+                    txType: 3),
+              );
             }
           } catch (e) {
-            print(e.toString());
+            // notify AppStateBloc about failed ipfs upload
+            appStateBloc
+                .add(UploadStateChangedEvent(uploadState: UploadFailedState()));
+
             yield IPFSUploadErrorState(message: e.toString());
+
+            // notify tyBloc about failed ipfs upload -> will show global flushbar
             txBloc.add(TransactionPreprocessingFailed(
                 errorMessage:
                     "\nPlease report this error to the dtube team with a screenshot!\n\n" +
-                        e.toString()));
+                        e.toString(),
+                txType: 3));
           }
         }
         // upload to ipfs
       } catch (e) {
-        print("error: " + e.toString());
+        // notify AppStateBloc about failed ipfs upload
+        appStateBloc
+            .add(UploadStateChangedEvent(uploadState: UploadFailedState()));
+
         yield IPFSUploadErrorState(message: e.toString());
+
+        // notify tyBloc about failed ipfs upload -> will show global flushbar
         txBloc.add(TransactionPreprocessingFailed(
             errorMessage:
                 "\nPlease report this error to the dtube team with a screenshot!\n\n" +
-                    e.toString()));
+                    e.toString(),
+            txType: 3));
       }
     }
   }

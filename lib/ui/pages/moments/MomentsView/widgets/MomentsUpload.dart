@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:disk_space/disk_space.dart';
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc.dart';
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
+import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/style/ThemeData.dart';
@@ -113,9 +114,9 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
     final info = await VideoCompress.getMediaInfo(videoPath);
 
     _uploadData.duration = (info.duration! / 1000).floor().toString();
-    // this will turn the global "+" icon to a rotating DTube Logo and deactivate further uploas until current is finished
-    BlocProvider.of<TransactionBloc>(context)
-        .add(TransactionPreprocessing(txType: _uploadData.isPromoted ? 13 : 4));
+    // // this will turn the global "+" icon to a rotating DTube Logo and deactivate further uploas until current is finished
+    // BlocProvider.of<AppStateBloc>(context)
+    //     .add(UploadStateChangedEvent(uploadState: UploadStartedState()));
     _uploadBloc.add(UploadVideo(
         videoPath: _uploadData.videoLocation,
         thumbnailPath: "",
@@ -262,10 +263,37 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<IPFSUploadBloc, IPFSUploadState>(
+    return BlocBuilder<AppStateBloc, AppState>(
       builder: (context, state) {
-        if (!(state is IPFSUploadInitialState)) {
-          return DTubeLogoPulseRotating(size: 15.w);
+        if (state is UploadStartedState) {
+          return DTubeLogoPulseWave(
+            size: 15.w,
+            progressPercent: 10,
+          );
+        }
+        if (state is UploadProcessingState) {
+          return DTubeLogoPulseWave(
+            size: 15.w,
+            progressPercent: state.progressPercent,
+          );
+        }
+        if ((state is UploadFinishedState)) {
+          return Center(
+            child: ShadowedIcon(
+                size: 10.w,
+                icon: FontAwesomeIcons.check,
+                color: Colors.green,
+                shadowColor: Colors.black),
+          );
+        }
+        if ((state is UploadFailedState)) {
+          return Center(
+            child: ShadowedIcon(
+                size: 10.w,
+                icon: FontAwesomeIcons.times,
+                color: globalRed,
+                shadowColor: Colors.black),
+          );
         }
         return GestureDetector(
           child: Row(

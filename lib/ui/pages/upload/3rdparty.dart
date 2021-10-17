@@ -1,3 +1,4 @@
+import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
@@ -84,8 +85,8 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
   void childCallback(UploadData ud) {
     setState(() {
       widget.uploaderCallback();
-      BlocProvider.of<TransactionBloc>(context)
-          .add(TransactionPreprocessing(txType: ud.isPromoted ? 13 : 4));
+      // BlocProvider.of<AppStateBloc>(context)
+      //     .add(UploadStateChangedEvent(uploadState: UploadStartedState()));
       _uploadData = ud;
       BlocProvider.of<TransactionBloc>(context)
           .add(SendCommentEvent(_uploadData));

@@ -374,6 +374,9 @@ class _UploadFormState extends State<UploadForm> {
                                                             Navigator.of(
                                                                     context)
                                                                 .pop();
+                                                            FocusScope.of(
+                                                                    context)
+                                                                .unfocus();
                                                           }),
                                                     ],
                                                   ),

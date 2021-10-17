@@ -1,3 +1,5 @@
+import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
+import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsTabContainer.dart';
@@ -71,14 +73,30 @@ class _NavigationContainerState extends State<NavigationContainer> {
     BottomNavigationBarItem(
       label: '',
       icon: Center(
-        child: BlocBuilder<TransactionBloc, TransactionState>(
-            builder: (context, state) {
-          if (state is TransactionPreprocessingState) {
-            if (state.txType == 13 || state.txType == 4) {
-              return DTubeLogoPulseRotating(
-                size: 10.w,
-              );
-            }
+        child: BlocBuilder<AppStateBloc, AppState>(builder: (context, state) {
+          if (state is UploadStartedState) {
+            return DTubeLogoPulseWave(size: 10.w, progressPercent: 10);
+          } else if (state is UploadProcessingState) {
+            return DTubeLogoPulseWave(
+                size: 10.w, progressPercent: state.progressPercent);
+          } else if (state is UploadFinishedState) {
+            return Center(
+              child: new ShadowedIcon(
+                icon: FontAwesomeIcons.check,
+                color: Colors.green,
+                shadowColor: Colors.black,
+                size: globalIconSizeMedium,
+              ),
+            );
+          } else if (state is UploadFailedState) {
+            return Center(
+              child: new ShadowedIcon(
+                icon: FontAwesomeIcons.times,
+                color: globalRed,
+                shadowColor: Colors.black,
+                size: globalIconSizeMedium,
+              ),
+            );
           }
           return Center(
             child: new ShadowedIcon(
@@ -324,12 +342,32 @@ class _NavigationContainerState extends State<NavigationContainer> {
                         play: false,
                       ));
                 }
-                // if there is a current background upload > show snachbar and do not navigate to the screen
-                if (BlocProvider.of<TransactionBloc>(context).state
-                        is TransactionPreprocessingState &&
-                    index == 2) {
-                  showCustomFlushbarOnError(
-                      "please wait until upload is finished", context);
+                // if pressed menu button is at the upload button position
+                if (index == 2) {
+                  // if there is a current background upload running
+                  //  show snackbar and do not navigate to the upload screen
+                  if (BlocProvider.of<AppStateBloc>(context).state
+                          is UploadStartedState ||
+                      BlocProvider.of<AppStateBloc>(context).state
+                          is UploadProcessingState) {
+                    showCustomFlushbarOnError(
+                        "please wait until upload is finished", context);
+                  }
+                  // if the most recent background upload task is finished
+                  // reset UploadState and navigate to the upload screen
+                  if (BlocProvider.of<AppStateBloc>(context).state
+                      is UploadFinishedState) {
+                    BlocProvider.of<AppStateBloc>(context).add(
+                        UploadStateChangedEvent(
+                            uploadState: UploadInitialState()));
+                    _currentIndex = index;
+                  }
+                  // if there is no background upload task running or recently finished
+                  if (BlocProvider.of<AppStateBloc>(context).state
+                      is UploadInitialState) {
+                    // navigate to the uploader screen
+                    _currentIndex = index;
+                  }
                 } else {
                   _currentIndex = index;
                 }

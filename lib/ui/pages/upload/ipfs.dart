@@ -1,5 +1,8 @@
 // JUST IN CASE WE NEED THIS OLD CODE WITH IPFS UPLOAD PROGRESS WE KEEP IT FOR SOME TIME IN THE REPO
 
+import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
+import 'package:dtube_go/bloc/appstate/appstate_event.dart';
+import 'package:dtube_go/bloc/appstate/appstate_state.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
 
@@ -62,9 +65,9 @@ class _WizardIPFSState extends State<WizardIPFS> {
   void childCallback(UploadData ud) {
     setState(() {
       widget.uploaderCallback();
-      // this will turn the global "+" icon to a rotating DTube Logo and deactivate further uploas until current is finished
-      BlocProvider.of<TransactionBloc>(context)
-          .add(TransactionPreprocessing(txType: ud.isPromoted ? 13 : 4));
+      // // this will turn the global "+" icon to a rotating DTube Logo and deactivate further uploas until current is finished
+      // BlocProvider.of<AppStateBloc>(context)
+      //     .add(UploadStateChangedEvent(uploadState: UploadStartedState()));
 
       _uploadData = ud;
       _uploadPressed = true;

@@ -1,4 +1,6 @@
+import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/utils/globalVariables.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:dtube_go/bloc/config/txTypes.dart';
@@ -39,7 +41,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     }
     if (event is TransactionPreprocessingFailed) {
       yield TransactionError(
-          message: "error preparing transaction\n" + event.errorMessage);
+          message: "error preparing transaction\n" + event.errorMessage,
+          txType: event.txType,
+          isParentContent: false);
     }
 
     if (event is SignAndSendTransactionEvent) {
@@ -69,10 +73,20 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                   (event.tx.data.pa == "" || event.tx.data.pa == null) &&
                       (event.tx.type == 4 || event.tx.type == 13));
         } else {
-          yield TransactionError(message: result);
+          yield TransactionError(
+              message: result,
+              txType: event.tx.type,
+              isParentContent:
+                  ((event.tx.data.pa == "" || event.tx.data.pa == null) &&
+                      (event.tx.type == 4 || event.tx.type == 13)));
         }
       } catch (e) {
-        yield TransactionError(message: e.toString());
+        yield TransactionError(
+            message: e.toString(),
+            txType: event.tx.type,
+            isParentContent:
+                ((event.tx.data.pa == "" || event.tx.data.pa == null) &&
+                    (event.tx.type == 4 || event.tx.type == 13)));
       }
     }
 
@@ -98,7 +112,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             .sign(_tx, _applicationUser!, _privKey!)
             .then((value) => repository.send(_avalonApiNode, value));
       } catch (e) {
-        yield TransactionError(message: e.toString());
+        yield TransactionError(
+            message: e.toString(),
+            txType: _tx.type,
+            isParentContent: ((_tx.data.pa == "" || _tx.data.pa == null) &&
+                (_tx.type == 4 || _tx.type == 13)));
       }
 
       yield TransactionSent(
@@ -325,6 +343,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                       _tx.data.link != null
                   ? _applicationUser + '/' + _tx.data.link!
                   : null);
+
           if (_upload.crossPostToHive) {
             HivesignerBloc _hiveSignerBloc =
                 HivesignerBloc(repository: HivesignerRepositoryImpl());
@@ -351,10 +370,16 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             }
           }
         } else {
-          yield TransactionError(message: result);
+          yield TransactionError(
+              message: result,
+              txType: 3,
+              isParentContent: event.uploadData.parentPermlink == "");
         }
       } catch (e) {
-        yield TransactionError(message: e.toString());
+        yield TransactionError(
+            message: e.toString(),
+            txType: 3,
+            isParentContent: event.uploadData.parentPermlink == "");
       }
     }
   }

@@ -53,8 +53,13 @@ class TransactionSent extends TransactionState {
 
 class TransactionError extends TransactionState {
   String message;
+  int txType;
+  bool isParentContent;
 
-  TransactionError({required this.message});
+  TransactionError(
+      {required this.message,
+      required this.txType,
+      required this.isParentContent});
 
   @override
   List<Object> get props => [message];

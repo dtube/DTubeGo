@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/utils/ResponsiveLayout.dart';
@@ -58,6 +59,9 @@ class _PinPadScreenState extends State<PinPadScreen> {
             ),
             BlocProvider(
               create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
+            ),
+            BlocProvider(
+              create: (context) => AppStateBloc(),
             ),
           ], child: NavigationContainer());
         }

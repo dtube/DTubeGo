@@ -17,7 +17,8 @@ abstract class IPFSUploadRepository {
   Future<String> getUploadEndpoint();
   Future<String> uploadVideo(String localFilePath, String endpoint);
   Future<String> uploadThumbnail(String localFilePath);
-  Future<Map> monitorVideoUploadStatus(String token, String endpoint);
+  Future<Map<String, dynamic>> monitorVideoUploadStatus(
+      String token, String endpoint);
   Future<Map> monitorThumbnailUploadStatus(String token);
 }
 
@@ -137,7 +138,8 @@ class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
     }
   }
 
-  Future<Map> monitorVideoUploadStatus(String token, String endpoint) async {
+  Future<Map<String, dynamic>> monitorVideoUploadStatus(
+      String token, String endpoint) async {
     var dio = Dio();
     int tsNow = DateTime.now().millisecondsSinceEpoch;
     String url =
