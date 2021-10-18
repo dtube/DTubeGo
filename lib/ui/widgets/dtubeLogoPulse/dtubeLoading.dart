@@ -128,7 +128,14 @@ class DtubeLogoPulseWithSubtitle extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(top: 3.h),
-            child: Text(subtitle, style: Theme.of(context).textTheme.bodyText1),
+            child: Container(
+              width: size * 1.2,
+              child: Text(
+                subtitle,
+                style: Theme.of(context).textTheme.bodyText1,
+                textAlign: TextAlign.center,
+              ),
+            ),
           ),
         ],
       )),

@@ -92,9 +92,10 @@ class AppConfig {
 // urls for login screen
   static String signUpUrl = "https://signup.d.tube";
   static String readmoreUrl = "https://token.d.tube";
+  static String faqUrl = "https://d.tube/#!/wiki/faq/README";
 
   // activate/deactivate first user journey
-  static bool faqStartup = false; // show on first startup
+  static bool faqStartup = true; // show on first startup
   static bool faqVisible = false; // make the FAQ videos visible
 
   // global settings -> tags: those are the possible tags

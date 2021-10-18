@@ -43,7 +43,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
             if (keyIsValid) {
               //sec.persistUsernameKey(event.username, event.privateKey);
-              yield SignedInState();
+              yield SignedInState(firstSignIn: true);
             } else {
               yield SignInFailedState(
                   message: "login failed", username: _applicationUser);
@@ -79,7 +79,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (keyIsValid) {
           sec.persistUsernameKey(event.username, event.privateKey);
 
-          yield SignedInState();
+          yield SignedInState(firstSignIn: true);
         } else {
           yield SignInFailedState(
               message: 'login failed', username: event.username);

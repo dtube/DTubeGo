@@ -6,7 +6,7 @@ import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/ui/startup/PinPad.dart';
 
-import 'package:dtube_go/ui/startup/OnboardingJourney.dart';
+import 'package:dtube_go/ui/startup/OnboardingJourney/OnboardingJourney.dart';
 
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
@@ -36,14 +36,8 @@ class _StartUpState extends State<StartUp> {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        // if the app has never been opened before -> show faq
-        if (AppConfig.faqStartup) {
-          // currently disabled because of missing faq content
-          if (state is NeverUsedTheAppBeforeState) {
-            return OnboardingJourney(loggedIn: false);
-          }
-        }
-        // if the user has been authenticated before using login credentials -> show Pinpad
+        // if the user has been authenticated before using login credentials
+        //// show Pinpad
         if (state is SignedInState) {
           return BlocProvider<SettingsBloc>(
               create: (BuildContext context) => SettingsBloc()
@@ -56,12 +50,23 @@ class _StartUpState extends State<StartUp> {
           return LoginForm(
             message: state.message,
             username: state.username,
+            firstUsage: false,
           );
         }
-        // if the user logged out or no login credentials have been found in the secure storage -> show login form
+        // if the user logged out or no login credentials have been found in the secure storage
+        //// show login form
         if (state is SignOutCompleteState ||
             state is NoSignInInformationFoundState) {
-          return LoginForm();
+          return LoginForm(
+            firstUsage: false,
+          );
+        }
+        // if the app is opened for the first time
+        // show Login with onboarding journey on top
+        if (state is NeverUsedTheAppBeforeState) {
+          return LoginForm(
+            firstUsage: true,
+          );
         }
 
         // as long as there are no informations from the authentication logic -> show loading animation
@@ -69,7 +74,8 @@ class _StartUpState extends State<StartUp> {
           backgroundColor: globalBlue,
           body: Center(
             child: DtubeLogoPulseWithSubtitle(
-              subtitle: "searching for the best node...",
+              subtitle:
+                  "We are currently searching for the fastest Avalon API node...",
               size: 40.w,
             ),
           ),

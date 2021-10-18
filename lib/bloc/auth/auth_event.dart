@@ -17,9 +17,11 @@ class SignOutEvent extends AuthEvent {
 }
 
 class SignInWithCredentialsEvent extends AuthEvent {
-  SignInWithCredentialsEvent(this.username, this.privateKey);
+  SignInWithCredentialsEvent(
+      {required this.username, required this.privateKey});
   final String username;
   final String privateKey;
+
   @override
   List<Object> get props => List.empty();
 }

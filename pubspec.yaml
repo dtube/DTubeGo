@@ -138,4 +138,15 @@ flutter:
     - assets/images/Image_of_none.svg.png
     - assets/images/appicon.png
     - assets/images/appicon_noalpha.png
+    - assets/gifs/hovering_guy.gif
+    - assets/gifs/hovering_girl1.gif
+    - assets/gifs/hovering_girl2.gif
+    - assets/gifs/hovering_messages.gif
+    - assets/gifs/hovering_globe.gif
+    - assets/gifs/hovering_network.gif
+    - assets/gifs/hovering_graph.gif
+    - assets/gifs/hovering_startup.gif
+    - assets/gifs/hovering_freeandprivate.gif
+    - assets/gifs/hovering_free.gif
     - assets/videos/firstpage.mp4
+    

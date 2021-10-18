@@ -20,6 +20,7 @@ const settingKey_hiveSignerAccessTokenExpiresIn = 'HSEI';
 const settingKey_hiveSignerAccessTokenRequestedOn = 'HSRO';
 
 const settingKey_OpenedOnce = 'OPENEDONCE';
+const settingKey_FirstLogin = 'FIRSTLOGIN';
 
 // TODO: multiple templates?
 const settingKey_templateTitle = 'TEMPLATETITLE';
@@ -79,6 +80,10 @@ Future<void> persistNotificationSeen(int tsLast) async {
 
 Future<void> persistOpenedOnce() async {
   await _storage.write(key: settingKey_OpenedOnce, value: "true");
+}
+
+Future<void> persistFirstLogin() async {
+  await _storage.write(key: settingKey_FirstLogin, value: "false");
 }
 
 Future<void> persistHiveSignerData(String accessToken, String expiresIn,
@@ -170,6 +175,15 @@ Future<bool> getOpenedOnce() async {
     return false;
   } else {
     return true;
+  }
+}
+
+Future<bool> getFirstLogin() async {
+  var _firstTimeLogin = await _storage.read(key: settingKey_FirstLogin);
+  if (_firstTimeLogin == null || _firstTimeLogin != "false") {
+    return true;
+  } else {
+    return false;
   }
 }
 

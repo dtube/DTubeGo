@@ -14,7 +14,8 @@ class SignInLoadingState extends AuthState {
 }
 
 class SignedInState extends AuthState {
-  SignedInState();
+  bool firstSignIn;
+  SignedInState({required this.firstSignIn});
 
   @override
   List<Object> get props => [];
@@ -23,7 +24,6 @@ class SignedInState extends AuthState {
 class SignInFailedState extends AuthState {
   String message;
   String username;
-
   SignInFailedState({required this.message, required this.username});
 
   @override

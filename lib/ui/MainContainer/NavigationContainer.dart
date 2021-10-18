@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+
 import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -5,7 +7,6 @@ import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsTabContainer.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
-import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
@@ -15,7 +16,6 @@ import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/MainContainer/BalanceOverview.dart';
 import 'package:dtube_go/ui/MainContainer/MenuButton.dart';
 import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
@@ -45,6 +45,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
   int bottomSelectedIndex = 0;
   int _currentIndex = 0;
+  bool _firstTimeLogin = true;
 
   // list of navigation buttons
   List<BottomNavigationBarItem> navBarItems = [
@@ -204,6 +205,10 @@ class _NavigationContainerState extends State<NavigationContainer> {
         false; //if showDialouge had returned null, then return false
   }
 
+  void isFirstLogin() async {
+    _firstTimeLogin = await sec.getFirstLogin();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -240,6 +245,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
         ),
       ),
     ];
+    isFirstLogin();
   }
 
   @override
