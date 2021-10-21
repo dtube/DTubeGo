@@ -69,6 +69,39 @@ class _StartUpState extends State<StartUp> {
           );
         }
 
+        if (state is ApiNodeOfflineState) {
+          // as long as there are no informations from the authentication logic -> show loading animation
+          return Scaffold(
+            backgroundColor: globalBlue,
+            body: Center(
+              child: DtubeLogoPulseWithSubtitle(
+                subtitle:
+                    "No API node can be reached. Check your internet connnection or contact us on discord...",
+                size: 40.w,
+              ),
+            ),
+          );
+        }
+
+        if (state is AuthErrorState) {
+          // as long as there are no informations from the authentication logic -> show loading animation
+          return Scaffold(
+            backgroundColor: globalBlue,
+            body: Center(
+              child: DtubeLogoPulseWithSubtitle(
+                subtitle: state.message,
+                size: 40.w,
+              ),
+            ),
+          );
+        }
+
+        if (state is NeverUsedTheAppBeforeState) {
+          return LoginForm(
+            firstUsage: true,
+          );
+        }
+
         // as long as there are no informations from the authentication logic -> show loading animation
         return Scaffold(
           backgroundColor: globalBlue,

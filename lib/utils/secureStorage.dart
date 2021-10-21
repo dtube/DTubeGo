@@ -170,8 +170,13 @@ Future<void> persistDefaultUploadAndMomentSettings(
 // GET
 
 Future<bool> getOpenedOnce() async {
-  var _openedOnce = await _storage.read(key: settingKey_OpenedOnce);
-  if (_openedOnce == null || _openedOnce != "true") {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_OpenedOnce);
+  } catch (e) {
+    _setting = "false"; // fallback: never opened that app before
+  }
+  if (_setting != "true") {
     return false;
   } else {
     return true;
@@ -188,7 +193,12 @@ Future<bool> getFirstLogin() async {
 }
 
 Future<String> getUsername() async {
-  var _setting = await _storage.read(key: authKey_usernameKey);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: authKey_usernameKey);
+  } catch (e) {
+    _setting = "";
+  }
   if (_setting != null) {
     return _setting;
   } else {
@@ -197,7 +207,13 @@ Future<String> getUsername() async {
 }
 
 Future<String> getImageUploadService() async {
-  var _setting = await _storage.read(key: settingKey_imageUploadService);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_imageUploadService);
+  } catch (e) {
+    _setting = "imgur";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -206,7 +222,13 @@ Future<String> getImageUploadService() async {
 }
 
 Future<String> getPinCode() async {
-  var _setting = await _storage.read(key: settingKey_pincode);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_pincode);
+  } catch (e) {
+    _setting = "";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -215,7 +237,13 @@ Future<String> getPinCode() async {
 }
 
 Future<String> getTemplateTitle() async {
-  var _setting = await _storage.read(key: settingKey_templateTitle);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_templateTitle);
+  } catch (e) {
+    _setting = "";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -224,7 +252,13 @@ Future<String> getTemplateTitle() async {
 }
 
 Future<String> getExploreTags() async {
-  var _setting = await _storage.read(key: settingKey_ExploreTags);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_ExploreTags);
+  } catch (e) {
+    _setting = "";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -233,7 +267,12 @@ Future<String> getExploreTags() async {
 }
 
 Future<String> getTemplateBody() async {
-  var _setting = await _storage.read(key: settingKey_templateBody);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_templateBody);
+  } catch (e) {
+    _setting = "";
+  }
   if (_setting != null) {
     return _setting;
   } else {
@@ -242,7 +281,13 @@ Future<String> getTemplateBody() async {
 }
 
 Future<String> getTemplateTag() async {
-  var _setting = await _storage.read(key: settingKey_templateTag);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_templateTag);
+  } catch (e) {
+    _setting = "";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -251,7 +296,12 @@ Future<String> getTemplateTag() async {
 }
 
 Future<String> getUploadNSFW() async {
-  var _setting = await _storage.read(key: settingKey_DefaultUploadNSFW);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_DefaultUploadNSFW);
+  } catch (e) {
+    _setting = "";
+  }
   if (_setting != null) {
     return _setting;
   } else {
@@ -260,7 +310,13 @@ Future<String> getUploadNSFW() async {
 }
 
 Future<String> getUploadOC() async {
-  var _setting = await _storage.read(key: settingKey_DefaultUploadOC);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_DefaultUploadOC);
+  } catch (e) {
+    _setting = "";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -269,7 +325,12 @@ Future<String> getUploadOC() async {
 }
 
 Future<String> getUploadUnlist() async {
-  var _setting = await _storage.read(key: settingKey_DefaultUploadUnlist);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_DefaultUploadUnlist);
+  } catch (e) {
+    _setting = "";
+  }
   if (_setting != null) {
     return _setting;
   } else {
@@ -278,7 +339,13 @@ Future<String> getUploadUnlist() async {
 }
 
 Future<String> getUploadCrosspost() async {
-  var _setting = await _storage.read(key: settingKey_DefaultUploadCrosspost);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_DefaultUploadCrosspost);
+  } catch (e) {
+    _setting = "";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -287,7 +354,13 @@ Future<String> getUploadCrosspost() async {
 }
 
 Future<String> getMomentNSFW() async {
-  var _setting = await _storage.read(key: settingKey_DefaultMomentNSFW);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_DefaultMomentNSFW);
+  } catch (e) {
+    _setting = "";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -296,7 +369,13 @@ Future<String> getMomentNSFW() async {
 }
 
 Future<String> getMomentOC() async {
-  var _setting = await _storage.read(key: settingKey_DefaultMomentOC);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_DefaultMomentOC);
+  } catch (e) {
+    _setting = "";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -305,7 +384,13 @@ Future<String> getMomentOC() async {
 }
 
 Future<String> getMomentUnlist() async {
-  var _setting = await _storage.read(key: settingKey_DefaultMomentUnlist);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_DefaultMomentUnlist);
+  } catch (e) {
+    _setting = "";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -314,7 +399,13 @@ Future<String> getMomentUnlist() async {
 }
 
 Future<String> getMomentCrosspost() async {
-  var _setting = await _storage.read(key: settingKey_DefaultMomentCrosspost);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_DefaultMomentCrosspost);
+  } catch (e) {
+    _setting = "";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -323,7 +414,13 @@ Future<String> getMomentCrosspost() async {
 }
 
 Future<String> getUploadVotingWeight() async {
-  var _setting = await _storage.read(key: settingKey_DefaultUploadVotingWeigth);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_DefaultUploadVotingWeigth);
+  } catch (e) {
+    _setting = "5.0";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -332,7 +429,13 @@ Future<String> getUploadVotingWeight() async {
 }
 
 Future<String> getMomentVotingWeight() async {
-  var _setting = await _storage.read(key: settingKey_DefaultMomentVotingWeigth);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_DefaultMomentVotingWeigth);
+  } catch (e) {
+    _setting = "5.0";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -341,7 +444,13 @@ Future<String> getMomentVotingWeight() async {
 }
 
 Future<String> getPrivateKey() async {
-  var _setting = await _storage.read(key: authKey_privKey);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: authKey_privKey);
+  } catch (e) {
+    _setting = "";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -350,50 +459,80 @@ Future<String> getPrivateKey() async {
 }
 
 Future<Map<String, String>> getAllSettings() async {
+  // here perhaps trycatch
   var _allSettings = await _storage.readAll();
   return _allSettings;
 }
 
 Future<String> getHiveSignerAccessToken() async {
-  var _accessToken = await _storage.read(key: settingKey_hiveSignerAccessToken);
-  if (_accessToken != null) {
-    return _accessToken;
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_hiveSignerAccessToken);
+  } catch (e) {
+    _setting = "";
+  }
+
+  if (_setting != null) {
+    return _setting;
   } else {
     return '';
   }
 }
 
 Future<String> getHiveSignerAccessTokenExpiresIn() async {
-  var _accessTokenExpiresIn =
-      await _storage.read(key: settingKey_hiveSignerAccessTokenExpiresIn);
-  if (_accessTokenExpiresIn != null) {
-    return _accessTokenExpiresIn;
+  String? _setting = "";
+  try {
+    _setting =
+        await _storage.read(key: settingKey_hiveSignerAccessTokenExpiresIn);
+  } catch (e) {
+    _setting = "";
+  }
+
+  if (_setting != null) {
+    return _setting;
   } else {
     return '';
   }
 }
 
 Future<String> getHiveSignerAccessTokenRequestedOn() async {
-  var _accessTokenRequestedOn =
-      await _storage.read(key: settingKey_hiveSignerAccessTokenRequestedOn);
-  if (_accessTokenRequestedOn != null) {
-    return _accessTokenRequestedOn;
+  String? _setting = "";
+  try {
+    _setting =
+        await _storage.read(key: settingKey_hiveSignerAccessTokenRequestedOn);
+  } catch (e) {
+    _setting = "";
+  }
+
+  if (_setting != null) {
+    return _setting;
   } else {
     return '';
   }
 }
 
 Future<String> getHiveSignerUsername() async {
-  var _username = await _storage.read(key: settingKey_hiveSignerUsername);
-  if (_username != null) {
-    return _username;
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_hiveSignerUsername);
+  } catch (e) {
+    _setting = "";
+  }
+
+  if (_setting != null) {
+    return _setting;
   } else {
     return '';
   }
 }
 
 Future<String> getNode() async {
-  var _setting = await _storage.read(key: settingKey_avalonNode);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_avalonNode);
+  } catch (e) {
+    _setting = "https://avalon.d.tube";
+  }
   if (_setting != null) {
     return _setting;
   } else {
@@ -402,7 +541,13 @@ Future<String> getNode() async {
 }
 
 Future<String> getLastNotification() async {
-  var _setting = await _storage.read(key: settingKey_tsLastNotificationSeen);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_tsLastNotificationSeen);
+  } catch (e) {
+    _setting = "0";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -411,7 +556,13 @@ Future<String> getLastNotification() async {
 }
 
 Future<String> getDefaultVote() async {
-  var _setting = await _storage.read(key: settingKey_defaultVotingWeight);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_defaultVotingWeight);
+  } catch (e) {
+    _setting = "5";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -420,8 +571,13 @@ Future<String> getDefaultVote() async {
 }
 
 Future<String> getDefaultVoteComments() async {
-  var _setting =
-      await _storage.read(key: settingKey_defaultVotingWeightComments);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_defaultVotingWeightComments);
+  } catch (e) {
+    _setting = "5";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -430,7 +586,13 @@ Future<String> getDefaultVoteComments() async {
 }
 
 Future<String> getDefaultVoteTip() async {
-  var _setting = await _storage.read(key: settingKey_defaultVotingTip);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_defaultVotingTip);
+  } catch (e) {
+    _setting = "25";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -439,7 +601,13 @@ Future<String> getDefaultVoteTip() async {
 }
 
 Future<String> getDefaultVoteTipComments() async {
-  var _setting = await _storage.read(key: settingKey_defaultVotingTipComments);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_defaultVotingTipComments);
+  } catch (e) {
+    _setting = "25";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -448,7 +616,13 @@ Future<String> getDefaultVoteTipComments() async {
 }
 
 Future<String> getShowHidden() async {
-  var _setting = await _storage.read(key: settingKey_showHidden);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_showHidden);
+  } catch (e) {
+    _setting = "Hide";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {
@@ -457,7 +631,13 @@ Future<String> getShowHidden() async {
 }
 
 Future<String> getNSFW() async {
-  var _setting = await _storage.read(key: settingKey_showNSFW);
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_showNSFW);
+  } catch (e) {
+    _setting = "Hide";
+  }
+
   if (_setting != null) {
     return _setting;
   } else {

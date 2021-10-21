@@ -98,15 +98,16 @@ class _NavigationContainerState extends State<NavigationContainer> {
                 size: globalIconSizeMedium,
               ),
             );
+          } else {
+            return Center(
+              child: new ShadowedIcon(
+                icon: FontAwesomeIcons.plus,
+                color: Colors.white,
+                shadowColor: Colors.black,
+                size: globalIconSizeMedium,
+              ),
+            );
           }
-          return Center(
-            child: new ShadowedIcon(
-              icon: FontAwesomeIcons.plus,
-              color: Colors.white,
-              shadowColor: Colors.black,
-              size: globalIconSizeMedium,
-            ),
-          );
         }),
       ),
     ),

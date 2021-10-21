@@ -119,6 +119,9 @@ class _PinPadState extends State<PinPad> {
               BlocProvider(
                 create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
               ),
+              BlocProvider(
+                create: (context) => AppStateBloc(),
+              ),
             ], child: NavigationContainer());
           }),
         );
