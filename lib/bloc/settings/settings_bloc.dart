@@ -53,6 +53,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               await sec.getUploadVotingWeight(),
           sec.settingKey_DefaultMomentVotingWeigth:
               await sec.getMomentVotingWeight(),
+          sec.settingKey_HiveStillInCooldown:
+              await sec.getLastHivePostWithin5MinCooldown(),
         };
         yield SettingsLoadedState(settings: newSettings);
       } catch (e) {

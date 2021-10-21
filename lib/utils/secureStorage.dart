@@ -47,6 +47,9 @@ const settingKey_imageUploadService = "IMGUS";
 
 const settingKey_ExploreTags = "EXPTAGS";
 
+const settingKey_LastHivePost = "LASTHIVEPOST";
+const settingKey_HiveStillInCooldown = "LASTHIVEPOSTCOOLDOWN";
+
 // const _txsKey = 'TXS';
 const _storage = FlutterSecureStorage();
 
@@ -71,6 +74,11 @@ Future<void> persistImageUploadService(String service) async {
 
 Future<void> persistPinCode(String pin) async {
   await _storage.write(key: settingKey_pincode, value: pin);
+}
+
+Future<void> persistLastHivePost() async {
+  await _storage.write(
+      key: settingKey_LastHivePost, value: DateTime.now().toString());
 }
 
 Future<void> persistNotificationSeen(int tsLast) async {
@@ -189,6 +197,27 @@ Future<bool> getFirstLogin() async {
     return true;
   } else {
     return false;
+  }
+}
+
+Future<String> getLastHivePostWithin5MinCooldown() async {
+  DateTime _curTime = new DateTime.now(); //Current local time
+  DateTime _before5Min = _curTime.subtract(Duration(minutes: 5));
+
+  try {
+    // read DateTime of recent hive post
+    String? _lastPostString = await _storage.read(key: settingKey_LastHivePost);
+    DateTime _lastPost = DateTime.parse(_lastPostString!);
+    // if the recent post is within the last 5 minute cooldown
+    if (_lastPost.isAfter(_before5Min)) {
+      return "true";
+    } else {
+      return "false";
+    }
+    // if no DateTime found or it is not parsable
+    // it was never set before
+  } catch (e) {
+    return "false";
   }
 }
 

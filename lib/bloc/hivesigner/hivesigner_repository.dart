@@ -87,6 +87,7 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       if (data["errors"] == null) {
+        await sec.persistLastHivePost();
         return true;
       } else {
         return false;

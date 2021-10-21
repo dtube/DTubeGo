@@ -146,8 +146,75 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
       if (camera) {
         double? _freeSpace = await DiskSpace.getFreeDiskSpace;
         if (_freeSpace! > AppConfig.minFreeSpaceRecordVideoInMB) {
-          _pickedFile = await _picker.pickVideo(
-              source: ImageSource.camera, maxDuration: Duration(seconds: 60));
+          String _stillInHiveCooldown =
+              await sec.getLastHivePostWithin5MinCooldown();
+          if (_uploadData.crossPostToHive && _stillInHiveCooldown == "true") {
+            showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => PopUpDialogWithTitleLogo(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Please wait a bit!",
+                            style: Theme.of(context).textTheme.headline4,
+                            textAlign: TextAlign.center),
+                        SizedBox(height: 2.h),
+                        Text(
+                            "You want to cross post to hive but you already have posted something within the last 5 minutes.",
+                            style: Theme.of(context).textTheme.bodyText1,
+                            textAlign: TextAlign.center),
+                        Text(
+                            "Please wait for the 5 min hive cooldown to expire and try it again.",
+                            style: Theme.of(context).textTheme.bodyText1,
+                            textAlign: TextAlign.center),
+                        SizedBox(height: 3.h),
+                        Text(
+                            "This cooldown is a property coming from the hive blockchain. We just want to avoid upload errors when you crosspost.",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6!
+                                .copyWith(color: globalRed),
+                            textAlign: TextAlign.center),
+                        SizedBox(height: 2.h),
+                        InkWell(
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                              decoration: BoxDecoration(
+                                color: globalRed,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(20.0),
+                                    bottomRight: Radius.circular(20.0)),
+                              ),
+                              child: Text(
+                                "Okay thanks!",
+                                style: Theme.of(context).textTheme.headline4,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              FocusScope.of(context).unfocus();
+                            }),
+                      ],
+                    ),
+                  ),
+                  titleWidget: Center(
+                    child: FaIcon(
+                      FontAwesomeIcons.cloudUploadAlt,
+                      size: 8.h,
+                    ),
+                  ),
+                  callbackOK: () {},
+                  titleWidgetPadding: 10.w,
+                  titleWidgetSize: 10.w),
+            );
+          } else {
+            _pickedFile = await _picker.pickVideo(
+                source: ImageSource.camera, maxDuration: Duration(seconds: 60));
+          }
           if (_pickedFile != null) {
             showDialog<String>(
               context: context,
@@ -277,24 +344,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
             progressPercent: state.progressPercent,
           );
         }
-        if ((state is UploadFinishedState)) {
-          return Center(
-            child: ShadowedIcon(
-                size: 10.w,
-                icon: FontAwesomeIcons.check,
-                color: Colors.green,
-                shadowColor: Colors.black),
-          );
-        }
-        if ((state is UploadFailedState)) {
-          return Center(
-            child: ShadowedIcon(
-                size: 10.w,
-                icon: FontAwesomeIcons.times,
-                color: globalRed,
-                shadowColor: Colors.black),
-          );
-        }
+
         return GestureDetector(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,

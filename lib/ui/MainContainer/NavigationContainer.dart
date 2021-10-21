@@ -363,7 +363,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
                   // if the most recent background upload task is finished
                   // reset UploadState and navigate to the upload screen
                   if (BlocProvider.of<AppStateBloc>(context).state
-                      is UploadFinishedState) {
+                          is UploadFinishedState ||
+                      BlocProvider.of<AppStateBloc>(context).state
+                          is UploadFailedState) {
                     BlocProvider.of<AppStateBloc>(context).add(
                         UploadStateChangedEvent(
                             uploadState: UploadInitialState()));
