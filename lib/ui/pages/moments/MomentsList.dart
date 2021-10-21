@@ -112,9 +112,16 @@ class _MomentsListState extends State<MomentsList> {
                 builder: (context, state) {
                   // TODO error handling
 
-                  if (state is UserDTCVPLoadingState) {
-                    return CircularProgressIndicator();
-                  }
+                  // if (state is UserDTCVPLoadingState) {
+                  //   return Container(
+                  //     width: 40.w,
+                  //     height: 40.h,
+                  //     child: DTubeLogoPulse(
+                  //       size: 40.w,
+                  //     ),
+                  //   );
+                  //   // return CircularProgressIndicator();
+                  // }
                   if (state is UserDTCVPLoadedState) {
                     _currentVp = state.vtBalance["v"]! + 0.0;
                   }
