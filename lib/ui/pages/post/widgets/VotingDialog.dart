@@ -28,7 +28,9 @@ class VotingDialog extends StatefulWidget {
       //required this.currentVT,
       required this.isPost,
       this.vertical,
-      this.verticalModeCallbackVotingButtonsPressed})
+      this.verticalModeCallbackVotingButtonsPressed,
+      this.okCallback,
+      this.cancelCallback})
       : super(key: key);
   TransactionBloc txBloc;
 
@@ -42,6 +44,9 @@ class VotingDialog extends StatefulWidget {
 
   bool downvote;
   VoidCallback? verticalModeCallbackVotingButtonsPressed;
+
+  VoidCallback? okCallback;
+  VoidCallback? cancelCallback;
 
   @override
   _VotingDialogState createState() => _VotingDialogState();
@@ -72,235 +77,242 @@ class _VotingDialogState extends State<VotingDialog> {
 
   @override
   Widget build(BuildContext context) {
-    // return AlertDialog(
-    //   backgroundColor: globalAlmostBlack,
-    //   shape: RoundedRectangleBorder(
-    //       borderRadius: BorderRadius.all(Radius.circular(20.0))),
-    //   content: Builder(builder: (context) {
-    //     return Container(
-    //       height: 65.h,
-    //       width: 100.w,
-    return PopUpDialogWithTitleLogo(
-      titleWidgetPadding: 5.w,
-      titleWidgetSize: 20.w,
-      callbackOK: () {},
-      titleWidget: FaIcon(
-        widget.downvote
-            ? FontAwesomeIcons.thumbsDown
-            : FontAwesomeIcons.thumbsUp,
-        size: 20.w,
-        color: globalBGColor,
-      ),
-      child: BlocBuilder<UserBloc, UserState>(
-        bloc: _userBloc,
-        builder: (context, state) {
-          if (state is UserInitialState) {
-            return DtubeLogoPulseWithSubtitle(
-                subtitle: "loading your balance...", size: 30.w);
-          } else if (state is UserDTCVPLoadingState) {
-            return DtubeLogoPulseWithSubtitle(
-                subtitle: "loading your balance...", size: 30.w);
-          } else if (state is UserDTCVPLoadedState) {
-            return SingleChildScrollView(
-              child: BlocListener<TransactionBloc, TransactionState>(
-                listener: (context, state) {
-                  if (state is TransactionSent) {
-                    _postBloc.add(FetchPostEvent(widget.author, widget.link));
-                  }
-                },
-                child: !_sendButtonPressed
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text("weight: ",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5),
-                                        Text(
-                                            (_vpValue.floor() *
-                                                        (widget.downvote
-                                                            ? -1
-                                                            : 1))
-                                                    .toString() +
-                                                '%',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5),
-                                      ],
-                                    ),
-                                    RotatedBox(
-                                      quarterTurns: widget.downvote ? 1 : 3,
-                                      child: Slider(
-                                        min: 1,
-                                        max: 100.0,
-                                        value: _vpValue,
-
-                                        label: (widget.downvote ? "-" : "") +
-                                            _vpValue.floor().toString() +
-                                            "%",
-                                        //divisions: 40,
-                                        inactiveColor: globalBlue,
-                                        activeColor: globalRed,
-                                        onChanged: (dynamic value) {
-                                          setState(() {
-                                            _vpValue = value;
-                                          });
-                                        },
+    return WillPopScope(
+      onWillPop: () async {
+        if (widget.cancelCallback != null) {
+          widget.cancelCallback!();
+        }
+        return true;
+      },
+      child: PopUpDialogWithTitleLogo(
+        titleWidgetPadding: 5.w,
+        titleWidgetSize: 20.w,
+        callbackOK: () {},
+        titleWidget: FaIcon(
+          widget.downvote
+              ? FontAwesomeIcons.thumbsDown
+              : FontAwesomeIcons.thumbsUp,
+          size: 20.w,
+          color: globalBGColor,
+        ),
+        child: BlocBuilder<UserBloc, UserState>(
+          bloc: _userBloc,
+          builder: (context, state) {
+            if (state is UserInitialState) {
+              return DtubeLogoPulseWithSubtitle(
+                  subtitle: "loading your balance...", size: 30.w);
+            } else if (state is UserDTCVPLoadingState) {
+              return DtubeLogoPulseWithSubtitle(
+                  subtitle: "loading your balance...", size: 30.w);
+            } else if (state is UserDTCVPLoadedState) {
+              return SingleChildScrollView(
+                child: BlocListener<TransactionBloc, TransactionState>(
+                  listener: (context, state) {
+                    if (state is TransactionSent) {
+                      _postBloc.add(FetchPostEvent(widget.author, widget.link));
+                    }
+                  },
+                  child: !_sendButtonPressed
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text("weight: ",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5),
+                                          Text(
+                                              (_vpValue.floor() *
+                                                          (widget.downvote
+                                                              ? -1
+                                                              : 1))
+                                                      .toString() +
+                                                  '%',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5),
+                                        ],
                                       ),
-                                    ),
-                                    Text(
-                                        shortVP((state.vtBalance['v']! /
-                                                100 *
-                                                _vpValue)
-                                            .floor()),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6),
-                                  ],
-                                ),
-                                widget.downvote
-                                    ? SizedBox(width: 0)
-                                    : Padding(
-                                        padding: EdgeInsets.only(left: 4.w),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text("vote tip: ",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline5),
-                                                Text(
-                                                    _tipValue
-                                                            .floor()
-                                                            .toString() +
-                                                        '%',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline5),
-                                              ],
-                                            ),
-                                            RotatedBox(
-                                              quarterTurns: 3,
-                                              child: Slider(
-                                                min: 0.0,
-                                                max: 100.0,
-                                                value: _tipValue,
-                                                label: _tipValue
-                                                        .floor()
-                                                        .toString() +
-                                                    "%",
-                                                //divisions: 20,
-                                                inactiveColor: globalBlue,
-                                                activeColor: globalRed,
-                                                onChanged: (dynamic value) {
-                                                  setState(() {
-                                                    _tipValue = value;
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                            Text("",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline6),
-                                          ],
+                                      RotatedBox(
+                                        quarterTurns: widget.downvote ? 1 : 3,
+                                        child: Slider(
+                                          min: 1,
+                                          max: 100.0,
+                                          value: _vpValue,
+
+                                          label: (widget.downvote ? "-" : "") +
+                                              _vpValue.floor().toString() +
+                                              "%",
+                                          //divisions: 40,
+                                          inactiveColor: globalBlue,
+                                          activeColor: globalRed,
+                                          onChanged: (dynamic value) {
+                                            setState(() {
+                                              _vpValue = value;
+                                            });
+                                          },
                                         ),
                                       ),
-                              ],
-                            ),
-                          ),
-                          widget.isPost
-                              ? Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 20.w,
-                                      right: 20.w,
-                                      top: 1.h,
-                                      bottom: 2.h),
-                                  child: Container(
-                                    height: 8.h,
-                                    child: OverlayTextInput(
-                                      textEditingController: _tagController,
-                                      label: "curator tag",
-                                      autoFocus: false,
-                                    ),
+                                      Text(
+                                          shortVP((state.vtBalance['v']! /
+                                                  100 *
+                                                  _vpValue)
+                                              .floor()),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6),
+                                    ],
                                   ),
-                                )
-                              : SizedBox(width: 0),
-                          InkWell(
-                            child: Container(
-                              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                              decoration: BoxDecoration(
-                                color: globalRed,
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20.0),
-                                    bottomRight: Radius.circular(20.0)),
-                              ),
-                              child: Text(
-                                "Send Vote",
-                                style: Theme.of(context).textTheme.headline4,
-                                textAlign: TextAlign.center,
+                                  widget.downvote
+                                      ? SizedBox(width: 0)
+                                      : Padding(
+                                          padding: EdgeInsets.only(left: 4.w),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text("vote tip: ",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline5),
+                                                  Text(
+                                                      _tipValue
+                                                              .floor()
+                                                              .toString() +
+                                                          '%',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline5),
+                                                ],
+                                              ),
+                                              RotatedBox(
+                                                quarterTurns: 3,
+                                                child: Slider(
+                                                  min: 0.0,
+                                                  max: 100.0,
+                                                  value: _tipValue,
+                                                  label: _tipValue
+                                                          .floor()
+                                                          .toString() +
+                                                      "%",
+                                                  //divisions: 20,
+                                                  inactiveColor: globalBlue,
+                                                  activeColor: globalRed,
+                                                  onChanged: (dynamic value) {
+                                                    setState(() {
+                                                      _tipValue = value;
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                              Text("",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6),
+                                            ],
+                                          ),
+                                        ),
+                                ],
                               ),
                             ),
-                            onTap: () async {
-                              var voteValue =
-                                  (state.vtBalance['v']! * (_vpValue / 100))
-                                      .floor();
-                              int _txType = 5;
-                              TxData txdata = TxData(
-                                author: widget.author,
-                                link: widget.link,
-                                tag: _tagController.value.text,
-                                vt: voteValue * (widget.downvote ? -1 : 1),
-                              );
+                            widget.isPost
+                                ? Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 20.w,
+                                        right: 20.w,
+                                        top: 1.h,
+                                        bottom: 2.h),
+                                    child: Container(
+                                      height: 8.h,
+                                      child: OverlayTextInput(
+                                        textEditingController: _tagController,
+                                        label: "curator tag",
+                                        autoFocus: false,
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(width: 0),
+                            InkWell(
+                              child: Container(
+                                padding:
+                                    EdgeInsets.only(top: 20.0, bottom: 20.0),
+                                decoration: BoxDecoration(
+                                  color: globalRed,
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(20.0),
+                                      bottomRight: Radius.circular(20.0)),
+                                ),
+                                child: Text(
+                                  "Send Vote",
+                                  style: Theme.of(context).textTheme.headline4,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              onTap: () async {
+                                var voteValue =
+                                    (state.vtBalance['v']! * (_vpValue / 100))
+                                        .floor();
+                                int _txType = 5;
+                                TxData txdata = TxData(
+                                  author: widget.author,
+                                  link: widget.link,
+                                  tag: _tagController.value.text,
+                                  vt: voteValue * (widget.downvote ? -1 : 1),
+                                );
 
-                              if (_tipValue > 0) {
-                                _txType = 19;
-                                txdata = TxData(
-                                    author: widget.author,
-                                    link: widget.link,
-                                    tag: _tagController.value.text,
-                                    vt: voteValue * (widget.downvote ? -1 : 1),
-                                    tip: _tipValue.floor());
-                              }
-                              Transaction newTx =
-                                  Transaction(type: _txType, data: txdata);
+                                if (_tipValue > 0) {
+                                  _txType = 19;
+                                  txdata = TxData(
+                                      author: widget.author,
+                                      link: widget.link,
+                                      tag: _tagController.value.text,
+                                      vt: voteValue *
+                                          (widget.downvote ? -1 : 1),
+                                      tip: _tipValue.floor());
+                                }
+                                Transaction newTx =
+                                    Transaction(type: _txType, data: txdata);
 
-                              _txBloc.add(SignAndSendTransactionEvent(newTx));
-                              Navigator.of(context).pop();
-                            },
+                                _txBloc.add(SignAndSendTransactionEvent(newTx));
+                                Navigator.of(context).pop();
+                                if (widget.okCallback != null) {
+                                  widget.okCallback!();
+                                }
+                              },
+                            ),
+                          ],
+                        )
+                      : Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: CircularProgressIndicator(),
                           ),
-                        ],
-                      )
-                    : Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: CircularProgressIndicator(),
                         ),
-                      ),
-              ),
-            );
-          } else {
-            return DtubeLogoPulseWithSubtitle(
-                subtitle: "loading your balance...", size: 30.w);
-          }
-        },
+                ),
+              );
+            } else {
+              return DtubeLogoPulseWithSubtitle(
+                  subtitle: "loading your balance...", size: 30.w);
+            }
+          },
+        ),
       ),
     );
+
     //   }),
     // );
   }

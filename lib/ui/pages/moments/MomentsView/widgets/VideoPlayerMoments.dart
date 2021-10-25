@@ -1,8 +1,11 @@
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
+import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
+import 'package:dtube_go/ui/widgets/Comments/CommentDialog.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/controller/MomentsController.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
@@ -200,19 +203,51 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          setState(() {
-                            widget.momentsController.pause();
-                            _videoController.pause();
-                            if (_showVotingBars && _votingDirection) {
-                              _showVotingBars = false;
-                            } else if (_showVotingBars && !_votingDirection) {
-                              _votingDirection = true;
-                            } else if (!_showVotingBars) {
-                              _showCommentInput = false;
-                              _showVotingBars = true;
-                              _votingDirection = true;
-                            }
-                          });
+                          if (!widget.feedItem.alreadyVoted!) {
+                            setState(() {
+                              widget.momentsController.pause();
+                              _videoController.pause();
+                            });
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  MultiBlocProvider(
+                                providers: [
+                                  BlocProvider<PostBloc>(
+                                      create: (context) => PostBloc(
+                                          repository: PostRepositoryImpl())),
+                                  BlocProvider<UserBloc>(
+                                      create: (context) => UserBloc(
+                                          repository: UserRepositoryImpl())),
+                                ],
+                                child: VotingDialog(
+                                  txBloc:
+                                      BlocProvider.of<TransactionBloc>(context),
+                                  defaultVote:
+                                      double.parse(widget.momentsVotingWeight),
+                                  defaultTip: double.parse(
+                                      widget.defaultPostsVotingTip),
+                                  author: widget.feedItem.author,
+                                  link: widget.feedItem.link,
+                                  downvote: false,
+                                  //currentVT: state.vtBalance['v']! + 0.0,
+                                  isPost: true,
+                                  okCallback: () {
+                                    setState(() {
+                                      widget.momentsController.play();
+                                      _videoController.play();
+                                    });
+                                  },
+                                  cancelCallback: () {
+                                    setState(() {
+                                      widget.momentsController.play();
+                                      _videoController.play();
+                                    });
+                                  },
+                                ),
+                              ),
+                            );
+                          }
                         },
                         child: ShadowedIcon(
                           icon: FontAwesomeIcons.thumbsUp,
@@ -226,19 +261,52 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          setState(() {
-                            widget.momentsController.pause();
-                            _videoController.pause();
-                            if (_showVotingBars && _votingDirection) {
-                              _votingDirection = false;
-                            } else if (!_showVotingBars) {
-                              _showCommentInput = false;
-                              _showVotingBars = true;
-                              _votingDirection = false;
-                            } else if (_showVotingBars && !_votingDirection) {
-                              _showVotingBars = false;
-                            }
-                          });
+                          if (!widget.feedItem.alreadyVoted!) {
+                            setState(() {
+                              widget.momentsController.pause();
+                              _videoController.pause();
+                            });
+
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  MultiBlocProvider(
+                                providers: [
+                                  BlocProvider<PostBloc>(
+                                      create: (context) => PostBloc(
+                                          repository: PostRepositoryImpl())),
+                                  BlocProvider<UserBloc>(
+                                      create: (context) => UserBloc(
+                                          repository: UserRepositoryImpl())),
+                                ],
+                                child: VotingDialog(
+                                  txBloc:
+                                      BlocProvider.of<TransactionBloc>(context),
+                                  defaultVote:
+                                      double.parse(widget.momentsVotingWeight),
+                                  defaultTip: double.parse(
+                                      widget.defaultPostsVotingTip),
+                                  author: widget.feedItem.author,
+                                  link: widget.feedItem.link,
+                                  downvote: true,
+                                  //currentVT: state.vtBalance['v']! + 0.0,
+                                  isPost: true,
+                                  okCallback: () {
+                                    setState(() {
+                                      widget.momentsController.play();
+                                      _videoController.play();
+                                    });
+                                  },
+                                  cancelCallback: () {
+                                    setState(() {
+                                      widget.momentsController.play();
+                                      _videoController.play();
+                                    });
+                                  },
+                                ),
+                              ),
+                            );
+                          }
                         },
                         child: ShadowedIcon(
                           icon: FontAwesomeIcons.thumbsDown,
@@ -255,13 +323,35 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                           setState(() {
                             widget.momentsController.pause();
                             _videoController.pause();
-                            if (!_showCommentInput) {
-                              _showCommentInput = true;
-                              _showVotingBars = false;
-                            } else {
-                              _showCommentInput = false;
-                            }
                           });
+                          showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                BlocProvider<UserBloc>(
+                              create: (context) =>
+                                  UserBloc(repository: UserRepositoryImpl()),
+                              child: CommentDialog(
+                                txBloc:
+                                    BlocProvider.of<TransactionBloc>(context),
+                                originAuthor: widget.feedItem.author,
+                                originLink: widget.feedItem.link,
+                                defaultCommentVote: double.parse(
+                                    widget.defaultCommentsVotingWeight),
+                                okCallback: () {
+                                  setState(() {
+                                    widget.momentsController.play();
+                                    _videoController.play();
+                                  });
+                                },
+                                cancelCallback: () {
+                                  setState(() {
+                                    widget.momentsController.play();
+                                    _videoController.play();
+                                  });
+                                },
+                              ),
+                            ),
+                          );
                         },
                         child: ShadowedIcon(
                           icon: FontAwesomeIcons.comment,
@@ -275,148 +365,6 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                 ),
               ),
             ),
-            Visibility(
-              visible: _showVotingBars,
-              child: AspectRatio(
-                aspectRatio: 5 / 8,
-                child: Stack(
-                  children: [
-                    GestureDetector(
-                      child: Container(
-                        color: Colors.transparent,
-                      ),
-                      onTap: () {
-                        setState(() {
-                          _showVotingBars = false;
-                          widget.momentsController.play();
-                          _videoController.play();
-                        });
-                      },
-                    ),
-                    AspectRatio(
-                      aspectRatio: 8 / 5,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          color: Colors.black.withAlpha(85),
-                          child: VotingSliderStandalone(
-                            defaultVote:
-                                double.parse(widget.defaultPostsVotingWeight),
-                            defaultTip:
-                                double.parse(widget.defaultPostsVotingTip),
-                            author: widget.feedItem.author,
-                            link: widget.feedItem.link,
-                            downvote: !_votingDirection,
-                            currentVT: widget.currentVP,
-                            isPost: true,
-                            sendCallback: () {
-                              widget.momentsController.play();
-                              _videoController.play();
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Visibility(
-                visible: _showCommentInput,
-                child: AspectRatio(
-                  aspectRatio: 5 / 8,
-                  child: Stack(
-                    children: [
-                      GestureDetector(
-                        child: Container(
-                          color: Colors.transparent,
-                        ),
-                        onTap: () {
-                          setState(() {
-                            _showCommentInput = false;
-                            widget.momentsController.play();
-                            _videoController.play();
-                          });
-                        },
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          color: Colors.black.withAlpha(85),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 80.w, // TODO: make this dynamic
-                                child: Padding(
-                                  padding: EdgeInsets.all(5.w),
-                                  child: TextField(
-                                    //key: UniqueKey(),
-                                    autofocus: _showCommentInput,
-                                    cursorColor: globalRed,
-                                    controller: _replyController,
-                                    maxLines: 4,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.all(5.w),
-                                  child: InputChip(
-                                    onPressed: () {
-                                      UploadData _uploadData = new UploadData(
-                                        link: "",
-                                        parentAuthor: widget.feedItem.author,
-                                        parentPermlink: widget.feedItem.link,
-                                        title: "",
-                                        description:
-                                            _replyController.value.text,
-                                        tag: "",
-                                        vpPercent: double.parse(
-                                            widget.defaultCommentsVotingWeight),
-                                        vpBalance: widget.currentVP.floor(),
-                                        burnDtc: 0,
-                                        dtcBalance:
-                                            0, // TODO promoted comment implementation missing
-                                        isPromoted: false,
-                                        duration: "",
-                                        thumbnailLocation: "",
-                                        localThumbnail: false,
-                                        videoLocation: "",
-                                        localVideoFile: false,
-                                        originalContent: false,
-                                        nSFWContent: false,
-                                        unlistVideo: false,
-                                        isEditing: false,
-                                        videoSourceHash: "",
-                                        video240pHash: "",
-                                        video480pHash: "",
-                                        videoSpriteHash: "",
-                                        thumbnail640Hash: "",
-                                        thumbnail210Hash: "",
-                                        uploaded: false,
-                                        crossPostToHive: false,
-                                      );
-
-                                      BlocProvider.of<TransactionBloc>(context)
-                                          .add(SendCommentEvent(_uploadData));
-                                      setState(() {
-                                        _showCommentInput = false;
-                                        _replyController.text = '';
-                                        widget.momentsController.play();
-                                        _videoController.play();
-                                      });
-                                    },
-                                    label: FaIcon(FontAwesomeIcons.paperPlane),
-                                  )),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
           ],
         ),
       ),
