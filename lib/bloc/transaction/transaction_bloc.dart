@@ -143,8 +143,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       //no video location => comment
       if (_upload.videoLocation == "") {
         jsonMetadata = {
-          "title": _upload.title,
           "description": _upload.description,
+          "title": _upload.title,
           "tag": _upload.tag,
           "app": "dtube.go.app_" +
               packageInfo.version +
