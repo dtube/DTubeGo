@@ -1020,7 +1020,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                         }),
                                     ChoiceChip(
                                         selected: _defaultMomentsUnlist,
-                                        label: Text('unlist video'),
+                                        label: Text('only show in moments'),
                                         labelStyle: Theme.of(context)
                                             .textTheme
                                             .bodyText1,

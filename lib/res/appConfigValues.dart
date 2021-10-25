@@ -46,6 +46,7 @@ class AppConfig {
     "https://3.btfsu.d.tube",
     "https://4.btfsu.d.tube"
   ];
+  static int maxUploadRetries = 7;
 
   static String ipfsSnapUrl = 'https://snap1.d.tube/ipfs/';
   static String ipfsSnapUploadUrl = 'https://snap1.d.tube';

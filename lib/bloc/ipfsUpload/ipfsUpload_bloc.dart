@@ -3,6 +3,7 @@ import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_response_model.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/utils/randomPermlink.dart';
 
 import 'package:bloc/bloc.dart';
@@ -37,6 +38,8 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
       TransactionBloc txBloc = BlocProvider.of<TransactionBloc>(event.context);
       yield IPFSUploadVideoPreProcessingState();
       _uploadData = event.uploadData;
+      String uploadErrorMessage = "";
+      int uploadErrorCount = 0;
       // notify AppStateBloc about starting the transcoding and thumbnail creation
       // will turn the "+" to a rotating DTube Logo
       appStateBloc
@@ -55,17 +58,25 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
       appStateBloc.add(UploadStateChangedEvent(
           uploadState: UploadProcessingState(progressPercent: 10)));
       yield IPFSUploadVideoPreProcessedState(compressedFile: _newFile);
-      try {
-        _uploadEndpoint = await repository.getUploadEndpoint();
-        print("ENDPOINT: " + _uploadEndpoint);
-        if (_uploadEndpoint == "") {
-          yield IPFSUploadErrorState(message: "no valid endpoint found");
-        } else {
-          _videoUploadToken =
-              await repository.uploadVideo(_newFile.path, _uploadEndpoint);
-          print("TOKEN: " + _videoUploadToken);
-          yield IPFSUploadVideoUploadedState(uploadToken: _videoUploadToken);
-          try {
+
+      // some upload endpoints throw errors
+      // we try to upload max 5 times until we show an error
+      do {
+        try {
+          _uploadEndpoint = await repository.getUploadEndpoint();
+          print("ENDPOINT: " + _uploadEndpoint);
+          if (_uploadEndpoint == "") {
+            // yield IPFSUploadErrorState(message: "no valid endpoint found");
+            uploadErrorMessage = "no valid upload endpoint found!\n\n";
+
+            uploadErrorCount++;
+          } else {
+            _videoUploadToken =
+                await repository.uploadVideo(_newFile.path, _uploadEndpoint);
+            print("TOKEN: " + _videoUploadToken);
+            yield IPFSUploadVideoUploadedState(uploadToken: _videoUploadToken);
+
+            // monitor the upload status
             do {
               _uploadStatusResponse = await repository.monitorVideoUploadStatus(
                   _videoUploadToken, _uploadEndpoint);
@@ -90,10 +101,13 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
               yield IPFSUploadVideoPostProcessingState(
                   processingResponse: _uploadStatusResponse);
             } while (_uploadStatusResponse["finished"] == false);
+
+            // video is uploaded
             yield IPFSUploadVideoPostProcessedState(
                 processingResponse: _uploadStatusResponse);
             var statusInfo = _uploadStatusResponse;
 
+            // add ipfs info to the uploadData
             _uploadData.videoSourceHash =
                 statusInfo["ipfsAddSourceVideo"]["hash"];
             _uploadData.video240pHash =
@@ -102,65 +116,48 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
                 statusInfo["encodedVideos"][1]["ipfsAddEncodeVideo"]["hash"];
             _uploadData.videoSpriteHash =
                 statusInfo["ipfsAddSourceVideo"]["hash"];
-
-            try {
-              _thumbnailOnlineLocation =
-                  await repository.uploadThumbnail(_newThumbnail);
-
-              yield IPFSUploadThumbnailUploadedState();
-
-              _uploadData.thumbnailLocation = _thumbnailOnlineLocation;
-
-              _uploadData.link = randomPermlink(11);
-              // notify AppStateBloc about finishing ipfs upload
-              appStateBloc.add(
-                  UploadStateChangedEvent(uploadState: UploadFinishedState()));
-
-              txBloc.add(SendCommentEvent(_uploadData));
-            } catch (e) {
-              // notify AppStateBloc about failed ipfs upload
-              appStateBloc.add(
-                  UploadStateChangedEvent(uploadState: UploadFailedState()));
-
-              yield IPFSUploadErrorState(message: e.toString());
-              // notify tyBloc about failed ipfs upload -> will show global flushbar
-              txBloc.add(
-                TransactionPreprocessingFailed(
-                    errorMessage:
-                        "\nPlease report this error to the dtube team with a screenshot!\n\n" +
-                            e.toString(),
-                    txType: 3),
-              );
-            }
-          } catch (e) {
-            // notify AppStateBloc about failed ipfs upload
-            appStateBloc
-                .add(UploadStateChangedEvent(uploadState: UploadFailedState()));
-
-            yield IPFSUploadErrorState(message: e.toString());
-
-            // notify tyBloc about failed ipfs upload -> will show global flushbar
-            txBloc.add(TransactionPreprocessingFailed(
-                errorMessage:
-                    "\nPlease report this error to the dtube team with a screenshot!\n\n" +
-                        e.toString(),
-                txType: 3));
+            uploadErrorCount = 0;
           }
+        } catch (e) {
+          // ipfs upload failed
+          uploadErrorMessage =
+              "Video upload failed!\n\nPlease report this error to the dtube team with a screenshot!\n\n" +
+                  e.toString();
+          uploadErrorCount++;
         }
-        // upload to ipfs
-      } catch (e) {
+        // thumnail upload
+        try {
+          _thumbnailOnlineLocation =
+              await repository.uploadThumbnail(_newThumbnail);
+
+          yield IPFSUploadThumbnailUploadedState();
+          // add thumbnail url to the uploadData
+          _uploadData.thumbnailLocation = _thumbnailOnlineLocation;
+
+          _uploadData.link = randomPermlink(11);
+          // notify AppStateBloc about finishing ipfs upload
+          appStateBloc
+              .add(UploadStateChangedEvent(uploadState: UploadFinishedState()));
+
+          txBloc.add(SendCommentEvent(_uploadData));
+        } catch (e) {
+          // thumbnail upload failed
+
+          uploadErrorMessage =
+              "Thumnail upload failed!\n\nPlease report this error to the dtube team with a screenshot!\n\n" +
+                  e.toString();
+          uploadErrorCount++;
+        }
+      } while (uploadErrorCount != 0 &&
+          uploadErrorCount < AppConfig.maxUploadRetries);
+      if (uploadErrorCount == AppConfig.maxUploadRetries) {
         // notify AppStateBloc about failed ipfs upload
         appStateBloc
             .add(UploadStateChangedEvent(uploadState: UploadFailedState()));
 
-        yield IPFSUploadErrorState(message: e.toString());
-
-        // notify tyBloc about failed ipfs upload -> will show global flushbar
+        // notify txBloc about failed ipfs upload -> will show global flushbar
         txBloc.add(TransactionPreprocessingFailed(
-            errorMessage:
-                "\nPlease report this error to the dtube team with a screenshot!\n\n" +
-                    e.toString(),
-            txType: 3));
+            errorMessage: uploadErrorMessage, txType: 3));
       }
     }
   }

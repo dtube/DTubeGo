@@ -22,7 +22,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     // event to fetch moments
     if (event is FetchMomentsEvent) {
       String _tsRangeFilter = '&tsrange=' +
-          (DateTime.now().add(Duration(days: -7)).millisecondsSinceEpoch / 1000)
+          (DateTime.now().add(Duration(days: -14)).millisecondsSinceEpoch /
+                  1000)
               .toString() +
           ',' +
           (DateTime.now().millisecondsSinceEpoch / 1000).toString();
@@ -30,8 +31,11 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       yield FeedLoadingState();
       try {
         List<FeedItem> feed = event.feedType == "NewMoments"
-            ? await repository.getNewFeedFiltered(_avalonApiNode,
-                "&tags=DTubeGo-Moments", _tsRangeFilter, _applicationUser)
+            ? await repository.getNewFeedFiltered(
+                _avalonApiNode,
+                "&authors=all,%5Es3rk47&tags=DTubeGo-Moments",
+                _tsRangeFilter,
+                _applicationUser)
             : await repository.getMyFeedFiltered(_avalonApiNode,
                 "&tags=DTubeGo-Moments", _tsRangeFilter, _applicationUser);
         yield FeedLoadedState(feed: feed, feedType: event.feedType);
