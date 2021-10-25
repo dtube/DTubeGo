@@ -131,205 +131,194 @@ class _UserState extends State<UserPage> {
       iconSize = 6.h;
     }
 
-    return Stack(
-      children: [
-        SingleChildScrollView(
-            child: Stack(children: [
-          //SizedBox(height: 8),
-          BlocProvider<FeedBloc>(
-              create: (context) => FeedBloc(repository: FeedRepositoryImpl())
-                ..add(FetchUserFeedEvent(username: user.name)),
-              child: FeedList(
-                feedType: 'UserFeed',
-                username: user.name,
-                showAuthor: false,
-                largeFormat: false,
-                heightPerEntry: 10.h,
-                width: 95.w,
-                topPaddingForFirstEntry:
-                    Device.orientation == Orientation.landscape ? 38.h : 30.h,
-                sidepadding: 10.w,
-                bottompadding: 10.h,
-                scrollCallback: (bool) {},
-                enableNavigation: true,
-              )),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              height: 35.h,
-              width: 200.w,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  gradient: LinearGradient(
-                      begin: FractionalOffset.topCenter,
-                      end: FractionalOffset.bottomCenter,
-                      colors: [
-                        Colors.black,
-                        Colors.black.withOpacity(0.0),
-                      ],
-                      stops: [
-                        0.0,
-                        1.0
-                      ])),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 11.h),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: FadeIn(
-                    preferences: AnimationPreferences(
-                        offset: Duration(milliseconds: 1100)),
-                    child: AccountAvatarBase(
-                      username: user.name,
-                      avatarSize: Device.orientation == Orientation.portrait
-                          ? 18.h
-                          : 25.h,
-                      showVerified: true,
-                      showName: true,
-                      showNameLeft: true,
-                      showFullUserInfo: true,
-                      nameFontSizeMultiply: 1.4,
-                      width: Device.orientation == Orientation.portrait
-                          ? 95.w
-                          : 70.w,
-                      height: Device.orientation == Orientation.portrait
-                          ? 18.h
-                          : 25.h,
-                    ),
-                  ),
+    return SingleChildScrollView(
+        child: Stack(children: [
+      //SizedBox(height: 8),
+      BlocProvider<FeedBloc>(
+          create: (context) => FeedBloc(repository: FeedRepositoryImpl())
+            ..add(FetchUserFeedEvent(username: user.name)),
+          child: FeedList(
+            feedType: 'UserFeed',
+            username: user.name,
+            showAuthor: false,
+            largeFormat: false,
+            heightPerEntry: 10.h,
+            width: 100.w,
+            topPaddingForFirstEntry:
+                Device.orientation == Orientation.landscape ? 38.h : 30.h,
+            sidepadding: 5.w,
+            bottompadding: 10.h,
+            scrollCallback: (bool) {},
+            enableNavigation: true,
+          )),
+      Align(
+        alignment: Alignment.topLeft,
+        child: Container(
+          height: 35.h,
+          width: 200.w,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              gradient: LinearGradient(
+                  begin: FractionalOffset.topCenter,
+                  end: FractionalOffset.bottomCenter,
+                  colors: [
+                    Colors.black,
+                    Colors.black.withOpacity(0.0),
+                  ],
+                  stops: [
+                    0.0,
+                    1.0
+                  ])),
+        ),
+      ),
+      Padding(
+        padding: EdgeInsets.only(top: 11.h),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: FadeIn(
+                preferences:
+                    AnimationPreferences(offset: Duration(milliseconds: 1100)),
+                child: AccountAvatarBase(
+                  username: user.name,
+                  avatarSize:
+                      Device.orientation == Orientation.portrait ? 18.h : 25.h,
+                  showVerified: true,
+                  showName: true,
+                  showNameLeft: true,
+                  showFullUserInfo: true,
+                  nameFontSizeMultiply: 1.4,
+                  width:
+                      Device.orientation == Orientation.portrait ? 95.w : 70.w,
+                  height:
+                      Device.orientation == Orientation.portrait ? 18.h : 25.h,
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
+        ),
+      ),
 
-          Positioned(
-            top: 45.h,
-            right: 3.w,
-            child: !ownUsername
-                ? Column(
-                    children: [
-                      GestureDetector(
-                          child: ShadowedIcon(
-                            icon: FontAwesomeIcons.history,
-                            size: iconSize,
-                            color: Colors.white,
-                            shadowColor: Colors.black,
-                          ),
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return BlocProvider<AccountHistoryBloc>(
-                                  create: (context) => AccountHistoryBloc(
-                                      repository:
-                                          AccountHistoryRepositoryImpl()),
-                                  child: AccountHistoryScreen(
-                                    username: user.name,
-                                  ));
-                            }));
-                          }),
-                      SizedBox(height: iconSize / 2),
-                      GestureDetector(
-                          child: ShadowedIcon(
-                            icon: FontAwesomeIcons.exchangeAlt,
-                            size: iconSize,
-                            color: Colors.white,
-                            shadowColor: Colors.black,
-                          ),
-                          onTap: () {
-                            showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    TransferDialog(
-                                      receiver: widget.username,
-                                      txBloc: BlocProvider.of<TransactionBloc>(
-                                          context),
-                                    ));
-                          }),
-                      SizedBox(height: iconSize / 2),
-                      GestureDetector(
-                        child: ShadowedIcon(
-                          icon: user.alreadyFollowing
-                              ? FontAwesomeIcons.usersSlash
-                              : FontAwesomeIcons.userFriends,
-                          size: iconSize,
-                          color: Colors.white,
-                          shadowColor: Colors.black,
-                        ),
-                        onTap: () async {
-                          TxData txdata = TxData(
-                            target: widget.username,
-                          );
-                          Transaction newTx = Transaction(
-                              type: user.alreadyFollowing ? 8 : 7,
-                              data: txdata);
-                          BlocProvider.of<TransactionBloc>(context)
-                              .add(SignAndSendTransactionEvent(newTx));
-                        },
+      Positioned(
+        top: 45.h,
+        right: 3.w,
+        child: !ownUsername
+            ? Column(
+                children: [
+                  GestureDetector(
+                      child: ShadowedIcon(
+                        icon: FontAwesomeIcons.history,
+                        size: iconSize,
+                        color: Colors.white,
+                        shadowColor: Colors.black,
                       ),
-                    ],
-                  )
-                : Column(
-                    children: [
-                      GestureDetector(
-                          child: ShadowedIcon(
-                            icon: FontAwesomeIcons.cogs,
-                            size: iconSize,
-                            color: Colors.white,
-                            shadowColor: Colors.black,
-                          ),
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return BlocProvider<ThirdPartyUploaderBloc>(
-                                  create: (BuildContext context) =>
-                                      ThirdPartyUploaderBloc(
-                                          repository:
-                                              ThirdPartyUploaderRepositoryImpl()),
-                                  child: ProfileSettingsContainer(
-                                      userBloc: userBloc));
-                            }));
-                          }),
-                      SizedBox(height: 3.h),
-                      GestureDetector(
-                          child: ShadowedIcon(
-                            icon: FontAwesomeIcons.history,
-                            size: iconSize,
-                            color: Colors.white,
-                            shadowColor: Colors.black,
-                          ),
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return BlocProvider<AccountHistoryBloc>(
-                                  create: (context) => AccountHistoryBloc(
-                                      repository:
-                                          AccountHistoryRepositoryImpl()),
-                                  child: AccountHistoryScreen(
-                                    username: widget.username,
-                                  ));
-                            }));
-                          }),
-                      SizedBox(height: iconSize / 2),
-                      GestureDetector(
-                          child: ShadowedIcon(
-                            icon: FontAwesomeIcons.signOutAlt,
-                            size: iconSize,
-                            color: Colors.white,
-                            shadowColor: Colors.black,
-                          ),
-                          onTap: () {
-                            BlocProvider.of<AuthBloc>(context)
-                                .add(SignOutEvent(context: context));
-                          }),
-                    ],
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return BlocProvider<AccountHistoryBloc>(
+                              create: (context) => AccountHistoryBloc(
+                                  repository: AccountHistoryRepositoryImpl()),
+                              child: AccountHistoryScreen(
+                                username: user.name,
+                              ));
+                        }));
+                      }),
+                  SizedBox(height: iconSize / 2),
+                  GestureDetector(
+                      child: ShadowedIcon(
+                        icon: FontAwesomeIcons.exchangeAlt,
+                        size: iconSize,
+                        color: Colors.white,
+                        shadowColor: Colors.black,
+                      ),
+                      onTap: () {
+                        showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => TransferDialog(
+                                  receiver: widget.username,
+                                  txBloc:
+                                      BlocProvider.of<TransactionBloc>(context),
+                                ));
+                      }),
+                  SizedBox(height: iconSize / 2),
+                  GestureDetector(
+                    child: ShadowedIcon(
+                      icon: user.alreadyFollowing
+                          ? FontAwesomeIcons.usersSlash
+                          : FontAwesomeIcons.userFriends,
+                      size: iconSize,
+                      color: Colors.white,
+                      shadowColor: Colors.black,
+                    ),
+                    onTap: () async {
+                      TxData txdata = TxData(
+                        target: widget.username,
+                      );
+                      Transaction newTx = Transaction(
+                          type: user.alreadyFollowing ? 8 : 7, data: txdata);
+                      BlocProvider.of<TransactionBloc>(context)
+                          .add(SignAndSendTransactionEvent(newTx));
+                    },
                   ),
-          ),
-        ])),
-      ],
-    );
+                ],
+              )
+            : Column(
+                children: [
+                  GestureDetector(
+                      child: ShadowedIcon(
+                        icon: FontAwesomeIcons.cogs,
+                        size: iconSize,
+                        color: Colors.white,
+                        shadowColor: Colors.black,
+                      ),
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return BlocProvider<ThirdPartyUploaderBloc>(
+                              create: (BuildContext context) =>
+                                  ThirdPartyUploaderBloc(
+                                      repository:
+                                          ThirdPartyUploaderRepositoryImpl()),
+                              child:
+                                  ProfileSettingsContainer(userBloc: userBloc));
+                        }));
+                      }),
+                  SizedBox(height: 3.h),
+                  GestureDetector(
+                      child: ShadowedIcon(
+                        icon: FontAwesomeIcons.history,
+                        size: iconSize,
+                        color: Colors.white,
+                        shadowColor: Colors.black,
+                      ),
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return BlocProvider<AccountHistoryBloc>(
+                              create: (context) => AccountHistoryBloc(
+                                  repository: AccountHistoryRepositoryImpl()),
+                              child: AccountHistoryScreen(
+                                username: widget.username,
+                              ));
+                        }));
+                      }),
+                  SizedBox(height: iconSize / 2),
+                  GestureDetector(
+                      child: ShadowedIcon(
+                        icon: FontAwesomeIcons.signOutAlt,
+                        size: iconSize,
+                        color: Colors.white,
+                        shadowColor: Colors.black,
+                      ),
+                      onTap: () {
+                        BlocProvider.of<AuthBloc>(context)
+                            .add(SignOutEvent(context: context));
+                      }),
+                ],
+              ),
+      ),
+    ]));
   }
 }

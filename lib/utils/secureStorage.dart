@@ -22,10 +22,12 @@ const settingKey_hiveSignerAccessTokenRequestedOn = 'HSRO';
 const settingKey_OpenedOnce = 'OPENEDONCE';
 const settingKey_FirstLogin = 'FIRSTLOGIN';
 
-// TODO: multiple templates?
 const settingKey_templateTitle = 'TEMPLATETITLE';
 const settingKey_templateBody = 'TEMPLATEBODY';
 const settingKey_templateTag = 'TEMPLATETAG';
+
+const settingKey_momentTitle = 'MOMENTTITLE';
+const settingKey_momentBody = 'MOMENTBODY';
 
 const settingKey_DefaultUploadNSFW = "DFUNSFW";
 const settingKey_DefaultUploadOC = "DFUOC";
@@ -141,6 +143,14 @@ Future<void> persistTemplateSettings(
   await _storage.write(key: settingKey_templateTitle, value: templateTitle);
   await _storage.write(key: settingKey_templateBody, value: templateBody);
   await _storage.write(key: settingKey_templateTag, value: templateTag);
+}
+
+Future<void> persistMomentTemplateSettings(
+  String templateTitle,
+  String templateBody,
+) async {
+  await _storage.write(key: settingKey_momentTitle, value: templateTitle);
+  await _storage.write(key: settingKey_momentBody, value: templateBody);
 }
 
 Future<void> persistDefaultUploadAndMomentSettings(
@@ -280,6 +290,21 @@ Future<String> getTemplateTitle() async {
   }
 }
 
+Future<String> getMomentTitle() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_momentTitle);
+  } catch (e) {
+    _setting = "";
+  }
+
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
 Future<String> getExploreTags() async {
   String? _setting = "";
   try {
@@ -299,6 +324,20 @@ Future<String> getTemplateBody() async {
   String? _setting = "";
   try {
     _setting = await _storage.read(key: settingKey_templateBody);
+  } catch (e) {
+    _setting = "";
+  }
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getMomentBody() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_momentBody);
   } catch (e) {
     _setting = "";
   }

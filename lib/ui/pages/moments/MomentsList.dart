@@ -60,6 +60,9 @@ class _MomentsListState extends State<MomentsList> {
   String? _momentsUploadOC;
   String? _momentsUploadUnlist;
   String? _momentsUploadCrosspost;
+  String? _momentsCustomTitle;
+  String? _momentsCustomBody;
+
   late UserBloc _userBloc;
   double _currentVp = 0.0;
 
@@ -75,6 +78,8 @@ class _MomentsListState extends State<MomentsList> {
     _momentsUploadOC = await sec.getMomentOC();
     _momentsUploadUnlist = await sec.getMomentUnlist();
     _momentsUploadCrosspost = await sec.getMomentCrosspost();
+    _momentsCustomTitle = await sec.getMomentTitle();
+    _momentsCustomBody = await sec.getMomentBody();
 
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
@@ -187,6 +192,8 @@ class _MomentsListState extends State<MomentsList> {
                           momentsUploadOC: _momentsUploadOC!,
                           momentsUploadUnlist: _momentsUploadUnlist!,
                           momentsUploadCrosspost: _momentsUploadCrosspost!,
+                          momentsCustomTitle: _momentsCustomTitle!,
+                          momentsCustomBody: _momentsCustomBody!,
                           controller: momentsController);
                     },
                   );
@@ -229,6 +236,8 @@ class MomentsContainer extends StatefulWidget {
   String momentsUploadOC;
   String momentsUploadUnlist;
   String momentsUploadCrosspost;
+  String momentsCustomTitle;
+  String momentsCustomBody;
 
   String appUser;
 
@@ -248,7 +257,9 @@ class MomentsContainer extends StatefulWidget {
       required this.momentsUploadOC,
       required this.momentsUploadUnlist,
       required this.momentsUploadCrosspost,
-      required this.controller})
+      required this.controller,
+      required this.momentsCustomTitle,
+      required this.momentsCustomBody})
       : super(key: key);
 
   @override
@@ -293,34 +304,34 @@ class _MomentsContainerState extends State<MomentsContainer> {
                   width: 25.w,
                   height: 25.h,
                   child: MomentsUploadButton(
-                    currentVT: state.vtBalance['v']! + 0.0,
-                    defaultVotingWeight: double.parse(widget
-                        .defaultMomentsVotingWeight), // todo make this dynamic
-                    clickedCallback: () {
-                      // setState(() {
-                      //   widget.momentsController.pause();
-                      //   _videoController.pause();
-                      // });
-                    },
-                    leaveDialogWithUploadCallback: () {
-                      // setState(() {
-                      //   widget.momentsController.pause();
-                      //   _videoController.pause();
-                      //   _momentUploading = true;
-                      // });
-                    },
-                    leaveDialogWithoutUploadCallback: () {
-                      //   widget.momentsController.play();
-                      //   _videoController.play();
-                      //   _momentUploading = false;
-                    },
-                    momentsVotingWeight: widget.defaultMomentsVotingWeight,
-                    momentsUploadNSFW: widget.momentsUploadNSFW,
-                    momentsUploadOC: widget.momentsUploadOC,
-                    momentsUploadUnlist: widget.momentsUploadUnlist,
-
-                    momentsUploadCrosspost: widget.momentsUploadCrosspost,
-                  ));
+                      currentVT: state.vtBalance['v']! + 0.0,
+                      defaultVotingWeight: double.parse(widget
+                          .defaultMomentsVotingWeight), // todo make this dynamic
+                      clickedCallback: () {
+                        // setState(() {
+                        //   widget.momentsController.pause();
+                        //   _videoController.pause();
+                        // });
+                      },
+                      leaveDialogWithUploadCallback: () {
+                        // setState(() {
+                        //   widget.momentsController.pause();
+                        //   _videoController.pause();
+                        //   _momentUploading = true;
+                        // });
+                      },
+                      leaveDialogWithoutUploadCallback: () {
+                        //   widget.momentsController.play();
+                        //   _videoController.play();
+                        //   _momentUploading = false;
+                      },
+                      momentsVotingWeight: widget.defaultMomentsVotingWeight,
+                      momentsUploadNSFW: widget.momentsUploadNSFW,
+                      momentsUploadOC: widget.momentsUploadOC,
+                      momentsUploadUnlist: widget.momentsUploadUnlist,
+                      momentsUploadCrosspost: widget.momentsUploadCrosspost,
+                      customMomentTitle: widget.momentsCustomTitle,
+                      customMomentBody: widget.momentsCustomBody));
             }
             return SizedBox(height: 0, width: 0);
           })
@@ -343,34 +354,34 @@ class _MomentsContainerState extends State<MomentsContainer> {
                   width: 25.w,
                   height: 25.h,
                   child: MomentsUploadButton(
-                    currentVT: state.vtBalance['v']! + 0.0,
-                    defaultVotingWeight: double.parse(widget
-                        .defaultPostsVotingWeight), // todo make this dynamic
-                    clickedCallback: () {
-                      // setState(() {
-                      //   widget.momentsController.pause();
-                      //   _videoController.pause();
-                      // });
-                    },
-                    leaveDialogWithUploadCallback: () {
-                      // setState(() {
-                      //   widget.momentsController.pause();
-                      //   _videoController.pause();
-                      //   _momentUploading = true;
-                      // });
-                    },
-                    leaveDialogWithoutUploadCallback: () {
-                      //   widget.momentsController.play();
-                      //   _videoController.play();
-                      //   _momentUploading = false;
-                    },
-                    momentsVotingWeight: widget.defaultMomentsVotingWeight,
-                    momentsUploadNSFW: widget.momentsUploadNSFW,
-                    momentsUploadOC: widget.momentsUploadOC,
-                    momentsUploadUnlist: widget.momentsUploadUnlist,
-
-                    momentsUploadCrosspost: widget.momentsUploadCrosspost,
-                  ));
+                      currentVT: state.vtBalance['v']! + 0.0,
+                      defaultVotingWeight: double.parse(widget
+                          .defaultPostsVotingWeight), // todo make this dynamic
+                      clickedCallback: () {
+                        // setState(() {
+                        //   widget.momentsController.pause();
+                        //   _videoController.pause();
+                        // });
+                      },
+                      leaveDialogWithUploadCallback: () {
+                        // setState(() {
+                        //   widget.momentsController.pause();
+                        //   _videoController.pause();
+                        //   _momentUploading = true;
+                        // });
+                      },
+                      leaveDialogWithoutUploadCallback: () {
+                        //   widget.momentsController.play();
+                        //   _videoController.play();
+                        //   _momentUploading = false;
+                      },
+                      momentsVotingWeight: widget.defaultMomentsVotingWeight,
+                      momentsUploadNSFW: widget.momentsUploadNSFW,
+                      momentsUploadOC: widget.momentsUploadOC,
+                      momentsUploadUnlist: widget.momentsUploadUnlist,
+                      momentsUploadCrosspost: widget.momentsUploadCrosspost,
+                      customMomentTitle: widget.momentsCustomTitle,
+                      customMomentBody: widget.momentsCustomBody));
             }
             return SizedBox(height: 0, width: 0);
           })

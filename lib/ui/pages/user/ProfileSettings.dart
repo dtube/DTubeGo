@@ -35,7 +35,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
     'Investor / Curator',
     'Business Account'
   ];
-
+  List<int> _visitedTabs = [];
   late TabController _tabController;
   late UserBloc _userBloc;
   late User _originalUserData;
@@ -145,6 +145,19 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                         unselectedLabelColor: Colors.grey,
                         labelColor: globalAlmostWhite,
                         indicatorColor: globalRed,
+                        onTap: (index) {
+                          setState(() {
+                            if (!_visitedTabs.contains(index)) {
+                              // add page to visited to avoid rebuilding the animation
+                              _visitedTabs.add(index);
+                            }
+                            //add first tab to visited because it is the default one
+                            if (index > 0 && !_visitedTabs.contains(0)) {
+                              // add page to visited to avoid rebuilding the animation
+                              _visitedTabs.add(0);
+                            }
+                          });
+                        },
                         tabs: [
                           Tab(
                             text: _settingsTypes[0],
@@ -177,6 +190,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                     DTubeFormCard(
                                       waitBeforeFadeIn:
                                           Duration(milliseconds: 200),
+                                      avoidAnimation: _visitedTabs.contains(0),
                                       childs: [
                                         TextFormField(
                                           style: Theme.of(context)
@@ -227,6 +241,8 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                       child: DTubeFormCard(
                                         waitBeforeFadeIn:
                                             Duration(milliseconds: 400),
+                                        avoidAnimation:
+                                            _visitedTabs.contains(0),
                                         childs: [
                                           BlocBuilder<ThirdPartyUploaderBloc,
                                                   ThirdPartyUploaderState>(
@@ -285,6 +301,8 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                       child: DTubeFormCard(
                                         waitBeforeFadeIn:
                                             Duration(milliseconds: 600),
+                                        avoidAnimation:
+                                            _visitedTabs.contains(0),
                                         childs: [
                                           BlocBuilder<ThirdPartyUploaderBloc,
                                                   ThirdPartyUploaderState>(
@@ -359,6 +377,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                     DTubeFormCard(
                                       waitBeforeFadeIn:
                                           Duration(milliseconds: 200),
+                                      avoidAnimation: _visitedTabs.contains(1),
                                       childs: [
                                         TextFormField(
                                           style: Theme.of(context)

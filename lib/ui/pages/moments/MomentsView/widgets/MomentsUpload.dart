@@ -37,6 +37,8 @@ class MomentsUploadButton extends StatefulWidget {
   String momentsUploadOC;
   String momentsUploadUnlist;
   String momentsUploadCrosspost;
+  String customMomentTitle;
+  String customMomentBody;
 
   MomentsUploadButton(
       {Key? key,
@@ -49,7 +51,9 @@ class MomentsUploadButton extends StatefulWidget {
       required this.momentsUploadNSFW,
       required this.momentsUploadOC,
       required this.momentsUploadUnlist,
-      required this.momentsUploadCrosspost})
+      required this.momentsUploadCrosspost,
+      required this.customMomentTitle,
+      required this.customMomentBody})
       : super(key: key);
 
   @override
@@ -130,6 +134,13 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
   void initState() {
     super.initState();
     _uploadBloc = BlocProvider.of<IPFSUploadBloc>(context);
+    if (widget.customMomentTitle != "") {
+      _uploadData.title = widget.customMomentTitle;
+    }
+    if (widget.customMomentBody != "") {
+      _uploadData.description = widget.customMomentBody;
+    }
+
     loadHiveSignerAccessToken();
   }
 

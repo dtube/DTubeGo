@@ -44,8 +44,11 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   late TextEditingController _templateTitleController;
   late TextEditingController _templateBodyController;
   late TextEditingController _templateTagController;
+  late String _templatePreviewBody;
 
-  late String _previewBody;
+  late TextEditingController _momentTitleController;
+  late TextEditingController _momentBodyController;
+  late String _momentPreviewBody;
 
   late List<String> _selectedExploreTags;
 
@@ -75,19 +78,23 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   bool _showHivesignerHints = false;
 
   List<String> _imageUploadProviders = ['imgur', 'ipfs'];
+  List<int> _visitedTabs = [];
 
   @override
   void initState() {
     settings = {"none": "none"};
-    _tabController = new TabController(length: 4, vsync: this);
+    _tabController = new TabController(length: 5, vsync: this);
 
     _settingsBloc = BlocProvider.of<SettingsBloc>(context);
     _settingsBloc.add(FetchSettingsEvent()); // statements;
     _templateBodyController = TextEditingController(text: "");
     _templateTitleController = TextEditingController(text: "");
     _templateTagController = TextEditingController(text: "");
+    _momentBodyController = TextEditingController(text: "");
+    _momentTitleController = TextEditingController(text: "");
 
-    _previewBody = "";
+    _templatePreviewBody = "";
+    _momentPreviewBody = "";
 
     super.initState();
   }
@@ -152,6 +159,10 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           _defaultUploadVotingWeight.toString(),
                       sec.settingKey_DefaultMomentVotingWeigth:
                           _defaultMomentVotingWeight.toString(),
+                      sec.settingKey_momentTitle:
+                          _momentTitleController.value.text,
+                      sec.settingKey_momentBody:
+                          _momentBodyController.value.text,
                     };
                     _settingsBloc.add(PushSettingsEvent(
                         newSettings: newSettings, context: context));
@@ -207,8 +218,20 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                 text: settings[sec.settingKey_templateBody] != null
                     ? settings[sec.settingKey_templateBody]!
                     : "");
-            _previewBody = settings[sec.settingKey_templateBody] != null
+            _templatePreviewBody = settings[sec.settingKey_templateBody] != null
                 ? settings[sec.settingKey_templateBody]!
+                : "";
+
+            _momentTitleController = new TextEditingController(
+                text: settings[sec.settingKey_momentTitle] != null
+                    ? settings[sec.settingKey_momentTitle]!
+                    : "");
+            _momentBodyController = new TextEditingController(
+                text: settings[sec.settingKey_momentBody] != null
+                    ? settings[sec.settingKey_momentBody]!
+                    : "");
+            _momentPreviewBody = settings[sec.settingKey_momentBody] != null
+                ? settings[sec.settingKey_momentBody]!
                 : "";
 
             _templateTagController = new TextEditingController(
@@ -281,6 +304,19 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                 unselectedLabelColor: Colors.grey,
                 labelColor: globalAlmostWhite,
                 indicatorColor: globalRed,
+                onTap: (index) {
+                  setState(() {
+                    if (!_visitedTabs.contains(index)) {
+                      // add page to visited to avoid rebuilding the animation
+                      _visitedTabs.add(index);
+                    }
+                    //add first tab to visited because it is the default one
+                    if (index > 0 && !_visitedTabs.contains(0)) {
+                      // add page to visited to avoid rebuilding the animation
+                      _visitedTabs.add(0);
+                    }
+                  });
+                },
                 tabs: [
                   Tab(
                     text: 'General',
@@ -289,10 +325,13 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                     text: 'Avalon',
                   ),
                   Tab(
-                    text: 'Posting',
+                    text: 'Hive',
                   ),
                   Tab(
-                    text: 'Template',
+                    text: 'Uploads',
+                  ),
+                  Tab(
+                    text: 'Moments',
                   ),
                 ],
                 controller: _tabController,
@@ -309,6 +348,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           children: [
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 200),
+                              avoidAnimation: _visitedTabs.contains(0),
                               childs: [
                                 Stack(
                                   children: [
@@ -399,6 +439,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
 
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
+                              avoidAnimation: _visitedTabs.contains(0),
                               childs: [
                                 Stack(
                                   children: [
@@ -492,6 +533,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             // ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 600),
+                              avoidAnimation: _visitedTabs.contains(0),
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -569,6 +611,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             SizedBox(height: 16),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 200),
+                              avoidAnimation: _visitedTabs.contains(1),
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -672,6 +715,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
+                              avoidAnimation: _visitedTabs.contains(1),
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -778,7 +822,79 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           children: [
                             SizedBox(height: 16),
                             DTubeFormCard(
+                              avoidAnimation: _visitedTabs.contains(2),
+                              waitBeforeFadeIn: Duration(milliseconds: 600),
+                              childs: [
+                                Stack(children: [
+                                  ShowHintIcon(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showHivesignerHints =
+                                            !_showHivesignerHints;
+                                      });
+                                    },
+                                    alignment: Alignment.topRight,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 1.h, bottom: 1.h),
+                                    child: Text("Hivesigner settings",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                ]),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 100.w,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                              "Cross-posting to the hive blockchain is possible by authorizing the app via hivesigner:",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: BlocProvider<HivesignerBloc>(
+                                              create: (BuildContext context) =>
+                                                  HivesignerBloc(
+                                                      repository:
+                                                          HivesignerRepositoryImpl()),
+                                              child: HiveSignerButton(
+                                                username: _hiveUsername,
+                                              ),
+                                            ),
+                                          ),
+                                          VisibilityHintText(
+                                            showHint: _showHivesignerHints,
+                                            hintText:
+                                                "This authorizing does not include voting, commenting or any other functionality of the hive blockchain! For security reasons you have to renew the connection every 7 days.",
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                      // REGULAR UPLOAD SETTINGS &  TEMPLATE
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
+                              child: Text("Default Values for Regular Uploads",
+                                  style: Theme.of(context).textTheme.headline3),
+                            ),
+                            DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 200),
+                              avoidAnimation: _visitedTabs.contains(2),
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -939,7 +1055,128 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               ],
                             ),
                             DTubeFormCard(
+                              avoidAnimation: _visitedTabs.contains(3),
+                              waitBeforeFadeIn: Duration(milliseconds: 200),
+                              childs: [
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 1.h, bottom: 1.h),
+                                  child: Text("Title",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                ),
+                                Divider(
+                                  height: 1,
+                                  thickness: 1,
+                                  color: Colors.black,
+                                ),
+                                TextFormField(
+                                  controller: _templateTitleController,
+                                  cursorColor: globalRed,
+                                  maxLines: 1,
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                              ],
+                            ),
+                            DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
+                              avoidAnimation: _visitedTabs.contains(3),
+                              childs: [
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 1.h, bottom: 1.h),
+                                  child: Text("Body",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                ),
+                                Divider(
+                                  height: 1,
+                                  thickness: 1,
+                                  color: Colors.black,
+                                ),
+                                TextFormField(
+                                  controller: _templateBodyController,
+                                  cursorColor: globalRed,
+                                  maxLines: 6,
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                  onChanged: (String text) {
+                                    setState(() {
+                                      _templatePreviewBody = text;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                            DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 600),
+                              avoidAnimation: _visitedTabs.contains(3),
+                              childs: [
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 1.h, bottom: 1.h),
+                                  child: Text("Tag",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                ),
+                                Divider(
+                                  height: 1,
+                                  thickness: 1,
+                                  color: Colors.black,
+                                ),
+                                TextFormField(
+                                  controller: _templateTagController,
+                                  cursorColor: globalRed,
+                                  maxLines: 1,
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                              ],
+                            ),
+                            DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 800),
+                              avoidAnimation: _visitedTabs.contains(3),
+                              childs: [
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 1.h, bottom: 1.h),
+                                  child: Text("Preview",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                ),
+                                Divider(
+                                  height: 1,
+                                  thickness: 1,
+                                  color: Colors.black,
+                                ),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                Container(
+                                  width: 90.w,
+                                  height: 200,
+                                  child:
+                                      MarkdownBody(data: _templatePreviewBody),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      // MOMENT SETTINGS & TEMPLATE
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
+                              child: Text("Moment Values",
+                                  style: Theme.of(context).textTheme.headline3),
+                            ),
+                            DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 400),
+                              avoidAnimation: _visitedTabs.contains(4),
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -1112,78 +1349,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               ],
                             ),
                             DTubeFormCard(
-                              waitBeforeFadeIn: Duration(milliseconds: 600),
-                              childs: [
-                                Stack(children: [
-                                  ShowHintIcon(
-                                    onPressed: () {
-                                      setState(() {
-                                        _showHivesignerHints =
-                                            !_showHivesignerHints;
-                                      });
-                                    },
-                                    alignment: Alignment.topRight,
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(top: 1.h, bottom: 1.h),
-                                    child: Text("Hivesigner settings",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5),
-                                  ),
-                                ]),
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 100.w,
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                              "Cross-posting to the hive blockchain is possible by authorizing the app via hivesigner:",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: BlocProvider<HivesignerBloc>(
-                                              create: (BuildContext context) =>
-                                                  HivesignerBloc(
-                                                      repository:
-                                                          HivesignerRepositoryImpl()),
-                                              child: HiveSignerButton(
-                                                username: _hiveUsername,
-                                              ),
-                                            ),
-                                          ),
-                                          VisibilityHintText(
-                                            showHint: _showHivesignerHints,
-                                            hintText:
-                                                "This authorizing does not include voting, commenting or any other functionality of the hive blockchain! For security reasons you have to renew the connection every 7 days.",
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                          ],
-                        ),
-                      ),
-                      // TEMPLATE
-                      SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
-                              child: Text(
-                                  "This template will be preselected for new uploads:",
-                                  style: Theme.of(context).textTheme.bodyText1),
-                            ),
-                            DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 200),
+                              avoidAnimation: _visitedTabs.contains(4),
                               childs: [
                                 Padding(
                                   padding:
@@ -1199,7 +1366,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                   color: Colors.black,
                                 ),
                                 TextFormField(
-                                  controller: _templateTitleController,
+                                  controller: _momentTitleController,
                                   cursorColor: globalRed,
                                   maxLines: 1,
                                   style: Theme.of(context).textTheme.bodyText1,
@@ -1208,6 +1375,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
+                              avoidAnimation: _visitedTabs.contains(4),
                               childs: [
                                 Padding(
                                   padding:
@@ -1223,44 +1391,21 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                   color: Colors.black,
                                 ),
                                 TextFormField(
-                                  controller: _templateBodyController,
+                                  controller: _momentBodyController,
                                   cursorColor: globalRed,
                                   maxLines: 6,
                                   style: Theme.of(context).textTheme.bodyText1,
                                   onChanged: (String text) {
                                     setState(() {
-                                      _previewBody = text;
+                                      _momentPreviewBody = text;
                                     });
                                   },
                                 ),
                               ],
                             ),
                             DTubeFormCard(
-                              waitBeforeFadeIn: Duration(milliseconds: 600),
-                              childs: [
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(top: 1.h, bottom: 1.h),
-                                  child: Text("Tag",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6),
-                                ),
-                                Divider(
-                                  height: 1,
-                                  thickness: 1,
-                                  color: Colors.black,
-                                ),
-                                TextFormField(
-                                  controller: _templateTagController,
-                                  cursorColor: globalRed,
-                                  maxLines: 1,
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                ),
-                              ],
-                            ),
-                            DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 800),
+                              avoidAnimation: _visitedTabs.contains(4),
                               childs: [
                                 Padding(
                                   padding:
@@ -1281,7 +1426,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 Container(
                                   width: 90.w,
                                   height: 200,
-                                  child: MarkdownBody(data: _previewBody),
+                                  child: MarkdownBody(data: _momentPreviewBody),
                                 )
                               ],
                             ),

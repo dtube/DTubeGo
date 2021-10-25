@@ -32,6 +32,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           sec.authKey_usernameKey: username,
           sec.settingKey_templateTitle: await sec.getTemplateTitle(),
           sec.settingKey_templateBody: await sec.getTemplateBody(),
+          sec.settingKey_momentTitle: await sec.getMomentTitle(),
+          sec.settingKey_momentBody: await sec.getMomentBody(),
           sec.settingKey_templateTag: await sec.getTemplateTag(),
           sec.settingKey_hiveSignerUsername: await sec.getHiveSignerUsername(),
           sec.settingKey_hiveSignerAccessTokenExpiresIn:
@@ -78,6 +80,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           event.newSettings[sec.settingKey_templateTitle]!,
           event.newSettings[sec.settingKey_templateBody]!,
           event.newSettings[sec.settingKey_templateTag]!,
+        );
+        await sec.persistMomentTemplateSettings(
+          event.newSettings[sec.settingKey_momentTitle]!,
+          event.newSettings[sec.settingKey_momentBody]!,
         );
         await sec.persistDefaultUploadAndMomentSettings(
           event.newSettings[sec.settingKey_DefaultUploadVotingWeigth]!,

@@ -104,6 +104,7 @@ class FeedList extends StatelessWidget {
           } else {
             return Container(
               height: 110.h,
+              width: width,
               child: BlocBuilder<FeedBloc, FeedState>(
                 builder: (context, state) {
                   if (state is FeedInitialState ||
@@ -126,7 +127,7 @@ class FeedList extends StatelessWidget {
                   }
                   return Container(
                     height: 100.h,
-                    width: 120.w,
+                    width: width,
                     child: Stack(
                       children: [
                         Padding(
@@ -418,7 +419,7 @@ class _PostListCardState extends State<PostListCard>
       return Padding(
         padding: EdgeInsets.only(left: 5.w),
         child: PostListCardNarrow(
-          width: widget.width,
+          width: widget.width * 0.85,
           height: widget.heightPerEntry,
           blur: widget.blur,
           thumbnailUrl: widget.thumbnailUrl,

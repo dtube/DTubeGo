@@ -150,7 +150,7 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 0.5.w),
-                              child: DTubeLogoShadowed(size: 2.w),
+                              child: DTubeLogoShadowed(size: 4.w),
                             ),
                           ],
                         ),

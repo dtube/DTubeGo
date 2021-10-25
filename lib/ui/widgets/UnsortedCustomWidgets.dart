@@ -29,24 +29,42 @@ AppBar dtubeSubAppBar(
 
 class DTubeFormCard extends StatelessWidget {
   DTubeFormCard(
-      {Key? key, required this.childs, required this.waitBeforeFadeIn})
+      {Key? key,
+      required this.childs,
+      required this.waitBeforeFadeIn,
+      required this.avoidAnimation})
       : super(key: key);
   List<Widget> childs;
   Duration waitBeforeFadeIn;
+  bool avoidAnimation;
 
   @override
   Widget build(BuildContext context) {
-    return SlideInLeft(
-      preferences: AnimationPreferences(offset: waitBeforeFadeIn),
-      child: Card(
-        color: globalBlue,
-        elevation: 8,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, children: childs),
-        ),
-      ),
-    );
+    return avoidAnimation
+        ? Card(
+            color: globalBlue,
+            elevation: 8,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: childs),
+            ),
+          )
+        : SlideInLeft(
+            preferences: AnimationPreferences(
+              offset: waitBeforeFadeIn,
+            ),
+            child: Card(
+              color: globalBlue,
+              elevation: 8,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: childs),
+              ),
+            ),
+          );
   }
 }

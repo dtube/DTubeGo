@@ -186,30 +186,32 @@ class _DTubeLogoPulseWaveState extends State<DTubeLogoPulseWave>
       height: widget.size,
       child: Stack(
         children: [
-          ClipOval(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 0.0),
-              child: WaveWidget(
-                config: CustomConfig(
-                  colors: [
-                    Colors.blue[300]!,
-                    Colors.blue[600]!,
-                    Colors.blue[800]!,
-                    Colors.blue[900]!,
-                  ],
-                  durations: [18000, 8000, 5000, 12000],
-                  heightPercentages: [
-                    0.99 - widget.progressPercent / 100,
-                    0.86 - widget.progressPercent / 100,
-                    0.88 - widget.progressPercent / 100,
-                    0.90 - widget.progressPercent / 100,
-                  ],
-                  //heightPercentages: [0.25, 0.26, 0.28, 0.31],
-                ),
-                waveAmplitude: 0,
-                size: Size(
-                  widget.size,
-                  widget.size,
+          Center(
+            child: ClipOval(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 0.0),
+                child: WaveWidget(
+                  config: CustomConfig(
+                    colors: [
+                      Colors.blue[300]!,
+                      Colors.blue[600]!,
+                      Colors.blue[800]!,
+                      Colors.blue[900]!,
+                    ],
+                    durations: [18000, 8000, 5000, 12000],
+                    heightPercentages: [
+                      0.99 - widget.progressPercent / 100,
+                      0.86 - widget.progressPercent / 100,
+                      0.88 - widget.progressPercent / 100,
+                      0.90 - widget.progressPercent / 100,
+                    ],
+                    //heightPercentages: [0.25, 0.26, 0.28, 0.31],
+                  ),
+                  waveAmplitude: 0,
+                  size: Size(
+                    widget.size,
+                    widget.size,
+                  ),
                 ),
               ),
             ),
