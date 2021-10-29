@@ -558,8 +558,10 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                 ),
                 SizedBox(width: 2.w),
                 FadeInLeftBig(
-                  preferences:
-                      AnimationPreferences(offset: Duration(milliseconds: 300)),
+                  preferences: AnimationPreferences(
+                    offset: Duration(milliseconds: 100),
+                    duration: Duration(milliseconds: 350),
+                  ),
                   child: Container(
                     width: 45.w,
                     child: InkWell(
@@ -817,7 +819,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
         ),
         FadeInDown(
           preferences:
-              AnimationPreferences(offset: Duration(milliseconds: 1300)),
+              AnimationPreferences(offset: Duration(milliseconds: 500)),
           child: Padding(
             padding: EdgeInsets.only(left: 12.w),
             child: Row(
