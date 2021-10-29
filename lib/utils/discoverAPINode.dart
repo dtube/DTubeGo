@@ -18,19 +18,23 @@ Future<String> discoverAPINode() async {
   do {
     // check response time of each node
     for (var node in _nodes) {
-      var _beforeRequestMicroSeconds = DateTime.now().microsecondsSinceEpoch;
-      var response = await http
-          .get(Uri.parse(node + '/count'))
-          .timeout(AppConfig.nodeDescoveryTimeout, onTimeout: () {
-        // Time has run out, do what you wanted to do.
-        return http.Response('Error', 500); // Replace 500 with your http code.
-      });
-      if (response.statusCode == 200) {
-        var _afterRequestMicroSeconds = DateTime.now().microsecondsSinceEpoch;
+      print("checking " + node);
+      try {
+        var _beforeRequestMicroSeconds = DateTime.now().microsecondsSinceEpoch;
+        var response = await http
+            .get(Uri.parse(node + '/count'))
+            .timeout(AppConfig.nodeDescoveryTimeout, onTimeout: () {
+          // Time has run out, do what you wanted to do.
+          return http.Response(
+              'Error', 500); // Replace 500 with your http code.
+        });
+        if (response.statusCode == 200) {
+          var _afterRequestMicroSeconds = DateTime.now().microsecondsSinceEpoch;
 
-        _nodeResponses[node] =
-            _afterRequestMicroSeconds - _beforeRequestMicroSeconds;
-      }
+          _nodeResponses[node] =
+              _afterRequestMicroSeconds - _beforeRequestMicroSeconds;
+        }
+      } catch (e) {}
     }
     // sort all responses by their response time
     _sortedApiNodesByResponseTime = SplayTreeMap.from(_nodeResponses,
