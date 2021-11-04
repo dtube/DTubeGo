@@ -28,6 +28,7 @@ class SendPostToHive extends HivesignerEvent {
   final String videoUrl;
   final String storageType;
   final String tag;
+  final String dtubeuser;
 
   SendPostToHive(
       {required this.postTitle,
@@ -37,7 +38,8 @@ class SendPostToHive extends HivesignerEvent {
       required this.thumbnailUrl,
       required this.videoUrl,
       required this.storageType,
-      required this.tag});
+      required this.tag,
+      required this.dtubeuser});
   @override
   List<Object> get props => List.empty();
 }

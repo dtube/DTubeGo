@@ -51,7 +51,8 @@ class HivesignerBloc extends Bloc<HivesignerEvent, HivesignerState> {
           event.thumbnailUrl,
           event.videoUrl,
           event.storageType,
-          event.tag);
+          event.tag,
+          event.dtubeuser);
       yield HiveSignerTransactionBroadcasting();
       bool postPublished =
           await repository.broadcastPostToHive(transactionBody);

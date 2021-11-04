@@ -18,7 +18,8 @@ abstract class HivesignerRepository {
       String thumbnailUrl,
       String videoUrl,
       String storageType,
-      String tag);
+      String tag,
+      String dtubeuser);
 }
 
 // TODO: error handling
@@ -106,10 +107,11 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
       String thumbnailUrl,
       String videoUrl,
       String storageType,
-      String tag) async {
+      String tag,
+      String dtubeuser) async {
     String _hiveUsername = await sec.getHiveSignerUsername();
-    String _hiveBody = genHiveBody(
-        _hiveUsername, permlink, body, thumbnailUrl, videoUrl, storageType);
+    String _hiveBody = genHiveBody(_hiveUsername, permlink, body, thumbnailUrl,
+        videoUrl, storageType, dtubeuser);
 
     var _transactionJson = {
       "operations": [
@@ -119,7 +121,7 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
             "parent_author": "",
             "parent_permlink": 'hive-196037',
 
-            "author": _hiveUsername,
+            "author": _hiveUsername.replaceAll(' ', ''),
             "category": 'hive-196037', // dtube community
             "permlink": permlink,
             "title": title,
@@ -131,7 +133,7 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
         [
           "comment_options",
           {
-            "author": _hiveUsername,
+            "author": _hiveUsername.replaceAll(' ', ''),
             "permlink": permlink,
             "max_accepted_payout": "1000000.000 HBD",
             "percent_hbd": 10000,
@@ -155,10 +157,20 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
     return json.encode(_transactionJson);
   }
 
-  String genHiveBody(String author, String permlink, String postBody,
-      String thumbnailUrl, String videoUrl, String storageType) {
+  String genHiveBody(
+      String author,
+      String permlink,
+      String postBody,
+      String thumbnailUrl,
+      String videoUrl,
+      String storageType,
+      String dtubeusername) {
     String body = '<center>';
-    body += '<a href=\'https://d.tube/#!/v/' + author + '/' + permlink + '\'>';
+    body += '<a href=\'https://d.tube/#!/v/' +
+        dtubeusername +
+        '/' +
+        permlink +
+        '\'>';
     if (storageType == "ipfs") {
       body += '<img src=\'' +
           AppConfig.ipfsSnapUrl +
@@ -173,7 +185,7 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
 
     body += '\n\n<hr>';
     body += '<a href=\'https://d.tube/#!/v/' +
-        author +
+        dtubeusername +
         '/' +
         permlink +
         '\'> ▶️ DTube</a><br />';

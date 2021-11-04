@@ -189,345 +189,340 @@ class _UploadFormState extends State<UploadForm> {
   @override
   Widget build(BuildContext context) {
     // bloc listener to react on avalon uploaded state
-    return BlocListener<TransactionBloc, TransactionState>(
-      listener: (context, stateUpload) {
-        if (stateUpload is TransactionSent) {
-          // if the user wants to crosspost onto hive
-          if (stateUploadData.crossPostToHive) {
-            // fire event for hivesigner bloc
-            _hivesignerBloc.add(SendPostToHive(
-                postTitle: stateUploadData.title,
-                postBody: stateUploadData.description,
-                permlink: stateUploadData.link,
-                dtubeUrl: stateUploadData.link,
-                thumbnailUrl: stateUploadData.thumbnailLocation,
-                videoUrl: stateUploadData.videoSourceHash,
-                storageType: "ipfs",
-                tag: stateUploadData.tag));
-          }
+    return
+        // BlocListener<TransactionBloc, TransactionState>(
+        //   listener: (context, stateUpload) {
+        //     if (stateUpload is TransactionSent) {
+        //       // if the user wants to crosspost onto hive
+        //       if (stateUploadData.crossPostToHive) {
+        //         // fire event for hivesigner bloc
+        //         _hivesignerBloc.add(SendPostToHive(
+        //             postTitle: stateUploadData.title,
+        //             postBody: stateUploadData.description,
+        //             permlink: stateUploadData.link,
+        //             dtubeUrl: stateUploadData.link,
+        //             thumbnailUrl: stateUploadData.thumbnailLocation,
+        //             videoUrl: stateUploadData.videoSourceHash,
+        //             storageType: "ipfs",
+        //             tag: stateUploadData.tag,
+        //             dtubeuser: ));
+        //       }
+        //     }
+        //   },
+        //   // bloc listener for reacting when DTC balance is fetched
+        //   child:
+        BlocListener<UserBloc, UserState>(
+      listener: (context, stateDTCVP) {
+        if (stateDTCVP is UserDTCVPLoadedState) {
+          setState(() {
+            stateUploadData.dtcBalance = stateDTCVP.dtcBalance;
+            stateUploadData.vpBalance = stateDTCVP.vtBalance["v"]!;
+          });
         }
       },
-      // bloc listener for reacting when DTC balance is fetched
-      child: BlocListener<UserBloc, UserState>(
-        listener: (context, stateDTCVP) {
-          if (stateDTCVP is UserDTCVPLoadedState) {
+      // bloc listener for reacting when settings got loaded
+      child: BlocListener<SettingsBloc, SettingsState>(
+        listener: (context, stateSettings) {
+          if (stateSettings is SettingsLoadedState) {
             setState(() {
-              stateUploadData.dtcBalance = stateDTCVP.dtcBalance;
-              stateUploadData.vpBalance = stateDTCVP.vtBalance["v"]!;
+              stateUploadData.vpPercent = double.parse(stateSettings
+                  .settings[settingKey_DefaultUploadVotingWeigth]!);
+              if (_titleController.text.isEmpty) {
+                _titleController.text =
+                    stateSettings.settings[settingKey_templateTitle]!;
+              }
+              if (_descController.text.isEmpty) {
+                _descController.text =
+                    stateSettings.settings[settingKey_templateBody]!;
+              }
+              if (_tagController.text.isEmpty) {
+                _tagController.text =
+                    stateSettings.settings[settingKey_templateTag]!;
+              }
+              stateUploadData.nSFWContent =
+                  stateSettings.settings[settingKey_DefaultUploadNSFW]! ==
+                      "true";
+
+              stateUploadData.originalContent =
+                  stateSettings.settings[settingKey_DefaultUploadOC]! == "true";
+
+              stateUploadData.unlistVideo =
+                  stateSettings.settings[settingKey_DefaultUploadUnlist]! ==
+                      "true";
+
+              stateUploadData.crossPostToHive =
+                  stateSettings.settings[settingKey_DefaultUploadCrosspost]! ==
+                      "true";
+
+              if (stateSettings.settings[settingKey_hiveSignerUsername] !=
+                      null &&
+                  stateSettings.settings[settingKey_hiveSignerUsername] != "") {
+                DateTime requestedOn = DateTime.parse(stateSettings
+                    .settings[settingKey_hiveSignerAccessTokenRequestedOn]!);
+                DateTime invalidOn = requestedOn.add(Duration(
+                    seconds: int.parse(stateSettings.settings[
+                        settingKey_hiveSignerAccessTokenExpiresIn]!)));
+                if (invalidOn.isAfter(DateTime.now())) {
+                  stateUploadData.crossPostToHive = true;
+                  hiveSignerValid = true;
+                  hiveSignerUsername =
+                      stateSettings.settings[settingKey_hiveSignerUsername]!;
+                }
+              }
+              lastPostWithinCooldown =
+                  stateSettings.settings[settingKey_HiveStillInCooldown] ==
+                      "true";
             });
           }
         },
-        // bloc listener for reacting when settings got loaded
-        child: BlocListener<SettingsBloc, SettingsState>(
-          listener: (context, stateSettings) {
-            if (stateSettings is SettingsLoadedState) {
-              setState(() {
-                stateUploadData.vpPercent = double.parse(stateSettings
-                    .settings[settingKey_DefaultUploadVotingWeigth]!);
-                if (_titleController.text.isEmpty) {
-                  _titleController.text =
-                      stateSettings.settings[settingKey_templateTitle]!;
-                }
-                if (_descController.text.isEmpty) {
-                  _descController.text =
-                      stateSettings.settings[settingKey_templateBody]!;
-                }
-                if (_tagController.text.isEmpty) {
-                  _tagController.text =
-                      stateSettings.settings[settingKey_templateTag]!;
-                }
-                stateUploadData.nSFWContent =
-                    stateSettings.settings[settingKey_DefaultUploadNSFW]! ==
-                        "true";
-
-                stateUploadData.originalContent =
-                    stateSettings.settings[settingKey_DefaultUploadOC]! ==
-                        "true";
-
-                stateUploadData.unlistVideo =
-                    stateSettings.settings[settingKey_DefaultUploadUnlist]! ==
-                        "true";
-
-                stateUploadData.crossPostToHive = stateSettings
-                        .settings[settingKey_DefaultUploadCrosspost]! ==
-                    "true";
-
-                if (stateSettings.settings[settingKey_hiveSignerUsername] !=
-                        null &&
-                    stateSettings.settings[settingKey_hiveSignerUsername] !=
-                        "") {
-                  DateTime requestedOn = DateTime.parse(stateSettings
-                      .settings[settingKey_hiveSignerAccessTokenRequestedOn]!);
-                  DateTime invalidOn = requestedOn.add(Duration(
-                      seconds: int.parse(stateSettings.settings[
-                          settingKey_hiveSignerAccessTokenExpiresIn]!)));
-                  if (invalidOn.isAfter(DateTime.now())) {
-                    stateUploadData.crossPostToHive = true;
-                    hiveSignerValid = true;
-                    hiveSignerUsername =
-                        stateSettings.settings[settingKey_hiveSignerUsername]!;
-                  }
-                }
-                lastPostWithinCooldown =
-                    stateSettings.settings[settingKey_HiveStillInCooldown] ==
-                        "true";
-              });
-            }
-          },
-          child: SingleChildScrollView(
-            physics: ClampingScrollPhysics(),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  videoPreview(),
-                  SizedBox(height: 8),
-                  stateUploadData.videoLocation != ""
-                      ? basicData()
-                      : SizedBox(height: 50),
-                  SizedBox(height: 8),
-                  _formIsFilled ? imagePreview() : SizedBox(height: 50),
-                  _formIsFilled
-                      ? Column(
-                          children: [
-                            moreSettings(),
-                            SizedBox(height: 8),
-                            InputChip(
-                              backgroundColor: globalRed,
-                              label: Text("upload",
-                                  style: TextStyle(fontSize: 24)),
-                              onPressed: _formIsFilled
-                                  ? () async {
-                                      String _stillInHiveCooldown = await sec
-                                          .getLastHivePostWithin5MinCooldown();
-                                      if (stateUploadData.crossPostToHive &&
-                                          _stillInHiveCooldown == "true") {
-                                        showDialog<String>(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              PopUpDialogWithTitleLogo(
-                                                  child: SingleChildScrollView(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .stretch,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Text(
-                                                            "Please wait a bit!",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .headline4,
-                                                            textAlign: TextAlign
-                                                                .center),
-                                                        SizedBox(height: 2.h),
-                                                        Text(
-                                                            "You want to cross post to hive but you already have posted something within the last 5 minutes.",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyText1,
-                                                            textAlign: TextAlign
-                                                                .center),
-                                                        Text(
-                                                            "Please wait for the 5 min hive cooldown to expire and try it again.",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyText1,
-                                                            textAlign: TextAlign
-                                                                .center),
-                                                        SizedBox(height: 3.h),
-                                                        Text(
-                                                            "This cooldown is a property coming from the hive blockchain. We just want to avoid upload errors when you crosspost.",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .headline6!
-                                                                .copyWith(
-                                                                    color:
-                                                                        globalRed),
-                                                            textAlign: TextAlign
-                                                                .center),
-                                                        SizedBox(height: 2.h),
-                                                        InkWell(
-                                                            child: Container(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      top: 20.0,
-                                                                      bottom:
+        child: SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                videoPreview(),
+                SizedBox(height: 8),
+                stateUploadData.videoLocation != ""
+                    ? basicData()
+                    : SizedBox(height: 50),
+                SizedBox(height: 8),
+                _formIsFilled ? imagePreview() : SizedBox(height: 50),
+                _formIsFilled
+                    ? Column(
+                        children: [
+                          moreSettings(),
+                          SizedBox(height: 8),
+                          InputChip(
+                            backgroundColor: globalRed,
+                            label:
+                                Text("upload", style: TextStyle(fontSize: 24)),
+                            onPressed: _formIsFilled
+                                ? () async {
+                                    String _stillInHiveCooldown = await sec
+                                        .getLastHivePostWithin5MinCooldown();
+                                    if (stateUploadData.crossPostToHive &&
+                                        _stillInHiveCooldown == "true") {
+                                      showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            PopUpDialogWithTitleLogo(
+                                                child: SingleChildScrollView(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .stretch,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text("Please wait a bit!",
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline4,
+                                                          textAlign:
+                                                              TextAlign.center),
+                                                      SizedBox(height: 2.h),
+                                                      Text(
+                                                          "You want to cross post to hive but you already have posted something within the last 5 minutes.",
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyText1,
+                                                          textAlign:
+                                                              TextAlign.center),
+                                                      Text(
+                                                          "Please wait for the 5 min hive cooldown to expire and try it again.",
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyText1,
+                                                          textAlign:
+                                                              TextAlign.center),
+                                                      SizedBox(height: 3.h),
+                                                      Text(
+                                                          "This cooldown is a property coming from the hive blockchain. We just want to avoid upload errors when you crosspost.",
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headline6!
+                                                              .copyWith(
+                                                                  color:
+                                                                      globalRed),
+                                                          textAlign:
+                                                              TextAlign.center),
+                                                      SizedBox(height: 2.h),
+                                                      InkWell(
+                                                          child: Container(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 20.0,
+                                                                    bottom:
+                                                                        20.0),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: globalRed,
+                                                              borderRadius: BorderRadius.only(
+                                                                  bottomLeft: Radius
+                                                                      .circular(
                                                                           20.0),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color:
-                                                                    globalRed,
-                                                                borderRadius: BorderRadius.only(
-                                                                    bottomLeft:
-                                                                        Radius.circular(
-                                                                            20.0),
-                                                                    bottomRight:
-                                                                        Radius.circular(
-                                                                            20.0)),
-                                                              ),
-                                                              child: Text(
-                                                                "Okay thanks!",
-                                                                style: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .headline4,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                              ),
+                                                                  bottomRight: Radius
+                                                                      .circular(
+                                                                          20.0)),
                                                             ),
-                                                            onTap: () {
-                                                              Navigator.of(
+                                                            child: Text(
+                                                              "Okay thanks!",
+                                                              style: Theme.of(
                                                                       context)
-                                                                  .pop();
-                                                              FocusScope.of(
-                                                                      context)
-                                                                  .unfocus();
-                                                            }),
-                                                      ],
-                                                    ),
+                                                                  .textTheme
+                                                                  .headline4,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                          onTap: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            FocusScope.of(
+                                                                    context)
+                                                                .unfocus();
+                                                          }),
+                                                    ],
                                                   ),
-                                                  titleWidget: Center(
-                                                    child: FaIcon(
-                                                      FontAwesomeIcons
-                                                          .cloudUploadAlt,
-                                                      size: 8.h,
-                                                    ),
+                                                ),
+                                                titleWidget: Center(
+                                                  child: FaIcon(
+                                                    FontAwesomeIcons
+                                                        .cloudUploadAlt,
+                                                    size: 8.h,
                                                   ),
-                                                  callbackOK: () {},
-                                                  titleWidgetPadding: 10.w,
-                                                  titleWidgetSize: 10.w),
-                                        );
-                                      } else {
-                                        widget.callback(stateUploadData);
+                                                ),
+                                                callbackOK: () {},
+                                                titleWidgetPadding: 10.w,
+                                                titleWidgetSize: 10.w),
+                                      );
+                                    } else {
+                                      widget.callback(stateUploadData);
 
-                                        showDialog<String>(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              PopUpDialogWithTitleLogo(
-                                                  child: SingleChildScrollView(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .stretch,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Text("Amazing!",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .headline4,
-                                                            textAlign: TextAlign
-                                                                .center),
-                                                        SizedBox(height: 2.h),
-                                                        Text(
-                                                            "Your new video is uploading right now and this could take some time...",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyText1,
-                                                            textAlign: TextAlign
-                                                                .center),
-                                                        Text(
-                                                            "It is safe to browse DTube Go in the meantime. Go share some feedback and votes on other videos of the community.",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyText1,
-                                                            textAlign: TextAlign
-                                                                .center),
-                                                        SizedBox(height: 3.h),
-                                                        Text(
-                                                            "Make sure to not close the app or lock your screen until the upload is finished!",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .headline6!
-                                                                .copyWith(
-                                                                    color:
-                                                                        globalRed),
-                                                            textAlign: TextAlign
-                                                                .center),
-                                                        SizedBox(height: 2.h),
-                                                        InkWell(
-                                                            child: Container(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      top: 20.0,
-                                                                      bottom:
+                                      showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            PopUpDialogWithTitleLogo(
+                                                child: SingleChildScrollView(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .stretch,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text("Amazing!",
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline4,
+                                                          textAlign:
+                                                              TextAlign.center),
+                                                      SizedBox(height: 2.h),
+                                                      Text(
+                                                          "Your new video is uploading right now and this could take some time...",
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyText1,
+                                                          textAlign:
+                                                              TextAlign.center),
+                                                      Text(
+                                                          "It is safe to browse DTube Go in the meantime. Go share some feedback and votes on other videos of the community.",
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyText1,
+                                                          textAlign:
+                                                              TextAlign.center),
+                                                      SizedBox(height: 3.h),
+                                                      Text(
+                                                          "Make sure to not close the app or lock your screen until the upload is finished!",
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headline6!
+                                                              .copyWith(
+                                                                  color:
+                                                                      globalRed),
+                                                          textAlign:
+                                                              TextAlign.center),
+                                                      SizedBox(height: 2.h),
+                                                      InkWell(
+                                                          child: Container(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 20.0,
+                                                                    bottom:
+                                                                        20.0),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: globalRed,
+                                                              borderRadius: BorderRadius.only(
+                                                                  bottomLeft: Radius
+                                                                      .circular(
                                                                           20.0),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color:
-                                                                    globalRed,
-                                                                borderRadius: BorderRadius.only(
-                                                                    bottomLeft:
-                                                                        Radius.circular(
-                                                                            20.0),
-                                                                    bottomRight:
-                                                                        Radius.circular(
-                                                                            20.0)),
-                                                              ),
-                                                              child: Text(
-                                                                "Allright!",
-                                                                style: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .headline4,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                              ),
+                                                                  bottomRight: Radius
+                                                                      .circular(
+                                                                          20.0)),
                                                             ),
-                                                            onTap: () {
-                                                              Navigator.of(
+                                                            child: Text(
+                                                              "Allright!",
+                                                              style: Theme.of(
                                                                       context)
-                                                                  .pop();
-                                                              FocusScope.of(
-                                                                      context)
-                                                                  .unfocus();
-                                                            }),
-                                                      ],
-                                                    ),
+                                                                  .textTheme
+                                                                  .headline4,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                          onTap: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            FocusScope.of(
+                                                                    context)
+                                                                .unfocus();
+                                                          }),
+                                                    ],
                                                   ),
-                                                  titleWidget: Center(
-                                                    child: FaIcon(
-                                                      FontAwesomeIcons
-                                                          .cloudUploadAlt,
-                                                      size: 8.h,
-                                                    ),
+                                                ),
+                                                titleWidget: Center(
+                                                  child: FaIcon(
+                                                    FontAwesomeIcons
+                                                        .cloudUploadAlt,
+                                                    size: 8.h,
                                                   ),
-                                                  callbackOK: () {},
-                                                  titleWidgetPadding: 10.w,
-                                                  titleWidgetSize: 10.w),
-                                        );
-                                      }
+                                                ),
+                                                callbackOK: () {},
+                                                titleWidgetPadding: 10.w,
+                                                titleWidgetSize: 10.w),
+                                      );
                                     }
-                                  : null,
-                            ),
-                            SizedBox(
-                              height: 100,
-                            )
-                          ],
-                        )
-                      : SizedBox(height: 50),
-                  SizedBox(height: 50)
-                ],
-              ),
+                                  }
+                                : null,
+                          ),
+                          SizedBox(
+                            height: 100,
+                          )
+                        ],
+                      )
+                    : SizedBox(height: 50),
+                SizedBox(height: 50)
+              ],
             ),
           ),
         ),

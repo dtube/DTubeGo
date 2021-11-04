@@ -331,7 +331,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             .sign(_tx, _applicationUser!, _privKey!)
             .then((value) => repository.send(_avalonApiNode, value));
         print(result);
-        if (int.tryParse(result) != null) {
+        if (!result.contains("error") && int.tryParse(result) != null) {
           yield TransactionSent(
               block: int.parse(result),
               successMessage: txTypeFriendlyDescriptionActions[_tx.type]!,
@@ -356,7 +356,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                   thumbnailUrl: _upload.thumbnailLocation,
                   videoUrl: _upload.videoSourceHash,
                   storageType: "youtube",
-                  tag: _upload.tag));
+                  tag: _upload.tag,
+                  dtubeuser: _applicationUser));
             } else {
               _hiveSignerBloc.add(SendPostToHive(
                   postTitle: _upload.title,
@@ -366,7 +367,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                   thumbnailUrl: _upload.thumbnailLocation,
                   videoUrl: _upload.videoSourceHash,
                   storageType: "ipfs",
-                  tag: _upload.tag));
+                  tag: _upload.tag,
+                  dtubeuser: _applicationUser));
             }
           }
         } else {
