@@ -103,7 +103,7 @@ class FeedList extends StatelessWidget {
             return buildLoading(context);
           } else {
             return Container(
-              height: 110.h,
+              height: 150.h,
               width: width,
               child: BlocBuilder<FeedBloc, FeedState>(
                 builder: (context, state) {
@@ -141,7 +141,7 @@ class FeedList extends StatelessWidget {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Container(
-                            height: feedType == "UserFeed" ? 0.h : 15.h,
+                            height: feedType == "UserFeed" ? 40.h : 15.h,
                             width: 200.w,
                             decoration: BoxDecoration(
                                 color: Colors.white,

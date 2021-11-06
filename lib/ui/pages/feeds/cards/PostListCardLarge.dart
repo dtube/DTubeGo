@@ -140,7 +140,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
               Visibility(
                 visible: !_thumbnailTapped,
                 child: AspectRatio(
-                  aspectRatio: 8 / 5,
+                  aspectRatio: 16 / 9,
                   child: widget.blur
                       ? ClipRect(
                           child: ImageFiltered(
@@ -157,12 +157,13 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                             ),
                           ),
                         )
-                      : Shimmer(
-                          duration: Duration(seconds: 5), //Default value
+                      :
+                      // shimmer creates a light color cast even if the animation is not present
+                      Shimmer(
+                          duration: Duration(seconds: 5),
                           interval: Duration(seconds: generateRandom(3, 15)),
                           color: globalAlmostWhite,
-
-                          colorOpacity: 0.2, //Default value
+                          colorOpacity: 0.1,
                           child: CachedNetworkImage(
                             imageUrl: widget.thumbnailUrl,
                             fit: BoxFit.fitWidth,

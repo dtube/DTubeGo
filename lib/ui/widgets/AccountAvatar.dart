@@ -25,7 +25,8 @@ class AccountAvatarBase extends StatelessWidget {
       this.showNameLeft,
       this.showFullUserInfo,
       required this.width,
-      required this.height})
+      required this.height,
+      this.showAvatar})
       : super(key: key);
   final String username;
   final double avatarSize;
@@ -36,6 +37,7 @@ class AccountAvatarBase extends StatelessWidget {
   bool? showFullUserInfo;
   double width;
   double height;
+  bool? showAvatar;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,9 @@ class AccountAvatarBase extends StatelessWidget {
     }
     if (showFullUserInfo == null) {
       showFullUserInfo = false;
+    }
+    if (showAvatar == null) {
+      showAvatar = true;
     }
 
     return BlocProvider(
@@ -61,6 +66,7 @@ class AccountAvatarBase extends StatelessWidget {
         showFullUserInfo: showFullUserInfo!,
         width: width,
         height: height,
+        showAvatar: showAvatar!,
       ),
     );
   }
@@ -77,7 +83,8 @@ class AccountAvatar extends StatefulWidget {
       required this.showNameLeft,
       required this.showFullUserInfo,
       required this.width,
-      required this.height})
+      required this.height,
+      required this.showAvatar})
       : super(key: key);
   final String username;
   final double avatarSize;
@@ -88,6 +95,7 @@ class AccountAvatar extends StatefulWidget {
   final bool showFullUserInfo;
   final double width;
   final double height;
+  final bool showAvatar;
 
   @override
   _AccountAvatarState createState() => _AccountAvatarState();
@@ -141,57 +149,65 @@ class _AccountAvatarState extends State<AccountAvatar> {
                       : SizedBox(
                           width: 0,
                         ),
-                  Stack(
-                    children: [
-                      state.user.jsonString != null &&
-                              state.user.jsonString?.profile != null &&
-                              state.user.jsonString?.profile?.avatar != ""
-                          ? CachedNetworkImage(
-                              imageUrl: state.user.jsonString!.profile!.avatar!
-                                  .replaceAll("http:", "https:"),
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                width: widget.avatarSize,
-                                height: widget.avatarSize,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: imageProvider, fit: BoxFit.cover),
-                                ),
-                              ),
-                              placeholder: (context, url) => Container(
-                                  width: widget.avatarSize,
-                                  height: widget.avatarSize,
-                                  child: AvatarLoadingPlaceholder(
-                                      size: widget.avatarSize)),
-                              errorWidget: (context, url, error) => Container(
-                                  width: widget.avatarSize,
-                                  height: widget.avatarSize,
-                                  child: AvatarLoadingPlaceholder(
-                                      size: widget.avatarSize)),
-                            )
-                          : AvatarLoadingPlaceholder(
-                              size: widget.avatarSize,
-                            ),
-                      state.verified && widget.showVerified
-                          ? BounceIn(
-                              preferences: AnimationPreferences(
-                                  offset: Duration(milliseconds: 1000)),
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: CircleAvatar(
-                                    maxRadius: widget.avatarSize / 8,
-                                    backgroundColor: globalRed,
-                                    child: FaIcon(
-                                      FontAwesomeIcons.check,
-                                      color: globalAlmostWhite,
-                                      size: widget.avatarSize / 8,
-                                    )),
-                              ),
-                            )
-                          : SizedBox(height: 0),
-                    ],
-                  ),
+                  widget.showAvatar
+                      ? Stack(
+                          children: [
+                            state.user.jsonString != null &&
+                                    state.user.jsonString?.profile != null &&
+                                    state.user.jsonString?.profile?.avatar != ""
+                                ? CachedNetworkImage(
+                                    imageUrl: state
+                                        .user.jsonString!.profile!.avatar!
+                                        .replaceAll("http:", "https:"),
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      width: widget.avatarSize,
+                                      height: widget.avatarSize,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover),
+                                      ),
+                                    ),
+                                    placeholder: (context, url) => Container(
+                                        width: widget.avatarSize,
+                                        height: widget.avatarSize,
+                                        child: AvatarLoadingPlaceholder(
+                                            size: widget.avatarSize)),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                            width: widget.avatarSize,
+                                            height: widget.avatarSize,
+                                            child: AvatarLoadingPlaceholder(
+                                                size: widget.avatarSize)),
+                                  )
+                                : AvatarLoadingPlaceholder(
+                                    size: widget.avatarSize,
+                                  ),
+                            state.verified && widget.showVerified
+                                ? BounceIn(
+                                    preferences: AnimationPreferences(
+                                        offset: Duration(milliseconds: 1000)),
+                                    child: Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: CircleAvatar(
+                                          maxRadius: widget.avatarSize / 8,
+                                          backgroundColor: globalRed,
+                                          child: FaIcon(
+                                            FontAwesomeIcons.check,
+                                            color: globalAlmostWhite,
+                                            size: widget.avatarSize / 8,
+                                          )),
+                                    ),
+                                  )
+                                : SizedBox(height: 0),
+                          ],
+                        )
+                      : SizedBox(
+                          width: 0,
+                          height: 0,
+                        ),
                   widget.showName && !widget.showNameLeft
                       ? Row(
                           children: [

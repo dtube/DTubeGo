@@ -192,12 +192,7 @@ class _DTubeLogoPulseWaveState extends State<DTubeLogoPulseWave>
                 padding: const EdgeInsets.only(bottom: 0.0),
                 child: WaveWidget(
                   config: CustomConfig(
-                    colors: [
-                      Colors.blue[300]!,
-                      Colors.blue[600]!,
-                      Colors.blue[800]!,
-                      Colors.blue[900]!,
-                    ],
+                    colors: globalBlueShades,
                     durations: [18000, 8000, 5000, 12000],
                     heightPercentages: [
                       0.99 - widget.progressPercent / 100,

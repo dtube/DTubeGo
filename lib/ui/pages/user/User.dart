@@ -1,5 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
+import 'package:dtube_go/style/OpenableHyperlink.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
@@ -145,9 +149,9 @@ class _UserState extends State<UserPage> {
             heightPerEntry: 10.h,
             width: 100.w,
             topPaddingForFirstEntry:
-                Device.orientation == Orientation.landscape ? 38.h : 30.h,
+                Device.orientation == Orientation.landscape ? 38.h : 42.h,
             sidepadding: 5.w,
-            bottompadding: 10.h,
+            bottompadding: widget.ownUserpage ? 10.h : 0.h,
             scrollCallback: (bool) {},
             enableNavigation: true,
           )),
@@ -171,33 +175,132 @@ class _UserState extends State<UserPage> {
                   ])),
         ),
       ),
+
+      Container(
+        width: 130.w,
+        height: 30.h,
+        child: user.jsonString!.profile != null &&
+                user.jsonString!.profile!.coverImage != null
+            ? CachedNetworkImage(
+                imageUrl: user.jsonString!.profile!.coverImage!,
+                fit: BoxFit.fill,
+              )
+            : Container(color: globalBlueShades[3]),
+      ),
+      Align(
+        alignment: Alignment.topLeft,
+        child: Container(
+          height: 35.h,
+          width: 200.w,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              gradient: LinearGradient(
+                  begin: FractionalOffset.topCenter,
+                  end: FractionalOffset.bottomCenter,
+                  colors: [
+                    Colors.black,
+                    Colors.black.withOpacity(0.0),
+                  ],
+                  stops: [
+                    0.0,
+                    1.0
+                  ])),
+        ),
+      ),
       Padding(
-        padding: EdgeInsets.only(top: 11.h),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: FadeIn(
-                preferences:
-                    AnimationPreferences(offset: Duration(milliseconds: 1100)),
-                child: AccountAvatarBase(
-                  username: user.name,
-                  avatarSize:
-                      Device.orientation == Orientation.portrait ? 18.h : 25.h,
-                  showVerified: true,
-                  showName: true,
-                  showNameLeft: true,
-                  showFullUserInfo: true,
-                  nameFontSizeMultiply: 1.4,
-                  width:
-                      Device.orientation == Orientation.portrait ? 95.w : 70.w,
-                  height:
-                      Device.orientation == Orientation.portrait ? 18.h : 25.h,
+        padding: EdgeInsets.only(top: 9.h, left: 5.w),
+        child: FadeIn(
+          preferences:
+              AnimationPreferences(offset: Duration(milliseconds: 1100)),
+          child: Container(
+            width: 70.w,
+            height: 21.h,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                OverlayText(
+                  text: user.jsonString!.additionals != null &&
+                          user.jsonString!.additionals!.displayName != null
+                      ? user.jsonString!.additionals!.displayName!
+                      : user.name,
+                  sizeMultiply: 1.6,
+                  bold: true,
+                  overflow: TextOverflow.ellipsis,
                 ),
+                user.jsonString!.additionals != null &&
+                        user.jsonString!.additionals!.displayName != null
+                    ? OverlayText(
+                        text: '@' + user.name,
+                        sizeMultiply: 1.3,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                    : SizedBox(height: 0),
+                user.jsonString!.profile != null &&
+                        user.jsonString!.profile!.about != null
+                    ? OverlayText(
+                        text: user.jsonString!.profile!.about!,
+                        sizeMultiply: 1.1,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                    : SizedBox(height: 0),
+              ],
+            ),
+          ),
+        ),
+      ),
+      Align(
+        alignment: Alignment.topRight,
+        child: Padding(
+          padding: EdgeInsets.only(top: 12.h, right: 5.w),
+          child: FadeIn(
+            preferences:
+                AnimationPreferences(offset: Duration(milliseconds: 1100)),
+            child: Container(
+              width: 40.w,
+              height: 21.h,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  user.jsonString!.profile != null &&
+                          user.jsonString!.profile!.location != null
+                      ? OverlayText(
+                          text: 'from: ' + user.jsonString!.profile!.location!,
+                          sizeMultiply: 1,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      : SizedBox(height: 0),
+                  // user.jsonString!.profile != null &&
+                  //         user.jsonString!.profile!.website != null
+                  //     ? OpenableHyperlink(
+                  //         url: user.jsonString!.profile!.website!,
+                  //       )
+                  //     : SizedBox(height: 0)
+                ],
               ),
             ),
-          ],
+          ),
+        ),
+      ),
+      Align(
+        alignment: Alignment.topRight,
+        child: Padding(
+          padding: EdgeInsets.only(top: 19.h, right: 4.w),
+          child: FadeIn(
+            preferences:
+                AnimationPreferences(offset: Duration(milliseconds: 1100)),
+            child: AccountAvatarBase(
+              username: user.name,
+              avatarSize: 40.w,
+              showVerified: true,
+              showName: false,
+              width: 40.w,
+              height: 40.w,
+            ),
+          ),
         ),
       ),
 

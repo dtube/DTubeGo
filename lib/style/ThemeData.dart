@@ -7,7 +7,22 @@ Color globalRed = Color.fromRGBO(240, 26, 48, 1);
 Color globalAlmostWhite = Color.fromRGBO(230, 230, 230, 1);
 Color globalAlmostBlack = Color.fromRGBO(29, 35, 51, 1);
 Color globalBGColor = Color.fromRGBO(29, 35, 51, 1);
+Color globalBGColorHalfOpacity = Color.fromRGBO(29, 35, 51, 0.5);
 Color globalBGColorNoOpacity = Color.fromRGBO(29, 35, 51, 0);
+
+List<Color> globalBlueShades = [
+  Colors.blue[300]!,
+  Colors.blue[600]!,
+  Colors.blue[800]!,
+  Colors.blue[900]!,
+];
+
+List<Color> globalRedShades = [
+  Colors.red[300]!,
+  Colors.red[600]!,
+  Colors.red[800]!,
+  Colors.red[900]!,
+];
 
 Color globalTextColor = Colors.white;
 double globalIconSizeSmall = 25;
@@ -93,85 +108,86 @@ final ThemeData dtubeDarkTheme = ThemeData(
     ),
   ),
   textTheme: TextTheme(
-      headline1: TextStyle(
-        color: globalTextColor,
-        fontSize: 30,
-        fontWeight: FontWeight.w900,
-        fontStyle: FontStyle.normal,
-      ),
-      headline2: TextStyle(
-        color: globalTextColor,
-        fontSize: 30,
-        fontWeight: FontWeight.w700,
-        fontStyle: FontStyle.normal,
-      ),
-      headline3: TextStyle(
-        color: globalTextColor,
-        fontSize: 25,
-        fontWeight: FontWeight.w900,
-        fontStyle: FontStyle.normal,
-      ),
-      headline4: TextStyle(
-        color: globalTextColor,
-        fontSize: 25,
-        fontWeight: FontWeight.w700,
-        fontStyle: FontStyle.normal,
-      ),
-      headline5: TextStyle(
-        color: globalTextColor,
-        fontSize: 20,
-        fontWeight: FontWeight.w700,
-        fontStyle: FontStyle.normal,
-      ),
-      headline6: TextStyle(
-        color: globalTextColor,
-        fontSize: 17,
-        fontWeight: FontWeight.w700,
-        fontStyle: FontStyle.normal,
-      ),
-      subtitle1: TextStyle(
-        color: globalTextColor,
-        fontSize: 17,
-        fontWeight: FontWeight.w200,
-        fontStyle: FontStyle.normal,
-      ),
-      bodyText1: TextStyle(
-        color: globalTextColor,
-        fontSize: 17,
-        fontWeight: FontWeight.w400,
-        fontStyle: FontStyle.normal,
-      ),
-      bodyText2: TextStyle(
-        color: globalTextColor,
-        fontSize: 15,
-        fontWeight: FontWeight.w400,
-        fontStyle: FontStyle.normal,
-      ),
-      caption: TextStyle(
-        color: globalTextColor,
-        fontSize: 15,
-        fontWeight: FontWeight.w400,
-        fontStyle: FontStyle.normal,
-      ),
-      button: TextStyle(
-        color: globalTextColor,
-        fontSize: 17,
-        fontWeight: FontWeight.w400,
-        fontStyle: FontStyle.normal,
-      ),
-      subtitle2: TextStyle(
-        color: globalTextColor,
-        fontSize: 14,
-        fontWeight: FontWeight.w400,
-        fontStyle: FontStyle.normal,
-      ),
-      overline: TextStyle(
-        decoration: TextDecoration.underline,
-        color: Colors.blue,
-        fontSize: 17,
-        fontWeight: FontWeight.w400,
-        fontStyle: FontStyle.normal,
-      )),
+    headline1: TextStyle(
+      color: globalTextColor,
+      fontSize: 30,
+      fontWeight: FontWeight.w900,
+      fontStyle: FontStyle.normal,
+    ),
+    headline2: TextStyle(
+      color: globalTextColor,
+      fontSize: 30,
+      fontWeight: FontWeight.w700,
+      fontStyle: FontStyle.normal,
+    ),
+    headline3: TextStyle(
+      color: globalTextColor,
+      fontSize: 25,
+      fontWeight: FontWeight.w900,
+      fontStyle: FontStyle.normal,
+    ),
+    headline4: TextStyle(
+      color: globalTextColor,
+      fontSize: 25,
+      fontWeight: FontWeight.w700,
+      fontStyle: FontStyle.normal,
+    ),
+    headline5: TextStyle(
+      color: globalTextColor,
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+      fontStyle: FontStyle.normal,
+    ),
+    headline6: TextStyle(
+      color: globalTextColor,
+      fontSize: 17,
+      fontWeight: FontWeight.w700,
+      fontStyle: FontStyle.normal,
+    ),
+    subtitle1: TextStyle(
+      color: globalTextColor,
+      fontSize: 17,
+      fontWeight: FontWeight.w200,
+      fontStyle: FontStyle.normal,
+    ),
+    bodyText1: TextStyle(
+      color: globalTextColor,
+      fontSize: 17,
+      fontWeight: FontWeight.w400,
+      fontStyle: FontStyle.normal,
+    ),
+    bodyText2: TextStyle(
+      color: globalTextColor,
+      fontSize: 15,
+      fontWeight: FontWeight.w400,
+      fontStyle: FontStyle.normal,
+    ),
+    caption: TextStyle(
+      color: globalTextColor,
+      fontSize: 15,
+      fontWeight: FontWeight.w400,
+      fontStyle: FontStyle.normal,
+    ),
+    button: TextStyle(
+      color: globalTextColor,
+      fontSize: 17,
+      fontWeight: FontWeight.w400,
+      fontStyle: FontStyle.normal,
+    ),
+    subtitle2: TextStyle(
+      color: globalTextColor,
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+      fontStyle: FontStyle.normal,
+    ),
+    overline: TextStyle(
+      decoration: TextDecoration.underline,
+      color: globalTextColor,
+      fontSize: 17,
+      fontWeight: FontWeight.w400,
+      fontStyle: FontStyle.normal,
+    ),
+  ),
   inputDecorationTheme: InputDecorationTheme(
     labelStyle: TextStyle(
       color: globalTextColor,

@@ -11,6 +11,8 @@ import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wave/config.dart';
+import 'package:wave/wave.dart';
 
 class FeedMainPage extends StatefulWidget {
   FeedMainPage({Key? key}) : super(key: key);
@@ -86,6 +88,7 @@ class _FeedMainPageState extends State<FeedMainPage>
     return Scaffold(
       //appBar: dtubeSubAppBar(true, "", context, null),
       resizeToAvoidBottomInset: true,
+
       body: Stack(
         children: [
           Padding(
