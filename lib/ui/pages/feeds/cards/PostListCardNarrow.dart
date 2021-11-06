@@ -73,38 +73,48 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
         }
       },
       child: Card(
-        color: globalBGColor,
+        color: globalBlueShades[2],
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16.0))),
         elevation: 0,
         child: Container(
-          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             Container(
-              height: widget.height,
-
-              child: AspectRatio(
-                aspectRatio: 8 / 5,
-                child: widget.blur
-                    ? ClipRect(
-                        child: ImageFiltered(
-                          imageFilter: ImageFilter.blur(
-                            sigmaY: 5,
-                            sigmaX: 5,
-                          ),
-                          child: CachedNetworkImage(
-                            imageUrl: widget.thumbnailUrl,
-                          ),
-                        ),
-                      )
-                    : CachedNetworkImage(
-                        imageUrl: widget.thumbnailUrl,
-                        fit: BoxFit.fitWidth,
-                      ),
-              ),
+              decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.vertical(top: new Radius.circular(16.0)),
+                  image: DecorationImage(
+                      image: NetworkImage(widget.thumbnailUrl),
+                      fit: BoxFit.fitWidth)),
+              width: double.infinity,
+              height: 30.h,
+              // child: Center(
+              //   child: AspectRatio(
+              //     aspectRatio: 16 / 9,
+              //     child: widget.blur
+              //         ? ClipRect(
+              //             child: ImageFiltered(
+              //               imageFilter: ImageFilter.blur(
+              //                 sigmaY: 5,
+              //                 sigmaX: 5,
+              //               ),
+              //               child: CachedNetworkImage(
+              //                 imageUrl: widget.thumbnailUrl,
+              //               ),
+              //             ),
+              //           )
+              //         : CachedNetworkImage(
+              //             imageUrl: widget.thumbnailUrl,
+              //             fit: BoxFit.fitWidth,
+              //           ),
+              //   ),
               // ),
             ),
             SizedBox(width: 4),
             Container(
-              width: widget.userPage ? widget.width * 0.6 : widget.width * 0.5,
-              height: widget.height,
+              width: widget.userPage ? widget.width * 0.7 : widget.width * 0.5,
+              height: 10.h,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,9 +123,9 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
                   Text(
                     widget.title,
                     style: widget.userPage
-                        ? Theme.of(context).textTheme.bodyText1
+                        ? Theme.of(context).textTheme.headline5
                         : Theme.of(context).textTheme.bodyText2,
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   !widget.userPage

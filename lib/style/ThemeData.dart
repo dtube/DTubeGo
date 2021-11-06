@@ -11,10 +11,10 @@ Color globalBGColorHalfOpacity = Color.fromRGBO(29, 35, 51, 0.5);
 Color globalBGColorNoOpacity = Color.fromRGBO(29, 35, 51, 0);
 
 List<Color> globalBlueShades = [
-  Colors.blue[300]!,
-  Colors.blue[600]!,
-  Colors.blue[800]!,
-  Colors.blue[900]!,
+  Color(0xff58bfd3),
+  Color(0xff00899c),
+  Color(0xff005c83),
+  Color(0xff223154)
 ];
 
 List<Color> globalRedShades = [

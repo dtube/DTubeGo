@@ -2,9 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/style/OpenableHyperlink.dart';
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/pages/user/MenuButton.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:flutter_animator/flutter_animator.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc.dart';
@@ -130,298 +132,201 @@ class _UserState extends State<UserPage> {
   }
 
   Widget buildUserPage(User user, bool ownUsername) {
-    double iconSize = 8.w;
+    double iconSize = 10.w;
     if (Device.orientation == Orientation.landscape) {
       iconSize = 6.h;
     }
 
-    return SingleChildScrollView(
-        child: Stack(children: [
-      //SizedBox(height: 8),
-      BlocProvider<FeedBloc>(
-          create: (context) => FeedBloc(repository: FeedRepositoryImpl())
-            ..add(FetchUserFeedEvent(username: user.name)),
-          child: FeedList(
-            feedType: 'UserFeed',
-            username: user.name,
-            showAuthor: false,
-            largeFormat: false,
-            heightPerEntry: 10.h,
-            width: 100.w,
-            topPaddingForFirstEntry:
-                Device.orientation == Orientation.landscape ? 38.h : 42.h,
-            sidepadding: 5.w,
-            bottompadding: widget.ownUserpage ? 10.h : 0.h,
-            scrollCallback: (bool) {},
-            enableNavigation: true,
-          )),
-      Align(
-        alignment: Alignment.topLeft,
-        child: Container(
-          height: 35.h,
-          width: 200.w,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              gradient: LinearGradient(
-                  begin: FractionalOffset.topCenter,
-                  end: FractionalOffset.bottomCenter,
-                  colors: [
-                    Colors.black,
-                    Colors.black.withOpacity(0.0),
-                  ],
-                  stops: [
-                    0.0,
-                    1.0
-                  ])),
+    return Expanded(
+      child: SingleChildScrollView(
+          child: Stack(children: [
+        //SizedBox(height: 8),
+        Align(
+          alignment: Alignment.topCenter,
+          child: BlocProvider<FeedBloc>(
+              create: (context) => FeedBloc(repository: FeedRepositoryImpl())
+                ..add(FetchUserFeedEvent(username: user.name)),
+              child: FeedList(
+                feedType: 'UserFeed',
+                username: user.name,
+                showAuthor: false,
+                largeFormat: false,
+                heightPerEntry: 18.h,
+                width: 125.w,
+                topPaddingForFirstEntry:
+                    Device.orientation == Orientation.landscape ? 38.h : 42.h,
+                sidepadding: 5.w,
+                bottompadding: widget.ownUserpage ? 10.h : 0.h,
+                scrollCallback: (bool) {},
+                enableNavigation: true,
+              )),
         ),
-      ),
-
-      Container(
-        width: 130.w,
-        height: 30.h,
-        child: user.jsonString!.profile != null &&
-                user.jsonString!.profile!.coverImage != null
-            ? CachedNetworkImage(
-                imageUrl: user.jsonString!.profile!.coverImage!,
-                fit: BoxFit.fill,
-              )
-            : Container(color: globalBlueShades[3]),
-      ),
-      Align(
-        alignment: Alignment.topLeft,
-        child: Container(
-          height: 35.h,
-          width: 200.w,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              gradient: LinearGradient(
-                  begin: FractionalOffset.topCenter,
-                  end: FractionalOffset.bottomCenter,
-                  colors: [
-                    Colors.black,
-                    Colors.black.withOpacity(0.0),
-                  ],
-                  stops: [
-                    0.0,
-                    1.0
-                  ])),
-        ),
-      ),
-      Padding(
-        padding: EdgeInsets.only(top: 9.h, left: 5.w),
-        child: FadeIn(
-          preferences:
-              AnimationPreferences(offset: Duration(milliseconds: 1100)),
+        Align(
+          alignment: Alignment.topLeft,
           child: Container(
-            width: 70.w,
-            height: 21.h,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                OverlayText(
-                  text: user.jsonString!.additionals != null &&
-                          user.jsonString!.additionals!.displayName != null
-                      ? user.jsonString!.additionals!.displayName!
-                      : user.name,
-                  sizeMultiply: 1.6,
-                  bold: true,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                user.jsonString!.additionals != null &&
-                        user.jsonString!.additionals!.displayName != null
-                    ? OverlayText(
-                        text: '@' + user.name,
-                        sizeMultiply: 1.3,
-                        overflow: TextOverflow.ellipsis,
-                      )
-                    : SizedBox(height: 0),
-                user.jsonString!.profile != null &&
-                        user.jsonString!.profile!.about != null
-                    ? OverlayText(
-                        text: user.jsonString!.profile!.about!,
-                        sizeMultiply: 1.1,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      )
-                    : SizedBox(height: 0),
-              ],
-            ),
+            height: 35.h,
+            width: 200.w,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                gradient: LinearGradient(
+                    begin: FractionalOffset.topCenter,
+                    end: FractionalOffset.bottomCenter,
+                    colors: [
+                      Colors.black,
+                      Colors.black.withOpacity(0.0),
+                    ],
+                    stops: [
+                      0.0,
+                      1.0
+                    ])),
           ),
         ),
-      ),
-      Align(
-        alignment: Alignment.topRight,
-        child: Padding(
-          padding: EdgeInsets.only(top: 12.h, right: 5.w),
+
+        Container(
+          width: 130.w,
+          height: 30.h,
+          child: user.jsonString != null &&
+                  user.jsonString!.profile != null &&
+                  user.jsonString!.profile!.coverImage != null
+              ? CachedNetworkImage(
+                  imageUrl: user.jsonString!.profile!.coverImage!,
+                  fit: BoxFit.fill,
+                )
+              : Container(color: globalBlueShades[2]),
+        ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Container(
+            height: 35.h,
+            width: 200.w,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                gradient: LinearGradient(
+                    begin: FractionalOffset.topCenter,
+                    end: FractionalOffset.bottomCenter,
+                    colors: [
+                      Colors.black,
+                      Colors.black.withOpacity(0.0),
+                    ],
+                    stops: [
+                      0.0,
+                      1.0
+                    ])),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 9.h, left: 5.w),
           child: FadeIn(
             preferences:
                 AnimationPreferences(offset: Duration(milliseconds: 1100)),
             child: Container(
-              width: 40.w,
+              width: 70.w,
               height: 21.h,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  user.jsonString!.profile != null &&
-                          user.jsonString!.profile!.location != null
+                  OverlayText(
+                    text: user.jsonString != null &&
+                            user.jsonString!.additionals != null &&
+                            user.jsonString!.additionals!.displayName != null
+                        ? user.jsonString!.additionals!.displayName!
+                        : user.name,
+                    sizeMultiply: 1.6,
+                    bold: true,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  user.jsonString != null &&
+                          user.jsonString!.additionals != null &&
+                          user.jsonString!.additionals!.displayName != null
                       ? OverlayText(
-                          text: 'from: ' + user.jsonString!.profile!.location!,
-                          sizeMultiply: 1,
-                          maxLines: 2,
+                          text: '@' + user.name,
+                          sizeMultiply: 1.3,
                           overflow: TextOverflow.ellipsis,
                         )
                       : SizedBox(height: 0),
-                  // user.jsonString!.profile != null &&
-                  //         user.jsonString!.profile!.website != null
-                  //     ? OpenableHyperlink(
-                  //         url: user.jsonString!.profile!.website!,
-                  //       )
-                  //     : SizedBox(height: 0)
+                  user.jsonString != null &&
+                          user.jsonString!.profile != null &&
+                          user.jsonString!.profile!.about != null
+                      ? OverlayText(
+                          text: user.jsonString!.profile!.about!,
+                          sizeMultiply: 1.1,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      : SizedBox(height: 0),
                 ],
               ),
             ),
           ),
         ),
-      ),
-      Align(
-        alignment: Alignment.topRight,
-        child: Padding(
-          padding: EdgeInsets.only(top: 19.h, right: 4.w),
-          child: FadeIn(
-            preferences:
-                AnimationPreferences(offset: Duration(milliseconds: 1100)),
-            child: AccountAvatarBase(
-              username: user.name,
-              avatarSize: 40.w,
-              showVerified: true,
-              showName: false,
-              width: 40.w,
-              height: 40.w,
+        Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: EdgeInsets.only(top: 12.h, right: 5.w),
+            child: FadeIn(
+              preferences:
+                  AnimationPreferences(offset: Duration(milliseconds: 1100)),
+              child: Container(
+                width: 40.w,
+                height: 21.h,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    user.jsonString != null &&
+                            user.jsonString!.profile != null &&
+                            user.jsonString!.profile!.location != null
+                        ? OverlayText(
+                            text:
+                                'from: ' + user.jsonString!.profile!.location!,
+                            sizeMultiply: 1,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : SizedBox(height: 0),
+                    // user.jsonString!.profile != null &&
+                    //         user.jsonString!.profile!.website != null
+                    //     ? OpenableHyperlink(
+                    //         url: user.jsonString!.profile!.website!,
+                    //       )
+                    //     : SizedBox(height: 0)
+                  ],
+                ),
+              ),
             ),
           ),
         ),
-      ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: EdgeInsets.only(top: 19.h, right: 4.w),
+            child: FadeIn(
+              preferences:
+                  AnimationPreferences(offset: Duration(milliseconds: 1100)),
+              child: AccountAvatarBase(
+                username: user.name,
+                avatarSize: 38.w,
+                showVerified: true,
+                showName: false,
+                width: 40.w,
+                height: 40.w,
+              ),
+            ),
+          ),
+        ),
 
-      Positioned(
-        top: 45.h,
-        right: 3.w,
-        child: !ownUsername
-            ? Column(
-                children: [
-                  GestureDetector(
-                      child: ShadowedIcon(
-                        icon: FontAwesomeIcons.history,
-                        size: iconSize,
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                      ),
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return BlocProvider<AccountHistoryBloc>(
-                              create: (context) => AccountHistoryBloc(
-                                  repository: AccountHistoryRepositoryImpl()),
-                              child: AccountHistoryScreen(
-                                username: user.name,
-                              ));
-                        }));
-                      }),
-                  SizedBox(height: iconSize / 2),
-                  GestureDetector(
-                      child: ShadowedIcon(
-                        icon: FontAwesomeIcons.exchangeAlt,
-                        size: iconSize,
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                      ),
-                      onTap: () {
-                        showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) => TransferDialog(
-                                  receiver: widget.username,
-                                  txBloc:
-                                      BlocProvider.of<TransactionBloc>(context),
-                                ));
-                      }),
-                  SizedBox(height: iconSize / 2),
-                  GestureDetector(
-                    child: ShadowedIcon(
-                      icon: user.alreadyFollowing
-                          ? FontAwesomeIcons.usersSlash
-                          : FontAwesomeIcons.userFriends,
-                      size: iconSize,
-                      color: Colors.white,
-                      shadowColor: Colors.black,
-                    ),
-                    onTap: () async {
-                      TxData txdata = TxData(
-                        target: widget.username,
-                      );
-                      Transaction newTx = Transaction(
-                          type: user.alreadyFollowing ? 8 : 7, data: txdata);
-                      BlocProvider.of<TransactionBloc>(context)
-                          .add(SignAndSendTransactionEvent(newTx));
-                    },
-                  ),
-                ],
-              )
-            : Column(
-                children: [
-                  GestureDetector(
-                      child: ShadowedIcon(
-                        icon: FontAwesomeIcons.cogs,
-                        size: iconSize,
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                      ),
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return BlocProvider<ThirdPartyUploaderBloc>(
-                              create: (BuildContext context) =>
-                                  ThirdPartyUploaderBloc(
-                                      repository:
-                                          ThirdPartyUploaderRepositoryImpl()),
-                              child:
-                                  ProfileSettingsContainer(userBloc: userBloc));
-                        }));
-                      }),
-                  SizedBox(height: 3.h),
-                  GestureDetector(
-                      child: ShadowedIcon(
-                        icon: FontAwesomeIcons.history,
-                        size: iconSize,
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                      ),
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return BlocProvider<AccountHistoryBloc>(
-                              create: (context) => AccountHistoryBloc(
-                                  repository: AccountHistoryRepositoryImpl()),
-                              child: AccountHistoryScreen(
-                                username: widget.username,
-                              ));
-                        }));
-                      }),
-                  SizedBox(height: iconSize / 2),
-                  GestureDetector(
-                      child: ShadowedIcon(
-                        icon: FontAwesomeIcons.signOutAlt,
-                        size: iconSize,
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                      ),
-                      onTap: () {
-                        BlocProvider.of<AuthBloc>(context)
-                            .add(SignOutEvent(context: context));
-                      }),
-                ],
-              ),
-      ),
-    ]));
+        Positioned(
+          bottom: 15.h,
+          right: 3.w,
+          child: FadeIn(
+              preferences: AnimationPreferences(
+                  offset: Duration(milliseconds: 1000),
+                  duration: Duration(seconds: 1)),
+              child: buildUserMenuSpeedDial(
+                  context, user, widget.ownUserpage, userBloc)),
+        )
+      ])),
+    );
   }
 }

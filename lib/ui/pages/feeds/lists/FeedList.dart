@@ -103,7 +103,7 @@ class FeedList extends StatelessWidget {
             return buildLoading(context);
           } else {
             return Container(
-              height: 150.h,
+              height: 80.h + topPaddingForFirstEntry!,
               width: width,
               child: BlocBuilder<FeedBloc, FeedState>(
                 builder: (context, state) {
@@ -141,7 +141,7 @@ class FeedList extends StatelessWidget {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Container(
-                            height: feedType == "UserFeed" ? 40.h : 15.h,
+                            height: feedType == "UserFeed" ? 0.h : 15.h,
                             width: 200.w,
                             decoration: BoxDecoration(
                                 color: Colors.white,
@@ -416,26 +416,30 @@ class _PostListCardState extends State<PostListCard>
         ),
       );
     } else {
-      return Padding(
-        padding: EdgeInsets.only(left: 5.w),
-        child: PostListCardNarrow(
-          width: widget.width * 0.85,
-          height: widget.heightPerEntry,
-          blur: widget.blur,
-          thumbnailUrl: widget.thumbnailUrl,
-          title: widget.title,
-          description: widget.description,
-          author: widget.author,
-          link: widget.link,
-          publishDate: widget.publishDate,
-          duration: widget.duration,
-          dtcValue: widget.dtcValue,
-          indexOfList: widget.indexOfList,
-          enableNavigation: widget.enableNavigation,
-          itemSelectedCallback: widget.itemSelectedCallback,
-          userPage: widget.feedType == "UserFeed",
-        ),
+      return
+          // Padding(
+          //   padding: EdgeInsets.only(left: 5.w),
+          //   child:
+          PostListCardNarrow(
+        // width: widget.width * 0.85,
+        width: widget.width,
+        height: widget.heightPerEntry,
+        blur: widget.blur,
+        thumbnailUrl: widget.thumbnailUrl,
+        title: widget.title,
+        description: widget.description,
+        author: widget.author,
+        link: widget.link,
+        publishDate: widget.publishDate,
+        duration: widget.duration,
+        dtcValue: widget.dtcValue,
+        indexOfList: widget.indexOfList,
+        enableNavigation: widget.enableNavigation,
+        itemSelectedCallback: widget.itemSelectedCallback,
+        userPage: widget.feedType == "UserFeed",
+        //),
       );
+      SizedBox(height: 0);
     }
   }
 }
