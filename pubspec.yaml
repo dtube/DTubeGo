@@ -113,7 +113,7 @@ dependencies:
 
 # unsorted
   equatable: ^2.0.3
- 
+  card_swiper: ^1.0.4
   
   
   
