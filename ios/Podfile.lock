@@ -1,0 +1,163 @@
+PODS:
+  - auto_orientation (0.0.1):
+    - Flutter
+  - better_player (0.0.1):
+    - Flutter
+    - KTVHTTPCache (~> 2.0.0)
+  - CocoaAsyncSocket (7.6.5)
+  - disk_space (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+  - flutter_barcode_scanner (2.0.0):
+    - Flutter
+  - flutter_inappwebview (0.0.1):
+    - Flutter
+    - flutter_inappwebview/Core (= 0.0.1)
+    - OrderedSet (~> 5.0)
+  - flutter_inappwebview/Core (0.0.1):
+    - Flutter
+    - OrderedSet (~> 5.0)
+  - flutter_secure_storage (3.3.1):
+    - Flutter
+  - flutter_web_auth (0.3.0):
+    - Flutter
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
+  - image_cropper (0.0.4):
+    - Flutter
+    - TOCropViewController (~> 2.6.0)
+  - image_picker (0.0.1):
+    - Flutter
+  - KTVCocoaHTTPServer (1.0.0):
+    - CocoaAsyncSocket
+  - KTVHTTPCache (2.0.1):
+    - KTVCocoaHTTPServer
+  - native_device_orientation (0.0.1):
+    - Flutter
+  - OrderedSet (5.0.0)
+  - package_info_plus (0.4.5):
+    - Flutter
+  - path_provider (0.0.1):
+    - Flutter
+  - share_plus (0.0.1):
+    - Flutter
+  - sqflite (0.0.2):
+    - Flutter
+    - FMDB (>= 2.7.5)
+  - TOCropViewController (2.6.0)
+  - url_launcher (0.0.1):
+    - Flutter
+  - video_compress (0.3.0):
+    - Flutter
+  - video_player (0.0.1):
+    - Flutter
+  - wakelock (0.0.1):
+    - Flutter
+  - webview_flutter (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - auto_orientation (from `.symlinks/plugins/auto_orientation/ios`)
+  - better_player (from `.symlinks/plugins/better_player/ios`)
+  - disk_space (from `.symlinks/plugins/disk_space/ios`)
+  - Flutter (from `Flutter`)
+  - flutter_barcode_scanner (from `.symlinks/plugins/flutter_barcode_scanner/ios`)
+  - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
+  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - flutter_web_auth (from `.symlinks/plugins/flutter_web_auth/ios`)
+  - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
+  - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - native_device_orientation (from `.symlinks/plugins/native_device_orientation/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - share_plus (from `.symlinks/plugins/share_plus/ios`)
+  - sqflite (from `.symlinks/plugins/sqflite/ios`)
+  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
+  - video_compress (from `.symlinks/plugins/video_compress/ios`)
+  - video_player (from `.symlinks/plugins/video_player/ios`)
+  - wakelock (from `.symlinks/plugins/wakelock/ios`)
+  - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
+
+SPEC REPOS:
+  trunk:
+    - CocoaAsyncSocket
+    - FMDB
+    - KTVCocoaHTTPServer
+    - KTVHTTPCache
+    - OrderedSet
+    - TOCropViewController
+
+EXTERNAL SOURCES:
+  auto_orientation:
+    :path: ".symlinks/plugins/auto_orientation/ios"
+  better_player:
+    :path: ".symlinks/plugins/better_player/ios"
+  disk_space:
+    :path: ".symlinks/plugins/disk_space/ios"
+  Flutter:
+    :path: Flutter
+  flutter_barcode_scanner:
+    :path: ".symlinks/plugins/flutter_barcode_scanner/ios"
+  flutter_inappwebview:
+    :path: ".symlinks/plugins/flutter_inappwebview/ios"
+  flutter_secure_storage:
+    :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  flutter_web_auth:
+    :path: ".symlinks/plugins/flutter_web_auth/ios"
+  image_cropper:
+    :path: ".symlinks/plugins/image_cropper/ios"
+  image_picker:
+    :path: ".symlinks/plugins/image_picker/ios"
+  native_device_orientation:
+    :path: ".symlinks/plugins/native_device_orientation/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+  share_plus:
+    :path: ".symlinks/plugins/share_plus/ios"
+  sqflite:
+    :path: ".symlinks/plugins/sqflite/ios"
+  url_launcher:
+    :path: ".symlinks/plugins/url_launcher/ios"
+  video_compress:
+    :path: ".symlinks/plugins/video_compress/ios"
+  video_player:
+    :path: ".symlinks/plugins/video_player/ios"
+  wakelock:
+    :path: ".symlinks/plugins/wakelock/ios"
+  webview_flutter:
+    :path: ".symlinks/plugins/webview_flutter/ios"
+
+SPEC CHECKSUMS:
+  auto_orientation: 2941c44ebe5c3d41016001597ab03e81a92a26ce
+  better_player: a4383402f457e53720525888c0fc5d337ef6ba11
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
+  disk_space: e94d34bbdf77954adfb39e60bde9cc5c7233eda6
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  flutter_barcode_scanner: 7a1144744c28dc0c57a8de7218ffe5ec59a9e4bf
+  flutter_inappwebview: bfd58618f49dc62f2676de690fc6dcda1d6c3721
+  flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
+  flutter_web_auth: ede89bf8107b021cf16e769756d267d84d24e88b
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  image_cropper: f1668dd8d2cad2d357955caad15a40547856edcb
+  image_picker: e06f7a68f000bd36f552c1847e33cda96ed31f1f
+  KTVCocoaHTTPServer: df8d7b861e603ff8037e9b2138aca2563a6b768d
+  KTVHTTPCache: 588c3eb16f6bd1e6fde1e230dabfb7bd4e490a4d
+  native_device_orientation: 3b4cfc9565a7b879cc4fde282b3e27745e852d0d
+  OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
+  package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
+  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
+  sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
+  TOCropViewController: 3105367e808b7d3d886a74ff59bf4804e7d3ab38
+  url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
+  video_compress: fce97e4fb1dfd88175aa07d2ffc8a2f297f87fbe
+  video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
+  wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
+  webview_flutter: 3603125dfd3bcbc9d8d418c3f80aeecf331c068b
+
+PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
+
+COCOAPODS: 1.10.2
