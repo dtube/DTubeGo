@@ -78,99 +78,107 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
             borderRadius: BorderRadius.all(Radius.circular(16.0))),
         elevation: 0,
         child: Container(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.vertical(top: new Radius.circular(16.0)),
-                  image: DecorationImage(
-                      image: NetworkImage(widget.thumbnailUrl),
-                      fit: BoxFit.fitWidth)),
-              width: double.infinity,
-              height: 30.h,
-              // child: Center(
-              //   child: AspectRatio(
-              //     aspectRatio: 16 / 9,
-              //     child: widget.blur
-              //         ? ClipRect(
-              //             child: ImageFiltered(
-              //               imageFilter: ImageFilter.blur(
-              //                 sigmaY: 5,
-              //                 sigmaX: 5,
-              //               ),
-              //               child: CachedNetworkImage(
-              //                 imageUrl: widget.thumbnailUrl,
-              //               ),
-              //             ),
-              //           )
-              //         : CachedNetworkImage(
-              //             imageUrl: widget.thumbnailUrl,
-              //             fit: BoxFit.fitWidth,
-              //           ),
-              //   ),
-              // ),
-            ),
-            SizedBox(width: 4),
-            Container(
-              width: widget.userPage ? widget.width * 0.7 : widget.width * 0.5,
-              height: 10.h,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    widget.title,
-                    style: widget.userPage
-                        ? Theme.of(context).textTheme.headline5
-                        : Theme.of(context).textTheme.bodyText2,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  !widget.userPage
-                      ? Text(
-                          widget.author,
-                          style: Theme.of(context).textTheme.subtitle2,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      : SizedBox(height: 0),
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '${widget.publishDate} - ' +
-                              (widget.duration.inHours == 0
-                                  ? widget.duration.toString().substring(2, 7)
-                                  : widget.duration.toString().substring(0, 7)),
-                          style: !widget.userPage
-                              ? Theme.of(context).textTheme.subtitle2
-                              : Theme.of(context).textTheme.bodyText2,
-                        ),
-                        Row(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                    alignment: Alignment.topCenter,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.vertical(
+                            top: new Radius.circular(16.0)),
+                        image: DecorationImage(
+                            image: NetworkImage(widget.thumbnailUrl),
+                            fit: BoxFit.fitWidth)),
+                    width: double.infinity,
+                    height: 30.h
+                    // child: Center(
+                    //   child: AspectRatio(
+                    //     aspectRatio: 16 / 9,
+                    //     child: widget.blur
+                    //         ? ClipRect(
+                    //             child: ImageFiltered(
+                    //               imageFilter: ImageFilter.blur(
+                    //                 sigmaY: 5,
+                    //                 sigmaX: 5,
+                    //               ),
+                    //               child: CachedNetworkImage(
+                    //                 imageUrl: widget.thumbnailUrl,
+                    //               ),
+                    //             ),
+                    //           )
+                    //         : CachedNetworkImage(
+                    //             imageUrl: widget.thumbnailUrl,
+                    //             fit: BoxFit.fitWidth,
+                    //           ),
+                    //   ),
+                    // ),
+                    ),
+                SizedBox(width: 4),
+                Container(
+                  width:
+                      widget.userPage ? widget.width * 0.7 : widget.width * 0.5,
+                  height: 10.h,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: widget.userPage
+                            ? Theme.of(context).textTheme.headline5
+                            : Theme.of(context).textTheme.bodyText2,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      !widget.userPage
+                          ? Text(
+                              widget.author,
+                              style: Theme.of(context).textTheme.subtitle2,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : SizedBox(height: 0),
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '${widget.dtcValue}',
+                              '${widget.publishDate} - ' +
+                                  (widget.duration.inHours == 0
+                                      ? widget.duration
+                                          .toString()
+                                          .substring(2, 7)
+                                      : widget.duration
+                                          .toString()
+                                          .substring(0, 7)),
                               style: !widget.userPage
-                                  ? Theme.of(context).textTheme.bodyText2
+                                  ? Theme.of(context).textTheme.subtitle2
                                   : Theme.of(context).textTheme.bodyText2,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 0.5.w),
-                              child: DTubeLogoShadowed(size: 4.w),
+                            Row(
+                              children: [
+                                Text(
+                                  '${widget.dtcValue}',
+                                  style: !widget.userPage
+                                      ? Theme.of(context).textTheme.bodyText2
+                                      : Theme.of(context).textTheme.bodyText2,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 0.5.w),
+                                  child: DTubeLogoShadowed(size: 4.w),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          ]),
+                ),
+              ]),
         ),
       ),
     );

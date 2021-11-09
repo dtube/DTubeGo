@@ -106,13 +106,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  card_swiper:
+  carousel_slider:
     dependency: "direct main"
     description:
-      name: card_swiper
+      name: carousel_slider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "4.0.0"
   characters:
     dependency: transitive
     description:
