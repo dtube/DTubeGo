@@ -38,6 +38,15 @@ class FetchUserFeedEvent extends FeedEvent {
   List<Object> get props => List.empty();
 }
 
+class FetchMomentsOfUserEvent extends FeedEvent {
+  String feedType; // NewFeed or MyFeed
+  String username;
+  FetchMomentsOfUserEvent({required this.feedType, required this.username});
+
+  @override
+  List<Object> get props => List.empty();
+}
+
 class InitFeedEvent extends FeedEvent {
   InitFeedEvent();
 

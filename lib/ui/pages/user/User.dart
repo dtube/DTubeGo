@@ -154,48 +154,43 @@ class _UserState extends State<UserPage> {
             child: SingleChildScrollView(
                 child: Column(
               children: [
-                Text("Fresh Uploads",
-                    style: Theme.of(context).textTheme.headline4),
                 BlocProvider<FeedBloc>(
                   create: (context) =>
                       FeedBloc(repository: FeedRepositoryImpl())
                         ..add(FetchUserFeedEvent(username: user.name)),
                   child: FeedListCarousel(
-                    feedType: 'UserFeed',
-                    username: user.name,
-                    showAuthor: false,
-                    largeFormat: false,
-                    heightPerEntry: 30.h,
-                    width: 125.w,
-                    topPaddingForFirstEntry: 0,
-                    sidepadding: 5.w,
-                    bottompadding: widget.ownUserpage ? 10.h : 0.h,
-                    scrollCallback: (bool) {},
-                    enableNavigation: true,
-                  ),
+                      feedType: 'UserFeed',
+                      username: user.name,
+                      showAuthor: false,
+                      largeFormat: false,
+                      heightPerEntry: 30.h,
+                      width: 125.w,
+                      topPaddingForFirstEntry: 0,
+                      sidepadding: 5.w,
+                      bottompadding: 0.h,
+                      scrollCallback: (bool) {},
+                      enableNavigation: true,
+                      header: "Fresh Uploads"),
                 ),
-
-                // TODO: we'll need a new api function for that
-                // Text("Top Uploads",
-                //     style: Theme.of(context).textTheme.headline4),
-                // BlocProvider<FeedBloc>(
-                //   create: (context) =>
-                //       FeedBloc(repository: FeedRepositoryImpl())
-                //         ..add(FetchUserFeedEvent(username: user.name)),
-                //   child: FeedListCarousel(
-                //     feedType: 'UserFeed',
-                //     username: user.name,
-                //     showAuthor: false,
-                //     largeFormat: false,
-                //     heightPerEntry: 30.h,
-                //     width: 125.w,
-                //     topPaddingForFirstEntry: 0,
-                //     sidepadding: 5.w,
-                //     bottompadding: widget.ownUserpage ? 10.h : 0.h,
-                //     scrollCallback: (bool) {},
-                //     enableNavigation: true,
-                //   ),
-                // ),
+                BlocProvider<FeedBloc>(
+                  create: (context) =>
+                      FeedBloc(repository: FeedRepositoryImpl())
+                        ..add(FetchMomentsOfUserEvent(
+                            feedType: "NewUserMoments", username: user.name)),
+                  child: FeedListCarousel(
+                      feedType: 'NewUserMoments',
+                      username: user.name,
+                      showAuthor: false,
+                      largeFormat: false,
+                      heightPerEntry: 30.h,
+                      width: 125.w,
+                      topPaddingForFirstEntry: 0,
+                      sidepadding: 5.w,
+                      bottompadding: 0.h,
+                      scrollCallback: (bool) {},
+                      enableNavigation: true,
+                      header: "Fresh Moments"),
+                ),
                 SizedBox(height: 10.h)
               ],
             )),
@@ -227,10 +222,18 @@ class _UserState extends State<UserPage> {
                 user.jsonString!.profile!.coverImage != null
             ? ClipPath(
                 clipper: TopBarCustomClipper(),
-                child: CachedNetworkImage(
-                  imageUrl: user.jsonString!.profile!.coverImage!,
-                  fit: BoxFit.contain,
-                ),
+                child: Align(
+                    alignment: Alignment.center,
+                    // heightFactor: 5,
+                    // // widthFactor: 0.5,
+                    child: Container(
+                      height: 25.h,
+                      child: Image.network(
+                        user.jsonString!.profile!.coverImage!,
+                        fit: BoxFit.fitHeight,
+                        // fit: BoxFit.fitHeight,
+                      ),
+                    )),
               )
             : CustomPaint(
                 painter: TopBarCustomPainter(),
@@ -556,7 +559,7 @@ class _UserState extends State<UserPage> {
         ),
 
         Positioned(
-          bottom: 15.h,
+          top: 100.h,
           right: 3.w,
           child: FadeIn(
               preferences: AnimationPreferences(

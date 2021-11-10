@@ -44,6 +44,32 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         yield FeedErrorState(message: e.toString());
       }
     }
+// event to fetch user moments
+    if (event is FetchMomentsOfUserEvent) {
+      String _tsRangeFilter = '&tsrange=' +
+          (DateTime.now().add(Duration(days: -90)).millisecondsSinceEpoch /
+                  1000)
+              .toString() +
+          ',' +
+          (DateTime.now().millisecondsSinceEpoch / 1000).toString();
+
+      yield FeedLoadingState();
+      try {
+        List<FeedItem> feed = event.feedType == "NewUserMoments"
+            ? await repository.getNewFeedFiltered(
+                _avalonApiNode,
+                "&authors=" + event.username + "&tags=DTubeGo-Moments",
+                _tsRangeFilter,
+                _applicationUser)
+            : await repository.getMyFeedFiltered(_avalonApiNode,
+                "&tags=DTubeGo-Moments", _tsRangeFilter, _applicationUser);
+        yield FeedLoadedState(feed: feed, feedType: event.feedType);
+      } catch (e) {
+        print(e.toString());
+        yield FeedErrorState(message: e.toString());
+      }
+    }
+
     // even to fetch tag list entries of the last 90 days
     if (event is FetchTagSearchResults) {
       String _tsRangeFilter = '&tsrange=' +
@@ -110,7 +136,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       try {
         List<FeedItem> feed = await repository.getNewFeedFiltered(
             _avalonApiNode,
-            "&authors=" + event.username,
+            "&authors=" + event.username + "&tags=all,%5EDTubeGo-Moments",
             "" // tsrange currently not used here to load all uploads of the user
             ,
             _applicationUser);
