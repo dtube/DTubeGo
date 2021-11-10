@@ -115,67 +115,77 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
                     // ),
                     ),
                 SizedBox(width: 4),
-                Container(
-                  width:
-                      widget.userPage ? widget.width * 0.7 : widget.width * 0.5,
-                  height: 10.h,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        widget.title,
-                        style: widget.userPage
-                            ? Theme.of(context).textTheme.headline5
-                            : Theme.of(context).textTheme.bodyText2,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      !widget.userPage
-                          ? Text(
-                              widget.author,
-                              style: Theme.of(context).textTheme.subtitle2,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          : SizedBox(height: 0),
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '${widget.publishDate} - ' +
-                                  (widget.duration.inHours == 0
-                                      ? widget.duration
-                                          .toString()
-                                          .substring(2, 7)
-                                      : widget.duration
-                                          .toString()
-                                          .substring(0, 7)),
-                              style: !widget.userPage
-                                  ? Theme.of(context).textTheme.subtitle2
-                                  : Theme.of(context).textTheme.bodyText2,
-                            ),
-                            Row(
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Container(
+                      width: widget.userPage
+                          ? widget.width * 0.7
+                          : widget.width * 0.5,
+                      height: 10.h,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text(
+                            widget.title,
+                            style: widget.userPage
+                                ? Theme.of(context).textTheme.headline5
+                                : Theme.of(context).textTheme.bodyText2,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          !widget.userPage
+                              ? Text(
+                                  widget.author,
+                                  style: Theme.of(context).textTheme.subtitle2,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              : SizedBox(height: 0),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  '${widget.dtcValue}',
+                                  '${widget.publishDate} - ' +
+                                      (widget.duration.inHours == 0
+                                          ? widget.duration
+                                              .toString()
+                                              .substring(2, 7)
+                                          : widget.duration
+                                              .toString()
+                                              .substring(0, 7)),
                                   style: !widget.userPage
-                                      ? Theme.of(context).textTheme.bodyText2
+                                      ? Theme.of(context).textTheme.subtitle2
                                       : Theme.of(context).textTheme.bodyText2,
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 0.5.w),
-                                  child: DTubeLogoShadowed(size: 4.w),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '${widget.dtcValue}',
+                                      style: !widget.userPage
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .bodyText2,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 0.5.w),
+                                      child: DTubeLogoShadowed(size: 4.w),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ]),

@@ -86,7 +86,7 @@ class StaggeredFeed extends StatelessWidget {
   Widget buildLoading(BuildContext context) {
     return DtubeLogoPulseWithSubtitle(
       subtitle: "loading posts..",
-      size: 10.w,
+      size: 40.w,
     );
   }
 

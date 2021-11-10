@@ -1,3 +1,4 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:flutter/material.dart';
@@ -108,79 +109,79 @@ final ThemeData dtubeDarkTheme = ThemeData(
     ),
   ),
   textTheme: TextTheme(
-    headline1: TextStyle(
+    headline1: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 30,
       fontWeight: FontWeight.w900,
       fontStyle: FontStyle.normal,
     ),
-    headline2: TextStyle(
+    headline2: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 30,
       fontWeight: FontWeight.w700,
       fontStyle: FontStyle.normal,
     ),
-    headline3: TextStyle(
+    headline3: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 25,
       fontWeight: FontWeight.w900,
       fontStyle: FontStyle.normal,
     ),
-    headline4: TextStyle(
+    headline4: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 25,
       fontWeight: FontWeight.w700,
       fontStyle: FontStyle.normal,
     ),
-    headline5: TextStyle(
+    headline5: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 20,
       fontWeight: FontWeight.w700,
       fontStyle: FontStyle.normal,
     ),
-    headline6: TextStyle(
+    headline6: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 17,
       fontWeight: FontWeight.w700,
       fontStyle: FontStyle.normal,
     ),
-    subtitle1: TextStyle(
+    subtitle1: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 17,
       fontWeight: FontWeight.w200,
       fontStyle: FontStyle.normal,
     ),
-    bodyText1: TextStyle(
+    bodyText1: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 17,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    bodyText2: TextStyle(
+    bodyText2: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 15,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    caption: TextStyle(
+    caption: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 15,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    button: TextStyle(
+    button: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 17,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    subtitle2: TextStyle(
+    subtitle2: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 14,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    overline: TextStyle(
+    overline: GoogleFonts.workSans(
       decoration: TextDecoration.underline,
       color: globalTextColor,
       fontSize: 17,
@@ -189,25 +190,25 @@ final ThemeData dtubeDarkTheme = ThemeData(
     ),
   ),
   inputDecorationTheme: InputDecorationTheme(
-    labelStyle: TextStyle(
+    labelStyle: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 16,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    helperStyle: TextStyle(
+    helperStyle: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 16,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    hintStyle: TextStyle(
+    hintStyle: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 16,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    errorStyle: TextStyle(
+    errorStyle: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 16,
       fontWeight: FontWeight.w400,
@@ -219,19 +220,19 @@ final ThemeData dtubeDarkTheme = ThemeData(
     contentPadding:
         EdgeInsets.only(top: 12.0, bottom: 12.0, left: 0.0, right: 0.0),
     isCollapsed: false,
-    prefixStyle: TextStyle(
+    prefixStyle: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 16,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    suffixStyle: TextStyle(
+    suffixStyle: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 16,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    counterStyle: TextStyle(
+    counterStyle: GoogleFonts.workSans(
       color: globalTextColor,
       fontSize: 16,
       fontWeight: FontWeight.w400,
@@ -319,7 +320,7 @@ final ThemeData dtubeDarkTheme = ThemeData(
     valueIndicatorColor: Color(0xff223053),
     valueIndicatorShape: PaddleSliderValueIndicatorShape(),
     showValueIndicator: ShowValueIndicator.onlyForDiscrete,
-    valueIndicatorTextStyle: TextStyle(
+    valueIndicatorTextStyle: GoogleFonts.workSans(
       color: Color(0xffcdcdcd),
       fontSize: 14,
       fontWeight: FontWeight.w400,
@@ -337,14 +338,14 @@ final ThemeData dtubeDarkTheme = ThemeData(
     deleteIconColor: Color(0xdeffffff),
     disabledColor: Color(0x0cffffff),
     labelPadding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 8.0, right: 8.0),
-    labelStyle: TextStyle(
+    labelStyle: GoogleFonts.workSans(
       color: Color(0xdeffffff),
       fontSize: 14,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
     padding: EdgeInsets.only(top: 4.0, bottom: 4.0, left: 4.0, right: 4.0),
-    secondaryLabelStyle: TextStyle(
+    secondaryLabelStyle: GoogleFonts.workSans(
       color: Color(0xff223153),
       fontSize: 14,
       fontWeight: FontWeight.w400,

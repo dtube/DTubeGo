@@ -1,3 +1,5 @@
+import 'package:responsive_sizer/responsive_sizer.dart';
+
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc.dart';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
@@ -108,12 +110,12 @@ class _ReplyButtonState extends State<ReplyButton> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: 250, // TODO: make this dynamic
+                  width: 85.w, // TODO: make this dynamic
                   child: TextField(
-                    //key: UniqueKey(),
-                    autofocus: _replyPressed,
-                    controller: _replyController,
-                  ),
+                      //key: UniqueKey(),
+                      autofocus: _replyPressed,
+                      controller: _replyController,
+                      style: Theme.of(context).textTheme.bodyText1),
                 ),
                 BlocBuilder<UserBloc, UserState>(
                     bloc: _userBloc,

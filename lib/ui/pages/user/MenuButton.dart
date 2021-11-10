@@ -137,7 +137,7 @@ Widget buildUserMenuSpeedDial(
 
   return SpeedDial(
       child: CircleAvatar(
-        backgroundColor: globalBlueShades[2],
+        backgroundColor: globalRed,
         radius: 10.w,
         foregroundColor: globalAlmostWhite,
         child: FaIcon(FontAwesomeIcons.bars, size: 8.w),
