@@ -208,11 +208,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                   packageInfo.version +
                   '+' +
                   packageInfo.buildNumber,
-              "refs": [
-                _upload.crossPostToHive
-                    ? "hive/" + _hiveAuthor + "/" + _upload.link
-                    : null
-              ]
+              "refs": (_upload.crossPostToHive == false)
+                  ? []
+                  : ["hive/" + _hiveAuthor + "/" + _upload.link]
             };
           } else {
             // we have a thumbnail location defined => no ipfs uploaded image so third party thumbnail
