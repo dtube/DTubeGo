@@ -48,8 +48,6 @@ class UserPage extends StatefulWidget {
 
 class _UserState extends State<UserPage> {
   late UserBloc userBloc;
-  List<String> randomFollowers = [];
-  List<String> randomFollowings = [];
 
   @override
   void initState() {
@@ -103,16 +101,6 @@ class _UserState extends State<UserPage> {
                 } else if (state is UserLoadingState) {
                   return buildLoading();
                 } else if (state is UserLoadedState) {
-                  if (state.user.followers != null) {
-                    randomFollowers = state.user.followers!;
-                    randomFollowers.shuffle();
-                    randomFollowers = randomFollowers.take(15).toList();
-                  }
-                  if (state.user.follows != null) {
-                    randomFollowings = state.user.follows!;
-                    randomFollowings.shuffle();
-                    randomFollowings = randomFollowings.take(15).toList();
-                  }
                   return buildUserPage(state.user, widget.ownUserpage);
                 } else if (state is UserErrorState) {
                   return buildErrorUi(state.message);
@@ -153,502 +141,499 @@ class _UserState extends State<UserPage> {
       iconSize = 6.h;
     }
 
-    return Expanded(
-      child: Stack(
-        children: [
-          SingleChildScrollView(
-              child: Stack(children: [
-            //SizedBox(height: 8),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: EdgeInsets.only(top: 28.h),
-                child: SingleChildScrollView(
-                    child: Column(
-                  children: [
-                    BlocProvider<FeedBloc>(
-                      create: (context) =>
-                          FeedBloc(repository: FeedRepositoryImpl())
-                            ..add(FetchUserFeedEvent(username: user.name)),
-                      child: FeedListCarousel(
-                          feedType: 'UserFeed',
-                          username: user.name,
-                          showAuthor: false,
-                          largeFormat: false,
-                          heightPerEntry: 30.h,
-                          width: 125.w,
-                          topPaddingForFirstEntry: 0,
-                          sidepadding: 5.w,
-                          bottompadding: 0.h,
-                          scrollCallback: (bool) {},
-                          enableNavigation: true,
-                          header: "Fresh Uploads"),
-                    ),
-                    BlocProvider<FeedBloc>(
-                      create: (context) =>
-                          FeedBloc(repository: FeedRepositoryImpl())
-                            ..add(FetchMomentsOfUserEvent(
-                                feedType: "NewUserMoments",
-                                username: user.name)),
-                      child: FeedListCarousel(
-                          feedType: 'NewUserMoments',
-                          username: user.name,
-                          showAuthor: false,
-                          largeFormat: false,
-                          heightPerEntry: 30.h,
-                          width: 125.w,
-                          topPaddingForFirstEntry: 0,
-                          sidepadding: 5.w,
-                          bottompadding: 0.h,
-                          scrollCallback: (bool) {},
-                          enableNavigation: true,
-                          header: "Fresh Moments"),
-                    ),
-                    user.followers != null
-                        ? Column(
-                            children: [
-                              Text(
-                                  "Followers (" +
-                                      user.followers!.length.toString() +
-                                      ")",
-                                  style: Theme.of(context).textTheme.headline5),
-                              Container(
-                                height: 15.h,
-                                width: double.infinity,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: user.followers!.length,
-                                  itemBuilder: (ctx, index) => FollowsAvatar(
-                                      username: user.followers![index]),
-                                ),
-                              ),
-                            ],
-                          )
-                        : SizedBox(height: 0),
-                    user.follows != null
-                        ? Column(
-                            children: [
-                              Text(
-                                  "Followings (" +
-                                      user.follows!.length.toString() +
-                                      ")",
-                                  style: Theme.of(context).textTheme.headline5),
-                              Container(
-                                height: 15.h,
-                                width: double.infinity,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: user.follows!.length,
-                                  itemBuilder: (ctx, index) => FollowsAvatar(
-                                      username: user.follows![index]),
-                                ),
-                              ),
-                            ],
-                          )
-                        : SizedBox(height: 0),
-                    SizedBox(height: 10.h)
-                  ],
-                )),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                height: 15.h,
-                width: 200.w,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    gradient: LinearGradient(
-                        begin: FractionalOffset.topCenter,
-                        end: FractionalOffset.bottomCenter,
-                        colors: [
-                          Colors.black,
-                          Colors.black.withOpacity(0.0),
-                        ],
-                        stops: [
-                          0.0,
-                          1.0
-                        ])),
-              ),
-            ),
+    return
+        // Expanded(
+        //   child:
 
-            user.jsonString != null &&
-                    user.jsonString!.profile != null &&
-                    user.jsonString!.profile!.coverImage != null
-                ? ClipPath(
-                    clipper: TopBarCustomClipper(),
-                    child: Align(
-                        alignment: Alignment.center,
-                        // heightFactor: 5,
-                        // // widthFactor: 0.5,
-                        child: Container(
-                          height: 25.h,
-                          width: double.infinity,
-                          child: FittedBox(
-                            fit: BoxFit.fill,
-                            child: Image.network(
-                              user.jsonString!.profile!.coverImage!,
-                              //  fit: BoxFit.fitWidth,
-                              // fit: BoxFit.fitHeight,
-                            ),
-                          ),
-                        )),
-                  )
-                : CustomPaint(
-                    painter: TopBarCustomPainter(),
+        Stack(
+      children: [
+        SingleChildScrollView(
+            child: Stack(children: [
+          //SizedBox(height: 8),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 28.h),
+              child: SingleChildScrollView(
+                  child: Column(
+                children: [
+                  BlocProvider<FeedBloc>(
+                    create: (context) =>
+                        FeedBloc(repository: FeedRepositoryImpl())
+                          ..add(FetchUserFeedEvent(username: user.name)),
+                    child: FeedListCarousel(
+                        feedType: 'UserFeed',
+                        username: user.name,
+                        showAuthor: false,
+                        largeFormat: false,
+                        heightPerEntry: 30.h,
+                        width: 125.w,
+                        topPaddingForFirstEntry: 0,
+                        sidepadding: 5.w,
+                        bottompadding: 0.h,
+                        scrollCallback: (bool) {},
+                        enableNavigation: true,
+                        header: "Fresh Uploads"),
                   ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                height: 35.h,
-                width: 200.w,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    gradient: LinearGradient(
-                        begin: FractionalOffset.topCenter,
-                        end: FractionalOffset.bottomCenter,
-                        colors: [
-                          Colors.black,
-                          Colors.black.withOpacity(0.0),
-                        ],
-                        stops: [
-                          0.0,
-                          1.0
-                        ])),
-              ),
+                  BlocProvider<FeedBloc>(
+                    create: (context) =>
+                        FeedBloc(repository: FeedRepositoryImpl())
+                          ..add(FetchMomentsOfUserEvent(
+                              feedType: "NewUserMoments", username: user.name)),
+                    child: FeedListCarousel(
+                        feedType: 'NewUserMoments',
+                        username: user.name,
+                        showAuthor: false,
+                        largeFormat: false,
+                        heightPerEntry: 30.h,
+                        width: 125.w,
+                        topPaddingForFirstEntry: 0,
+                        sidepadding: 5.w,
+                        bottompadding: 0.h,
+                        scrollCallback: (bool) {},
+                        enableNavigation: true,
+                        header: "Fresh Moments"),
+                  ),
+                  user.followers != null
+                      ? Column(
+                          children: [
+                            Text(
+                                "Followers (" +
+                                    user.followers!.length.toString() +
+                                    ")",
+                                style: Theme.of(context).textTheme.headline5),
+                            Container(
+                              height: 15.h,
+                              width: double.infinity,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: user.followers!.length,
+                                itemBuilder: (ctx, index) => FollowsAvatar(
+                                    username: user.followers![index]),
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox(height: 0),
+                  user.follows != null
+                      ? Column(
+                          children: [
+                            Text(
+                                "Followings (" +
+                                    user.follows!.length.toString() +
+                                    ")",
+                                style: Theme.of(context).textTheme.headline5),
+                            Container(
+                              height: 15.h,
+                              width: double.infinity,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: user.follows!.length,
+                                itemBuilder: (ctx, index) => FollowsAvatar(
+                                    username: user.follows![index]),
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox(height: 0),
+                  SizedBox(height: 10.h)
+                ],
+              )),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 5.h, left: 40.w),
-              child: FadeIn(
-                preferences:
-                    AnimationPreferences(offset: Duration(milliseconds: 1100)),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      width: 70.w,
-                      height: 20.h,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          OverlayText(
-                            text: user.jsonString != null &&
-                                    user.jsonString!.additionals != null &&
-                                    user.jsonString!.additionals!.displayName !=
-                                        null
-                                ? user.jsonString!.additionals!.displayName!
-                                : user.name,
-                            sizeMultiply: 1.6,
-                            bold: true,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              height: 15.h,
+              width: 200.w,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  gradient: LinearGradient(
+                      begin: FractionalOffset.topCenter,
+                      end: FractionalOffset.bottomCenter,
+                      colors: [
+                        Colors.black,
+                        Colors.black.withOpacity(0.0),
+                      ],
+                      stops: [
+                        0.0,
+                        1.0
+                      ])),
+            ),
+          ),
+
+          user.jsonString != null &&
+                  user.jsonString!.profile != null &&
+                  user.jsonString!.profile!.coverImage != null
+              ? ClipPath(
+                  clipper: TopBarCustomClipper(),
+                  child: Align(
+                      alignment: Alignment.center,
+                      // heightFactor: 5,
+                      // // widthFactor: 0.5,
+                      child: Container(
+                        height: 25.h,
+                        width: double.infinity,
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Image.network(
+                            user.jsonString!.profile!.coverImage!,
+                            //  fit: BoxFit.fitWidth,
+                            // fit: BoxFit.fitHeight,
                           ),
-                          user.jsonString != null &&
+                        ),
+                      )),
+                )
+              : CustomPaint(
+                  painter: TopBarCustomPainter(),
+                ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              height: 35.h,
+              width: 200.w,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  gradient: LinearGradient(
+                      begin: FractionalOffset.topCenter,
+                      end: FractionalOffset.bottomCenter,
+                      colors: [
+                        Colors.black,
+                        Colors.black.withOpacity(0.0),
+                      ],
+                      stops: [
+                        0.0,
+                        1.0
+                      ])),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 5.h, left: 40.w),
+            child: FadeIn(
+              preferences:
+                  AnimationPreferences(offset: Duration(milliseconds: 1100)),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    width: 70.w,
+                    height: 20.h,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OverlayText(
+                          text: user.jsonString != null &&
                                   user.jsonString!.additionals != null &&
                                   user.jsonString!.additionals!.displayName !=
                                       null
-                              ? OverlayText(
-                                  text: '@' + user.name,
-                                  sizeMultiply: 1.2,
-                                  overflow: TextOverflow.ellipsis,
-                                )
-                              : SizedBox(height: 0),
-                          // user.jsonString != null &&
-                          //         user.jsonString!.profile != null &&
-                          //         user.jsonString!.profile!.about != null
-                          //     ? OverlayText(
-                          //         text: user.jsonString!.profile!.about!,
-                          //         sizeMultiply: 1.1,
-                          //         maxLines: 3,
-                          //         overflow: TextOverflow.ellipsis,
-                          //       )
-                          //     : SizedBox(height: 0),
-                        ],
-                      ),
+                              ? user.jsonString!.additionals!.displayName!
+                              : user.name,
+                          sizeMultiply: 1.6,
+                          bold: true,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                        user.jsonString != null &&
+                                user.jsonString!.additionals != null &&
+                                user.jsonString!.additionals!.displayName !=
+                                    null
+                            ? OverlayText(
+                                text: '@' + user.name,
+                                sizeMultiply: 1.2,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            : SizedBox(height: 0),
+                        // user.jsonString != null &&
+                        //         user.jsonString!.profile != null &&
+                        //         user.jsonString!.profile!.about != null
+                        //     ? OverlayText(
+                        //         text: user.jsonString!.profile!.about!,
+                        //         sizeMultiply: 1.1,
+                        //         maxLines: 3,
+                        //         overflow: TextOverflow.ellipsis,
+                        //       )
+                        //     : SizedBox(height: 0),
+                      ],
                     ),
-                    IconButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return PopUpDialogWithTitleLogo(
-                                  titleWidget: Center(
-                                    child: FaIcon(
-                                      FontAwesomeIcons.info,
-                                      size: 8.h,
-                                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return PopUpDialogWithTitleLogo(
+                                titleWidget: Center(
+                                  child: FaIcon(
+                                    FontAwesomeIcons.info,
+                                    size: 8.h,
                                   ),
-                                  callbackOK: () {},
-                                  titleWidgetPadding: 10.w,
-                                  titleWidgetSize: 10.w,
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                        width: 10.w,
-                                                        height: 10.w,
-                                                        child:
-                                                            DTubeLogoShadowed(
-                                                                size: 10.w)),
-                                                    OverlayText(
-                                                      text: shortDTC(
-                                                          user.balance),
-                                                      sizeMultiply: 1.4,
-                                                      bold: true,
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Container(
+                                ),
+                                callbackOK: () {},
+                                titleWidgetPadding: 10.w,
+                                titleWidgetSize: 10.w,
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Container(
                                                       width: 10.w,
                                                       height: 10.w,
-                                                      child: ShadowedIcon(
-                                                        icon: FontAwesomeIcons
-                                                            .bolt,
-                                                        shadowColor:
-                                                            Colors.black,
-                                                        color: Colors.white,
-                                                        size: 10.w,
-                                                      ),
-                                                    ),
-                                                    OverlayText(
-                                                        text:
-                                                            shortVP(user.vt!.v),
-                                                        sizeMultiply: 1.4,
-                                                        bold: true),
-                                                  ],
-                                                ),
-                                              ]),
-                                        ),
-                                        SizedBox(height: 2.h),
-                                        user.jsonString != null &&
-                                                user.jsonString!.profile !=
-                                                    null &&
-                                                user.jsonString!.profile!
-                                                        .location !=
-                                                    null
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("From: ",
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline6,
-                                                        textAlign:
-                                                            TextAlign.start),
-                                                    Container(
-                                                      width: 80.w,
-                                                      child: Text(
-                                                        user.jsonString!
-                                                            .profile!.location!,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyText1,
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        maxLines: 3,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            : SizedBox(height: 0),
-                                        user.jsonString != null &&
-                                                user.jsonString!.profile !=
-                                                    null &&
-                                                user.jsonString!.profile!
-                                                        .website !=
-                                                    null
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("Website: ",
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline6,
-                                                        textAlign:
-                                                            TextAlign.start),
-                                                    Container(
-                                                      width: 70.w,
-                                                      child: OpenableHyperlink(
-                                                        url: user.jsonString!
-                                                            .profile!.website!,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            : SizedBox(height: 0),
-                                        user.jsonString != null &&
-                                                user.jsonString!.profile !=
-                                                    null &&
-                                                user.jsonString!.profile!
-                                                        .about !=
-                                                    null
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("about: ",
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline6,
-                                                        textAlign:
-                                                            TextAlign.start),
-                                                    Container(
-                                                      width: 80.w,
-                                                      child: Text(
-                                                        user.jsonString!
-                                                            .profile!.about!,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyText1,
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        maxLines: 5,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            : SizedBox(height: 0),
-                                        InkWell(
-                                            child: Container(
-                                              padding: EdgeInsets.only(
-                                                  top: 20.0, bottom: 20.0),
-                                              decoration: BoxDecoration(
-                                                color: globalRed,
-                                                borderRadius: BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(20.0),
-                                                    bottomRight:
-                                                        Radius.circular(20.0)),
+                                                      child: DTubeLogoShadowed(
+                                                          size: 10.w)),
+                                                  OverlayText(
+                                                    text:
+                                                        shortDTC(user.balance),
+                                                    sizeMultiply: 1.4,
+                                                    bold: true,
+                                                  ),
+                                                ],
                                               ),
-                                              child: Text(
-                                                "Thanks!",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline4,
-                                                textAlign: TextAlign.center,
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    width: 10.w,
+                                                    height: 10.w,
+                                                    child: ShadowedIcon(
+                                                      icon:
+                                                          FontAwesomeIcons.bolt,
+                                                      shadowColor: Colors.black,
+                                                      color: Colors.white,
+                                                      size: 10.w,
+                                                    ),
+                                                  ),
+                                                  OverlayText(
+                                                      text: shortVP(user.vt!.v),
+                                                      sizeMultiply: 1.4,
+                                                      bold: true),
+                                                ],
                                               ),
+                                            ]),
+                                      ),
+                                      SizedBox(height: 2.h),
+                                      user.jsonString != null &&
+                                              user.jsonString!.profile !=
+                                                  null &&
+                                              user.jsonString!.profile!
+                                                      .location !=
+                                                  null
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text("From: ",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline6,
+                                                      textAlign:
+                                                          TextAlign.start),
+                                                  Container(
+                                                    width: 80.w,
+                                                    child: Text(
+                                                      user.jsonString!.profile!
+                                                          .location!,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyText1,
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      maxLines: 3,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : SizedBox(height: 0),
+                                      user.jsonString != null &&
+                                              user.jsonString!.profile !=
+                                                  null &&
+                                              user.jsonString!.profile!
+                                                      .website !=
+                                                  null
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text("Website: ",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline6,
+                                                      textAlign:
+                                                          TextAlign.start),
+                                                  Container(
+                                                    width: 70.w,
+                                                    child: OpenableHyperlink(
+                                                      url: user.jsonString!
+                                                          .profile!.website!,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : SizedBox(height: 0),
+                                      user.jsonString != null &&
+                                              user.jsonString!.profile !=
+                                                  null &&
+                                              user.jsonString!.profile!.about !=
+                                                  null
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text("about: ",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline6,
+                                                      textAlign:
+                                                          TextAlign.start),
+                                                  Container(
+                                                    width: 80.w,
+                                                    child: Text(
+                                                      user.jsonString!.profile!
+                                                          .about!,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyText1,
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      maxLines: 5,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : SizedBox(height: 0),
+                                      InkWell(
+                                          child: Container(
+                                            padding: EdgeInsets.only(
+                                                top: 20.0, bottom: 20.0),
+                                            decoration: BoxDecoration(
+                                              color: globalRed,
+                                              borderRadius: BorderRadius.only(
+                                                  bottomLeft:
+                                                      Radius.circular(20.0),
+                                                  bottomRight:
+                                                      Radius.circular(20.0)),
                                             ),
-                                            onTap: () {
-                                              Navigator.of(context).pop();
-                                              FocusScope.of(context).unfocus();
-                                            }),
-                                      ],
-                                    ),
+                                            child: Text(
+                                              "Thanks!",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                            FocusScope.of(context).unfocus();
+                                          }),
+                                    ],
                                   ),
-                                );
-                              });
-                        },
-                        icon: ShadowedIcon(
-                            size: 8.w,
-                            icon: FontAwesomeIcons.info,
-                            color: Colors.white,
-                            shadowColor: Colors.black))
-                  ],
-                ),
+                                ),
+                              );
+                            });
+                      },
+                      icon: ShadowedIcon(
+                          size: 8.w,
+                          icon: FontAwesomeIcons.info,
+                          color: Colors.white,
+                          shadowColor: Colors.black))
+                ],
               ),
             ),
-            // Align(
-            //   alignment: Alignment.topRight,
-            //   child: Padding(
-            //     padding: EdgeInsets.only(top: 12.h, right: 5.w),
-            //     child: FadeIn(
-            //       preferences:
-            //           AnimationPreferences(offset: Duration(milliseconds: 1100)),
-            //       child: Container(
-            //         width: 40.w,
-            //         height: 21.h,
-            //         child: Column(
-            //           crossAxisAlignment: CrossAxisAlignment.end,
-            //           mainAxisAlignment: MainAxisAlignment.start,
-            //           children: [
-            //             user.jsonString != null &&
-            //                     user.jsonString!.profile != null &&
-            //                     user.jsonString!.profile!.location != null
-            //                 ? OverlayText(
-            //                     text:
-            //                         'from: ' + user.jsonString!.profile!.location!,
-            //                     sizeMultiply: 1,
-            //                     maxLines: 2,
-            //                     overflow: TextOverflow.ellipsis,
-            //                   )
-            //                 : SizedBox(height: 0),
-            //             // user.jsonString!.profile != null &&
-            //             //         user.jsonString!.profile!.website != null
-            //             //     ? OpenableHyperlink(
-            //             //         url: user.jsonString!.profile!.website!,
-            //             //       )
-            //             //     : SizedBox(height: 0)
-            //           ],
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: EdgeInsets.only(top: 7.h, left: 4.w),
-                child: FadeIn(
-                  preferences:
-                      AnimationPreferences(offset: Duration(milliseconds: 500)),
-                  child: AccountAvatarBase(
-                    username: user.name,
-                    avatarSize: 30.w,
-                    showVerified: true,
-                    showName: false,
-                    width: 32.w,
-                    height: 32.w,
-                  ),
-                ),
-              ),
-            ),
-          ])),
-          Positioned(
-            bottom: 10.h,
-            right: 3.w,
-            child: FadeIn(
-                preferences: AnimationPreferences(
-                    offset: Duration(milliseconds: 1000),
-                    duration: Duration(seconds: 1)),
-                child: buildUserMenuSpeedDial(
-                    context, user, widget.ownUserpage, userBloc)),
           ),
-        ],
-      ),
+          // Align(
+          //   alignment: Alignment.topRight,
+          //   child: Padding(
+          //     padding: EdgeInsets.only(top: 12.h, right: 5.w),
+          //     child: FadeIn(
+          //       preferences:
+          //           AnimationPreferences(offset: Duration(milliseconds: 1100)),
+          //       child: Container(
+          //         width: 40.w,
+          //         height: 21.h,
+          //         child: Column(
+          //           crossAxisAlignment: CrossAxisAlignment.end,
+          //           mainAxisAlignment: MainAxisAlignment.start,
+          //           children: [
+          //             user.jsonString != null &&
+          //                     user.jsonString!.profile != null &&
+          //                     user.jsonString!.profile!.location != null
+          //                 ? OverlayText(
+          //                     text:
+          //                         'from: ' + user.jsonString!.profile!.location!,
+          //                     sizeMultiply: 1,
+          //                     maxLines: 2,
+          //                     overflow: TextOverflow.ellipsis,
+          //                   )
+          //                 : SizedBox(height: 0),
+          //             // user.jsonString!.profile != null &&
+          //             //         user.jsonString!.profile!.website != null
+          //             //     ? OpenableHyperlink(
+          //             //         url: user.jsonString!.profile!.website!,
+          //             //       )
+          //             //     : SizedBox(height: 0)
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(top: 7.h, left: 4.w),
+              child: FadeIn(
+                preferences:
+                    AnimationPreferences(offset: Duration(milliseconds: 500)),
+                child: AccountAvatarBase(
+                  username: user.name,
+                  avatarSize: 30.w,
+                  showVerified: true,
+                  showName: false,
+                  width: 32.w,
+                  height: 32.w,
+                ),
+              ),
+            ),
+          ),
+        ])),
+        Positioned(
+          bottom: 10.h,
+          right: 3.w,
+          child: FadeIn(
+              preferences: AnimationPreferences(
+                  offset: Duration(milliseconds: 1000),
+                  duration: Duration(seconds: 1)),
+              child: buildUserMenuSpeedDial(
+                  context, user, widget.ownUserpage, userBloc)),
+        ),
+      ],
+      //   ),
     );
   }
 }

@@ -202,7 +202,12 @@ Future<bool> getOpenedOnce() async {
 }
 
 Future<bool> getFirstLogin() async {
-  var _firstTimeLogin = await _storage.read(key: settingKey_FirstLogin);
+  String? _firstTimeLogin = "";
+  try {
+    _firstTimeLogin = await _storage.read(key: settingKey_FirstLogin);
+  } catch (e) {
+    _firstTimeLogin = "true"; // fallback: never opened that app before
+  }
   if (_firstTimeLogin == null || _firstTimeLogin != "false") {
     return true;
   } else {
