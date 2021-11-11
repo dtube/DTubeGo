@@ -89,7 +89,7 @@ class TagListState extends State<TagList> {
                     child: Column(
                       children: [
                         Text(
-                          "videos with the tag \"${widget.tagName}\" of the last 90 days",
+                          "videos with the tag \"${widget.tagName}\" of the last 90 days: ",
                           style: Theme.of(context).textTheme.headline5,
                         ),
                         BlocBuilder<FeedBloc, FeedState>(
@@ -150,7 +150,7 @@ class TagListState extends State<TagList> {
 
   Widget buildResultsListForTagResults(List<FeedItem> searchResults) {
     return Container(
-      height: 800,
+      height: 100.h,
       alignment: Alignment.topLeft,
       child: ListView.builder(
           padding: EdgeInsets.zero,

@@ -135,9 +135,15 @@ class StaggeredFeed extends StatelessWidget {
           navigateToPostDetailPage(context, feed[index].author,
               feed[index].link, "none", false, () {});
         },
-        child: new CachedNetworkImage(
-          imageUrl: feed[index].thumbUrl,
-        ),
+        child: (feed[index].summaryOfVotes < 0 ||
+                feed[index].jsonString?.hide == 1 ||
+                feed[index].jsonString?.nsfw == 1)
+            ? SizedBox(
+                height: 0,
+              )
+            : new CachedNetworkImage(
+                imageUrl: feed[index].thumbUrl,
+              ),
       ),
       staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
       mainAxisSpacing: 4.0,
