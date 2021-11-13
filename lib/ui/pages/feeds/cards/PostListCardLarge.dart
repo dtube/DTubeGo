@@ -4,9 +4,8 @@ import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/Comments/CommentDialog.dart';
+import 'package:dtube_go/ui/widgets/FullScreenButton.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
-
-import 'package:dtube_go/ui/pages/feeds/widgets/FullScreenButton.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
 import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';

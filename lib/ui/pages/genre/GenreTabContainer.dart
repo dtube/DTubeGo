@@ -1,3 +1,7 @@
+// Currently not needed since the navigation bar does not support more than 5 items
+// but let's keep it in the code for now
+
+import 'package:dtube_go/ui/pages/genre/GenreViewBase.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_go/res/appConfigValues.dart';
@@ -19,29 +23,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
-class FeedMainPage extends StatefulWidget {
-  FeedMainPage({Key? key}) : super(key: key);
+class GenreMainPage extends StatefulWidget {
+  GenreMainPage({Key? key}) : super(key: key);
 
   @override
-  _FeedMainPageState createState() => _FeedMainPageState();
+  _GenreMainPageState createState() => _GenreMainPageState();
 }
 
-class _FeedMainPageState extends State<FeedMainPage>
+class _GenreMainPageState extends State<GenreMainPage>
     with SingleTickerProviderStateMixin {
-  List<String> _tabNames = [
-    "Fresh Videos",
-    "Genre Feed",
-    "Follow Feed",
-    "Hot Videos",
-    "Trending Videos"
-  ];
-  List<IconData> _tabIcons = [
-    FontAwesomeIcons.rss,
-    FontAwesomeIcons.hashtag,
-    FontAwesomeIcons.userFriends,
-    FontAwesomeIcons.fire,
-    FontAwesomeIcons.chartLine,
-  ];
+  List<String> _tabNames = ["Genre Feed"];
+  List<IconData> _tabIcons = [FontAwesomeIcons.hashtag];
   late TabController _tabController;
   int _selectedIndex = 0;
   List<FilterTag> mockResults = [];
@@ -51,7 +43,7 @@ class _FeedMainPageState extends State<FeedMainPage>
   FocusNode tagSearch = new FocusNode();
   @override
   void initState() {
-    _tabController = new TabController(length: 5, vsync: this);
+    _tabController = new TabController(length: 1, vsync: this);
     _tabController.addListener(() {
       if (_tabController.index != _selectedIndex) {
         setState(() {
@@ -62,37 +54,10 @@ class _FeedMainPageState extends State<FeedMainPage>
           case 0:
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
-              ..add(FetchFeedEvent(feedType: "NewFeed"));
-            break;
-          case 1:
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
               ..add(FetchTagSearchResults(
-                  tags: selectedTagsString == ""
-                      ? "all"
-                      : selectedTagsString
-                          .replaceAll(' ', ',')
-                          .substring(0, selectedTagsString.length - 1)));
-
-            break;
-          case 2:
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(feedType: "MyFeed"));
+                  tags: selectedTagsString.replaceAll(' ', ',')));
             break;
 
-          case 3:
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(feedType: "HotFeed"));
-            break;
-          case 4:
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(feedType: "TrendingFeed"));
-            break;
-
-            break;
           default:
         }
       }
@@ -146,15 +111,10 @@ class _FeedMainPageState extends State<FeedMainPage>
             padding: _paddingTabBarView,
             child: TabBarView(
               children: [
-                FeedViewBase(
-                    feedType: 'NewFeed',
-                    largeFormat: true,
-                    showAuthor: false,
-                    scrollCallback: (bool) {}),
                 Stack(
                   fit: StackFit.expand,
                   children: [
-                    FeedViewBase(
+                    GenreViewBase(
                         feedType: 'tagSearch',
                         largeFormat: true,
                         showAuthor: false,
@@ -167,43 +127,34 @@ class _FeedMainPageState extends State<FeedMainPage>
                           top: 10.h,
                         ),
                         child: Container(
-                          width: 90.w,
+                          width: 85.w,
                           // height: 10.h,
                           child: Stack(
                             children: [
                               Visibility(
                                 visible: !showTagFilter,
                                 child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        setState(() async {
-                                          getMainTagsFromStorage();
-                                          showTagFilter = true;
-                                        });
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 3.5.h, left: 4.w),
-                                        child: Row(
-                                          children: [
-                                            ShadowedIcon(
+                                    alignment: Alignment.topLeft,
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                            onPressed: () {
+                                              setState(() async {
+                                                getMainTagsFromStorage();
+                                                showTagFilter = true;
+                                              });
+                                            },
+                                            icon: ShadowedIcon(
                                                 size: 5.w,
                                                 icon: FontAwesomeIcons.filter,
                                                 color: Colors.white,
-                                                shadowColor: Colors.black),
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 4.w),
-                                              child: Text("show genre filter",
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyText1),
-                                            )
-                                          ],
-                                        ),
-                                      )),
-                                ),
+                                                shadowColor: Colors.black)),
+                                        Text("show genre filter",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1)
+                                      ],
+                                    )),
                               ),
                               Visibility(
                                 visible: showTagFilter,
@@ -381,21 +332,6 @@ class _FeedMainPageState extends State<FeedMainPage>
                     ),
                   ],
                 ),
-                FeedViewBase(
-                    feedType: 'MyFeed',
-                    largeFormat: true,
-                    showAuthor: false,
-                    scrollCallback: (bool) {}),
-                FeedViewBase(
-                    feedType: 'HotFeed',
-                    largeFormat: true,
-                    showAuthor: false,
-                    scrollCallback: (bool) {}),
-                FeedViewBase(
-                    feedType: 'TrendingFeed',
-                    largeFormat: true,
-                    showAuthor: false,
-                    scrollCallback: (bool) {}),
               ],
               controller: _tabController,
             ),
@@ -473,46 +409,6 @@ class TabBarWithPosition extends StatelessWidget {
               labelColor: Colors.white,
               indicatorColor: Colors.white,
               tabs: [
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[0],
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[1],
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[2],
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[3],
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
                 Tab(
                   child: RotatedBox(
                     quarterTurns: rotation == 3 ? 1 : 0,

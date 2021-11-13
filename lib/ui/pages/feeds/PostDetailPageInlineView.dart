@@ -1,5 +1,5 @@
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/ui/pages/feeds/widgets/FullScreenButton.dart';
+import 'package:dtube_go/ui/widgets/FullScreenButton.dart';
 
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
