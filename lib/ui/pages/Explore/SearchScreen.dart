@@ -80,7 +80,7 @@ class SearchScreenState extends State<SearchScreen> {
         if (_selectedEntity == 2) {
           BlocProvider.of<FeedBloc>(context)
             ..isFetching = true
-            ..add(FetchTagSearchResults(tag: currentSearch));
+            ..add(FetchTagSearchResults(tags: currentSearch));
         } else {
           searchBloc.add(FetchSearchResultsEvent(
               searchQuery: searchTextController.text,
@@ -119,7 +119,7 @@ class SearchScreenState extends State<SearchScreen> {
                 if (_selectedEntity == 2) {
                   BlocProvider.of<FeedBloc>(context)
                     ..isFetching = true
-                    ..add(FetchTagSearchResults(tag: currentSearch));
+                    ..add(FetchTagSearchResults(tags: currentSearch));
                 } else {
                   searchBloc.add(FetchSearchResultsEvent(
                       searchQuery: searchTextController.text,

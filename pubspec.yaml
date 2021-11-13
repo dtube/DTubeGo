@@ -69,6 +69,7 @@ dependencies:
   google_fonts: ^2.1.0
   rflutter_alert: ^2.0.2 
   flutter_speed_dial: ^4.1.0 # drop out menu
+  chips_input: ^0.0.6
   
   another_flushbar: ^1.10.24 # global snackbar to inform the user about transactions
   loadmore: ^2.0.1 # collapsable widget for long video descriptions

@@ -103,10 +103,10 @@ class _ExploreMainPageState extends State<ExploreMainPage>
                       children: [
                         _exploreTags != ""
                             ? BlocProvider<FeedBloc>(
-                                create: (context) => FeedBloc(
-                                    repository: FeedRepositoryImpl())
-                                  ..add(
-                                      FetchTagSearchResults(tag: _exploreTags)),
+                                create: (context) =>
+                                    FeedBloc(repository: FeedRepositoryImpl())
+                                      ..add(FetchTagSearchResults(
+                                          tags: _exploreTags)),
                                 child: StaggeredFeed(
                                   searchTags: _exploreTags,
                                 ))

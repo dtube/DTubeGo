@@ -34,6 +34,7 @@ class FeedList extends StatelessWidget {
   bool enableNavigation;
   ListOfString2VoidFunc?
       itemSelectedCallback; // only used in landscape mode for now
+  double? topPadding;
 
   Bool2VoidFunc scrollCallback;
   late YoutubePlayerController _youtubePlayerController;
@@ -51,6 +52,7 @@ class FeedList extends StatelessWidget {
     this.heightPerEntry,
     required this.enableNavigation,
     this.itemSelectedCallback,
+    this.topPadding,
     Key? key,
   }) : super(key: key);
 
@@ -87,6 +89,9 @@ class FeedList extends StatelessWidget {
     if (topPaddingForFirstEntry == null) {
       topPaddingForFirstEntry = 16.h;
     }
+    if (topPadding == null) {
+      topPadding = 0;
+    }
 
     if (width == null) {
       width = 100.w;
@@ -113,6 +118,9 @@ class FeedList extends StatelessWidget {
                   } else if (state is FeedLoadedState) {
                     if (state.feedType == feedType) {
                       if (_feedItems.isNotEmpty) {
+                        if (state.feedType == "tagSearch") {
+                          _feedItems.clear();
+                        }
                         if (_feedItems.first.link == state.feed.first.link) {
                           _feedItems.clear();
                         } else {
@@ -132,9 +140,9 @@ class FeedList extends StatelessWidget {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(
-                            left: sidepadding != null ? sidepadding! : 0.0,
-                            right: sidepadding != null ? sidepadding! : 0.0,
-                          ),
+                              left: sidepadding != null ? sidepadding! : 0.0,
+                              right: sidepadding != null ? sidepadding! : 0.0,
+                              top: topPadding!),
                           child: buildPostList(
                               _feedItems, largeFormat, true, context, feedType),
                         ),
@@ -205,7 +213,8 @@ class FeedList extends StatelessWidget {
           if (_scrollController.offset >=
                   _scrollController.position.maxScrollExtent &&
               !BlocProvider.of<FeedBloc>(context).isFetching &&
-              feedType != "UserFeed") {
+              feedType != "UserFeed" &&
+              feedType != "tagSearch") {
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
               ..add(FetchFeedEvent(
@@ -217,7 +226,8 @@ class FeedList extends StatelessWidget {
           if (_scrollController.offset <=
                   _scrollController.position.minScrollExtent &&
               !BlocProvider.of<FeedBloc>(context).isFetching &&
-              feedType != "UserFeed") {
+              feedType != "UserFeed" &&
+              feedType != "tagSearch") {
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
               ..add(FetchFeedEvent(

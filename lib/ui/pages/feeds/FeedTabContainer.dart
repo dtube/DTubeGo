@@ -1,3 +1,7 @@
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+
+import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:chips_input/chips_input.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/feeds/FeedViewBase.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
@@ -27,20 +31,25 @@ class _FeedMainPageState extends State<FeedMainPage>
     "Fresh Videos",
     "Follow Feed",
     "Hot Videos",
-    "Trending Videos"
+    "Trending Videos",
+    "Genre Feed"
   ];
   List<IconData> _tabIcons = [
     FontAwesomeIcons.rss,
     FontAwesomeIcons.userFriends,
     FontAwesomeIcons.fire,
-    FontAwesomeIcons.chartLine
+    FontAwesomeIcons.chartLine,
+    FontAwesomeIcons.hashtag
   ];
   late TabController _tabController;
   int _selectedIndex = 0;
+  List<FilterTag> mockResults = [];
+  String selectedTagsString = "";
+  List<FilterTag> selectedMainTags = [];
+  FocusNode tagSearch = new FocusNode();
   @override
   void initState() {
-    _tabController = new TabController(length: 4, vsync: this);
-
+    _tabController = new TabController(length: 5, vsync: this);
     _tabController.addListener(() {
       if (_tabController.index != _selectedIndex) {
         setState(() {
@@ -69,6 +78,12 @@ class _FeedMainPageState extends State<FeedMainPage>
               ..isFetching = true
               ..add(FetchFeedEvent(feedType: "TrendingFeed"));
             break;
+          case 4:
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
+              ..add(FetchTagSearchResults(
+                  tags: selectedTagsString.replaceAll(' ', ',')));
+            break;
           default:
         }
       }
@@ -77,8 +92,34 @@ class _FeedMainPageState extends State<FeedMainPage>
       ..isFetching = true
       ..add(FetchFeedEvent(feedType: "NewFeed"));
 
+    for (var maintag in AppConfig.genreTags.keys) {
+      mockResults
+          .add(FilterTag(maintag, AppConfig.genreTags[maintag]!.join(' ')));
+    }
+    getMainTagsFromStorage();
     super.initState();
   }
+
+  void getMainTagsFromStorage() async {
+    String _selectedSubTags = "";
+    String _mainTagsString = await sec.getGenreTags();
+    List<String> _mainTags = _mainTagsString.split(',');
+    setState(() {
+      for (var t in _mainTags) {
+        selectedMainTags.add(findTag(t));
+        _selectedSubTags = _selectedSubTags + findTag(t).subtags + ',';
+      }
+      selectedTagsString =
+          _selectedSubTags.substring(0, _selectedSubTags.length - 1);
+    });
+  }
+
+  void pushMainTagsToStorage(String tags) async {
+    await sec.persistGenreTags(tags);
+  }
+
+  FilterTag findTag(String name) =>
+      mockResults.firstWhere((tag) => tag.name == name);
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +156,149 @@ class _FeedMainPageState extends State<FeedMainPage>
                     largeFormat: true,
                     showAuthor: false,
                     scrollCallback: (bool) {}),
+                Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    FeedViewBase(
+                        feedType: 'tagSearch',
+                        largeFormat: true,
+                        showAuthor: false,
+                        topPadding: 7.h,
+                        scrollCallback: (bool) {}),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: 10.h,
+                        ),
+                        child: Container(
+                          width: 70.w,
+                          height: 10.h,
+                          child: ChipsInput(
+                            initialValue: selectedMainTags,
+                            cursorColor: Colors.white,
+                            focusNode: tagSearch,
+                            decoration: InputDecoration(
+                              //   labelText: "Select Tags",
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6!
+                                .copyWith(shadows: [
+                              Shadow(
+                                  color: Colors.black,
+                                  offset: Offset(0, 0),
+                                  blurRadius: 2),
+                              //Shadow(color: Colors.white, offset: Offset(0, 0), blurRadius: 10),
+                              Shadow(
+                                offset: Offset(4.0, 3.0),
+                                blurRadius: 10,
+                                color: Colors.black,
+                              ),
+                            ]),
+                            textCapitalization: TextCapitalization.words,
+                            findSuggestions: (String query) {
+                              if (query.isNotEmpty) {
+                                print(query);
+                                var lowercaseQuery = query.toLowerCase();
+                                final results = mockResults.where((tag) {
+                                  return tag.name
+                                          .toLowerCase()
+                                          .contains(query.toLowerCase()) ||
+                                      tag.subtags
+                                          .toLowerCase()
+                                          .contains(query.toLowerCase());
+                                }).toList(growable: false)
+                                  ..sort((a, b) => a.name
+                                      .toLowerCase()
+                                      .indexOf(lowercaseQuery)
+                                      .compareTo(b.name
+                                          .toLowerCase()
+                                          .indexOf(lowercaseQuery)));
+                                return results;
+                              }
+                              return mockResults;
+                            },
+                            onChanged: (data) {
+                              String selectedMainTagsString = "";
+                              setState(() {
+                                selectedTagsString = "";
+                                for (var d in data) {
+                                  selectedTagsString = selectedTagsString +
+                                      findTag(d.toString()).subtags +
+                                      ',';
+                                  selectedMainTagsString =
+                                      selectedMainTagsString +
+                                          d.toString() +
+                                          ',';
+                                }
+                                selectedTagsString =
+                                    selectedTagsString.replaceAll(' ', ',');
+                                BlocProvider.of<FeedBloc>(context)
+                                  ..isFetching = true
+                                  ..add(FetchTagSearchResults(
+                                      tags: selectedTagsString.substring(
+                                          0, selectedTagsString.length - 1)));
+                                String _saveMainTags =
+                                    selectedMainTagsString.substring(
+                                        0, selectedMainTagsString.length - 1);
+                                pushMainTagsToStorage(_saveMainTags);
+                                tagSearch.unfocus();
+                              });
+                            },
+                            chipBuilder: (context, state, FilterTag tag) {
+                              return Theme(
+                                data:
+                                    ThemeData(canvasColor: Colors.transparent),
+                                child: InputChip(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                  selectedColor: Colors.transparent,
+                                  elevation: 0,
+                                  key: ObjectKey(tag),
+                                  // label: Text(tag.name),
+                                  label: OverlayText(
+                                    text: tag.toString(),
+                                    bold: true,
+                                    color: Colors.white,
+                                    sizeMultiply: 1.2,
+                                  ),
+                                  // deleteIconColor: Colors.white,
+                                  deleteIcon: ShadowedIcon(
+                                    icon: FontAwesomeIcons.times,
+                                    size: 4.w,
+                                    color: Colors.white,
+                                    shadowColor: Colors.black,
+                                  ),
+                                  onDeleted: () => state.deleteChip(tag),
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                              );
+                            },
+                            suggestionBuilder: (context, FilterTag tag) {
+                              return ListTile(
+                                key: ObjectKey(tag),
+                                title: Text(tag.toString(),
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1),
+                                subtitle: Text(tag.subtags,
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
               controller: _tabController,
             ),
@@ -232,6 +416,16 @@ class TabBarWithPosition extends StatelessWidget {
                         size: iconSize),
                   ),
                 ),
+                Tab(
+                  child: RotatedBox(
+                    quarterTurns: rotation == 3 ? 1 : 0,
+                    child: ShadowedIcon(
+                        icon: tabIcons[4],
+                        color: Colors.white,
+                        shadowColor: Colors.black,
+                        size: iconSize),
+                  ),
+                ),
               ],
               controller: tabController,
               indicatorSize: TabBarIndicatorSize.label,
@@ -241,5 +435,27 @@ class TabBarWithPosition extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class FilterTag {
+  final String name;
+  final String subtags;
+
+  const FilterTag(this.name, this.subtags);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FilterTag &&
+          runtimeType == other.runtimeType &&
+          name == other.name;
+
+  @override
+  int get hashCode => name.hashCode;
+
+  @override
+  String toString() {
+    return name;
   }
 }

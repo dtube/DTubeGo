@@ -83,7 +83,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       try {
         List<FeedItem> feed = await repository.getNewFeedFiltered(
             _avalonApiNode,
-            "&tags=" + event.tag,
+            "&tags=" + event.tags,
             _tsRangeFilter,
             _applicationUser);
         yield FeedLoadedState(feed: feed, feedType: "tagSearch");

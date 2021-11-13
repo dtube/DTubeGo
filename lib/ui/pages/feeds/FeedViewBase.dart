@@ -13,16 +13,18 @@ class FeedViewBase extends StatefulWidget {
 
   bool largeFormat;
   bool showAuthor;
+  double? topPadding;
 
   Bool2VoidFunc scrollCallback;
 
-  FeedViewBase({
-    Key? key,
-    required this.feedType,
-    required this.largeFormat,
-    required this.showAuthor,
-    required this.scrollCallback,
-  }) : super(key: key);
+  FeedViewBase(
+      {Key? key,
+      required this.feedType,
+      required this.largeFormat,
+      required this.showAuthor,
+      required this.scrollCallback,
+      this.topPadding})
+      : super(key: key);
 
   @override
   State<FeedViewBase> createState() => _FeedViewBaseState();
@@ -57,12 +59,12 @@ class _FeedViewBaseState extends State<FeedViewBase>
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       portrait: FeedList(
-        feedType: widget.feedType,
-        largeFormat: widget.largeFormat,
-        showAuthor: widget.showAuthor,
-        scrollCallback: widget.scrollCallback,
-        enableNavigation: true,
-      ),
+          feedType: widget.feedType,
+          largeFormat: widget.largeFormat,
+          showAuthor: widget.showAuthor,
+          scrollCallback: widget.scrollCallback,
+          enableNavigation: true,
+          topPadding: widget.topPadding != null ? widget.topPadding : 0),
       landscape: Align(
         alignment: Alignment.topLeft,
         child: Row(

@@ -21,8 +21,8 @@ class FetchMomentsEvent extends FeedEvent {
 }
 
 class FetchTagSearchResults extends FeedEvent {
-  String tag; // NewFeed or MyFeed
-  FetchTagSearchResults({required this.tag});
+  String tags; // NewFeed or MyFeed
+  FetchTagSearchResults({required this.tags});
 
   @override
   List<Object> get props => List.empty();

@@ -48,6 +48,7 @@ const settingKey_pincode = "PINC";
 const settingKey_imageUploadService = "IMGUS";
 
 const settingKey_ExploreTags = "EXPTAGS";
+const settingKey_GenreTags = "GENRETAGS";
 
 const settingKey_LastHivePost = "LASTHIVEPOST";
 const settingKey_HiveStillInCooldown = "LASTHIVEPOSTCOOLDOWN";
@@ -68,6 +69,10 @@ Future<void> persistNode(String node) async {
 
 Future<void> persistExploreTags(String tags) async {
   await _storage.write(key: settingKey_ExploreTags, value: tags);
+}
+
+Future<void> persistGenreTags(String tags) async {
+  await _storage.write(key: settingKey_GenreTags, value: tags);
 }
 
 Future<void> persistImageUploadService(String service) async {
@@ -314,6 +319,21 @@ Future<String> getExploreTags() async {
   String? _setting = "";
   try {
     _setting = await _storage.read(key: settingKey_ExploreTags);
+  } catch (e) {
+    _setting = "";
+  }
+
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getGenreTags() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_GenreTags);
   } catch (e) {
     _setting = "";
   }

@@ -147,4 +147,70 @@ class AppConfig {
     "cleanplanet",
     "onelovedtube"
   ];
+  static var genreTags = {
+    "music": [
+      "song",
+      "music",
+      "acoustic",
+      "songs",
+      "guitar",
+      "piano",
+      "acapella"
+    ],
+    "sports": [
+      "sports",
+      "football",
+      "skate",
+      "skatehive",
+      "running",
+      "marathon",
+      "gym",
+      "workout"
+    ],
+    "gaming": ["ps4", "ps5", "gaming"],
+    "health": ["yoga", "health"],
+    "science": ["physics", "chemistry", "math"],
+    "diy": [
+      "woodworking",
+      "diy",
+      "crafting",
+      "3dprinting",
+      "cooking",
+      "tutorial"
+    ],
+    "tech": ["coding", "tech", "software"],
+    "blockchains": [
+      "nft",
+      "crypto",
+      "cryptocurrency",
+      "bitcoing",
+      "etherium",
+      "opensea",
+      "objkt",
+      "tezos",
+      "litecoin",
+      "binance",
+      "hex",
+      // asd
+      "nft",
+      "crypto",
+      "cryptocurrency",
+      "bitcoing",
+      "etherium",
+      "opensea",
+      "objkt",
+      "tezos",
+      "litecoin",
+      "binance",
+      "hex"
+    ],
+    "art": ["drawing", "painting", "art", "dance", "dancing"],
+    "vlogs": ["vlog", "dailyvlog", "vlogs"],
+    "communities": ["onelovedtube", "cleanplanet", "skatehive"],
+    "lifestyle": ["lifestyle", "fashion", "makeup", "travel"],
+    "entertainment": ["funny", "entertainment", "skit", "comedy", "talks"],
+    "news": ["news", "politics"],
+    "nature": ["nature", "animals", "gardening", "forrest"],
+    "food": ["cooking", "restaurant", "dinner", "lunch", "food"]
+  };
 }

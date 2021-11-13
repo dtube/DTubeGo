@@ -124,7 +124,7 @@ class StaggeredFeed extends StatelessWidget {
             _feedItems.clear();
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
-              ..add(FetchTagSearchResults(tag: searchTags));
+              ..add(FetchTagSearchResults(tags: searchTags));
           }
         }),
       padding: EdgeInsets.only(top: 19.h),

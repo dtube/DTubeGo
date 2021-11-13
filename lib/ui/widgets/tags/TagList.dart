@@ -61,7 +61,7 @@ class TagListState extends State<TagList> {
 
     BlocProvider.of<FeedBloc>(context)
       ..isFetching = true
-      ..add(FetchTagSearchResults(tag: widget.tagName));
+      ..add(FetchTagSearchResults(tags: widget.tagName));
   }
 
   @override
