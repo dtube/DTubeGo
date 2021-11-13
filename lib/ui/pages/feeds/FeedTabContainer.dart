@@ -7,6 +7,7 @@ import 'package:dtube_go/ui/pages/feeds/FeedViewBase.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/utils/ResponsiveLayout.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -46,6 +47,7 @@ class _FeedMainPageState extends State<FeedMainPage>
   List<FilterTag> mockResults = [];
   String selectedTagsString = "";
   List<FilterTag> selectedMainTags = [];
+  bool showTagFilter = false;
   FocusNode tagSearch = new FocusNode();
   @override
   void initState() {
@@ -104,6 +106,7 @@ class _FeedMainPageState extends State<FeedMainPage>
     String _selectedSubTags = "";
     String _mainTagsString = await sec.getGenreTags();
     List<String> _mainTags = _mainTagsString.split(',');
+    selectedMainTags = [];
     setState(() {
       for (var t in _mainTags) {
         selectedMainTags.add(findTag(t));
@@ -172,127 +175,205 @@ class _FeedMainPageState extends State<FeedMainPage>
                           top: 10.h,
                         ),
                         child: Container(
-                          width: 70.w,
-                          height: 10.h,
-                          child: ChipsInput(
-                            initialValue: selectedMainTags,
-                            cursorColor: Colors.white,
-                            focusNode: tagSearch,
-                            decoration: InputDecoration(
-                              //   labelText: "Select Tags",
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                          width: 85.w,
+                          // height: 10.h,
+                          child: Stack(
+                            children: [
+                              Visibility(
+                                visible: !showTagFilter,
+                                child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                            onPressed: () {
+                                              setState(() async {
+                                                getMainTagsFromStorage();
+                                                showTagFilter = true;
+                                              });
+                                            },
+                                            icon: ShadowedIcon(
+                                                size: 5.w,
+                                                icon: FontAwesomeIcons.filter,
+                                                color: Colors.white,
+                                                shadowColor: Colors.black)),
+                                        Text("show genre filter",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1)
+                                      ],
+                                    )),
                               ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                            ),
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline6!
-                                .copyWith(shadows: [
-                              Shadow(
-                                  color: Colors.black,
-                                  offset: Offset(0, 0),
-                                  blurRadius: 2),
-                              //Shadow(color: Colors.white, offset: Offset(0, 0), blurRadius: 10),
-                              Shadow(
-                                offset: Offset(4.0, 3.0),
-                                blurRadius: 10,
-                                color: Colors.black,
-                              ),
-                            ]),
-                            textCapitalization: TextCapitalization.words,
-                            findSuggestions: (String query) {
-                              if (query.isNotEmpty) {
-                                print(query);
-                                var lowercaseQuery = query.toLowerCase();
-                                final results = mockResults.where((tag) {
-                                  return tag.name
-                                          .toLowerCase()
-                                          .contains(query.toLowerCase()) ||
-                                      tag.subtags
-                                          .toLowerCase()
-                                          .contains(query.toLowerCase());
-                                }).toList(growable: false)
-                                  ..sort((a, b) => a.name
-                                      .toLowerCase()
-                                      .indexOf(lowercaseQuery)
-                                      .compareTo(b.name
-                                          .toLowerCase()
-                                          .indexOf(lowercaseQuery)));
-                                return results;
-                              }
-                              return mockResults;
-                            },
-                            onChanged: (data) {
-                              String selectedMainTagsString = "";
-                              setState(() {
-                                selectedTagsString = "";
-                                for (var d in data) {
-                                  selectedTagsString = selectedTagsString +
-                                      findTag(d.toString()).subtags +
-                                      ',';
-                                  selectedMainTagsString =
-                                      selectedMainTagsString +
-                                          d.toString() +
-                                          ',';
-                                }
-                                selectedTagsString =
-                                    selectedTagsString.replaceAll(' ', ',');
-                                BlocProvider.of<FeedBloc>(context)
-                                  ..isFetching = true
-                                  ..add(FetchTagSearchResults(
-                                      tags: selectedTagsString.substring(
-                                          0, selectedTagsString.length - 1)));
-                                String _saveMainTags =
-                                    selectedMainTagsString.substring(
-                                        0, selectedMainTagsString.length - 1);
-                                pushMainTagsToStorage(_saveMainTags);
-                                tagSearch.unfocus();
-                              });
-                            },
-                            chipBuilder: (context, state, FilterTag tag) {
-                              return Theme(
-                                data:
-                                    ThemeData(canvasColor: Colors.transparent),
-                                child: InputChip(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                  selectedColor: Colors.transparent,
-                                  elevation: 0,
-                                  key: ObjectKey(tag),
-                                  // label: Text(tag.name),
-                                  label: OverlayText(
-                                    text: tag.toString(),
-                                    bold: true,
-                                    color: Colors.white,
-                                    sizeMultiply: 1.2,
+                              Visibility(
+                                visible: showTagFilter,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 4.w),
+                                  child: Container(
+                                    width: 75.w,
+                                    child: ChipsInput(
+                                      initialValue: selectedMainTags,
+                                      cursorColor: Colors.white,
+                                      focusNode: tagSearch,
+                                      decoration: InputDecoration(
+                                        //   labelText: "Select Tags",
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white),
+                                        ),
+                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6!
+                                          .copyWith(shadows: [
+                                        Shadow(
+                                            color: Colors.black,
+                                            offset: Offset(0, 0),
+                                            blurRadius: 2),
+                                        //Shadow(color: Colors.white, offset: Offset(0, 0), blurRadius: 10),
+                                        Shadow(
+                                          offset: Offset(4.0, 3.0),
+                                          blurRadius: 10,
+                                          color: Colors.black,
+                                        ),
+                                      ]),
+                                      textCapitalization:
+                                          TextCapitalization.words,
+                                      findSuggestions: (String query) {
+                                        if (query.isNotEmpty) {
+                                          print(query);
+                                          var lowercaseQuery =
+                                              query.toLowerCase();
+                                          final results = mockResults
+                                              .where((tag) {
+                                            return tag.name
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        query.toLowerCase()) ||
+                                                tag.subtags
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        query.toLowerCase());
+                                          }).toList(growable: false)
+                                            ..sort((a, b) => a.name
+                                                .toLowerCase()
+                                                .indexOf(lowercaseQuery)
+                                                .compareTo(b.name
+                                                    .toLowerCase()
+                                                    .indexOf(lowercaseQuery)));
+                                          return results;
+                                        }
+                                        return mockResults;
+                                      },
+                                      onChanged: (data) {
+                                        String selectedMainTagsString = "";
+                                        setState(() {
+                                          selectedTagsString = "";
+                                          for (var d in data) {
+                                            selectedTagsString =
+                                                selectedTagsString +
+                                                    findTag(d.toString())
+                                                        .subtags +
+                                                    ',';
+                                            selectedMainTagsString =
+                                                selectedMainTagsString +
+                                                    d.toString() +
+                                                    ',';
+                                          }
+                                          selectedTagsString =
+                                              selectedTagsString.replaceAll(
+                                                  ' ', ',');
+                                          BlocProvider.of<FeedBloc>(context)
+                                            ..isFetching = true
+                                            ..add(FetchTagSearchResults(
+                                                tags: selectedTagsString
+                                                    .substring(
+                                                        0,
+                                                        selectedTagsString
+                                                                .length -
+                                                            1)));
+                                          String _saveMainTags =
+                                              selectedMainTagsString.substring(
+                                                  0,
+                                                  selectedMainTagsString
+                                                          .length -
+                                                      1);
+                                          pushMainTagsToStorage(_saveMainTags);
+                                          tagSearch.unfocus();
+                                        });
+                                      },
+                                      chipBuilder:
+                                          (context, state, FilterTag tag) {
+                                        return Theme(
+                                          data: ThemeData(
+                                              canvasColor: Colors.transparent),
+                                          child: InputChip(
+                                            backgroundColor: Colors.transparent,
+                                            shadowColor: Colors.transparent,
+                                            selectedColor: Colors.transparent,
+                                            elevation: 0,
+                                            key: ObjectKey(tag),
+                                            // label: Text(tag.name),
+                                            label: OverlayText(
+                                              text: tag.toString(),
+                                              bold: true,
+                                              color: Colors.white,
+                                              sizeMultiply: 1.2,
+                                            ),
+                                            // deleteIconColor: Colors.white,
+                                            deleteIcon: ShadowedIcon(
+                                              icon: FontAwesomeIcons.times,
+                                              size: 4.w,
+                                              color: Colors.white,
+                                              shadowColor: Colors.black,
+                                            ),
+                                            onDeleted: () =>
+                                                state.deleteChip(tag),
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                          ),
+                                        );
+                                      },
+                                      suggestionBuilder:
+                                          (context, FilterTag tag) {
+                                        return ListTile(
+                                          key: ObjectKey(tag),
+                                          title: Text(tag.toString(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1),
+                                          subtitle: Text(tag.subtags,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1),
+                                        );
+                                      },
+                                    ),
                                   ),
-                                  // deleteIconColor: Colors.white,
-                                  deleteIcon: ShadowedIcon(
-                                    icon: FontAwesomeIcons.times,
-                                    size: 4.w,
-                                    color: Colors.white,
-                                    shadowColor: Colors.black,
-                                  ),
-                                  onDeleted: () => state.deleteChip(tag),
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
-                              );
-                            },
-                            suggestionBuilder: (context, FilterTag tag) {
-                              return ListTile(
-                                key: ObjectKey(tag),
-                                title: Text(tag.toString(),
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1),
-                                subtitle: Text(tag.subtags,
-                                    style:
-                                        Theme.of(context).textTheme.subtitle1),
-                              );
-                            },
+                              ),
+                              Visibility(
+                                visible: showTagFilter,
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          showTagFilter = false;
+                                        });
+                                      },
+                                      icon: ShadowedIcon(
+                                          size: 5.w,
+                                          icon: FontAwesomeIcons.chevronLeft,
+                                          color: Colors.white,
+                                          shadowColor: Colors.black)),
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       ),

@@ -564,7 +564,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                     duration: Duration(milliseconds: 350),
                   ),
                   child: Container(
-                    width: 65.w,
+                    width: 63.w,
                     child: InkWell(
                       onTap: () {
                         navigateToPostDetailPage(context, widget.author,
