@@ -110,15 +110,21 @@ class _DTubeLogoPulseRotatingState extends State<DTubeLogoPulseRotating>
 
 class DtubeLogoPulseWithSubtitle extends StatelessWidget {
   DtubeLogoPulseWithSubtitle(
-      {Key? key, required this.subtitle, required this.size})
+      {Key? key,
+      required this.subtitle,
+      required this.size,
+      this.width,
+      this.height})
       : super(key: key);
   String subtitle;
   double size;
+  double? width;
+  double? height;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: size * 2,
+      height: height == null ? size * 2 : height,
       child: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -129,7 +135,7 @@ class DtubeLogoPulseWithSubtitle extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 3.h),
             child: Container(
-              width: size * 1.2,
+              width: width == null ? size * 1.2 : width,
               child: Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodyText1,

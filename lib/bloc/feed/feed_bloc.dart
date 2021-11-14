@@ -1,8 +1,11 @@
+import 'dart:collection';
+
 import 'package:bloc/bloc.dart';
 import 'package:dtube_go/bloc/feed/feed_state.dart';
 import 'package:dtube_go/bloc/feed/feed_event.dart';
 import 'package:dtube_go/bloc/feed/feed_response_model.dart';
 import 'package:dtube_go/bloc/feed/feed_repository.dart';
+import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
@@ -141,6 +144,93 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             ,
             _applicationUser);
         yield FeedLoadedState(feed: feed, feedType: "UserFeed");
+      } catch (e) {
+        print(e.toString());
+        yield FeedErrorState(message: e.toString());
+      }
+    }
+    // event to fetch videos with tags of the recent vdeos of the specific user
+    // event to fetch videos of a specific user
+    if (event is FetchSuggestedUsersForUserHistory) {
+      yield SuggestedUsersLoadingState();
+
+      try {
+        String _tsRangeFilterUser = '&tsrange=' +
+            (DateTime.now().add(Duration(days: -90)).millisecondsSinceEpoch /
+                    1000)
+                .toString() +
+            ',' +
+            (DateTime.now().millisecondsSinceEpoch / 1000).toString();
+        // get recent posts of the user
+        print("// get recent posts of the user");
+        List<FeedItem> _feed = await repository.getNewFeedFiltered(
+            _avalonApiNode,
+            "&authors=" + event.username + "&tags=all,%5EDTubeGo-Moments",
+            _tsRangeFilterUser,
+            _applicationUser);
+
+        // build list of tags for videos of the user
+        print("//build list of tags for videos of the user");
+        List<String> _tags = [];
+        for (var post in _feed) {
+          for (var tag in post.tags) {
+            if (!_tags.contains(tag) &&
+                // Exclude generic curation tags from suggested search
+                !AppConfig.genericCurationTags.contains(tag)) {
+              _tags.add(tag);
+            }
+          }
+        }
+        List<String> _suggestedUsers = [];
+
+        //query posts with those tags
+        print("//query posts wit those tags");
+        if (_tags.length > 0) {
+          Map<String, int> _usersPostCount = {};
+          String _tsRangeFilterOtherUsers = '&tsrange=' +
+              (DateTime.now().add(Duration(days: -90)).millisecondsSinceEpoch /
+                      1000)
+                  .toString() +
+              ',' +
+              (DateTime.now().millisecondsSinceEpoch / 1000).toString();
+
+          List<FeedItem> _otherUsersFeed = await repository.getNewFeedFiltered(
+              _avalonApiNode,
+              "&authors=all,%5E" +
+                  event.username + // not from the same user
+                  "&tags=" +
+                  _tags.join(',') + // with tags of the users videos
+                  ",%5EDTubeGo-Moments",
+              _tsRangeFilterOtherUsers, // only last 90 days
+              _applicationUser);
+
+          // count count of posts per user
+          print("// count count of posts per user");
+          if (_otherUsersFeed.length > 0) {
+            for (var post in _otherUsersFeed) {
+              if (_usersPostCount[post.author] == null) {
+                _usersPostCount[post.author] = 1;
+              } else {
+                _usersPostCount[post.author] =
+                    _usersPostCount[post.author]! + 1;
+              }
+            }
+            // sort counted list by count
+            print("// sort counted list by count");
+            var _sortedByValue = new SplayTreeMap.from(
+                _usersPostCount,
+                (key2, key1) =>
+                    _usersPostCount[key1]!.compareTo(_usersPostCount[key2]!));
+            // add sorted users to list
+            print("// add sorted users to list");
+            _sortedByValue.forEach((key, value) {
+              _suggestedUsers.add(key.toString());
+            });
+          }
+        }
+
+        yield SuggestedUsersLoadedState(
+            users: _suggestedUsers.take(50).toList());
       } catch (e) {
         print(e.toString());
         yield FeedErrorState(message: e.toString());

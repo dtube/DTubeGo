@@ -28,6 +28,13 @@ class FetchTagSearchResults extends FeedEvent {
   List<Object> get props => List.empty();
 }
 
+class FetchSuggestedUsersForUserHistory extends FeedEvent {
+  late String username;
+  FetchSuggestedUsersForUserHistory({required this.username});
+  @override
+  List<Object> get props => List.empty();
+}
+
 class FetchUserFeedEvent extends FeedEvent {
   late String username;
   String? fromAuthor;

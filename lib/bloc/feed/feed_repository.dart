@@ -57,10 +57,15 @@ class FeedRepositoryImpl implements FeedRepository {
     String applicationUser,
   ) async {
     String _url = apiNode +
-        AppConfig.newFeedUrlFiltered
-            .replaceAll("##FILTERSTRING", filterString + tsRangeFilter);
+        AppConfig.newFeedUrlFiltered.replaceAll(
+            "##FILTERSTRING",
+            filterString.replaceAll(
+                    '#', '') // somehow "#" in the taglist breaks the api
+                +
+                tsRangeFilter);
 
     var response = await http.get(Uri.parse(_url));
+
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 

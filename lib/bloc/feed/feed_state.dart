@@ -32,3 +32,21 @@ class FeedErrorState extends FeedState {
   @override
   List<Object> get props => [message];
 }
+
+class SuggestedUsersLoadingState extends FeedState {
+  SuggestedUsersLoadingState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class SuggestedUsersLoadedState extends FeedState {
+  List<String> users;
+
+  SuggestedUsersLoadedState({
+    required this.users,
+  });
+
+  @override
+  List<Object> get props => [users];
+}

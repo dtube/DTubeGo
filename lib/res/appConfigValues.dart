@@ -99,6 +99,9 @@ class AppConfig {
   static bool faqStartup = true; // show on first startup
   static bool faqVisible = false; // make the FAQ videos visible
 
+// generic curation tags to exclude from suggested channels/videos
+  static List<String> genericCurationTags = ["vdc", "onelovedtube"];
+
   // global settings -> tags: those are the possible tags
   static List<String> possibleExploreTags = [
     "dtube",

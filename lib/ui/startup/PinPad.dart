@@ -53,6 +53,7 @@ class _PinPadScreenState extends State<PinPadScreen> {
               create: (BuildContext context) =>
                   AuthBloc(repository: AuthRepositoryImpl()),
             ),
+            // TODO: delete?
             BlocProvider(
               create: (context) =>
                   IPFSUploadBloc(repository: IPFSUploadRepositoryImpl()),

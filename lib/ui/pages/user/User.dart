@@ -6,10 +6,16 @@ import 'package:dtube_go/ui/pages/feeds/lists/FeedListCarousel.dart';
 import 'package:dtube_go/ui/pages/user/MenuButton.dart';
 import 'package:dtube_go/ui/pages/user/TopBarCustomClipper.dart';
 import 'package:dtube_go/ui/pages/user/TopBarCustomPainter.dart';
+import 'package:dtube_go/ui/pages/user/Widgets/OtherUsersAvatar.dart';
+import 'package:dtube_go/ui/pages/user/Widgets/SuggestedChannels.dart';
+import 'package:dtube_go/ui/pages/user/Widgets/UserList.dart';
+import 'package:dtube_go/ui/pages/user/Widgets/UsersMoreInfoButton.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
+import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:dtube_go/utils/shortBalanceStrings.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -136,11 +142,6 @@ class _UserState extends State<UserPage> {
   }
 
   Widget buildUserPage(User user, bool ownUsername) {
-    double iconSize = 10.w;
-    if (Device.orientation == Orientation.landscape) {
-      iconSize = 6.h;
-    }
-
     return
         // Expanded(
         //   child:
@@ -194,46 +195,27 @@ class _UserState extends State<UserPage> {
                         enableNavigation: true,
                         header: "Fresh Moments"),
                   ),
+                  BlocProvider<FeedBloc>(
+                    create: (context) =>
+                        FeedBloc(repository: FeedRepositoryImpl())
+                          ..add(FetchSuggestedUsersForUserHistory(
+                              username: user.name)),
+                    child: SuggestedChannels(
+                      username: user.name,
+                    ),
+                  ),
                   user.followers != null
-                      ? Column(
-                          children: [
-                            Text(
-                                "Followers (" +
-                                    user.followers!.length.toString() +
-                                    ")",
-                                style: Theme.of(context).textTheme.headline5),
-                            Container(
-                              height: 15.h,
-                              width: double.infinity,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: user.followers!.length,
-                                itemBuilder: (ctx, index) => FollowsAvatar(
-                                    username: user.followers![index]),
-                              ),
-                            ),
-                          ],
+                      ? UserList(
+                          userlist: user.followers!,
+                          title: "Followers",
+                          showCount: true,
                         )
                       : SizedBox(height: 0),
                   user.follows != null
-                      ? Column(
-                          children: [
-                            Text(
-                                "Followings (" +
-                                    user.follows!.length.toString() +
-                                    ")",
-                                style: Theme.of(context).textTheme.headline5),
-                            Container(
-                              height: 15.h,
-                              width: double.infinity,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: user.follows!.length,
-                                itemBuilder: (ctx, index) => FollowsAvatar(
-                                    username: user.follows![index]),
-                              ),
-                            ),
-                          ],
+                      ? UserList(
+                          userlist: user.follows!,
+                          title: "Following",
+                          showCount: true,
                         )
                       : SizedBox(height: 0),
                   SizedBox(height: 10.h)
@@ -344,265 +326,18 @@ class _UserState extends State<UserPage> {
                                 overflow: TextOverflow.ellipsis,
                               )
                             : SizedBox(height: 0),
-                        // user.jsonString != null &&
-                        //         user.jsonString!.profile != null &&
-                        //         user.jsonString!.profile!.about != null
-                        //     ? OverlayText(
-                        //         text: user.jsonString!.profile!.about!,
-                        //         sizeMultiply: 1.1,
-                        //         maxLines: 3,
-                        //         overflow: TextOverflow.ellipsis,
-                        //       )
-                        //     : SizedBox(height: 0),
                       ],
                     ),
                   ),
-                  IconButton(
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return PopUpDialogWithTitleLogo(
-                                titleWidget: Center(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.info,
-                                    size: 8.h,
-                                  ),
-                                ),
-                                callbackOK: () {},
-                                titleWidgetPadding: 10.w,
-                                titleWidgetSize: 10.w,
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                      width: 10.w,
-                                                      height: 10.w,
-                                                      child: DTubeLogoShadowed(
-                                                          size: 10.w)),
-                                                  OverlayText(
-                                                    text:
-                                                        shortDTC(user.balance),
-                                                    sizeMultiply: 1.4,
-                                                    bold: true,
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    width: 10.w,
-                                                    height: 10.w,
-                                                    child: ShadowedIcon(
-                                                      icon:
-                                                          FontAwesomeIcons.bolt,
-                                                      shadowColor: Colors.black,
-                                                      color: Colors.white,
-                                                      size: 10.w,
-                                                    ),
-                                                  ),
-                                                  OverlayText(
-                                                      text: shortVP(user.vt!.v),
-                                                      sizeMultiply: 1.4,
-                                                      bold: true),
-                                                ],
-                                              ),
-                                            ]),
-                                      ),
-                                      SizedBox(height: 2.h),
-                                      user.jsonString != null &&
-                                              user.jsonString!.profile !=
-                                                  null &&
-                                              user.jsonString!.profile!
-                                                      .location !=
-                                                  null
-                                          ? Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text("From: ",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline6,
-                                                      textAlign:
-                                                          TextAlign.start),
-                                                  Container(
-                                                    width: 80.w,
-                                                    child: Text(
-                                                      user.jsonString!.profile!
-                                                          .location!,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyText1,
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      maxLines: 3,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          : SizedBox(height: 0),
-                                      user.jsonString != null &&
-                                              user.jsonString!.profile !=
-                                                  null &&
-                                              user.jsonString!.profile!
-                                                      .website !=
-                                                  null
-                                          ? Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text("Website: ",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline6,
-                                                      textAlign:
-                                                          TextAlign.start),
-                                                  Container(
-                                                    width: 70.w,
-                                                    child: OpenableHyperlink(
-                                                      url: user.jsonString!
-                                                          .profile!.website!,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          : SizedBox(height: 0),
-                                      user.jsonString != null &&
-                                              user.jsonString!.profile !=
-                                                  null &&
-                                              user.jsonString!.profile!.about !=
-                                                  null
-                                          ? Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text("about: ",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline6,
-                                                      textAlign:
-                                                          TextAlign.start),
-                                                  Container(
-                                                    width: 80.w,
-                                                    child: Text(
-                                                      user.jsonString!.profile!
-                                                          .about!,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyText1,
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      maxLines: 5,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          : SizedBox(height: 0),
-                                      InkWell(
-                                          child: Container(
-                                            padding: EdgeInsets.only(
-                                                top: 20.0, bottom: 20.0),
-                                            decoration: BoxDecoration(
-                                              color: globalRed,
-                                              borderRadius: BorderRadius.only(
-                                                  bottomLeft:
-                                                      Radius.circular(20.0),
-                                                  bottomRight:
-                                                      Radius.circular(20.0)),
-                                            ),
-                                            child: Text(
-                                              "Thanks!",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                            FocusScope.of(context).unfocus();
-                                          }),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            });
-                      },
-                      icon: ShadowedIcon(
-                          size: 8.w,
-                          icon: FontAwesomeIcons.info,
-                          color: Colors.white,
-                          shadowColor: Colors.black))
+                  UserMoreInfoButton(
+                    context: context,
+                    user: user,
+                  )
                 ],
               ),
             ),
           ),
-          // Align(
-          //   alignment: Alignment.topRight,
-          //   child: Padding(
-          //     padding: EdgeInsets.only(top: 12.h, right: 5.w),
-          //     child: FadeIn(
-          //       preferences:
-          //           AnimationPreferences(offset: Duration(milliseconds: 1100)),
-          //       child: Container(
-          //         width: 40.w,
-          //         height: 21.h,
-          //         child: Column(
-          //           crossAxisAlignment: CrossAxisAlignment.end,
-          //           mainAxisAlignment: MainAxisAlignment.start,
-          //           children: [
-          //             user.jsonString != null &&
-          //                     user.jsonString!.profile != null &&
-          //                     user.jsonString!.profile!.location != null
-          //                 ? OverlayText(
-          //                     text:
-          //                         'from: ' + user.jsonString!.profile!.location!,
-          //                     sizeMultiply: 1,
-          //                     maxLines: 2,
-          //                     overflow: TextOverflow.ellipsis,
-          //                   )
-          //                 : SizedBox(height: 0),
-          //             // user.jsonString!.profile != null &&
-          //             //         user.jsonString!.profile!.website != null
-          //             //     ? OpenableHyperlink(
-          //             //         url: user.jsonString!.profile!.website!,
-          //             //       )
-          //             //     : SizedBox(height: 0)
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
@@ -635,42 +370,5 @@ class _UserState extends State<UserPage> {
       ],
       //   ),
     );
-  }
-}
-
-class FollowsAvatar extends StatelessWidget {
-  String username;
-  FollowsAvatar({Key? key, required this.username}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider<UserBloc>(
-        create: (context) => UserBloc(repository: UserRepositoryImpl()),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: 20.w,
-            child: Column(
-              children: [
-                AccountAvatar(
-                    username: username,
-                    avatarSize: 20.w,
-                    showVerified: true,
-                    showName: false,
-                    nameFontSizeMultiply: 1,
-                    showNameLeft: false,
-                    showFullUserInfo: false,
-                    width: 20.w,
-                    height: 20.w,
-                    showAvatar: true),
-                Text(
-                  username,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                )
-              ],
-            ),
-          ),
-        ));
   }
 }

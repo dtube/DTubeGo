@@ -167,7 +167,7 @@ class _FeedMainPageState extends State<FeedMainPage>
                           top: 10.h,
                         ),
                         child: Container(
-                          width: 90.w,
+                          width: 75.w,
                           // height: 10.h,
                           child: Stack(
                             children: [
@@ -210,7 +210,7 @@ class _FeedMainPageState extends State<FeedMainPage>
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 4.w),
                                   child: Container(
-                                    width: 75.w,
+                                    width: 65.w,
                                     child: ChipsInput(
                                       initialValue: selectedMainTags,
                                       cursorColor: Colors.white,
