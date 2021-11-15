@@ -263,10 +263,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                   packageInfo.version +
                   '+' +
                   packageInfo.buildNumber,
-              "refs": [
-                _upload.crossPostToHive
-                    ? "hive/" + _hiveAuthor + "/" + _upload.link
-                    : null
+              "refs": (_upload.crossPostToHive == false)
+                  ? []
+                  : ["hive/" + _hiveAuthor + "/" + _upload.link]
               ]
             };
           } else {
@@ -285,10 +284,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                   packageInfo.version +
                   '+' +
                   packageInfo.buildNumber,
-              "refs": [
-                _upload.crossPostToHive
-                    ? "hive/" + _hiveAuthor + "/" + _upload.link
-                    : null
+               "refs": (_upload.crossPostToHive == false)
+                  ? []
+                  : ["hive/" + _hiveAuthor + "/" + _upload.link]
               ]
             };
           }
