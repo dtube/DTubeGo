@@ -266,7 +266,6 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               "refs": (_upload.crossPostToHive == false)
                   ? []
                   : ["hive/" + _hiveAuthor + "/" + _upload.link]
-              ]
             };
           } else {
             // we have NO source hash => third party video
@@ -284,10 +283,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                   packageInfo.version +
                   '+' +
                   packageInfo.buildNumber,
-               "refs": (_upload.crossPostToHive == false)
+              "refs": (_upload.crossPostToHive == false)
                   ? []
                   : ["hive/" + _hiveAuthor + "/" + _upload.link]
-              ]
             };
           }
         }
