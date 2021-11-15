@@ -188,6 +188,10 @@ class _VersionDialogState extends State<AboutDialog> {
                         padding: EdgeInsets.only(top: 1.h),
                         child: Text("@brishtiteveja0595"),
                       ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 1.h),
+                        child: Text("@sagar.kothari.88"),
+                      ),
                     ],
                   ),
                 ),
