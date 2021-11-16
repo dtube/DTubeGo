@@ -1,4 +1,5 @@
-// import 'package:chewie/chewie.dart';
+import 'package:auto_orientation/auto_orientation.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:io';
 
 import 'package:better_player/better_player.dart';
@@ -90,6 +91,7 @@ class _BPState extends State<BP> {
     _videocontroller.dispose();
     _betterPlayerController.pause();
     _betterPlayerController.dispose();
+    AutoOrientation.portraitAutoMode();
   }
 
   buildPlaceholderImage() {

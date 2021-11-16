@@ -21,7 +21,6 @@ class BetterPlayerFullScreenPage extends StatefulWidget {
 
 class _BetterPlayerFullScreenPageState
     extends State<BetterPlayerFullScreenPage> {
-  late YoutubePlayerController _controller;
   final String link;
 
   bool full = false;
@@ -31,9 +30,9 @@ class _BetterPlayerFullScreenPageState
 
   @override
   void initState() {
-    // if (Device.orientation != Orientation.landscape) {
-    //   AutoOrientation.landscapeAutoMode();
-    // }
+    if (Device.orientation != Orientation.landscape) {
+      AutoOrientation.landscapeAutoMode();
+    }
 
     super.initState();
   }
@@ -41,6 +40,7 @@ class _BetterPlayerFullScreenPageState
   @override
   void dispose() {
 //    AutoOrientation.fullAutoMode();
+
     super.dispose();
   }
 
@@ -59,6 +59,8 @@ class _BetterPlayerFullScreenPageState
               usedAsPreview: false,
               allowFullscreen: false,
               portraitVideoPadding: 0.0,
+              openInFullscreen: true
+              
             ),
             Padding(
               padding: EdgeInsets.only(top: 10.h),
@@ -68,6 +70,8 @@ class _BetterPlayerFullScreenPageState
                           MaterialStateProperty.all(Colors.transparent)),
                   onPressed: () {
                     //Navigator.pop(context);
+
+                    AutoOrientation.portraitAutoMode();
                     DialogHelper().hide(context);
                   },
                   child: FaIcon(FontAwesomeIcons.arrowLeft)),

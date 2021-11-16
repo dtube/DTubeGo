@@ -1,4 +1,5 @@
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:flutter/services.dart';
 
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -37,6 +38,12 @@ const MaterialColor kPrimaryColor = const MaterialColor(
 );
 
 void realMain() {
+  // deactivate landscape mode
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
+  /////////////
   runApp(
     // embedding MyApp into a Pheonix widget to be able to restart the app from within the app itself
     // used for saving the global settings to reinitialize everything based on those settings

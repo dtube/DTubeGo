@@ -53,7 +53,7 @@ class _YoutubePlayerFullScreenPageState
   void dispose() {
     _controller.pause();
     _controller.close();
-    AutoOrientation.fullAutoMode();
+    AutoOrientation.portraitAutoMode();
     super.dispose();
   }
 
