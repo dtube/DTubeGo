@@ -33,13 +33,12 @@ class _BetterPlayerFullScreenPageState
     if (Device.orientation != Orientation.landscape) {
       AutoOrientation.landscapeAutoMode();
     }
-
     super.initState();
   }
 
   @override
   void dispose() {
-//    AutoOrientation.fullAutoMode();
+    AutoOrientation.portraitAutoMode();
 
     super.dispose();
   }
@@ -51,17 +50,15 @@ class _BetterPlayerFullScreenPageState
         body: Stack(
           children: [
             BP(
-              videoUrl: link,
-              looping: false,
-              autoplay: true,
-              localFile: false,
-              controls: true,
-              usedAsPreview: false,
-              allowFullscreen: false,
-              portraitVideoPadding: 0.0,
-              openInFullscreen: true
-              
-            ),
+                videoUrl: link,
+                looping: false,
+                autoplay: true,
+                localFile: false,
+                controls: true,
+                usedAsPreview: false,
+                allowFullscreen: false,
+                portraitVideoPadding: 0.0,
+                openInFullscreen: true),
             Padding(
               padding: EdgeInsets.only(top: 10.h),
               child: ElevatedButton(
@@ -71,7 +68,6 @@ class _BetterPlayerFullScreenPageState
                   onPressed: () {
                     //Navigator.pop(context);
 
-                    AutoOrientation.portraitAutoMode();
                     DialogHelper().hide(context);
                   },
                   child: FaIcon(FontAwesomeIcons.arrowLeft)),

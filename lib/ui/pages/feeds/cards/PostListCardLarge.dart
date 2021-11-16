@@ -645,7 +645,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                         ),
                         buttonSize: globalIconSizeSmall * 2,
                         useRotationAnimation: false,
-                        direction: SpeedDialDirection.Up,
+                        direction: SpeedDialDirection.up,
                         visible: true,
                         spacing: 0.0,
                         closeManually: false,

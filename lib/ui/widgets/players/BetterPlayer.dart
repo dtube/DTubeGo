@@ -1,4 +1,5 @@
 import 'package:auto_orientation/auto_orientation.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:io';
 
@@ -87,16 +88,26 @@ class _BPState extends State<BP> {
 
   @override
   void dispose() {
-    super.dispose();
-    _videocontroller.dispose();
     _betterPlayerController.pause();
     _betterPlayerController.dispose();
-    AutoOrientation.portraitAutoMode();
+    _videocontroller.dispose();
+
+    super.dispose();
   }
 
   buildPlaceholderImage() {
-    return Center(
-      child: CircularProgressIndicator(),
+    return Container(
+      width: 120.w,
+      child: AspectRatio(
+        aspectRatio: 8 / 5,
+        child: Center(
+          child: DtubeLogoPulseWithSubtitle(
+            size: 20.h,
+            subtitle: "loading video",
+            // width: 100.w,
+          ),
+        ),
+      ),
     );
   }
 
