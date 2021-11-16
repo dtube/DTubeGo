@@ -1,5 +1,10 @@
+import 'package:dtube_go/bloc/feed/feed_bloc.dart';
+import 'package:dtube_go/bloc/feed/feed_event.dart';
+import 'package:dtube_go/bloc/feed/feed_repository.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/pages/feeds/lists/FeedListCarousel.dart';
+import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannels.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
 import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
@@ -513,6 +518,35 @@ class _PostDetailsState extends State<PostDetails> {
                                   ),
                                 )
                               : SizedBox(height: 0),
+
+                          BlocProvider<FeedBloc>(
+                            create: (context) =>
+                                FeedBloc(repository: FeedRepositoryImpl())
+                                  ..add(FetchSuggestedUsersForPost(
+                                      currentUsername: widget.post.author,
+                                      tags: widget.post.tags)),
+                            child: SuggestedChannels(),
+                          ),
+                          BlocProvider<FeedBloc>(
+                            create: (context) =>
+                                FeedBloc(repository: FeedRepositoryImpl())
+                                  ..add(FetchSuggestedPostsForPost(
+                                      currentUsername: widget.post.author,
+                                      tags: widget.post.tags)),
+                            child: FeedListCarousel(
+                                feedType: 'SuggestedPosts',
+                                username: widget.post.author,
+                                showAuthor: true,
+                                largeFormat: false,
+                                heightPerEntry: 30.h,
+                                width: 150.w,
+                                topPaddingForFirstEntry: 0,
+                                sidepadding: 5.w,
+                                bottompadding: 0.h,
+                                scrollCallback: (bool) {},
+                                enableNavigation: true,
+                                header: "Suggested Videos"),
+                          ),
                           SizedBox(height: 200)
                         ],
                       ),

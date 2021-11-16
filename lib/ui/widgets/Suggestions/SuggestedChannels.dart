@@ -1,13 +1,14 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_go/ui/pages/user/Widgets/UserList.dart';
+import 'package:dtube_go/ui/widgets/Suggestions/UserList.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SuggestedChannels extends StatefulWidget {
-  SuggestedChannels({Key? key, required this.username}) : super(key: key);
-  String username;
+  SuggestedChannels({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<SuggestedChannels> createState() => _SuggestedChannelsState();

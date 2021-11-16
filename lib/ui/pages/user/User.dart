@@ -6,13 +6,13 @@ import 'package:dtube_go/ui/pages/feeds/lists/FeedListCarousel.dart';
 import 'package:dtube_go/ui/pages/user/MenuButton.dart';
 import 'package:dtube_go/ui/pages/user/TopBarCustomClipper.dart';
 import 'package:dtube_go/ui/pages/user/TopBarCustomPainter.dart';
-import 'package:dtube_go/ui/pages/user/Widgets/OtherUsersAvatar.dart';
-import 'package:dtube_go/ui/pages/user/Widgets/SuggestedChannels.dart';
-import 'package:dtube_go/ui/pages/user/Widgets/UserList.dart';
+import 'package:dtube_go/ui/widgets/Suggestions/OtherUsersAvatar.dart';
+import 'package:dtube_go/ui/widgets/Suggestions/UserList.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/UsersMoreInfoButton.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
+import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannels.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/utils/navigationShortcuts.dart';
@@ -168,7 +168,7 @@ class _UserState extends State<UserPage> {
                         showAuthor: false,
                         largeFormat: false,
                         heightPerEntry: 30.h,
-                        width: 125.w,
+                        width: 150.w,
                         topPaddingForFirstEntry: 0,
                         sidepadding: 5.w,
                         bottompadding: 0.h,
@@ -187,7 +187,7 @@ class _UserState extends State<UserPage> {
                         showAuthor: false,
                         largeFormat: false,
                         heightPerEntry: 30.h,
-                        width: 125.w,
+                        width: 150.w,
                         topPaddingForFirstEntry: 0,
                         sidepadding: 5.w,
                         bottompadding: 0.h,
@@ -200,9 +200,7 @@ class _UserState extends State<UserPage> {
                         FeedBloc(repository: FeedRepositoryImpl())
                           ..add(FetchSuggestedUsersForUserHistory(
                               username: user.name)),
-                    child: SuggestedChannels(
-                      username: user.name,
-                    ),
+                    child: SuggestedChannels(),
                   ),
                   user.followers != null
                       ? UserList(

@@ -1,6 +1,6 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_go/ui/pages/user/Widgets/OtherUsersAvatar.dart';
+import 'package:dtube_go/ui/widgets/Suggestions/OtherUsersAvatar.dart';
 import 'package:flutter/material.dart';
 
 class UserList extends StatefulWidget {

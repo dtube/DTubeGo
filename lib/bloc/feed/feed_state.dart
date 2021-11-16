@@ -33,6 +33,9 @@ class FeedErrorState extends FeedState {
   List<Object> get props => [message];
 }
 
+// suggestions based on a post query
+// that's why they are listed here
+
 class SuggestedUsersLoadingState extends FeedState {
   SuggestedUsersLoadingState();
 
@@ -49,4 +52,22 @@ class SuggestedUsersLoadedState extends FeedState {
 
   @override
   List<Object> get props => [users];
+}
+
+class SuggestedPostsLoadingState extends FeedState {
+  SuggestedPostsLoadingState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class SuggestedPostsLoadedState extends FeedState {
+  List<FeedItem> suggestedPosts;
+
+  SuggestedPostsLoadedState({
+    required this.suggestedPosts,
+  });
+
+  @override
+  List<Object> get props => [suggestedPosts];
 }

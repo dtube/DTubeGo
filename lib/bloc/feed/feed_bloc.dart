@@ -50,7 +50,10 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
 // event to fetch user moments
     if (event is FetchMomentsOfUserEvent) {
       String _tsRangeFilter = '&tsrange=' +
-          (DateTime.now().add(Duration(days: -90)).millisecondsSinceEpoch /
+          (DateTime.now()
+                      .add(Duration(
+                          days: AppConfig.maxDaysInPastForSuggestions * -1))
+                      .millisecondsSinceEpoch /
                   1000)
               .toString() +
           ',' +
@@ -73,10 +76,13 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       }
     }
 
-    // even to fetch tag list entries of the last 90 days
+    // even to fetch tag list entries of the last x days
     if (event is FetchTagSearchResults) {
       String _tsRangeFilter = '&tsrange=' +
-          (DateTime.now().add(Duration(days: -90)).millisecondsSinceEpoch /
+          (DateTime.now()
+                      .add(Duration(
+                          days: AppConfig.maxDaysInPastForSuggestions * -1))
+                      .millisecondsSinceEpoch /
                   1000)
               .toString() +
           ',' +
@@ -149,20 +155,22 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         yield FeedErrorState(message: e.toString());
       }
     }
-    // event to fetch videos with tags of the recent vdeos of the specific user
-    // event to fetch videos of a specific user
+    // event to fetch authors of videos with tags of the recent vdeos of the specific user
     if (event is FetchSuggestedUsersForUserHistory) {
       yield SuggestedUsersLoadingState();
 
       try {
         String _tsRangeFilterUser = '&tsrange=' +
-            (DateTime.now().add(Duration(days: -90)).millisecondsSinceEpoch /
+            (DateTime.now()
+                        .add(Duration(
+                            days: AppConfig.maxDaysInPastForSuggestions * -1))
+                        .millisecondsSinceEpoch /
                     1000)
                 .toString() +
             ',' +
             (DateTime.now().millisecondsSinceEpoch / 1000).toString();
         // get recent posts of the user
-        print("// get recent posts of the user");
+
         List<FeedItem> _feed = await repository.getNewFeedFiltered(
             _avalonApiNode,
             "&authors=" + event.username + "&tags=all,%5EDTubeGo-Moments",
@@ -170,7 +178,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             _applicationUser);
 
         // build list of tags for videos of the user
-        print("//build list of tags for videos of the user");
+
         List<String> _tags = [];
         for (var post in _feed) {
           for (var tag in post.tags) {
@@ -184,11 +192,14 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         List<String> _suggestedUsers = [];
 
         //query posts with those tags
-        print("//query posts wit those tags");
+
         if (_tags.length > 0) {
           Map<String, int> _usersPostCount = {};
           String _tsRangeFilterOtherUsers = '&tsrange=' +
-              (DateTime.now().add(Duration(days: -90)).millisecondsSinceEpoch /
+              (DateTime.now()
+                          .add(Duration(
+                              days: AppConfig.maxDaysInPastForSuggestions * -1))
+                          .millisecondsSinceEpoch /
                       1000)
                   .toString() +
               ',' +
@@ -201,11 +212,74 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
                   "&tags=" +
                   _tags.join(',') + // with tags of the users videos
                   ",%5EDTubeGo-Moments",
-              _tsRangeFilterOtherUsers, // only last 90 days
+              _tsRangeFilterOtherUsers, // only last x days
               _applicationUser);
 
           // count count of posts per user
-          print("// count count of posts per user");
+
+          if (_otherUsersFeed.length > 0) {
+            for (var post in _otherUsersFeed) {
+              if (_usersPostCount[post.author] == null) {
+                _usersPostCount[post.author] = 1;
+              } else {
+                _usersPostCount[post.author] =
+                    _usersPostCount[post.author]! + 1;
+              }
+            }
+            // sort counted list by count
+
+            var _sortedByValue = new SplayTreeMap.from(
+                _usersPostCount,
+                (key2, key1) =>
+                    _usersPostCount[key1]!.compareTo(_usersPostCount[key2]!));
+            // add sorted users to list
+            print("// add sorted users to list");
+            _sortedByValue.forEach((key, value) {
+              _suggestedUsers.add(key.toString());
+            });
+          }
+        }
+
+        yield SuggestedUsersLoadedState(
+            users: _suggestedUsers.take(AppConfig.maxUserSuggestions).toList());
+      } catch (e) {
+        print(e.toString());
+        yield FeedErrorState(message: e.toString());
+      }
+    }
+
+    // event to fetch authors of videos with the tags of the current video
+    if (event is FetchSuggestedUsersForPost) {
+      yield SuggestedUsersLoadingState();
+
+      try {
+        List<String> _suggestedUsers = [];
+
+        //query posts with the tags
+        if (event.tags.length > 0) {
+          Map<String, int> _usersPostCount = {};
+          String _tsRangeFilterOtherUsers = '&tsrange=' +
+              (DateTime.now()
+                          .add(Duration(
+                              days: AppConfig.maxDaysInPastForSuggestions * -1))
+                          .millisecondsSinceEpoch /
+                      1000)
+                  .toString() +
+              ',' +
+              (DateTime.now().millisecondsSinceEpoch / 1000).toString();
+
+          List<FeedItem> _otherUsersFeed = await repository.getNewFeedFiltered(
+              _avalonApiNode,
+              "&authors=all,%5E" +
+                  event.currentUsername + // not from the same user
+                  "&tags=" +
+                  event.tags.join(',') + // with tags of the users video
+                  ",%5EDTubeGo-Moments",
+              _tsRangeFilterOtherUsers, // only last x days
+              _applicationUser);
+
+          // count count of posts per user
+
           if (_otherUsersFeed.length > 0) {
             for (var post in _otherUsersFeed) {
               if (_usersPostCount[post.author] == null) {
@@ -230,7 +304,41 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         }
 
         yield SuggestedUsersLoadedState(
-            users: _suggestedUsers.take(50).toList());
+            users: _suggestedUsers.take(AppConfig.maxUserSuggestions).toList());
+      } catch (e) {
+        print(e.toString());
+        yield FeedErrorState(message: e.toString());
+      }
+    }
+    // event to fetch rercent videos with the same tags of the current video
+    if (event is FetchSuggestedPostsForPost) {
+      yield FeedLoadingState();
+
+      try {
+        List<FeedItem> _suggestedPosts = [];
+
+        String _tsRangeFilterOtherUsers = '&tsrange=' +
+            (DateTime.now()
+                        .add(Duration(
+                            days: AppConfig.maxDaysInPastForSuggestions * -1))
+                        .millisecondsSinceEpoch /
+                    1000)
+                .toString() +
+            ',' +
+            (DateTime.now().millisecondsSinceEpoch / 1000).toString();
+
+        List<FeedItem> _otherUsersFeed = await repository.getNewFeedFiltered(
+            _avalonApiNode,
+            "&authors=all,%5E" +
+                event.currentUsername + // not from the same user
+                "&tags=" +
+                event.tags.join(',') + // with tags of the users video
+                ",%5EDTubeGo-Moments",
+            _tsRangeFilterOtherUsers, // only last x days
+            _applicationUser);
+        yield FeedLoadedState(
+            feed: _otherUsersFeed.take(AppConfig.maxUserSuggestions).toList(),
+            feedType: "SuggestedPosts");
       } catch (e) {
         print(e.toString());
         yield FeedErrorState(message: e.toString());

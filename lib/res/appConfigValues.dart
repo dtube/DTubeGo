@@ -216,4 +216,12 @@ class AppConfig {
     "nature": ["nature", "animals", "gardening", "forrest"],
     "food": ["cooking", "restaurant", "dinner", "lunch", "food"]
   };
+  // suggestion params
+  static int maxUserSuggestions =
+      50; // max count of users shown in the suggestions
+  static int maxPostSuggestions =
+      50; // max count of posts shown in the suggestions
+
+  static int maxDaysInPastForSuggestions =
+      75; // max count of days the suggestion algorythm should check the past
 }
