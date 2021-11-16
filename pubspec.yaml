@@ -94,9 +94,9 @@ dependencies:
   # NETWORK - http related
   http: ^0.13.4
   dio: ^4.0.3
-  # NETWORK - authentication related
-  oauth2_client: ^2.2.2
-  flutter_web_auth: ^0.3.0
+  # # NETWORK - authentication related
+  # oauth2_client: ^2.3.0
+  flutter_web_auth: ^0.3.1
   
   # OTHERS - global stuff
   flutter_phoenix: ^1.0.0 # for restarting the app on purpose (e.g. logout)

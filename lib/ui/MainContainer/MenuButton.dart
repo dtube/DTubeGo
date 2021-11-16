@@ -80,7 +80,7 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
           shadowColor: Colors.black,
           size: globalIconSizeMedium),
       activeIcon: FontAwesomeIcons.chevronLeft,
-      direction: SpeedDialDirection.Down,
+      direction: SpeedDialDirection.down,
       visible: true,
       closeManually: false,
       curve: Curves.bounceIn,

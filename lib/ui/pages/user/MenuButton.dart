@@ -143,7 +143,7 @@ Widget buildUserMenuSpeedDial(
         child: FaIcon(FontAwesomeIcons.bars, size: 8.w),
       ),
       activeIcon: FontAwesomeIcons.chevronLeft,
-      direction: SpeedDialDirection.Up,
+      direction: SpeedDialDirection.up,
       visible: true,
       closeManually: false,
       curve: Curves.bounceIn,
