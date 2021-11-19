@@ -68,6 +68,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return AppBuilder(
+    
       builder: (context) {
         return BlocProvider<TransactionBloc>(
             create: (context) =>
@@ -87,6 +88,7 @@ class _MyAppState extends State<MyApp> {
                     background: Container(color: Color(0xFFF5F5F5))),
                 title: 'DTube',
                 debugShowCheckedModeBanner: false,
+                
                 theme: dtubeDarkTheme,
                 home: BlocProvider<AuthBloc>(
                   create: (context) {

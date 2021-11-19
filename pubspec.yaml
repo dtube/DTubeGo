@@ -44,6 +44,7 @@ dependencies:
   better_player: ^0.0.79 # player for ipfs/sia/local files
   # youtube_plyr_iframe: ^2.0.7 # custom player for youtube
   youtube_player_iframe: ^2.2.2
+  chewie: ^1.2.2
 
   # UI - markdown related
   flutter_markdown: ^0.6.2  # display markdown (only post description for now)
