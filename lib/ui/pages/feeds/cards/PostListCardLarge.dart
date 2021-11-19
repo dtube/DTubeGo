@@ -4,7 +4,7 @@ import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/Comments/CommentDialog.dart';
-import 'package:dtube_go/ui/widgets/FullScreenButton.dart';
+import 'package:dtube_go/ui/widgets/players/FullScreenButton.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
 import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
@@ -12,12 +12,15 @@ import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/gifts/GiftDialog.dart';
+import 'package:dtube_go/ui/widgets/players/BetterPlayerFullScreen.dart';
+import 'package:dtube_go/ui/widgets/players/YTPlayerFullScreen.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
 import 'package:dtube_go/utils/randomGenerator.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:overlay_dialog/overlay_dialog.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/ui/widgets/players/BetterPlayer.dart';
@@ -178,15 +181,28 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                   visible: _thumbnailTapped,
                   child: (["sia", "ipfs"].contains(widget.videoSource) &&
                           widget.videoUrl != "")
-                      ? BP(
-                          videoUrl: widget.videoUrl,
-                          autoplay: true,
-                          looping: false,
-                          localFile: false,
-                          controls: true,
-                          usedAsPreview: false,
-                          allowFullscreen: false,
-                          portraitVideoPadding: 30.w,
+                      // ? BP(
+                      //     videoUrl: widget.videoUrl,
+                      //     autoplay: true,
+                      //     looping: false,
+                      //     localFile: false,
+                      //     controls: true,
+                      //     usedAsPreview: false,
+                      //     allowFullscreen: false,
+                      //     portraitVideoPadding: 30.w,
+                      //   )
+                      ? AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: BP(
+                            videoUrl: widget.videoUrl,
+                            autoplay: true,
+                            looping: false,
+                            localFile: false,
+                            controls: true,
+                            usedAsPreview: false,
+                            allowFullscreen: false,
+                            portraitVideoPadding: 30.w,
+                          ),
                         )
                       : (widget.videoSource == 'youtube' &&
                               widget.videoUrl != "")
@@ -517,17 +533,44 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                     ),
                   )),
 
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 2.h),
-                  child: FullScreenButton(
-                    videoUrl: widget.videoUrl,
-                    videoSource: widget.videoSource,
-                    iconSize: globalIconSizeSmall,
-                  ),
-                ),
-              ),
+// Fullscreen needs to get re-implemeneted
+              // Align(
+              //   alignment: Alignment.topRight,
+              //   child: Padding(
+              //     padding: EdgeInsets.only(top: 2.h),
+              //     child: IconButton(
+              //         iconSize: globalIconSizeSmall,
+              //         onPressed: () {
+              //           _thumbnailTapped = false;
+              //           DialogHelper().show(
+              //               context,
+              //               DialogWidget.custom(
+              //                 child: widget.videoSource == "youtube"
+              //                     ? YoutubePlayerFullScreenPage(
+              //                         key: UniqueKey(),
+              //                         link: widget.videoUrl,
+              //                       )
+              //                     : ["ipfs", "sia"].contains(widget.videoSource)
+              //                         ? BetterPlayerFullScreenPage(
+              //                             link: widget.videoUrl,
+              //                           )
+              //                         : Text("no player detected"),
+              //               ));
+              //         },
+              //         icon: ShadowedIcon(
+              //           icon: FontAwesomeIcons.expand,
+              //           color: Colors.white,
+              //           shadowColor: Colors.black,
+              //           size: globalIconSizeSmall,
+              //         )),
+
+              //     // FullScreenButton(
+              //     //   videoUrl: widget.videoUrl,
+              //     //   videoSource: widget.videoSource,
+              //     //   iconSize: globalIconSizeSmall,
+              //     // ),
+              //   ),
+              // ),
             ],
           ),
           //),
