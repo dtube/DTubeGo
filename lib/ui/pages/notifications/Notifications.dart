@@ -78,45 +78,52 @@ class _NotificationsState extends State<Notifications> {
     List<int> navigatableTxsUser = [1, 2, 3, 7, 8];
     List<int> navigatableTxsPost = [4, 5, 13, 19];
 
-    return ListView.builder(
-      itemCount: notifications.length,
-      itemBuilder: (ctx, pos) {
-        bool _userNavigationPossible =
-            navigatableTxsUser.contains(notifications[pos].tx.type);
-        bool _postNavigationPossible =
-            navigatableTxsPost.contains(notifications[pos].tx.type);
+    if (notifications.length > 0) {
+      return ListView.builder(
+        itemCount: notifications.length,
+        itemBuilder: (ctx, pos) {
+          bool _userNavigationPossible =
+              navigatableTxsUser.contains(notifications[pos].tx.type);
+          bool _postNavigationPossible =
+              navigatableTxsPost.contains(notifications[pos].tx.type);
 
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: InkWell(
-            child: CustomListItem(
-              sender: notifications[pos].tx.sender,
-              tx: notifications[pos].tx,
-              username: username,
-              userNavigation: _userNavigationPossible,
-              postNavigation: _postNavigationPossible,
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: InkWell(
+              child: CustomListItem(
+                sender: notifications[pos].tx.sender,
+                tx: notifications[pos].tx,
+                username: username,
+                userNavigation: _userNavigationPossible,
+                postNavigation: _postNavigationPossible,
+              ),
+              onTap: () {
+                if (_userNavigationPossible) {
+                  navigateToUserDetailPage(
+                      context, notifications[pos].tx.sender, () {});
+                }
+                if (_postNavigationPossible) {
+                  navigateToPostDetailPage(
+                      context,
+                      notifications[pos].tx.data.author! != ""
+                          ? notifications[pos].tx.data.author!
+                          : notifications[pos].tx.sender,
+                      notifications[pos].tx.data.link!,
+                      "none",
+                      false,
+                      () {});
+                }
+              },
             ),
-            onTap: () {
-              if (_userNavigationPossible) {
-                navigateToUserDetailPage(
-                    context, notifications[pos].tx.sender, () {});
-              }
-              if (_postNavigationPossible) {
-                navigateToPostDetailPage(
-                    context,
-                    notifications[pos].tx.data.author! != ""
-                        ? notifications[pos].tx.data.author!
-                        : notifications[pos].tx.sender,
-                    notifications[pos].tx.data.link!,
-                    "none",
-                    false,
-                    () {});
-              }
-            },
-          ),
-        );
-      },
-    );
+          );
+        },
+      );
+    } else {
+      return Center(
+        child: Text("you dont have any notifications yet",
+            style: Theme.of(context).textTheme.headline5),
+      );
+    }
   }
 }
 

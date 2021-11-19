@@ -56,11 +56,11 @@ class _BetterPlayerFullScreenPageState
     ]);
     AutoOrientation.portraitAutoMode();
 
-    // _videocontroller
-    //     .pause()
-    //     .then((value) => Future.delayed(Duration(seconds: 10)));
+    _videocontroller
+        .pause()
+        .then((value) => Future.delayed(Duration(seconds: 10)));
 
-    // _videocontroller.dispose();
+    _videocontroller.dispose();
 
     _betterPlayerController.pause();
     _betterPlayerController.dispose();
@@ -123,18 +123,17 @@ class _BetterPlayerFullScreenPageState
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            // double _aspectRatio = _videocontroller.value.size.width /
-            //     _videocontroller.value.size.height;
+            double _aspectRatio = _videocontroller.value.size.width /
+                _videocontroller.value.size.height;
             return Scaffold(
                 backgroundColor: Colors.black,
                 body: Stack(
                   children: [
-                    // AspectRatio(
-                    //   aspectRatio: _aspectRatio,
-                    //   child:
-                    BetterPlayer(
-                      controller: _betterPlayerController,
-                      //    ),
+                    AspectRatio(
+                      aspectRatio: _aspectRatio,
+                      child: BetterPlayer(
+                        controller: _betterPlayerController,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 10.h),
@@ -157,7 +156,6 @@ class _BetterPlayerFullScreenPageState
                             // _betterPlayerController.dispose();
                             // _videocontroller.dispose();
 
-                            _videocontroller.dispose();
                             DialogHelper().hide(context);
                           },
                           child: FaIcon(FontAwesomeIcons.arrowLeft)),
