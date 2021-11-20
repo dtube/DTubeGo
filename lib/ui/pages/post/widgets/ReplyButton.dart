@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc.dart';
@@ -45,6 +46,7 @@ class _ReplyButtonState extends State<ReplyButton> {
   //static final _formKey = new GlobalKey<FormState>();
   TextEditingController _replyController = new TextEditingController();
   bool _replyPressed = false;
+  bool _sendPressed = false;
 
   late UserBloc _userBloc;
   late PostBloc _postBloc;
@@ -133,44 +135,54 @@ class _ReplyButtonState extends State<ReplyButton> {
                             .toString());
                       }
 
-                      return InputChip(
-                          onPressed: () {
-                            UploadData _uploadData = new UploadData(
-                                link: "",
-                                parentAuthor: widget.author,
-                                parentPermlink: widget.link,
-                                title: "",
-                                description: _replyController.value.text,
-                                tag: "",
-                                vpPercent: widget.votingWeight,
-                                vpBalance: _currentVp,
-                                burnDtc: 0,
-                                dtcBalance:
-                                    0, // TODO promoted comment implementation missing
-                                isPromoted: false,
-                                duration: "",
-                                thumbnailLocation: "",
-                                localThumbnail: false,
-                                videoLocation: "",
-                                localVideoFile: false,
-                                originalContent: false,
-                                nSFWContent: false,
-                                unlistVideo: false,
-                                isEditing: false,
-                                videoSourceHash: "",
-                                video240pHash: "",
-                                video480pHash: "",
-                                videoSpriteHash: "",
-                                thumbnail640Hash: "",
-                                thumbnail210Hash: "",
-                                uploaded: false,
-                                crossPostToHive: false);
+                      return _sendPressed
+                          ? Padding(
+                              padding: EdgeInsets.only(left: 2.w),
+                              child: DTubeLogoPulse(
+                                size: 10.w,
+                              ),
+                            )
+                          : InputChip(
+                              onPressed: () {
+                                setState(() {
+                                  _sendPressed = true;
+                                });
+                                UploadData _uploadData = new UploadData(
+                                    link: "",
+                                    parentAuthor: widget.author,
+                                    parentPermlink: widget.link,
+                                    title: "",
+                                    description: _replyController.value.text,
+                                    tag: "",
+                                    vpPercent: widget.votingWeight,
+                                    vpBalance: _currentVp,
+                                    burnDtc: 0,
+                                    dtcBalance:
+                                        0, // TODO promoted comment implementation missing
+                                    isPromoted: false,
+                                    duration: "",
+                                    thumbnailLocation: "",
+                                    localThumbnail: false,
+                                    videoLocation: "",
+                                    localVideoFile: false,
+                                    originalContent: false,
+                                    nSFWContent: false,
+                                    unlistVideo: false,
+                                    isEditing: false,
+                                    videoSourceHash: "",
+                                    video240pHash: "",
+                                    video480pHash: "",
+                                    videoSpriteHash: "",
+                                    thumbnail640Hash: "",
+                                    thumbnail210Hash: "",
+                                    uploaded: false,
+                                    crossPostToHive: false);
 
-                            BlocProvider.of<TransactionBloc>(context)
-                                .add(SendCommentEvent(_uploadData));
-                          },
-                          label: Text(
-                              "send")); // TODO: only show send button when text is entered: https://flutter-examples.com/flutter-show-hide-button-on-text-field-input/
+                                BlocProvider.of<TransactionBloc>(context)
+                                    .add(SendCommentEvent(_uploadData));
+                              },
+                              label: Text(
+                                  "send")); // TODO: only show send button when text is entered: https://flutter-examples.com/flutter-show-hide-button-on-text-field-input/
                     }),
               ],
             ),
