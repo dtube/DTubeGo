@@ -182,6 +182,7 @@ class FeedListCarousel extends StatelessWidget {
               child: CarouselSlider.builder(
                 options: CarouselOptions(
                     //aspectRatio: 2.0,
+                    initialPage: 0,
                     enlargeCenterPage: true,
                     autoPlay: true,
                     disableCenter: true,
