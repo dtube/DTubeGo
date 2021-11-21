@@ -50,5 +50,11 @@
 	<string>This lets you upload videos you have already created.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This lets you create videos using the app.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_dtubego._tcp</string>
+	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Allow DTubeGo to connect and debug application</string>
 </dict>
 </plist>
