@@ -147,8 +147,7 @@ class AppConfig {
     "horology",
     // communities
     "skatehive",
-    "cleanplanet",
-    "onelovedtube"
+    "cleanplanet"
   ];
   static var genreTags = {
     "music": [
@@ -209,7 +208,7 @@ class AppConfig {
     ],
     "art": ["drawing", "painting", "art", "dance", "dancing"],
     "vlogs": ["vlog", "dailyvlog", "vlogs"],
-    "communities": ["onelovedtube", "cleanplanet", "skatehive"],
+    "communities": ["cleanplanet", "skatehive"],
     "lifestyle": ["lifestyle", "fashion", "makeup", "travel"],
     "entertainment": ["funny", "entertainment", "skit", "comedy", "talks"],
     "news": ["news", "politics"],
