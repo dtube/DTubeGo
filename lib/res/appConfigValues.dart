@@ -81,7 +81,7 @@ class AppConfig {
   static List<String> apiNodes = [
     // common api nodes
     'https://avalon.tibfox.com',
-    // 'https://avalon.d.tube',
+    'https://avalon.d.tube',
     'https://dtube.club/mainnetapi',
     // 'https://avalon.oneloved.tube',
     'https://dtube.fso.ovh'
