@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/OpenableHyperlink.dart';
@@ -30,6 +32,10 @@ class _UserBlockButtonState extends State<UserBlockButton> {
     _userBloc = BlocProvider.of<UserBloc>(context);
     _userBloc.add(FetchMyAccountDataEvent());
     super.initState();
+  }
+
+  void persistNewBlockedUserList(List<String> blockList) async {
+    await sec.persistBlockedUsers(blockList.join(","));
   }
 
   @override
@@ -193,6 +199,22 @@ class _UserBlockButtonState extends State<UserBlockButton> {
                                                           [widget.user.name]
                                                       : [widget.user.name],
                                                 )));
+
+                                        persistNewBlockedUserList(state
+                                                        .user
+                                                        .jsonString!
+                                                        .additionals !=
+                                                    null &&
+                                                state
+                                                        .user
+                                                        .jsonString!
+                                                        .additionals!
+                                                        .blocking !=
+                                                    null
+                                            ? state.user.jsonString!
+                                                    .additionals!.blocking! +
+                                                [widget.user.name]
+                                            : [widget.user.name]);
 
                                         BlocProvider.of<TransactionBloc>(
                                                 context)

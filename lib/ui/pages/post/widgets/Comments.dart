@@ -22,7 +22,8 @@ class CommentDisplay extends StatelessWidget {
       this.parentAuthor,
       this.parentLink,
       this.defaultVoteTip,
-      this.parentContext);
+      this.parentContext,
+      this.blockedUsers);
   final Comment entry;
   final double defaultVoteWeight;
   final double defaultVoteTip;
@@ -30,6 +31,7 @@ class CommentDisplay extends StatelessWidget {
   final String parentLink;
   final int _currentVT;
   final BuildContext parentContext;
+  final List<String> blockedUsers;
 
   // This function recursively creates the multi-level list rows.
   Widget _buildTiles(Comment root) {
@@ -40,22 +42,31 @@ class CommentDisplay extends StatelessWidget {
         children: [
           Row(
             children: [
-              AccountAvatarBase(
-                username: root.author,
-                avatarSize: 12.w,
-                showVerified: true,
-                showName: true,
-                width: 35.w,
-                height: 8.h,
-              ),
+              !blockedUsers.contains(root.author)
+                  ? AccountAvatarBase(
+                      username: root.author,
+                      avatarSize: 12.w,
+                      showVerified: true,
+                      showName: true,
+                      width: 35.w,
+                      height: 8.h,
+                    )
+                  : AvatarErrorPlaceholder(),
               SizedBox(
                 width: 8,
               ),
               Container(
                 width: 60.w,
                 child: Text(
-                  root.commentjson.description,
-                  style: Theme.of(parentContext).textTheme.bodyText1,
+                  !blockedUsers.contains(root.author)
+                      ? root.commentjson.description
+                      : "author is blocked",
+                  style: !blockedUsers.contains(root.author)
+                      ? Theme.of(parentContext).textTheme.bodyText1
+                      : Theme.of(parentContext)
+                          .textTheme
+                          .bodyText1!
+                          .copyWith(color: globalRed),
                 ),
               ),
             ],
@@ -109,19 +120,28 @@ class CommentDisplay extends StatelessWidget {
           children: [
             Row(
               children: [
-                AccountAvatarBase(
-                  username: root.author,
-                  avatarSize: 12.w,
-                  showVerified: true,
-                  showName: true,
-                  width: 35.w,
-                  height: 8.h,
-                ),
+                !blockedUsers.contains(root.author)
+                    ? AccountAvatarBase(
+                        username: root.author,
+                        avatarSize: 12.w,
+                        showVerified: true,
+                        showName: true,
+                        width: 35.w,
+                        height: 8.h,
+                      )
+                    : AvatarErrorPlaceholder(),
                 Container(
                   width: 60.w,
                   child: Text(
-                    root.commentjson.description,
-                    style: Theme.of(parentContext).textTheme.bodyText1,
+                    !blockedUsers.contains(root.author)
+                        ? root.commentjson.description
+                        : "author is blocked",
+                    style: !blockedUsers.contains(root.author)
+                        ? Theme.of(parentContext).textTheme.bodyText1
+                        : Theme.of(parentContext)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(color: globalRed),
                   ),
                 ),
               ],

@@ -1,3 +1,4 @@
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/players/FullScreenButton.dart';
 
@@ -122,11 +123,16 @@ class _PostDetailsState extends State<PostDetails> {
   late double _defaultVoteTipPosts = 0;
   late double _defaultVoteTipComments = 0;
   late int _currentVT = 0;
+  String blockedUsers = "";
+
+  void fetchBlockedUsers() async {
+    blockedUsers = await sec.getBlockedUsers();
+  }
 
   @override
   void initState() {
     super.initState();
-
+    fetchBlockedUsers();
     _userBloc = BlocProvider.of<UserBloc>(context);
 
     _userBloc.add(FetchAccountDataEvent(username: widget.post.author));
@@ -332,7 +338,8 @@ class _PostDetailsState extends State<PostDetails> {
                                   widget.post.author,
                                   widget.post.link,
                                   _defaultVoteTipComments,
-                                  context),
+                                  context,
+                                  blockedUsers.split(",")),
                         ),
                       )
                     : SizedBox(height: 0),

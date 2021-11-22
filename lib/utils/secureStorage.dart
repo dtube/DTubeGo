@@ -53,6 +53,8 @@ const settingKey_GenreTags = "GENRETAGS";
 const settingKey_LastHivePost = "LASTHIVEPOST";
 const settingKey_HiveStillInCooldown = "LASTHIVEPOSTCOOLDOWN";
 
+const settingKey_BlockedUsers = "BLOCKEDUSERS";
+
 // const _txsKey = 'TXS';
 const _storage = FlutterSecureStorage();
 
@@ -69,6 +71,10 @@ Future<void> persistNode(String node) async {
 
 Future<void> persistExploreTags(String tags) async {
   await _storage.write(key: settingKey_ExploreTags, value: tags);
+}
+
+Future<void> persistBlockedUsers(String blocked) async {
+  await _storage.write(key: settingKey_BlockedUsers, value: blocked);
 }
 
 Future<void> persistGenreTags(String tags) async {
@@ -245,6 +251,20 @@ Future<String> getUsername() async {
   String? _setting = "";
   try {
     _setting = await _storage.read(key: authKey_usernameKey);
+  } catch (e) {
+    _setting = "";
+  }
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getBlockedUsers() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_BlockedUsers);
   } catch (e) {
     _setting = "";
   }

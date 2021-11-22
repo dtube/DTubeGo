@@ -1,3 +1,6 @@
+import 'package:dtube_go/bloc/user/user_bloc.dart';
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/bloc/user/user_event.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -40,9 +43,10 @@ class _StartUpState extends State<StartUp> {
         //// show Pinpad
         if (state is SignedInState) {
           return BlocProvider<SettingsBloc>(
-              create: (BuildContext context) => SettingsBloc()
-                ..add(
-                    FetchSettingsEvent()), // add event FetchSettingsEvent to prepare the data for the pinpad dialog
+              create: (BuildContext context) =>
+                  SettingsBloc()..add(FetchSettingsEvent()),
+
+              // add event FetchS) // add event FetchSettingsEvent to prepare the data for the pinpad dialog
               child: PinPadScreen());
         }
         // if credentials are wrong or key got deleted -> show login form with the prefilled username

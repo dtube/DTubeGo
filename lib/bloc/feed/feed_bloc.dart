@@ -18,6 +18,15 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   Stream<FeedState> mapEventToState(FeedEvent event) async* {
     String _avalonApiNode = await sec.getNode();
     String? _applicationUser = await sec.getUsername();
+
+    // read and prepare the blocked list for the search filters
+    String? _blockedUsers = await sec.getBlockedUsers();
+    String _blockedUsersFilter = "";
+    if (_blockedUsers != "") {
+      for (var u in _blockedUsers.split(",")) {
+        _blockedUsersFilter = ",%5E" + u;
+      }
+    }
     // event to reset the feed state
     if (event is InitFeedEvent) {
       yield FeedInitialState();
@@ -36,7 +45,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         List<FeedItem> feed = event.feedType == "NewMoments"
             ? await repository.getNewFeedFiltered(
                 _avalonApiNode,
-                "&authors=all,%5Es3rk47&tags=DTubeGo-Moments",
+                "&authors=all,%5Es3rk47" +
+                    _blockedUsersFilter +
+                    "&tags=DTubeGo-Moments",
                 _tsRangeFilter,
                 _applicationUser)
             : await repository.getMyFeedFiltered(_avalonApiNode,
@@ -92,7 +103,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       try {
         List<FeedItem> feed = await repository.getNewFeedFiltered(
             _avalonApiNode,
-            event.tags != "all" ? "&tags=" + event.tags : "",
+            (event.tags != "all" ? "&tags=" + event.tags : "") +
+                "&authors=all,%5Es3rk47" +
+                _blockedUsersFilter,
             _tsRangeFilter,
             _applicationUser);
         yield FeedLoadedState(feed: feed, feedType: "tagSearch");
@@ -110,26 +123,42 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         switch (event.feedType) {
           case 'MyFeed':
             {
-              feed = await repository.getMyFeed(_avalonApiNode,
-                  _applicationUser, event.fromAuthor, event.fromLink);
+              feed = await repository.getMyFeed(
+                  _avalonApiNode,
+                  _applicationUser,
+                  event.fromAuthor,
+                  event.fromLink,
+                  _blockedUsers);
             }
             break;
           case 'HotFeed':
             {
-              feed = await repository.getHotFeed(_avalonApiNode,
-                  event.fromAuthor, event.fromLink, _applicationUser);
+              feed = await repository.getHotFeed(
+                  _avalonApiNode,
+                  event.fromAuthor,
+                  event.fromLink,
+                  _applicationUser,
+                  _blockedUsers);
             }
             break;
           case 'TrendingFeed':
             {
-              feed = await repository.getTrendingFeed(_avalonApiNode,
-                  event.fromAuthor, event.fromLink, _applicationUser);
+              feed = await repository.getTrendingFeed(
+                  _avalonApiNode,
+                  event.fromAuthor,
+                  event.fromLink,
+                  _applicationUser,
+                  _blockedUsers);
             }
             break;
           case 'NewFeed':
             {
-              feed = await repository.getNewFeed(_avalonApiNode,
-                  event.fromAuthor, event.fromLink, _applicationUser);
+              feed = await repository.getNewFeed(
+                  _avalonApiNode,
+                  event.fromAuthor,
+                  event.fromLink,
+                  _applicationUser,
+                  _blockedUsers);
             }
             break;
         }
@@ -170,7 +199,6 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             ',' +
             (DateTime.now().millisecondsSinceEpoch / 1000).toString();
         // get recent posts of the user
-
         List<FeedItem> _feed = await repository.getNewFeedFiltered(
             _avalonApiNode,
             "&authors=" + event.username + "&tags=all,%5EDTubeGo-Moments",
@@ -209,6 +237,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
               _avalonApiNode,
               "&authors=all,%5E" +
                   event.username + // not from the same user
+                  _blockedUsersFilter + // not from blocked users
                   "&tags=" +
                   _tags.join(',') + // with tags of the users videos
                   ",%5EDTubeGo-Moments",
@@ -272,6 +301,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
               _avalonApiNode,
               "&authors=all,%5E" +
                   event.currentUsername + // not from the same user
+                  _blockedUsersFilter // not from blocked users
+                  +
                   "&tags=" +
                   event.tags.join(',') + // with tags of the users video
                   ",%5EDTubeGo-Moments",
@@ -331,6 +362,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             _avalonApiNode,
             "&authors=all,%5E" +
                 event.currentUsername + // not from the same user
+                _blockedUsersFilter + // not from blocked users
                 "&tags=" +
                 event.tags.join(',') + // with tags of the users video
                 ",%5EDTubeGo-Moments",

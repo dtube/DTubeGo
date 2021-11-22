@@ -47,6 +47,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         bool _verified =
             await repository.getAccountVerificationOffline(_applicationUser);
 
+        await sec.persistBlockedUsers(
+            user.jsonString!.additionals!.blocking!.join(","));
+
         yield UserLoadedState(user: user, verified: _verified);
       } catch (e) {
         yield UserErrorState(message: e.toString());

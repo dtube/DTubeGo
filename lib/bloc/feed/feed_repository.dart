@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;
@@ -5,25 +7,13 @@ import 'dart:convert';
 
 abstract class FeedRepository {
   Future<List<FeedItem>> getMyFeed(String apiNode, String applicationUser,
-      String? fromAuthor, String? fromLink);
-  Future<List<FeedItem>> getHotFeed(
-    String apiNode,
-    String? fromAuthor,
-    String? fromLink,
-    String applicationUser,
-  );
-  Future<List<FeedItem>> getTrendingFeed(
-    String apiNode,
-    String? fromAuthor,
-    String? fromLink,
-    String applicationUser,
-  );
-  Future<List<FeedItem>> getNewFeed(
-    String apiNode,
-    String? fromAuthor,
-    String? fromLink,
-    String applicationUser,
-  );
+      String? fromAuthor, String? fromLink, String blockedUsers);
+  Future<List<FeedItem>> getHotFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers);
+  Future<List<FeedItem>> getTrendingFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers);
+  Future<List<FeedItem>> getNewFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers);
   Future<List<FeedItem>> getUserFeed(
     String apiNode,
     String username,
@@ -93,6 +83,7 @@ class FeedRepositoryImpl implements FeedRepository {
       var data = json.decode(response.body);
 
       List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+
       return feed;
     } else {
       throw Exception();
@@ -102,7 +93,7 @@ class FeedRepositoryImpl implements FeedRepository {
   // common feeds
 
   Future<List<FeedItem>> getMyFeed(String apiNode, String applicationUser,
-      String? fromAuthor, String? fromLink) async {
+      String? fromAuthor, String? fromLink, String blockedUsers) async {
     String _url = apiNode +
         AppConfig.myFeedUrlFirst.replaceAll("##USERNAME", applicationUser);
     if (fromAuthor != null && fromLink != null) {
@@ -117,20 +108,25 @@ class FeedRepositoryImpl implements FeedRepository {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
-      List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+      List<String> _blockedUsers = blockedUsers.split(",");
+      List<FeedItem> _preFilterFeed =
+          ApiResultModel.fromJson(data, applicationUser).feed;
+      List<FeedItem> feed = [];
+      for (var f in _preFilterFeed) {
+        if (!_blockedUsers.contains(f.author)) {
+          feed.add(f);
+        }
+      }
       return feed;
     } else {
       throw Exception();
     }
   }
 
-  Future<List<FeedItem>> getHotFeed(
-    String apiNode,
-    String? fromAuthor,
-    String? fromLink,
-    String applicationUser,
-  ) async {
+  Future<List<FeedItem>> getHotFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers) async {
     String _url = apiNode + AppConfig.hotFeedUrlFirst;
+
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
           AppConfig.hotFeedUrlMore
@@ -141,19 +137,23 @@ class FeedRepositoryImpl implements FeedRepository {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
-      List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+      List<String> _blockedUsers = blockedUsers.split(",");
+      List<FeedItem> _preFilterFeed =
+          ApiResultModel.fromJson(data, applicationUser).feed;
+      List<FeedItem> feed = [];
+      for (var f in _preFilterFeed) {
+        if (!_blockedUsers.contains(f.author)) {
+          feed.add(f);
+        }
+      }
       return feed;
     } else {
       throw Exception();
     }
   }
 
-  Future<List<FeedItem>> getTrendingFeed(
-    String apiNode,
-    String? fromAuthor,
-    String? fromLink,
-    String applicationUser,
-  ) async {
+  Future<List<FeedItem>> getTrendingFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers) async {
     String _url = apiNode + AppConfig.trendingFeedUrlFirst;
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
@@ -165,19 +165,23 @@ class FeedRepositoryImpl implements FeedRepository {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
-      List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+      List<String> _blockedUsers = blockedUsers.split(",");
+      List<FeedItem> _preFilterFeed =
+          ApiResultModel.fromJson(data, applicationUser).feed;
+      List<FeedItem> feed = [];
+      for (var f in _preFilterFeed) {
+        if (!_blockedUsers.contains(f.author)) {
+          feed.add(f);
+        }
+      }
       return feed;
     } else {
       throw Exception();
     }
   }
 
-  Future<List<FeedItem>> getNewFeed(
-    String apiNode,
-    String? fromAuthor,
-    String? fromLink,
-    String applicationUser,
-  ) async {
+  Future<List<FeedItem>> getNewFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers) async {
     String _url = apiNode + AppConfig.newFeedUrlFirst;
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
@@ -189,7 +193,16 @@ class FeedRepositoryImpl implements FeedRepository {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
-      List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+      List<String> _blockedUsers = blockedUsers.split(",");
+      List<FeedItem> _preFilterFeed =
+          ApiResultModel.fromJson(data, applicationUser).feed;
+      List<FeedItem> feed = [];
+
+      for (var f in _preFilterFeed) {
+        if (!_blockedUsers.contains(f.author)) {
+          feed.add(f);
+        }
+      }
 
       return feed;
     } else {

@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+
 import 'package:dtube_go/bloc/feed/feed_bloc.dart';
 import 'package:dtube_go/bloc/feed/feed_event.dart';
 import 'package:dtube_go/bloc/feed/feed_repository.dart';
@@ -66,6 +68,7 @@ class PostDetailPage extends StatefulWidget {
 
 class _PostDetailPageState extends State<PostDetailPage> {
   int reloadCount = 0;
+
   Future<bool> _onWillPop() async {
     if (widget.recentlyUploaded) {
       Navigator.pushAndRemoveUntil(
@@ -182,10 +185,16 @@ class _PostDetailsState extends State<PostDetails> {
   late double _defaultVoteTipPosts = 0;
   late double _defaultVoteTipComments = 0;
   late int _currentVT = 0;
+  String blockedUsers = "";
+
+  void fetchBlockedUsers() async {
+    blockedUsers = await sec.getBlockedUsers();
+  }
 
   @override
   void initState() {
     super.initState();
+    fetchBlockedUsers();
 
     _userBloc = BlocProvider.of<UserBloc>(context);
 
@@ -504,7 +513,8 @@ class _PostDetailsState extends State<PostDetails> {
                                               widget.post.author,
                                               widget.post.link,
                                               _defaultVoteTipComments,
-                                              context),
+                                              context,
+                                              blockedUsers.split(",")),
                                           SizedBox(
                                               height: index ==
                                                       widget.post.comments!
