@@ -487,7 +487,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                           _displayNameController.text)));
 
                           BlocProvider.of<TransactionBloc>(context)
-                              .add(ChangeProfileData(_saveUserData));
+                              .add(ChangeProfileData(_saveUserData, context));
                         });
                   }
 

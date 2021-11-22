@@ -1,6 +1,7 @@
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/utils/globalVariables.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:dtube_go/bloc/config/txTypes.dart';
@@ -124,6 +125,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           isParentContent: false,
           successMessage: "profile updated",
           txType: _txType);
+      Phoenix.rebirth(event.context);
     }
 
     if (event is SendCommentEvent) {

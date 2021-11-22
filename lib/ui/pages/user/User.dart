@@ -6,6 +6,7 @@ import 'package:dtube_go/ui/pages/feeds/lists/FeedListCarousel.dart';
 import 'package:dtube_go/ui/pages/user/MenuButton.dart';
 import 'package:dtube_go/ui/pages/user/TopBarCustomClipper.dart';
 import 'package:dtube_go/ui/pages/user/TopBarCustomPainter.dart';
+import 'package:dtube_go/ui/pages/user/Widgets/UsersBlockButton.dart';
 import 'package:dtube_go/ui/widgets/Suggestions/OtherUsersAvatar.dart';
 import 'package:dtube_go/ui/widgets/Suggestions/UserList.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/UsersMoreInfoButton.dart';
@@ -327,9 +328,20 @@ class _UserState extends State<UserPage> {
                       ],
                     ),
                   ),
-                  UserMoreInfoButton(
-                    context: context,
-                    user: user,
+                  Column(
+                    children: [
+                      BlocProvider(
+                        create: (context) =>
+                            UserBloc(repository: UserRepositoryImpl()),
+                        child: UserBlockButton(
+                          user: user,
+                        ),
+                      ),
+                      UserMoreInfoButton(
+                        context: context,
+                        user: user,
+                      ),
+                    ],
                   )
                 ],
               ),

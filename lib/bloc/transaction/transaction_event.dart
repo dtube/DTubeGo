@@ -1,6 +1,7 @@
 import 'package:dtube_go/bloc/transaction/transaction_response_model.dart';
 import 'package:dtube_go/bloc/user/user_response_model.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
 abstract class TransactionEvent extends Equatable {}
 
@@ -23,10 +24,9 @@ class SendCommentEvent extends TransactionEvent {
 }
 
 class ChangeProfileData extends TransactionEvent {
-  ChangeProfileData(
-    this.userData,
-  );
+  ChangeProfileData(this.userData, this.context);
   User userData;
+  BuildContext context;
 
   @override
   List<Object> get props => List.empty();

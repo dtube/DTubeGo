@@ -248,6 +248,7 @@ class Profile {
     data['website'] = this.website;
     data['steem'] = this.steem;
     data['hive'] = this.hive;
+
     return data;
   }
 }
@@ -255,21 +256,26 @@ class Profile {
 class Additionals {
   String? displayName;
   String? accountType;
+  List<String>? blocking;
 
-  Additionals({
-    this.displayName,
-    this.accountType,
-  });
+  Additionals({this.displayName, this.accountType, this.blocking});
 
   Additionals.fromJson(Map<String, dynamic> json) {
     displayName = json['displayName'] != null ? json['displayName'] : '';
     accountType = json['accountType'] != null ? json['accountType'] : '';
+    if (json['blocking'] != null) {
+      blocking = [];
+      json['blocking'].forEach((v) {
+        blocking?.add(v);
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['displayName'] = this.displayName;
     data['accountType'] = this.accountType;
+    data['blocking'] = this.blocking;
 
     return data;
   }
