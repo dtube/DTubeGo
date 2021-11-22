@@ -56,5 +56,7 @@
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Allow DTubeGo to connect and debug application</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This lets you create videos with audio using the app.</string>
 </dict>
 </plist>

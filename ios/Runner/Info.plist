@@ -50,5 +50,7 @@
 	<string>This lets you upload videos you have already created.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This lets you create videos using the app.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This lets you create videos with audio using the app.</string>
 </dict>
 </plist>
