@@ -1,3 +1,4 @@
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:ui';
 
 import 'package:dtube_go/style/ThemeDataOldDynamics.dart';
@@ -198,10 +199,18 @@ PageViewModel finishedPage(
         preferences: AnimationPreferences(
             offset: Duration(milliseconds: 120),
             duration: Duration(milliseconds: 1500)),
-        child: Image.asset(
-          "assets/gifs/hovering_startup.gif",
-          fit: BoxFit.fill,
-          filterQuality: FilterQuality.high,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.only(top: 20.h),
+            child: Container(
+              width: 90.w,
+              child: Image.asset(
+                "assets/images/D_RocketOLC.png",
+                fit: BoxFit.contain,
+                filterQuality: FilterQuality.high,
+              ),
+            ),
+          ),
         ),
       ),
     ),
