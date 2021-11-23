@@ -13,7 +13,14 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<Post> getPost(String apiNode, String author, String link,
       String applicationUser) async {
-    Post _post = Post(sId: "", author: "", link: "", ts: 0, dist: 0, tags: []);
+    Post _post = Post(
+        sId: "",
+        author: "",
+        link: "",
+        ts: 0,
+        dist: 0,
+        tags: [],
+        isFlaggedByUser: false);
 
     String _tag = "";
     while (_tag == "") {

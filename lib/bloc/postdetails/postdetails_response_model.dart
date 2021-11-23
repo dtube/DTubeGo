@@ -34,6 +34,7 @@ class Post {
   //List<Votes>? votes;
   List<Votes>? upvotes;
   List<Votes>? downvotes;
+  bool isFlaggedByUser = false;
   late int ts;
   // Tags? tags;
   late double dist;
@@ -61,7 +62,8 @@ class Post {
       //required this.tags,
       required this.dist,
       this.comments,
-      required this.tags});
+      required this.tags,
+      required this.isFlaggedByUser});
 
   Post.fromJson(Map<String, dynamic> json, String currentUser) {
     sId = json['_id'];
@@ -122,6 +124,7 @@ class Post {
         } else {
           downvotes!.add(_v);
           if (_v.u == currentUser) {
+            isFlaggedByUser = true;
             alreadyVoted = true;
             alreadyVotedDirection = false;
           }
@@ -211,6 +214,7 @@ class Post {
     }
     data['comments'] = this.comments!.map((v) => v.toJson()).toList();
     data['alreadyVoted'] = alreadyVoted;
+    data['isFlaggedByUser'] = isFlaggedByUser;
     data['ts'] = this.ts;
     // if (this.tags != null) {
     //   data['tags'] = this.tags?.toJson();

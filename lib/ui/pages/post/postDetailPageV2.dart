@@ -139,15 +139,21 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 );
               } else if (state is PostLoadedState) {
                 reloadCount++;
-                return
-                    // Padding(
-                    //   padding: const EdgeInsets.only(top: 100),
-                    //   child:
-                    PostDetails(
-                  post: state.post,
-                  directFocus: reloadCount <= 1 ? widget.directFocus : "none",
-                  //),
-                );
+                if (!state.post.isFlaggedByUser) {
+                  return
+                      // Padding(
+                      //   padding: const EdgeInsets.only(top: 100),
+                      //   child:
+                      PostDetails(
+                    post: state.post,
+                    directFocus: reloadCount <= 1 ? widget.directFocus : "none",
+                    //),
+                  );
+                } else {
+                  return Center(
+                      child: Text("this post got flagged by you!",
+                          style: Theme.of(context).textTheme.headline4));
+                }
               } else {
                 return Center(
                   child: DtubeLogoPulseWithSubtitle(
