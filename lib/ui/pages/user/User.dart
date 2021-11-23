@@ -226,7 +226,7 @@ class _UserState extends State<UserPage> {
             alignment: Alignment.topLeft,
             child: Container(
               height: 15.h,
-              width: 200.w,
+              width: 100.w,
               decoration: BoxDecoration(
                   color: Colors.white,
                   gradient: LinearGradient(
@@ -296,9 +296,10 @@ class _UserState extends State<UserPage> {
                   AnimationPreferences(offset: Duration(milliseconds: 1100)),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    width: 50.w,
+                    width: 45.w,
                     height: 20.h,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -330,6 +331,7 @@ class _UserState extends State<UserPage> {
                     ),
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       BlocProvider(
                         create: (context) =>
