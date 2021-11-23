@@ -1,5 +1,6 @@
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
@@ -40,16 +41,23 @@ class CommentDisplay extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               !blockedUsers.contains(root.author)
-                  ? AccountAvatarBase(
-                      username: root.author,
-                      avatarSize: 12.w,
-                      showVerified: true,
-                      showName: true,
-                      width: 35.w,
-                      height: 8.h,
+                  ? GestureDetector(
+                      onTap: () {
+                        navigateToUserDetailPage(
+                            parentContext, root.author, () {});
+                      },
+                      child: AccountAvatarBase(
+                        username: root.author,
+                        avatarSize: 12.w,
+                        showVerified: true,
+                        showName: true,
+                        width: 35.w,
+                        height: 8.h,
+                      ),
                     )
                   : AvatarErrorPlaceholder(),
               SizedBox(
@@ -118,20 +126,27 @@ class CommentDisplay extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 !blockedUsers.contains(root.author)
-                    ? AccountAvatarBase(
-                        username: root.author,
-                        avatarSize: 12.w,
-                        showVerified: true,
-                        showName: true,
-                        width: 35.w,
-                        height: 8.h,
+                    ? GestureDetector(
+                        onTap: () {
+                          navigateToUserDetailPage(
+                              parentContext, root.author, () {});
+                        },
+                        child: AccountAvatarBase(
+                          username: root.author,
+                          avatarSize: 12.w,
+                          showVerified: true,
+                          showName: true,
+                          width: 35.w,
+                          height: 8.h,
+                        ),
                       )
                     : AvatarErrorPlaceholder(),
                 Container(
-                  width: 60.w,
+                  width: 80.w,
                   child: Text(
                     !blockedUsers.contains(root.author)
                         ? root.commentjson.description

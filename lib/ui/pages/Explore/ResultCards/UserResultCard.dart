@@ -45,7 +45,7 @@ class UserResultCard extends StatelessWidget {
                         avatarSize: 10.w,
                         showVerified: true,
                         showName: true,
-                        width: 70.w,
+                        width: 50.w,
                         height: 5.h),
                   ),
                   // Text(
