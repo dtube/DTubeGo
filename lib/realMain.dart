@@ -1,7 +1,7 @@
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:flutter/services.dart';
 
-import 'package:responsive_framework/responsive_framework.dart';
+// import 'package:responsive_framework/responsive_framework.dart';
 
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -67,39 +67,45 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return AppBuilder(
-    
-      builder: (context) {
+    return
+        // AppBuilder(
+        //   builder: (context) {
+        //     return
+        ResponsiveSizer(
+      builder: (context, orientation, screenType) {
         return BlocProvider<TransactionBloc>(
             create: (context) =>
                 TransactionBloc(repository: TransactionRepositoryImpl()),
-            child: ResponsiveSizer(builder: (context, orientation, deviceType) {
-              return MaterialApp(
-                builder: (context, widget) => ResponsiveWrapper.builder(
-                    BouncingScrollWrapper.builder(context, widget!),
-                    maxWidth: 1200,
-                    minWidth: 480,
-                    defaultScale: true,
-                    breakpoints: [
-                      ResponsiveBreakpoint.resize(480, name: MOBILE),
-                      ResponsiveBreakpoint.autoScale(800, name: TABLET),
-                      ResponsiveBreakpoint.resize(1000, name: DESKTOP),
-                    ],
-                    background: Container(color: Color(0xFFF5F5F5))),
-                title: 'DTube',
-                debugShowCheckedModeBanner: false,
-                
-                theme: dtubeDarkTheme,
-                home: BlocProvider<AuthBloc>(
-                  create: (context) {
-                    // add the AppStartedEvent to try to login with perhaps existing login credentails and forward to the startup "dialog"
-                    return AuthBloc(repository: AuthRepositoryImpl())
-                      ..add(AppStartedEvent());
-                  },
-                  child: StartUp(),
-                ),
-              );
-            }));
+            child:
+                // ResponsiveSizer(builder: (context, orientation, deviceType) {
+                //   return
+                MaterialApp(
+              // builder: (context, widget) => ResponsiveWrapper.builder(
+              //     BouncingScrollWrapper.builder(context, widget!),
+              //     maxWidth: 1200,
+              //     minWidth: 480,
+              //     defaultScale: true,
+              //     breakpoints: [
+              //       ResponsiveBreakpoint.resize(480, name: MOBILE),
+              //       ResponsiveBreakpoint.autoScale(800, name: TABLET),
+              //       ResponsiveBreakpoint.resize(1000, name: DESKTOP),
+              //     ],
+              //     background: Container(color: Color(0xFFF5F5F5))),
+              title: 'DTube',
+              debugShowCheckedModeBanner: false,
+
+              theme: dtubeDarkTheme,
+              home: BlocProvider<AuthBloc>(
+                create: (context) {
+                  // add the AppStartedEvent to try to login with perhaps existing login credentails and forward to the startup "dialog"
+                  return AuthBloc(repository: AuthRepositoryImpl())
+                    ..add(AppStartedEvent());
+                },
+                child: StartUp(),
+              ),
+              //);
+              //}
+            ));
       },
     );
   }

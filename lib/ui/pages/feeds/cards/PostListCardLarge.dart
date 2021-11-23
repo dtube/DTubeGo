@@ -606,7 +606,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                     duration: Duration(milliseconds: 350),
                   ),
                   child: Container(
-                    width: 63.w,
+                    width: 55.w,
                     child: InkWell(
                       onTap: () {
                         navigateToPostDetailPage(context, widget.author,
@@ -625,7 +625,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
             ),
             SizedBox(height: 2.h),
             Container(
-              width: 38.w,
+              width: 28.w,
               child: Stack(
                 children: [
                   Row(
@@ -649,7 +649,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                         waitBeforeFadeIn: Duration(milliseconds: 600),
                         fadeInFromLeft: false,
                         tagName: widget.mainTag,
-                        width: 20.w,
+                        width: 14.w,
                       ),
                     ],
                   ),
@@ -679,7 +679,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                           ),
                         ),
                         activeChild: Padding(
-                          padding: EdgeInsets.only(left: 7.w),
+                          padding: EdgeInsets.only(left: 2.w),
                           child: ShadowedIcon(
                               icon: FontAwesomeIcons.sortDown,
                               color: Colors.white,
