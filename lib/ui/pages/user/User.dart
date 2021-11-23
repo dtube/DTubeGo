@@ -245,7 +245,8 @@ class _UserState extends State<UserPage> {
 
           user.jsonString != null &&
                   user.jsonString!.profile != null &&
-                  user.jsonString!.profile!.coverImage != null
+                  user.jsonString!.profile!.coverImage != null &&
+                  user.jsonString!.profile!.coverImage != ""
               ? ClipPath(
                   clipper: TopBarCustomClipper(),
                   child: Align(
