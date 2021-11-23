@@ -667,7 +667,7 @@ class _VotesOverviewState extends State<VotesOverview> {
                           ),
                           FaIcon(_allVotes[index].vt > 0
                               ? FontAwesomeIcons.thumbsUp
-                              : FontAwesomeIcons.thumbsDown),
+                              : FontAwesomeIcons.flag),
                           Container(
                             width: 30.w,
                             child: Row(

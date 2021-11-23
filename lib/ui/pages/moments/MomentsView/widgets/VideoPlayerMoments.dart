@@ -309,7 +309,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                           }
                         },
                         child: ShadowedIcon(
-                          icon: FontAwesomeIcons.thumbsDown,
+                          icon: FontAwesomeIcons.flag,
                           color: widget.feedItem.alreadyVoted! &&
                                   !widget.feedItem.alreadyVotedDirection!
                               ? globalRed

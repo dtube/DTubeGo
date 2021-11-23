@@ -134,7 +134,7 @@ class _VotingButtonsState extends State<VotingButtons> {
                   icon: Padding(
                     padding: const EdgeInsets.only(left: 4.0),
                     child: ShadowedIcon(
-                      icon: FontAwesomeIcons.thumbsDown,
+                      icon: FontAwesomeIcons.flag,
                       color:
                           widget.alreadyVoted && !widget.alreadyVotedDirection
                               ? globalRed
@@ -287,7 +287,7 @@ class VotingButtonRow extends StatelessWidget {
             ),
             avatar: Padding(
               padding: const EdgeInsets.only(left: 4.0),
-              child: FaIcon(FontAwesomeIcons.thumbsDown,
+              child: FaIcon(FontAwesomeIcons.flag,
                   color: widget.alreadyVoted && !widget.alreadyVotedDirection
                       ? globalRed
                       : widget.iconColor),

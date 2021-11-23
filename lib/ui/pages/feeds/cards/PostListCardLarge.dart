@@ -739,8 +739,10 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                               child: Padding(
                                 padding: EdgeInsets.only(left: 7.w),
                                 child: ShadowedIcon(
-                                    icon: FontAwesomeIcons.thumbsDown,
-                                    color: Colors.white,
+                                    icon: FontAwesomeIcons.flag,
+                                    color: !widget.alreadyVoted
+                                        ? Colors.white
+                                        : globalRed,
                                     shadowColor: Colors.black,
                                     size: globalIconSizeBig),
                               ),
@@ -788,7 +790,9 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                 padding: EdgeInsets.only(left: 7.w),
                                 child: ShadowedIcon(
                                     icon: FontAwesomeIcons.thumbsUp,
-                                    color: Colors.white,
+                                    color: !widget.alreadyVoted
+                                        ? Colors.white
+                                        : globalRed,
                                     shadowColor: Colors.black,
                                     size: globalIconSizeBig),
                               ),
