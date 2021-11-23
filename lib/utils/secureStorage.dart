@@ -233,13 +233,18 @@ Future<String> getLastHivePostWithin5MinCooldown() async {
   try {
     // read DateTime of recent hive post
     String? _lastPostString = await _storage.read(key: settingKey_LastHivePost);
-    DateTime _lastPost = DateTime.parse(_lastPostString!);
-    // if the recent post is within the last 5 minute cooldown
-    if (_lastPost.isAfter(_before5Min)) {
-      return "true";
+    if (_lastPostString != null) {
+      DateTime _lastPost = DateTime.parse(_lastPostString);
+      // if the recent post is within the last 5 minute cooldown
+      if (_lastPost.isAfter(_before5Min)) {
+        return "true";
+      } else {
+        return "false";
+      }
     } else {
       return "false";
     }
+
     // if no DateTime found or it is not parsable
     // it was never set before
   } catch (e) {
