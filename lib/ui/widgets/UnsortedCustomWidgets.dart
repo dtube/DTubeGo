@@ -15,6 +15,8 @@ AppBar dtubeSubAppBar(
     bool showLogo, String title, BuildContext context, List<Widget>? actions) {
   return AppBar(
     centerTitle: true,
+    backgroundColor: globalBGColor,
+    elevation: 0,
     title: showLogo
         ? DTubeLogo(
             size: 60,

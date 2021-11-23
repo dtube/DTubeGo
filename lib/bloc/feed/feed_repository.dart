@@ -66,6 +66,8 @@ class FeedRepositoryImpl implements FeedRepository {
           if (!downvotedByAppUser) {
             feed.add(f);
           }
+        } else {
+          feed.add(f);
         }
       }
 
@@ -105,6 +107,8 @@ class FeedRepositoryImpl implements FeedRepository {
           if (!downvotedByAppUser) {
             feed.add(f);
           }
+        } else {
+          feed.add(f);
         }
       }
       return feed;
@@ -151,6 +155,8 @@ class FeedRepositoryImpl implements FeedRepository {
             if (!downvotedByAppUser) {
               feed.add(f);
             }
+          } else {
+            feed.add(f);
           }
         }
       }
@@ -194,6 +200,8 @@ class FeedRepositoryImpl implements FeedRepository {
             if (!downvotedByAppUser) {
               feed.add(f);
             }
+          } else {
+            feed.add(f);
           }
         }
       }
@@ -236,6 +244,8 @@ class FeedRepositoryImpl implements FeedRepository {
             if (!downvotedByAppUser) {
               feed.add(f);
             }
+          } else {
+            feed.add(f);
           }
         }
       }
@@ -279,6 +289,8 @@ class FeedRepositoryImpl implements FeedRepository {
             if (!downvotedByAppUser) {
               feed.add(f);
             }
+          } else {
+            feed.add(f);
           }
         }
       }
