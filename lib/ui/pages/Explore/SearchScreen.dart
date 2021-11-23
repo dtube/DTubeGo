@@ -131,7 +131,10 @@ class SearchScreenState extends State<SearchScreen> {
         },
       );
 
-      chips.add(SizedBox(width: 40, height: 40, child: choiceChip));
+      chips.add(SizedBox(
+          width: globalIconSizeBig,
+          height: globalIconSizeBig,
+          child: choiceChip));
     }
 
     return Row(
@@ -154,7 +157,7 @@ class SearchScreenState extends State<SearchScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(
-                    width: 60.w,
+                    width: 50.w,
                     child: TextField(
                       controller: searchTextController,
                       decoration: InputDecoration(hintText: "Search"),

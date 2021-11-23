@@ -186,7 +186,7 @@ class UserMoreInfoButton extends StatelessWidget {
               });
         },
         icon: ShadowedIcon(
-            size: 8.w,
+            size: globalIconSizeSmall,
             icon: FontAwesomeIcons.info,
             color: Colors.white,
             shadowColor: Colors.black));

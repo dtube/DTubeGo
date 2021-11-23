@@ -232,7 +232,7 @@ class _UserBlockButtonState extends State<UserBlockButton> {
                       });
                 },
                 icon: ShadowedIcon(
-                    size: 5.w,
+                    size: globalIconSizeSmall,
                     icon: FontAwesomeIcons.flag,
                     color: globalRed,
                     shadowColor: Colors.black));

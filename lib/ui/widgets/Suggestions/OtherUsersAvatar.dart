@@ -27,14 +27,14 @@ class OtherUsersAvatar extends StatelessWidget {
                 children: [
                   AccountAvatar(
                       username: username,
-                      avatarSize: 20.w,
+                      avatarSize: 18.w,
                       showVerified: true,
                       showName: false,
                       nameFontSizeMultiply: 1,
                       showNameLeft: false,
                       showFullUserInfo: false,
-                      width: 20.w,
-                      height: 20.w,
+                      width: 18.w,
+                      height: 18.w,
                       showAvatar: true),
                   Text(
                     username,

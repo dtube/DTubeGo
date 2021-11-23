@@ -273,7 +273,7 @@ class _UserState extends State<UserPage> {
             alignment: Alignment.topLeft,
             child: Container(
               height: 35.h,
-              width: 200.w,
+              width: 100.w,
               decoration: BoxDecoration(
                   color: Colors.white,
                   gradient: LinearGradient(
@@ -298,7 +298,7 @@ class _UserState extends State<UserPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Container(
-                    width: 70.w,
+                    width: 50.w,
                     height: 20.h,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
