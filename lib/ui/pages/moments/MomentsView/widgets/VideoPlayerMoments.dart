@@ -120,6 +120,15 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                       widget.momentsController.play();
                       _videoController.play();
                     },
+                    onHorizontalDragEnd: (DragEndDetails details) {
+                      if (details.primaryVelocity != null &&
+                          details.primaryVelocity! > 0) {
+                        widget.momentsController.previous();
+                      } else if (details.primaryVelocity != null &&
+                          details.primaryVelocity! < 0) {
+                        widget.momentsController.next();
+                      }
+                    },
                     child: Center(
                       child: AspectRatio(
                         aspectRatio: _videoController.value.aspectRatio,
