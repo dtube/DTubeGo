@@ -870,21 +870,47 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
           child: Padding(
             padding: EdgeInsets.only(left: 12.w),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '@${widget.author} | ' +
-                      '${widget.publishDate} - ' +
-                      (widget.duration.inHours == 0
-                          ? widget.duration.toString().substring(2, 7) + ' min'
-                          : widget.duration.toString().substring(0, 7) +
-                              ' hours'),
-                  style: Theme.of(context).textTheme.bodyText2,
+                // Text(
+                //   '@${widget.author} | ' +
+                //       '${widget.publishDate} - ' +
+                //       (widget.duration.inHours == 0
+                //           ? widget.duration.toString().substring(2, 7) + ' min'
+                //           : widget.duration.toString().substring(0, 7) +
+                //               ' hours'),
+                //   style: Theme.of(context).textTheme.bodyText2,
+                // ),
+                Row(
+                  children: [
+                    Container(
+                      width: 28.w,
+                      child: Text(
+                        '@${widget.author}',
+                        style: Theme.of(context).textTheme.bodyText2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Text(
+                      '| ${widget.publishDate}',
+                      style: Theme.of(context).textTheme.bodyText2,
+                    ),
+                    Text(
+                      ' - ' +
+                          (widget.duration.inHours == 0
+                              ? widget.duration.toString().substring(2, 7) +
+                                  ' min'
+                              : widget.duration.toString().substring(0, 7) +
+                                  ' h'),
+                      style: Theme.of(context).textTheme.bodyText2,
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: EdgeInsets.only(right: 0.w),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
@@ -892,7 +918,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                         style: Theme.of(context).textTheme.headline5,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 2.w),
+                        padding: EdgeInsets.only(left: 1.w),
                         child: DTubeLogoShadowed(size: 5.w),
                       ),
                     ],
