@@ -657,29 +657,26 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                     alignment: Alignment.centerRight,
                     child: SpeedDial(
                         child: Padding(
-                          padding: EdgeInsets.only(left: 7.w),
+                          padding: EdgeInsets.only(left: 10.w),
                           child: FadeIn(
                             preferences: AnimationPreferences(
                                 offset: Duration(milliseconds: 700),
                                 duration: Duration(seconds: 1)),
-                            child: Padding(
-                              padding: EdgeInsets.only(right: 2.w),
-                              child: HeartBeat(
-                                preferences: AnimationPreferences(
-                                    magnitude: 1.2,
-                                    offset: Duration(seconds: 3),
-                                    autoPlay: AnimationPlayStates.Loop),
-                                child: ShadowedIcon(
-                                    icon: FontAwesomeIcons.ellipsisV,
-                                    color: Colors.white,
-                                    shadowColor: Colors.black,
-                                    size: globalIconSizeSmall),
-                              ),
+                            child: HeartBeat(
+                              preferences: AnimationPreferences(
+                                  magnitude: 1.2,
+                                  offset: Duration(seconds: 3),
+                                  autoPlay: AnimationPlayStates.Loop),
+                              child: ShadowedIcon(
+                                  icon: FontAwesomeIcons.ellipsisV,
+                                  color: Colors.white,
+                                  shadowColor: Colors.black,
+                                  size: globalIconSizeSmall),
                             ),
                           ),
                         ),
                         activeChild: Padding(
-                          padding: EdgeInsets.only(left: 2.w),
+                          padding: EdgeInsets.only(left: 10.w),
                           child: ShadowedIcon(
                               icon: FontAwesomeIcons.sortDown,
                               color: Colors.white,
@@ -882,28 +879,33 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                 //               ' hours'),
                 //   style: Theme.of(context).textTheme.bodyText2,
                 // ),
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: 28.w,
+                      width: 50.w,
                       child: Text(
                         '@${widget.author}',
                         style: Theme.of(context).textTheme.bodyText2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Text(
-                      '| ${widget.publishDate}',
-                      style: Theme.of(context).textTheme.bodyText2,
-                    ),
-                    Text(
-                      ' - ' +
-                          (widget.duration.inHours == 0
-                              ? widget.duration.toString().substring(2, 7) +
-                                  ' min'
-                              : widget.duration.toString().substring(0, 7) +
-                                  ' h'),
-                      style: Theme.of(context).textTheme.bodyText2,
+                    Row(
+                      children: [
+                        Text(
+                          '${widget.publishDate}',
+                          style: Theme.of(context).textTheme.bodyText2,
+                        ),
+                        Text(
+                          ' - ' +
+                              (widget.duration.inHours == 0
+                                  ? widget.duration.toString().substring(2, 7) +
+                                      ' min'
+                                  : widget.duration.toString().substring(0, 7) +
+                                      ' h'),
+                          style: Theme.of(context).textTheme.bodyText2,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -928,7 +930,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
             ),
           ),
         ),
-        SizedBox(height: 2.h),
+        SizedBox(height: 1.h),
       ],
     );
   }
