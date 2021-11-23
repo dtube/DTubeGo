@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -67,7 +68,10 @@ final ThemeData dtubeDarkTheme = ThemeData(
   indicatorColor: Color(0xff64ffda),
   hintColor: Color(0x80ffffff),
   errorColor: Color(0xffd32f2f),
-  appBarTheme: AppBarTheme(backgroundColor: globalBGColor, elevation: 0),
+  // appBarTheme: AppBarTheme(backgroundColor: globalBGColor, elevation: 0),
+  appBarTheme: AppBarTheme(
+    systemOverlayStyle: SystemUiOverlayStyle.light,
+  ),
   elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
     alignment: Alignment.center,

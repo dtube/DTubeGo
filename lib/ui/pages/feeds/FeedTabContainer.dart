@@ -92,7 +92,6 @@ class _FeedMainPageState extends State<FeedMainPage>
               ..add(FetchFeedEvent(feedType: "TrendingFeed"));
             break;
 
-            break;
           default:
         }
       }
