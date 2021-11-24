@@ -1,16 +1,7 @@
-import 'package:dtube_go/bloc/user/user_bloc.dart';
-import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/bloc/user/user_event.dart';
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/bloc/settings/settings_bloc.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/ui/startup/PinPad.dart';
-
-import 'package:dtube_go/ui/startup/OnboardingJourney/OnboardingJourney.dart';
-
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';

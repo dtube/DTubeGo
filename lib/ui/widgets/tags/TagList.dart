@@ -1,21 +1,11 @@
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/pages/feeds/cards/PostListCardLarge.dart';
 import 'package:dtube_go/utils/friendlyTimestamp.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'dart:async';
-
 import 'package:dtube_go/bloc/search/search_bloc_full.dart';
-
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-
-import 'package:dtube_go/ui/pages/Explore/ResultCards/PostResultCard.dart';
-import 'package:dtube_go/ui/pages/Explore/ResultCards/UserResultCard.dart';
-
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;

@@ -443,7 +443,6 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                     return DTubeLogoPulse(size: 40);
                   }
                   if (state is TransactionSent) {
-                    print("test");
                     _userDataLoaded = false;
                     BlocProvider.of<TransactionBloc>(context)
                         .add(SetInitState());

@@ -1,6 +1,5 @@
 import 'package:dtube_go/ui/pages/feeds/lists/FeedList.dart';
 import 'package:dtube_go/ui/pages/feeds/PostDetailPageInlineView.dart';
-
 import 'package:dtube_go/utils/ResponsiveLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -37,12 +36,9 @@ class _FeedViewBaseState extends State<FeedViewBase>
   ValueNotifier<List<String>> _notifierPost = ValueNotifier(["", ""]);
 
   void showPost(List<String> params) {
-// params: author, link
-    // setState(() {
     _notifierPost.value[0] = params[0];
     _notifierPost.value[1] = params[1];
     _notifierPost.value = [params[0], params[1]];
-    //});
   }
 
   @override
@@ -73,7 +69,6 @@ class _FeedViewBaseState extends State<FeedViewBase>
           children: [
             Container(
               width: 44.w,
-
               child: FeedList(
                   feedType: widget.feedType,
                   largeFormat: false,
@@ -84,7 +79,6 @@ class _FeedViewBaseState extends State<FeedViewBase>
                   width: 46.w,
                   enableNavigation: false,
                   itemSelectedCallback: showPost),
-              // child: Text("test")
             ),
             VerticalDivider(),
             ValueListenableBuilder(
@@ -117,7 +111,6 @@ class PostView extends StatefulWidget {
 class _PostViewState extends State<PostView> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

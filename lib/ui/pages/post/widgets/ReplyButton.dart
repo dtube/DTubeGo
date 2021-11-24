@@ -104,17 +104,12 @@ class _ReplyButtonState extends State<ReplyButton> {
           ),
           Visibility(
             visible: _replyPressed,
-            child:
-                //Expanded(
-                //flex: 2,
-                //child:
-                Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   width: 85.w, // TODO: make this dynamic
                   child: TextField(
-                      //key: UniqueKey(),
                       autofocus: _replyPressed,
                       controller: _replyController,
                       style: Theme.of(context).textTheme.bodyText1),
@@ -122,8 +117,6 @@ class _ReplyButtonState extends State<ReplyButton> {
                 BlocBuilder<UserBloc, UserState>(
                     bloc: _userBloc,
                     builder: (context, state) {
-                      // TODO error handling
-
                       if (state is UserDTCVPLoadingState) {
                         return CircularProgressIndicator();
                       }

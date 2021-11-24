@@ -1,5 +1,3 @@
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;

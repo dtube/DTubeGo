@@ -1,11 +1,9 @@
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/ui/startup/OnboardingJourney/Pages.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
-
 import 'package:introduction_screen/introduction_screen.dart';
-
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
@@ -31,8 +29,6 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
     var pageDecoration = PageDecoration(
       titleTextStyle: Theme.of(context).textTheme.headline1!,
       bodyTextStyle: Theme.of(context).textTheme.bodyText1!,
@@ -55,7 +51,7 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Align(
-                alignment: Alignment.topCenter, child: DTubeLogo(size: 70)),
+                alignment: Alignment.topCenter, child: DTubeLogo(size: 20.w)),
           ),
         ),
       ),
@@ -92,9 +88,9 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
       controlsMargin: const EdgeInsets.all(16),
       controlsPadding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
       dotsDecorator: DotsDecorator(
-        size: Size(20.0, 10.0),
+        size: Size(4.w, 2.w),
         color: globalAlmostWhite,
-        activeSize: Size(32.0, 10.0),
+        activeSize: Size(5.w, 2.w),
         activeColor: globalRed,
         activeShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(25.0)),

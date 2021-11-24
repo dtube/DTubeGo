@@ -1,4 +1,3 @@
-import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'package:dtube_go/bloc/auth/auth_event.dart';

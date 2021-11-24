@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
-// import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
-
-import 'dart:io' show Platform;
 
 class YTPlayerIFrame extends StatefulWidget {
   YTPlayerIFrame(

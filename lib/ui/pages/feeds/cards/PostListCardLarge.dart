@@ -84,7 +84,6 @@ class PostListCardLarge extends StatefulWidget {
 
 class _PostListCardLargeState extends State<PostListCardLarge> {
   double _avatarSize = 10.w;
-  double _tagSpace = 20.w;
   bool _thumbnailTapped = false;
   TextEditingController _replyController = new TextEditingController();
   TextEditingController _giftMemoController = new TextEditingController();
@@ -340,8 +339,6 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                               BlocBuilder<UserBloc, UserState>(
                                   bloc: _userBloc,
                                   builder: (context, state) {
-                                    // TODO error handling
-
                                     if (state is UserDTCVPLoadingState) {
                                       return CircularProgressIndicator();
                                     }

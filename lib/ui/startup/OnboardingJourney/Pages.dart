@@ -1,8 +1,5 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:ui';
-
-import 'package:dtube_go/style/ThemeDataOldDynamics.dart';
-import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:introduction_screen/introduction_screen.dart';

@@ -1,8 +1,6 @@
-import 'package:auto_orientation/auto_orientation.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:io';
-
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';

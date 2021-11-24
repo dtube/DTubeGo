@@ -1,7 +1,5 @@
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/bloc/rewards/rewards_bloc.dart';
 import 'package:dtube_go/bloc/rewards/rewards_bloc_full.dart';
 import 'package:dtube_go/bloc/rewards/rewards_event.dart';
@@ -168,7 +166,6 @@ class _RewardsCardState extends State<RewardsCard>
     with AutomaticKeepAliveClientMixin {
   double widthLabel = 23.w;
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   @override
