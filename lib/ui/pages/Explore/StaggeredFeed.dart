@@ -1,3 +1,5 @@
+import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_go/utils/navigationShortcuts.dart';
@@ -144,6 +146,25 @@ class StaggeredFeed extends StatelessWidget {
               )
             : new CachedNetworkImage(
                 imageUrl: feed[index].thumbUrl,
+                placeholder: (context, url) => Container(
+                    //width: widget.avatarSize,
+                    height: 15.h,
+                    child: Container(
+                      height: 10.h,
+                      child: DTubeLogoPulse(
+                        size: 10.h,
+                      ),
+                    )),
+                errorWidget: (context, url, error) => Container(
+                    color: globalBGColor,
+                    //width: widget.avatarSize,
+                    height: 20.h,
+                    child: Container(
+                        height: 10.h,
+                        child: Image.asset(
+                          'assets/images/dtube_logo_white.png',
+                          fit: BoxFit.fitHeight,
+                        ))),
               ),
       ),
       staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),

@@ -67,10 +67,12 @@ class _NavigationContainerState extends State<NavigationContainer> {
       icon: Center(
         child: BlocBuilder<AppStateBloc, AppState>(builder: (context, state) {
           if (state is UploadStartedState) {
-            return DTubeLogoPulseWave(size: 10.w, progressPercent: 10);
+            return DTubeLogoPulseWave(
+                size: globalIconSizeMedium, progressPercent: 10);
           } else if (state is UploadProcessingState) {
             return DTubeLogoPulseWave(
-                size: 10.w, progressPercent: state.progressPercent);
+                size: globalIconSizeMedium,
+                progressPercent: state.progressPercent);
           } else if (state is UploadFinishedState) {
             return Center(
               child: new ShadowedIcon(
@@ -275,7 +277,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           ),
         ),
         bottomNavigationBar: Container(
-          height: globalIconSizeMedium * 2.2,
+          height: globalIconSizeMedium * 2.4,
           decoration: BoxDecoration(
               color: Colors.white,
               gradient: LinearGradient(
