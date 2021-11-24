@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
@@ -37,6 +39,9 @@ import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class PostListCardLarge extends StatefulWidget {
   const PostListCardLarge(
@@ -107,7 +112,8 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
 
   late UserBloc _userBloc;
   int _currentVp = 0;
-
+  late VideoPlayerController _bpController;
+  late YoutubePlayerController _ytController;
   @override
   void initState() {
     super.initState();
@@ -116,6 +122,17 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
     _showCommentInput = false;
     _showGiftInput = false;
     _userBloc = BlocProvider.of<UserBloc>(context);
+    _bpController = VideoPlayerController.asset('assets/videos/firstpage.mp4');
+    _ytController = YoutubePlayerController(
+      initialVideoId: widget.videoUrl,
+      params: YoutubePlayerParams(
+          showControls: true,
+          showFullscreenButton: false,
+          desktopMode: !Platform.isIOS,
+          privacyEnhanced: true,
+          useHybridComposition: true,
+          autoPlay: false),
+    );
   }
 
   @override
@@ -126,812 +143,853 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        InkWell(
-          onTap: () {
-            setState(() {
-              _thumbnailTapped = true;
-            });
-          },
-          child: Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              Visibility(
-                visible: !_thumbnailTapped,
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: widget.blur
-                      ? ClipRect(
-                          child: ImageFiltered(
-                            imageFilter: ImageFilter.blur(
-                              sigmaY: 5,
-                              sigmaX: 5,
+    return VisibilityDetector(
+      key: Key('postlist-large' + widget.link),
+      onVisibilityChanged: (visibilityInfo) {
+        var visiblePercentage = visibilityInfo.visibleFraction * 100;
+
+        if (visiblePercentage < 1) {
+          _ytController.pause();
+          _bpController.pause();
+          print("VISIBILITY OF " +
+              widget.author +
+              "/" +
+              widget.link +
+              "CHANGED TO " +
+              visiblePercentage.toString());
+        }
+        if (visiblePercentage > 90) {
+          _ytController.play();
+          _bpController.play();
+          print("VISIBILITY OF " +
+              widget.author +
+              "/" +
+              widget.link +
+              "CHANGED TO " +
+              visiblePercentage.toString());
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: () {
+              setState(() {
+                _thumbnailTapped = true;
+              });
+            },
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                Visibility(
+                  visible: !_thumbnailTapped,
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: widget.blur
+                        ? ClipRect(
+                            child: ImageFiltered(
+                              imageFilter: ImageFilter.blur(
+                                sigmaY: 5,
+                                sigmaX: 5,
+                              ),
+                              child: CachedNetworkImage(
+                                fit: BoxFit.fitWidth,
+                                imageUrl: widget.thumbnailUrl,
+                                errorWidget: (context, url, error) => DTubeLogo(
+                                  size: 50,
+                                ),
+                              ),
                             ),
+                          )
+                        :
+                        // shimmer creates a light color cast even if the animation is not present
+                        Shimmer(
+                            duration: Duration(seconds: 5),
+                            interval: Duration(seconds: generateRandom(3, 15)),
+                            color: globalAlmostWhite,
+                            colorOpacity: 0.1,
                             child: CachedNetworkImage(
-                              fit: BoxFit.fitWidth,
                               imageUrl: widget.thumbnailUrl,
+                              fit: BoxFit.fitWidth,
                               errorWidget: (context, url, error) => DTubeLogo(
                                 size: 50,
                               ),
                             ),
                           ),
-                        )
-                      :
-                      // shimmer creates a light color cast even if the animation is not present
-                      Shimmer(
-                          duration: Duration(seconds: 5),
-                          interval: Duration(seconds: generateRandom(3, 15)),
-                          color: globalAlmostWhite,
-                          colorOpacity: 0.1,
-                          child: CachedNetworkImage(
-                            imageUrl: widget.thumbnailUrl,
-                            fit: BoxFit.fitWidth,
-                            errorWidget: (context, url, error) => DTubeLogo(
-                              size: 50,
-                            ),
-                          ),
-                        ),
+                  ),
                 ),
-              ),
-              Center(
-                child: Visibility(
-                  visible: _thumbnailTapped,
-                  child: (["sia", "ipfs"].contains(widget.videoSource) &&
-                          widget.videoUrl != "")
-                      // ? BP(
-                      //     videoUrl: widget.videoUrl,
-                      //     autoplay: true,
-                      //     looping: false,
-                      //     localFile: false,
-                      //     controls: true,
-                      //     usedAsPreview: false,
-                      //     allowFullscreen: false,
-                      //     portraitVideoPadding: 30.w,
-                      //   )
-                      ? AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: BP(
-                            videoUrl: widget.videoUrl,
-                            autoplay: true,
-                            looping: false,
-                            localFile: false,
-                            controls: true,
-                            usedAsPreview: false,
-                            allowFullscreen: false,
-                            portraitVideoPadding: 30.w,
-                          ),
-                        )
-                      : (widget.videoSource == 'youtube' &&
-                              widget.videoUrl != "")
-                          ? YTPlayerIFrame(
-                              videoUrl: widget.videoUrl,
-                              autoplay: true,
-                              allowFullscreen: false)
-                          : Text("no player detected"),
+                Center(
+                  child: Visibility(
+                    visible: _thumbnailTapped,
+                    child: (["sia", "ipfs"].contains(widget.videoSource) &&
+                            widget.videoUrl != "")
+                        // ? BP(
+                        //     videoUrl: widget.videoUrl,
+                        //     autoplay: true,
+                        //     looping: false,
+                        //     localFile: false,
+                        //     controls: true,
+                        //     usedAsPreview: false,
+                        //     allowFullscreen: false,
+                        //     portraitVideoPadding: 30.w,
+                        //   )
+                        ? AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: BP(
+                                videoUrl: widget.videoUrl,
+                                autoplay: true,
+                                looping: false,
+                                localFile: false,
+                                controls: true,
+                                usedAsPreview: false,
+                                allowFullscreen: false,
+                                portraitVideoPadding: 30.w,
+                                videocontroller: _bpController),
+                          )
+                        : (widget.videoSource == 'youtube' &&
+                                widget.videoUrl != "")
+                            ? YTPlayerIFrame(
+                                videoUrl: widget.videoUrl,
+                                autoplay: true,
+                                allowFullscreen: false,
+                                controller: _ytController,
+                              )
+                            : Text("no player detected"),
+                  ),
                 ),
-              ),
-              // VOTING DIALOG
-              Visibility(
-                  visible: _showVotingBars,
-                  child: AspectRatio(
-                    aspectRatio: 8 / 5,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: BlocBuilder<UserBloc, UserState>(
-                        bloc: _userBloc,
-                        builder: (context, state) {
-                          // TODO error handling
+                // VOTING DIALOG
+                Visibility(
+                    visible: _showVotingBars,
+                    child: AspectRatio(
+                      aspectRatio: 8 / 5,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: BlocBuilder<UserBloc, UserState>(
+                          bloc: _userBloc,
+                          builder: (context, state) {
+                            // TODO error handling
 
-                          if (state is UserDTCVPLoadingState) {
+                            if (state is UserDTCVPLoadingState) {
+                              return DtubeLogoPulseWithSubtitle(
+                                  subtitle: "loading your balances...",
+                                  size: 30.w);
+                            }
+                            if (state is UserDTCVPLoadedState) {
+                              _currentVp = state.vtBalance["v"]!;
+
+                              return AspectRatio(
+                                aspectRatio: 8 / 5,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    color: Colors.black.withAlpha(99),
+                                    child: VotingSliderStandalone(
+                                      defaultVote: double.parse(
+                                          widget.defaultPostVotingWeight),
+                                      defaultTip: double.parse(
+                                          widget.defaultPostVotingTip),
+                                      author: widget.author,
+                                      link: widget.link,
+                                      downvote: !_votingDirection,
+                                      currentVT: _currentVp + 0.0,
+                                      isPost: true,
+                                      cancelCallback: () {
+                                        setState(() {
+                                          _showVotingBars = false;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
                             return DtubeLogoPulseWithSubtitle(
                                 subtitle: "loading your balances...",
                                 size: 30.w);
-                          }
-                          if (state is UserDTCVPLoadedState) {
-                            _currentVp = state.vtBalance["v"]!;
-
-                            return AspectRatio(
-                              aspectRatio: 8 / 5,
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  color: Colors.black.withAlpha(99),
-                                  child: VotingSliderStandalone(
-                                    defaultVote: double.parse(
-                                        widget.defaultPostVotingWeight),
-                                    defaultTip: double.parse(
-                                        widget.defaultPostVotingTip),
-                                    author: widget.author,
-                                    link: widget.link,
-                                    downvote: !_votingDirection,
-                                    currentVT: _currentVp + 0.0,
-                                    isPost: true,
-                                    cancelCallback: () {
-                                      setState(() {
-                                        _showVotingBars = false;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                          return DtubeLogoPulseWithSubtitle(
-                              subtitle: "loading your balances...", size: 30.w);
-                        },
-                      ),
-                    ),
-                  )),
-              // COMMENT DIALOG
-              Visibility(
-                  visible: _showCommentInput,
-                  child: AspectRatio(
-                    aspectRatio: 8 / 5,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        //color: Colors.black.withAlpha(95),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            gradient: LinearGradient(
-                                begin: FractionalOffset.topCenter,
-                                end: FractionalOffset.bottomCenter,
-                                colors: [
-                                  Colors.black.withOpacity(0.0),
-                                  Colors.black.withAlpha(95),
-                                  Colors.black.withAlpha(95),
-                                  Colors.black.withOpacity(0.0),
-                                ],
-                                stops: [
-                                  0.0,
-                                  0.2,
-                                  0.8,
-                                  1.0
-                                ])),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 80.w,
-                              child: Padding(
-                                  padding: EdgeInsets.all(5.w),
-                                  child: OverlayTextInput(
-                                    autoFocus: _showCommentInput,
-                                    label: 'Share some feedback',
-                                    textEditingController: _replyController,
-                                  )),
-                            ),
-                            BlocBuilder<UserBloc, UserState>(
-                                bloc: _userBloc,
-                                builder: (context, state) {
-                                  // TODO error handling
-
-                                  if (state is UserDTCVPLoadingState) {
-                                    return CircularProgressIndicator();
-                                  }
-                                  if (state is UserDTCVPLoadedState) {
-                                    _currentVp = state.vtBalance["v"]!;
-                                  }
-
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      InputChip(
-                                        padding: EdgeInsets.zero,
-                                        onPressed: () {
-                                          UploadData _uploadData =
-                                              new UploadData(
-                                                  link: "",
-                                                  parentAuthor: widget.author,
-                                                  parentPermlink: widget.link,
-                                                  title: "",
-                                                  description: _replyController
-                                                      .value.text,
-                                                  tag: "",
-                                                  vpPercent: double.parse(widget
-                                                      .defaultCommentVotingWeight),
-                                                  vpBalance: _currentVp,
-                                                  burnDtc: 0,
-                                                  dtcBalance:
-                                                      0, // TODO promoted comment implementation missing
-                                                  isPromoted: false,
-                                                  duration: "",
-                                                  thumbnailLocation: "",
-                                                  localThumbnail: false,
-                                                  videoLocation: "",
-                                                  localVideoFile: false,
-                                                  originalContent: false,
-                                                  nSFWContent: false,
-                                                  unlistVideo: false,
-                                                  isEditing: false,
-                                                  videoSourceHash: "",
-                                                  video240pHash: "",
-                                                  video480pHash: "",
-                                                  videoSpriteHash: "",
-                                                  thumbnail640Hash: "",
-                                                  thumbnail210Hash: "",
-                                                  uploaded: false,
-                                                  crossPostToHive: false);
-
-                                          BlocProvider.of<TransactionBloc>(
-                                                  context)
-                                              .add(SendCommentEvent(
-                                                  _uploadData));
-                                          setState(() {
-                                            _showCommentInput = false;
-                                            _replyController.text = '';
-                                          });
-                                        },
-                                        backgroundColor: globalRed,
-                                        label: Padding(
-                                          padding: EdgeInsets.all(
-                                              globalIconSizeBig / 4),
-                                          child: FaIcon(
-                                            FontAwesomeIcons.paperPlane,
-                                            size: globalIconSizeBig,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 2.h),
-                                        child: InputChip(
-                                          label: Text(
-                                            "cancel",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1,
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              _showCommentInput = false;
-                                            });
-                                          },
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                }),
-                          ],
+                          },
                         ),
                       ),
-                    ),
-                  )),
-              // GIFT DIALOG
-              Visibility(
-                  visible: _showGiftInput,
-                  child: AspectRatio(
-                    aspectRatio: 8 / 5,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        //color: Colors.black.withAlpha(95),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            gradient: LinearGradient(
-                                begin: FractionalOffset.topCenter,
-                                end: FractionalOffset.bottomCenter,
-                                colors: [
-                                  Colors.black.withOpacity(0.0),
-                                  Colors.black.withAlpha(95),
-                                  Colors.black.withAlpha(95),
-                                  Colors.black.withOpacity(0.0),
-                                ],
-                                stops: [
-                                  0.0,
-                                  0.2,
-                                  0.8,
-                                  1.0
-                                ])),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                SizedBox(height: 5.h),
-                                Container(
-                                  width: 80.w,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 40.w,
-                                        child: OverlayNumberInput(
-                                          autoFocus: _showGiftInput,
-                                          textEditingController:
-                                              _giftDTCController,
-                                          label: "your gift",
-                                        ),
-                                      ),
-                                      Text(" DTC",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5)
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  width: 80.w,
-                                  child: Padding(
+                    )),
+                // COMMENT DIALOG
+                Visibility(
+                    visible: _showCommentInput,
+                    child: AspectRatio(
+                      aspectRatio: 8 / 5,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          //color: Colors.black.withAlpha(95),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              gradient: LinearGradient(
+                                  begin: FractionalOffset.topCenter,
+                                  end: FractionalOffset.bottomCenter,
+                                  colors: [
+                                    Colors.black.withOpacity(0.0),
+                                    Colors.black.withAlpha(95),
+                                    Colors.black.withAlpha(95),
+                                    Colors.black.withOpacity(0.0),
+                                  ],
+                                  stops: [
+                                    0.0,
+                                    0.2,
+                                    0.8,
+                                    1.0
+                                  ])),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 80.w,
+                                child: Padding(
                                     padding: EdgeInsets.all(5.w),
                                     child: OverlayTextInput(
-                                        autoFocus: false,
-                                        textEditingController:
-                                            _giftMemoController,
-                                        label: "Add some kind words"),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                InputChip(
-                                  padding: EdgeInsets.zero,
-                                  onPressed: () async {
-                                    String _memo = "";
+                                      autoFocus: _showCommentInput,
+                                      label: 'Share some feedback',
+                                      textEditingController: _replyController,
+                                    )),
+                              ),
+                              BlocBuilder<UserBloc, UserState>(
+                                  bloc: _userBloc,
+                                  builder: (context, state) {
+                                    // TODO error handling
 
-                                    if (widget.link != "") {
-                                      _memo =
-                                          "Gift sent through https://d.tube/#!/v/${widget.author}/${widget.link}";
-                                      if (_giftMemoController.value.text !=
-                                          "") {
-                                        _memo = _memo +
-                                            ": ${_giftMemoController.value.text}";
-                                      }
-                                    } else {
-                                      _memo = _giftMemoController.value.text;
+                                    if (state is UserDTCVPLoadingState) {
+                                      return CircularProgressIndicator();
                                     }
-                                    TxData txdata = TxData(
-                                        receiver: widget.author,
-                                        amount: (double.parse(_giftDTCController
-                                                    .value.text) *
-                                                100)
-                                            .floor(),
-                                        memo: _memo);
-                                    Transaction newTx =
-                                        Transaction(type: 3, data: txdata);
-                                    BlocProvider.of<TransactionBloc>(context)
-                                        .add(
-                                            SignAndSendTransactionEvent(newTx));
-                                    setState(() {
-                                      _showGiftInput = false;
-                                    });
-                                  },
-                                  backgroundColor: globalRed,
-                                  label: Padding(
-                                    padding:
-                                        EdgeInsets.all(globalIconSizeBig / 4),
-                                    child: FaIcon(
-                                      FontAwesomeIcons.paperPlane,
-                                      size: globalIconSizeBig,
+                                    if (state is UserDTCVPLoadedState) {
+                                      _currentVp = state.vtBalance["v"]!;
+                                    }
+
+                                    return Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InputChip(
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () {
+                                            UploadData _uploadData =
+                                                new UploadData(
+                                                    link: "",
+                                                    parentAuthor: widget.author,
+                                                    parentPermlink: widget.link,
+                                                    title: "",
+                                                    description:
+                                                        _replyController
+                                                            .value.text,
+                                                    tag: "",
+                                                    vpPercent: double.parse(widget
+                                                        .defaultCommentVotingWeight),
+                                                    vpBalance: _currentVp,
+                                                    burnDtc: 0,
+                                                    dtcBalance:
+                                                        0, // TODO promoted comment implementation missing
+                                                    isPromoted: false,
+                                                    duration: "",
+                                                    thumbnailLocation: "",
+                                                    localThumbnail: false,
+                                                    videoLocation: "",
+                                                    localVideoFile: false,
+                                                    originalContent: false,
+                                                    nSFWContent: false,
+                                                    unlistVideo: false,
+                                                    isEditing: false,
+                                                    videoSourceHash: "",
+                                                    video240pHash: "",
+                                                    video480pHash: "",
+                                                    videoSpriteHash: "",
+                                                    thumbnail640Hash: "",
+                                                    thumbnail210Hash: "",
+                                                    uploaded: false,
+                                                    crossPostToHive: false);
+
+                                            BlocProvider.of<TransactionBloc>(
+                                                    context)
+                                                .add(SendCommentEvent(
+                                                    _uploadData));
+                                            setState(() {
+                                              _showCommentInput = false;
+                                              _replyController.text = '';
+                                            });
+                                          },
+                                          backgroundColor: globalRed,
+                                          label: Padding(
+                                            padding: EdgeInsets.all(
+                                                globalIconSizeBig / 4),
+                                            child: FaIcon(
+                                              FontAwesomeIcons.paperPlane,
+                                              size: globalIconSizeBig,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 2.h),
+                                          child: InputChip(
+                                            label: Text(
+                                              "cancel",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                _showCommentInput = false;
+                                              });
+                                            },
+                                          ),
+                                        )
+                                      ],
+                                    );
+                                  }),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )),
+                // GIFT DIALOG
+                Visibility(
+                    visible: _showGiftInput,
+                    child: AspectRatio(
+                      aspectRatio: 8 / 5,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          //color: Colors.black.withAlpha(95),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              gradient: LinearGradient(
+                                  begin: FractionalOffset.topCenter,
+                                  end: FractionalOffset.bottomCenter,
+                                  colors: [
+                                    Colors.black.withOpacity(0.0),
+                                    Colors.black.withAlpha(95),
+                                    Colors.black.withAlpha(95),
+                                    Colors.black.withOpacity(0.0),
+                                  ],
+                                  stops: [
+                                    0.0,
+                                    0.2,
+                                    0.8,
+                                    1.0
+                                  ])),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Column(
+                                children: [
+                                  SizedBox(height: 5.h),
+                                  Container(
+                                    width: 80.w,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: 40.w,
+                                          child: OverlayNumberInput(
+                                            autoFocus: _showGiftInput,
+                                            textEditingController:
+                                                _giftDTCController,
+                                            label: "your gift",
+                                          ),
+                                        ),
+                                        Text(" DTC",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5)
+                                      ],
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 2.h),
-                                  child: InputChip(
-                                    label: Text(
-                                      "cancel",
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
+                                  Container(
+                                    width: 80.w,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(5.w),
+                                      child: OverlayTextInput(
+                                          autoFocus: false,
+                                          textEditingController:
+                                              _giftMemoController,
+                                          label: "Add some kind words"),
                                     ),
-                                    onPressed: () {
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  InputChip(
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () async {
+                                      String _memo = "";
+
+                                      if (widget.link != "") {
+                                        _memo =
+                                            "Gift sent through https://d.tube/#!/v/${widget.author}/${widget.link}";
+                                        if (_giftMemoController.value.text !=
+                                            "") {
+                                          _memo = _memo +
+                                              ": ${_giftMemoController.value.text}";
+                                        }
+                                      } else {
+                                        _memo = _giftMemoController.value.text;
+                                      }
+                                      TxData txdata = TxData(
+                                          receiver: widget.author,
+                                          amount: (double.parse(
+                                                      _giftDTCController
+                                                          .value.text) *
+                                                  100)
+                                              .floor(),
+                                          memo: _memo);
+                                      Transaction newTx =
+                                          Transaction(type: 3, data: txdata);
+                                      BlocProvider.of<TransactionBloc>(context)
+                                          .add(SignAndSendTransactionEvent(
+                                              newTx));
                                       setState(() {
                                         _showGiftInput = false;
                                       });
                                     },
+                                    backgroundColor: globalRed,
+                                    label: Padding(
+                                      padding:
+                                          EdgeInsets.all(globalIconSizeBig / 4),
+                                      child: FaIcon(
+                                        FontAwesomeIcons.paperPlane,
+                                        size: globalIconSizeBig,
+                                      ),
+                                    ),
                                   ),
-                                )
-                              ],
-                            ),
-                          ],
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 2.h),
+                                    child: InputChip(
+                                      label: Text(
+                                        "cancel",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _showGiftInput = false;
+                                        });
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )),
+
+// Fullscreen needs to get re-implemeneted
+                // Align(
+                //   alignment: Alignment.topRight,
+                //   child: Padding(
+                //     padding: EdgeInsets.only(top: 2.h),
+                //     child: IconButton(
+                //         iconSize: globalIconSizeSmall,
+                //         onPressed: () {
+                //           _thumbnailTapped = false;
+                //           DialogHelper().show(
+                //               context,
+                //               DialogWidget.custom(
+                //                 child: widget.videoSource == "youtube"
+                //                     ? YoutubePlayerFullScreenPage(
+                //                         key: UniqueKey(),
+                //                         link: widget.videoUrl,
+                //                       )
+                //                     : ["ipfs", "sia"].contains(widget.videoSource)
+                //                         ? BetterPlayerFullScreenPage(
+                //                             link: widget.videoUrl,
+                //                           )
+                //                         : Text("no player detected"),
+                //               ));
+                //         },
+                //         icon: ShadowedIcon(
+                //           icon: FontAwesomeIcons.expand,
+                //           color: Colors.white,
+                //           shadowColor: Colors.black,
+                //           size: globalIconSizeSmall,
+                //         )),
+
+                //     // FullScreenButton(
+                //     //   videoUrl: widget.videoUrl,
+                //     //   videoSource: widget.videoSource,
+                //     //   iconSize: globalIconSizeSmall,
+                //     // ),
+                //   ),
+                // ),
+              ],
+            ),
+            //),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: [
+                  FadeIn(
+                    preferences: AnimationPreferences(
+                        offset: Duration(milliseconds: 500),
+                        duration: Duration(seconds: 1)),
+                    child: InkWell(
+                      onTap: () {
+                        navigateToUserDetailPage(context, widget.author, () {});
+                      },
+                      child: AccountAvatarBase(
+                          username: widget.author,
+                          avatarSize: _avatarSize,
+                          showVerified: true,
+                          showName: false,
+                          nameFontSizeMultiply: 1,
+                          width: 10.w,
+                          height: _avatarSize),
+                    ),
+                  ),
+                  SizedBox(width: 2.w),
+                  FadeInLeftBig(
+                    preferences: AnimationPreferences(
+                      offset: Duration(milliseconds: 100),
+                      duration: Duration(milliseconds: 350),
+                    ),
+                    child: Container(
+                      width: 55.w,
+                      child: InkWell(
+                        onTap: () {
+                          navigateToPostDetailPage(context, widget.author,
+                              widget.link, "none", false, () {});
+                        },
+                        child: Text(
+                          widget.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.headline6,
                         ),
                       ),
                     ),
-                  )),
-
-// Fullscreen needs to get re-implemeneted
-              // Align(
-              //   alignment: Alignment.topRight,
-              //   child: Padding(
-              //     padding: EdgeInsets.only(top: 2.h),
-              //     child: IconButton(
-              //         iconSize: globalIconSizeSmall,
-              //         onPressed: () {
-              //           _thumbnailTapped = false;
-              //           DialogHelper().show(
-              //               context,
-              //               DialogWidget.custom(
-              //                 child: widget.videoSource == "youtube"
-              //                     ? YoutubePlayerFullScreenPage(
-              //                         key: UniqueKey(),
-              //                         link: widget.videoUrl,
-              //                       )
-              //                     : ["ipfs", "sia"].contains(widget.videoSource)
-              //                         ? BetterPlayerFullScreenPage(
-              //                             link: widget.videoUrl,
-              //                           )
-              //                         : Text("no player detected"),
-              //               ));
-              //         },
-              //         icon: ShadowedIcon(
-              //           icon: FontAwesomeIcons.expand,
-              //           color: Colors.white,
-              //           shadowColor: Colors.black,
-              //           size: globalIconSizeSmall,
-              //         )),
-
-              //     // FullScreenButton(
-              //     //   videoUrl: widget.videoUrl,
-              //     //   videoSource: widget.videoSource,
-              //     //   iconSize: globalIconSizeSmall,
-              //     // ),
-              //   ),
-              // ),
-            ],
-          ),
-          //),
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
-              children: [
-                FadeIn(
-                  preferences: AnimationPreferences(
-                      offset: Duration(milliseconds: 500),
-                      duration: Duration(seconds: 1)),
-                  child: InkWell(
-                    onTap: () {
-                      navigateToUserDetailPage(context, widget.author, () {});
-                    },
-                    child: AccountAvatarBase(
-                        username: widget.author,
-                        avatarSize: _avatarSize,
-                        showVerified: true,
-                        showName: false,
-                        nameFontSizeMultiply: 1,
-                        width: 10.w,
-                        height: _avatarSize),
                   ),
-                ),
-                SizedBox(width: 2.w),
-                FadeInLeftBig(
-                  preferences: AnimationPreferences(
-                    offset: Duration(milliseconds: 100),
-                    duration: Duration(milliseconds: 350),
-                  ),
-                  child: Container(
-                    width: 55.w,
-                    child: InkWell(
-                      onTap: () {
-                        navigateToPostDetailPage(context, widget.author,
-                            widget.link, "none", false, () {});
-                      },
-                      child: Text(
-                        widget.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
+                ],
+              ),
+              SizedBox(height: 2.h),
+              Container(
+                width: 28.w,
+                child: Stack(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        widget.oc
+                            ? FadeIn(
+                                preferences: AnimationPreferences(
+                                    offset: Duration(milliseconds: 700),
+                                    duration: Duration(seconds: 1)),
+                                child: Padding(
+                                  padding: EdgeInsets.only(right: 2.w),
+                                  child: FaIcon(
+                                    FontAwesomeIcons.award,
+                                    size: globalIconSizeSmall,
+                                  ),
+                                ),
+                              )
+                            : SizedBox(width: globalIconSizeSmall),
+                        TagChip(
+                          waitBeforeFadeIn: Duration(milliseconds: 600),
+                          fadeInFromLeft: false,
+                          tagName: widget.mainTag,
+                          width: 14.w,
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 2.h),
-            Container(
-              width: 28.w,
-              child: Stack(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      widget.oc
-                          ? FadeIn(
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: SpeedDial(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10.w),
+                            child: FadeIn(
                               preferences: AnimationPreferences(
                                   offset: Duration(milliseconds: 700),
                                   duration: Duration(seconds: 1)),
-                              child: Padding(
-                                padding: EdgeInsets.only(right: 2.w),
-                                child: FaIcon(
-                                  FontAwesomeIcons.award,
-                                  size: globalIconSizeSmall,
-                                ),
+                              child: HeartBeat(
+                                preferences: AnimationPreferences(
+                                    magnitude: 1.2,
+                                    offset: Duration(seconds: 3),
+                                    autoPlay: AnimationPlayStates.Loop),
+                                child: ShadowedIcon(
+                                    icon: FontAwesomeIcons.ellipsisV,
+                                    color: Colors.white,
+                                    shadowColor: Colors.black,
+                                    size: globalIconSizeSmall),
                               ),
-                            )
-                          : SizedBox(width: globalIconSizeSmall),
-                      TagChip(
-                        waitBeforeFadeIn: Duration(milliseconds: 600),
-                        fadeInFromLeft: false,
-                        tagName: widget.mainTag,
-                        width: 14.w,
+                            ),
+                          ),
+                          activeChild: Padding(
+                            padding: EdgeInsets.only(left: 10.w),
+                            child: ShadowedIcon(
+                                icon: FontAwesomeIcons.sortDown,
+                                color: Colors.white,
+                                shadowColor: Colors.black,
+                                size: globalIconSizeSmall),
+                          ),
+                          buttonSize: globalIconSizeSmall * 2,
+                          useRotationAnimation: false,
+                          direction: SpeedDialDirection.up,
+                          visible: true,
+                          spacing: 0.0,
+                          closeManually: false,
+                          curve: Curves.bounceIn,
+                          overlayColor: Colors.white,
+                          overlayOpacity: 0,
+                          onOpen: () => print('OPENING DIAL'),
+                          onClose: () => print('DIAL CLOSED'),
+                          tooltip: 'menu',
+                          heroTag: 'submenu' + widget.title,
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Colors.white,
+                          elevation: 0.0,
+                          children: [
+                            // COMMENT BUTTON
+                            SpeedDialChild(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 7.w),
+                                  child: ShadowedIcon(
+                                      icon: FontAwesomeIcons.comment,
+                                      color: Colors.white,
+                                      shadowColor: Colors.black,
+                                      size: globalIconSizeBig),
+                                ),
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                backgroundColor: Colors.transparent,
+                                onTap: () {
+                                  showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        BlocProvider<UserBloc>(
+                                      create: (context) => UserBloc(
+                                          repository: UserRepositoryImpl()),
+                                      child: CommentDialog(
+                                        txBloc:
+                                            BlocProvider.of<TransactionBloc>(
+                                                context),
+                                        originAuthor: widget.author,
+                                        originLink: widget.link,
+                                        defaultCommentVote: double.parse(
+                                            widget.defaultCommentVotingWeight),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                            // DOWNVOTE BUTTON
+                            SpeedDialChild(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 7.w),
+                                  child: ShadowedIcon(
+                                      icon: FontAwesomeIcons.flag,
+                                      color: !widget.alreadyVoted
+                                          ? Colors.white
+                                          : globalRed,
+                                      shadowColor: Colors.black,
+                                      size: globalIconSizeBig),
+                                ),
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                backgroundColor: Colors.transparent,
+                                onTap: () {
+                                  if (!widget.alreadyVoted) {
+                                    showDialog<String>(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider<PostBloc>(
+                                              create: (context) => PostBloc(
+                                                  repository:
+                                                      PostRepositoryImpl())),
+                                          BlocProvider<UserBloc>(
+                                              create: (context) => UserBloc(
+                                                  repository:
+                                                      UserRepositoryImpl())),
+                                        ],
+                                        child: VotingDialog(
+                                          txBloc:
+                                              BlocProvider.of<TransactionBloc>(
+                                                  context),
+                                          defaultVote: double.parse(
+                                              widget.defaultPostVotingWeight),
+                                          defaultTip: double.parse(
+                                              widget.defaultPostVotingTip),
+                                          author: widget.author,
+                                          link: widget.link,
+                                          downvote: true,
+                                          //currentVT: state.vtBalance['v']! + 0.0,
+                                          isPost: true,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }),
+                            // UPVOTE BUTTON
+
+                            SpeedDialChild(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 7.w),
+                                  child: ShadowedIcon(
+                                      icon: FontAwesomeIcons.thumbsUp,
+                                      color: !widget.alreadyVoted
+                                          ? Colors.white
+                                          : globalRed,
+                                      shadowColor: Colors.black,
+                                      size: globalIconSizeBig),
+                                ),
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                backgroundColor: Colors.transparent,
+                                onTap: () {
+                                  if (!widget.alreadyVoted) {
+                                    showDialog<String>(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider<PostBloc>(
+                                              create: (context) => PostBloc(
+                                                  repository:
+                                                      PostRepositoryImpl())),
+                                          BlocProvider<UserBloc>(
+                                              create: (context) => UserBloc(
+                                                  repository:
+                                                      UserRepositoryImpl())),
+                                        ],
+                                        child: VotingDialog(
+                                          txBloc:
+                                              BlocProvider.of<TransactionBloc>(
+                                                  context),
+                                          defaultVote: double.parse(
+                                              widget.defaultPostVotingWeight),
+                                          defaultTip: double.parse(
+                                              widget.defaultPostVotingTip),
+                                          author: widget.author,
+                                          link: widget.link,
+                                          downvote: false,
+                                          //currentVT: state.vtBalance['v']! + 0.0,
+                                          isPost: true,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }),
+                            // GIFT BUTTON
+                            SpeedDialChild(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 7.w),
+                                  child: ShadowedIcon(
+                                      icon: FontAwesomeIcons.gift,
+                                      color: Colors.white,
+                                      shadowColor: Colors.black,
+                                      size: globalIconSizeBig),
+                                ),
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                backgroundColor: Colors.transparent,
+                                onTap: () {
+                                  showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        GiftDialog(
+                                      txBloc: BlocProvider.of<TransactionBloc>(
+                                          context),
+                                      receiver: widget.author,
+                                      originLink: widget.link,
+                                    ),
+                                  );
+                                }),
+                          ]),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          FadeInDown(
+            preferences:
+                AnimationPreferences(offset: Duration(milliseconds: 500)),
+            child: Padding(
+              padding: EdgeInsets.only(left: 12.w),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Text(
+                  //   '@${widget.author} | ' +
+                  //       '${widget.publishDate} - ' +
+                  //       (widget.duration.inHours == 0
+                  //           ? widget.duration.toString().substring(2, 7) + ' min'
+                  //           : widget.duration.toString().substring(0, 7) +
+                  //               ' hours'),
+                  //   style: Theme.of(context).textTheme.bodyText2,
+                  // ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 50.w,
+                        child: Text(
+                          '@${widget.author}',
+                          style: Theme.of(context).textTheme.bodyText2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            '${widget.publishDate}',
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                          Text(
+                            ' - ' +
+                                (widget.duration.inHours == 0
+                                    ? widget.duration
+                                            .toString()
+                                            .substring(2, 7) +
+                                        ' min'
+                                    : widget.duration
+                                            .toString()
+                                            .substring(0, 7) +
+                                        ' h'),
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: SpeedDial(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10.w),
-                          child: FadeIn(
-                            preferences: AnimationPreferences(
-                                offset: Duration(milliseconds: 700),
-                                duration: Duration(seconds: 1)),
-                            child: HeartBeat(
-                              preferences: AnimationPreferences(
-                                  magnitude: 1.2,
-                                  offset: Duration(seconds: 3),
-                                  autoPlay: AnimationPlayStates.Loop),
-                              child: ShadowedIcon(
-                                  icon: FontAwesomeIcons.ellipsisV,
-                                  color: Colors.white,
-                                  shadowColor: Colors.black,
-                                  size: globalIconSizeSmall),
-                            ),
-                          ),
+                  Padding(
+                    padding: EdgeInsets.only(right: 0.w),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          '${widget.dtcValue}',
+                          style: Theme.of(context).textTheme.headline5,
                         ),
-                        activeChild: Padding(
-                          padding: EdgeInsets.only(left: 10.w),
-                          child: ShadowedIcon(
-                              icon: FontAwesomeIcons.sortDown,
-                              color: Colors.white,
-                              shadowColor: Colors.black,
-                              size: globalIconSizeSmall),
+                        Padding(
+                          padding: EdgeInsets.only(left: 1.w),
+                          child: DTubeLogoShadowed(size: 5.w),
                         ),
-                        buttonSize: globalIconSizeSmall * 2,
-                        useRotationAnimation: false,
-                        direction: SpeedDialDirection.up,
-                        visible: true,
-                        spacing: 0.0,
-                        closeManually: false,
-                        curve: Curves.bounceIn,
-                        overlayColor: Colors.white,
-                        overlayOpacity: 0,
-                        onOpen: () => print('OPENING DIAL'),
-                        onClose: () => print('DIAL CLOSED'),
-                        tooltip: 'menu',
-                        heroTag: 'submenu' + widget.title,
-                        backgroundColor: Colors.transparent,
-                        foregroundColor: Colors.white,
-                        elevation: 0.0,
-                        children: [
-                          // COMMENT BUTTON
-                          SpeedDialChild(
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 7.w),
-                                child: ShadowedIcon(
-                                    icon: FontAwesomeIcons.comment,
-                                    color: Colors.white,
-                                    shadowColor: Colors.black,
-                                    size: globalIconSizeBig),
-                              ),
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              backgroundColor: Colors.transparent,
-                              onTap: () {
-                                showDialog<String>(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      BlocProvider<UserBloc>(
-                                    create: (context) => UserBloc(
-                                        repository: UserRepositoryImpl()),
-                                    child: CommentDialog(
-                                      txBloc: BlocProvider.of<TransactionBloc>(
-                                          context),
-                                      originAuthor: widget.author,
-                                      originLink: widget.link,
-                                      defaultCommentVote: double.parse(
-                                          widget.defaultCommentVotingWeight),
-                                    ),
-                                  ),
-                                );
-                              }),
-                          // DOWNVOTE BUTTON
-                          SpeedDialChild(
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 7.w),
-                                child: ShadowedIcon(
-                                    icon: FontAwesomeIcons.flag,
-                                    color: !widget.alreadyVoted
-                                        ? Colors.white
-                                        : globalRed,
-                                    shadowColor: Colors.black,
-                                    size: globalIconSizeBig),
-                              ),
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              backgroundColor: Colors.transparent,
-                              onTap: () {
-                                if (!widget.alreadyVoted) {
-                                  showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        MultiBlocProvider(
-                                      providers: [
-                                        BlocProvider<PostBloc>(
-                                            create: (context) => PostBloc(
-                                                repository:
-                                                    PostRepositoryImpl())),
-                                        BlocProvider<UserBloc>(
-                                            create: (context) => UserBloc(
-                                                repository:
-                                                    UserRepositoryImpl())),
-                                      ],
-                                      child: VotingDialog(
-                                        txBloc:
-                                            BlocProvider.of<TransactionBloc>(
-                                                context),
-                                        defaultVote: double.parse(
-                                            widget.defaultPostVotingWeight),
-                                        defaultTip: double.parse(
-                                            widget.defaultPostVotingTip),
-                                        author: widget.author,
-                                        link: widget.link,
-                                        downvote: true,
-                                        //currentVT: state.vtBalance['v']! + 0.0,
-                                        isPost: true,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              }),
-                          // UPVOTE BUTTON
-
-                          SpeedDialChild(
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 7.w),
-                                child: ShadowedIcon(
-                                    icon: FontAwesomeIcons.thumbsUp,
-                                    color: !widget.alreadyVoted
-                                        ? Colors.white
-                                        : globalRed,
-                                    shadowColor: Colors.black,
-                                    size: globalIconSizeBig),
-                              ),
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              backgroundColor: Colors.transparent,
-                              onTap: () {
-                                if (!widget.alreadyVoted) {
-                                  showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        MultiBlocProvider(
-                                      providers: [
-                                        BlocProvider<PostBloc>(
-                                            create: (context) => PostBloc(
-                                                repository:
-                                                    PostRepositoryImpl())),
-                                        BlocProvider<UserBloc>(
-                                            create: (context) => UserBloc(
-                                                repository:
-                                                    UserRepositoryImpl())),
-                                      ],
-                                      child: VotingDialog(
-                                        txBloc:
-                                            BlocProvider.of<TransactionBloc>(
-                                                context),
-                                        defaultVote: double.parse(
-                                            widget.defaultPostVotingWeight),
-                                        defaultTip: double.parse(
-                                            widget.defaultPostVotingTip),
-                                        author: widget.author,
-                                        link: widget.link,
-                                        downvote: false,
-                                        //currentVT: state.vtBalance['v']! + 0.0,
-                                        isPost: true,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              }),
-                          // GIFT BUTTON
-                          SpeedDialChild(
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 7.w),
-                                child: ShadowedIcon(
-                                    icon: FontAwesomeIcons.gift,
-                                    color: Colors.white,
-                                    shadowColor: Colors.black,
-                                    size: globalIconSizeBig),
-                              ),
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              backgroundColor: Colors.transparent,
-                              onTap: () {
-                                showDialog<String>(
-                                  context: context,
-                                  builder: (BuildContext context) => GiftDialog(
-                                    txBloc: BlocProvider.of<TransactionBloc>(
-                                        context),
-                                    receiver: widget.author,
-                                    originLink: widget.link,
-                                  ),
-                                );
-                              }),
-                        ]),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-        FadeInDown(
-          preferences:
-              AnimationPreferences(offset: Duration(milliseconds: 500)),
-          child: Padding(
-            padding: EdgeInsets.only(left: 12.w),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Text(
-                //   '@${widget.author} | ' +
-                //       '${widget.publishDate} - ' +
-                //       (widget.duration.inHours == 0
-                //           ? widget.duration.toString().substring(2, 7) + ' min'
-                //           : widget.duration.toString().substring(0, 7) +
-                //               ' hours'),
-                //   style: Theme.of(context).textTheme.bodyText2,
-                // ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 50.w,
-                      child: Text(
-                        '@${widget.author}',
-                        style: Theme.of(context).textTheme.bodyText2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          '${widget.publishDate}',
-                          style: Theme.of(context).textTheme.bodyText2,
-                        ),
-                        Text(
-                          ' - ' +
-                              (widget.duration.inHours == 0
-                                  ? widget.duration.toString().substring(2, 7) +
-                                      ' min'
-                                  : widget.duration.toString().substring(0, 7) +
-                                      ' h'),
-                          style: Theme.of(context).textTheme.bodyText2,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: 0.w),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        '${widget.dtcValue}',
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 1.w),
-                        child: DTubeLogoShadowed(size: 5.w),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
           ),
-        ),
-        SizedBox(height: 1.h),
-      ],
+          SizedBox(height: 1.h),
+        ],
+      ),
     );
   }
 }

@@ -30,6 +30,8 @@ import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:video_player/video_player.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class PostDetailPageInlineView extends StatefulWidget {
   String link;
@@ -117,14 +119,14 @@ class PostDetails extends StatefulWidget {
 
 class _PostDetailsState extends State<PostDetails> {
   late UserBloc _userBloc;
-
+  late VideoPlayerController _videocontroller;
   late double _defaultVoteWeightPosts = 0;
   late double _defaultVoteWeightComments = 0;
   late double _defaultVoteTipPosts = 0;
   late double _defaultVoteTipComments = 0;
   late int _currentVT = 0;
   String blockedUsers = "";
-
+  late YoutubePlayerController _ytController;
   void fetchBlockedUsers() async {
     blockedUsers = await sec.getBlockedUsers();
   }
@@ -137,6 +139,9 @@ class _PostDetailsState extends State<PostDetails> {
 
     _userBloc.add(FetchAccountDataEvent(username: widget.post.author));
     _userBloc.add(FetchDTCVPEvent());
+    _videocontroller =
+        VideoPlayerController.asset('assets/videos/firstpage.mp4');
+    _ytController = YoutubePlayerController(initialVideoId: 'tFa7Om3Au8M');
   }
 
   @override
@@ -166,7 +171,8 @@ class _PostDetailsState extends State<PostDetails> {
                     ? YTPlayerIFrame(
                         videoUrl: widget.post.videoUrl!,
                         autoplay: false,
-                        allowFullscreen: false)
+                        allowFullscreen: false,
+                        controller: _ytController)
                     : ["ipfs", "sia"].contains(widget.post.videoSource)
                         ? BP(
                             videoUrl: widget.post.videoUrl!,
@@ -177,7 +183,7 @@ class _PostDetailsState extends State<PostDetails> {
                             usedAsPreview: false,
                             allowFullscreen: false,
                             portraitVideoPadding: 50.0,
-                          )
+                            videocontroller: _videocontroller)
                         : Text("no player detected"),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

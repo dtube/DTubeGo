@@ -17,7 +17,6 @@ class BP extends StatefulWidget {
   final bool allowFullscreen;
   final double portraitVideoPadding;
   bool? openInFullscreen;
-  VideoPlayerController videocontroller;
 
   BP({
     required this.videoUrl,
@@ -29,7 +28,6 @@ class BP extends StatefulWidget {
     required this.allowFullscreen,
     required this.portraitVideoPadding,
     this.openInFullscreen,
-    required this.videocontroller,
     Key? key,
   }) : super(key: key);
 
@@ -39,11 +37,11 @@ class BP extends StatefulWidget {
 
 class _BPState extends State<BP> {
   late BetterPlayerController _betterPlayerController;
-  // late VideoPlayerController _videocontroller;
+  late VideoPlayerController _videocontroller;
   late Future<void> _future;
 
   Future<void> initVideoPlayer() async {
-    await widget.videocontroller.initialize();
+    await _videocontroller.initialize();
 
     setState(() {
       BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
@@ -56,8 +54,8 @@ class _BPState extends State<BP> {
           maxBufferMs: Duration(seconds: 60).inMilliseconds,
         ),
       );
-      double aspectRatio = widget.videocontroller.value.size.width /
-          widget.videocontroller.value.size.height;
+      double aspectRatio = _videocontroller.value.size.width /
+          _videocontroller.value.size.height;
 
       _betterPlayerController = BetterPlayerController(
         BetterPlayerConfiguration(
@@ -82,7 +80,7 @@ class _BPState extends State<BP> {
   @override
   void initState() {
     super.initState();
-    widget.videocontroller = !widget.localFile
+    _videocontroller = !widget.localFile
         ? VideoPlayerController.network(widget.videoUrl)
         : VideoPlayerController.file(File(widget.videoUrl));
     _future = initVideoPlayer();
@@ -92,7 +90,7 @@ class _BPState extends State<BP> {
   void dispose() {
     _betterPlayerController.pause();
     _betterPlayerController.dispose();
-    widget.videocontroller.dispose();
+    _videocontroller.dispose();
 
     super.dispose();
   }
@@ -119,9 +117,8 @@ class _BPState extends State<BP> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          double _aspectRatio = widget.videocontroller.value.size.width /
-              widget.videocontroller.value.size.height;
-
+          double _aspectRatio = _videocontroller.value.size.width /
+              _videocontroller.value.size.height;
           return Center(
             child: Padding(
               padding: EdgeInsets.only(
@@ -130,7 +127,7 @@ class _BPState extends State<BP> {
               child: Column(
                 children: [
                   AspectRatio(
-                    aspectRatio: _aspectRatio > 0.0 ? _aspectRatio : 1,
+                    aspectRatio: _aspectRatio,
                     child: BetterPlayer(
                       controller: _betterPlayerController,
                     ),

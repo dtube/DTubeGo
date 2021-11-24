@@ -7,46 +7,38 @@ import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'dart:io' show Platform;
 
 class YTPlayerIFrame extends StatefulWidget {
-  const YTPlayerIFrame(
+  YTPlayerIFrame(
       {Key? key,
       required this.videoUrl,
       required this.autoplay,
-      required this.allowFullscreen})
+      required this.allowFullscreen,
+      required this.controller})
       : super(key: key);
 
   final String videoUrl;
   final bool autoplay;
   final bool allowFullscreen;
+  YoutubePlayerController controller;
 
   @override
   _YTPlayerIFrameState createState() => _YTPlayerIFrameState();
 }
 
 class _YTPlayerIFrameState extends State<YTPlayerIFrame> {
-  late YoutubePlayerController _controller;
+  // late YoutubePlayerController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController(
-      initialVideoId: widget.videoUrl,
-      params: YoutubePlayerParams(
-          showControls: true,
-          showFullscreenButton: widget.allowFullscreen,
-          desktopMode: !Platform.isIOS,
-          privacyEnhanced: true,
-          useHybridComposition: true,
-          autoPlay: widget.autoplay),
-    );
 
-    _controller.onEnterFullscreen = () {
+    widget.controller.onEnterFullscreen = () {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.landscapeLeft,
         DeviceOrientation.landscapeRight,
       ]);
       print('Entered Fullscreen');
     };
-    _controller.onExitFullscreen = () {
+    widget.controller.onExitFullscreen = () {
       print('Exited Fullscreen');
     };
   }
@@ -59,8 +51,8 @@ class _YTPlayerIFrameState extends State<YTPlayerIFrame> {
 
   @override
   void dispose() {
-    _controller.close();
-    _controller.pause();
+    widget.controller.close();
+    widget.controller.pause();
     super.dispose();
   }
 
@@ -69,7 +61,7 @@ class _YTPlayerIFrameState extends State<YTPlayerIFrame> {
     //const _player = YoutubePlayerIFrame();
 
     return YoutubePlayerControllerProvider(
-      controller: _controller,
+      controller: widget.controller,
       child: YoutubePlayerIFrame(
         aspectRatio: 16 / 9,
       ),

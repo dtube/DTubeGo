@@ -45,6 +45,7 @@ import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 // import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
@@ -186,6 +187,7 @@ class PostDetails extends StatefulWidget {
 
 class _PostDetailsState extends State<PostDetails> {
   late YoutubePlayerController _controller;
+  late VideoPlayerController _videocontroller;
 
   late UserBloc _userBloc;
 
@@ -230,6 +232,8 @@ class _PostDetailsState extends State<PostDetails> {
     _controller.onExitFullscreen = () {
       print('Exited Fullscreen');
     };
+    _videocontroller =
+        VideoPlayerController.asset('assets/videos/firstpage.mp4');
   }
 
   @override
@@ -260,9 +264,11 @@ class _PostDetailsState extends State<PostDetails> {
               var visiblePercentage = visibilityInfo.visibleFraction * 100;
               if (visiblePercentage < 1) {
                 _controller.pause();
+                _videocontroller.pause();
               }
               if (visiblePercentage > 90) {
                 _controller.play();
+                _videocontroller.play();
               }
             },
             child: SingleChildScrollView(
@@ -335,7 +341,7 @@ class _PostDetailsState extends State<PostDetails> {
                                       usedAsPreview: false,
                                       allowFullscreen: true,
                                       portraitVideoPadding: 50.0,
-                                    )
+                                      videocontroller: _videocontroller)
                                   : Text("no player detected"),
                           SizedBox(
                             height: 2.h,

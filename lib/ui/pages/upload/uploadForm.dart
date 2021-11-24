@@ -26,6 +26,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class UploadForm extends StatefulWidget {
   late UploadData uploadData;
@@ -61,6 +63,8 @@ class _UploadFormState extends State<UploadForm> {
   FocusNode _titleFocus = new FocusNode();
   FocusNode _tagFocus = new FocusNode();
   bool uploadEnabled = true;
+  late VideoPlayerController _videocontroller;
+  late YoutubePlayerController _ytController;
 
 // video and thumbnail variables
   File? _image;
@@ -92,6 +96,10 @@ class _UploadFormState extends State<UploadForm> {
 
     _userBloc.add(FetchDTCVPEvent());
     _settingsBloc.add(FetchSettingsEvent());
+    _videocontroller =
+        VideoPlayerController.asset('assets/videos/firstpage.mp4');
+
+    _ytController = YoutubePlayerController(initialVideoId: 'tFa7Om3Au8M');
   }
 
   @override
@@ -535,10 +543,10 @@ class _UploadFormState extends State<UploadForm> {
       _tagFocus.requestFocus();
       checkIfFormIsFilled();
       return YTPlayerIFrame(
-        videoUrl: stateUploadData.videoLocation,
-        autoplay: false,
-        allowFullscreen: false,
-      );
+          videoUrl: stateUploadData.videoLocation,
+          autoplay: false,
+          allowFullscreen: false,
+          controller: _ytController);
     } else {
       return Column(
         children: [
@@ -587,8 +595,9 @@ class _UploadFormState extends State<UploadForm> {
                           controls: true,
                           //key: UniqueKey(),
                           usedAsPreview: true,
-                          allowFullscreen: false, portraitVideoPadding: 50.0,
-                        )
+                          allowFullscreen: false,
+                          portraitVideoPadding: 50.0,
+                          videocontroller: _videocontroller)
                       : SizedBox(height: 0),
                   InputChip(
                       selectedColor: globalRed,

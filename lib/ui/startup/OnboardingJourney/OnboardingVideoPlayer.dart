@@ -3,10 +3,25 @@
 import 'package:dtube_go/ui/widgets/players/BetterPlayer.dart';
 import 'package:dtube_go/utils/GetAppDocDirectory.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
-class OnboardingVideo extends StatelessWidget {
+class OnboardingVideo extends StatefulWidget {
   OnboardingVideo({Key? key, required this.videoname}) : super(key: key);
   String videoname;
+
+  @override
+  State<OnboardingVideo> createState() => _OnboardingVideoState();
+}
+
+class _OnboardingVideoState extends State<OnboardingVideo> {
+  late VideoPlayerController _videocontroller;
+
+  @override
+  void initState() {
+    _videocontroller =
+        VideoPlayerController.asset('assets/videos/firstpage.mp4');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,20 +33,20 @@ class OnboardingVideo extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: FutureBuilder<String>(
-          future: getFileUrl(videoname),
+          future: getFileUrl(widget.videoname),
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             if (snapshot.data != null) {
               //return BetterPlayer.file(snapshot.data!);
               return BP(
-                videoUrl: snapshot.data!,
-                looping: false,
-                autoplay: true,
-                localFile: true,
-                controls: false,
-                usedAsPreview: false,
-                allowFullscreen: false,
-                portraitVideoPadding: 50.0,
-              );
+                  videoUrl: snapshot.data!,
+                  looping: false,
+                  autoplay: true,
+                  localFile: true,
+                  controls: false,
+                  usedAsPreview: false,
+                  allowFullscreen: false,
+                  portraitVideoPadding: 50.0,
+                  videocontroller: _videocontroller);
             } else {
               return const SizedBox();
             }
