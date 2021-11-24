@@ -117,9 +117,15 @@ class StaggeredFeed extends StatelessWidget {
                   _scrollController.position.minScrollExtent &&
               !BlocProvider.of<FeedBloc>(context).isFetching) {
             _feedItems.clear();
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchTagSearchResults(tags: searchTags));
+            if (searchTags != "") {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchTagSearchResults(tags: searchTags));
+            } else {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "HotFeed"));
+            }
           }
         }),
       padding: EdgeInsets.only(top: 19.h),

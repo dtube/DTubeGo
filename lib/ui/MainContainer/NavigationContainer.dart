@@ -275,7 +275,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           ),
         ),
         bottomNavigationBar: Container(
-          height: globalIconSizeMedium * 2.5,
+          height: globalIconSizeMedium * 2.2,
           decoration: BoxDecoration(
               color: Colors.white,
               gradient: LinearGradient(
