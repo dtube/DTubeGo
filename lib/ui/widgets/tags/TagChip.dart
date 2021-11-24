@@ -17,12 +17,14 @@ class TagChip extends StatelessWidget {
   bool fadeInFromLeft;
   double width;
   Duration waitBeforeFadeIn;
+  TextStyle? fontStyle;
   TagChip(
       {Key? key,
       required this.tagName,
       required this.width,
       required this.fadeInFromLeft,
-      required this.waitBeforeFadeIn})
+      required this.waitBeforeFadeIn,
+      this.fontStyle})
       : super(key: key);
 
   @override
@@ -31,27 +33,34 @@ class TagChip extends StatelessWidget {
       return FadeInLeftBig(
         preferences: AnimationPreferences(
             offset: waitBeforeFadeIn, duration: Duration(seconds: 1)),
-        child: TagChipWidget(tagName: tagName, width: width),
+        child: TagChipWidget(
+          tagName: tagName,
+          width: width,
+          fontStyle: fontStyle,
+        ),
       );
     } else {
       return FadeInRightBig(
         preferences: AnimationPreferences(
             offset: waitBeforeFadeIn, duration: Duration(seconds: 1)),
-        child: TagChipWidget(tagName: tagName, width: width),
+        child:
+            TagChipWidget(tagName: tagName, width: width, fontStyle: fontStyle),
       );
     }
   }
 }
 
 class TagChipWidget extends StatelessWidget {
-  const TagChipWidget({
-    Key? key,
-    required this.tagName,
-    required this.width,
-  }) : super(key: key);
+  TagChipWidget(
+      {Key? key,
+      required this.tagName,
+      required this.width,
+      required this.fontStyle})
+      : super(key: key);
 
   final String tagName;
   final double width;
+  TextStyle? fontStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +88,9 @@ class TagChipWidget extends StatelessWidget {
         child: Center(
           child: Text(
             tagName,
-            style: Theme.of(context).textTheme.bodyText1,
+            style: fontStyle != null
+                ? fontStyle
+                : Theme.of(context).textTheme.bodyText1,
             overflow: TextOverflow.ellipsis,
           ),
         ),

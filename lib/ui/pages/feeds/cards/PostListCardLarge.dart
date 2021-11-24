@@ -640,14 +640,17 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                       onTap: () {
                         navigateToUserDetailPage(context, widget.author, () {});
                       },
-                      child: AccountAvatarBase(
-                          username: widget.author,
-                          avatarSize: _avatarSize,
-                          showVerified: true,
-                          showName: false,
-                          nameFontSizeMultiply: 1,
-                          width: 10.w,
-                          height: _avatarSize),
+                      child: SizedBox(
+                        width: 10.w,
+                        child: AccountAvatarBase(
+                            username: widget.author,
+                            avatarSize: _avatarSize,
+                            showVerified: true,
+                            showName: false,
+                            nameFontSizeMultiply: 1,
+                            width: 10.w,
+                            height: _avatarSize),
+                      ),
                     ),
                   ),
                   SizedBox(width: 2.w),
@@ -691,43 +694,45 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                   padding: EdgeInsets.only(right: 2.w),
                                   child: FaIcon(
                                     FontAwesomeIcons.award,
-                                    size: globalIconSizeSmall,
+                                    size: globalIconSizeSmall * 0.6,
                                   ),
                                 ),
                               )
                             : SizedBox(width: globalIconSizeSmall),
                         TagChip(
-                          waitBeforeFadeIn: Duration(milliseconds: 600),
-                          fadeInFromLeft: false,
-                          tagName: widget.mainTag,
-                          width: 14.w,
-                        ),
+                            waitBeforeFadeIn: Duration(milliseconds: 600),
+                            fadeInFromLeft: false,
+                            tagName: widget.mainTag,
+                            width: 14.w,
+                            fontStyle: Theme.of(context).textTheme.caption),
                       ],
                     ),
                     Align(
                       alignment: Alignment.centerRight,
                       child: SpeedDial(
                           child: Padding(
-                            padding: EdgeInsets.only(left: 10.w),
-                            child: FadeIn(
+                            padding: EdgeInsets.only(left: 12.w),
+                            child:
+                                // FadeIn(
+                                //   preferences: AnimationPreferences(
+                                //       offset: Duration(milliseconds: 700),
+                                //       duration: Duration(seconds: 1)),
+                                //   child:
+                                HeartBeat(
                               preferences: AnimationPreferences(
-                                  offset: Duration(milliseconds: 700),
-                                  duration: Duration(seconds: 1)),
-                              child: HeartBeat(
-                                preferences: AnimationPreferences(
-                                    magnitude: 1.2,
-                                    offset: Duration(seconds: 3),
-                                    autoPlay: AnimationPlayStates.Loop),
-                                child: ShadowedIcon(
-                                    icon: FontAwesomeIcons.ellipsisV,
-                                    color: Colors.white,
-                                    shadowColor: Colors.black,
-                                    size: globalIconSizeSmall),
-                              ),
+                                  magnitude: 1.2,
+                                  offset: Duration(seconds: 3),
+                                  autoPlay: AnimationPlayStates.Loop),
+                              child: ShadowedIcon(
+                                  icon: FontAwesomeIcons.ellipsisV,
+                                  color: Colors.white,
+                                  shadowColor: Colors.black,
+                                  size: globalIconSizeSmall),
                             ),
+                            // ),
                           ),
                           activeChild: Padding(
-                            padding: EdgeInsets.only(left: 10.w),
+                            padding: EdgeInsets.only(left: 12.w),
                             child: ShadowedIcon(
                                 icon: FontAwesomeIcons.sortDown,
                                 color: Colors.white,
