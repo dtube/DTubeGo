@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/pages/feeds/cards/PostListCardLarge.dart';
@@ -29,6 +31,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class SearchScreenState extends State<SearchScreen> {
+  late List<String> blockedUsers;
   late SearchBloc searchBloc;
   late TextEditingController searchTextController;
   String _searchEntity = "Users";
@@ -50,6 +53,8 @@ class SearchScreenState extends State<SearchScreen> {
     searchBloc = BlocProvider.of<SearchBloc>(context);
     searchTextController = TextEditingController();
     searchTextController.addListener(_sendRequest);
+    getBlockedUsers();
+
     //  searchBloc.add(FetchNotificationsEvent([])); // statements;
   }
 
@@ -58,6 +63,11 @@ class SearchScreenState extends State<SearchScreen> {
     searchTextController.dispose();
     _debouncer.dispose();
     super.dispose();
+  }
+
+  void getBlockedUsers() async {
+    String _blockedUsersString = await sec.getBlockedUsers();
+    blockedUsers = _blockedUsersString.split(",");
   }
 
   void prefillForm(String search, int searchEntity) {
@@ -248,57 +258,79 @@ class SearchScreenState extends State<SearchScreen> {
         itemBuilder: (ctx, pos) {
           switch (_searchEntity) {
             case "Users":
-              return UserResultCard(
-                id: searchResults.hits!.hits![pos].sId,
-                name: searchResults.hits!.hits![pos].sSource!.name!,
-                dtcValue:
-                    searchResults.hits!.hits![pos].sSource!.balance! + 0.0,
-                vpBalance: searchResults.hits!.hits![pos].sSource!.vt! + 0.0,
-              );
+              if (!blockedUsers
+                  .contains(searchResults.hits!.hits![pos].sSource!.name!)) {
+                return UserResultCard(
+                  id: searchResults.hits!.hits![pos].sId,
+                  name: searchResults.hits!.hits![pos].sSource!.name!,
+                  dtcValue:
+                      searchResults.hits!.hits![pos].sSource!.balance! + 0.0,
+                  vpBalance: searchResults.hits!.hits![pos].sSource!.vt! + 0.0,
+                );
+              } else {
+                return SizedBox(
+                  height: 0,
+                  width: 0,
+                );
+              }
+
             case "Posts":
-              return PostListCardLarge(
-                alreadyVoted:
-                    searchResults.hits!.hits![pos].sSource!.alreadyVoted!,
-                alreadyVotedDirection: searchResults
-                    .hits!.hits![pos].sSource!.alreadyVotedDirection!,
-                author: searchResults.hits!.hits![pos].sSource!.author!,
-                blur: false,
-                defaultCommentVotingWeight: "25",
-                defaultPostVotingTip: "25",
-                defaultPostVotingWeight: "25",
-                description:
-                    searchResults.hits!.hits![pos].sSource!.jsonstring!.desc!,
-                downvotesCount:
-                    searchResults.hits!.hits![pos].sSource!.downvotes!.length,
-                dtcValue: (searchResults.hits!.hits![pos].sSource!.dist! / 100)
-                        .round()
-                        .toString() +
-                    " DTC",
-                duration: new Duration(
-                    seconds: int.tryParse(searchResults
-                                .hits!.hits![pos].sSource!.jsonstring!.dur!) !=
-                            null
-                        ? int.parse(searchResults
-                            .hits!.hits![pos].sSource!.jsonstring!.dur!)
-                        : 0),
-                indexOfList: pos,
-                link: searchResults.hits!.hits![pos].sSource!.link!,
-                mainTag:
-                    searchResults.hits!.hits![pos].sSource!.jsonstring!.tag!,
-                oc: searchResults.hits!.hits![pos].sSource!.jsonstring!.oc == 1
-                    ? true
-                    : false,
-                publishDate: TimeAgo.timeInAgoTSShort(
-                    searchResults.hits!.hits![pos].sSource!.ts!),
-                thumbnailUrl: searchResults.hits!.hits![pos].sSource!.thumbUrl,
-                title:
-                    searchResults.hits!.hits![pos].sSource!.jsonstring!.title!,
-                upvotesCount:
-                    searchResults.hits!.hits![pos].sSource!.upvotes!.length,
-                videoSource:
-                    searchResults.hits!.hits![pos].sSource!.videoSource,
-                videoUrl: searchResults.hits!.hits![pos].sSource!.videoUrl,
-              );
+              if (searchResults.hits!.hits![pos].sSource!.alreadyVoted! &&
+                  searchResults
+                          .hits!.hits![pos].sSource!.alreadyVotedDirection! ==
+                      false) {
+                return SizedBox(
+                  height: 0,
+                  width: 0,
+                );
+              } else {
+                return PostListCardLarge(
+                  alreadyVoted:
+                      searchResults.hits!.hits![pos].sSource!.alreadyVoted!,
+                  alreadyVotedDirection: searchResults
+                      .hits!.hits![pos].sSource!.alreadyVotedDirection!,
+                  author: searchResults.hits!.hits![pos].sSource!.author!,
+                  blur: false,
+                  defaultCommentVotingWeight: "25",
+                  defaultPostVotingTip: "25",
+                  defaultPostVotingWeight: "25",
+                  description:
+                      searchResults.hits!.hits![pos].sSource!.jsonstring!.desc!,
+                  downvotesCount:
+                      searchResults.hits!.hits![pos].sSource!.downvotes!.length,
+                  dtcValue:
+                      (searchResults.hits!.hits![pos].sSource!.dist! / 100)
+                              .round()
+                              .toString() +
+                          " DTC",
+                  duration: new Duration(
+                      seconds: int.tryParse(searchResults.hits!.hits![pos]
+                                  .sSource!.jsonstring!.dur!) !=
+                              null
+                          ? int.parse(searchResults
+                              .hits!.hits![pos].sSource!.jsonstring!.dur!)
+                          : 0),
+                  indexOfList: pos,
+                  link: searchResults.hits!.hits![pos].sSource!.link!,
+                  mainTag:
+                      searchResults.hits!.hits![pos].sSource!.jsonstring!.tag!,
+                  oc: searchResults.hits!.hits![pos].sSource!.jsonstring!.oc ==
+                          1
+                      ? true
+                      : false,
+                  publishDate: TimeAgo.timeInAgoTSShort(
+                      searchResults.hits!.hits![pos].sSource!.ts!),
+                  thumbnailUrl:
+                      searchResults.hits!.hits![pos].sSource!.thumbUrl,
+                  title: searchResults
+                      .hits!.hits![pos].sSource!.jsonstring!.title!,
+                  upvotesCount:
+                      searchResults.hits!.hits![pos].sSource!.upvotes!.length,
+                  videoSource:
+                      searchResults.hits!.hits![pos].sSource!.videoSource,
+                  videoUrl: searchResults.hits!.hits![pos].sSource!.videoUrl,
+                );
+              }
             default:
               return UserResultCard(
                 id: searchResults.hits!.hits![pos].sId,
@@ -321,36 +353,45 @@ class SearchScreenState extends State<SearchScreen> {
           padding: EdgeInsets.zero,
           itemCount: searchResults.length,
           itemBuilder: (ctx, pos) {
-            return PostListCardLarge(
-              alreadyVoted: searchResults[pos].alreadyVoted!,
-              alreadyVotedDirection: searchResults[pos].alreadyVotedDirection!,
-              author: searchResults[pos].author,
-              blur: false,
-              defaultCommentVotingWeight: "25",
-              defaultPostVotingTip: "25",
-              defaultPostVotingWeight: "25",
-              description: searchResults[pos].jsonString!.desc!,
-              downvotesCount: searchResults[pos].downvotes != null
-                  ? searchResults[pos].downvotes!.length
-                  : 0,
-              dtcValue:
-                  (searchResults[pos].dist / 100).round().toString() + " DTC",
-              duration: new Duration(
-                  seconds:
-                      int.tryParse(searchResults[pos].jsonString!.dur) != null
-                          ? int.parse(searchResults[pos].jsonString!.dur)
-                          : 0),
-              indexOfList: pos,
-              link: searchResults[pos].link,
-              mainTag: searchResults[pos].jsonString!.tag,
-              oc: searchResults[pos].jsonString!.oc == 1 ? true : false,
-              publishDate: TimeAgo.timeInAgoTSShort(searchResults[pos].ts),
-              thumbnailUrl: searchResults[pos].thumbUrl,
-              title: searchResults[pos].jsonString!.title,
-              upvotesCount: searchResults[pos].upvotes!.length,
-              videoSource: searchResults[pos].videoSource,
-              videoUrl: searchResults[pos].videoUrl,
-            );
+            if (searchResults[pos].alreadyVoted! &&
+                searchResults[pos].alreadyVotedDirection! == false) {
+              return SizedBox(
+                height: 0,
+                width: 0,
+              );
+            } else {
+              return PostListCardLarge(
+                alreadyVoted: searchResults[pos].alreadyVoted!,
+                alreadyVotedDirection:
+                    searchResults[pos].alreadyVotedDirection!,
+                author: searchResults[pos].author,
+                blur: false,
+                defaultCommentVotingWeight: "25",
+                defaultPostVotingTip: "25",
+                defaultPostVotingWeight: "25",
+                description: searchResults[pos].jsonString!.desc!,
+                downvotesCount: searchResults[pos].downvotes != null
+                    ? searchResults[pos].downvotes!.length
+                    : 0,
+                dtcValue:
+                    (searchResults[pos].dist / 100).round().toString() + " DTC",
+                duration: new Duration(
+                    seconds:
+                        int.tryParse(searchResults[pos].jsonString!.dur) != null
+                            ? int.parse(searchResults[pos].jsonString!.dur)
+                            : 0),
+                indexOfList: pos,
+                link: searchResults[pos].link,
+                mainTag: searchResults[pos].jsonString!.tag,
+                oc: searchResults[pos].jsonString!.oc == 1 ? true : false,
+                publishDate: TimeAgo.timeInAgoTSShort(searchResults[pos].ts),
+                thumbnailUrl: searchResults[pos].thumbUrl,
+                title: searchResults[pos].jsonString!.title,
+                upvotesCount: searchResults[pos].upvotes!.length,
+                videoSource: searchResults[pos].videoSource,
+                videoUrl: searchResults[pos].videoUrl,
+              );
+            }
           }),
     );
   }

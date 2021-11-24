@@ -333,13 +333,15 @@ class _UserState extends State<UserPage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      BlocProvider(
-                        create: (context) =>
-                            UserBloc(repository: UserRepositoryImpl()),
-                        child: UserBlockButton(
-                          user: user,
-                        ),
-                      ),
+                      !widget.ownUserpage
+                          ? BlocProvider(
+                              create: (context) =>
+                                  UserBloc(repository: UserRepositoryImpl()),
+                              child: UserBlockButton(
+                                user: user,
+                              ),
+                            )
+                          : Container(),
                       UserMoreInfoButton(
                         context: context,
                         user: user,

@@ -105,6 +105,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
       // Todo abstract this to dtubeSubAppBar
       appBar: AppBar(
           centerTitle: true,
+          backgroundColor: globalBGColor,
+          elevation: 0,
           title: DTubeLogo(
             size: 60,
           ),
@@ -555,12 +557,15 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 ]),
                                 Row(
                                   children: [
-                                    Text(
-                                        "define your interests to auto filter the explore page",
-                                        maxLines: 2,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1),
+                                    Container(
+                                      width: 85.w,
+                                      child: Text(
+                                          "define your interests to auto filter the explore page",
+                                          maxLines: 2,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1),
+                                    ),
                                   ],
                                 ),
                                 Wrap(children: [
@@ -637,7 +642,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                         "default voting weight (posts):",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6)),
+                                            .bodyText1)),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -673,7 +678,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                         "default voting weight (comments):",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6)),
+                                            .bodyText1)),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -737,7 +742,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 ]),
                                 Text("default voting tip (posts):",
                                     style:
-                                        Theme.of(context).textTheme.headline6),
+                                        Theme.of(context).textTheme.bodyText1),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -773,7 +778,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                         "default voting tip (comments):",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6)),
+                                            .bodyText1)),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -847,7 +852,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 Row(
                                   children: [
                                     Container(
-                                      width: 100.w,
+                                      width: 85.w,
                                       child: Column(
                                         children: [
                                           Text(
@@ -890,7 +895,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             Padding(
                               padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
                               child: Text("Default Values for Regular Uploads",
-                                  style: Theme.of(context).textTheme.headline3),
+                                  style: Theme.of(context).textTheme.headline5),
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 200),
@@ -1172,7 +1177,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             Padding(
                               padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
                               child: Text("Moment Values",
-                                  style: Theme.of(context).textTheme.headline3),
+                                  style: Theme.of(context).textTheme.headline5),
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),

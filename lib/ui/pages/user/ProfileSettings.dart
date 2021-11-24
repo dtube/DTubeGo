@@ -483,8 +483,9 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                       website: _websiteController.text),
                                   additionals: new Additionals(
                                       accountType: _accountType,
-                                      displayName:
-                                          _displayNameController.text)));
+                                      displayName: _displayNameController.text,
+                                      blocking: _originalUserData
+                                          .jsonString!.additionals!.blocking)));
 
                           BlocProvider.of<TransactionBloc>(context)
                               .add(ChangeProfileData(_saveUserData, context));

@@ -163,8 +163,8 @@ class Source {
   JsonData? jsonstring;
   int? ts;
   List<Votes>? upvotes;
-
   List<Votes>? downvotes;
+
   String videoUrl = "";
   String thumbUrl = "";
   String videoSource = "";
