@@ -82,6 +82,7 @@ class _MomentsPageState extends State<MomentsPage>
           ? Stack(
               children: [
                 TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
                   children: [
                     MomentsList(
                       feedType: 'NewMoments',

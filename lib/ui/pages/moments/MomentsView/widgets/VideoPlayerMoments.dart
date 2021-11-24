@@ -124,33 +124,33 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
           padding: EdgeInsets.only(top: 30),
           child: Stack(
             children: [
-              _videoController.value.isInitialized
-                  ? GestureDetector(
-                      onLongPressStart: (details) {
-                        widget.momentsController.pause();
-                        _videoController.pause();
-                      },
-                      onLongPressEnd: (details) {
-                        widget.momentsController.play();
-                        _videoController.play();
-                      },
-                      onHorizontalDragEnd: (DragEndDetails details) {
-                        if (details.primaryVelocity != null &&
-                            details.primaryVelocity! > 0) {
-                          widget.momentsController.previous();
-                        } else if (details.primaryVelocity != null &&
-                            details.primaryVelocity! < 0) {
-                          widget.momentsController.next();
-                        }
-                      },
-                      child: Center(
+              GestureDetector(
+                onLongPressStart: (details) {
+                  widget.momentsController.pause();
+                  _videoController.pause();
+                },
+                onLongPressEnd: (details) {
+                  widget.momentsController.play();
+                  _videoController.play();
+                },
+                onHorizontalDragEnd: (DragEndDetails details) {
+                  if (details.primaryVelocity != null &&
+                      details.primaryVelocity! > 0) {
+                    widget.momentsController.previous();
+                  } else if (details.primaryVelocity != null &&
+                      details.primaryVelocity! < 0) {
+                    widget.momentsController.next();
+                  }
+                },
+                child: _videoController.value.isInitialized
+                    ? Center(
                         child: AspectRatio(
                           aspectRatio: _videoController.value.aspectRatio,
                           child: VideoPlayer(_videoController),
                         ),
-                      ),
-                    )
-                  : Container(),
+                      )
+                    : Center(child: Container(height: 100.h, width: 100.w)),
+              ),
               Align(
                 alignment: Alignment.centerLeft,
                 heightFactor: 1,
