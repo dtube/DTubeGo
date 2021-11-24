@@ -18,6 +18,7 @@ import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
 import 'package:dtube_go/utils/friendlyTimestamp.dart';
 import 'package:dtube_go/utils/shortBalanceStrings.dart';
 import 'package:flutter_animator/flutter_animator.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/utils/navigationShortcuts.dart';
@@ -72,6 +73,7 @@ class PostDetailPage extends StatefulWidget {
 
 class _PostDetailPageState extends State<PostDetailPage> {
   int reloadCount = 0;
+  bool flagged = false;
 
   Future<bool> _onWillPop() async {
     if (widget.recentlyUploaded) {
@@ -118,6 +120,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
           onWillPop: () async {
             if (widget.onPop != null) {
               widget.onPop!();
+              if (flagged) {
+                await Future.delayed(Duration(seconds: 3));
+                Phoenix.rebirth(context);
+              }
             }
 
             return true;
@@ -154,6 +160,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
                     //),
                   );
                 } else {
+                  flagged = true;
+
                   return Center(
                       child: Text("this post got flagged by you!",
                           style: Theme.of(context).textTheme.headline4));

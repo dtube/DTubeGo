@@ -4,6 +4,7 @@ import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:flutter_animator/flutter_animator.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
@@ -928,7 +929,7 @@ class _VotingSliderStandaloneState extends State<VotingSliderStandalone> {
                               SizedBox(height: 8),
                               ElevatedButton(
                                 child: Text("send"),
-                                onPressed: () {
+                                onPressed: () async {
                                   var voteValue =
                                       (widget.currentVT * (_vpValue / 100))
                                           .floor();
@@ -958,8 +959,17 @@ class _VotingSliderStandaloneState extends State<VotingSliderStandalone> {
                                   setState(() {
                                     _sendButtonPressed = true;
                                   });
+                                  if (widget.downvote) {
+                                    await Future.delayed(Duration(seconds: 3));
+                                    Phoenix.rebirth(context);
+                                  }
+
                                   if (widget.sendCallback != null) {
                                     widget.sendCallback!();
+                                  }
+                                  if (widget.downvote) {
+                                    await Future.delayed(Duration(seconds: 3));
+                                    Phoenix.rebirth(context);
                                   }
                                 },
                               ),
