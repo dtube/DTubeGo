@@ -1,14 +1,10 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
-import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
-
-import '../../../style/ThemeData.dart';
 
 class DTubeLogoPulse extends StatefulWidget {
   DTubeLogoPulse({Key? key, required this.size}) : super(key: key);
@@ -24,7 +20,6 @@ class _DTubeLogoPulseState extends State<DTubeLogoPulse>
 
   @override
   void initState() {
-    // TODO: implement initState
     _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 2));
     _animationController.repeat(reverse: true);

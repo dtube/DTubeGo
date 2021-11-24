@@ -1,5 +1,4 @@
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-
 import 'package:dtube_go/bloc/feed/feed_bloc.dart';
 import 'package:dtube_go/bloc/feed/feed_event.dart';
 import 'package:dtube_go/bloc/feed/feed_repository.dart';
@@ -7,10 +6,7 @@ import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/feeds/lists/FeedListCarousel.dart';
 import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannels.dart';
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
-import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
-import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/ui/widgets/gifts/GiftBoxWidget.dart';
@@ -20,36 +16,27 @@ import 'package:dtube_go/utils/shortBalanceStrings.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-// import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
-
 import 'package:dtube_go/ui/widgets/players/BetterPlayer.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/pages/post/widgets/CollapsedDescription.dart';
 import 'package:dtube_go/ui/pages/post/widgets/Comments.dart';
 import 'package:dtube_go/ui/pages/post/widgets/ReplyButton.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
-
 import 'package:dtube_go/utils/secureStorage.dart';
-
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
-// import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
 import 'dart:io' show Platform;
 

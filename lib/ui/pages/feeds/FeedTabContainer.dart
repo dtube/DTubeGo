@@ -11,13 +11,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
-
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wave/config.dart';
-import 'package:wave/wave.dart';
 
 class FeedMainPage extends StatefulWidget {
   FeedMainPage({Key? key}) : super(key: key);

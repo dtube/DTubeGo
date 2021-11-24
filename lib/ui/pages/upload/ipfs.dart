@@ -1,17 +1,12 @@
 // JUST IN CASE WE NEED THIS OLD CODE WITH IPFS UPLOAD PROGRESS WE KEEP IT FOR SOME TIME IN THE REPO
 
-import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
-import 'package:dtube_go/bloc/appstate/appstate_event.dart';
-import 'package:dtube_go/bloc/appstate/appstate_state.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
-
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_event.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-
 import 'package:dtube_go/ui/pages/upload/uploadForm.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:flutter/material.dart';

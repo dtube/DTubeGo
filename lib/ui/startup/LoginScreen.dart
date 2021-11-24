@@ -1,16 +1,11 @@
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-
-import 'dart:math' as math;
-
 import 'package:dtube_go/ui/startup/OnboardingJourney/OnboardingJourney.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/style/OpenableHyperlink.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

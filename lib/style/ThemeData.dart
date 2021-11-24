@@ -1,7 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:flutter/material.dart';
 
 Color globalBlue = Color.fromRGBO(34, 49, 84, 1);

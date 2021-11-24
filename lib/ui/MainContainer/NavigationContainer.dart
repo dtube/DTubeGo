@@ -1,5 +1,4 @@
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-
 import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -7,29 +6,20 @@ import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsTabContainer.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
-
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/MainContainer/BalanceOverview.dart';
 import 'package:dtube_go/ui/MainContainer/MenuButton.dart';
 import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
-
 import 'package:dtube_go/ui/pages/feeds/FeedTabContainer.dart';
 import 'package:dtube_go/ui/pages/notifications/NotificationButton.dart';
-
 import 'package:dtube_go/ui/pages/upload/uploaderTabContainer.dart';
 import 'package:dtube_go/ui/pages/user/User.dart';
-
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/widgets/system/customSnackbar.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

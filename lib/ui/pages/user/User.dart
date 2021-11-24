@@ -1,45 +1,20 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
-import 'package:dtube_go/style/OpenableHyperlink.dart';
-import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/feeds/lists/FeedListCarousel.dart';
 import 'package:dtube_go/ui/pages/user/MenuButton.dart';
 import 'package:dtube_go/ui/pages/user/TopBarCustomClipper.dart';
 import 'package:dtube_go/ui/pages/user/TopBarCustomPainter.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/UsersBlockButton.dart';
-import 'package:dtube_go/ui/widgets/Suggestions/OtherUsersAvatar.dart';
 import 'package:dtube_go/ui/widgets/Suggestions/UserList.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/UsersMoreInfoButton.dart';
-import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
-import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannels.dart';
-import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
-import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-import 'package:dtube_go/utils/navigationShortcuts.dart';
-import 'package:dtube_go/utils/shortBalanceStrings.dart';
 import 'package:flutter_animator/flutter_animator.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
-import 'package:dtube_go/bloc/auth/auth_bloc.dart';
-import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
-import 'package:dtube_go/ui/pages/accountHistory/AccountHistory.dart';
-import 'package:dtube_go/ui/pages/user/ProfileSettings.dart';
-import 'package:dtube_go/ui/pages/wallet/transferDialog.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:flutter/rendering.dart';
-
-import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../feeds/lists/FeedList.dart';
 
 class UserPage extends StatefulWidget {
   String? username;
