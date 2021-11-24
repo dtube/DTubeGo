@@ -52,5 +52,7 @@
 	<string>This lets you create videos using the app.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This lets you create videos with audio using the app.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

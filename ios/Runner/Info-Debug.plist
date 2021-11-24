@@ -24,6 +24,23 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_dtubego._tcp</string>
+	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>This lets you create videos using the app.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Allow DTubeGo to connect and debug application</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This lets you create videos with audio using the app.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This lets you upload videos you have already created.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -41,22 +58,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This lets you upload videos you have already created.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>This lets you create videos using the app.</string>
-	<key>NSBonjourServices</key>
-	<array>
-		<string>_dtubego._tcp</string>
-	</array>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>Allow DTubeGo to connect and debug application</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This lets you create videos with audio using the app.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

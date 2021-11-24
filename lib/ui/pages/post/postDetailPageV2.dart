@@ -49,6 +49,8 @@ import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 // import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
+import 'dart:io' show Platform;
+
 class PostDetailPage extends StatefulWidget {
   String link;
   String author;
@@ -213,7 +215,7 @@ class _PostDetailsState extends State<PostDetails> {
       params: YoutubePlayerParams(
           showControls: true,
           showFullscreenButton: true,
-          desktopMode: true,
+          desktopMode: !Platform.isIOS,
           privacyEnhanced: true,
           useHybridComposition: true,
           autoPlay: !(widget.directFocus != "none")),

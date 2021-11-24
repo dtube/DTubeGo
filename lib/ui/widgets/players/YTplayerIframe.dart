@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 // import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
+import 'dart:io' show Platform;
+
 class YTPlayerIFrame extends StatefulWidget {
   const YTPlayerIFrame(
       {Key? key,
@@ -31,7 +33,7 @@ class _YTPlayerIFrameState extends State<YTPlayerIFrame> {
       params: YoutubePlayerParams(
           showControls: true,
           showFullscreenButton: widget.allowFullscreen,
-          desktopMode: true,
+          desktopMode: !Platform.isIOS,
           privacyEnhanced: true,
           useHybridComposition: true,
           autoPlay: widget.autoplay),
