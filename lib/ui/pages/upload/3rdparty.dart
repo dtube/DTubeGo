@@ -107,11 +107,11 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
               Container(
                 width: MediaQuery.of(context).size.width - 150,
                 child: TextField(
-                  decoration: new InputDecoration(
-                      labelText:
-                          "youtube url"), // TODO: support more foreign systems
-                  controller: _foreignUrlController,
-                ),
+                    decoration: new InputDecoration(
+                        labelText:
+                            "youtube url"), // TODO: support more foreign systems
+                    controller: _foreignUrlController,
+                    style: Theme.of(context).textTheme.bodyText1),
               ),
               InputChip(
                   label: BlocBuilder<ThirdPartyMetadataBloc,

@@ -99,7 +99,8 @@ class _UploadFormState extends State<UploadForm> {
     _videocontroller =
         VideoPlayerController.asset('assets/videos/firstpage.mp4');
 
-    _ytController = YoutubePlayerController(initialVideoId: 'tFa7Om3Au8M');
+    _ytController =
+        YoutubePlayerController(initialVideoId: stateUploadData.videoLocation);
   }
 
   @override
@@ -163,9 +164,6 @@ class _UploadFormState extends State<UploadForm> {
     } else {
       _pickedFile = await _picker.pickImage(source: ImageSource.gallery);
       if (_pickedFile != null) {
-        // uploadEnabled = false;
-        // BlocProvider.of<ThirdPartyUploaderBloc>(context)
-        //     .add(UploadFile(filePath: _pickedFile.path));
         var _tempImage = File(_pickedFile.path);
         var decodedImage =
             await decodeImageFromList(_tempImage.readAsBytesSync());
@@ -196,30 +194,7 @@ class _UploadFormState extends State<UploadForm> {
 
   @override
   Widget build(BuildContext context) {
-    // bloc listener to react on avalon uploaded state
-    return
-        // BlocListener<TransactionBloc, TransactionState>(
-        //   listener: (context, stateUpload) {
-        //     if (stateUpload is TransactionSent) {
-        //       // if the user wants to crosspost onto hive
-        //       if (stateUploadData.crossPostToHive) {
-        //         // fire event for hivesigner bloc
-        //         _hivesignerBloc.add(SendPostToHive(
-        //             postTitle: stateUploadData.title,
-        //             postBody: stateUploadData.description,
-        //             permlink: stateUploadData.link,
-        //             dtubeUrl: stateUploadData.link,
-        //             thumbnailUrl: stateUploadData.thumbnailLocation,
-        //             videoUrl: stateUploadData.videoSourceHash,
-        //             storageType: "ipfs",
-        //             tag: stateUploadData.tag,
-        //             dtubeuser: ));
-        //       }
-        //     }
-        //   },
-        //   // bloc listener for reacting when DTC balance is fetched
-        //   child:
-        BlocListener<UserBloc, UserState>(
+    return BlocListener<UserBloc, UserState>(
       listener: (context, stateDTCVP) {
         if (stateDTCVP is UserDTCVPLoadedState) {
           setState(() {
@@ -540,7 +515,7 @@ class _UploadFormState extends State<UploadForm> {
 
   Widget videoPreview() {
     if (!stateUploadData.localVideoFile) {
-      _tagFocus.requestFocus();
+      // _tagFocus.requestFocus();
       checkIfFormIsFilled();
       return YTPlayerIFrame(
           videoUrl: stateUploadData.videoLocation,
@@ -559,7 +534,7 @@ class _UploadFormState extends State<UploadForm> {
                   children: [
                     Icon(FontAwesomeIcons.solidFolderOpen),
                     SizedBox(width: 8),
-                    Text(_video == null ? "pick video" : "change video file",
+                    Text(_video == null ? "pick file" : "change file",
                         style: Theme.of(context).textTheme.bodyText1),
                   ],
                 ),
@@ -570,10 +545,15 @@ class _UploadFormState extends State<UploadForm> {
               InputChip(
                 label: Row(
                   children: [
-                    Icon(FontAwesomeIcons.video),
+                    Icon(_video == null
+                        ? FontAwesomeIcons.video
+                        : FontAwesomeIcons.undo),
                     SizedBox(width: 8),
-                    Text(_video == null ? "record video" : "record a new video",
-                        style: Theme.of(context).textTheme.bodyText1),
+                    Text(
+                      _video == null ? "record" : "re-record",
+                      style: Theme.of(context).textTheme.bodyText1,
+                      maxLines: 2,
+                    ),
                   ],
                 ),
                 onPressed: () {
@@ -583,7 +563,7 @@ class _UploadFormState extends State<UploadForm> {
             ],
           ),
           stateUploadData.videoLocation != ""
-              // TODO: react on possibly wrong orientation with videos in landscape
+
               // e.g. open issue on https://github.com/jhomlala/betterplayer/issues
               ? Column(children: [
                   showVideoPreview
@@ -602,7 +582,7 @@ class _UploadFormState extends State<UploadForm> {
                   InputChip(
                       selectedColor: globalRed,
                       label: Text(
-                        (showVideoPreview ? 'hide' : 'show') + " video preview",
+                        (showVideoPreview ? 'hide' : 'show') + " preview",
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       avatar: FaIcon(showVideoPreview
