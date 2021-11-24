@@ -104,7 +104,7 @@ class _BPState extends State<BP> {
         aspectRatio: 8 / 5,
         child: Center(
           child: DtubeLogoPulseWithSubtitle(
-            size: 20.h,
+            size: 40.w,
             subtitle: "loading video",
             // width: 100.w,
           ),
@@ -130,7 +130,7 @@ class _BPState extends State<BP> {
               child: Column(
                 children: [
                   AspectRatio(
-                    aspectRatio: _aspectRatio > 0.0 ? _aspectRatio : 1,
+                    aspectRatio: _aspectRatio > 0.0 ? _aspectRatio : 16 / 9,
                     child: BetterPlayer(
                       controller: _betterPlayerController,
                     ),
