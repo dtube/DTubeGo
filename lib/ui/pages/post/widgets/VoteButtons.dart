@@ -949,7 +949,9 @@ class _VotingSliderStandaloneState extends State<VotingSliderStandalone> {
                                         tag: _tagController.value.text,
                                         vt: voteValue *
                                             (widget.downvote ? -1 : 1),
-                                        tip: _tipValue.floor());
+                                        tip: widget.downvote
+                                            ? 0
+                                            : _tipValue.floor());
                                   }
                                   Transaction newTx =
                                       Transaction(type: _txType, data: txdata);
@@ -959,17 +961,9 @@ class _VotingSliderStandaloneState extends State<VotingSliderStandalone> {
                                   setState(() {
                                     _sendButtonPressed = true;
                                   });
-                                  if (widget.downvote) {
-                                    await Future.delayed(Duration(seconds: 3));
-                                    Phoenix.rebirth(context);
-                                  }
 
                                   if (widget.sendCallback != null) {
                                     widget.sendCallback!();
-                                  }
-                                  if (widget.downvote) {
-                                    await Future.delayed(Duration(seconds: 3));
-                                    Phoenix.rebirth(context);
                                   }
                                 },
                               ),
