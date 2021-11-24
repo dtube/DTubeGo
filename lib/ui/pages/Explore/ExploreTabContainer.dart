@@ -27,7 +27,7 @@ class ExploreMainPage extends StatefulWidget {
 
 class _ExploreMainPageState extends State<ExploreMainPage>
     with SingleTickerProviderStateMixin {
-  List<String> _tabNames = ["Explore Videos", "Search Users/Videos"];
+  List<String> _tabNames = ["Explore Videos", "Search"];
   List<IconData> _tabIcons = [
     FontAwesomeIcons.compass,
     FontAwesomeIcons.search

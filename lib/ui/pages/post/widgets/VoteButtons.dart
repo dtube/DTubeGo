@@ -540,10 +540,7 @@ class _VotingSliderState extends State<VotingSlider> {
                                                     link: widget.link,
                                                     tag: _tagController
                                                         .value.text,
-                                                    vt: voteValue *
-                                                        (widget.downvote
-                                                            ? -1
-                                                            : 1),
+                                                    vt: voteValue,
                                                     tip: _tipValue.floor());
                                               }
                                               Transaction newTx = Transaction(
@@ -729,8 +726,7 @@ class _VotingSliderState extends State<VotingSlider> {
                                             author: widget.author,
                                             link: widget.link,
                                             tag: _tagController.value.text,
-                                            vt: voteValue *
-                                                (widget.downvote ? -1 : 1),
+                                            vt: voteValue,
                                             tip: _tipValue.floor());
                                       }
                                       Transaction newTx = Transaction(
@@ -947,11 +943,8 @@ class _VotingSliderStandaloneState extends State<VotingSliderStandalone> {
                                         author: widget.author,
                                         link: widget.link,
                                         tag: _tagController.value.text,
-                                        vt: voteValue *
-                                            (widget.downvote ? -1 : 1),
-                                        tip: widget.downvote
-                                            ? 0
-                                            : _tipValue.floor());
+                                        vt: voteValue,
+                                        tip: _tipValue.floor());
                                   }
                                   Transaction newTx =
                                       Transaction(type: _txType, data: txdata);

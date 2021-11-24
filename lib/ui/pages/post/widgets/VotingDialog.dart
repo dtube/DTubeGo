@@ -72,7 +72,11 @@ class _VotingDialogState extends State<VotingDialog> {
     _tagController = TextEditingController();
     _userBloc.add(FetchDTCVPEvent());
     _vpValue = widget.defaultVote;
-    _tipValue = widget.defaultTip;
+    if (widget.downvote) {
+      _tipValue = widget.defaultTip;
+    } else {
+      _tipValue = 0;
+    }
   }
 
   @override
@@ -165,9 +169,10 @@ class _VotingDialogState extends State<VotingDialog> {
                                       ),
                                       Text(
                                           shortVP((state.vtBalance['v']! /
-                                                  100 *
-                                                  _vpValue)
-                                              .floor()),
+                                                      100 *
+                                                      _vpValue)
+                                                  .floor()) +
+                                              " VP",
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
@@ -272,7 +277,7 @@ class _VotingDialogState extends State<VotingDialog> {
                                   vt: voteValue * (widget.downvote ? -1 : 1),
                                 );
 
-                                if (_tipValue > 0) {
+                                if (_tipValue > 0 && !widget.downvote) {
                                   _txType = 19;
                                   txdata = TxData(
                                       author: widget.author,

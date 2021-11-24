@@ -307,9 +307,8 @@ class _PostDetailsState extends State<PostDetails> {
                                             avatarSize: 12.w,
                                             showVerified: true,
                                             showName: true,
-                                            width: 15.w +
-                                                (widget.post.author.length *
-                                                    2.5.w),
+                                            nameFontSizeMultiply: 0.8,
+                                            width: 35.w,
                                             height: 5.h,
                                           ),
                                           onPressed: () {
