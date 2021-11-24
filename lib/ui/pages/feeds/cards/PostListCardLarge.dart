@@ -131,7 +131,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
           desktopMode: !Platform.isIOS,
           privacyEnhanced: true,
           useHybridComposition: true,
-          autoPlay: false),
+          autoPlay: true),
     );
   }
 
