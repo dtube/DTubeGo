@@ -117,6 +117,7 @@ dependencies:
 # unsorted
   equatable: ^2.0.3
   carousel_slider: ^4.0.0
+  visibility_detector: ^0.2.2
   
   
   

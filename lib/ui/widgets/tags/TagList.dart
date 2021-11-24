@@ -80,6 +80,8 @@ class TagListState extends State<TagList> {
             return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: true,
+                backgroundColor: globalBGColor,
+                elevation: 0,
               ),
               body: Padding(
                 padding: EdgeInsets.only(top: 2.h),
@@ -92,23 +94,26 @@ class TagListState extends State<TagList> {
                           "videos with the tag \"${widget.tagName}\" of the last 90 days: ",
                           style: Theme.of(context).textTheme.headline5,
                         ),
-                        BlocBuilder<FeedBloc, FeedState>(
-                            builder: (context, state) {
-                          if (state is FeedInitialState ||
-                              state is FeedLoadingState) {
-                            return buildLoading();
-                          } else if (state is FeedLoadedState) {
-                            hashtagResults = state.feed;
-                            BlocProvider.of<FeedBloc>(context).isFetching =
-                                false;
-                            return buildResultsListForTagResults(
-                                hashtagResults);
-                          } else if (state is FeedErrorState) {
-                            return buildErrorUi(state.message);
-                          } else {
-                            return buildErrorUi('');
-                          }
-                        })
+                        Padding(
+                          padding: EdgeInsets.only(top: 2.h),
+                          child: BlocBuilder<FeedBloc, FeedState>(
+                              builder: (context, state) {
+                            if (state is FeedInitialState ||
+                                state is FeedLoadingState) {
+                              return buildLoading();
+                            } else if (state is FeedLoadedState) {
+                              hashtagResults = state.feed;
+                              BlocProvider.of<FeedBloc>(context).isFetching =
+                                  false;
+                              return buildResultsListForTagResults(
+                                  hashtagResults);
+                            } else if (state is FeedErrorState) {
+                              return buildErrorUi(state.message);
+                            } else {
+                              return buildErrorUi('');
+                            }
+                          }),
+                        )
                       ],
                     ),
                   ),

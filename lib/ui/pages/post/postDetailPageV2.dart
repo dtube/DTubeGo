@@ -45,6 +45,7 @@ import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 // import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
@@ -251,6 +252,17 @@ class _PostDetailsState extends State<PostDetails> {
       child: YoutubePlayerControllerProvider(
           controller: _controller,
           child: Container(
+              child: VisibilityDetector(
+            key: Key('post-details' + widget.post.link),
+            onVisibilityChanged: (visibilityInfo) {
+              var visiblePercentage = visibilityInfo.visibleFraction * 100;
+              if (visiblePercentage < 1) {
+                _controller.pause();
+              }
+              if (visiblePercentage > 90) {
+                _controller.play();
+              }
+            },
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.only(top: 5.h),
@@ -571,7 +583,7 @@ class _PostDetailsState extends State<PostDetails> {
                 ),
               ),
             ),
-          )),
+          ))),
     );
   }
 }
