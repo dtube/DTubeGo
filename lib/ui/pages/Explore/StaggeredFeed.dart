@@ -40,50 +40,64 @@ class StaggeredFeed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      //padding: EdgeInsets.only(top: (paddingTop)),
-      padding: EdgeInsets.only(top: (0.0)),
-      child: FutureBuilder<bool>(
-          future: getDisplayModes(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return buildLoading(context);
-            } else {
-              return Container(
-                // height: MediaQuery.of(context).size.height - 250,
-                height: MediaQuery.of(context).size.height,
-                // color: globalAlmostBlack,
-
-                child: BlocBuilder<FeedBloc, FeedState>(
-                  // listener: (context, state) {
-                  //   if (state is FeedErrorState) {
-                  //     BlocProvider.of<FeedBloc>(context).isFetching = false;
-                  //   }
-                  //   return;
-                  // },
-                  builder: (context, state) {
-                    if (state is FeedInitialState ||
-                        state is FeedLoadingState && _feedItems.isEmpty) {
-                      return buildLoading(context);
-                    } else if (state is FeedLoadedState) {
-                      _feedItems.addAll(state.feed);
-                      BlocProvider.of<FeedBloc>(context).isFetching = false;
-                    } else if (state is FeedErrorState) {
-                      return buildErrorUi(state.message);
-                    }
-                    return buildPostList(_feedItems, context);
-                  },
-                ),
-              );
-            }
-          }),
-    );
+    return FutureBuilder<bool>(
+        future: getDisplayModes(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return buildLoading(context);
+          } else {
+            return Container(
+              height: 100.h,
+              child: Stack(
+                children: [
+                  BlocBuilder<FeedBloc, FeedState>(
+                    builder: (context, state) {
+                      if (state is FeedInitialState ||
+                          state is FeedLoadingState && _feedItems.isEmpty) {
+                        return buildLoading(context);
+                      } else if (state is FeedLoadedState) {
+                        _feedItems.addAll(state.feed);
+                        BlocProvider.of<FeedBloc>(context).isFetching = false;
+                      } else if (state is FeedErrorState) {
+                        return buildErrorUi(state.message);
+                      }
+                      return buildPostList(_feedItems, context);
+                    },
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      height: 25.h,
+                      width: 200.w,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          gradient: LinearGradient(
+                              begin: FractionalOffset.topCenter,
+                              end: FractionalOffset.bottomCenter,
+                              colors: [
+                                Colors.black,
+                                Colors.black.withOpacity(0.0),
+                              ],
+                              stops: [
+                                0.0,
+                                1.0
+                              ])),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+        });
   }
 
   Widget buildLoading(BuildContext context) {
-    return DtubeLogoPulseWithSubtitle(
-      subtitle: "loading posts..",
-      size: 40.w,
+    return Container(
+      height: 100.h,
+      child: DtubeLogoPulseWithSubtitle(
+        subtitle: "loading posts..",
+        size: 40.w,
+      ),
     );
   }
 
@@ -103,7 +117,6 @@ class StaggeredFeed extends StatelessWidget {
     return StaggeredGridView.countBuilder(
       controller: _scrollController
         ..addListener(() {
-          // TODO: implement adding items if end of list && tagsearch
           if (_scrollController.offset >=
                   _scrollController.position.maxScrollExtent &&
               !BlocProvider.of<FeedBloc>(context).isFetching) {
