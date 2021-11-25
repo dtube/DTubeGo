@@ -57,6 +57,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               await sec.getMomentVotingWeight(),
           sec.settingKey_HiveStillInCooldown:
               await sec.getLastHivePostWithin5MinCooldown(),
+          sec.settingKey_hiveSignerDefaultCommunity:
+              await sec.getHiveSignerDefaultCommunity(),
         };
         yield SettingsLoadedState(settings: newSettings);
       } catch (e) {
@@ -97,6 +99,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           event.newSettings[sec.settingKey_DefaultMomentUnlist]!,
           event.newSettings[sec.settingKey_DefaultMomentCrosspost]!,
         );
+
+        await sec.persistHiveSignerAdditionalData(
+            event.newSettings[sec.settingKey_hiveSignerDefaultCommunity]!);
+
         await sec
             .persistExploreTags(event.newSettings[sec.settingKey_ExploreTags]!);
 

@@ -2,13 +2,12 @@ import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
-import 'package:dtube_go/ui/pages/settings/HiveSignerButton.dart';
+import 'package:dtube_go/ui/pages/settings/HiveSignerForm.dart';
 import 'package:dtube_go/ui/pages/settings/PinCodeDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +35,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   late String _showHidden;
   late String _showNsfw;
   late String _hiveUsername;
-
+  late String _hiveDefaultCommunity;
+  late TextEditingController _hiveDefaultCommunityController;
   late String _pinCode;
 
   late String _imageUploadProvider;
@@ -76,6 +76,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   bool _showVotingUploadDefaultsHints = false;
   bool _showVotingMomentDefaultsHints = false;
   bool _showHivesignerHints = false;
+  bool _showHiveDefaultCommunityHint = false;
 
   List<String> _imageUploadProviders = ['imgur', 'ipfs'];
   List<int> _visitedTabs = [];
@@ -92,7 +93,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
     _templateTagController = TextEditingController(text: "");
     _momentBodyController = TextEditingController(text: "");
     _momentTitleController = TextEditingController(text: "");
-
+    _hiveDefaultCommunityController = TextEditingController(text: "");
     _templatePreviewBody = "";
     _momentPreviewBody = "";
 
@@ -165,6 +166,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           _momentTitleController.value.text,
                       sec.settingKey_momentBody:
                           _momentBodyController.value.text,
+                      sec.settingKey_hiveSignerDefaultCommunity:
+                          _hiveDefaultCommunityController.value.text,
                     };
                     _settingsBloc.add(PushSettingsEvent(
                         newSettings: newSettings, context: context));
@@ -211,7 +214,19 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
             _hiveUsername = settings[sec.settingKey_hiveSignerUsername] != null
                 ? settings[sec.settingKey_hiveSignerUsername]!
                 : "";
-
+            _hiveDefaultCommunity =
+                settings[sec.settingKey_hiveSignerDefaultCommunity] != null &&
+                        settings[sec.settingKey_hiveSignerDefaultCommunity] !=
+                            ""
+                    ? settings[sec.settingKey_hiveSignerDefaultCommunity]!
+                    : "hive-196037";
+            _hiveDefaultCommunityController = new TextEditingController(
+                text: settings[sec.settingKey_hiveSignerDefaultCommunity] !=
+                            null &&
+                        settings[sec.settingKey_hiveSignerDefaultCommunity]!
+                            .startsWith("hive-")
+                    ? settings[sec.settingKey_hiveSignerDefaultCommunity]!
+                    : "hive-196037");
             _templateTitleController = new TextEditingController(
                 text: settings[sec.settingKey_templateTitle] != null
                     ? settings[sec.settingKey_templateTitle]!
@@ -240,9 +255,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                 text: settings[sec.settingKey_templateTag] != null
                     ? settings[sec.settingKey_templateTag]!
                     : "");
-            _hiveUsername = settings[sec.settingKey_hiveSignerUsername] != null
-                ? settings[sec.settingKey_hiveSignerUsername]!
-                : "";
+
             _pinCode = settings[sec.settingKey_pincode] != null
                 ? settings[sec.settingKey_pincode]!
                 : "";
@@ -856,7 +869,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                       child: Column(
                                         children: [
                                           Text(
-                                              "Cross-posting to the hive blockchain is possible by authorizing the app via hivesigner:",
+                                              "Cross-posting to the hive blockchain is possible by authorizing the app via hivesigner.",
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyText1),
@@ -867,7 +880,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                                   HivesignerBloc(
                                                       repository:
                                                           HivesignerRepositoryImpl()),
-                                              child: HiveSignerButton(
+                                              child: HiveSignerForm(
                                                 username: _hiveUsername,
                                               ),
                                             ),
@@ -885,6 +898,68 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               ],
                             ),
                             SizedBox(height: 20),
+                            DTubeFormCard(
+                              avoidAnimation: _visitedTabs.contains(2),
+                              waitBeforeFadeIn: Duration(milliseconds: 800),
+                              childs: [
+                                Stack(children: [
+                                  ShowHintIcon(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showHiveDefaultCommunityHint =
+                                            !_showHiveDefaultCommunityHint;
+                                      });
+                                    },
+                                    alignment: Alignment.topRight,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 1.h, bottom: 1.h),
+                                    child: Text("Hive community",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                ]),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 85.w,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                              "Cross-posted videos are usually published in the DTube-Community on Hive. Here you can change this to any other hive community by entering the correct community ID (e.g. hive-196037 for DTube).",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: TextFormField(
+                                              controller:
+                                                  _hiveDefaultCommunityController,
+                                              cursorColor: globalRed,
+                                              decoration: new InputDecoration(
+                                                  labelText:
+                                                      "hive community id:"),
+                                              maxLines: 1,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1,
+                                            ),
+                                          ),
+                                          VisibilityHintText(
+                                            showHint:
+                                                _showHiveDefaultCommunityHint,
+                                            hintText:
+                                                "The code is very important in order to post your video in the correct community! You can look the id for your desired community up on a hive user interface like peakd.com.",
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),

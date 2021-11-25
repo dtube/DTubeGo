@@ -1,20 +1,21 @@
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class HiveSignerButton extends StatefulWidget {
-  HiveSignerButton({Key? key, required this.username}) : super(key: key);
+class HiveSignerForm extends StatefulWidget {
+  HiveSignerForm({Key? key, required this.username}) : super(key: key);
 
   String username;
+
   @override
-  _HiveSignerButtonState createState() => _HiveSignerButtonState();
+  _HiveSignerFormState createState() => _HiveSignerFormState();
 }
 
-class _HiveSignerButtonState extends State<HiveSignerButton> {
+class _HiveSignerFormState extends State<HiveSignerForm> {
   String _status = 'notset'; // notset, invalid, valid
   late TextEditingController _usernameController;
   bool _usernameFilled = false;
@@ -51,7 +52,7 @@ class _HiveSignerButtonState extends State<HiveSignerButton> {
       children: [
         TextFormField(
           maxLines: 1,
-          decoration: new InputDecoration(labelText: "hive username"),
+          decoration: new InputDecoration(labelText: "hive username:"),
           controller: _usernameController,
           style: Theme.of(context).textTheme.bodyText1,
           onChanged: (val) {
