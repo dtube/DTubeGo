@@ -1,3 +1,4 @@
+import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:decorated_icon/decorated_icon.dart';
@@ -56,8 +57,8 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
   @override
   void initState() {
     _tabController = new TabController(length: 2, vsync: this);
-    _userBloc = widget.userBloc;
-    _userBloc.add(FetchMyAccountDataEvent()); // statements;
+    _userBloc = BlocProvider.of<UserBloc>(context);
+    _userBloc.add(FetchMyAccountDataEvent());
     _displayNameController = TextEditingController(text: "");
     _locationController = TextEditingController(text: "");
     _avatarController = TextEditingController(text: "");
@@ -65,7 +66,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
     _aboutController = TextEditingController(text: "");
     _websiteController = TextEditingController(text: "");
     _accountType = "Content Creator";
-
+    BlocProvider.of<TransactionBloc>(context).add(SetInitState());
     super.initState();
   }
 
@@ -78,7 +79,6 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
         elevation: 0,
         toolbarHeight: 28,
       ),
-
       resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
@@ -141,40 +141,45 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
 
                   return Column(
                     children: [
-                      TabBar(
-                        unselectedLabelColor: Colors.grey,
-                        labelColor: globalAlmostWhite,
-                        indicatorColor: globalRed,
-                        onTap: (index) {
-                          setState(() {
-                            if (!_visitedTabs.contains(index)) {
-                              // add page to visited to avoid rebuilding the animation
-                              _visitedTabs.add(index);
-                            }
-                            //add first tab to visited because it is the default one
-                            if (index > 0 && !_visitedTabs.contains(0)) {
-                              // add page to visited to avoid rebuilding the animation
-                              _visitedTabs.add(0);
-                            }
-                          });
-                        },
-                        tabs: [
-                          Tab(
-                            text: _settingsTypes[0],
+                      Align(
+                        child: Container(
+                          width: 80.w,
+                          child: TabBar(
+                            unselectedLabelColor: Colors.grey,
+                            labelColor: globalAlmostWhite,
+                            indicatorColor: globalRed,
+                            onTap: (index) {
+                              setState(() {
+                                if (!_visitedTabs.contains(index)) {
+                                  // add page to visited to avoid rebuilding the animation
+                                  _visitedTabs.add(index);
+                                }
+                                //add first tab to visited because it is the default one
+                                if (index > 0 && !_visitedTabs.contains(0)) {
+                                  // add page to visited to avoid rebuilding the animation
+                                  _visitedTabs.add(0);
+                                }
+                              });
+                            },
+                            tabs: [
+                              Tab(
+                                text: _settingsTypes[0],
+                              ),
+                              Tab(
+                                text: _settingsTypes[1],
+                              ),
+                            ],
+                            controller: _tabController,
+                            indicatorSize: TabBarIndicatorSize.tab,
                           ),
-                          Tab(
-                            text: _settingsTypes[1],
-                          ),
-                        ],
-                        controller: _tabController,
-                        indicatorSize: TabBarIndicatorSize.tab,
+                        ),
                       ),
-                      // COMMON SETTINGS
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TabBarView(
                             children: [
+                              // COMMON SETTINGS
                               SingleChildScrollView(
                                 child: Column(
                                   children: [
@@ -433,69 +438,74 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
               }),
           // Save button
           Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 24.0, 80),
-                child: BlocBuilder<TransactionBloc, TransactionState>(
-                    builder: (context, state) {
-                  if (state is TransactionPreprocessingState &&
-                      state.txType == 6) {
-                    return DTubeLogoPulse(size: 40);
-                  }
-                  if (state is TransactionSent) {
-                    _userDataLoaded = false;
-                    BlocProvider.of<TransactionBloc>(context)
-                        .add(SetInitState());
-                    _userBloc.add(FetchMyAccountDataEvent()); // statements;
-                  }
-                  if (state is TransactionInitialState) {
-                    return GestureDetector(
-                        child: DecoratedIcon(
-                          FontAwesomeIcons.save,
-                          size: 40,
-                          shadows: [
-                            BoxShadow(
-                              blurRadius: 24.0,
-                              color: Colors.black,
-                            ),
-                          ],
+              alignment: Alignment.topRight,
+              child: BlocBuilder<TransactionBloc, TransactionState>(
+                  builder: (context, state) {
+                if (state is TransactionPreprocessingState &&
+                    state.txType == 6) {
+                  return Padding(
+                      padding: EdgeInsets.fromLTRB(0, 2.h, 4.w, 0),
+                      child: DTubeLogoPulse(size: 9.w));
+                }
+
+                if (state is TransactionInitialState) {
+                  return GestureDetector(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 2.h, 4.w, 0),
+                        child: HeartBeat(
+                          preferences: AnimationPreferences(
+                              autoPlay: AnimationPlayStates.Loop,
+                              offset: Duration(seconds: 3),
+                              duration: Duration(seconds: 1)),
+                          child: DecoratedIcon(
+                            FontAwesomeIcons.save,
+                            size: 8.w,
+                            shadows: [
+                              BoxShadow(
+                                blurRadius: 24.0,
+                                color: Colors.black,
+                              ),
+                            ],
+                          ),
                         ),
-                        onTap: () async {
-                          User _saveUserData = new User(
-                              sId: _originalUserData.sId,
-                              name: _originalUserData.name,
-                              pub: _originalUserData.pub,
-                              balance: _originalUserData.balance,
-                              keys: _originalUserData.keys,
-                              alreadyFollowing: false,
-                              jsonString: new JsonString(
-                                  node: _originalUserData.jsonString?.node,
-                                  profile: new Profile(
-                                      about: _aboutController.text,
-                                      avatar: _avatarController.text,
-                                      coverImage: _coverImageController.text,
-                                      hive: _originalUserData
-                                          .jsonString!.profile?.hive,
-                                      location: _locationController.text,
-                                      steem: _originalUserData
-                                          .jsonString!.profile?.steem,
-                                      website: _websiteController.text),
-                                  additionals: new Additionals(
-                                      accountType: _accountType,
-                                      displayName: _displayNameController.text,
-                                      blocking: _originalUserData
-                                          .jsonString!.additionals!.blocking)));
+                      ),
+                      onTap: () async {
+                        User _saveUserData = new User(
+                            sId: _originalUserData.sId,
+                            name: _originalUserData.name,
+                            pub: _originalUserData.pub,
+                            balance: _originalUserData.balance,
+                            keys: _originalUserData.keys,
+                            alreadyFollowing: false,
+                            jsonString: new JsonString(
+                                node: _originalUserData.jsonString?.node,
+                                profile: new Profile(
+                                    about: _aboutController.text,
+                                    avatar: _avatarController.text,
+                                    coverImage: _coverImageController.text,
+                                    hive: _originalUserData
+                                        .jsonString!.profile?.hive,
+                                    location: _locationController.text,
+                                    steem: _originalUserData
+                                        .jsonString!.profile?.steem,
+                                    website: _websiteController.text),
+                                additionals: new Additionals(
+                                    accountType: _accountType,
+                                    displayName: _displayNameController.text,
+                                    blocking: _originalUserData
+                                        .jsonString!.additionals!.blocking)));
 
-                          BlocProvider.of<TransactionBloc>(context)
-                              .add(ChangeProfileData(_saveUserData, context));
-                        });
-                  }
-
-                  return Text("test");
-                })),
-          ),
+                        BlocProvider.of<TransactionBloc>(context)
+                            .add(ChangeProfileData(_saveUserData, context));
+                        // ignore: empty_statements
+                      });
+                } else {
+                  return Container();
+                }
+              })),
         ],
       ),
+      //Container()
     );
   }
 

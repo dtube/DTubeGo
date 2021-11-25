@@ -30,7 +30,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         }
         User _user = await repository.getAccountData(
             _avalonApiNode, _username, _applicationUser);
-
         bool _verified =
             await repository.getAccountVerificationOffline(_username);
 
@@ -46,6 +45,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
             _avalonApiNode, _applicationUser, _applicationUser);
         bool _verified =
             await repository.getAccountVerificationOffline(_applicationUser);
+
         if (user.jsonString?.additionals?.blocking != null) {
           await sec.persistBlockedUsers(
               user.jsonString!.additionals!.blocking!.join(","));

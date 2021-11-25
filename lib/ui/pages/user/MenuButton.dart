@@ -23,22 +23,26 @@ Widget buildUserMenuSpeedDial(
     mainMenuButtonOptions = [
       SpeedDialChild(
           child: CircleAvatar(
-            backgroundColor: globalBlueShades[2],
+            backgroundColor: globalRed,
             radius: globalIconSizeMedium + 2.w,
             foregroundColor: globalAlmostWhite,
             child: FaIcon(FontAwesomeIcons.cogs, size: globalIconSizeMedium),
           ),
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return BlocProvider<ThirdPartyUploaderBloc>(
-                  create: (BuildContext context) => ThirdPartyUploaderBloc(
-                      repository: ThirdPartyUploaderRepositoryImpl()),
-                  child: ProfileSettingsContainer(userBloc: userBloc));
+              return MultiBlocProvider(providers: [
+                BlocProvider<ThirdPartyUploaderBloc>(
+                    create: (BuildContext context) => ThirdPartyUploaderBloc(
+                        repository: ThirdPartyUploaderRepositoryImpl())),
+                BlocProvider<UserBloc>(
+                    create: (BuildContext context) =>
+                        UserBloc(repository: UserRepositoryImpl())),
+              ], child: ProfileSettingsContainer(userBloc: userBloc));
             }));
           }),
       SpeedDialChild(
           child: CircleAvatar(
-            backgroundColor: globalBlueShades[2],
+            backgroundColor: globalRed,
             radius: globalIconSizeMedium + 2.w,
             foregroundColor: globalAlmostWhite,
             child: FaIcon(FontAwesomeIcons.history, size: globalIconSizeMedium),
@@ -55,7 +59,7 @@ Widget buildUserMenuSpeedDial(
           }),
       SpeedDialChild(
           child: CircleAvatar(
-            backgroundColor: globalBlueShades[2],
+            backgroundColor: globalRed,
             radius: globalIconSizeMedium + 2.w,
             foregroundColor: globalAlmostWhite,
             child:
@@ -70,7 +74,7 @@ Widget buildUserMenuSpeedDial(
     mainMenuButtonOptions = [
       SpeedDialChild(
           child: CircleAvatar(
-            backgroundColor: globalBlueShades[2],
+            backgroundColor: globalRed,
             radius: globalIconSizeMedium + 2.w,
             foregroundColor: globalAlmostWhite,
             child: FaIcon(FontAwesomeIcons.history, size: globalIconSizeMedium),
@@ -87,7 +91,7 @@ Widget buildUserMenuSpeedDial(
           }),
       SpeedDialChild(
           child: CircleAvatar(
-            backgroundColor: globalBlueShades[2],
+            backgroundColor: globalRed,
             radius: globalIconSizeMedium + 2.w,
             foregroundColor: globalAlmostWhite,
             child: FaIcon(FontAwesomeIcons.exchangeAlt,
@@ -103,7 +107,7 @@ Widget buildUserMenuSpeedDial(
           }),
       SpeedDialChild(
           child: CircleAvatar(
-            backgroundColor: globalBlueShades[2],
+            backgroundColor: globalRed,
             radius: globalIconSizeMedium + 2.w,
             foregroundColor: globalAlmostWhite,
             child: FaIcon(
@@ -142,7 +146,7 @@ Widget buildUserMenuSpeedDial(
       onClose: () => print('DIAL CLOSED'),
       tooltip: 'menu',
       heroTag: 'user menu button' + ownUser.toString(),
-      backgroundColor: globalBlueShades[2],
+      backgroundColor: globalRed,
       foregroundColor: Colors.white,
       elevation: 0.0,
       shape: CircleBorder(),

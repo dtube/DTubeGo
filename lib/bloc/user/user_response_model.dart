@@ -263,10 +263,10 @@ class Additionals {
   Additionals.fromJson(Map<String, dynamic> json) {
     displayName = json['displayName'] != null ? json['displayName'] : '';
     accountType = json['accountType'] != null ? json['accountType'] : '';
-    if (json['blocking'] != null) {
-      blocking = [];
+    blocking = [];
+    if (json['blocking'] != null && json['blocking'] != []) {
       json['blocking'].forEach((v) {
-        blocking?.add(v);
+        blocking!.add(v);
       });
     }
   }
