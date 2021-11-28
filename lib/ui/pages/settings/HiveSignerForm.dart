@@ -23,7 +23,9 @@ class _HiveSignerFormState extends State<HiveSignerForm> {
   @override
   void initState() {
     _usernameController = new TextEditingController(text: widget.username);
-
+    if (widget.username != null && widget.username.length > 3) {
+      _usernameFilled = true;
+    }
     super.initState();
   }
 
@@ -59,7 +61,7 @@ class _HiveSignerFormState extends State<HiveSignerForm> {
             checkIfFormIsFilled();
           },
           validator: (value) {
-            if (value!.isNotEmpty && value.length > 0) {
+            if (value!.isNotEmpty && value.length > 3) {
               return null;
             } else {
               return 'please fill in a valid username';

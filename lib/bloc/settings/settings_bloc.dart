@@ -59,6 +59,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               await sec.getLastHivePostWithin5MinCooldown(),
           sec.settingKey_hiveSignerDefaultCommunity:
               await sec.getHiveSignerDefaultCommunity(),
+          sec.settingKey_hiveSignerDefaultTags:
+              await sec.getHiveSignerDefaultTags(),
         };
         yield SettingsLoadedState(settings: newSettings);
       } catch (e) {
@@ -101,7 +103,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         );
 
         await sec.persistHiveSignerAdditionalData(
-            event.newSettings[sec.settingKey_hiveSignerDefaultCommunity]!);
+            event.newSettings[sec.settingKey_hiveSignerDefaultCommunity]!,
+            event.newSettings[sec.settingKey_hiveSignerDefaultTags]!);
 
         await sec
             .persistExploreTags(event.newSettings[sec.settingKey_ExploreTags]!);

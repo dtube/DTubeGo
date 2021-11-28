@@ -20,6 +20,7 @@ const settingKey_hiveSignerAccessTokenExpiresIn = 'HSEI';
 const settingKey_hiveSignerAccessTokenRequestedOn = 'HSRO';
 
 const settingKey_hiveSignerDefaultCommunity = 'HSCOMMUNITY';
+const settingKey_hiveSignerDefaultTags = 'HSTAGS';
 
 const settingKey_OpenedOnce = 'OPENEDONCE';
 const settingKey_FirstLogin = 'FIRSTLOGIN';
@@ -120,9 +121,11 @@ Future<void> persistHiveSignerData(String accessToken, String expiresIn,
   await _storage.write(key: settingKey_hiveSignerUsername, value: username);
 }
 
-Future<void> persistHiveSignerAdditionalData(String community) async {
+Future<void> persistHiveSignerAdditionalData(
+    String community, String tags) async {
   await _storage.write(
       key: settingKey_hiveSignerDefaultCommunity, value: community);
+  await _storage.write(key: settingKey_hiveSignerDefaultTags, value: tags);
 }
 
 // app settings
@@ -616,6 +619,21 @@ Future<String> getHiveSignerDefaultCommunity() async {
     return _setting;
   } else {
     return 'hive-196037';
+  }
+}
+
+Future<String> getHiveSignerDefaultTags() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_hiveSignerDefaultTags);
+  } catch (e) {
+    _setting = "";
+  }
+
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
   }
 }
 

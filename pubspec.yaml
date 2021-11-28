@@ -72,6 +72,7 @@ dependencies:
   rflutter_alert: ^2.0.2
   flutter_speed_dial: ^4.6.6 # drop out menu
   chips_input: ^0.0.6
+  textfield_tags: ^1.4.2
 
   another_flushbar: ^1.10.25 # global snackbar to inform the user about transactions
   loadmore: ^2.0.1 # collapsable widget for long video descriptions
