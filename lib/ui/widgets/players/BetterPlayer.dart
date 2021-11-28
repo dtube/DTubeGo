@@ -39,7 +39,7 @@ class _BPState extends State<BP> {
   late BetterPlayerController _betterPlayerController;
   // late VideoPlayerController _videocontroller;
   late Future<void> _future;
-
+  late double aspectRatio;
   Future<void> initVideoPlayer() async {
     await widget.videocontroller.initialize();
 
@@ -54,7 +54,7 @@ class _BPState extends State<BP> {
           maxBufferMs: Duration(seconds: 60).inMilliseconds,
         ),
       );
-      double aspectRatio = widget.videocontroller.value.size.width /
+      aspectRatio = widget.videocontroller.value.size.width /
           widget.videocontroller.value.size.height;
 
       _betterPlayerController = BetterPlayerController(
@@ -117,24 +117,24 @@ class _BPState extends State<BP> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          double _aspectRatio = widget.videocontroller.value.size.width /
-              widget.videocontroller.value.size.height;
+          // double _aspectRatio = widget.videocontroller.value.size.width /
+          //     widget.videocontroller.value.size.height;
 
           return Center(
             child: Padding(
               padding: EdgeInsets.only(
-                  left: _aspectRatio < 1 ? widget.portraitVideoPadding : 0.0,
-                  right: _aspectRatio < 1 ? widget.portraitVideoPadding : 0.0),
+                  left: aspectRatio < 1 ? widget.portraitVideoPadding : 0.0,
+                  right: aspectRatio < 1 ? widget.portraitVideoPadding : 0.0),
               child: Column(
                 children: [
                   AspectRatio(
-                    aspectRatio: _aspectRatio > 0.0 ? _aspectRatio : 16 / 9,
+                    aspectRatio: aspectRatio > 0.0 ? aspectRatio : 16 / 9,
                     child: BetterPlayer(
                       controller: _betterPlayerController,
                     ),
                   ),
                   widget.usedAsPreview
-                      ? _aspectRatio > 1
+                      ? aspectRatio > 1
                           ? Column(
                               children: [
                                 Padding(
