@@ -17,6 +17,7 @@ class NotificationItem extends StatelessWidget {
     required this.tx,
     required this.userNavigation,
     required this.postNavigation,
+    required this.notificationType,
   }) : super(key: key);
 
   final String sender;
@@ -24,6 +25,7 @@ class NotificationItem extends StatelessWidget {
   final Tx tx;
   final bool userNavigation;
   final bool postNavigation;
+  final String notificationType;
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +76,7 @@ class NotificationItem extends StatelessWidget {
                         sender: sender,
                         tx: tx,
                         username: username,
+                        notificationType: notificationType,
                       ),
                     ),
                     userNavigation || postNavigation
@@ -98,16 +101,18 @@ class NotificationItem extends StatelessWidget {
 }
 
 class NotificationTitle extends StatelessWidget {
-  const NotificationTitle({
-    Key? key,
-    required this.sender,
-    required this.username,
-    required this.tx,
-  }) : super(key: key);
+  const NotificationTitle(
+      {Key? key,
+      required this.sender,
+      required this.username,
+      required this.tx,
+      required this.notificationType})
+      : super(key: key);
 
   final String sender;
   final String username;
   final Tx tx;
+  final String notificationType;
 
   @override
   Widget build(BuildContext context) {
@@ -125,9 +130,12 @@ class NotificationTitle extends StatelessWidget {
       case 19:
         friendlyDescription = friendlyDescription.replaceAll(
             '##TIPAMOUNT', tx.data.tip!.toString());
-
         break;
       default:
+        break;
+    }
+    if (notificationType == "mentions" && [4, 13].contains(tx.type)) {
+      friendlyDescription = "mentioned you";
     }
 
     return Column(

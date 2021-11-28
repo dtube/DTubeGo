@@ -1,5 +1,5 @@
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/notifications/NotificationItem.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
@@ -87,12 +87,22 @@ class NotificationTabContainer extends StatefulWidget {
 
 class _NotificationTabContainerState extends State<NotificationTabContainer>
     with SingleTickerProviderStateMixin {
-  List<String> _tabNames = ["all", "comments", "votes", "transfers", "others"];
+  List<String> _tabNames = [
+    "all",
+    "comments",
+    "mentions",
+    "votes",
+    "transfers",
+    "others"
+  ];
   List<AvalonNotification> _voteNotifications = [];
   List<AvalonNotification> _commentNotifications = [];
+  List<AvalonNotification> _mentionsNotifications = [];
   List<AvalonNotification> _transferNotifications = [];
   List<AvalonNotification> _otherNotifications = [];
   late TabController _tabController;
+  late String _currentUserName;
+
   @override
   void initState() {
     for (var n in widget.notifications) {
@@ -101,7 +111,11 @@ class _NotificationTabContainerState extends State<NotificationTabContainer>
         _voteNotifications.add(n);
       } else if ([4, 13].contains(n.tx.type)) {
         // comment || promoted comment || mentions
-        _commentNotifications.add(n);
+        if (n.tx.data.pa == widget.username) {
+          _commentNotifications.add(n);
+        } else {
+          _mentionsNotifications.add(n);
+        }
       } else if (n.tx.type == 3) {
         // transfers
         _transferNotifications.add(n);
@@ -109,7 +123,7 @@ class _NotificationTabContainerState extends State<NotificationTabContainer>
         _otherNotifications.add(n);
       }
     }
-    _tabController = new TabController(length: 5, vsync: this);
+    _tabController = new TabController(length: 6, vsync: this);
     super.initState();
   }
 
@@ -139,17 +153,23 @@ class _NotificationTabContainerState extends State<NotificationTabContainer>
                 Tab(
                   text: _tabNames[2] +
                       ' (' +
-                      _voteNotifications.length.toString() +
+                      _mentionsNotifications.length.toString() +
                       ')',
                 ),
                 Tab(
                   text: _tabNames[3] +
                       ' (' +
-                      _transferNotifications.length.toString() +
+                      _voteNotifications.length.toString() +
                       ')',
                 ),
                 Tab(
                   text: _tabNames[4] +
+                      ' (' +
+                      _transferNotifications.length.toString() +
+                      ')',
+                ),
+                Tab(
+                  text: _tabNames[5] +
                       ' (' +
                       _otherNotifications.length.toString() +
                       ')',
@@ -165,11 +185,12 @@ class _NotificationTabContainerState extends State<NotificationTabContainer>
             padding: const EdgeInsets.all(8.0),
             child: TabBarView(
               children: [
-                buildNotificationList(widget.notifications),
-                buildNotificationList(_commentNotifications),
-                buildNotificationList(_voteNotifications),
-                buildNotificationList(_transferNotifications),
-                buildNotificationList(_otherNotifications),
+                buildNotificationList(widget.notifications, _tabNames[0]),
+                buildNotificationList(_commentNotifications, _tabNames[1]),
+                buildNotificationList(_mentionsNotifications, _tabNames[2]),
+                buildNotificationList(_voteNotifications, _tabNames[3]),
+                buildNotificationList(_transferNotifications, _tabNames[4]),
+                buildNotificationList(_otherNotifications, _tabNames[5]),
               ],
               controller: _tabController,
             ),
@@ -179,7 +200,8 @@ class _NotificationTabContainerState extends State<NotificationTabContainer>
     );
   }
 
-  Widget buildNotificationList(List<AvalonNotification> notifications) {
+  Widget buildNotificationList(
+      List<AvalonNotification> notifications, String notificationType) {
     List<int> navigatableTxsUser = [1, 2, 3, 7, 8];
     List<int> navigatableTxsPost = [4, 5, 13, 19];
     if (notifications.length > 0) {
@@ -195,12 +217,12 @@ class _NotificationTabContainerState extends State<NotificationTabContainer>
             padding: const EdgeInsets.only(bottom: 8.0),
             child: InkWell(
               child: NotificationItem(
-                sender: notifications[pos].tx.sender,
-                tx: notifications[pos].tx,
-                username: widget.username,
-                userNavigation: _userNavigationPossible,
-                postNavigation: _postNavigationPossible,
-              ),
+                  sender: notifications[pos].tx.sender,
+                  tx: notifications[pos].tx,
+                  username: widget.username,
+                  userNavigation: _userNavigationPossible,
+                  postNavigation: _postNavigationPossible,
+                  notificationType: notificationType),
               onTap: () {
                 if (_userNavigationPossible) {
                   navigateToUserDetailPage(

@@ -45,7 +45,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
         yield NotificationLoadedState(
             notifications: notifications,
-            username: "you",
+            username: _applicationUser,
             tsLastNotificationSeen: int.parse(_tsLastNotificationSeen),
             newNotificationsCount: _newNotifications);
       } catch (e) {
