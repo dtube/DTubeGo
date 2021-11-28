@@ -142,180 +142,175 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
     _uploadData.crossPostToHive = _accessToken != '';
   }
 
-  Future getFile(
-      bool video, bool camera, int vpBalance, double vpPercent) async {
+  Future getFile(int vpBalance, double vpPercent) async {
     XFile? _pickedFile;
 
-    if (video) {
-      if (camera) {
-        double? _freeSpace = await DiskSpace.getFreeDiskSpace;
-        if (_freeSpace! > AppConfig.minFreeSpaceRecordVideoInMB) {
-          String _stillInHiveCooldown =
-              await sec.getLastHivePostWithin5MinCooldown();
-          if (_uploadData.crossPostToHive && _stillInHiveCooldown == "true") {
-            showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => PopUpDialogWithTitleLogo(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Please wait a bit!",
-                            style: Theme.of(context).textTheme.headline4,
-                            textAlign: TextAlign.center),
-                        SizedBox(height: 2.h),
-                        Text(
-                            "You want to cross post to hive but you already have posted something within the last 5 minutes.",
-                            style: Theme.of(context).textTheme.bodyText1,
-                            textAlign: TextAlign.center),
-                        Text(
-                            "Please wait for the 5 min hive cooldown to expire and try it again.",
-                            style: Theme.of(context).textTheme.bodyText1,
-                            textAlign: TextAlign.center),
-                        SizedBox(height: 3.h),
-                        Text(
-                            "This cooldown is a property coming from the hive blockchain. We just want to avoid upload errors when you crosspost.",
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline6!
-                                .copyWith(color: globalRed),
-                            textAlign: TextAlign.center),
-                        SizedBox(height: 2.h),
-                        InkWell(
-                            child: Container(
-                              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                              decoration: BoxDecoration(
-                                color: globalRed,
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20.0),
-                                    bottomRight: Radius.circular(20.0)),
-                              ),
-                              child: Text(
-                                "Okay thanks!",
-                                style: Theme.of(context).textTheme.headline4,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              FocusScope.of(context).unfocus();
-                            }),
-                      ],
-                    ),
-                  ),
-                  titleWidget: Center(
-                    child: FaIcon(
-                      FontAwesomeIcons.cloudUploadAlt,
-                      size: 8.h,
-                    ),
-                  ),
-                  callbackOK: () {},
-                  titleWidgetPadding: 10.w,
-                  titleWidgetSize: 10.w),
-            );
-          } else {
-            _pickedFile = await _picker.pickVideo(
-                source: ImageSource.camera, maxDuration: Duration(seconds: 60));
-          }
-          if (_pickedFile != null) {
-            showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => PopUpDialogWithTitleLogo(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Amazing!",
-                            style: Theme.of(context).textTheme.headline4,
-                            textAlign: TextAlign.center),
-                        SizedBox(height: 2.h),
-                        Text(
-                            "Your moment is uploading right now and this could take some time...",
-                            style: Theme.of(context).textTheme.bodyText1,
-                            textAlign: TextAlign.center),
-                        Text(
-                            "It is safe to browse DTube Go in the meantime. Go share some feedback and votes on other videos of the community.",
-                            style: Theme.of(context).textTheme.bodyText1,
-                            textAlign: TextAlign.center),
-                        SizedBox(height: 3.h),
-                        Text(
-                            "Make sure to not close the app or lock your screen until the upload is finished!",
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline6!
-                                .copyWith(color: globalRed),
-                            textAlign: TextAlign.center),
-                        SizedBox(height: 2.h),
-                        InkWell(
-                            child: Container(
-                              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                              decoration: BoxDecoration(
-                                color: globalRed,
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20.0),
-                                    bottomRight: Radius.circular(20.0)),
-                              ),
-                              child: Text(
-                                "Allright!",
-                                style: Theme.of(context).textTheme.headline4,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            }),
-                      ],
-                    ),
-                  ),
-                  titleWidget: Center(
-                    child: FaIcon(
-                      FontAwesomeIcons.cloudUploadAlt,
-                      size: 8.h,
-                    ),
-                  ),
-                  callbackOK: () {},
-                  titleWidgetPadding: 10.w,
-                  titleWidgetSize: 10.w),
-            );
-          }
-        } else {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: Text('not enough free storage',
-                  style: Theme.of(context).textTheme.headline1),
-              content: Container(
-                height: MediaQuery.of(context).size.height / 5,
+    double? _freeSpace = await DiskSpace.getFreeDiskSpace;
+    if (_freeSpace! > AppConfig.minFreeSpaceRecordVideoInMB) {
+      String _stillInHiveCooldown =
+          await sec.getLastHivePostWithin5MinCooldown();
+      if (_uploadData.crossPostToHive && _stillInHiveCooldown == "true") {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => PopUpDialogWithTitleLogo(
+              child: SingleChildScrollView(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
+                    Text("Please wait a bit!",
+                        style: Theme.of(context).textTheme.headline4,
+                        textAlign: TextAlign.center),
+                    SizedBox(height: 2.h),
                     Text(
-                        "In order to record a video with the app please make sure to have enough free internal storage on your device.",
-                        style: Theme.of(context).textTheme.bodyText1),
-                    SizedBox(
-                      height: 18,
-                    ),
+                        "You want to cross post to hive but you already have posted something within the last 5 minutes.",
+                        style: Theme.of(context).textTheme.bodyText1,
+                        textAlign: TextAlign.center),
                     Text(
-                        "We have set the minimum required free space to ${AppConfig.minFreeSpaceRecordVideoInMB / 1000} GB internal storage.",
-                        style: Theme.of(context).textTheme.bodyText1)
+                        "Please wait for the 5 min hive cooldown to expire and try it again.",
+                        style: Theme.of(context).textTheme.bodyText1,
+                        textAlign: TextAlign.center),
+                    SizedBox(height: 3.h),
+                    Text(
+                        "This cooldown is a property coming from the hive blockchain. We just want to avoid upload errors when you crosspost.",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline6!
+                            .copyWith(color: globalRed),
+                        textAlign: TextAlign.center),
+                    SizedBox(height: 2.h),
+                    InkWell(
+                        child: Container(
+                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          decoration: BoxDecoration(
+                            color: globalRed,
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(20.0),
+                                bottomRight: Radius.circular(20.0)),
+                          ),
+                          child: Text(
+                            "Okay thanks!",
+                            style: Theme.of(context).textTheme.headline4,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          FocusScope.of(context).unfocus();
+                        }),
                   ],
                 ),
               ),
-              actions: [
-                new ElevatedButton(
-                  child: Text("Ok"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+              titleWidget: Center(
+                child: FaIcon(
+                  FontAwesomeIcons.cloudUploadAlt,
+                  size: 8.h,
                 ),
+              ),
+              callbackOK: () {},
+              titleWidgetPadding: 10.w,
+              titleWidgetSize: 10.w),
+        );
+      } else {
+        _pickedFile = await _picker.pickVideo(
+            source: ImageSource.camera, maxDuration: Duration(seconds: 60));
+      }
+      if (_pickedFile != null) {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => PopUpDialogWithTitleLogo(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("Amazing!",
+                        style: Theme.of(context).textTheme.headline4,
+                        textAlign: TextAlign.center),
+                    SizedBox(height: 2.h),
+                    Text(
+                        "Your moment is uploading right now and this could take some time...",
+                        style: Theme.of(context).textTheme.bodyText1,
+                        textAlign: TextAlign.center),
+                    Text(
+                        "It is safe to browse DTube Go in the meantime. Go share some feedback and votes on other videos of the community.",
+                        style: Theme.of(context).textTheme.bodyText1,
+                        textAlign: TextAlign.center),
+                    SizedBox(height: 3.h),
+                    Text(
+                        "Make sure to not close the app or lock your screen until the upload is finished!",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline6!
+                            .copyWith(color: globalRed),
+                        textAlign: TextAlign.center),
+                    SizedBox(height: 2.h),
+                    InkWell(
+                        child: Container(
+                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          decoration: BoxDecoration(
+                            color: globalRed,
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(20.0),
+                                bottomRight: Radius.circular(20.0)),
+                          ),
+                          child: Text(
+                            "Allright!",
+                            style: Theme.of(context).textTheme.headline4,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        }),
+                  ],
+                ),
+              ),
+              titleWidget: Center(
+                child: FaIcon(
+                  FontAwesomeIcons.cloudUploadAlt,
+                  size: 8.h,
+                ),
+              ),
+              callbackOK: () {},
+              titleWidgetPadding: 10.w,
+              titleWidgetSize: 10.w),
+        );
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('not enough free storage',
+              style: Theme.of(context).textTheme.headline1),
+          content: Container(
+            height: MediaQuery.of(context).size.height / 5,
+            child: Column(
+              children: [
+                Text(
+                    "In order to record a video with the app please make sure to have enough free internal storage on your device.",
+                    style: Theme.of(context).textTheme.bodyText1),
+                SizedBox(
+                  height: 18,
+                ),
+                Text(
+                    "We have set the minimum required free space to ${AppConfig.minFreeSpaceRecordVideoInMB / 1000} GB internal storage.",
+                    style: Theme.of(context).textTheme.bodyText1)
               ],
             ),
-          );
-        }
-      }
+          ),
+          actions: [
+            new ElevatedButton(
+              child: Text("Ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
     }
 
     if (_pickedFile != null) {
@@ -367,8 +362,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
           ),
           onTap: () async {
             widget.clickedCallback();
-            getFile(true, true, widget.currentVT.floor(),
-                widget.defaultVotingWeight);
+            getFile(widget.currentVT.floor(), widget.defaultVotingWeight);
           },
         );
       },

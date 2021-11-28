@@ -115,6 +115,8 @@ dependencies:
 
   # os related
   disk_space: ^0.2.1 # get free memory before recording video
+  path_provider: ^2.0.7
+  path: ^1.8.0
 
 # unsorted
   equatable: ^2.0.3
