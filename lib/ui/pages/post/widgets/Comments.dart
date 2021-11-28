@@ -55,7 +55,7 @@ class CommentDisplay extends StatelessWidget {
                         avatarSize: 12.w,
                         showVerified: true,
                         showName: true,
-                        width: 35.w,
+                        width: 65.w,
                         height: 8.h,
                       ),
                     )
@@ -140,7 +140,7 @@ class CommentDisplay extends StatelessWidget {
                           avatarSize: 12.w,
                           showVerified: true,
                           showName: true,
-                          width: 35.w,
+                          width: 65.w,
                           height: 8.h,
                         ),
                       )
