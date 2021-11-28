@@ -108,7 +108,7 @@ class _ReplyButtonState extends State<ReplyButton> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: 85.w, // TODO: make this dynamic
+                  width: 55.w, // TODO: make this dynamic
                   child: TextField(
                       autofocus: _replyPressed,
                       controller: _replyController,
