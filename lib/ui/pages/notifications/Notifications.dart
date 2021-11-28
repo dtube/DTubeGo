@@ -1,15 +1,10 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:dtube_go/bloc/config/txTypes.dart';
-import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/pages/notifications/NotificationItem.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
-import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/utils/navigationShortcuts.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:intl/intl.dart';
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,7 +38,8 @@ class _NotificationsState extends State<Notifications> {
             } else if (state is NotificationLoadingState) {
               return buildLoading();
             } else if (state is NotificationLoadedState) {
-              return buildnotificationList(state.notifications, state.username);
+              return NotificationTabContainer(
+                  notifications: state.notifications, username: state.username);
             } else if (state is NotificationErrorState) {
               return buildErrorUi(state.message);
             } else {
@@ -72,12 +68,120 @@ class _NotificationsState extends State<Notifications> {
       ),
     );
   }
+}
 
-  Widget buildnotificationList(
-      List<AvalonNotification> notifications, String username) {
+class NotificationTabContainer extends StatefulWidget {
+  const NotificationTabContainer({
+    Key? key,
+    required this.notifications,
+    required this.username,
+  }) : super(key: key);
+
+  final List<AvalonNotification> notifications;
+  final String username;
+
+  @override
+  State<NotificationTabContainer> createState() =>
+      _NotificationTabContainerState();
+}
+
+class _NotificationTabContainerState extends State<NotificationTabContainer>
+    with SingleTickerProviderStateMixin {
+  List<String> _tabNames = ["all", "comments", "votes", "transfers", "others"];
+  List<AvalonNotification> _voteNotifications = [];
+  List<AvalonNotification> _commentNotifications = [];
+  List<AvalonNotification> _transferNotifications = [];
+  List<AvalonNotification> _otherNotifications = [];
+  late TabController _tabController;
+  @override
+  void initState() {
+    for (var n in widget.notifications) {
+      if ([5, 19].contains(n.tx.type)) {
+        // votes || tipped votes
+        _voteNotifications.add(n);
+      } else if ([4, 13].contains(n.tx.type)) {
+        // comment || promoted comment || mentions
+        _commentNotifications.add(n);
+      } else if (n.tx.type == 3) {
+        // transfers
+        _transferNotifications.add(n);
+      } else {
+        _otherNotifications.add(n);
+      }
+    }
+    _tabController = new TabController(length: 5, vsync: this);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Align(
+          child: Container(
+            width: 100.w,
+            child: TabBar(
+              unselectedLabelColor: Colors.grey,
+              labelColor: globalAlmostWhite,
+              indicatorColor: globalRed,
+              isScrollable: true,
+              labelPadding: EdgeInsets.symmetric(horizontal: 2.w),
+              tabs: [
+                Tab(
+                  text: _tabNames[0],
+                ),
+                Tab(
+                  text: _tabNames[1] +
+                      ' (' +
+                      _commentNotifications.length.toString() +
+                      ')',
+                ),
+                Tab(
+                  text: _tabNames[2] +
+                      ' (' +
+                      _voteNotifications.length.toString() +
+                      ')',
+                ),
+                Tab(
+                  text: _tabNames[3] +
+                      ' (' +
+                      _transferNotifications.length.toString() +
+                      ')',
+                ),
+                Tab(
+                  text: _tabNames[4] +
+                      ' (' +
+                      _otherNotifications.length.toString() +
+                      ')',
+                ),
+              ],
+              controller: _tabController,
+              indicatorSize: TabBarIndicatorSize.tab,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TabBarView(
+              children: [
+                buildNotificationList(widget.notifications),
+                buildNotificationList(_commentNotifications),
+                buildNotificationList(_voteNotifications),
+                buildNotificationList(_transferNotifications),
+                buildNotificationList(_otherNotifications),
+              ],
+              controller: _tabController,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildNotificationList(List<AvalonNotification> notifications) {
     List<int> navigatableTxsUser = [1, 2, 3, 7, 8];
     List<int> navigatableTxsPost = [4, 5, 13, 19];
-
     if (notifications.length > 0) {
       return ListView.builder(
         itemCount: notifications.length,
@@ -90,10 +194,10 @@ class _NotificationsState extends State<Notifications> {
           return Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: InkWell(
-              child: CustomListItem(
+              child: NotificationItem(
                 sender: notifications[pos].tx.sender,
                 tx: notifications[pos].tx,
-                username: username,
+                username: widget.username,
                 userNavigation: _userNavigationPossible,
                 postNavigation: _postNavigationPossible,
               ),
@@ -124,125 +228,5 @@ class _NotificationsState extends State<Notifications> {
             style: Theme.of(context).textTheme.headline5),
       );
     }
-  }
-}
-
-class CustomListItem extends StatelessWidget {
-  const CustomListItem({
-    Key? key,
-    required this.sender,
-    required this.username,
-    required this.tx,
-    required this.userNavigation,
-    required this.postNavigation,
-  }) : super(key: key);
-
-  final String sender;
-  final String username;
-  final Tx tx;
-  final bool userNavigation;
-  final bool postNavigation;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        height: 10.h,
-        width: 100.w,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
-              children: [
-                BlocProvider<UserBloc>(
-                  create: (BuildContext context) =>
-                      UserBloc(repository: UserRepositoryImpl()),
-                  child: AccountAvatarBase(
-                    username: sender,
-                    avatarSize: 15.w,
-                    showVerified: true,
-                    showName: true,
-                    width: 40.w,
-                    height: 8.h,
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                NotificationTitle(
-                  sender: sender,
-                  tx: tx,
-                  username: username,
-                ),
-              ],
-            ),
-            userNavigation || postNavigation
-                ? FaIcon(
-                    userNavigation
-                        ? FontAwesomeIcons.user
-                        : FontAwesomeIcons.play,
-                    size: 5.w,
-                  )
-                : SizedBox(width: 0)
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class NotificationTitle extends StatelessWidget {
-  const NotificationTitle({
-    Key? key,
-    required this.sender,
-    required this.username,
-    required this.tx,
-  }) : super(key: key);
-
-  final String sender;
-  final String username;
-  final Tx tx;
-
-  @override
-  Widget build(BuildContext context) {
-    String username2 = "your";
-
-    String friendlyDescription =
-        txTypeFriendlyDescriptionNotifications[tx.type]!
-            .replaceAll("##USERNAMES", username2)
-            .replaceAll("##USERNAME", username);
-    switch (tx.type) {
-      case 3:
-        friendlyDescription = friendlyDescription.replaceAll(
-            '##DTCAMOUNT', (tx.data.amount! / 100).toString());
-        break;
-      case 19:
-        friendlyDescription = friendlyDescription.replaceAll(
-            '##TIPAMOUNT', tx.data.tip!.toString());
-
-        break;
-      default:
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(
-            DateFormat('yyyy-MM-dd kk:mm').format(
-                    DateTime.fromMicrosecondsSinceEpoch(tx.ts * 1000)
-                        .toLocal()) +
-                ':',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyText1),
-        Text(friendlyDescription,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyText1),
-      ],
-    );
   }
 }

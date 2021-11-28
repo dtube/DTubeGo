@@ -111,7 +111,10 @@ class _AccountAvatarState extends State<AccountAvatar> {
       bloc: _userBlocAvatar,
       builder: (context, state) {
         if (state is UserLoadingState) {
-          return CircularProgressIndicator();
+          return Container(
+              width: widget.width,
+              height: widget.height,
+              child: Center(child: CircularProgressIndicator()));
         } else if (state is UserLoadedState) {
           try {
             return Container(
