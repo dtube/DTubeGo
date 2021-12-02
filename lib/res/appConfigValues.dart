@@ -94,6 +94,9 @@ class AppConfig {
   static String signUpUrl = "https://signup.d.tube";
   static String readmoreUrl = "https://token.d.tube";
   static String faqUrl = "https://d.tube/#!/wiki/faq/README";
+  static String gitDTubeGoUrl = "https://github.com/dtube/DTubeGo";
+  static String gitAvalonUrl = "https://github.com/dtube/avalon";
+  static String gitDtubeUrl = "https://github.com/dtube/dtube";
 
   // activate/deactivate first user journey
   static bool faqStartup = true; // show on first startup
