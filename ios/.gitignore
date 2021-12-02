@@ -30,3 +30,8 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+build.sh
+vendor
+bundle
+ios/fastlane/report.xml
