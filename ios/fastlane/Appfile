@@ -1,0 +1,8 @@
+app_identifier("dtube.go.app") # The bundle identifier of your app
+apple_id("tibfox@gmail.com") # Your Apple email address
+
+itc_team_id("123758832") # App Store Connect Team ID
+team_id("66TU8S86UG") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
