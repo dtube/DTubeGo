@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/startup/eula/EulaScreen.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/ui/startup/OnboardingJourney/OnboardingJourney.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -24,7 +25,8 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  late bool _firstUsage;
+  late bool _journeyDone;
+  late bool _eulaAccepted = false;
   late AuthBloc _loginBloc;
   TextEditingController usernameController = new TextEditingController();
   TextEditingController privateKeyController = new TextEditingController();
@@ -32,7 +34,9 @@ class _LoginFormState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
-    _firstUsage = widget.firstUsage;
+    _journeyDone = !widget.firstUsage;
+    _eulaAccepted = !widget.firstUsage;
+
     _loginBloc = BlocProvider.of<AuthBloc>(context);
     if (widget.username != null) {
       usernameController = TextEditingController(text: widget.username);
@@ -62,9 +66,15 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void journeyDoneCallback() async {
+    setState(() {
+      _journeyDone = true;
+    });
+  }
+
+  void eulaAcceptedCallback() async {
     await sec.persistOpenedOnce();
     setState(() {
-      _firstUsage = false;
+      _eulaAccepted = true;
     });
   }
 
@@ -242,12 +252,20 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
           // if the app is opened for the first time
+          // show EULA
+          Visibility(
+            child: EULAScreen(
+              eulaAcceptedCallback: eulaAcceptedCallback,
+            ),
+            visible: _journeyDone && !_eulaAccepted,
+          ),
+          // if the app is opened for the first time and eula got accepted
           // show onboarding journey
           Visibility(
             child: OnboardingJourney(
               journeyDoneCallback: journeyDoneCallback,
             ),
-            visible: _firstUsage,
+            visible: !_journeyDone,
           ),
         ],
       ),

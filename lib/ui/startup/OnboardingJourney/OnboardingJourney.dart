@@ -34,10 +34,11 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
       bodyTextStyle: Theme.of(context).textTheme.bodyText1!,
       descriptionPadding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
       pageColor: globalBlue,
-      imagePadding: EdgeInsets.all(16),
+      imagePadding: EdgeInsets.only(top: 20.h),
       imageFlex: 3,
-      bodyFlex: 1,
-      titlePadding: EdgeInsets.only(bottom: 8, top: 16),
+      bodyFlex: 2,
+      imageAlignment: Alignment.bottomCenter,
+      titlePadding: EdgeInsets.only(bottom: 0, top: 0),
       bodyAlignment: Alignment.bottomCenter,
       //imageAlignment: Alignment.topLeft
     );

@@ -158,3 +158,5 @@ flutter:
     - assets/gifs/hovering_freeandprivate.gif
     - assets/gifs/hovering_free.gif
     - assets/videos/firstpage.mp4
+    - assets/mds/androidEULA.md
+    - assets/mds/iOSEULA.md
