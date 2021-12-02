@@ -34,4 +34,6 @@ Runner/GeneratedPluginRegistrant.*
 build.sh
 vendor
 bundle
-ios/fastlane/report.xml
+fastlane/report.xml
+Runner.ipa
+Runner.app.dSYM.zip

@@ -15,11 +15,26 @@
 
 default_platform(:ios)
 
+before_all do
+  ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "true"
+end
+
 platform :ios do
   desc "Push a new release build to the App Store"
-  lane :release do
-    # increment_build_number(xcodeproj: "Runner.xcodeproj")
+  lane :release do |options|
+    if options[:buildNo]
+      increment_build_number(xcodeproj: "Runner.xcodeproj", build_number: options[:buildNo])
+    else
+      puts "Build number unknown"
+      sh("exit 1")
+    end
+    if options[:versionNo]
+      increment_version_number(xcodeproj: "Runner.xcodeproj", version_number: options[:versionNo])
+    else
+      puts "Version number unknown"
+      sh("exit 1")
+    end
     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
-    # upload_to_app_store(skip_metadata: true, skip_screenshots: true)
+    upload_to_testflight
   end
 end
