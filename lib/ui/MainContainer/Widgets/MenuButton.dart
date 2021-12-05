@@ -1,4 +1,7 @@
+import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
+import 'package:dtube_go/bloc/search/search_bloc_full.dart';
 import 'package:dtube_go/ui/MainContainer/Widgets/AboutDialog.dart';
+import 'package:dtube_go/ui/pages/Explore/SearchScreen.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
@@ -18,6 +21,27 @@ import 'package:url_launcher/url_launcher.dart';
 
 Widget buildMainMenuSpeedDial(BuildContext context) {
   List<SpeedDialChild> mainMenuButtonOptions = [
+    SpeedDialChild(
+        child: ShadowedIcon(
+            icon: FontAwesomeIcons.search,
+            color: Colors.white,
+            shadowColor: Colors.black,
+            size: globalIconSizeMedium),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return MultiBlocProvider(providers: [
+              BlocProvider<SearchBloc>(
+                  create: (context) =>
+                      SearchBloc(repository: SearchRepositoryImpl())),
+              BlocProvider(
+                  create: (context) =>
+                      FeedBloc(repository: FeedRepositoryImpl())),
+            ], child: SearchScreen());
+          }));
+        }),
     SpeedDialChild(
         child: ShadowedIcon(
             icon: FontAwesomeIcons.wallet,

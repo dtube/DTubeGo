@@ -1,4 +1,5 @@
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/pages/Explore/GenreFeed/GenreBase.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
@@ -21,7 +22,7 @@ class ExploreMainPage extends StatefulWidget {
 
 class _ExploreMainPageState extends State<ExploreMainPage>
     with SingleTickerProviderStateMixin {
-  List<String> _tabNames = ["Explore Videos", "Search"];
+  List<String> _tabNames = ["Genre Explorer", "Search"];
   List<IconData> _tabIcons = [
     FontAwesomeIcons.compass,
     FontAwesomeIcons.search
@@ -95,30 +96,11 @@ class _ExploreMainPageState extends State<ExploreMainPage>
                   Expanded(
                     child: TabBarView(
                       children: [
-                        _exploreTags != ""
-                            ? BlocProvider<FeedBloc>(
-                                create: (context) =>
-                                    FeedBloc(repository: FeedRepositoryImpl())
-                                      ..add(FetchTagSearchResults(
-                                          tags: _exploreTags)),
-                                child: StaggeredFeed(
-                                  searchTags: _exploreTags,
-                                ))
-                            : BlocProvider<FeedBloc>(
-                                create: (context) => FeedBloc(
-                                    repository: FeedRepositoryImpl())
-                                  ..add(FetchFeedEvent(feedType: "HotFeed")),
-                                child: StaggeredFeed(
-                                  searchTags: "",
-                                )),
-                        MultiBlocProvider(providers: [
-                          BlocProvider<SearchBloc>(
-                              create: (context) => SearchBloc(
-                                  repository: SearchRepositoryImpl())),
-                          BlocProvider(
-                              create: (context) =>
-                                  FeedBloc(repository: FeedRepositoryImpl())),
-                        ], child: SearchScreen()),
+                        BlocProvider<FeedBloc>(
+                            create: (context) => FeedBloc(
+                                repository: FeedRepositoryImpl())
+                              ..add(FetchTagSearchResults(tags: _exploreTags)),
+                            child: GenreBase()),
                       ],
                       controller: _tabController,
                     ),
@@ -166,7 +148,7 @@ class _ExploreMainPageState extends State<ExploreMainPage>
               Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 8.h, left: 4.w),
+                  padding: EdgeInsets.only(top: 6.h, left: 4.w),
                   //padding: EdgeInsets.only(top: 5.h),
                   child: OverlayText(
                     text: _tabNames[_selectedIndex],

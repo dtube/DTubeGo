@@ -83,10 +83,6 @@ class _FeedMainPageState extends State<FeedMainPage>
       ..isFetching = true
       ..add(FetchFeedEvent(feedType: "NewFeed"));
 
-    for (var maintag in AppConfig.genreTags.keys) {
-      mockResults
-          .add(FilterTag(maintag, AppConfig.genreTags[maintag]!.join(' ')));
-    }
     getMainTagsFromStorage();
     super.initState();
   }

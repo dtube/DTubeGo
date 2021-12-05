@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/ui/pages/feeds/cards/PostListCardLarge.dart';
@@ -146,9 +147,10 @@ class SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 18.h),
-      child: SingleChildScrollView(
+    return Scaffold(
+      appBar: dtubeSubAppBar(true, "", context, null),
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
