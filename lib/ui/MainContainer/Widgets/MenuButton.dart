@@ -1,7 +1,7 @@
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/bloc/search/search_bloc_full.dart';
 import 'package:dtube_go/ui/MainContainer/Widgets/AboutDialog.dart';
-import 'package:dtube_go/ui/pages/Explore/SearchScreen.dart';
+import 'package:dtube_go/ui/pages/search/SearchScreen.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';

@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/pages/Explore/GenreBase.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
@@ -13,7 +14,7 @@ import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/MainContainer/Widgets/BalanceOverview.dart';
 import 'package:dtube_go/ui/MainContainer/Widgets/MenuButton.dart';
-import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
+
 import 'package:dtube_go/ui/pages/feeds/FeedTabContainer.dart';
 import 'package:dtube_go/ui/pages/notifications/NotificationButton.dart';
 import 'package:dtube_go/ui/pages/upload/uploaderTabContainer.dart';
@@ -214,7 +215,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
       ),
       BlocProvider(
         create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
-        child: ExploreMainPage(),
+        child: GenreBase(),
       ),
       UploaderMainPage(
         callback: uploaderCallback,

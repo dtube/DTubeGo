@@ -42,7 +42,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               await sec.getHiveSignerAccessTokenRequestedOn(),
           sec.settingKey_pincode: await sec.getPinCode(),
           sec.settingKey_imageUploadService: await sec.getImageUploadService(),
-          sec.settingKey_ExploreTags: await sec.getExploreTags(),
           sec.settingKey_DefaultUploadNSFW: await sec.getUploadNSFW(),
           sec.settingKey_DefaultUploadOC: await sec.getUploadOC(),
           sec.settingKey_DefaultUploadUnlist: await sec.getUploadUnlist(),
@@ -105,9 +104,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         await sec.persistHiveSignerAdditionalData(
             event.newSettings[sec.settingKey_hiveSignerDefaultCommunity]!,
             event.newSettings[sec.settingKey_hiveSignerDefaultTags]!);
-
-        await sec
-            .persistExploreTags(event.newSettings[sec.settingKey_ExploreTags]!);
 
         yield SettingsSavedState(settings: event.newSettings);
         Phoenix.rebirth(event.context);

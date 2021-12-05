@@ -53,8 +53,6 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   late TextEditingController _momentBodyController;
   late String _momentPreviewBody;
 
-  late List<String> _selectedExploreTags;
-
   List<String> _showHiddentNsfwOptions = ['Show', 'Hide', 'Blur'];
 
   bool _defaultUploadOC = false;
@@ -127,7 +125,6 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                 child: GestureDetector(
                   child: FaIcon(FontAwesomeIcons.save),
                   onTap: () async {
-                    _selectedExploreTags.remove("");
                     Map<String, String> newSettings = {
                       sec.settingKey_defaultVotingWeight:
                           _defaultVote.toString(),
@@ -145,8 +142,6 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                       sec.settingKey_templateTag:
                           _templateTagController.value.text,
                       sec.settingKey_imageUploadService: _imageUploadProvider,
-                      sec.settingKey_ExploreTags:
-                          _selectedExploreTags.join(","),
                       sec.settingKey_DefaultUploadNSFW:
                           _defaultUploadNSFW.toString(),
                       sec.settingKey_DefaultUploadOC:
@@ -279,10 +274,6 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                 settings[sec.settingKey_imageUploadService] != null
                     ? settings[sec.settingKey_imageUploadService]!
                     : "imgur";
-
-            _selectedExploreTags = settings[sec.settingKey_ExploreTags] != null
-                ? settings[sec.settingKey_ExploreTags]!.split((','))
-                : [];
 
             _defaultUploadNSFW =
                 settings[sec.settingKey_DefaultUploadNSFW] != null
@@ -561,78 +552,6 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             //     ),
                             //   ],
                             // ),
-                            DTubeFormCard(
-                              waitBeforeFadeIn: Duration(milliseconds: 600),
-                              avoidAnimation: _visitedTabs.contains(0),
-                              childs: [
-                                Stack(children: [
-                                  ShowHintIcon(
-                                    onPressed: () {
-                                      setState(() {
-                                        _showInterestsHints =
-                                            !_showInterestsHints;
-                                      });
-                                    },
-                                    alignment: Alignment.topRight,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 16.0),
-                                    child: Text("Interests",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5),
-                                  ),
-                                ]),
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 85.w,
-                                      child: Text(
-                                          "define your interests to auto filter the explore page",
-                                          maxLines: 2,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1),
-                                    ),
-                                  ],
-                                ),
-                                Wrap(children: [
-                                  for (var _possibleTag
-                                      in AppConfig.possibleExploreTags)
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 1.w),
-                                      child: InputChip(
-                                        label: Text(_possibleTag),
-                                        selectedColor: globalRed,
-                                        labelStyle: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                        //!.copyWith(color: globalAlmostWhite)
-                                        ,
-                                        backgroundColor: globalBGColorNoOpacity,
-                                        selected: _selectedExploreTags
-                                            .contains(_possibleTag),
-                                        onSelected: (value) {
-                                          print(_possibleTag);
-                                          setState(() {
-                                            if (value == true) {
-                                              _selectedExploreTags
-                                                  .add(_possibleTag);
-                                            } else {
-                                              _selectedExploreTags
-                                                  .remove(_possibleTag);
-                                            }
-                                          });
-                                        },
-                                      ),
-                                    )
-                                ]),
-                                VisibilityHintText(
-                                    showHint: _showInterestsHints,
-                                    hintText:
-                                        "The explore page of DTube (globe icon) shows the newest videos filtered by the above ativated tags. If you do not activate any of those tags the explore page will display all trending videos by default."),
-                              ],
-                            ),
                           ],
                         ),
                       ),
