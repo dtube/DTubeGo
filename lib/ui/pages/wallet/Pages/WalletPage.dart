@@ -17,12 +17,12 @@ class WalletPage extends StatefulWidget {
 class _WalletPageState extends State<WalletPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late TransactionBloc _transactionBloc;
 
   @override
   void initState() {
+    _transactionBloc = BlocProvider.of<TransactionBloc>(context);
     super.initState();
-
-    _tabController = new TabController(length: 1, vsync: this);
   }
 
   @override
@@ -39,44 +39,30 @@ class _WalletPageState extends State<WalletPage>
         child: Center(
           child: Column(
             children: [
-              TabBar(
-                unselectedLabelColor: Colors.grey,
-                labelColor: globalAlmostWhite,
-                indicatorColor: globalRed,
-                tabs: [
-                  Tab(
-                    text: 'Transfer History',
-                  ),
-                ],
-                controller: _tabController,
-                indicatorSize: TabBarIndicatorSize.tab,
+              Align(
+                alignment: Alignment.topCenter,
+                child: InputChip(
+                  label: Text("new transfer",
+                      style: Theme.of(context).textTheme.headline6),
+                  backgroundColor: globalRed,
+                  onPressed: () {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          TransferDialog(txBloc: _transactionBloc),
+                    );
+                  },
+                ),
               ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TabBarView(
-                    children: [
-                      // BlocProvider(
-                      //     create: (context) =>
-                      //         RewardsBloc(repository: RewardRepositoryImpl()),
-                      //     child:
-                      WalletHistoryList(
+                  child: WalletHistoryList(
 
-                          // )
-                          ),
-
-                      // BlocProvider(
-                      //     create: (context) =>
-                      //         RewardsBloc(repository: RewardRepositoryImpl()),
-                      //     child: WalletHistoryList(
-
-                      //     )),
-                    ],
-                    controller: _tabController,
-                  ),
+                      // )
+                      ),
                 ),
               ),
-              //https://avalon.d.tube/votes/claimable/tibfox/0
             ],
           ),
         ));
@@ -91,32 +77,19 @@ class WalletHistoryList extends StatefulWidget {
 }
 
 class _WalletHistoryListState extends State<WalletHistoryList> {
-  late TransactionBloc _transactionBloc;
-
   @override
   void initState() {
     super.initState();
-    _transactionBloc = BlocProvider.of<TransactionBloc>(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Align(
-          alignment: Alignment.topRight,
-          child: InputChip(
-            label: Text("new transfer"),
-            onPressed: () {
-              showDialog<String>(
-                context: context,
-                builder: (BuildContext context) =>
-                    TransferDialog(txBloc: _transactionBloc),
-              );
-            },
-          ),
+        Text(
+          "Transfer History",
+          style: Theme.of(context).textTheme.headline6,
         ),
-        Text("History will come soon"),
       ],
     );
   }

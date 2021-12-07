@@ -53,10 +53,7 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
         backgroundColor: Colors.transparent,
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return BlocProvider<NotificationBloc>(
-                create: (context) =>
-                    NotificationBloc(repository: NotificationRepositoryImpl()),
-                child: WalletMainPage());
+            return WalletMainPage();
           }));
         }),
     SpeedDialChild(

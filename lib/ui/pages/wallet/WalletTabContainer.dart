@@ -1,6 +1,10 @@
 import 'package:dtube_go/bloc/rewards/rewards_bloc_full.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
+import 'package:dtube_go/bloc/user/user_bloc.dart';
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/pages/wallet/Pages/KeyManagement.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 
 import 'package:dtube_go/ui/pages/wallet/Pages/RewardsPage.dart';
@@ -17,12 +21,12 @@ class WalletMainPage extends StatefulWidget {
 
 class _WalletMainPageState extends State<WalletMainPage>
     with SingleTickerProviderStateMixin {
-  List<String> uploadOptions = ["Wallet", "Rewards"];
+  List<String> walletPages = ["Rewards", "Wallet", "Keys"];
   late TabController _tabController;
 
   @override
   void initState() {
-    _tabController = new TabController(length: 2, vsync: this);
+    _tabController = new TabController(length: 3, vsync: this);
 
     super.initState();
   }
@@ -40,10 +44,13 @@ class _WalletMainPageState extends State<WalletMainPage>
             indicatorColor: globalRed,
             tabs: [
               Tab(
-                text: 'Rewards',
+                text: walletPages[0],
               ),
               Tab(
-                text: 'Wallet',
+                text: walletPages[1],
+              ),
+              Tab(
+                text: walletPages[2],
               ),
             ],
             controller: _tabController,
@@ -60,6 +67,18 @@ class _WalletMainPageState extends State<WalletMainPage>
                     child: RewardsPage(),
                   ),
                   WalletPage(),
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                          create: (context) => TransactionBloc(
+                              repository: TransactionRepositoryImpl())),
+                      BlocProvider(
+                          create: (context) =>
+                              UserBloc(repository: UserRepositoryImpl())
+                                ..add(FetchMyAccountDataEvent())),
+                    ],
+                    child: KeyManagementPage(),
+                  ),
                 ],
                 controller: _tabController,
               ),

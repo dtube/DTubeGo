@@ -47,6 +47,9 @@ class TxData {
   Map<String, dynamic>? jsonmetadata;
   String? pa;
   String? pp;
+  String? id;
+  String? pub;
+  List<int>? types;
 
   TxData(
       {this.author,
@@ -61,7 +64,10 @@ class TxData {
       this.jsonmetadata,
       this.pp,
       this.pa,
-      this.burn});
+      this.burn,
+      this.id,
+      this.pub,
+      this.types});
 
   TxData.fromJson(Map<String, dynamic> json) {
     author = json['author'];
@@ -77,6 +83,9 @@ class TxData {
     pa = json['pa'];
     pp = json['pp'];
     burn = int.parse(json['burn']);
+    id = json['id'];
+    pub = json['pub'];
+    types = json['types'];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -120,6 +129,18 @@ class TxData {
     }
     if (this.burn != null) {
       data['burn'] = this.burn;
+    }
+
+    if (this.id != null) {
+      data['id'] = this.id;
+    }
+
+    if (this.pub != null) {
+      data['pub'] = this.pub;
+    }
+
+    if (this.types != null) {
+      data['types'] = this.types;
     }
 
     return data;

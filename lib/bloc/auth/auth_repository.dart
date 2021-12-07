@@ -4,11 +4,10 @@ import 'package:dtube_go/bloc/auth/auth_response_model.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/utils/privToPub.dart';
 import 'package:hex/hex.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-// TODO: refactor and put in the right place ;)
 
 import 'dart:typed_data';
 
@@ -82,16 +81,6 @@ class AuthRepositoryImpl implements AuthRepository {
       }
     }
     return _keyIsValid;
-  }
-
-  String privToPub(String privateKey) {
-    PrivateKey _pk = PrivateKey.fromHex(
-        getSecp256k1(), HEX.encode(bs58check.base58.decode(privateKey)));
-
-    var pub = base58.encode(
-        Uint8List.fromList(HEX.decode(_pk.publicKey.toCompressedHex())));
-
-    return pub;
   }
 
   void fetchAndStoreVerifiedUsers() async {
