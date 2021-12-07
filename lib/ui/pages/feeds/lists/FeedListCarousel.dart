@@ -30,7 +30,7 @@ class FeedListCarousel extends StatelessWidget {
       itemSelectedCallback; // only used in landscape mode for now
 
   Bool2VoidFunc scrollCallback;
-  late YoutubePlayerController _youtubePlayerController;
+
   String header;
 
   FeedListCarousel({
@@ -228,8 +228,6 @@ class FeedListCarousel extends StatelessWidget {
                           itemSelectedCallback: itemSelectedCallback,
                           userPage: true,
                         ),
-
-                        //Text(pos.toString())
                       );
                     }
                   } else {
