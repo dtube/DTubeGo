@@ -1,7 +1,7 @@
 import 'package:dtube_go/ui/pages/feeds/lists/FeedListCarousel.dart';
-import 'package:dtube_go/ui/pages/user/MenuButton.dart';
-import 'package:dtube_go/ui/pages/user/TopBarCustomClipper.dart';
-import 'package:dtube_go/ui/pages/user/TopBarCustomPainter.dart';
+import 'package:dtube_go/ui/pages/user/Widgets/MenuButton.dart';
+import 'package:dtube_go/ui/pages/user/Widgets/TopBarCustomClipper.dart';
+import 'package:dtube_go/ui/pages/user/Widgets/TopBarCustomPainter.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/UsersBlockButton.dart';
 import 'package:dtube_go/ui/widgets/Suggestions/UserList.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/UsersMoreInfoButton.dart';

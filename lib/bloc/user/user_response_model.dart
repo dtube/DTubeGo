@@ -257,8 +257,10 @@ class Additionals {
   String? displayName;
   String? accountType;
   List<String>? blocking;
+  List<String>? ytchannels;
 
-  Additionals({this.displayName, this.accountType, this.blocking});
+  Additionals(
+      {this.displayName, this.accountType, this.blocking, this.ytchannels});
 
   Additionals.fromJson(Map<String, dynamic> json) {
     displayName = json['displayName'] != null ? json['displayName'] : '';
@@ -269,6 +271,12 @@ class Additionals {
         blocking!.add(v);
       });
     }
+    ytchannels = [];
+    if (json['ytchannels'] != null && json['ytchannels'] != []) {
+      json['ytchannels'].forEach((v) {
+        ytchannels!.add(v);
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -276,6 +284,7 @@ class Additionals {
     data['displayName'] = this.displayName;
     data['accountType'] = this.accountType;
     data['blocking'] = this.blocking;
+    data['ytchannels'] = this.ytchannels;
 
     return data;
   }

@@ -13,7 +13,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 typedef Bool2VoidFunc = void Function(bool);
-typedef ListOfString2VoidFunc = void Function(List<String>);
 
 class MomentsList extends StatefulWidget {
   String feedType;

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 typedef Bool2VoidFunc = void Function(bool);
-typedef ListOfString2VoidFunc = void Function(List<String>);
 
 class FeedViewBase extends StatefulWidget {
   String feedType;

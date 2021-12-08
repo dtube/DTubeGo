@@ -3,7 +3,7 @@ import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/pages/accountHistory/AccountHistory.dart';
-import 'package:dtube_go/ui/pages/user/ProfileSettings.dart';
+import 'package:dtube_go/ui/pages/user/Pages/ProfileSettings.dart';
 import 'package:dtube_go/ui/pages/wallet/Widgets/transferDialog.dart';
 
 import 'package:responsive_sizer/responsive_sizer.dart';

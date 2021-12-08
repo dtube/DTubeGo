@@ -30,5 +30,16 @@ class ThirdPartyMetadataBloc
         yield ThirdPartyMetadataErrorState(message: 'unknown error');
       }
     }
+    if (event is CheckIfBioContainsVerificationCodeEvent) {
+      yield ThirdPartyMetadataLoadingState();
+      try {
+        bool bioContainsCode = await repository.getChannelCodeInserted(
+            event.channelId, event.code);
+        yield ThirdPartyMetadataBioContainsCodeLoadedState(
+            value: bioContainsCode);
+      } catch (e) {
+        yield ThirdPartyMetadataErrorState(message: 'incorrect channel id');
+      }
+    }
   }
 }
