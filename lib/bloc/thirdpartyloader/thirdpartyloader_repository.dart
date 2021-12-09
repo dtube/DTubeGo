@@ -30,7 +30,8 @@ class ThirdPartyMetadataRepositoryImpl implements ThirdPartyMetadataRepository {
           oc: false,
           nsfw: false,
           unlist: false,
-          burnDTC: 0.0);
+          burnDTC: 0.0,
+          channelId: video.channelId.value);
       yt.close();
       return _meta;
     } catch (e) {

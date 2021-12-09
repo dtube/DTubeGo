@@ -5,10 +5,16 @@ import 'package:dtube_go/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/res/secretConfigValues.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/upload/uploadForm.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class Wizard3rdParty extends StatefulWidget {
   Wizard3rdParty({Key? key, required this.uploaderCallback}) : super(key: key);
@@ -23,6 +29,7 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
   TextEditingController _foreignUrlController = new TextEditingController();
   late SettingsBloc _settingsBloc;
   late UserBloc _userBloc;
+  late UserBloc _userBloc2;
   late HivesignerBloc _hivesignerBloc;
   late ThirdPartyMetadataBloc _thirdPartyBloc;
 
@@ -63,7 +70,9 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
     _settingsBloc.add(FetchSettingsEvent());
     _thirdPartyBloc = BlocProvider.of<ThirdPartyMetadataBloc>(context);
     _userBloc = BlocProvider.of<UserBloc>(context);
-    _userBloc.add(FetchDTCVPEvent());
+
+    // _userBloc.add(FetchDTCVPEvent());
+    _userBloc.add(FetchMyAccountDataEvent());
     _hivesignerBloc = BlocProvider.of<HivesignerBloc>(context);
 
     loadHiveSignerAccessToken();
@@ -92,90 +101,164 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text("1. Video", style: TextStyle(fontSize: 18)),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width - 150,
-                child: TextField(
-                    decoration: new InputDecoration(
-                        labelText:
-                            "youtube url"), // TODO: support more foreign systems
-                    controller: _foreignUrlController,
-                    style: Theme.of(context).textTheme.bodyText1),
-              ),
-              InputChip(
-                  label: BlocBuilder<ThirdPartyMetadataBloc,
-                          ThirdPartyMetadataState>(
+    return BlocBuilder<UserBloc, UserState>(
+        bloc: _userBloc,
+        builder: (context, stateuserdata) {
+          if (stateuserdata is UserLoadingState) {
+            return DtubeLogoPulseWithSubtitle(
+                subtitle: "loading user data", size: 20.w);
+          } else if (stateuserdata is UserLoadedState) {
+            return SingleChildScrollView(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 95.w,
+                        child: DTubeFormCard(
+                          avoidAnimation: true,
+                          waitBeforeFadeIn: Duration(seconds: 0),
+                          childs: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text("1. External URL",
+                                  style: Theme.of(context).textTheme.headline5),
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                    width: 10.w,
+                                    child: FaIcon(FontAwesomeIcons.youtube,
+                                        color: globalRed)),
+                                Container(
+                                  width: 60.w,
+                                  child: TextField(
+                                      decoration: new InputDecoration(
+                                          labelText:
+                                              "enter video url "), // TODO: support more foreign systems
+                                      controller: _foreignUrlController,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1),
+                                ),
+                              ],
+                            ),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: InputChip(
+                                  backgroundColor: globalRed,
+                                  label: BlocBuilder<ThirdPartyMetadataBloc,
+                                          ThirdPartyMetadataState>(
+                                      bloc: _thirdPartyBloc,
+                                      builder: (context, state) {
+                                        if (state
+                                            is ThirdPartyMetadataInitialState) {
+                                          return Text("load data");
+                                        } else if (state
+                                            is ThirdPartyMetadataLoadedState) {
+                                          return Text("reload data");
+                                        } else if (state
+                                            is ThirdPartyMetadataErrorState) {
+                                          print(state.message);
+                                          return Text("error data");
+                                        } else {
+                                          return CircularProgressIndicator();
+                                        }
+                                      }),
+                                  onPressed: () async {
+                                    _thirdPartyBloc.add(
+                                        LoadThirdPartyMetadataEvent(
+                                            _foreignUrlController.value.text));
+                                  }),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  BlocBuilder<ThirdPartyMetadataBloc, ThirdPartyMetadataState>(
                       bloc: _thirdPartyBloc,
                       builder: (context, state) {
-                        if (state is ThirdPartyMetadataInitialState) {
-                          return Text("load data");
+                        if (state is ThirdPartyMetadataLoadingState) {
+                          return Container(
+                            width: 95.w,
+                            child: DTubeFormCard(
+                                avoidAnimation: true,
+                                waitBeforeFadeIn: Duration(seconds: 0),
+                                childs: [Text("Loading video data...")]),
+                          );
                         } else if (state is ThirdPartyMetadataLoadedState) {
-                          return Text("reload data");
-                        } else if (state is ThirdPartyMetadataErrorState) {
-                          print(state.message);
-                          return Text("error data");
-                        } else {
-                          return CircularProgressIndicator();
+                          if (stateuserdata.user.jsonString != null &&
+                              stateuserdata.user.jsonString!.additionals !=
+                                  null &&
+                              stateuserdata.user.jsonString!.additionals!
+                                      .ytchannels !=
+                                  null &&
+                              stateuserdata
+                                  .user.jsonString!.additionals!.ytchannels!
+                                  .contains(encryptYTChannelId(
+                                      stateuserdata.user,
+                                      state.metadata.channelId))) {
+                            _uploadData = UploadData(
+                                link: "",
+                                title: state.metadata.title,
+                                description: state.metadata.description,
+                                tag: "",
+                                vpPercent: 0.0,
+                                vpBalance: 0,
+                                burnDtc: 0,
+                                dtcBalance: 0,
+                                duration: state.metadata.duration.inSeconds
+                                    .toString(),
+                                thumbnailLocation: state.metadata.thumbUrl,
+                                localThumbnail: false,
+                                videoLocation: state.metadata.sId,
+                                localVideoFile: false,
+                                originalContent: false,
+                                nSFWContent: false,
+                                unlistVideo: false,
+                                videoSourceHash: "",
+                                video240pHash: "",
+                                video480pHash: "",
+                                videoSpriteHash: "",
+                                thumbnail640Hash: "",
+                                thumbnail210Hash: "",
+                                isEditing: false,
+                                isPromoted: false,
+                                parentAuthor: "",
+                                parentPermlink: "",
+                                uploaded: false,
+                                crossPostToHive: _uploadData.crossPostToHive);
+                            return BlocProvider(
+                              create: (context) =>
+                                  UserBloc(repository: UserRepositoryImpl()),
+                              child: UploadForm(
+                                uploadData: _uploadData,
+                                callback: childCallback,
+                              ),
+                            );
+                          } else {
+                            return Container(
+                              width: 95.w,
+                              child: DTubeFormCard(
+                                avoidAnimation: true,
+                                waitBeforeFadeIn: Duration(seconds: 0),
+                                childs: [
+                                  Text(
+                                      "The owning Youtube channel is not connected to your Dtube profile. Please verify the channel in your profile settings.")
+                                ],
+                              ),
+                            );
+                          }
                         }
-                      }),
-                  onPressed: () async {
-                    _thirdPartyBloc.add(LoadThirdPartyMetadataEvent(
-                        _foreignUrlController.value.text));
-                  }),
-            ],
-          ),
-          BlocBuilder<ThirdPartyMetadataBloc, ThirdPartyMetadataState>(
-            bloc: _thirdPartyBloc,
-            builder: (context, state) {
-              if (state is ThirdPartyMetadataLoadedState) {
-                _uploadData = UploadData(
-                    link: "",
-                    title: state.metadata.title,
-                    description: state.metadata.description,
-                    tag: "",
-                    vpPercent: 0.0,
-                    vpBalance: 0,
-                    burnDtc: 0,
-                    dtcBalance: 0,
-                    duration: state.metadata.duration.inSeconds.toString(),
-                    thumbnailLocation: state.metadata.thumbUrl,
-                    localThumbnail: false,
-                    videoLocation: state.metadata.sId,
-                    localVideoFile: false,
-                    originalContent: false,
-                    nSFWContent: false,
-                    unlistVideo: false,
-                    videoSourceHash: "",
-                    video240pHash: "",
-                    video480pHash: "",
-                    videoSpriteHash: "",
-                    thumbnail640Hash: "",
-                    thumbnail210Hash: "",
-                    isEditing: false,
-                    isPromoted: false,
-                    parentAuthor: "",
-                    parentPermlink: "",
-                    uploaded: false,
-                    crossPostToHive: _uploadData.crossPostToHive);
-                return UploadForm(
-                  uploadData: _uploadData,
-                  callback: childCallback,
-                );
-              } else {
-                return SizedBox(height: 0);
-              }
-            },
-          )
-        ],
-      ),
-    );
+                        return Text("Please enter video url");
+                      })
+                ]));
+          }
+          return Text("unknown in user");
+        });
   }
 }

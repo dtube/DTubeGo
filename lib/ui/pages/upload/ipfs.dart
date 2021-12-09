@@ -8,9 +8,11 @@ import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_event.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/ui/pages/upload/uploadForm.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class WizardIPFS extends StatefulWidget {
   WizardIPFS({Key? key, required this.uploaderCallback}) : super(key: key);
