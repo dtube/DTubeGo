@@ -622,15 +622,10 @@ class _VotesOverviewState extends State<VotesOverview> {
       backgroundColor: globalAlmostBlack,
       content: Builder(
         builder: (context) {
-          return
-              //  Container(
-              //   height: 45.h,
-              //   width: 100.w,
-              //   child:
-              SingleChildScrollView(
+          return SingleChildScrollView(
             child: Container(
               height: 45.h,
-              width: 100.w,
+              width: 90.w,
               child: ListView.builder(
                 itemCount: _allVotes.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -689,7 +684,7 @@ class _VotesOverviewState extends State<VotesOverview> {
                               ? FontAwesomeIcons.thumbsUp
                               : FontAwesomeIcons.flag),
                           Container(
-                            width: 30.w,
+                            width: 20.w,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
