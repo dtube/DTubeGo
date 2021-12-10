@@ -723,7 +723,8 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                 shadowColor: Colors.black,
                                 size: globalIconSizeSmall),
                           ),
-                          buttonSize: globalIconSizeSmall * 2,
+                          buttonSize: Size(
+                              globalIconSizeSmall * 2, globalIconSizeSmall * 2),
                           useRotationAnimation: false,
                           direction: SpeedDialDirection.up,
                           visible: true,

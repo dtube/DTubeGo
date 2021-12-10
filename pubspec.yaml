@@ -71,7 +71,7 @@ dependencies:
   font_awesome_flutter: ^9.2.0 # icons
   google_fonts: ^2.1.0
   rflutter_alert: ^2.0.2
-  flutter_speed_dial: ^4.6.6 # drop out menu
+  flutter_speed_dial: ^5.0.0 # drop out menu
   chips_input: ^0.0.6
   textfield_tags: ^1.4.2
 
