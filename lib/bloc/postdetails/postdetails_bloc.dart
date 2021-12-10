@@ -8,27 +8,20 @@ import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 class PostBloc extends Bloc<PostEvent, PostState> {
   PostRepository repository;
 
-  PostBloc({required this.repository}) : super(PostInitialState());
-
-  // @override
-
-  // PostState get initialState => PostInitialState();
-
-  @override
-  Stream<PostState> mapEventToState(PostEvent event) async* {
-    String _avalonApiNode = await sec.getNode();
-    String? _applicationUser = await sec.getUsername();
-    if (event is FetchPostEvent) {
-      yield PostLoadingState();
+  PostBloc({required this.repository}) : super(PostInitialState()) {
+    on<FetchPostEvent>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      String? _applicationUser = await sec.getUsername();
+      emit(PostLoadingState());
       try {
         Post post = await repository.getPost(
             _avalonApiNode, event.author, event.link, _applicationUser);
 
-        yield PostLoadedState(post: post);
+        emit(PostLoadedState(post: post));
       } catch (e) {
         print(e.toString());
-        yield PostErrorState(message: e.toString());
+        emit(PostErrorState(message: e.toString()));
       }
-    }
+    });
   }
 }

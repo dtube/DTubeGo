@@ -7,16 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  SettingsBloc() : super(SettingsInitialState());
-
-  // @override
-
-  // SettingsState get initialState => SettingsInitialState();
-
-  @override
-  Stream<SettingsState> mapEventToState(SettingsEvent event) async* {
-    if (event is FetchSettingsEvent) {
-      yield SettingsLoadingState();
+  SettingsBloc() : super(SettingsInitialState()) {
+    on<FetchSettingsEvent>((event, emit) async {
+      emit(SettingsLoadingState());
       try {
         String? username = await sec.getUsername();
 
@@ -61,13 +54,14 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           sec.settingKey_hiveSignerDefaultTags:
               await sec.getHiveSignerDefaultTags(),
         };
-        yield SettingsLoadedState(settings: newSettings);
+        emit(SettingsLoadedState(settings: newSettings));
       } catch (e) {
-        yield SettingsErrorState(message: 'unknown error');
+        emit(SettingsErrorState(message: 'unknown error'));
       }
-    }
-    if (event is PushSettingsEvent) {
-      yield SettingsSavingState();
+    });
+
+    on<PushSettingsEvent>((event, emit) async {
+      emit(SettingsSavingState());
       try {
         await sec.persistGeneralSettings(
             event.newSettings[sec.settingKey_showHidden]!,
@@ -105,21 +99,21 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
             event.newSettings[sec.settingKey_hiveSignerDefaultCommunity]!,
             event.newSettings[sec.settingKey_hiveSignerDefaultTags]!);
 
-        yield SettingsSavedState(settings: event.newSettings);
+        emit(SettingsSavedState(settings: event.newSettings));
         Phoenix.rebirth(event.context);
       } catch (e) {
-        yield SettingsErrorState(message: 'unknown error');
+        emit(SettingsErrorState(message: 'unknown error'));
       }
-    }
-    if (event is PushNewPinEvent) {
-      yield SettingsSavingState();
+    });
+    on<PushNewPinEvent>((event, emit) async {
+      emit(SettingsSavingState());
       try {
         await sec.persistPinCode(event.newPin);
 
-        yield PinSavedState();
+        emit(PinSavedState());
       } catch (e) {
-        yield SettingsErrorState(message: 'unknown error');
+        emit(SettingsErrorState(message: 'unknown error'));
       }
-    }
+    });
   }
 }

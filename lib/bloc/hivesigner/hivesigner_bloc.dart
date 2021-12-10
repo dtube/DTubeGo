@@ -11,38 +11,32 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class HivesignerBloc extends Bloc<HivesignerEvent, HivesignerState> {
   HivesignerRepository repository;
 
-  HivesignerBloc({required this.repository}) : super(HivesignerInitialState());
-
-  //@override
-
-  //HivesignerState get initialState => HivesignerInitialState();
-  // TODO: error handling
-  @override
-  Stream<HivesignerState> mapEventToState(HivesignerEvent event) async* {
-    if (event is CheckAccessToken) {
-      yield HiveSignerAccessTokenLoadingState();
+  HivesignerBloc({required this.repository}) : super(HivesignerInitialState()) {
+    on<CheckAccessToken>((event, emit) async {
+      emit(HiveSignerAccessTokenLoadingState());
       bool currentAccessTokenIsValid =
           await repository.checkCurrentAccessToken();
       if (currentAccessTokenIsValid) {
-        yield HiveSignerAccessTokenValidState();
+        emit(HiveSignerAccessTokenValidState());
       } else {
-        yield HiveSignerAccessTokenInvalidState(
-            message: 'expired token or not set');
+        emit(HiveSignerAccessTokenInvalidState(
+            message: 'expired token or not set'));
         try {
           bool newAccessTokenCreated =
               await repository.requestNewAccessToken(event.hiveSignerUsername);
           if (newAccessTokenCreated) {
-            yield HiveSignerAccessTokenValidState();
+            emit(HiveSignerAccessTokenValidState());
           } else {
-            yield HivesignerErrorState(message: 'unknown error');
+            emit(HivesignerErrorState(message: 'unknown error'));
           }
         } on PlatformException catch (e) {
-          HivesignerErrorState(message: e.toString());
+          emit(HivesignerErrorState(message: e.toString()));
         }
       }
-    }
-    if (event is SendPostToHive) {
-      yield HiveSignerTransactionPreparing();
+    });
+
+    on<SendPostToHive>((event, emit) async {
+      emit(HiveSignerTransactionPreparing());
       String transactionBody = await repository.preparePostTransaction(
           event.permlink,
           event.postTitle,
@@ -53,14 +47,14 @@ class HivesignerBloc extends Bloc<HivesignerEvent, HivesignerState> {
           event.storageType,
           event.tag,
           event.dtubeuser);
-      yield HiveSignerTransactionBroadcasting();
+      emit(HiveSignerTransactionBroadcasting());
       bool postPublished =
           await repository.broadcastPostToHive(transactionBody);
       if (postPublished) {
-        yield HiveSignerTransactionSent();
+        emit(HiveSignerTransactionSent());
       } else {
-        yield HiveSignerTransactionError(message: 'unknown error');
+        emit(HiveSignerTransactionError(message: 'unknown error'));
       }
-    }
+    });
   }
 }

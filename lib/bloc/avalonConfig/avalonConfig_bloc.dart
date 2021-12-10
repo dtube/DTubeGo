@@ -9,24 +9,17 @@ class AvalonConfigBloc extends Bloc<AvalonConfigEvent, AvalonConfigState> {
   AvalonConfigRepository repository;
 
   AvalonConfigBloc({required this.repository})
-      : super(AvalonConfigInitialState());
-
-  // @override
-
-  // AvalonConfigState get initialState => AvalonConfigInitialState();
-
-  @override
-  Stream<AvalonConfigState> mapEventToState(AvalonConfigEvent event) async* {
-    String _avalonApiNode = await sec.getNode();
-    if (event is FetchAvalonConfigEvent) {
-      yield AvalonConfigLoadingState();
+      : super(AvalonConfigInitialState()) {
+    on<FetchAvalonConfigEvent>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      emit(AvalonConfigLoadingState());
       try {
         AvalonConfig config = await repository.getAvalonConfig(_avalonApiNode);
 
-        yield AvalonConfigLoadedState(config: config);
+        emit(AvalonConfigLoadedState(config: config));
       } catch (e) {
-        yield AvalonConfigErrorState(message: e.toString());
+        emit(AvalonConfigErrorState(message: e.toString()));
       }
-    }
+    });
   }
 }

@@ -20,8 +20,8 @@ class NotificationButton extends StatefulWidget {
 class _NotificationButtonState extends State<NotificationButton> {
   @override
   void initState() {
-    BlocProvider.of<NotificationBloc>(context).add(FetchNotificationsEvent([]));
     super.initState();
+    BlocProvider.of<NotificationBloc>(context).add(FetchNotificationsEvent([]));
   }
 
   @override

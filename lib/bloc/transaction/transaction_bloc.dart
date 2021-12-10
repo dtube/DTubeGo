@@ -17,32 +17,27 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   TransactionRepository repository;
 
   TransactionBloc({required this.repository})
-      : super(TransactionInitialState());
+      : super(TransactionInitialState()) {
+    on<SetInitState>((event, emit) async {
+      emit(TransactionInitialState());
+    });
 
-  // @override
-  // TransactionState get initialState => TransactionInitialState();
-
-  @override
-  Stream<TransactionState> mapEventToState(TransactionEvent event) async* {
-    final String _avalonApiNode = await sec.getNode();
-    final String? _applicationUser = await sec.getUsername();
-    final String? _privKey = await sec.getPrivateKey();
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-    if (event is SetInitState) {
-      yield TransactionInitialState();
-    }
-    if (event is TransactionPreprocessing) {
-      yield TransactionPreprocessingState(txType: event.txType);
-    }
-    if (event is TransactionPreprocessingFailed) {
-      yield TransactionError(
+    on<TransactionPreprocessing>((event, emit) async {
+      emit(TransactionPreprocessingState(txType: event.txType));
+    });
+    on<TransactionPreprocessingFailed>((event, emit) async {
+      emit(TransactionError(
           message: "error preparing transaction\n" + event.errorMessage,
           txType: event.txType,
-          isParentContent: false);
-    }
+          isParentContent: false));
+    });
 
-    if (event is SignAndSendTransactionEvent) {
+    on<SignAndSendTransactionEvent>((event, emit) async {
+      final String _avalonApiNode = await sec.getNode();
+      final String? _applicationUser = await sec.getUsername();
+      final String? _privKey = await sec.getPrivateKey();
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
       String result = "";
       //for (var i = 0; i < 5; i++) {
       //yield TransactionSinging(tx: event.tx);
@@ -53,7 +48,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             .then((value) => repository.send(_avalonApiNode, value));
 
         if (int.tryParse(result) != null) {
-          yield TransactionSent(
+          emit(TransactionSent(
               block: int.parse(result),
               successMessage: txTypeFriendlyDescriptionActions[event.tx.type]!
                   .replaceAll(
@@ -67,29 +62,34 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               txType: event.tx.type,
               isParentContent:
                   (event.tx.data.pa == "" || event.tx.data.pa == null) &&
-                      (event.tx.type == 4 || event.tx.type == 13));
+                      (event.tx.type == 4 || event.tx.type == 13)));
         } else {
-          yield TransactionError(
+          emit(TransactionError(
               message: result,
               txType: event.tx.type,
               isParentContent:
                   ((event.tx.data.pa == "" || event.tx.data.pa == null) &&
-                      (event.tx.type == 4 || event.tx.type == 13)));
+                      (event.tx.type == 4 || event.tx.type == 13))));
         }
       } catch (e) {
-        yield TransactionError(
+        emit(TransactionError(
             message: e.toString(),
             txType: event.tx.type,
             isParentContent:
                 ((event.tx.data.pa == "" || event.tx.data.pa == null) &&
-                    (event.tx.type == 4 || event.tx.type == 13)));
+                    (event.tx.type == 4 || event.tx.type == 13))));
       }
-    }
+    });
 
-    if (event is ChangeProfileData) {
+    on<ChangeProfileData>((event, emit) async {
+      final String _avalonApiNode = await sec.getNode();
+      final String? _applicationUser = await sec.getUsername();
+      final String? _privKey = await sec.getPrivateKey();
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
       int _txType = 6;
       User _userData = event.userData;
-      yield TransactionPreprocessingState(txType: _txType);
+      emit(TransactionPreprocessingState(txType: _txType));
       Map<String, dynamic> jsonMetadata = {};
 
       TxData _txData = new TxData(
@@ -107,22 +107,27 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             .sign(_tx, _applicationUser!, _privKey!)
             .then((value) => repository.send(_avalonApiNode, value));
       } catch (e) {
-        yield TransactionError(
+        emit(TransactionError(
             message: e.toString(),
             txType: _tx.type,
             isParentContent: ((_tx.data.pa == "" || _tx.data.pa == null) &&
-                (_tx.type == 4 || _tx.type == 13)));
+                (_tx.type == 4 || _tx.type == 13))));
       }
 
-      yield TransactionSent(
+      emit(TransactionSent(
           block: _block,
           isParentContent: false,
           successMessage: "profile updated",
-          txType: _txType);
+          txType: _txType));
       Phoenix.rebirth(event.context);
-    }
+    });
 
-    if (event is SendCommentEvent) {
+    on<SendCommentEvent>((event, emit) async {
+      final String _avalonApiNode = await sec.getNode();
+      final String? _applicationUser = await sec.getUsername();
+      final String? _privKey = await sec.getPrivateKey();
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
       bool errorOnUpload = false;
       String _hiveAuthor = await sec.getHiveSignerUsername();
       UploadData _upload = event.uploadData;
@@ -331,7 +336,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               .then((value) => repository.send(_avalonApiNode, value));
           print(result);
           if (!result.contains("error") && int.tryParse(result) != null) {
-            yield TransactionSent(
+            emit(TransactionSent(
                 block: int.parse(result),
                 successMessage: txTypeFriendlyDescriptionActions[_tx.type]!,
                 txType: _tx.type,
@@ -341,7 +346,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                         (_tx.type == 4 || _tx.type == 13) &&
                         _tx.data.link != null
                     ? _applicationUser + '/' + _tx.data.link!
-                    : null);
+                    : null));
 
             if (_upload.crossPostToHive) {
               HivesignerBloc _hiveSignerBloc =
@@ -371,23 +376,23 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               }
             }
           } else {
-            yield TransactionError(
+            emit(TransactionError(
                 message: result,
                 txType: 3,
-                isParentContent: event.uploadData.parentPermlink == "");
+                isParentContent: event.uploadData.parentPermlink == ""));
           }
         } catch (e) {
-          yield TransactionError(
+          emit(TransactionError(
               message: e.toString(),
               txType: 3,
-              isParentContent: event.uploadData.parentPermlink == "");
+              isParentContent: event.uploadData.parentPermlink == ""));
         }
       } else {
-        yield TransactionError(
+        emit(TransactionError(
             message: "Upload failed - please try again",
             txType: 3,
-            isParentContent: event.uploadData.parentPermlink == "");
+            isParentContent: event.uploadData.parentPermlink == ""));
       }
-    }
+    });
   }
 }

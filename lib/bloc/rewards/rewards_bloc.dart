@@ -8,26 +8,19 @@ import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 class RewardsBloc extends Bloc<RewardsEvent, RewardsState> {
   RewardsRepository repository;
 
-  RewardsBloc({required this.repository}) : super(RewardsInitialState());
-
-  // @override
-
-  // RewardsState get initialState => RewardsInitialState();
-
-  @override
-  Stream<RewardsState> mapEventToState(RewardsEvent event) async* {
-    String _avalonApiNode = await sec.getNode();
-    String? _applicationUser = await sec.getUsername();
-    if (event is FetchRewardsEvent) {
-      yield RewardsLoadingState();
+  RewardsBloc({required this.repository}) : super(RewardsInitialState()) {
+    on<FetchRewardsEvent>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      String? _applicationUser = await sec.getUsername();
+      emit(RewardsLoadingState());
       try {
         List<Reward> rewardList = await repository.getRewards(
             _avalonApiNode, _applicationUser, event.rewardState);
 
-        yield RewardsLoadedState(rewardList: rewardList);
+        emit(RewardsLoadedState(rewardList: rewardList));
       } catch (e) {
-        yield RewardsErrorState(message: e.toString());
+        emit(RewardsErrorState(message: e.toString()));
       }
-    }
+    });
   }
 }

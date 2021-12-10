@@ -17,26 +17,23 @@ import 'package:video_compress/video_compress.dart';
 class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
   IPFSUploadRepository repository;
 
-  IPFSUploadBloc({required this.repository}) : super(IPFSUploadInitialState());
+  IPFSUploadBloc({required this.repository}) : super(IPFSUploadInitialState()) {
+    on<IPFSUploaderInitState>((event, emit) async {
+      emit(IPFSUploadInitialState());
+    });
 
-  @override
-  Stream<IPFSUploadState> mapEventToState(IPFSUploadEvent event) async* {
-    String _uploadEndpoint = "";
-    String _thumbnailOnlineLocation = "";
-    String _videoUploadToken = "";
-    String _newThumbnail = "";
-    File _newFile;
-    late Map<String, dynamic> _uploadStatusResponse;
+    on<UploadVideo>((event, emit) async {
+      String _uploadEndpoint = "";
+      String _thumbnailOnlineLocation = "";
+      String _videoUploadToken = "";
+      String _newThumbnail = "";
+      File _newFile;
+      late Map<String, dynamic> _uploadStatusResponse;
 
-    late UploadData _uploadData;
-    if (event is IPFSUploaderInitState) {
-      yield IPFSUploadInitialState();
-    }
-
-    if (event is UploadVideo) {
+      late UploadData _uploadData;
       AppStateBloc appStateBloc = BlocProvider.of<AppStateBloc>(event.context);
       TransactionBloc txBloc = BlocProvider.of<TransactionBloc>(event.context);
-      yield IPFSUploadVideoPreProcessingState();
+      emit(IPFSUploadVideoPreProcessingState());
       _uploadData = event.uploadData;
       String uploadErrorMessage = "";
       int uploadErrorCount = 0;
@@ -57,7 +54,7 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
       // notify AppStateBloc about finishing transcoding and thumbnail creation
       appStateBloc.add(UploadStateChangedEvent(
           uploadState: UploadProcessingState(progressPercent: 10)));
-      yield IPFSUploadVideoPreProcessedState(compressedFile: _newFile);
+      emit(IPFSUploadVideoPreProcessedState(compressedFile: _newFile));
 
       // some upload endpoints throw errors
       // we try to upload max 5 times until we show an error
@@ -74,7 +71,7 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
             _videoUploadToken =
                 await repository.uploadVideo(_newFile.path, _uploadEndpoint);
             print("TOKEN: " + _videoUploadToken);
-            yield IPFSUploadVideoUploadedState(uploadToken: _videoUploadToken);
+            emit(IPFSUploadVideoUploadedState(uploadToken: _videoUploadToken));
 
             // monitor the upload status
             do {
@@ -98,13 +95,13 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
                     uploadState: UploadProcessingState(progressPercent: 80)));
               }
 
-              yield IPFSUploadVideoPostProcessingState(
-                  processingResponse: _uploadStatusResponse);
+              emit(IPFSUploadVideoPostProcessingState(
+                  processingResponse: _uploadStatusResponse));
             } while (_uploadStatusResponse["finished"] == false);
 
             // video is uploaded
-            yield IPFSUploadVideoPostProcessedState(
-                processingResponse: _uploadStatusResponse);
+            emit(IPFSUploadVideoPostProcessedState(
+                processingResponse: _uploadStatusResponse));
             var statusInfo = _uploadStatusResponse;
 
             // add ipfs info to the uploadData
@@ -130,7 +127,7 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
           _thumbnailOnlineLocation =
               await repository.uploadThumbnail(_newThumbnail);
 
-          yield IPFSUploadThumbnailUploadedState();
+          emit(IPFSUploadThumbnailUploadedState());
           // add thumbnail url to the uploadData
           _uploadData.thumbnailLocation = _thumbnailOnlineLocation;
 
@@ -159,6 +156,6 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
         txBloc.add(TransactionPreprocessingFailed(
             errorMessage: uploadErrorMessage, txType: 3));
       }
-    }
+    });
   }
 }
