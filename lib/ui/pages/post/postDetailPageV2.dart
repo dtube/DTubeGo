@@ -453,7 +453,7 @@ class _PostDetailsState extends State<PostDetails> {
                                               _defaultVoteTipPosts,
                                           scale: 0.8,
                                           isPost: true,
-                                          iconColor: Colors.white,
+                                          iconColor: globalAlmostWhite,
                                           focusVote: widget.directFocus,
                                           fadeInFromLeft: false),
                                     );
@@ -728,7 +728,7 @@ class _VotesOverviewState extends State<VotesOverview> {
                                             child: ShadowedIcon(
                                               icon: FontAwesomeIcons.bolt,
                                               shadowColor: Colors.black,
-                                              color: Colors.white,
+                                              color: globalAlmostWhite,
                                               size: 5.w,
                                             ),
                                           ),

@@ -24,10 +24,10 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
     SpeedDialChild(
         child: ShadowedIcon(
             icon: FontAwesomeIcons.search,
-            color: Colors.white,
+            color: globalAlmostWhite,
             shadowColor: Colors.black,
             size: globalIconSizeMedium),
-        foregroundColor: Colors.white,
+        foregroundColor: globalAlmostWhite,
         elevation: 0,
         backgroundColor: Colors.transparent,
         onTap: () {
@@ -45,10 +45,10 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
     SpeedDialChild(
         child: ShadowedIcon(
             icon: FontAwesomeIcons.wallet,
-            color: Colors.white,
+            color: globalAlmostWhite,
             shadowColor: Colors.black,
             size: globalIconSizeMedium),
-        foregroundColor: Colors.white,
+        foregroundColor: globalAlmostWhite,
         elevation: 0,
         backgroundColor: Colors.transparent,
         onTap: () {
@@ -59,10 +59,10 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
     SpeedDialChild(
         child: ShadowedIcon(
             icon: FontAwesomeIcons.question,
-            color: Colors.white,
+            color: globalAlmostWhite,
             shadowColor: Colors.black,
             size: globalIconSizeMedium),
-        foregroundColor: Colors.white,
+        foregroundColor: globalAlmostWhite,
         elevation: 0,
         backgroundColor: Colors.transparent,
         onTap: () {
@@ -75,10 +75,10 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
     SpeedDialChild(
         child: ShadowedIcon(
             icon: FontAwesomeIcons.cog,
-            color: Colors.white,
+            color: globalAlmostWhite,
             shadowColor: Colors.black,
             size: globalIconSizeMedium),
-        foregroundColor: Colors.white,
+        foregroundColor: globalAlmostWhite,
         elevation: 0,
         backgroundColor: Colors.transparent,
         onTap: () {
@@ -93,7 +93,7 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
   return SpeedDial(
       child: ShadowedIcon(
           icon: FontAwesomeIcons.bars,
-          color: Colors.white,
+          color: globalAlmostWhite,
           shadowColor: Colors.black,
           size: globalIconSizeMedium),
       activeIcon: FontAwesomeIcons.chevronLeft,
@@ -108,7 +108,7 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
       tooltip: 'menu',
       heroTag: 'main menu button',
       backgroundColor: Colors.transparent,
-      foregroundColor: Colors.white,
+      foregroundColor: globalAlmostWhite,
       elevation: 0.0,
       shape: CircleBorder(),
       gradientBoxShape: BoxShape.circle,

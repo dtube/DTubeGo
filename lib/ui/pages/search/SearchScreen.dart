@@ -102,7 +102,7 @@ class SearchScreenState extends State<SearchScreen> {
         label: FaIcon(
           _searchEntityIcons[i],
           size: globalIconSizeSmall,
-          color: Colors.white,
+          color: globalAlmostWhite,
         ),
         elevation: 0,
         pressElevation: 5,

@@ -48,7 +48,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
       icon: Center(
         child: new ShadowedIcon(
           icon: FontAwesomeIcons.alignJustify,
-          color: Colors.white,
+          color: globalAlmostWhite,
           shadowColor: Colors.black,
           size: globalIconSizeMedium,
         ),
@@ -59,7 +59,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
       icon: Center(
         child: new ShadowedIcon(
           icon: FontAwesomeIcons.globeAfrica,
-          color: Colors.white,
+          color: globalAlmostWhite,
           shadowColor: Colors.black,
           size: globalIconSizeMedium,
         ),
@@ -98,7 +98,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
             return Center(
               child: new ShadowedIcon(
                 icon: FontAwesomeIcons.plus,
-                color: Colors.white,
+                color: globalAlmostWhite,
                 shadowColor: Colors.black,
                 size: globalIconSizeMedium,
               ),
@@ -112,7 +112,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
       icon: Center(
         child: new ShadowedIcon(
           icon: FontAwesomeIcons.eye,
-          color: Colors.white,
+          color: globalAlmostWhite,
           shadowColor: Colors.black,
           size: globalIconSizeMedium,
         ),
@@ -121,7 +121,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
     BottomNavigationBarItem(
       label: '',
       icon: CircleAvatar(
-        backgroundColor: Colors.white,
+        backgroundColor: globalAlmostWhite,
         radius: globalIconSizeMedium * 0.6,
         child: AccountAvatarBase(
             username: "you",
@@ -285,7 +285,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
         bottomNavigationBar: Container(
           height: globalIconSizeMedium * 2.4,
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: globalAlmostWhite,
               gradient: LinearGradient(
                   begin: FractionalOffset.topCenter,
                   end: FractionalOffset.bottomCenter,

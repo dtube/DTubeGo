@@ -980,7 +980,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                                   tagCancelIcon: Icon(
                                                       Icons.cancel,
                                                       size: 4.w,
-                                                      color: Colors.white),
+                                                      color: globalAlmostWhite),
                                                 ),
                                                 onTag: (tag) {
                                                   setState(() {

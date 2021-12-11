@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
@@ -154,7 +155,7 @@ class FeedList extends StatelessWidget {
                 height: feedType == "UserFeed" ? 0.h : 15.h,
                 width: 200.w,
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: globalAlmostWhite,
                     gradient: LinearGradient(
                         begin: FractionalOffset.topCenter,
                         end: FractionalOffset.bottomCenter,

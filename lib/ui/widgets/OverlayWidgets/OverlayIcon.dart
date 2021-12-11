@@ -22,7 +22,7 @@ class ShadowedIcon extends StatelessWidget {
       size: size,
       shadows: [
         Shadow(color: shadowColor, offset: Offset(0, 0), blurRadius: 2),
-        //Shadow(color: Colors.white, offset: Offset(0, 0), blurRadius: 10),
+        //Shadow(color: globalAlmostWhite, offset: Offset(0, 0), blurRadius: 10),
         Shadow(
           offset: Offset(4.0, 3.0),
           blurRadius: 10,
@@ -59,7 +59,7 @@ class HighlightedIcon extends StatelessWidget {
             color: highlightColor,
             offset: Offset(0, 0),
             blurRadius: highlightBlur),
-        //Shadow(color: Colors.white, offset: Offset(0, 0), blurRadius: 10),
+        //Shadow(color: globalAlmostWhite, offset: Offset(0, 0), blurRadius: 10),
       ],
     );
   }

@@ -353,12 +353,12 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
               ShadowedIcon(
                   size: 10.w,
                   icon: FontAwesomeIcons.eye,
-                  color: Colors.white,
+                  color: globalAlmostWhite,
                   shadowColor: Colors.black),
               ShadowedIcon(
                   size: 5.w,
                   icon: FontAwesomeIcons.plus,
-                  color: Colors.white,
+                  color: globalAlmostWhite,
                   shadowColor: Colors.black)
             ],
           ),

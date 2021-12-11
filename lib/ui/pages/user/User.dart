@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/feeds/lists/FeedListCarousel.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/MenuButton.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/TopBarCustomClipper.dart';
@@ -203,7 +204,7 @@ class _UserState extends State<UserPage> {
               height: 15.h,
               width: 100.w,
               decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: globalAlmostWhite,
                   gradient: LinearGradient(
                       begin: FractionalOffset.topCenter,
                       end: FractionalOffset.bottomCenter,
@@ -250,7 +251,7 @@ class _UserState extends State<UserPage> {
               height: 35.h,
               width: 100.w,
               decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: globalAlmostWhite,
                   gradient: LinearGradient(
                       begin: FractionalOffset.topCenter,
                       end: FractionalOffset.bottomCenter,
@@ -278,7 +279,7 @@ class _UserState extends State<UserPage> {
                     height: 20.h,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         OverlayText(
                           text: user.jsonString != null &&
@@ -292,16 +293,16 @@ class _UserState extends State<UserPage> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
-                        user.jsonString != null &&
-                                user.jsonString!.additionals != null &&
-                                user.jsonString!.additionals!.displayName !=
-                                    null
-                            ? OverlayText(
-                                text: '@' + user.name,
-                                sizeMultiply: 1.2,
-                                overflow: TextOverflow.ellipsis,
-                              )
-                            : SizedBox(height: 0),
+                        OverlayText(
+                          text: user.jsonString != null &&
+                                  user.jsonString!.additionals != null &&
+                                  user.jsonString!.additionals!.displayName !=
+                                      null
+                              ? '@' + user.name
+                              : "",
+                          sizeMultiply: 1.2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ],
                     ),
                   ),

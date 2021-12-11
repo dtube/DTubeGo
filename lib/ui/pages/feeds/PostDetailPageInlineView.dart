@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/ui/widgets/players/FullScreenButton.dart';
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
@@ -275,7 +276,7 @@ class _PostDetailsState extends State<PostDetails> {
                             defaultVotingTip: _defaultVoteTipPosts,
                             scale: 0.8,
                             isPost: true,
-                            iconColor: Colors.white,
+                            iconColor: globalAlmostWhite,
                             focusVote: widget.directFocus,
                             fadeInFromLeft: false,
                           ),

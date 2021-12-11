@@ -143,7 +143,7 @@ class _GenreBaseState extends State<GenreBase> {
                         height: 18.h,
                         width: 200.w,
                         decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: globalAlmostWhite,
                             gradient: LinearGradient(
                                 begin: FractionalOffset.topCenter,
                                 end: FractionalOffset.bottomCenter,
@@ -249,7 +249,8 @@ class GenreCard extends StatelessWidget {
                       Center(
                           child: FaIcon(currentIcon,
                               size: 10.w,
-                              color: activated ? globalRed : Colors.white)),
+                              color:
+                                  activated ? globalRed : globalAlmostWhite)),
                       Text(currentName,
                           style: Theme.of(context).textTheme.caption)
                     ],

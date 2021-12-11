@@ -274,7 +274,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             color: widget.feedItem.alreadyVoted! &&
                                     widget.feedItem.alreadyVotedDirection!
                                 ? globalRed
-                                : Colors.white,
+                                : globalAlmostWhite,
                             shadowColor: Colors.black,
                             size: 8.w,
                           ),
@@ -333,7 +333,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             color: widget.feedItem.alreadyVoted! &&
                                     !widget.feedItem.alreadyVotedDirection!
                                 ? globalRed
-                                : Colors.white,
+                                : globalAlmostWhite,
                             shadowColor: Colors.black,
                             size: 8.w,
                           ),
@@ -375,7 +375,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                           },
                           child: ShadowedIcon(
                             icon: FontAwesomeIcons.comment,
-                            color: Colors.white,
+                            color: globalAlmostWhite,
                             shadowColor: Colors.black,
                             size: 8.w,
                           ),

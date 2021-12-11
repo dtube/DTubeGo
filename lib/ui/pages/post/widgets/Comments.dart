@@ -96,7 +96,7 @@ class CommentDisplay extends StatelessWidget {
                     scale: 0.5,
                     isPost: false,
                     focusVote: "",
-                    iconColor: Colors.white,
+                    iconColor: globalAlmostWhite,
                     fadeInFromLeft: true),
               ),
               Align(
@@ -174,7 +174,7 @@ class CommentDisplay extends StatelessWidget {
                     defaultVotingTip: defaultVoteTip,
                     scale: 0.5,
                     isPost: false,
-                    iconColor: Colors.white,
+                    iconColor: globalAlmostWhite,
                     focusVote: "",
                     fadeInFromLeft: true),
                 Align(

@@ -307,7 +307,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                         child: Container(
                           //color: Colors.black.withAlpha(95),
                           decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: globalAlmostWhite,
                               gradient: LinearGradient(
                                   begin: FractionalOffset.topCenter,
                                   end: FractionalOffset.bottomCenter,
@@ -441,7 +441,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                         child: Container(
                           //color: Colors.black.withAlpha(95),
                           decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: globalAlmostWhite,
                               gradient: LinearGradient(
                                   begin: FractionalOffset.topCenter,
                                   end: FractionalOffset.bottomCenter,
@@ -594,7 +594,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                 //         },
                 //         icon: ShadowedIcon(
                 //           icon: FontAwesomeIcons.expand,
-                //           color: Colors.white,
+                //           color: globalAlmostWhite,
                 //           shadowColor: Colors.black,
                 //           size: globalIconSizeSmall,
                 //         )),
@@ -709,7 +709,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                   autoPlay: AnimationPlayStates.Loop),
                               child: ShadowedIcon(
                                   icon: FontAwesomeIcons.ellipsisV,
-                                  color: Colors.white,
+                                  color: globalAlmostWhite,
                                   shadowColor: Colors.black,
                                   size: globalIconSizeSmall),
                             ),
@@ -719,7 +719,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                             padding: EdgeInsets.only(left: 12.w),
                             child: ShadowedIcon(
                                 icon: FontAwesomeIcons.sortDown,
-                                color: Colors.white,
+                                color: globalAlmostWhite,
                                 shadowColor: Colors.black,
                                 size: globalIconSizeSmall),
                           ),
@@ -731,14 +731,14 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                           spacing: 0.0,
                           closeManually: false,
                           curve: Curves.bounceIn,
-                          overlayColor: Colors.white,
+                          overlayColor: globalAlmostWhite,
                           overlayOpacity: 0,
                           onOpen: () => print('OPENING DIAL'),
                           onClose: () => print('DIAL CLOSED'),
                           tooltip: 'menu',
                           heroTag: 'submenu' + widget.title,
                           backgroundColor: Colors.transparent,
-                          foregroundColor: Colors.white,
+                          foregroundColor: globalAlmostWhite,
                           elevation: 0.0,
                           children: [
                             // COMMENT BUTTON
@@ -747,11 +747,11 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                   padding: EdgeInsets.only(left: 7.w),
                                   child: ShadowedIcon(
                                       icon: FontAwesomeIcons.comment,
-                                      color: Colors.white,
+                                      color: globalAlmostWhite,
                                       shadowColor: Colors.black,
                                       size: globalIconSizeBig),
                                 ),
-                                foregroundColor: Colors.white,
+                                foregroundColor: globalAlmostWhite,
                                 elevation: 0,
                                 backgroundColor: Colors.transparent,
                                 onTap: () {
@@ -780,12 +780,12 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                   child: ShadowedIcon(
                                       icon: FontAwesomeIcons.flag,
                                       color: !widget.alreadyVoted
-                                          ? Colors.white
+                                          ? globalAlmostWhite
                                           : globalRed,
                                       shadowColor: Colors.black,
                                       size: globalIconSizeBig),
                                 ),
-                                foregroundColor: Colors.white,
+                                foregroundColor: globalAlmostWhite,
                                 elevation: 0,
                                 backgroundColor: Colors.transparent,
                                 onTap: () {
@@ -830,12 +830,12 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                   child: ShadowedIcon(
                                       icon: FontAwesomeIcons.thumbsUp,
                                       color: !widget.alreadyVoted
-                                          ? Colors.white
+                                          ? globalAlmostWhite
                                           : globalRed,
                                       shadowColor: Colors.black,
                                       size: globalIconSizeBig),
                                 ),
-                                foregroundColor: Colors.white,
+                                foregroundColor: globalAlmostWhite,
                                 elevation: 0,
                                 backgroundColor: Colors.transparent,
                                 onTap: () {
@@ -878,11 +878,11 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                   padding: EdgeInsets.only(left: 7.w),
                                   child: ShadowedIcon(
                                       icon: FontAwesomeIcons.gift,
-                                      color: Colors.white,
+                                      color: globalAlmostWhite,
                                       shadowColor: Colors.black,
                                       size: globalIconSizeBig),
                                 ),
-                                foregroundColor: Colors.white,
+                                foregroundColor: globalAlmostWhite,
                                 elevation: 0,
                                 backgroundColor: Colors.transparent,
                                 onTap: () {

@@ -25,16 +25,14 @@ class UserMoreInfoButton extends StatelessWidget {
               context: context,
               builder: (context) {
                 return PopUpDialogWithTitleLogo(
-                  titleWidget: Center(
-                    child: FaIcon(
-                      FontAwesomeIcons.info,
-                      size: 8.h,
-                    ),
+                  titleWidget: FaIcon(
+                    FontAwesomeIcons.info,
+                    size: 8.h,
                   ),
                   showTitleWidget: true,
                   callbackOK: () {},
-                  titleWidgetPadding: 10.w,
-                  titleWidgetSize: 10.w,
+                  titleWidgetPadding: 5.w,
+                  titleWidgetSize: 20.w,
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -69,7 +67,7 @@ class UserMoreInfoButton extends StatelessWidget {
                                       child: ShadowedIcon(
                                         icon: FontAwesomeIcons.bolt,
                                         shadowColor: Colors.black,
-                                        color: Colors.white,
+                                        color: globalAlmostWhite,
                                         size: 10.w,
                                       ),
                                     ),
@@ -88,6 +86,8 @@ class UserMoreInfoButton extends StatelessWidget {
                             ? Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text("From: ",
@@ -96,7 +96,7 @@ class UserMoreInfoButton extends StatelessWidget {
                                             .headline6,
                                         textAlign: TextAlign.start),
                                     Container(
-                                      width: 80.w,
+                                      width: 55.w,
                                       child: Text(
                                         user.jsonString!.profile!.location!,
                                         style: Theme.of(context)
@@ -116,6 +116,8 @@ class UserMoreInfoButton extends StatelessWidget {
                             ? Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text("Website: ",
@@ -124,7 +126,7 @@ class UserMoreInfoButton extends StatelessWidget {
                                             .headline6,
                                         textAlign: TextAlign.start),
                                     Container(
-                                      width: 70.w,
+                                      width: 55.w,
                                       child: OpenableHyperlink(
                                         url: user.jsonString!.profile!.website!,
                                       ),
@@ -139,6 +141,8 @@ class UserMoreInfoButton extends StatelessWidget {
                             ? Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text("about: ",
@@ -147,7 +151,7 @@ class UserMoreInfoButton extends StatelessWidget {
                                             .headline6,
                                         textAlign: TextAlign.start),
                                     Container(
-                                      width: 80.w,
+                                      width: 55.w,
                                       child: Text(
                                         user.jsonString!.profile!.about!,
                                         style: Theme.of(context)
@@ -189,7 +193,7 @@ class UserMoreInfoButton extends StatelessWidget {
         icon: ShadowedIcon(
             size: globalIconSizeSmall,
             icon: FontAwesomeIcons.info,
-            color: Colors.white,
+            color: globalAlmostWhite,
             shadowColor: Colors.black));
   }
 }

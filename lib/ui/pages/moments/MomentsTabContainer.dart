@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsList.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
@@ -180,16 +181,16 @@ class TabBarWithPosition extends StatelessWidget {
           child: Container(
             width: menuSize,
             child: TabBar(
-              unselectedLabelColor: Colors.white,
-              labelColor: Colors.white,
-              indicatorColor: Colors.white,
+              unselectedLabelColor: globalAlmostWhite,
+              labelColor: globalAlmostWhite,
+              indicatorColor: globalAlmostWhite,
               tabs: [
                 Tab(
                   child: RotatedBox(
                     quarterTurns: rotation == 3 ? 1 : 0,
                     child: ShadowedIcon(
                         icon: tabIcons[0],
-                        color: Colors.white,
+                        color: globalAlmostWhite,
                         shadowColor: Colors.black,
                         size: iconSize),
                   ),
@@ -199,7 +200,7 @@ class TabBarWithPosition extends StatelessWidget {
                     quarterTurns: rotation == 3 ? 1 : 0,
                     child: ShadowedIcon(
                         icon: tabIcons[1],
-                        color: Colors.white,
+                        color: globalAlmostWhite,
                         shadowColor: Colors.black,
                         size: iconSize),
                   ),

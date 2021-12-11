@@ -25,7 +25,7 @@ Widget buildUserMenuSpeedDial(
       SpeedDialChild(
           child: ShadowedIcon(
               icon: FontAwesomeIcons.cogs,
-              color: Colors.white,
+              color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: globalIconSizeMedium),
           elevation: 0,
@@ -45,7 +45,7 @@ Widget buildUserMenuSpeedDial(
       SpeedDialChild(
           child: ShadowedIcon(
               icon: FontAwesomeIcons.history,
-              color: Colors.white,
+              color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: globalIconSizeMedium),
           elevation: 0,
@@ -63,7 +63,7 @@ Widget buildUserMenuSpeedDial(
       SpeedDialChild(
           child: ShadowedIcon(
               icon: FontAwesomeIcons.signOutAlt,
-              color: Colors.white,
+              color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: globalIconSizeMedium),
           elevation: 0,
@@ -78,7 +78,7 @@ Widget buildUserMenuSpeedDial(
       SpeedDialChild(
           child: ShadowedIcon(
               icon: FontAwesomeIcons.history,
-              color: Colors.white,
+              color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: globalIconSizeMedium),
           elevation: 0,
@@ -96,7 +96,7 @@ Widget buildUserMenuSpeedDial(
       SpeedDialChild(
           child: ShadowedIcon(
               icon: FontAwesomeIcons.exchangeAlt,
-              color: Colors.white,
+              color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: globalIconSizeMedium),
           elevation: 0,
@@ -114,7 +114,7 @@ Widget buildUserMenuSpeedDial(
               icon: user.alreadyFollowing
                   ? FontAwesomeIcons.usersSlash
                   : FontAwesomeIcons.userFriends,
-              color: Colors.white,
+              color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: globalIconSizeMedium),
           elevation: 0,
@@ -134,8 +134,8 @@ Widget buildUserMenuSpeedDial(
   return SpeedDial(
       child: ShadowedIcon(
           icon: FontAwesomeIcons.bars,
-          color: Colors.white,
-          shadowColor: Colors.black,
+          color: globalAlmostWhite,
+          shadowColor: Colors.transparent,
           size: globalIconSizeMedium),
       activeIcon: FontAwesomeIcons.chevronLeft,
       direction: SpeedDialDirection.up,
@@ -149,7 +149,7 @@ Widget buildUserMenuSpeedDial(
       tooltip: 'menu',
       heroTag: 'user menu button' + ownUser.toString(),
       backgroundColor: globalRed,
-      foregroundColor: Colors.white,
+      foregroundColor: globalAlmostWhite,
       elevation: 0.0,
       shape: CircleBorder(),
       gradientBoxShape: BoxShape.circle,

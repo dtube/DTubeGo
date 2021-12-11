@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/MomentsItem.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/controller/MomentsController.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -226,7 +227,7 @@ class MomentsViewState extends State<MomentsView>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: globalAlmostWhite,
       child: Stack(
         children: <Widget>[
           _currentView,
@@ -341,11 +342,11 @@ class StoryProgressIndicator extends StatelessWidget {
         this.indicatorHeight,
       ),
       foregroundPainter: IndicatorOval(
-        Colors.white.withOpacity(0.8),
+        globalAlmostWhite.withOpacity(0.8),
         this.value,
       ),
       painter: IndicatorOval(
-        Colors.white.withOpacity(0.4),
+        globalAlmostWhite.withOpacity(0.4),
         1.0,
       ),
     );

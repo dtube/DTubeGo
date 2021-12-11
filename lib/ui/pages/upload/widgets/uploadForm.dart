@@ -835,7 +835,7 @@ class _UploadFormState extends State<UploadForm> {
                 selected: stateUploadData.originalContent,
                 label: Text('original content',
                     style: Theme.of(context).textTheme.bodyText1),
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle: TextStyle(color: globalAlmostWhite),
                 avatar: stateUploadData.originalContent
                     ? FaIcon(
                         FontAwesomeIcons.check,
@@ -854,7 +854,7 @@ class _UploadFormState extends State<UploadForm> {
                 selected: stateUploadData.nSFWContent,
                 label: Text('nsfw content',
                     style: Theme.of(context).textTheme.bodyText1),
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle: TextStyle(color: globalAlmostWhite),
                 avatar: stateUploadData.nSFWContent
                     ? FaIcon(
                         FontAwesomeIcons.check,
@@ -872,7 +872,7 @@ class _UploadFormState extends State<UploadForm> {
                 selected: stateUploadData.unlistVideo,
                 label: Text('unlist video',
                     style: Theme.of(context).textTheme.bodyText1),
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle: TextStyle(color: globalAlmostWhite),
                 avatar: stateUploadData.unlistVideo
                     ? FaIcon(
                         FontAwesomeIcons.check,
@@ -891,7 +891,7 @@ class _UploadFormState extends State<UploadForm> {
                     selected: stateUploadData.crossPostToHive,
                     label: Text('cross-post to hive',
                         style: Theme.of(context).textTheme.bodyText1),
-                    labelStyle: TextStyle(color: Colors.white),
+                    labelStyle: TextStyle(color: globalAlmostWhite),
                     avatar: stateUploadData.crossPostToHive
                         ? FaIcon(
                             FontAwesomeIcons.check,

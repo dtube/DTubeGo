@@ -32,7 +32,7 @@ class PresetCard extends StatelessWidget {
                     children: [
                       Center(
                           child: FaIcon(preset.icon,
-                              size: 10.w, color: Colors.white)),
+                              size: 10.w, color: globalAlmostWhite)),
                       Text(preset.name,
                           style: Theme.of(context).textTheme.caption)
                     ],
