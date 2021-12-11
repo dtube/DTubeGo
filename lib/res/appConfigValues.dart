@@ -107,6 +107,9 @@ class AppConfig {
 // generic curation tags to exclude from suggested channels/videos
   static List<String> genericCurationTags = ["vdc", "onelovedtube"];
 
+// only show moments of the last x days
+  static int momentsPastXDays = -7;
+
   // global settings -> tags: those are the possible tags
   static List<String> possibleExploreTags = [
     "dtube",

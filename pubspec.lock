@@ -14,7 +14,7 @@ packages:
       name: another_flushbar
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.10.25"
+    version: "1.10.28"
   archive:
     dependency: transitive
     description:
@@ -56,7 +56,7 @@ packages:
       name: base_x
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "2.0.0"
   better_player:
     dependency: "direct main"
     description:
@@ -84,7 +84,7 @@ packages:
       name: bs58
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
   bs58check:
     dependency: "direct main"
     description:
@@ -98,7 +98,7 @@ packages:
       name: cached_network_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.2.0"
   cached_network_image_platform_interface:
     dependency: transitive
     description:
@@ -210,7 +210,7 @@ packages:
       name: dio
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.3"
+    version: "4.0.4"
   disk_space:
     dependency: "direct main"
     description:
@@ -320,7 +320,7 @@ packages:
       name: flutter_cache_manager
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.2"
+    version: "3.3.0"
   flutter_inappwebview:
     dependency: transitive
     description:
@@ -341,7 +341,7 @@ packages:
       name: flutter_markdown
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.2"
+    version: "0.6.8"
   flutter_phoenix:
     dependency: "direct main"
     description:
@@ -404,7 +404,7 @@ packages:
       name: flutter_speed_dial
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0"
+    version: "5.0.0+1"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:
@@ -423,7 +423,7 @@ packages:
       name: flutter_web_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.1"
+    version: "0.3.2"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -680,7 +680,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.8"
   path_provider_android:
     dependency: transitive
     description:
@@ -701,7 +701,7 @@ packages:
       name: path_provider_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.4"
   path_provider_macos:
     dependency: transitive
     description:
@@ -722,7 +722,7 @@ packages:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.4"
   pedantic:
     dependency: transitive
     description:
@@ -799,7 +799,7 @@ packages:
       name: rflutter_alert
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.4"
   rxdart:
     dependency: transitive
     description:
@@ -986,7 +986,21 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.9"
+    version: "6.0.17"
+  url_launcher_android:
+    dependency: transitive
+    description:
+      name: url_launcher_android
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.13"
+  url_launcher_ios:
+    dependency: transitive
+    description:
+      name: url_launcher_ios
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.13"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -1119,28 +1133,28 @@ packages:
       name: webview_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.1"
+    version: "2.8.0"
   webview_flutter_android:
     dependency: transitive
     description:
       name: webview_flutter_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "2.8.0"
   webview_flutter_platform_interface:
     dependency: transitive
     description:
       name: webview_flutter_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.0"
+    version: "1.8.0"
   webview_flutter_wkwebview:
     dependency: transitive
     description:
       name: webview_flutter_wkwebview
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.0"
+    version: "2.7.1"
   win32:
     dependency: transitive
     description:
@@ -1184,5 +1198,5 @@ packages:
     source: hosted
     version: "2.2.2"
 sdks:
-  dart: ">=2.15.0-268.18.beta <3.0.0"
-  flutter: ">=2.8.0-3.3.pre"
+  dart: ">=2.14.0 <3.0.0"
+  flutter: ">=2.5.0"

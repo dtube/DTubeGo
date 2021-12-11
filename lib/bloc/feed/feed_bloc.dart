@@ -30,7 +30,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         }
       }
       String _tsRangeFilter = '&tsrange=' +
-          (DateTime.now().add(Duration(days: -14)).millisecondsSinceEpoch /
+          (DateTime.now()
+                      .add(Duration(days: AppConfig.momentsPastXDays))
+                      .millisecondsSinceEpoch /
                   1000)
               .toString() +
           ',' +
