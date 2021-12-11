@@ -297,4 +297,53 @@ class AppConfig {
 
   static int maxDaysInPastForSuggestions =
       75; // max count of days the suggestion algorythm should check the past
+
+  static var initiativePresets = [
+    {
+      "name": "cleanplanet",
+      "icon": FontAwesomeIcons.globe,
+      "tag": "cleanplanet",
+      "subject": "Cleanplanet walk",
+      "description": "",
+      "details": "## BASICS\n" +
+          "Cleanplanet is an initiative to reward you for the act of picking litter in nature and your neighborhood.\n" +
+          "## PROVE IT\n" +
+          "Take a video of you or your friends while you pick up litter, put what you have collected in a public trash and tell us the date and your username as proof.\n" +
+          "## UPLOAD IT\n" +
+          "Upload your video on d.tube using the preset.\n\n" +
+          "## GET REWARDED\n" +
+          "Get rewarded for your eco-citizen act by a big like of the community!",
+      "moreURL": "https://cleanplanet.io",
+      "imageURL":
+          "https://cleanplanet.io/wp-content/uploads/2019/01/logo_clean_planet_Plan-de-travail-1-copie-3-3.png"
+    },
+    {
+      "name": "diyhub",
+      "icon": FontAwesomeIcons.tools,
+      "tag": "diyhub",
+      "subject": "DIYHub: ",
+      "description": "",
+      "details": "## BASICS\n" +
+          "DIYHub is an initiative to reward you for sharing your knowledge in form of how-tos with the community.\n" +
+          "## TOPICS\n" +
+          "As long as you provide a value by descibing a process the topic is not important.\n" +
+          "## UPLOAD\n" +
+          "Upload your video on d.tube using the preset.\n\n" +
+          "## GET REWARDED\n" +
+          "Get rewarded for the video by a big like of the community!",
+      "moreURL": "https://peakd.com/@diyhub",
+      "imageURL":
+          "https://images.hive.blog/p/5bEGgqZEHBMe6s3wiPgGFTi3naqHERgdwJew6rJYRaB3RR7sSAdZKnpKTieuFqSBhG6vQvFwpLVYoK2oxZAk7Ed6QDpcWhrN?format=match&mode=fit"
+    },
+    // {
+    //   "name": "alive",
+    //   "icon": FontAwesomeIcons.handsHelping,
+    //   "tag": "alive",
+    //   "subject": "subject addition",
+    //   "description": "description addition",
+    //   "details": "more details text",
+    //   "moreURL": "https://d.tube",
+    //    "imageURL": ""
+    // },
+  ];
 }

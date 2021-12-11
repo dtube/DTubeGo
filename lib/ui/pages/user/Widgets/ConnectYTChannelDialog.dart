@@ -61,6 +61,7 @@ class _ConnectYTChannelDialogState extends State<ConnectYTChannelDialog> {
         size: 20.w,
         color: globalRed,
       ),
+      showTitleWidget: true,
       child: Builder(
         builder: (context) {
           return SingleChildScrollView(

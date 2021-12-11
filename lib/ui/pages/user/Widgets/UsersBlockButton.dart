@@ -54,6 +54,7 @@ class _UserBlockButtonState extends State<UserBlockButton> {
                                 size: 8.h,
                               ),
                             ),
+                            showTitleWidget: true,
                             callbackOK: () {},
                             titleWidgetPadding: 10.w,
                             titleWidgetSize: 10.w,

@@ -62,6 +62,7 @@ class _NewKeyDialogState extends State<NewKeyDialog> {
         size: 20.w,
         color: globalBGColor,
       ),
+      showTitleWidget: true,
       child: Builder(
         builder: (context) {
           return SingleChildScrollView(

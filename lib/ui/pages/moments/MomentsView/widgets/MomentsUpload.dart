@@ -153,6 +153,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
         showDialog<String>(
           context: context,
           builder: (BuildContext context) => PopUpDialogWithTitleLogo(
+              showTitleWidget: true,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -220,6 +221,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
         showDialog<String>(
           context: context,
           builder: (BuildContext context) => PopUpDialogWithTitleLogo(
+              showTitleWidget: true,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,

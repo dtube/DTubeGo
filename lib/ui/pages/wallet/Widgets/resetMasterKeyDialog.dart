@@ -61,6 +61,7 @@ class _ResetMasterKeyDialogState extends State<ResetMasterKeyDialog> {
         size: 20.w,
         color: globalBGColor,
       ),
+      showTitleWidget: true,
       child: Builder(
         builder: (context) {
           return SingleChildScrollView(

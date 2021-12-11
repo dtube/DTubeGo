@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/pages/upload/widgets/PresetCards.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -31,10 +32,16 @@ import 'package:video_player/video_player.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class UploadForm extends StatefulWidget {
+  UploadForm(
+      {Key? key,
+      required this.uploadData,
+      required this.callback,
+      required this.preset})
+      : super(key: key);
+
   late UploadData uploadData;
   final Function(UploadData) callback;
-  UploadForm({Key? key, required this.uploadData, required this.callback})
-      : super(key: key);
+  Preset preset;
 
   @override
   _UploadFormState createState() => _UploadFormState(uploadData);
@@ -85,9 +92,12 @@ class _UploadFormState extends State<UploadForm> {
   @override
   void initState() {
     super.initState();
-    _titleController.text = stateUploadData.title;
-    _descController.text = stateUploadData.description;
-    _tagController.text = stateUploadData.tag;
+    // _titleController.text = stateUploadData.title;
+    // _descController.text = stateUploadData.description;
+    // _tagController.text = stateUploadData.tag;
+    _titleController.text = widget.preset.subject;
+    _descController.text = widget.preset.description;
+    _tagController.text = widget.preset.tag;
 
     _userBloc = BlocProvider.of<UserBloc>(context);
     _settingsBloc = BlocProvider.of<SettingsBloc>(context);
@@ -211,18 +221,18 @@ class _UploadFormState extends State<UploadForm> {
             setState(() {
               stateUploadData.vpPercent = double.parse(stateSettings
                   .settings[settingKey_DefaultUploadVotingWeigth]!);
-              if (_titleController.text.isEmpty) {
-                _titleController.text =
-                    stateSettings.settings[settingKey_templateTitle]!;
-              }
-              if (_descController.text.isEmpty) {
-                _descController.text =
-                    stateSettings.settings[settingKey_templateBody]!;
-              }
-              if (_tagController.text.isEmpty) {
-                _tagController.text =
-                    stateSettings.settings[settingKey_templateTag]!;
-              }
+              // if (_titleController.text.isEmpty) {
+              //   _titleController.text =
+              //       stateSettings.settings[settingKey_templateTitle]!;
+              // }
+              // if (_descController.text.isEmpty) {
+              //   _descController.text =
+              //       stateSettings.settings[settingKey_templateBody]!;
+              // }
+              // if (_tagController.text.isEmpty) {
+              //   _tagController.text =
+              //       stateSettings.settings[settingKey_templateTag]!;
+              // }
               stateUploadData.nSFWContent =
                   stateSettings.settings[settingKey_DefaultUploadNSFW]! ==
                       "true";
@@ -302,9 +312,10 @@ class _UploadFormState extends State<UploadForm> {
                                                         "true") {
                                                   showDialog<String>(
                                                     context: context,
-                                                    builder: (BuildContext
-                                                            context) =>
+                                                    builder: (BuildContext context) =>
                                                         PopUpDialogWithTitleLogo(
+                                                            showTitleWidget:
+                                                                true,
                                                             child:
                                                                 SingleChildScrollView(
                                                               child: Column(
@@ -421,9 +432,10 @@ class _UploadFormState extends State<UploadForm> {
 
                                                   showDialog<String>(
                                                     context: context,
-                                                    builder: (BuildContext
-                                                            context) =>
+                                                    builder: (BuildContext context) =>
                                                         PopUpDialogWithTitleLogo(
+                                                            showTitleWidget:
+                                                                true,
                                                             child:
                                                                 SingleChildScrollView(
                                                               child: Column(

@@ -1,4 +1,5 @@
 import 'package:dtube_go/ui/pages/Explore/GenreBase.dart';
+import 'package:dtube_go/ui/pages/upload/UploadPresetSelection.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
@@ -18,7 +19,7 @@ import 'package:dtube_go/ui/MainContainer/Widgets/MenuButton.dart';
 
 import 'package:dtube_go/ui/pages/feeds/FeedTabContainer.dart';
 import 'package:dtube_go/ui/pages/notifications/NotificationButton.dart';
-import 'package:dtube_go/ui/pages/upload/uploaderTabContainer.dart';
+import 'package:dtube_go/ui/pages/upload/UploaderMainPage.dart';
 import 'package:dtube_go/ui/pages/user/User.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/widgets/system/customSnackbar.dart';
@@ -150,6 +151,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           //the return value will be from "Yes" or "No" options
           context: context,
           builder: (context) => PopUpDialogWithTitleLogo(
+            showTitleWidget: true,
             callbackOK: () {},
             child: SingleChildScrollView(
                 child: Column(
@@ -218,8 +220,10 @@ class _NavigationContainerState extends State<NavigationContainer> {
         create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
         child: GenreBase(),
       ),
-      UploaderMainPage(
-        callback: uploaderCallback,
+      // UploaderMainPage(
+      UploadPresetSelection(
+        //callback: uploaderCallback,
+        uploaderCallback: uploaderCallback,
         key: UniqueKey(),
       ),
       MultiBlocProvider(
@@ -307,8 +311,11 @@ class _NavigationContainerState extends State<NavigationContainer> {
                   _screens.removeAt(2);
                   _screens.insert(
                       2,
-                      new UploaderMainPage(
-                        callback: uploaderCallback,
+                      new
+                      //UploaderMainPage(
+                      //callback: uploaderCallback,
+                      UploadPresetSelection(
+                        uploaderCallback: uploaderCallback,
                         key: UniqueKey(),
                       ));
                 }

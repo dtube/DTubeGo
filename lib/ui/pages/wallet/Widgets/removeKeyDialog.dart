@@ -44,6 +44,7 @@ class _RemoveKeyDialogState extends State<RemoveKeyDialog> {
         size: 20.w,
         color: globalBGColor,
       ),
+      showTitleWidget: true,
       child: Builder(
         builder: (context) {
           return SingleChildScrollView(

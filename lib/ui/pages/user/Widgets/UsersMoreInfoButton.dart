@@ -31,6 +31,7 @@ class UserMoreInfoButton extends StatelessWidget {
                       size: 8.h,
                     ),
                   ),
+                  showTitleWidget: true,
                   callbackOK: () {},
                   titleWidgetPadding: 10.w,
                   titleWidgetSize: 10.w,

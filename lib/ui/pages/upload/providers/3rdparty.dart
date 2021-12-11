@@ -7,7 +7,8 @@ import 'package:dtube_go/bloc/user/user_bloc.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/res/secretConfigValues.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/ui/pages/upload/uploadForm.dart';
+import 'package:dtube_go/ui/pages/upload/widgets/PresetCards.dart';
+import 'package:dtube_go/ui/pages/upload/widgets/uploadForm.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,9 +18,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class Wizard3rdParty extends StatefulWidget {
-  Wizard3rdParty({Key? key, required this.uploaderCallback}) : super(key: key);
+  Wizard3rdParty(
+      {Key? key, required this.uploaderCallback, required this.preset})
+      : super(key: key);
 
   VoidCallback uploaderCallback;
+  Preset preset;
 
   @override
   _Wizard3rdPartyState createState() => _Wizard3rdPartyState();
@@ -238,6 +242,7 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
                               child: UploadForm(
                                 uploadData: _uploadData,
                                 callback: childCallback,
+                                preset: widget.preset,
                               ),
                             );
                           } else {
