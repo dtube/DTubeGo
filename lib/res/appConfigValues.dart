@@ -69,7 +69,7 @@ class AppConfig {
       'https://hivesigner.com/api/broadcast';
 
 // node discovery & api node configs
-  static Duration nodeDescoveryTimeout = Duration(seconds: 2);
+  static Duration nodeDescoveryTimeout = Duration(milliseconds: 300);
 
   static bool useDevNodes =
       false; //activate for new features which has not been integrated
