@@ -40,7 +40,7 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
       "subject": _customPresetSubject,
       "description": _customPresetBody,
       "details": "",
-      "moreURL": "",
+      "moreInfoURL": "",
       "imageURL": ""
     };
     setState(() {

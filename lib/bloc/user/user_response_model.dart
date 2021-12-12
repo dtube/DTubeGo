@@ -196,12 +196,12 @@ class JsonString {
 }
 
 class Node {
-  late String ws;
+  late String? ws;
 
   Node({required this.ws});
 
   Node.fromJson(Map<String, dynamic> json) {
-    ws = json['ws'];
+    ws = json['ws'] != null ? json['ws'] : "";
   }
 
   Map<String, dynamic> toJson() {

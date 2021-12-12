@@ -92,22 +92,11 @@ class _FeedMainPageState extends State<FeedMainPage>
     String _mainTagsString = await sec.getGenreTags();
     List<String> _mainTags = _mainTagsString.split(',');
     selectedMainTags = [];
-    setState(() {
-      for (var t in _mainTags) {
-        selectedMainTags.add(findTag(t));
-        _selectedSubTags = _selectedSubTags + findTag(t).subtags + ',';
-      }
-      selectedTagsString =
-          _selectedSubTags.substring(0, _selectedSubTags.length - 1);
-    });
   }
 
   void pushMainTagsToStorage(String tags) async {
     await sec.persistGenreTags(tags);
   }
-
-  FilterTag findTag(String name) =>
-      mockResults.firstWhere((tag) => tag.name == name);
 
   @override
   Widget build(BuildContext context) {

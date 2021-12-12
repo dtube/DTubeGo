@@ -85,8 +85,8 @@ class AppConfig {
     'https://avalon.tibfox.com',
     'https://avalon.d.tube',
     'https://dtube.club/mainnetapi',
-    // 'https://avalon.oneloved.tube',
-    'https://dtube.fso.ovh'
+    'https://avalon.oneloved.tube',
+    // 'https://dtube.fso.ovh'
   ];
 
   static int minFreeSpaceRecordVideoInMB =
@@ -316,7 +316,7 @@ class AppConfig {
           "Upload your video on d.tube using the preset.\n\n" +
           "## GET REWARDED\n" +
           "Get rewarded for your eco-citizen act by a big like of the community!",
-      "moreURL": "https://cleanplanet.io",
+      "moreInfoURL": "https://cleanplanet.io",
       "imageURL":
           "https://cleanplanet.io/wp-content/uploads/2019/01/logo_clean_planet_Plan-de-travail-1-copie-3-3.png"
     },
@@ -334,7 +334,7 @@ class AppConfig {
           "Upload your video on d.tube using the preset.\n\n" +
           "## GET REWARDED\n" +
           "Get rewarded for the video by a big like of the community!",
-      "moreURL": "https://peakd.com/@diyhub",
+      "moreInfoURL": "https://peakd.com/@diyhub",
       "imageURL":
           "https://images.hive.blog/p/5bEGgqZEHBMe6s3wiPgGFTi3naqHERgdwJew6rJYRaB3RR7sSAdZKnpKTieuFqSBhG6vQvFwpLVYoK2oxZAk7Ed6QDpcWhrN?format=match&mode=fit"
     },

@@ -1,20 +1,13 @@
 String shortDTC(int dtcBalance) {
   double _dtcBalanceK = dtcBalance / 100000;
   String result = "";
-  if (dtcBalance < 100000) {
-    result = (dtcBalance / 100).toString();
-  } else if (_dtcBalanceK >= 1000) {
-    result = (_dtcBalanceK / 1000).toString();
-  } else {
-    result = _dtcBalanceK.toStringAsFixed(1);
-  }
 
-  if (dtcBalance < 10000) {
-    result = result + ' ';
+  if (_dtcBalanceK < 1) {
+    result = (dtcBalance / 100).toStringAsFixed(1) + ' ';
   } else if (_dtcBalanceK >= 1000) {
-    result = result + 'M';
+    result = (_dtcBalanceK / 1000).toStringAsFixed(1) + 'M';
   } else {
-    result = result + 'K';
+    result = _dtcBalanceK.toStringAsFixed(1) + 'K';
   }
 
   return result;
