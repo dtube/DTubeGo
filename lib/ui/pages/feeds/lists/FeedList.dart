@@ -61,6 +61,9 @@ class FeedList extends StatelessWidget {
   String? _defaultPostVotingWeight;
   String? _defaultPostVotingTip;
 
+  String? _fixedDownvoteActivated;
+  String? _fixedDownvoteWeight;
+
   Future<bool> getSettings() async {
     _hiddenMode = await sec.getShowHidden();
     _nsfwMode = await sec.getNSFW();
@@ -68,6 +71,9 @@ class FeedList extends StatelessWidget {
     _defaultCommentVotingWeight = await sec.getDefaultVoteComments();
     _defaultPostVotingWeight = await sec.getDefaultVote();
     _defaultPostVotingTip = await sec.getDefaultVoteTip();
+
+    _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
+    _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
 
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
@@ -301,6 +307,9 @@ class FeedList extends StatelessWidget {
                   defaultCommentVotingWeight: _defaultCommentVotingWeight,
                   defaultPostVotingWeight: _defaultPostVotingWeight,
                   defaultPostVotingTip: _defaultPostVotingTip,
+                  fixedDownvoteActivated: _fixedDownvoteActivated,
+                  fixedDownvoteWeight: _fixedDownvoteWeight,
+                  parentContext: context,
                 ),
                 //Text(pos.toString())
               ),
@@ -350,6 +359,10 @@ class PostListCard extends StatefulWidget {
   final String? defaultPostVotingWeight;
   final String? defaultPostVotingTip;
 
+  final String? fixedDownvoteActivated;
+  final String? fixedDownvoteWeight;
+  final BuildContext parentContext;
+
   PostListCard(
       {Key? key,
       required this.showAuthor,
@@ -379,7 +392,10 @@ class PostListCard extends StatefulWidget {
       required this.feedType,
       this.defaultCommentVotingWeight,
       this.defaultPostVotingWeight,
-      this.defaultPostVotingTip})
+      this.defaultPostVotingTip,
+      required this.fixedDownvoteActivated,
+      required this.fixedDownvoteWeight,
+      required this.parentContext})
       : super(key: key);
 
   @override
@@ -420,6 +436,8 @@ class _PostListCardState extends State<PostListCard>
             defaultCommentVotingWeight: widget.defaultCommentVotingWeight!,
             defaultPostVotingWeight: widget.defaultPostVotingWeight!,
             defaultPostVotingTip: widget.defaultPostVotingTip!,
+            fixedDownvoteActivated: widget.fixedDownvoteActivated!,
+            fixedDownvoteWeight: widget.fixedDownvoteWeight!,
           ),
         ),
       );

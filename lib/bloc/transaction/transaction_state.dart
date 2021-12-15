@@ -39,13 +39,15 @@ class TransactionSent extends TransactionState {
   int txType;
   bool isParentContent;
   String? authorPerm;
+  bool? isDownvote;
 
   TransactionSent(
       {required this.block,
       required this.successMessage,
       required this.txType,
       required this.isParentContent,
-      this.authorPerm});
+      this.authorPerm,
+      this.isDownvote});
 
   @override
   List<Object> get props => [block];

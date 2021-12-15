@@ -35,6 +35,9 @@ class VideoPlayerMoments extends StatefulWidget {
   String momentsUploadCrosspost;
   double currentVP;
 
+  double fixedDownvoteWeight;
+  bool fixedDownvoteActivated;
+
   UserBloc userBloc;
 
   VideoPlayerMoments(
@@ -52,7 +55,9 @@ class VideoPlayerMoments extends StatefulWidget {
       required this.momentsUploadUnlist,
       required this.momentsUploadCrosspost,
       required this.userBloc,
-      required this.currentVP})
+      required this.currentVP,
+      required this.fixedDownvoteActivated,
+      required this.fixedDownvoteWeight})
       : super(key: key);
   @override
   _VideoPlayerMomentsState createState() => _VideoPlayerMomentsState();
@@ -264,6 +269,10 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                                         _videoController.play();
                                       });
                                     },
+                                    fixedDownvoteActivated:
+                                        widget.fixedDownvoteActivated,
+                                    fixedDownvoteWeight:
+                                        widget.fixedDownvoteWeight,
                                   ),
                                 ),
                               );
@@ -323,6 +332,10 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                                         _videoController.play();
                                       });
                                     },
+                                    fixedDownvoteActivated:
+                                        widget.fixedDownvoteActivated,
+                                    fixedDownvoteWeight:
+                                        widget.fixedDownvoteWeight,
                                   ),
                                 ),
                               );

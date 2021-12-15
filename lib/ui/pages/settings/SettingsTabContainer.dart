@@ -175,6 +175,10 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           _hiveDefaultCommunityController.value.text,
                       sec.settingKey_hiveSignerDefaultTags:
                           _hiveDefaultTags.join(","),
+                      sec.settingKey_FixedDownvoteActivated:
+                          _downvoteFixed.toString(),
+                      sec.settingKey_FixedDownvoteWeight:
+                          _downvoteFixedAmount.toString(),
                     };
 
                     _settingsBloc.add(PushSettingsEvent(

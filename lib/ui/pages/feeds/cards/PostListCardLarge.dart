@@ -53,7 +53,9 @@ class PostListCardLarge extends StatefulWidget {
       required this.oc,
       required this.defaultCommentVotingWeight,
       required this.defaultPostVotingWeight,
-      required this.defaultPostVotingTip})
+      required this.defaultPostVotingTip,
+      required this.fixedDownvoteActivated,
+      required this.fixedDownvoteWeight})
       : super(key: key);
 
   final bool blur;
@@ -77,6 +79,9 @@ class PostListCardLarge extends StatefulWidget {
   final String defaultCommentVotingWeight;
   final String defaultPostVotingWeight;
   final String defaultPostVotingTip;
+
+  final String fixedDownvoteActivated;
+  final String fixedDownvoteWeight;
 
   @override
   _PostListCardLargeState createState() => _PostListCardLargeState();
@@ -817,6 +822,11 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                           downvote: true,
                                           //currentVT: state.vtBalance['v']! + 0.0,
                                           isPost: true,
+                                          fixedDownvoteActivated:
+                                              widget.fixedDownvoteActivated ==
+                                                  "true",
+                                          fixedDownvoteWeight: double.parse(
+                                              widget.fixedDownvoteWeight),
                                         ),
                                       ),
                                     );
@@ -867,6 +877,11 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                           downvote: false,
                                           //currentVT: state.vtBalance['v']! + 0.0,
                                           isPost: true,
+                                          fixedDownvoteActivated:
+                                              widget.fixedDownvoteActivated ==
+                                                  "true",
+                                          fixedDownvoteWeight: double.parse(
+                                              widget.fixedDownvoteWeight),
                                         ),
                                       ),
                                     );

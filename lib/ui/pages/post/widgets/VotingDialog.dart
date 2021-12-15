@@ -3,6 +3,7 @@ import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/utils/shortBalanceStrings.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
@@ -25,7 +26,9 @@ class VotingDialog extends StatefulWidget {
       this.vertical,
       this.verticalModeCallbackVotingButtonsPressed,
       this.okCallback,
-      this.cancelCallback})
+      this.cancelCallback,
+      required this.fixedDownvoteActivated,
+      required this.fixedDownvoteWeight})
       : super(key: key);
   TransactionBloc txBloc;
 
@@ -33,6 +36,8 @@ class VotingDialog extends StatefulWidget {
   String link;
   double defaultVote;
   double defaultTip;
+  double fixedDownvoteWeight;
+  bool fixedDownvoteActivated;
   // double currentVT;
   bool isPost;
   bool? vertical; // only used in moments for now
@@ -67,7 +72,7 @@ class _VotingDialogState extends State<VotingDialog> {
     _tagController = TextEditingController();
     _userBloc.add(FetchDTCVPEvent());
     _vpValue = widget.defaultVote;
-    if (widget.downvote) {
+    if (!widget.downvote) {
       _tipValue = widget.defaultTip;
     } else {
       _tipValue = 0;
@@ -90,7 +95,7 @@ class _VotingDialogState extends State<VotingDialog> {
         titleWidget: FaIcon(
           widget.downvote ? FontAwesomeIcons.flag : FontAwesomeIcons.thumbsUp,
           size: 20.w,
-          color: globalBGColor,
+          color: widget.downvote ? globalRed : globalBGColor,
         ),
         showTitleWidget: true,
         child: BlocBuilder<UserBloc, UserState>(
@@ -116,119 +121,161 @@ class _VotingDialogState extends State<VotingDialog> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text("weight: ",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5),
-                                          Text(
-                                              (_vpValue.floor() *
-                                                          (widget.downvote
-                                                              ? -1
-                                                              : 1))
-                                                      .toString() +
-                                                  '%',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5),
-                                        ],
-                                      ),
-                                      RotatedBox(
-                                        quarterTurns: widget.downvote ? 1 : 3,
-                                        child: Slider(
-                                          min: 1,
-                                          max: 100.0,
-                                          value: _vpValue,
+                            widget.downvote && widget.fixedDownvoteActivated
+                                ? Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 2.w,
+                                        right: 2.w,
+                                        top: 1.h,
+                                        bottom: 2.h),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                            "Flagging this content will permanently hide it from your user interface." +
+                                                " If the curation team agrees it will get removed from the whole platform.",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1),
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 1.h),
+                                          child: Text(
+                                            "You can not undo this action!",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6!
+                                                .copyWith(color: globalRed),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                : Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 1.h, bottom: 1.h),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text("weight: ",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline5),
+                                                Text(
+                                                    (_vpValue.floor() *
+                                                                (widget.downvote
+                                                                    ? -1
+                                                                    : 1))
+                                                            .toString() +
+                                                        '%',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline5),
+                                              ],
+                                            ),
+                                            RotatedBox(
+                                              quarterTurns:
+                                                  widget.downvote ? 1 : 3,
+                                              child: Slider(
+                                                min: 1,
+                                                max: 100.0,
+                                                value: _vpValue,
 
-                                          label: (widget.downvote ? "-" : "") +
-                                              _vpValue.floor().toString() +
-                                              "%",
-                                          //divisions: 40,
-                                          inactiveColor: globalBlue,
-                                          activeColor: globalRed,
-                                          onChanged: (dynamic value) {
-                                            setState(() {
-                                              _vpValue = value;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Text(
-                                          shortVP((state.vtBalance['v']! /
-                                                      100 *
-                                                      _vpValue)
-                                                  .floor()) +
-                                              " VP",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6),
-                                    ],
-                                  ),
-                                  widget.downvote
-                                      ? SizedBox(width: 0)
-                                      : Padding(
-                                          padding: EdgeInsets.only(left: 4.w),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text("vote tip: ",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline5),
-                                                  Text(
-                                                      _tipValue
-                                                              .floor()
-                                                              .toString() +
-                                                          '%',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline5),
-                                                ],
+                                                label: (widget.downvote
+                                                        ? "-"
+                                                        : "") +
+                                                    _vpValue
+                                                        .floor()
+                                                        .toString() +
+                                                    "%",
+                                                //divisions: 40,
+                                                inactiveColor: globalBlue,
+                                                activeColor: globalRed,
+                                                onChanged: (dynamic value) {
+                                                  setState(() {
+                                                    _vpValue = value;
+                                                  });
+                                                },
                                               ),
-                                              RotatedBox(
-                                                quarterTurns: 3,
-                                                child: Slider(
-                                                  min: 0.0,
-                                                  max: 100.0,
-                                                  value: _tipValue,
-                                                  label: _tipValue
-                                                          .floor()
-                                                          .toString() +
-                                                      "%",
-                                                  //divisions: 20,
-                                                  inactiveColor: globalBlue,
-                                                  activeColor: globalRed,
-                                                  onChanged: (dynamic value) {
-                                                    setState(() {
-                                                      _tipValue = value;
-                                                    });
-                                                  },
+                                            ),
+                                            Text(
+                                                shortVP((state.vtBalance['v']! /
+                                                            100 *
+                                                            _vpValue)
+                                                        .floor()) +
+                                                    " VP",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6),
+                                          ],
+                                        ),
+                                        widget.downvote
+                                            ? SizedBox(width: 0)
+                                            : Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 4.w),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Text("vote tip: ",
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .headline5),
+                                                        Text(
+                                                            _tipValue
+                                                                    .floor()
+                                                                    .toString() +
+                                                                '%',
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .headline5),
+                                                      ],
+                                                    ),
+                                                    RotatedBox(
+                                                      quarterTurns: 3,
+                                                      child: Slider(
+                                                        min: 0.0,
+                                                        max: 100.0,
+                                                        value: _tipValue,
+                                                        label: _tipValue
+                                                                .floor()
+                                                                .toString() +
+                                                            "%",
+                                                        //divisions: 20,
+                                                        inactiveColor:
+                                                            globalBlue,
+                                                        activeColor: globalRed,
+                                                        onChanged:
+                                                            (dynamic value) {
+                                                          setState(() {
+                                                            _tipValue = value;
+                                                          });
+                                                        },
+                                                      ),
+                                                    ),
+                                                    Text("",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline6),
+                                                  ],
                                                 ),
                                               ),
-                                              Text("",
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6),
-                                            ],
-                                          ),
-                                        ),
-                                ],
-                              ),
-                            ),
-                            widget.isPost
+                                      ],
+                                    ),
+                                  ),
+                            widget.isPost &&
+                                    !(widget.downvote &&
+                                        widget.fixedDownvoteActivated)
                                 ? Padding(
                                     padding: EdgeInsets.only(
                                         left: 20.w,
@@ -256,7 +303,7 @@ class _VotingDialogState extends State<VotingDialog> {
                                       bottomRight: Radius.circular(20.0)),
                                 ),
                                 child: Text(
-                                  "Send Vote",
+                                  widget.downvote ? "Flag now!" : "Send Vote",
                                   style: Theme.of(context).textTheme.headline4,
                                   textAlign: TextAlign.center,
                                 ),
@@ -288,6 +335,7 @@ class _VotingDialogState extends State<VotingDialog> {
 
                                 _txBloc.add(SignAndSendTransactionEvent(newTx));
                                 Navigator.of(context).pop();
+
                                 if (widget.okCallback != null) {
                                   widget.okCallback!();
                                 }

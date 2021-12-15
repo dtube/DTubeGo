@@ -30,7 +30,9 @@ class VotingButtons extends StatefulWidget {
       required this.iconColor,
       this.verticalModeCallbackVotingButtonsPressed,
       this.verticalModeCallbackVoteSent,
-      required this.fadeInFromLeft})
+      required this.fadeInFromLeft,
+      required this.fixedDownvoteActivated,
+      required this.fixedDownvoteWeight})
       : super(key: key);
 
   final String author;
@@ -48,6 +50,10 @@ class VotingButtons extends StatefulWidget {
 
   final double defaultVotingWeight;
   final double defaultVotingTip;
+
+  final double fixedDownvoteWeight;
+  final bool fixedDownvoteActivated;
+
   final Color iconColor;
 
   final double scale;
@@ -263,6 +269,8 @@ class VotingButtonRow extends StatelessWidget {
                       downvote: false,
                       //currentVT: state.vtBalance['v']! + 0.0,
                       isPost: widget.isPost,
+                      fixedDownvoteActivated: widget.fixedDownvoteActivated,
+                      fixedDownvoteWeight: widget.fixedDownvoteWeight,
                     ),
                   ),
                 );
@@ -308,6 +316,8 @@ class VotingButtonRow extends StatelessWidget {
                       downvote: true,
                       //currentVT: state.vtBalance['v']! + 0.0,
                       isPost: widget.isPost,
+                      fixedDownvoteActivated: widget.fixedDownvoteActivated,
+                      fixedDownvoteWeight: widget.fixedDownvoteWeight,
                     ),
                   ),
                 );

@@ -4,6 +4,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Flushbar showCustomFlushbarOnError(String message, BuildContext context) {
@@ -34,6 +35,10 @@ Flushbar showCustomFlushbarOnError(String message, BuildContext context) {
 
 Flushbar showCustomFlushbarOnSuccess(
     TransactionSent state, BuildContext context) {
+  if (state.isDownvote != null && state.isDownvote!) {
+    Phoenix.rebirth(context);
+  }
+
   return Flushbar(
     margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
     borderRadius: BorderRadius.circular(8),

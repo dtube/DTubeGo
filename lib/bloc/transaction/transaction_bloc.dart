@@ -60,6 +60,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                   .replaceAll('##TIPAMOUNT', event.tx.data.tip.toString())
                   .replaceAll('##USERNAME', event.tx.data.target.toString()),
               txType: event.tx.type,
+              isDownvote: event.tx.type == 5 &&
+                      event.tx.data.vt != null &&
+                      event.tx.data.vt! < 0
+                  ? true
+                  : false,
               isParentContent:
                   (event.tx.data.pa == "" || event.tx.data.pa == null) &&
                       (event.tx.type == 4 || event.tx.type == 13)));

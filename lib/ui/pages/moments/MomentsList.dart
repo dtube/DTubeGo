@@ -54,6 +54,8 @@ class _MomentsListState extends State<MomentsList> {
   String? _momentsUploadCrosspost;
   String? _momentsCustomTitle;
   String? _momentsCustomBody;
+  String? _fixedDownvoteActivated;
+  String? _fixedDownvoteWeight;
 
   late UserBloc _userBloc;
   double _currentVp = 0.0;
@@ -72,6 +74,8 @@ class _MomentsListState extends State<MomentsList> {
     _momentsUploadCrosspost = await sec.getMomentCrosspost();
     _momentsCustomTitle = await sec.getMomentTitle();
     _momentsCustomBody = await sec.getMomentBody();
+    _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
+    _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
 
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
@@ -145,6 +149,10 @@ class _MomentsListState extends State<MomentsList> {
                                     currentVP: _currentVp,
                                     userBloc:
                                         BlocProvider.of<UserBloc>(context),
+                                    fixedDownvoteActivated:
+                                        _fixedDownvoteActivated == "true",
+                                    fixedDownvoteWeight:
+                                        double.parse(_fixedDownvoteWeight!),
                                   ),
                                   duration: Duration(
                                       seconds: f.jsonString!.dur != ""

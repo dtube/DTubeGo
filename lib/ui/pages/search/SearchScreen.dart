@@ -1,3 +1,4 @@
+import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -39,13 +40,23 @@ class SearchScreenState extends State<SearchScreen> {
   late SearchResults searchResults;
   late List<FeedItem> hashtagResults;
 
+  String? _defaultCommentVotingWeight;
+  String? _defaultPostVotingWeight;
+  String? _defaultPostVotingTip;
+
+  String? _fixedDownvoteActivated;
+  String? _fixedDownvoteWeight;
+
+  String? _nsfwMode;
+  String? _hiddenMode;
+
   @override
   void initState() {
     super.initState();
     searchBloc = BlocProvider.of<SearchBloc>(context);
     searchTextController = TextEditingController();
     searchTextController.addListener(_sendRequest);
-    getBlockedUsers();
+    getSettings();
 
     //  searchBloc.add(FetchNotificationsEvent([])); // statements;
   }
@@ -57,9 +68,17 @@ class SearchScreenState extends State<SearchScreen> {
     super.dispose();
   }
 
-  void getBlockedUsers() async {
+  void getSettings() async {
     String _blockedUsersString = await sec.getBlockedUsers();
     blockedUsers = _blockedUsersString.split(",");
+    _defaultCommentVotingWeight = await sec.getDefaultVoteComments();
+    _defaultPostVotingWeight = await sec.getDefaultVote();
+    _defaultPostVotingTip = await sec.getDefaultVoteTip();
+    _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
+    _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
+
+    _nsfwMode = await sec.getNSFW();
+    _hiddenMode = await sec.getShowHidden();
   }
 
   void prefillForm(String search, int searchEntity) {
@@ -277,51 +296,67 @@ class SearchScreenState extends State<SearchScreen> {
                   width: 0,
                 );
               } else {
-                return PostListCardLarge(
-                  alreadyVoted:
-                      searchResults.hits!.hits![pos].sSource!.alreadyVoted!,
-                  alreadyVotedDirection: searchResults
-                      .hits!.hits![pos].sSource!.alreadyVotedDirection!,
-                  author: searchResults.hits!.hits![pos].sSource!.author!,
-                  blur: false,
-                  defaultCommentVotingWeight: "25",
-                  defaultPostVotingTip: "25",
-                  defaultPostVotingWeight: "25",
-                  description:
-                      searchResults.hits!.hits![pos].sSource!.jsonstring!.desc!,
-                  downvotesCount:
-                      searchResults.hits!.hits![pos].sSource!.downvotes!.length,
-                  dtcValue:
-                      (searchResults.hits!.hits![pos].sSource!.dist! / 100)
-                              .round()
-                              .toString() +
-                          " DTC",
-                  duration: new Duration(
-                      seconds: int.tryParse(searchResults.hits!.hits![pos]
-                                  .sSource!.jsonstring!.dur!) !=
-                              null
-                          ? int.parse(searchResults
-                              .hits!.hits![pos].sSource!.jsonstring!.dur!)
-                          : 0),
-                  indexOfList: pos,
-                  link: searchResults.hits!.hits![pos].sSource!.link!,
-                  mainTag:
-                      searchResults.hits!.hits![pos].sSource!.jsonstring!.tag!,
-                  oc: searchResults.hits!.hits![pos].sSource!.jsonstring!.oc ==
-                          1
-                      ? true
-                      : false,
-                  publishDate: TimeAgo.timeInAgoTSShort(
-                      searchResults.hits!.hits![pos].sSource!.ts!),
-                  thumbnailUrl:
-                      searchResults.hits!.hits![pos].sSource!.thumbUrl,
-                  title: searchResults
-                      .hits!.hits![pos].sSource!.jsonstring!.title!,
-                  upvotesCount:
-                      searchResults.hits!.hits![pos].sSource!.upvotes!.length,
-                  videoSource:
-                      searchResults.hits!.hits![pos].sSource!.videoSource,
-                  videoUrl: searchResults.hits!.hits![pos].sSource!.videoUrl,
+                return BlocProvider<UserBloc>(
+                  create: (context) =>
+                      UserBloc(repository: UserRepositoryImpl()),
+                  child: PostListCardLarge(
+                    alreadyVoted:
+                        searchResults.hits!.hits![pos].sSource!.alreadyVoted!,
+                    alreadyVotedDirection: searchResults
+                        .hits!.hits![pos].sSource!.alreadyVotedDirection!,
+                    author: searchResults.hits!.hits![pos].sSource!.author!,
+                    blur: (_nsfwMode == 'Blur' &&
+                                searchResults.hits!.hits![pos].sSource!
+                                        .jsonstring?.nsfw ==
+                                    1) ||
+                            (_hiddenMode == 'Blur' &&
+                                searchResults.hits!.hits![pos].sSource!
+                                        .summaryOfVotes <
+                                    0)
+                        ? true
+                        : false,
+                    defaultCommentVotingWeight: _defaultCommentVotingWeight!,
+                    defaultPostVotingTip: _defaultPostVotingTip!,
+                    defaultPostVotingWeight: _defaultPostVotingWeight!,
+                    fixedDownvoteActivated: _fixedDownvoteActivated!,
+                    fixedDownvoteWeight: _fixedDownvoteWeight!,
+                    description: searchResults
+                        .hits!.hits![pos].sSource!.jsonstring!.desc!,
+                    downvotesCount: searchResults
+                        .hits!.hits![pos].sSource!.downvotes!.length,
+                    dtcValue:
+                        (searchResults.hits!.hits![pos].sSource!.dist! / 100)
+                                .round()
+                                .toString() +
+                            " DTC",
+                    duration: new Duration(
+                        seconds: int.tryParse(searchResults.hits!.hits![pos]
+                                    .sSource!.jsonstring!.dur!) !=
+                                null
+                            ? int.parse(searchResults
+                                .hits!.hits![pos].sSource!.jsonstring!.dur!)
+                            : 0),
+                    indexOfList: pos,
+                    link: searchResults.hits!.hits![pos].sSource!.link!,
+                    mainTag: searchResults
+                        .hits!.hits![pos].sSource!.jsonstring!.tag!,
+                    oc: searchResults
+                                .hits!.hits![pos].sSource!.jsonstring!.oc ==
+                            1
+                        ? true
+                        : false,
+                    publishDate: TimeAgo.timeInAgoTSShort(
+                        searchResults.hits!.hits![pos].sSource!.ts!),
+                    thumbnailUrl:
+                        searchResults.hits!.hits![pos].sSource!.thumbUrl,
+                    title: searchResults
+                        .hits!.hits![pos].sSource!.jsonstring!.title!,
+                    upvotesCount:
+                        searchResults.hits!.hits![pos].sSource!.upvotes!.length,
+                    videoSource:
+                        searchResults.hits!.hits![pos].sSource!.videoSource,
+                    videoUrl: searchResults.hits!.hits![pos].sSource!.videoUrl,
+                  ),
                 );
               }
             default:
@@ -353,36 +388,47 @@ class SearchScreenState extends State<SearchScreen> {
                 width: 0,
               );
             } else {
-              return PostListCardLarge(
-                alreadyVoted: searchResults[pos].alreadyVoted!,
-                alreadyVotedDirection:
-                    searchResults[pos].alreadyVotedDirection!,
-                author: searchResults[pos].author,
-                blur: false,
-                defaultCommentVotingWeight: "25",
-                defaultPostVotingTip: "25",
-                defaultPostVotingWeight: "25",
-                description: searchResults[pos].jsonString!.desc!,
-                downvotesCount: searchResults[pos].downvotes != null
-                    ? searchResults[pos].downvotes!.length
-                    : 0,
-                dtcValue:
-                    (searchResults[pos].dist / 100).round().toString() + " DTC",
-                duration: new Duration(
-                    seconds:
-                        int.tryParse(searchResults[pos].jsonString!.dur) != null
-                            ? int.parse(searchResults[pos].jsonString!.dur)
-                            : 0),
-                indexOfList: pos,
-                link: searchResults[pos].link,
-                mainTag: searchResults[pos].jsonString!.tag,
-                oc: searchResults[pos].jsonString!.oc == 1 ? true : false,
-                publishDate: TimeAgo.timeInAgoTSShort(searchResults[pos].ts),
-                thumbnailUrl: searchResults[pos].thumbUrl,
-                title: searchResults[pos].jsonString!.title,
-                upvotesCount: searchResults[pos].upvotes!.length,
-                videoSource: searchResults[pos].videoSource,
-                videoUrl: searchResults[pos].videoUrl,
+              return BlocProvider<UserBloc>(
+                create: (context) => UserBloc(repository: UserRepositoryImpl()),
+                child: PostListCardLarge(
+                  alreadyVoted: searchResults[pos].alreadyVoted!,
+                  alreadyVotedDirection:
+                      searchResults[pos].alreadyVotedDirection!,
+                  author: searchResults[pos].author,
+                  blur: (_nsfwMode == 'Blur' &&
+                              searchResults[pos].jsonString?.nsfw == 1) ||
+                          (_hiddenMode == 'Blur' &&
+                              searchResults[pos].summaryOfVotes < 0)
+                      ? true
+                      : false,
+                  defaultCommentVotingWeight: _defaultCommentVotingWeight!,
+                  defaultPostVotingTip: _defaultPostVotingTip!,
+                  defaultPostVotingWeight: _defaultPostVotingWeight!,
+                  fixedDownvoteActivated: _fixedDownvoteActivated!,
+                  fixedDownvoteWeight: _fixedDownvoteWeight!,
+                  description: searchResults[pos].jsonString!.desc!,
+                  downvotesCount: searchResults[pos].downvotes != null
+                      ? searchResults[pos].downvotes!.length
+                      : 0,
+                  dtcValue: (searchResults[pos].dist / 100).round().toString() +
+                      " DTC",
+                  duration: new Duration(
+                      seconds:
+                          int.tryParse(searchResults[pos].jsonString!.dur) !=
+                                  null
+                              ? int.parse(searchResults[pos].jsonString!.dur)
+                              : 0),
+                  indexOfList: pos,
+                  link: searchResults[pos].link,
+                  mainTag: searchResults[pos].jsonString!.tag,
+                  oc: searchResults[pos].jsonString!.oc == 1 ? true : false,
+                  publishDate: TimeAgo.timeInAgoTSShort(searchResults[pos].ts),
+                  thumbnailUrl: searchResults[pos].thumbUrl,
+                  title: searchResults[pos].jsonString!.title,
+                  upvotesCount: searchResults[pos].upvotes!.length,
+                  videoSource: searchResults[pos].videoSource,
+                  videoUrl: searchResults[pos].videoUrl,
+                ),
               );
             }
           }),

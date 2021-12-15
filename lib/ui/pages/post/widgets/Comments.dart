@@ -24,10 +24,16 @@ class CommentDisplay extends StatelessWidget {
       this.parentLink,
       this.defaultVoteTip,
       this.parentContext,
-      this.blockedUsers);
+      this.blockedUsers,
+      this.fixedDownvoteActivated,
+      this.fixedDownvoteWeight);
   final Comment entry;
   final double defaultVoteWeight;
   final double defaultVoteTip;
+
+  final bool fixedDownvoteActivated;
+  final double fixedDownvoteWeight;
+
   final String parentAuthor;
   final String parentLink;
   final int _currentVT;
@@ -85,19 +91,22 @@ class CommentDisplay extends StatelessWidget {
                 create: (BuildContext context) =>
                     UserBloc(repository: UserRepositoryImpl()),
                 child: VotingButtons(
-                    author: root.author,
-                    link: root.link,
-                    alreadyVoted: root.alreadyVoted,
-                    alreadyVotedDirection: root.alreadyVotedDirection,
-                    upvotes: root.upvotes,
-                    downvotes: root.downvotes,
-                    defaultVotingWeight: defaultVoteWeight,
-                    defaultVotingTip: defaultVoteTip,
-                    scale: 0.5,
-                    isPost: false,
-                    focusVote: "",
-                    iconColor: globalAlmostWhite,
-                    fadeInFromLeft: true),
+                  author: root.author,
+                  link: root.link,
+                  alreadyVoted: root.alreadyVoted,
+                  alreadyVotedDirection: root.alreadyVotedDirection,
+                  upvotes: root.upvotes,
+                  downvotes: root.downvotes,
+                  defaultVotingWeight: defaultVoteWeight,
+                  defaultVotingTip: defaultVoteTip,
+                  scale: 0.5,
+                  isPost: false,
+                  focusVote: "",
+                  iconColor: globalAlmostWhite,
+                  fadeInFromLeft: true,
+                  fixedDownvoteActivated: fixedDownvoteActivated,
+                  fixedDownvoteWeight: fixedDownvoteWeight,
+                ),
               ),
               Align(
                 alignment: Alignment.topRight,
@@ -164,19 +173,22 @@ class CommentDisplay extends StatelessWidget {
             Stack(
               children: [
                 VotingButtons(
-                    author: root.author,
-                    link: root.link,
-                    alreadyVoted: root.alreadyVoted,
-                    alreadyVotedDirection: root.alreadyVotedDirection,
-                    upvotes: root.upvotes,
-                    downvotes: root.downvotes,
-                    defaultVotingWeight: defaultVoteWeight,
-                    defaultVotingTip: defaultVoteTip,
-                    scale: 0.5,
-                    isPost: false,
-                    iconColor: globalAlmostWhite,
-                    focusVote: "",
-                    fadeInFromLeft: true),
+                  author: root.author,
+                  link: root.link,
+                  alreadyVoted: root.alreadyVoted,
+                  alreadyVotedDirection: root.alreadyVotedDirection,
+                  upvotes: root.upvotes,
+                  downvotes: root.downvotes,
+                  defaultVotingWeight: defaultVoteWeight,
+                  defaultVotingTip: defaultVoteTip,
+                  scale: 0.5,
+                  isPost: false,
+                  iconColor: globalAlmostWhite,
+                  focusVote: "",
+                  fadeInFromLeft: true,
+                  fixedDownvoteActivated: fixedDownvoteActivated,
+                  fixedDownvoteWeight: fixedDownvoteWeight,
+                ),
                 Align(
                   alignment: Alignment.topRight,
                   child: BlocProvider(
