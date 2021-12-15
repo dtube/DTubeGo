@@ -33,6 +33,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   late double _defaultVoteComments;
   late double _defaultTip;
   late double _defaultTipComments;
+
   late String _showHidden;
   late String _showNsfw;
   late String _hiveUsername;
@@ -67,12 +68,16 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   bool _defaultMomentsCrossPost = false;
   double _defaultMomentVotingWeight = 5;
 
+  bool _downvoteFixed = false;
+  double _downvoteFixedAmount = 1;
+
   bool _showDisplayHints = false;
   bool _showSecurityHints = false;
   bool _showInterestsHints = false;
 
   bool _showVotingWeightHints = false;
   bool _showVotingTipHints = false;
+  bool _showDefaultDownvoteHints = false;
 
   bool _showVotingUploadDefaultsHints = false;
   bool _showVotingMomentDefaultsHints = false;
@@ -317,6 +322,15 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                     ? double.parse(
                         settings[sec.settingKey_DefaultMomentVotingWeigth]!)
                     : 5.0;
+            _downvoteFixed =
+                settings[sec.settingKey_FixedDownvoteActivated] != null
+                    ? settings[sec.settingKey_FixedDownvoteActivated] == "true"
+                    : true;
+            _downvoteFixedAmount =
+                settings[sec.settingKey_FixedDownvoteWeight] != null
+                    ? double.parse(
+                        settings[sec.settingKey_FixedDownvoteWeight]!)
+                    : 1.0;
           }
 
           return Column(
@@ -762,6 +776,98 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                   showHint: _showVotingTipHints,
                                   hintText:
                                       "Those settings set the default setting of the tipping sliders. Every vote can generate DTC for you as curation rewards. By tipping you give away x % of those rewards to the content creator you are voting on.",
+                                ),
+                              ],
+                            ),
+                            DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 400),
+                              avoidAnimation: _visitedTabs.contains(1),
+                              childs: [
+                                Stack(children: [
+                                  ShowHintIcon(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showDefaultDownvoteHints =
+                                            !_showDefaultDownvoteHints;
+                                      });
+                                    },
+                                    alignment: Alignment.topRight,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 1.h),
+                                    child: Text("Downvotes",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                ]),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                        value: _downvoteFixed,
+                                        onChanged: (bool) {
+                                          setState(() {
+                                            _downvoteFixed = !_downvoteFixed;
+                                          });
+                                        }),
+                                    Text("downvote with a FIXED weight",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1)
+                                  ],
+                                ),
+                                _downvoteFixed
+                                    ? Column(
+                                        children: [
+                                          Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                  "default downvote weight:",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1)),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Expanded(
+                                                flex: 2,
+                                                child: Slider(
+                                                  min: 0.1,
+                                                  max: 100.0,
+                                                  value: _downvoteFixedAmount,
+                                                  label: _downvoteFixedAmount
+                                                          .floor()
+                                                          .toString() +
+                                                      "%",
+                                                  divisions: 20,
+                                                  inactiveColor: globalBlue,
+                                                  activeColor: globalRed,
+                                                  onChanged: (dynamic value) {
+                                                    setState(() {
+                                                      _downvoteFixedAmount =
+                                                          value;
+                                                      // widget.justSaved = false;
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                              Text(
+                                                _downvoteFixedAmount
+                                                        .floor()
+                                                        .toString() +
+                                                    "%",
+                                                style: TextStyle(fontSize: 18),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                    : Container(),
+                                VisibilityHintText(
+                                  showHint: _showDefaultDownvoteHints,
+                                  hintText:
+                                      "If you activate the fixed downvote setting you will not be able to set the downvote weight anymore. This setting does not affect the user experience inside of the app. All downvoted posts will get hidden automatically for you. ",
                                 ),
                               ],
                             ),

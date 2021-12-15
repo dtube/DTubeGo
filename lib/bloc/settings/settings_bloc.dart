@@ -53,6 +53,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               await sec.getHiveSignerDefaultCommunity(),
           sec.settingKey_hiveSignerDefaultTags:
               await sec.getHiveSignerDefaultTags(),
+          sec.settingKey_FixedDownvoteActivated:
+              await sec.getFixedDownvoteActivated(),
+          sec.settingKey_FixedDownvoteWeight:
+              await sec.getFixedDownvoteWeight(),
         };
         emit(SettingsLoadedState(settings: newSettings));
       } catch (e) {
@@ -72,6 +76,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           event.newSettings[sec.settingKey_defaultVotingWeightComments]!,
           event.newSettings[sec.settingKey_defaultVotingTip]!,
           event.newSettings[sec.settingKey_defaultVotingTipComments]!,
+          event.newSettings[sec.settingKey_FixedDownvoteActivated]!,
+          event.newSettings[sec.settingKey_FixedDownvoteWeight]!,
         );
         await sec.persistTemplateSettings(
           event.newSettings[sec.settingKey_templateTitle]!,

@@ -38,6 +38,9 @@ const settingKey_DefaultUploadUnlist = "DFUNLIST";
 const settingKey_DefaultUploadCrosspost = "DFUCP";
 const settingKey_DefaultUploadVotingWeigth = "DFUVW";
 
+const settingKey_FixedDownvoteActivated = "FIXEDDVACTIVE";
+const settingKey_FixedDownvoteWeight = "FIXEDDVWEIGHT";
+
 const settingKey_DefaultMomentNSFW = "DFMNSFW";
 const settingKey_DefaultMomentOC = "DFMOC";
 const settingKey_DefaultMomentUnlist = "DFMNLIST";
@@ -143,6 +146,8 @@ Future<void> persistAvalonSettings(
   String defaultVotingWeightComments,
   String defaultVotingTip,
   String defaultVotingTipComments,
+  String fixedDownvoteActive,
+  String fixedDownvoteWeight,
 ) async {
   await _storage.write(
       key: settingKey_defaultVotingWeight, value: defaultVotingWeight);
@@ -154,6 +159,10 @@ Future<void> persistAvalonSettings(
   await _storage.write(
       key: settingKey_defaultVotingTipComments,
       value: defaultVotingTipComments);
+  await _storage.write(
+      key: settingKey_FixedDownvoteActivated, value: fixedDownvoteActive);
+  await _storage.write(
+      key: settingKey_FixedDownvoteWeight, value: fixedDownvoteWeight);
 }
 
 Future<void> persistTemplateSettings(
@@ -770,6 +779,36 @@ Future<String> getDefaultVoteTipComments() async {
     return _setting;
   } else {
     return '25';
+  }
+}
+
+Future<String> getFixedDownvoteActivated() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_FixedDownvoteActivated);
+  } catch (e) {
+    _setting = "true";
+  }
+
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return 'true';
+  }
+}
+
+Future<String> getFixedDownvoteWeight() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_FixedDownvoteWeight);
+  } catch (e) {
+    _setting = "1";
+  }
+
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return '1';
   }
 }
 
