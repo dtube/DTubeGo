@@ -163,7 +163,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             link: _upload.link,
             vt: _upload.isEditing
                 ? 1
-                : (_upload.vpBalance * _upload.vpPercent / 100).floor(),
+                : (_upload.vpBalance * _upload.vpPercent / 100).floor() < 1
+                    ? 1
+                    : (_upload.vpBalance * _upload.vpPercent / 100).floor(),
             tag: _upload.tag,
             pa: _upload.parentAuthor,
             pp: _upload.parentPermlink,
@@ -174,7 +176,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               link: _upload.link,
               vt: _upload.isEditing
                   ? 1
-                  : (_upload.vpBalance * _upload.vpPercent / 100).floor(),
+                  : (_upload.vpBalance * _upload.vpPercent / 100).floor() < 1
+                      ? 1
+                      : (_upload.vpBalance * _upload.vpPercent / 100).floor(),
               tag: _upload.tag,
               jsonmetadata: jsonMetadata,
               pa: _upload.parentAuthor,
