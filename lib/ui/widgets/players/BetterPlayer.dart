@@ -70,7 +70,7 @@ class _BPState extends State<BP> {
               enableFullscreen: widget.allowFullscreen),
           autoPlay: widget.autoplay,
           autoDispose: true,
-          aspectRatio: aspectRatio,
+          aspectRatio: !(aspectRatio > 0.0) ? 1 : aspectRatio,
         ),
         betterPlayerDataSource: betterPlayerDataSource,
       );

@@ -178,9 +178,10 @@ class FeedListCarousel extends StatelessWidget {
                     //aspectRatio: 2.0,
                     initialPage: 0,
                     enlargeCenterPage: true,
+                    enableInfiniteScroll: false,
                     autoPlay: true,
                     disableCenter: true,
-                    autoPlayInterval: Duration(seconds: generateRandom(4, 7))),
+                    autoPlayInterval: Duration(seconds: generateRandom(6, 10))),
                 itemCount: feed.length,
                 itemBuilder: (ctx, index, realIdx) {
                   if (feed[index].jsonString!.files?.youtube != null ||
