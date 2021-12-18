@@ -24,20 +24,28 @@ class _EULAScreenState extends State<EULAScreen> {
   bool _eulaCompleted = false;
 
   var _controller = ScrollController();
+
   void loadEulaAssets() async {
-    final _loadedEulaAndroidData =
-        await rootBundle.loadString('assets/mds/androidEULA.md');
 
-    setState(() {
-      _eulaTextAndroid = _loadedEulaAndroidData;
-    });
+    if (Platform.isAndroid) {
+      final _loadedEulaAndroidData =
+      await rootBundle.loadString('lib/res/mds/androidEULA.md');
 
-    final _loadedEulaIOSData =
-        await rootBundle.loadString('assets/mds/iOSEULA.md');
+      setState(() {
+        _eulaTextAndroid = _loadedEulaAndroidData;
+      });
+    } else if (Platform.isIOS) {
+      final _loadedEulaIOSData =
+      await rootBundle.loadString('lib/res/mds/iOSEULA.md');
 
-    setState(() {
-      _eulaTextIOS = _loadedEulaIOSData;
-    });
+      setState(() {
+        _eulaTextIOS = _loadedEulaIOSData;
+      });
+    } else {
+      setState(() {
+        _eulaCompleted = true;
+      });
+    }
   }
 
   @override
@@ -47,7 +55,11 @@ class _EULAScreenState extends State<EULAScreen> {
       if (_controller.position.atEdge) {
         if (_controller.position.pixels == 0) {
           setState(() {
-            _eulaCompleted = false;
+            if (_eulaTextIOS == null && _eulaTextAndroid == null) {
+              _eulaCompleted = true;
+            } else {
+              _eulaCompleted = false;
+            }
           });
         } else {
           setState(() {
@@ -56,7 +68,11 @@ class _EULAScreenState extends State<EULAScreen> {
         }
       } else {
         setState(() {
-          _eulaCompleted = false;
+          if (_eulaTextIOS == null && _eulaTextAndroid == null) {
+            _eulaCompleted = true;
+          } else {
+            _eulaCompleted = false;
+          }
         });
       }
     });
