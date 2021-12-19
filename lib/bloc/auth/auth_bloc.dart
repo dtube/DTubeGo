@@ -71,7 +71,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
         // if the signout did not work (never happened)
       } catch (e) {
-        emit(AuthErrorState(message: 'unknown error'));
+        emit(AuthErrorState(message: 'unknown error\n\n' + e.toString()));
       }
     });
 
@@ -97,7 +97,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               message: 'login failed', username: event.username));
         }
       } catch (e) {
-        emit(AuthErrorState(message: 'unknown error'));
+        emit(AuthErrorState(message: 'unknown error\n\n' + e.toString()));
       }
     });
   }
