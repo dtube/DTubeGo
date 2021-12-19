@@ -88,6 +88,9 @@ class AppConfig {
     'https://dtube.fso.ovh'
   ];
 
+// node discovery & api node configs
+  static Duration nodeDescoveryTimeout = Duration(milliseconds: 100);
+
   static int minFreeSpaceRecordVideoInMB =
       50; // min free space to enable the user to record video in app
 
