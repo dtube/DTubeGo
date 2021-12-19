@@ -69,7 +69,6 @@ class AppConfig {
       'https://hivesigner.com/api/broadcast';
 
 // node discovery & api node configs
-  static Duration nodeDescoveryTimeout = Duration(milliseconds: 300);
 
   static bool useDevNodes =
       false; //activate for new features which has not been integrated
@@ -84,9 +83,9 @@ class AppConfig {
     // common api nodes
     'https://avalon.tibfox.com',
     'https://avalon.d.tube',
-    'https://dtube.club/mainnetapi',
+    // 'https://dtube.club/mainnetapi',
     'https://avalon.oneloved.tube',
-    // 'https://dtube.fso.ovh'
+    'https://dtube.fso.ovh'
   ];
 
   static int minFreeSpaceRecordVideoInMB =

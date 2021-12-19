@@ -24,9 +24,10 @@ Future<String> discoverAPINode() async {
       print("checking " + node);
       try {
         var _beforeRequestMicroSeconds = DateTime.now().microsecondsSinceEpoch;
-        var response = await http
-            .get(Uri.parse(node + '/count'))
-            .timeout(AppConfig.nodeDescoveryTimeout * _retries, onTimeout: () {
+        var response = await http.get(Uri.parse(node + '/count')).timeout(
+            Duration(
+                milliseconds: AppConfig.nodeDescoveryTimeout.inMilliseconds *
+                    _retries), onTimeout: () {
           // timeout occured
           return http.Response('Error', 500);
         });

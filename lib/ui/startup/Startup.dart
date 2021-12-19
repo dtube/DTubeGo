@@ -1,3 +1,4 @@
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
@@ -83,11 +84,21 @@ class _StartUpState extends State<StartUp> {
           return Scaffold(
             backgroundColor: globalBlue,
             body: Center(
-              child: DtubeLogoPulseWithSubtitle(
-                subtitle: state.message,
-                height: 50.h,
-                size: 40.w,
-                width: 95.w,
+              child: Column(
+                children: [
+                  DtubeLogoPulseWithSubtitle(
+                    subtitle: "error on login",
+                    size: 40.w,
+                  ),
+                  Container(
+                      color: globalBGColor,
+                      height: 50.h,
+                      width: 95.w,
+                      child: Markdown(
+                        data: state.message,
+                        selectable: true,
+                      ))
+                ],
               ),
             ),
           );
