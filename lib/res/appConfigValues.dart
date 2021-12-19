@@ -338,6 +338,24 @@ class AppConfig {
       "imageURL":
           "https://images.hive.blog/p/5bEGgqZEHBMe6s3wiPgGFTi3naqHERgdwJew6rJYRaB3RR7sSAdZKnpKTieuFqSBhG6vQvFwpLVYoK2oxZAk7Ed6QDpcWhrN?format=match&mode=fit"
     },
+    {
+      "name": "aliveandthriving",
+      "icon": FontAwesomeIcons.heartbeat,
+      "tag": "aliveandthriving",
+      "subject": "AliveAndThriving: ",
+      "description": "",
+      "details": "## BASICS\n" +
+          "Alive And Thriving is about you sharing your journey to Thrive in life, physical, mental and financial, and to live your life to it's fullest.\n" +
+          "## TOPICS\n" +
+          "Share your journey to Thrive in life in your video, and how you live it to it's fullest.\n" +
+          "## UPLOAD\n" +
+          "Upload your video on d.tube using the preset.\n\n" +
+          "## GET REWARDED\n" +
+          "Get rewarded for the video by a big like of the community!",
+      "moreInfoURL": "https://peakd.com/@aliveandthriving",
+      "imageURL":
+          "https://files.peakd.com/file/peakd-hive/aliveandthriving/RoundPhoto_Dec162021_163720.png?format=match&mode=fit"
+    },
     // {
     //   "name": "alive",
     //   "icon": FontAwesomeIcons.handsHelping,

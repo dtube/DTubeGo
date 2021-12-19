@@ -85,7 +85,9 @@ class _StartUpState extends State<StartUp> {
             body: Center(
               child: DtubeLogoPulseWithSubtitle(
                 subtitle: state.message,
+                height: 50.h,
                 size: 40.w,
+                width: 95.w,
               ),
             ),
           );

@@ -50,10 +50,10 @@ class AuthRepositoryImpl implements AuthRepository {
             AppConfig.accountDataUrl.replaceAll("##USERNAME", username)),
       )
           .catchError((e) {
-        throw Exception();
+        throw e;
       });
     } catch (e) {
-      throw Exception();
+      throw e;
     }
     if (response.statusCode == 404) {
       // username unknown

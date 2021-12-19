@@ -20,7 +20,6 @@ class UploadPresetSelection extends StatefulWidget {
 }
 
 class _UploadPresetSelectionState extends State<UploadPresetSelection> {
-  List<int> _activatedInitiatives = [0, 1];
   List<int> _ativeCustomPresets = [0];
   List<Preset> _initiativePresets = [];
   List<Preset> _customPresets = [];
@@ -87,18 +86,16 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
                         ),
                         shrinkWrap: true,
                         // scrollDirection: Axis.vertical,
-                        itemCount: _activatedInitiatives.length,
+                        itemCount: _initiativePresets.length,
                         crossAxisCount: 4,
                         itemBuilder: (BuildContext context, int index) {
                           return InitiativePresetCard(
-                              currentIndex: _activatedInitiatives[index],
-                              initiative: _initiativePresets[
-                                  _activatedInitiatives[index]],
+                              currentIndex: index,
+                              initiative: _initiativePresets[index],
                               // activated: _activatedGenres.contains(index),
                               onTapCallback: () {
                                 setState(() {
-                                  _selectedPreset = _initiativePresets[
-                                      _activatedInitiatives[index]];
+                                  _selectedPreset = _initiativePresets[index];
                                   _presetSelected = true;
                                 });
                               });
