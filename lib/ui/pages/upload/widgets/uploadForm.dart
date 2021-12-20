@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 import 'package:dtube_go/ui/pages/upload/widgets/PresetCards.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
@@ -449,15 +451,19 @@ class _UploadFormState extends State<UploadForm> {
                                                                     MainAxisSize
                                                                         .min,
                                                                 children: [
-                                                                  Text(
-                                                                      "Amazing!",
-                                                                      style: Theme.of(
-                                                                              context)
-                                                                          .textTheme
-                                                                          .headline4,
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center),
+                                                                  Padding(
+                                                                    padding: EdgeInsets
+                                                                        .only(
+                                                                            top:
+                                                                                7.h),
+                                                                    child: Text(
+                                                                        "Amazing!",
+                                                                        style: Theme.of(context)
+                                                                            .textTheme
+                                                                            .headline4,
+                                                                        textAlign:
+                                                                            TextAlign.center),
+                                                                  ),
                                                                   SizedBox(
                                                                       height:
                                                                           2.h),
@@ -542,7 +548,7 @@ class _UploadFormState extends State<UploadForm> {
                                                             ),
                                                             callbackOK: () {},
                                                             titleWidgetPadding:
-                                                                10.w,
+                                                                20.w,
                                                             titleWidgetSize:
                                                                 10.w),
                                                   );
@@ -735,6 +741,10 @@ class _UploadFormState extends State<UploadForm> {
             style: Theme.of(context).textTheme.bodyText1,
             controller: _tagController,
             focusNode: _tagFocus,
+            keyboardType: TextInputType.name,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow((RegExp("[a-zA-Z0-9]")))
+            ],
             onChanged: (val) {
               checkIfFormIsFilled();
             },
