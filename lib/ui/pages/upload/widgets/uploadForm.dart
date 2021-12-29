@@ -552,29 +552,68 @@ class _UploadFormState extends State<UploadForm> {
               }
             },
           ),
-          TextFormField(
-            cursorColor: globalRed,
-            decoration: new InputDecoration(
-              labelText: "Tag",
-              labelStyle: Theme.of(context).textTheme.bodyText1,
+          Container(
+            width: 95.w,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Visibility(
+                  visible: _tagController.text != "DTubeGo-Moments",
+                  child: Container(
+                    width: 40.w,
+                    child: TextFormField(
+                      cursorColor: globalRed,
+                      decoration: new InputDecoration(
+                        labelText: "Tag",
+                        labelStyle: Theme.of(context).textTheme.bodyText1,
+                      ),
+                      style: Theme.of(context).textTheme.bodyText1,
+                      controller: _tagController,
+                      focusNode: _tagFocus,
+                      keyboardType: TextInputType.name,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            (RegExp("[a-zA-Z0-9]")))
+                      ],
+                      onChanged: (val) {
+                        checkIfFormIsFilled();
+                      },
+                      validator: (value) {
+                        if (value!.isNotEmpty && value.length > 0) {
+                          return null;
+                        } else {
+                          return 'please fill in a tag';
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                ChoiceChip(
+                    selected: _tagController.text == "DTubeGo-Moments",
+                    label: Text('add to moments',
+                        style: Theme.of(context).textTheme.bodyText1),
+                    labelStyle: TextStyle(color: globalAlmostWhite),
+                    avatar: _tagController.value.text == "DTubeGo-Moments"
+                        ? FaIcon(
+                            FontAwesomeIcons.check,
+                            size: 15,
+                          )
+                        : null,
+                    backgroundColor: Colors.grey.withAlpha(30),
+                    selectedColor: Colors.green[700],
+                    onSelected: (bool selected) {
+                      setState(() {
+                        if (_tagController.text != "DTubeGo-Moments") {
+                          _tagController.text = "DTubeGo-Moments";
+                          stateUploadData.tag = _tagController.text;
+                        } else {
+                          _tagController.text = "";
+                          stateUploadData.tag = _tagController.text;
+                        }
+                      });
+                    }),
+              ],
             ),
-            style: Theme.of(context).textTheme.bodyText1,
-            controller: _tagController,
-            focusNode: _tagFocus,
-            keyboardType: TextInputType.name,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow((RegExp("[a-zA-Z0-9]")))
-            ],
-            onChanged: (val) {
-              checkIfFormIsFilled();
-            },
-            validator: (value) {
-              if (value!.isNotEmpty && value.length > 0) {
-                return null;
-              } else {
-                return 'please fill in a tag';
-              }
-            },
           ),
         ],
       ),

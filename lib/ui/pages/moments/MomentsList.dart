@@ -124,40 +124,50 @@ class _MomentsListState extends State<MomentsList> {
                         if (state.feedType == widget.feedType) {
                           if (moments.isEmpty) {
                             for (var f in state.feed) {
-                              moments.add(MomentsItem(
-                                  VideoPlayerMoments(
-                                    momentsController: momentsController,
-                                    defaultCommentsVotingWeight:
-                                        _defaultCommentsVotingWeight!,
-                                    defaultPostsVotingWeight:
-                                        _defaultPostVotingWeight!,
-                                    defaultPostsVotingTip:
-                                        _defaultPostVotingTip!,
-                                    key: UniqueKey(),
-                                    goingInBackgroundCallback:
-                                        widget.goingInBackgroundCallback,
-                                    goingInForegroundCallback:
-                                        widget.goingInForegroundCallback,
-                                    feedItem: f,
-                                    momentsVotingWeight:
-                                        _defaultMomentsVotingWeight!,
-                                    momentsUploadNSFW: _momentsUploadNSFW!,
-                                    momentsUploadOC: _momentsUploadOC!,
-                                    momentsUploadUnlist: _momentsUploadUnlist!,
-                                    momentsUploadCrosspost:
-                                        _momentsUploadCrosspost!,
-                                    currentVP: _currentVp,
-                                    userBloc:
-                                        BlocProvider.of<UserBloc>(context),
-                                    fixedDownvoteActivated:
-                                        _fixedDownvoteActivated == "true",
-                                    fixedDownvoteWeight:
-                                        double.parse(_fixedDownvoteWeight!),
-                                  ),
-                                  duration: Duration(
-                                      seconds: f.jsonString!.dur != ""
-                                          ? int.parse(f.jsonString!.dur) + 1
-                                          : 5)));
+                              // if moment is <= 60 seconds
+                              if (f.jsonString != null &&
+                                  f.jsonString!.dur != "" &&
+                                  int.parse(f.jsonString!.dur) <= 60 &&
+                                  // AND if no negative video
+                                  f.summaryOfVotes >= 0 &&
+                                  // AND if no nsfw video
+                                  f.jsonString!.nsfw == 0) {
+                                moments.add(MomentsItem(
+                                    VideoPlayerMoments(
+                                      momentsController: momentsController,
+                                      defaultCommentsVotingWeight:
+                                          _defaultCommentsVotingWeight!,
+                                      defaultPostsVotingWeight:
+                                          _defaultPostVotingWeight!,
+                                      defaultPostsVotingTip:
+                                          _defaultPostVotingTip!,
+                                      key: UniqueKey(),
+                                      goingInBackgroundCallback:
+                                          widget.goingInBackgroundCallback,
+                                      goingInForegroundCallback:
+                                          widget.goingInForegroundCallback,
+                                      feedItem: f,
+                                      momentsVotingWeight:
+                                          _defaultMomentsVotingWeight!,
+                                      momentsUploadNSFW: _momentsUploadNSFW!,
+                                      momentsUploadOC: _momentsUploadOC!,
+                                      momentsUploadUnlist:
+                                          _momentsUploadUnlist!,
+                                      momentsUploadCrosspost:
+                                          _momentsUploadCrosspost!,
+                                      currentVP: _currentVp,
+                                      userBloc:
+                                          BlocProvider.of<UserBloc>(context),
+                                      fixedDownvoteActivated:
+                                          _fixedDownvoteActivated == "true",
+                                      fixedDownvoteWeight:
+                                          double.parse(_fixedDownvoteWeight!),
+                                    ),
+                                    duration: Duration(
+                                        seconds: f.jsonString!.dur != ""
+                                            ? int.parse(f.jsonString!.dur) + 1
+                                            : 5)));
+                              }
                             }
                           }
                         }
