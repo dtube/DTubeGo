@@ -389,7 +389,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           children: [
                             Visibility(
                               visible:
-                                  _showNSFWSettings, // to get accepted by google those settings are invisible
+                                  false, // to get accepted by google we had to remove this option
                               child: DTubeFormCard(
                                 waitBeforeFadeIn: Duration(milliseconds: 200),
                                 avoidAnimation: _visitedTabs.contains(0),
@@ -1225,27 +1225,31 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                                 !_defaultUploadOC;
                                           });
                                         }),
-                                    ChoiceChip(
-                                        selected: _defaultUploadNSFW,
-                                        label: Text('nsfw content'),
-                                        labelStyle: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                        avatar: _defaultUploadNSFW
-                                            ? FaIcon(
-                                                FontAwesomeIcons.check,
-                                                size: 15,
-                                              )
-                                            : null,
-                                        backgroundColor:
-                                            Colors.grey.withAlpha(30),
-                                        selectedColor: Colors.green[700],
-                                        onSelected: (bool selected) {
-                                          setState(() {
-                                            _defaultUploadNSFW =
-                                                !_defaultUploadNSFW;
-                                          });
-                                        }),
+                                    Visibility(
+                                      visible:
+                                          false, // to get accepted by google we had to remove this option
+                                      child: ChoiceChip(
+                                          selected: _defaultUploadNSFW,
+                                          label: Text('nsfw content'),
+                                          labelStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                          avatar: _defaultUploadNSFW
+                                              ? FaIcon(
+                                                  FontAwesomeIcons.check,
+                                                  size: 15,
+                                                )
+                                              : null,
+                                          backgroundColor:
+                                              Colors.grey.withAlpha(30),
+                                          selectedColor: Colors.green[700],
+                                          onSelected: (bool selected) {
+                                            setState(() {
+                                              _defaultUploadNSFW =
+                                                  !_defaultUploadNSFW;
+                                            });
+                                          }),
+                                    ),
                                     ChoiceChip(
                                         selected: _defaultUploadUnlist,
                                         label: Text('unlist video'),
@@ -1519,27 +1523,31 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                                 !_defaultMomentsOC;
                                           });
                                         }),
-                                    ChoiceChip(
-                                        selected: _defaultMomentsNSFW,
-                                        label: Text('nsfw content'),
-                                        labelStyle: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                        avatar: _defaultMomentsNSFW
-                                            ? FaIcon(
-                                                FontAwesomeIcons.check,
-                                                size: 15,
-                                              )
-                                            : null,
-                                        backgroundColor:
-                                            Colors.grey.withAlpha(30),
-                                        selectedColor: Colors.green[700],
-                                        onSelected: (bool selected) {
-                                          setState(() {
-                                            _defaultMomentsNSFW =
-                                                !_defaultMomentsNSFW;
-                                          });
-                                        }),
+                                    Visibility(
+                                      visible:
+                                          false, // to get accepted by google we had to remove this option
+                                      child: ChoiceChip(
+                                          selected: _defaultMomentsNSFW,
+                                          label: Text('nsfw content'),
+                                          labelStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                          avatar: _defaultMomentsNSFW
+                                              ? FaIcon(
+                                                  FontAwesomeIcons.check,
+                                                  size: 15,
+                                                )
+                                              : null,
+                                          backgroundColor:
+                                              Colors.grey.withAlpha(30),
+                                          selectedColor: Colors.green[700],
+                                          onSelected: (bool selected) {
+                                            setState(() {
+                                              _defaultMomentsNSFW =
+                                                  !_defaultMomentsNSFW;
+                                            });
+                                          }),
+                                    ),
                                     ChoiceChip(
                                         selected: _defaultMomentsUnlist,
                                         label: Text('only show in moments'),

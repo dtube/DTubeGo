@@ -680,24 +680,29 @@ class _UploadFormState extends State<UploadForm> {
                         !stateUploadData.originalContent;
                   });
                 }),
-            ChoiceChip(
-                selected: stateUploadData.nSFWContent,
-                label: Text('nsfw content',
-                    style: Theme.of(context).textTheme.bodyText1),
-                labelStyle: TextStyle(color: globalAlmostWhite),
-                avatar: stateUploadData.nSFWContent
-                    ? FaIcon(
-                        FontAwesomeIcons.check,
-                        size: 15,
-                      )
-                    : null,
-                backgroundColor: Colors.grey.withAlpha(30),
-                selectedColor: Colors.green[700],
-                onSelected: (bool selected) {
-                  setState(() {
-                    stateUploadData.nSFWContent = !stateUploadData.nSFWContent;
-                  });
-                }),
+            Visibility(
+              visible:
+                  false, // to get accepted by google we had to remove this option
+              child: ChoiceChip(
+                  selected: stateUploadData.nSFWContent,
+                  label: Text('nsfw content',
+                      style: Theme.of(context).textTheme.bodyText1),
+                  labelStyle: TextStyle(color: globalAlmostWhite),
+                  avatar: stateUploadData.nSFWContent
+                      ? FaIcon(
+                          FontAwesomeIcons.check,
+                          size: 15,
+                        )
+                      : null,
+                  backgroundColor: Colors.grey.withAlpha(30),
+                  selectedColor: Colors.green[700],
+                  onSelected: (bool selected) {
+                    setState(() {
+                      stateUploadData.nSFWContent =
+                          !stateUploadData.nSFWContent;
+                    });
+                  }),
+            ),
             ChoiceChip(
                 selected: stateUploadData.unlistVideo,
                 label: Text('unlist video',
