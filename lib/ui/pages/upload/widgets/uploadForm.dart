@@ -1,12 +1,9 @@
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:markdown/markdown.dart' as md;
-
-import 'package:dtube_go/style/OpenableHyperlink.dart';
+import 'package:dtube_go/ui/pages/upload/dialogs/HivePostCooldownDialog.dart';
+import 'package:dtube_go/ui/pages/upload/dialogs/UploadTermsDialog.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/UploadStartedDialog.dart';
 import 'package:flutter/services.dart';
 
 import 'package:dtube_go/ui/pages/upload/widgets/PresetCards.dart';
-import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -229,18 +226,7 @@ class _UploadFormState extends State<UploadForm> {
             setState(() {
               stateUploadData.vpPercent = double.parse(stateSettings
                   .settings[settingKey_DefaultUploadVotingWeigth]!);
-              // if (_titleController.text.isEmpty) {
-              //   _titleController.text =
-              //       stateSettings.settings[settingKey_templateTitle]!;
-              // }
-              // if (_descController.text.isEmpty) {
-              //   _descController.text =
-              //       stateSettings.settings[settingKey_templateBody]!;
-              // }
-              // if (_tagController.text.isEmpty) {
-              //   _tagController.text =
-              //       stateSettings.settings[settingKey_templateTag]!;
-              // }
+
               stateUploadData.nSFWContent =
                   stateSettings.settings[settingKey_DefaultUploadNSFW]! ==
                       "true";
@@ -871,196 +857,5 @@ class _UploadFormState extends State<UploadForm> {
         _formIsFilled = false;
       });
     }
-  }
-}
-
-class HivePostCooldownDetectedDialog extends StatelessWidget {
-  const HivePostCooldownDetectedDialog({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return PopUpDialogWithTitleLogo(
-        showTitleWidget: true,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Please wait a bit!",
-                  style: Theme.of(context).textTheme.headline4,
-                  textAlign: TextAlign.center),
-              SizedBox(height: 2.h),
-              Text(
-                  "You want to cross post to hive but you already have posted something within the last 5 minutes.",
-                  style: Theme.of(context).textTheme.bodyText1,
-                  textAlign: TextAlign.center),
-              Text(
-                  "Please wait for the 5 min hive cooldown to expire and try it again.",
-                  style: Theme.of(context).textTheme.bodyText1,
-                  textAlign: TextAlign.center),
-              SizedBox(height: 3.h),
-              Text(
-                  "This cooldown is a property coming from the hive blockchain. We just want to avoid upload errors when you crosspost.",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6!
-                      .copyWith(color: globalRed),
-                  textAlign: TextAlign.center),
-              SizedBox(height: 2.h),
-              InkWell(
-                  child: Container(
-                    padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                    decoration: BoxDecoration(
-                      color: globalRed,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20.0),
-                          bottomRight: Radius.circular(20.0)),
-                    ),
-                    child: Text(
-                      "Okay thanks!",
-                      style: Theme.of(context).textTheme.headline4,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    FocusScope.of(context).unfocus();
-                  }),
-            ],
-          ),
-        ),
-        titleWidget: Center(
-          child: FaIcon(
-            FontAwesomeIcons.cloudUploadAlt,
-            size: 8.h,
-          ),
-        ),
-        callbackOK: () {},
-        titleWidgetPadding: 10.w,
-        titleWidgetSize: 10.w);
-  }
-}
-
-class UploadTermsDialog extends StatefulWidget {
-  UploadTermsDialog({Key? key, required this.agreeToTermsCallback})
-      : super(key: key);
-
-  VoidCallback agreeToTermsCallback;
-
-  @override
-  State<UploadTermsDialog> createState() => _UploadTermsDialogState();
-}
-
-class _UploadTermsDialogState extends State<UploadTermsDialog> {
-  String? _uploadTerms;
-  bool _readingCompleted = false;
-
-  var _controller = ScrollController();
-
-  void loadTermsFromMD() async {
-    final _loadUploadTerms =
-        await rootBundle.loadString('lib/res/mds/uploadTerms.md');
-
-    setState(() {
-      _uploadTerms = _loadUploadTerms;
-    });
-  }
-
-  @override
-  void initState() {
-    loadTermsFromMD();
-    _controller.addListener(() {
-      if (_controller.position.atEdge) {
-        if (_controller.position.pixels == 0) {
-          setState(() {
-            if (_uploadTerms == null) {
-              _readingCompleted = true;
-            } else {
-              _readingCompleted = false;
-            }
-          });
-        } else {
-          setState(() {
-            _readingCompleted = true;
-          });
-        }
-      } else {
-        setState(() {
-          if (_uploadTerms == null) {
-            _readingCompleted = true;
-          } else {
-            _readingCompleted = false;
-          }
-        });
-      }
-    });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return PopUpDialogWithTitleLogo(
-        showTitleWidget: true,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: 6.h),
-              Container(
-                height: 50.h,
-                width: 90.w,
-                child: Markdown(
-                    selectable: false,
-                    controller: _controller,
-                    data: (_uploadTerms != null ? _uploadTerms! : 'loading..'),
-                    extensionSet: md.ExtensionSet(
-                      md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-                      [
-                        md.EmojiSyntax(),
-                        ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
-                      ],
-                      // ),
-                    )),
-              ),
-              SizedBox(height: 3.h),
-              InkWell(
-                  child: Container(
-                    padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                    decoration: BoxDecoration(
-                      color: _readingCompleted ? globalRed : Colors.grey,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20.0),
-                          bottomRight: Radius.circular(20.0)),
-                    ),
-                    child: Text(
-                      "Agree",
-                      style: Theme.of(context).textTheme.headline4,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  onTap: _readingCompleted
-                      ? () {
-                          widget.agreeToTermsCallback();
-                          Navigator.of(context).pop();
-                          FocusScope.of(context).unfocus();
-                        }
-                      : null),
-            ],
-          ),
-        ),
-        titleWidget: Center(
-          child: FaIcon(
-            FontAwesomeIcons.fileSignature,
-            size: 8.h,
-          ),
-        ),
-        callbackOK: () {},
-        titleWidgetPadding: 10.w,
-        titleWidgetSize: 10.w);
   }
 }
