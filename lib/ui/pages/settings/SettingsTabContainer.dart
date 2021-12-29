@@ -85,6 +85,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   bool _showHiveDefaultCommunityHint = false;
   bool _showHiveDefaultTagsHint = false;
 
+  bool _showNSFWSettings = false;
+
   List<String> _imageUploadProviders = ['imgur', 'ipfs'];
   List<int> _visitedTabs = [];
 
@@ -385,95 +387,105 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                       SingleChildScrollView(
                         child: Column(
                           children: [
-                            DTubeFormCard(
-                              waitBeforeFadeIn: Duration(milliseconds: 200),
-                              avoidAnimation: _visitedTabs.contains(0),
-                              childs: [
-                                Stack(
-                                  children: [
-                                    ShowHintIcon(
-                                      onPressed: () {
-                                        setState(() {
-                                          _showDisplayHints =
-                                              !_showDisplayHints;
-                                        });
-                                      },
-                                      alignment: Alignment.topRight,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 1.h),
-                                      child: Text("Display",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 1.h),
-                                  child: Text(
-                                      "How do you want to see those kind of videos in the app?",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1),
-                                ),
-                                DropdownButtonFormField(
-                                  decoration: InputDecoration(
-                                      //filled: true,
-                                      //fillColor: Hexcolor('#ecedec'),
-                                      labelText: 'negative videos:',
-                                      labelStyle:
-                                          Theme.of(context).textTheme.headline5
-                                      //border: new CustomBorderTextFieldSkin().getSkin(),
+                            Visibility(
+                              visible:
+                                  _showNSFWSettings, // to get accepted by google those settings are invisible
+                              child: DTubeFormCard(
+                                waitBeforeFadeIn: Duration(milliseconds: 200),
+                                avoidAnimation: _visitedTabs.contains(0),
+                                childs: [
+                                  Stack(
+                                    children: [
+                                      ShowHintIcon(
+                                        onPressed: () {
+                                          setState(() {
+                                            _showDisplayHints =
+                                                !_showDisplayHints;
+                                          });
+                                        },
+                                        alignment: Alignment.topRight,
                                       ),
-                                  value: _showHidden,
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _showHidden = newValue.toString();
-                                      // widget.justSaved = false;
-                                    });
-                                  },
-                                  items: _showHiddentNsfwOptions.map((option) {
-                                    return DropdownMenuItem(
-                                      child: new Text(option),
-                                      value: option,
-                                    );
-                                  }).toList(),
-                                ),
-                                VisibilityHintText(
-                                    showHint: _showDisplayHints,
-                                    hintText:
-                                        "If a video has a higher sum of VP spent for downvotes than for upvotes it counts as a \"negative\" video."),
-                                DropdownButtonFormField(
-                                  decoration: InputDecoration(
-                                      //filled: true,
-                                      //fillColor: Hexcolor('#ecedec'),
-                                      labelText: 'NSFW videos:',
-                                      labelStyle:
-                                          Theme.of(context).textTheme.headline5
-                                      //border: new CustomBorderTextFieldSkin().getSkin(),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 1.h),
+                                        child: Text("Display",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5),
                                       ),
-                                  value: _showNsfw,
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _showNsfw = newValue.toString();
-                                      // widget.justSaved = false;
-                                    });
-                                  },
-                                  items: _showHiddentNsfwOptions.map((option) {
-                                    return DropdownMenuItem(
-                                      child: new Text(option),
-                                      value: option,
-                                    );
-                                  }).toList(),
-                                ),
-                                VisibilityHintText(
-                                    showHint: _showDisplayHints,
-                                    hintText:
-                                        "The author can tag the new video as NSFW (not safe for work). But also curators can vote with the NSFW curator tag. If this tag has more VP spent than the original video tag the video will also count as \"NSFW\"."),
-                              ],
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 1.h),
+                                    child: Text(
+                                        "How do you want to see those kind of videos in the app?",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1),
+                                  ),
+                                  DropdownButtonFormField(
+                                    decoration: InputDecoration(
+                                        //filled: true,
+                                        //fillColor: Hexcolor('#ecedec'),
+                                        labelText: 'negative videos:',
+                                        labelStyle: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                        //border: new CustomBorderTextFieldSkin().getSkin(),
+                                        ),
+                                    value: _showHidden,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        _showHidden = newValue.toString();
+                                        // widget.justSaved = false;
+                                      });
+                                    },
+                                    items:
+                                        _showHiddentNsfwOptions.map((option) {
+                                      return DropdownMenuItem(
+                                        child: new Text(option),
+                                        value: option,
+                                      );
+                                    }).toList(),
+                                  ),
+                                  VisibilityHintText(
+                                      showHint: _showDisplayHints,
+                                      hintText:
+                                          "If a video has a higher sum of VP spent for downvotes than for upvotes it counts as a \"negative\" video."),
+                                  DropdownButtonFormField(
+                                    decoration: InputDecoration(
+                                        //filled: true,
+                                        //fillColor: Hexcolor('#ecedec'),
+                                        labelText: 'NSFW videos:',
+                                        labelStyle: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                        //border: new CustomBorderTextFieldSkin().getSkin(),
+                                        ),
+                                    value: _showNsfw,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        _showNsfw = newValue.toString();
+                                        // widget.justSaved = false;
+                                      });
+                                    },
+                                    items:
+                                        _showHiddentNsfwOptions.map((option) {
+                                      return DropdownMenuItem(
+                                        child: new Text(option),
+                                        value: option,
+                                      );
+                                    }).toList(),
+                                  ),
+                                  VisibilityHintText(
+                                      showHint: _showDisplayHints,
+                                      hintText:
+                                          "The author can tag the new video as NSFW (not safe for work). But also curators can vote with the NSFW curator tag. If this tag has more VP spent than the original video tag the video will also count as \"NSFW\"."),
+                                ],
+                              ),
                             ),
 
                             DTubeFormCard(
