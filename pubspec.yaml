@@ -161,3 +161,4 @@ flutter:
     - assets/videos/firstpage.mp4
     - lib/res/mds/androidEULA.md
     - lib/res/mds/iOSEULA.md
+    - lib/res/mds/uploadTerms.md
