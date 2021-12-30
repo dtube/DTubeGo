@@ -606,9 +606,11 @@ class _UploadFormState extends State<UploadForm> {
                         if (_tagController.text != "DTubeGo-Moments") {
                           _tagController.text = "DTubeGo-Moments";
                           stateUploadData.tag = _tagController.text;
+                          checkIfFormIsFilled();
                         } else {
                           _tagController.text = "";
                           stateUploadData.tag = _tagController.text;
+                          checkIfFormIsFilled();
                         }
                       });
                     }),
