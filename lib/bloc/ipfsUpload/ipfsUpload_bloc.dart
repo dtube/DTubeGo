@@ -44,7 +44,7 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
 
       _newFile = await repository.compressVideo(event.videoPath);
       MediaInfo _metadata = await VideoCompress.getMediaInfo(event.videoPath);
-      _uploadData.duration = (_metadata.duration! / 10000).floor().toString();
+      _uploadData.duration = (_metadata.duration! / 1000).floor().toString();
 
       _newThumbnail =
           await repository.createThumbnailFromVideo(event.videoPath);
