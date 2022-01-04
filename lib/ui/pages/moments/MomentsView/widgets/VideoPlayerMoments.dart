@@ -1,3 +1,5 @@
+import 'package:share_plus/share_plus.dart';
+
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
@@ -388,6 +390,24 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                           },
                           child: ShadowedIcon(
                             icon: FontAwesomeIcons.comment,
+                            color: globalAlmostWhite,
+                            shadowColor: Colors.black,
+                            size: 8.w,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              // widget.momentsController.pause();
+                              // _videoController.pause();
+                            });
+                            Share.share('https://d.tube/#!/v/' +
+                                widget.feedItem.author +
+                                '/' +
+                                widget.feedItem.link);
+                          },
+                          child: ShadowedIcon(
+                            icon: FontAwesomeIcons.shareAlt,
                             color: globalAlmostWhite,
                             shadowColor: Colors.black,
                             size: 8.w,
