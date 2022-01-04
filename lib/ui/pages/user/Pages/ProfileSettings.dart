@@ -484,11 +484,13 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                               }),
                                           Text(
                                               "your connected youtube channels:"),
-                                          _originalUserData
-                                                      .jsonString!
-                                                      .additionals!
-                                                      .ytchannels !=
-                                                  null
+                                          _originalUserData.jsonString!.additionals !=
+                                                      null &&
+                                                  _originalUserData
+                                                          .jsonString!
+                                                          .additionals!
+                                                          .ytchannels !=
+                                                      null
                                               ? ListView.builder(
                                                   key: new PageStorageKey(
                                                       'linkedytchannels'),
