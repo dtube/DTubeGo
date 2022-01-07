@@ -1,5 +1,5 @@
 import 'package:dtube_go/ui/startup/eula/EulaScreen.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+
 import 'package:dtube_go/ui/startup/OnboardingJourney/OnboardingJourney.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
@@ -16,8 +16,13 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 class LoginForm extends StatefulWidget {
   String? message;
   String? username;
-  bool firstUsage;
-  LoginForm({Key? key, this.message, this.username, required this.firstUsage})
+  bool showOnboardingJourney;
+
+  LoginForm(
+      {Key? key,
+      this.message,
+      this.username,
+      required this.showOnboardingJourney})
       : super(key: key);
 
   @override
@@ -26,7 +31,7 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   late bool _journeyDone;
-  late bool _eulaAccepted = false;
+
   late AuthBloc _loginBloc;
   TextEditingController usernameController = new TextEditingController();
   TextEditingController privateKeyController = new TextEditingController();
@@ -34,8 +39,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
-    _journeyDone = !widget.firstUsage;
-    _eulaAccepted = !widget.firstUsage;
+    _journeyDone = !widget.showOnboardingJourney;
 
     _loginBloc = BlocProvider.of<AuthBloc>(context);
     if (widget.username != null) {
@@ -68,13 +72,6 @@ class _LoginFormState extends State<LoginForm> {
   void journeyDoneCallback() async {
     setState(() {
       _journeyDone = true;
-    });
-  }
-
-  void eulaAcceptedCallback() async {
-    await sec.persistOpenedOnce();
-    setState(() {
-      _eulaAccepted = true;
     });
   }
 
@@ -253,12 +250,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
           // if the app is opened for the first time
           // show EULA
-          Visibility(
-            child: EULAScreen(
-              eulaAcceptedCallback: eulaAcceptedCallback,
-            ),
-            visible: _journeyDone && !_eulaAccepted,
-          ),
+
           // if the app is opened for the first time and eula got accepted
           // show onboarding journey
           Visibility(

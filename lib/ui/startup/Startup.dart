@@ -38,15 +38,17 @@ class _StartUpState extends State<StartUp> {
               create: (BuildContext context) =>
                   SettingsBloc()..add(FetchSettingsEvent()),
 
-              // add event FetchS) // add event FetchSettingsEvent to prepare the data for the pinpad dialog
-              child: PinPadScreen());
+              // add event FetchSettingsEvent to prepare the data for the pinpad dialog
+              child: PinPadScreen(
+                currentTermsAccepted: state.termsAccepted,
+              ));
         }
         // if credentials are wrong or key got deleted -> show login form with the prefilled username
         if (state is SignInFailedState) {
           return LoginForm(
             message: state.message,
             username: state.username,
-            firstUsage: false,
+            showOnboardingJourney: false,
           );
         }
         // if the user logged out or no login credentials have been found in the secure storage
@@ -54,14 +56,14 @@ class _StartUpState extends State<StartUp> {
         if (state is SignOutCompleteState ||
             state is NoSignInInformationFoundState) {
           return LoginForm(
-            firstUsage: false,
+            showOnboardingJourney: false,
           );
         }
         // if the app is opened for the first time
         // show Login with onboarding journey on top
         if (state is NeverUsedTheAppBeforeState) {
           return LoginForm(
-            firstUsage: true,
+            showOnboardingJourney: true,
           );
         }
 
@@ -105,9 +107,7 @@ class _StartUpState extends State<StartUp> {
         }
 
         if (state is NeverUsedTheAppBeforeState) {
-          return LoginForm(
-            firstUsage: true,
-          );
+          return LoginForm(showOnboardingJourney: true);
         }
 
         // as long as there are no informations from the authentication logic -> show loading animation

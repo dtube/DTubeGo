@@ -89,7 +89,7 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
       controlsMargin: const EdgeInsets.all(16),
       controlsPadding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
       dotsDecorator: DotsDecorator(
-        size: Size(4.w, 2.w),
+        size: Size(2.w, 2.w),
         color: globalAlmostWhite,
         activeSize: Size(5.w, 2.w),
         activeColor: globalRed,

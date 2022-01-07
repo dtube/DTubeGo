@@ -61,6 +61,9 @@ const settingKey_HiveStillInCooldown = "LASTHIVEPOSTCOOLDOWN";
 
 const settingKey_BlockedUsers = "BLOCKEDUSERS";
 
+const settingKey_TermsAcceptedVersion = "TERMS1.1"; // versioning because:
+//if we would update the terms we want to view the updated version also for existing users
+
 // const _txsKey = 'TXS';
 const _storage = FlutterSecureStorage();
 
@@ -111,6 +114,10 @@ Future<void> persistOpenedOnce() async {
 
 Future<void> persistFirstLogin() async {
   await _storage.write(key: settingKey_FirstLogin, value: "false");
+}
+
+Future<void> persistCurrentTermsAccepted() async {
+  await _storage.write(key: settingKey_TermsAcceptedVersion, value: "true");
 }
 
 Future<void> persistHiveSignerData(String accessToken, String expiresIn,
@@ -242,6 +249,20 @@ Future<bool> getFirstLogin() async {
     return true;
   } else {
     return false;
+  }
+}
+
+Future<bool> getTermsAccepted() async {
+  String? _accepted = "";
+  try {
+    _accepted = await _storage.read(key: settingKey_TermsAcceptedVersion);
+  } catch (e) {
+    _accepted = "false"; // fallback: not accepted current terms
+  }
+  if (_accepted == null || _accepted != "true") {
+    return false;
+  } else {
+    return true;
   }
 }
 

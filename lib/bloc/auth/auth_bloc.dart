@@ -19,6 +19,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       String? _applicationUser = await sec.getUsername();
       String? _privKey = await sec.getPrivateKey();
       bool _openedOnce = await sec.getOpenedOnce();
+      bool _termsAccepted = await sec.getTermsAccepted();
+
       emit(SignInLoadingState());
       // commented out for debugging
       _avalonApiNode = await discoverAPINode();
@@ -38,7 +40,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 _avalonApiNode, _applicationUser, _privKey);
             // if the signin is legit
             if (keyIsValid) {
-              emit(SignedInState(firstSignIn: true));
+              emit(SignedInState(
+                  firstSignIn: true, termsAccepted: _termsAccepted));
               // if the sigin is not legit (anymore)
             } else {
               emit(SignInFailedState(
@@ -56,10 +59,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<SignOutEvent>((event, emit) async {
-      String _avalonApiNode = await sec.getNode();
-      String? _applicationUser = await sec.getUsername();
-      String? _privKey = await sec.getPrivateKey();
-      bool _openedOnce = await sec.getOpenedOnce();
       emit(SignOutInitiatedState());
       try {
         var loggedOut = await repository.signOut();
@@ -77,9 +76,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<SignInWithCredentialsEvent>((event, emit) async {
       String _avalonApiNode = await sec.getNode();
-      String? _applicationUser = await sec.getUsername();
-      String? _privKey = await sec.getPrivateKey();
-      bool _openedOnce = await sec.getOpenedOnce();
+
+      bool _termsAccepted = await sec.getTermsAccepted();
       emit(SignInLoadingState());
       try {
         // check the signin data
@@ -90,7 +88,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           // save the information in the secure storage
           sec.persistUsernameKey(event.username, event.privateKey);
 
-          emit(SignedInState(firstSignIn: true));
+          emit(SignedInState(firstSignIn: true, termsAccepted: _termsAccepted));
         } else {
           // if the login is not legit
           emit(SignInFailedState(
