@@ -396,7 +396,9 @@ class _UploadFormState extends State<UploadForm> {
   }
 
   Widget videoPreview() {
-    if (!stateUploadData.localVideoFile) {
+    // if it is a youtube video
+    if (!stateUploadData.localVideoFile &&
+        stateUploadData.videoSourceHash == "") {
       // _tagFocus.requestFocus();
       checkIfFormIsFilled();
       return Container(
@@ -413,7 +415,44 @@ class _UploadFormState extends State<UploadForm> {
           ],
         ),
       );
+      // if it is a custom self hosted video
+    } else if (!stateUploadData.localVideoFile &&
+        stateUploadData.videoSourceHash != "") {
+      // _tagFocus.requestFocus();
+      checkIfFormIsFilled();
+      String _videoUrl =
+          ["IPFS", "Skynet"].contains(stateUploadData.videoLocation)
+              ? (stateUploadData.videoLocation == "IPFS"
+                      ? AppConfig.ipfsVideoUrl
+                      : AppConfig.siaVideoUrl) +
+                  (stateUploadData.video240pHash != ""
+                      ? stateUploadData.video240pHash
+                      : stateUploadData.video480pHash != ""
+                          ? stateUploadData.video480pHash
+                          : stateUploadData.videoSourceHash)
+              : _video!.path;
+
+      return Container(
+        width: 95.w,
+        child: DTubeFormCard(
+            avoidAnimation: true,
+            waitBeforeFadeIn: Duration(seconds: 0),
+            childs: [
+              BP(
+                  videoUrl: _videoUrl,
+                  looping: false,
+                  autoplay: false,
+                  localFile: false,
+                  controls: true,
+                  //key: UniqueKey(),
+                  usedAsPreview: true,
+                  allowFullscreen: false,
+                  portraitVideoPadding: 50.0,
+                  videocontroller: _videocontroller),
+            ]),
+      );
     } else {
+      // if none of above -> file picker
       return Container(
         width: 95.w,
         child: DTubeFormCard(
@@ -468,10 +507,18 @@ class _UploadFormState extends State<UploadForm> {
                     ? Column(children: [
                         showVideoPreview
                             ? BP(
-                                videoUrl: _video!.path,
+                                videoUrl: stateUploadData.videoLocation ==
+                                        "IPFS"
+                                    ? AppConfig.ipfsVideoUrl +
+                                        stateUploadData.videoSourceHash
+                                    : stateUploadData.videoLocation == "Skynet"
+                                        ? AppConfig.siaVideoUrl +
+                                            stateUploadData.videoSourceHash
+                                        : _video!.path,
                                 looping: false,
                                 autoplay: false,
-                                localFile: true,
+                                localFile:
+                                    stateUploadData.videoSourceHash == "",
                                 controls: true,
                                 //key: UniqueKey(),
                                 usedAsPreview: true,

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -18,6 +19,38 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
   TransactionBloc({required this.repository})
       : super(TransactionInitialState()) {
+// TODO: support more providers
+    Future<String> uploadThumbnail(String localFilePath) async {
+      //String _url = endpoint;
+      String _url = "https://api.imgur.com/3/image";
+
+      String authHeader = "Client-ID fc2dde68a83c037";
+
+      var dio = Dio();
+      dio.options.headers["Authorization"] = authHeader;
+      String fileName = localFilePath.split('/').last;
+
+      FormData data = FormData.fromMap({
+        "image": await MultipartFile.fromFile(
+          localFilePath,
+          filename: fileName,
+        ),
+      });
+
+      var response = await dio.post(
+        _url,
+        data: data,
+      );
+
+      if (response.statusCode == 200) {
+        var uploadedUrl = response.data['data']['link'];
+
+        return uploadedUrl;
+      } else {
+        throw Exception();
+      }
+    }
+
     on<SetInitState>((event, emit) async {
       emit(TransactionInitialState());
     });
@@ -191,24 +224,65 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         // we have a source hash => ipfs uploaded video
         if (_upload.videoSourceHash != "") {
           errorOnUpload = false;
+
+          var fileJson = {};
+          var vidJson = {};
+
+          if (_upload.video480pHash != "" && _upload.video240pHash != "") {
+            vidJson = {
+              "240": _upload.video240pHash,
+              "480": _upload.video480pHash,
+              "src": _upload.videoSourceHash
+            };
+          } else if (_upload.video480pHash != "") {
+            vidJson = {
+              "480": _upload.video480pHash,
+              "src": _upload.videoSourceHash
+            };
+          } else if (_upload.video240pHash != "") {
+            vidJson = {
+              "240": _upload.video240pHash,
+              "src": _upload.videoSourceHash
+            };
+          } else {
+            vidJson = {"src": _upload.videoSourceHash};
+          }
+
+          if (_upload.videoLocation == "Skynet") {
+            if (_upload.videoSpriteHash != "") {
+              fileJson = {
+                "sia": {
+                  "vid": vidJson,
+                  "img": {"spr": _upload.videoSpriteHash},
+                }
+              };
+            } else {
+              fileJson = {
+                "sia": {
+                  "vid": vidJson,
+                }
+              };
+            }
+          } else {
+            if (_upload.videoSpriteHash != "") {
+              fileJson = {
+                "ipfs": {
+                  "vid": vidJson,
+                  "img": {"spr": _upload.videoSpriteHash},
+                  "gw": "https://player.d.tube"
+                }
+              };
+            } else {
+              fileJson = {
+                "ipfs": {"vid": vidJson, "gw": "https://player.d.tube"}
+              };
+            }
+          }
+
           // we have NO thumbnail location defined => ipfs uploaded image
           if (_upload.thumbnailLocation == "") {
             jsonMetadata = {
-              "files": {
-                "ipfs": {
-                  "vid": {
-                    "240": _upload.video240pHash,
-                    "480": _upload.video480pHash,
-                    "src": _upload.videoSourceHash
-                  },
-                  "img": {
-                    "118": _upload.thumbnail210Hash,
-                    "360": _upload.thumbnail640Hash,
-                    "spr": _upload.videoSpriteHash
-                  },
-                  "gw": "https://player.d.tube"
-                },
-              },
+              "files": fileJson,
               "title": _upload.title,
               "description": _upload.description,
               "dur": _upload.duration,
@@ -226,18 +300,17 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             };
           } else {
             // we have a thumbnail location defined => no ipfs uploaded image so third party thumbnail
+
+            // TODO: use the thirdpartyupload bloc!
+            String _thumbUrl = "";
+            if (!_upload.thumbnailLocation.contains("http")) {
+              _thumbUrl = await uploadThumbnail(_upload.thumbnailLocation);
+            } else {
+              _thumbUrl = _upload.thumbnailLocation;
+            }
+
             jsonMetadata = {
-              "files": {
-                "ipfs": {
-                  "vid": {
-                    "240": _upload.video240pHash,
-                    "480": _upload.video480pHash,
-                    "src": _upload.videoSourceHash
-                  },
-                  "img": {"spr": _upload.videoSpriteHash},
-                  "gw": "https://player.d.tube"
-                },
-              },
+              "files": fileJson,
               "title": _upload.title,
               "description": _upload.description,
               "dur": _upload.duration,
@@ -245,8 +318,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               "hide": _upload.unlistVideo ? 1 : 0,
               "nsfw": _upload.nSFWContent ? 1 : 0,
               "oc": _upload.originalContent ? 1 : 0,
-              "thumbnailUrlExternal": _upload.thumbnailLocation,
-              "thumbnailUrl": _upload.thumbnailLocation,
+              "thumbnailUrlExternal": _thumbUrl,
+              "thumbnailUrl": _thumbUrl,
               "app": "dtube.go.app_" +
                   packageInfo.version +
                   '+' +
@@ -258,10 +331,17 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           }
         } else {
           // we have NO source hash => third party video
-          // if there is no path in _videoLocation -> uploader probably succeeded
+          // double check: if there is no path in _videoLocation because of upload issues
           if (!_upload.videoLocation.contains("/")) {
             // and we have A defined thumbnail location => take the uploaded thumbnail
-            if (_upload.thumbnailLocation != "" && !_upload.localThumbnail) {
+            if (_upload.thumbnailLocation != "") {
+              // TODO: use the thirdpartyupload bloc!
+              String _thumbUrl = "";
+              if (!_upload.thumbnailLocation.contains("http")) {
+                _thumbUrl = await uploadThumbnail(_upload.thumbnailLocation);
+              } else {
+                _thumbUrl = _upload.thumbnailLocation;
+              }
               jsonMetadata = {
                 "files": {"youtube": _upload.videoLocation},
                 "title": _upload.title,
@@ -271,8 +351,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                 "hide": _upload.unlistVideo ? 1 : 0,
                 "nsfw": _upload.nSFWContent ? 1 : 0,
                 "oc": _upload.originalContent ? 1 : 0,
-                "thumbnailUrlExternal": _upload.thumbnailLocation,
-                "thumbnailUrl": _upload.thumbnailLocation,
+                "thumbnailUrlExternal": _thumbUrl,
+                "thumbnailUrl": _thumbUrl,
                 "app": "dtube.go.app_" +
                     packageInfo.version +
                     '+' +
