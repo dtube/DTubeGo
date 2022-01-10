@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:dtube_go/ui/pages/wallet/Widgets/resetMasterKeyDialog.dart';
 
@@ -72,6 +74,7 @@ class _KeyManagementPageState extends State<KeyManagementPage>
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 InputChip(
+                  isEnabled: globals.keyPermissions.contains(10),
                   label: Text("new custom key",
                       style: Theme.of(context).textTheme.headline6),
                   backgroundColor: globalRed,
@@ -85,6 +88,7 @@ class _KeyManagementPageState extends State<KeyManagementPage>
                   },
                 ),
                 InputChip(
+                  isEnabled: globals.keyPermissions.contains(12),
                   label: Text("change master key",
                       style: Theme.of(context).textTheme.headline6),
                   backgroundColor: globalRed,

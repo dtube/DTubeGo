@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'dart:io';
 import 'package:disk_space/disk_space.dart';
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
@@ -289,26 +291,29 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
           );
         }
 
-        return GestureDetector(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ShadowedIcon(
-                  size: 10.w,
-                  icon: FontAwesomeIcons.eye,
-                  color: globalAlmostWhite,
-                  shadowColor: Colors.black),
-              ShadowedIcon(
-                  size: 5.w,
-                  icon: FontAwesomeIcons.plus,
-                  color: globalAlmostWhite,
-                  shadowColor: Colors.black)
-            ],
+        return Visibility(
+          visible: globals.keyPermissions.contains(4),
+          child: GestureDetector(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ShadowedIcon(
+                    size: 10.w,
+                    icon: FontAwesomeIcons.eye,
+                    color: globalAlmostWhite,
+                    shadowColor: Colors.black),
+                ShadowedIcon(
+                    size: 5.w,
+                    icon: FontAwesomeIcons.plus,
+                    color: globalAlmostWhite,
+                    shadowColor: Colors.black)
+              ],
+            ),
+            onTap: () async {
+              widget.clickedCallback();
+              getFile(widget.currentVT.floor(), widget.defaultVotingWeight);
+            },
           ),
-          onTap: () async {
-            widget.clickedCallback();
-            getFile(widget.currentVT.floor(), widget.defaultVotingWeight);
-          },
         );
       },
     );

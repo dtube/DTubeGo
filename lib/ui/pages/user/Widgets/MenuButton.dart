@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
@@ -101,6 +103,7 @@ Widget buildUserMenuSpeedDial(
               size: globalIconSizeMedium),
           elevation: 0,
           backgroundColor: Colors.transparent,
+          visible: globals.keyPermissions.contains(3),
           onTap: () {
             showDialog<String>(
                 context: context,
@@ -118,6 +121,9 @@ Widget buildUserMenuSpeedDial(
               shadowColor: Colors.black,
               size: globalIconSizeMedium),
           elevation: 0,
+          visible: user.alreadyFollowing
+              ? globals.keyPermissions.contains(8)
+              : globals.keyPermissions.contains(7),
           backgroundColor: Colors.transparent,
           onTap: () async {
             TxData txdata = TxData(

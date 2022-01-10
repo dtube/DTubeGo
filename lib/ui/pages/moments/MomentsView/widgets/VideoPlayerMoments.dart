@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:share_plus/share_plus.dart';
 
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -281,6 +283,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             }
                           },
                           child: ShadowedIcon(
+                            visible: globals.keyPermissions.contains(5),
                             icon: FontAwesomeIcons.thumbsUp,
                             color: widget.feedItem.alreadyVoted! &&
                                     widget.feedItem.alreadyVotedDirection!
@@ -344,6 +347,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             }
                           },
                           child: ShadowedIcon(
+                            visible: globals.keyPermissions.contains(5),
                             icon: FontAwesomeIcons.flag,
                             color: widget.feedItem.alreadyVoted! &&
                                     !widget.feedItem.alreadyVotedDirection!
@@ -389,6 +393,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             );
                           },
                           child: ShadowedIcon(
+                            visible: globals.keyPermissions.contains(4),
                             icon: FontAwesomeIcons.comment,
                             color: globalAlmostWhite,
                             shadowColor: Colors.black,

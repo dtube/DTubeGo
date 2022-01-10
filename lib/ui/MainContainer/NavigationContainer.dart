@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/ui/pages/Explore/GenreBase.dart';
 import 'package:dtube_go/ui/pages/upload/UploadPresetSelection.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
@@ -99,7 +101,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
             return Center(
               child: new ShadowedIcon(
                 icon: FontAwesomeIcons.plus,
-                color: globalAlmostWhite,
+                color: globals.keyPermissions.contains(4)
+                    ? globalAlmostWhite
+                    : Colors.grey,
                 shadowColor: Colors.black,
                 size: globalIconSizeMedium,
               ),
@@ -354,31 +358,33 @@ class _NavigationContainerState extends State<NavigationContainer> {
                 }
                 // if pressed menu button is at the upload button position
                 if (index == 2) {
-                  // if there is a current background upload running
-                  //  show snackbar and do not navigate to the upload screen
-                  if (BlocProvider.of<AppStateBloc>(context).state
-                          is UploadStartedState ||
-                      BlocProvider.of<AppStateBloc>(context).state
-                          is UploadProcessingState) {
-                    showCustomFlushbarOnError(
-                        "please wait until upload is finished", context);
-                  }
-                  // if the most recent background upload task is finished
-                  // reset UploadState and navigate to the upload screen
-                  if (BlocProvider.of<AppStateBloc>(context).state
-                          is UploadFinishedState ||
-                      BlocProvider.of<AppStateBloc>(context).state
-                          is UploadFailedState) {
-                    BlocProvider.of<AppStateBloc>(context).add(
-                        UploadStateChangedEvent(
-                            uploadState: UploadInitialState()));
-                    _currentIndex = index;
-                  }
-                  // if there is no background upload task running or recently finished
-                  if (BlocProvider.of<AppStateBloc>(context).state
-                      is UploadInitialState) {
-                    // navigate to the uploader screen
-                    _currentIndex = index;
+                  if (globals.keyPermissions.contains(4)) {
+                    // if there is a current background upload running
+                    //  show snackbar and do not navigate to the upload screen
+                    if (BlocProvider.of<AppStateBloc>(context).state
+                            is UploadStartedState ||
+                        BlocProvider.of<AppStateBloc>(context).state
+                            is UploadProcessingState) {
+                      showCustomFlushbarOnError(
+                          "please wait until upload is finished", context);
+                    }
+                    // if the most recent background upload task is finished
+                    // reset UploadState and navigate to the upload screen
+                    if (BlocProvider.of<AppStateBloc>(context).state
+                            is UploadFinishedState ||
+                        BlocProvider.of<AppStateBloc>(context).state
+                            is UploadFailedState) {
+                      BlocProvider.of<AppStateBloc>(context).add(
+                          UploadStateChangedEvent(
+                              uploadState: UploadInitialState()));
+                      _currentIndex = index;
+                    }
+                    // if there is no background upload task running or recently finished
+                    if (BlocProvider.of<AppStateBloc>(context).state
+                        is UploadInitialState) {
+                      // navigate to the uploader screen
+                      _currentIndex = index;
+                    }
                   }
                 } else {
                   _currentIndex = index;

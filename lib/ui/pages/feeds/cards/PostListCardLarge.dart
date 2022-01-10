@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'dart:io';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
@@ -751,6 +753,8 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 7.w),
                                   child: ShadowedIcon(
+                                      visible:
+                                          globals.keyPermissions.contains(4),
                                       icon: FontAwesomeIcons.comment,
                                       color: globalAlmostWhite,
                                       shadowColor: Colors.black,
@@ -783,6 +787,8 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 7.w),
                                   child: ShadowedIcon(
+                                      visible:
+                                          globals.keyPermissions.contains(5),
                                       icon: FontAwesomeIcons.flag,
                                       color: !widget.alreadyVoted
                                           ? globalAlmostWhite
@@ -838,6 +844,8 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 7.w),
                                   child: ShadowedIcon(
+                                      visible:
+                                          globals.keyPermissions.contains(5),
                                       icon: FontAwesomeIcons.thumbsUp,
                                       color: !widget.alreadyVoted
                                           ? globalAlmostWhite
@@ -892,6 +900,8 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 7.w),
                                   child: ShadowedIcon(
+                                      visible:
+                                          globals.keyPermissions.contains(3),
                                       icon: FontAwesomeIcons.gift,
                                       color: globalAlmostWhite,
                                       shadowColor: Colors.black,

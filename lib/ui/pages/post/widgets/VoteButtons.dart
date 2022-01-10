@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
@@ -104,6 +106,7 @@ class _VotingButtonsState extends State<VotingButtons> {
                   icon: Padding(
                     padding: const EdgeInsets.only(left: 4.0),
                     child: ShadowedIcon(
+                      visible: globals.keyPermissions.contains(5),
                       icon: FontAwesomeIcons.thumbsUp,
                       color: widget.alreadyVoted && widget.alreadyVotedDirection
                           ? globalRed
@@ -226,6 +229,7 @@ class VotingButtonRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InputChip(
+            isEnabled: globals.keyPermissions.contains(5),
             label: Text(
               widget.upvotes != null && widget.upvotes!.isNotEmpty
                   ? (widget.upvotes!.length).toString()
@@ -281,6 +285,7 @@ class VotingButtonRow extends StatelessWidget {
             width: 8,
           ),
           InputChip(
+            isEnabled: globals.keyPermissions.contains(5),
             label: Text(
               widget.downvotes != null && widget.downvotes!.isNotEmpty
                   ? (widget.downvotes!.length).toString()
