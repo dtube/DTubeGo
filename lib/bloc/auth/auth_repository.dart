@@ -1,3 +1,4 @@
+import 'package:dtube_go/bloc/config/txTypes.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
 import 'package:dtube_go/bloc/auth/auth_response_model.dart';
@@ -64,11 +65,16 @@ class AuthRepositoryImpl implements AuthRepository {
         Auth authInformation = ApiResultModel.fromJson(data).auth;
         if (pub.toString() == authInformation.pub) {
           _keyIsValid = true;
+          for (var txType in txTypes.keys) {
+            globals.keyPermissions.add(txType);
+          }
+          print(globals.keyPermissions);
         } else {
           for (Keys key in authInformation.keys) {
             if (key.pub == pub.toString()) {
-              // availableTxTypes = key.types;
               _keyIsValid = true;
+              globals.keyPermissions = key.types;
+              print(globals.keyPermissions);
               break;
             }
           }

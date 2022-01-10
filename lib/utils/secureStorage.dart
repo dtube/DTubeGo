@@ -29,6 +29,8 @@ const settingKey_templateTitle = 'TEMPLATETITLE';
 const settingKey_templateBody = 'TEMPLATEBODY';
 const settingKey_templateTag = 'TEMPLATETAG';
 
+const settingKey_additionalTemplates = "ADDITIONALTEMPLATES";
+
 const settingKey_momentTitle = 'MOMENTTITLE';
 const settingKey_momentBody = 'MOMENTBODY';
 
@@ -180,6 +182,13 @@ Future<void> persistTemplateSettings(
   await _storage.write(key: settingKey_templateTitle, value: templateTitle);
   await _storage.write(key: settingKey_templateBody, value: templateBody);
   await _storage.write(key: settingKey_templateTag, value: templateTag);
+}
+
+Future<void> persistAdditionalTemplates(
+  String templatesJSON,
+) async {
+  await _storage.write(
+      key: settingKey_additionalTemplates, value: templatesJSON);
 }
 
 Future<void> persistMomentTemplateSettings(
@@ -414,6 +423,20 @@ Future<String> getTemplateBody() async {
   String? _setting = "";
   try {
     _setting = await _storage.read(key: settingKey_templateBody);
+  } catch (e) {
+    _setting = "";
+  }
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getAdditionalTemplates() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_additionalTemplates);
   } catch (e) {
     _setting = "";
   }

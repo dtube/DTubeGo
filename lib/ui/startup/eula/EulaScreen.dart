@@ -26,17 +26,16 @@ class _EULAScreenState extends State<EULAScreen> {
   var _controller = ScrollController();
 
   void loadEulaAssets() async {
-
     if (Platform.isAndroid) {
       final _loadedEulaAndroidData =
-      await rootBundle.loadString('lib/res/mds/androidEULA.md');
+          await rootBundle.loadString('lib/res/mds/androidEULA.md');
 
       setState(() {
         _eulaTextAndroid = _loadedEulaAndroidData;
       });
     } else if (Platform.isIOS) {
       final _loadedEulaIOSData =
-      await rootBundle.loadString('lib/res/mds/iOSEULA.md');
+          await rootBundle.loadString('lib/res/mds/iOSEULA.md');
 
       setState(() {
         _eulaTextIOS = _loadedEulaIOSData;
