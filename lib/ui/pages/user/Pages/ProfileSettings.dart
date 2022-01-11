@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
 import 'package:dtube_go/res/secretConfigValues.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/ConnectYTChannelDialog.dart';
@@ -441,6 +443,8 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                             _visitedTabs.contains(1),
                                         childs: [
                                           InputChip(
+                                            isEnabled: globals.keyPermissions
+                                                .contains(6),
                                             label: Text("connect to youtube"),
                                             backgroundColor: globalRed,
                                             onPressed: () {
@@ -543,14 +547,14 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                 if (state is TransactionPreprocessingState &&
                     state.txType == 6) {
                   return Padding(
-                      padding: EdgeInsets.fromLTRB(0, 2.h, 4.w, 0),
+                      padding: EdgeInsets.fromLTRB(0, 1.h, 4.w, 0),
                       child: DTubeLogoPulse(size: 9.w));
                 }
 
                 if (state is TransactionInitialState) {
                   return GestureDetector(
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 2.h, 4.w, 0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 4.w, 0),
                         child: HeartBeat(
                           preferences: AnimationPreferences(
                               autoPlay: AnimationPlayStates.Loop,
@@ -558,6 +562,9 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                               duration: Duration(seconds: 1)),
                           child: DecoratedIcon(
                             FontAwesomeIcons.save,
+                            color: globals.keyPermissions.contains(6)
+                                ? globalAlmostWhite
+                                : Colors.grey,
                             size: 8.w,
                             shadows: [
                               BoxShadow(
@@ -568,53 +575,60 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                           ),
                         ),
                       ),
-                      onTap: () async {
-                        List<String> ytChannels = [];
-                        if (_originalUserData
-                                .jsonString!.additionals!.ytchannels !=
-                            null) {
-                          ytChannels = _originalUserData
-                              .jsonString!.additionals!.ytchannels!;
-                        }
-                        if (_connectedYTChannels.length > 0) {
-                          for (List<String> item in _connectedYTChannels) {
-                            // add encrypted yt channel id if not already in list
-                            if (!ytChannels.contains(item[1])) {
-                              ytChannels.add(item[1]);
-                            }
-                          }
-                        }
+                      onTap: !globals.keyPermissions.contains(6)
+                          ? null
+                          : () async {
+                              List<String> ytChannels = [];
+                              if (_originalUserData
+                                      .jsonString!.additionals!.ytchannels !=
+                                  null) {
+                                ytChannels = _originalUserData
+                                    .jsonString!.additionals!.ytchannels!;
+                              }
+                              if (_connectedYTChannels.length > 0) {
+                                for (List<String> item
+                                    in _connectedYTChannels) {
+                                  // add encrypted yt channel id if not already in list
+                                  if (!ytChannels.contains(item[1])) {
+                                    ytChannels.add(item[1]);
+                                  }
+                                }
+                              }
 
-                        User _saveUserData = new User(
-                            sId: _originalUserData.sId,
-                            name: _originalUserData.name,
-                            pub: _originalUserData.pub,
-                            balance: _originalUserData.balance,
-                            keys: _originalUserData.keys,
-                            alreadyFollowing: false,
-                            jsonString: new JsonString(
-                                node: _originalUserData.jsonString?.node,
-                                profile: new Profile(
-                                    about: _aboutController.text,
-                                    avatar: _avatarController.text,
-                                    coverImage: _coverImageController.text,
-                                    hive: _originalUserData
-                                        .jsonString!.profile?.hive,
-                                    location: _locationController.text,
-                                    steem: _originalUserData
-                                        .jsonString!.profile?.steem,
-                                    website: _websiteController.text),
-                                additionals: new Additionals(
-                                    accountType: _accountType,
-                                    displayName: _displayNameController.text,
-                                    blocking: _originalUserData
-                                        .jsonString!.additionals!.blocking,
-                                    ytchannels: ytChannels)));
+                              User _saveUserData = new User(
+                                  sId: _originalUserData.sId,
+                                  name: _originalUserData.name,
+                                  pub: _originalUserData.pub,
+                                  balance: _originalUserData.balance,
+                                  keys: _originalUserData.keys,
+                                  alreadyFollowing: false,
+                                  jsonString: new JsonString(
+                                      node: _originalUserData.jsonString?.node,
+                                      profile: new Profile(
+                                          about: _aboutController.text,
+                                          avatar: _avatarController.text,
+                                          coverImage:
+                                              _coverImageController.text,
+                                          hive: _originalUserData
+                                              .jsonString!.profile?.hive,
+                                          location: _locationController.text,
+                                          steem: _originalUserData
+                                              .jsonString!.profile?.steem,
+                                          website: _websiteController.text),
+                                      additionals: new Additionals(
+                                          accountType: _accountType,
+                                          displayName:
+                                              _displayNameController.text,
+                                          blocking: _originalUserData
+                                              .jsonString!
+                                              .additionals!
+                                              .blocking,
+                                          ytchannels: ytChannels)));
 
-                        BlocProvider.of<TransactionBloc>(context)
-                            .add(ChangeProfileData(_saveUserData, context));
-                        // ignore: empty_statements
-                      });
+                              BlocProvider.of<TransactionBloc>(context).add(
+                                  ChangeProfileData(_saveUserData, context));
+                              // ignore: empty_statements
+                            });
                 } else {
                   return Container();
                 }

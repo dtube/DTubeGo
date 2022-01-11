@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/wallet/Widgets/transferDialog.dart';
@@ -42,6 +44,7 @@ class _WalletPageState extends State<WalletPage>
               Align(
                 alignment: Alignment.topCenter,
                 child: InputChip(
+                  isEnabled: globals.keyPermissions.contains(3),
                   label: Text("new transfer",
                       style: Theme.of(context).textTheme.headline6),
                   backgroundColor: globalRed,

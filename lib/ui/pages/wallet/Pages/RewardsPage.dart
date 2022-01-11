@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/rewards/rewards_bloc.dart';
@@ -417,14 +419,16 @@ class _ClaimRewardButtonState extends State<ClaimRewardButton> {
           return CircularProgressIndicator();
         } else {
           return ElevatedButton(
-            onPressed: () {
-              TxData txdata = TxData(
-                author: widget.author,
-                link: widget.link,
-              );
-              Transaction newTx = Transaction(type: 17, data: txdata);
-              _txBloc.add(SignAndSendTransactionEvent(newTx));
-            },
+            onPressed: !globals.keyPermissions.contains(17)
+                ? null
+                : () {
+                    TxData txdata = TxData(
+                      author: widget.author,
+                      link: widget.link,
+                    );
+                    Transaction newTx = Transaction(type: 17, data: txdata);
+                    _txBloc.add(SignAndSendTransactionEvent(newTx));
+                  },
             child: Padding(
               padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
               child: Column(
