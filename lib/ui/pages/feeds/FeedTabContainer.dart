@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_go/res/appConfigValues.dart';
@@ -42,9 +44,37 @@ class _FeedMainPageState extends State<FeedMainPage>
   List<FilterTag> selectedMainTags = [];
   bool showTagFilter = false;
   FocusNode tagSearch = new FocusNode();
+  late List<FeedViewBase> tabBarFeedItemList = [
+    FeedViewBase(
+        feedType: 'NewFeed',
+        largeFormat: true,
+        showAuthor: false,
+        scrollCallback: (bool) {}),
+    FeedViewBase(
+        feedType: 'MyFeed',
+        largeFormat: true,
+        showAuthor: false,
+        scrollCallback: (bool) {}),
+    FeedViewBase(
+        feedType: 'HotFeed',
+        largeFormat: true,
+        showAuthor: false,
+        scrollCallback: (bool) {}),
+    FeedViewBase(
+        feedType: 'TrendingFeed',
+        largeFormat: true,
+        showAuthor: false,
+        scrollCallback: (bool) {}),
+  ];
   @override
   void initState() {
-    _tabController = new TabController(length: 4, vsync: this);
+    if (globals.keyPermissions.isEmpty) {
+      tabBarFeedItemList.removeAt(1); // remove MyFeed (followings) from tabs
+      _tabNames.removeAt(1);
+    }
+
+    _tabController =
+        new TabController(length: tabBarFeedItemList.length, vsync: this);
     _tabController.addListener(() {
       if (_tabController.index != _selectedIndex) {
         setState(() {
@@ -59,20 +89,35 @@ class _FeedMainPageState extends State<FeedMainPage>
             break;
 
           case 1:
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(feedType: "MyFeed"));
+            if (globals.keyPermissions.isEmpty) {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "HotFeed"));
+            } else {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "MyFeed"));
+            }
             break;
 
           case 2:
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(feedType: "HotFeed"));
+            if (globals.keyPermissions.isEmpty) {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "TrendingFeed"));
+            } else {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "HotFeed"));
+            }
             break;
+
           case 3:
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(feedType: "TrendingFeed"));
+            if (!globals.keyPermissions.isEmpty) {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "TrendingFeed"));
+            }
             break;
 
           default:
@@ -112,28 +157,7 @@ class _FeedMainPageState extends State<FeedMainPage>
           Padding(
             padding: _paddingTabBarView,
             child: TabBarView(
-              children: [
-                FeedViewBase(
-                    feedType: 'NewFeed',
-                    largeFormat: true,
-                    showAuthor: false,
-                    scrollCallback: (bool) {}),
-                FeedViewBase(
-                    feedType: 'MyFeed',
-                    largeFormat: true,
-                    showAuthor: false,
-                    scrollCallback: (bool) {}),
-                FeedViewBase(
-                    feedType: 'HotFeed',
-                    largeFormat: true,
-                    showAuthor: false,
-                    scrollCallback: (bool) {}),
-                FeedViewBase(
-                    feedType: 'TrendingFeed',
-                    largeFormat: true,
-                    showAuthor: false,
-                    scrollCallback: (bool) {}),
-              ],
+              children: tabBarFeedItemList,
               controller: _tabController,
             ),
           ),
@@ -145,7 +169,9 @@ class _FeedMainPageState extends State<FeedMainPage>
               alignment: Alignment.topRight,
               padding: EdgeInsets.only(top: 11.h, right: 4.w),
               rotation: 0,
-              menuSize: globalIconSizeMedium * 6,
+              menuSize: globals.keyPermissions.isEmpty
+                  ? globalIconSizeMedium * 4
+                  : globalIconSizeMedium * 6,
             ),
             landscape: TabBarWithPosition(
               tabIcons: _tabIcons,
@@ -175,7 +201,7 @@ class _FeedMainPageState extends State<FeedMainPage>
   }
 }
 
-class TabBarWithPosition extends StatelessWidget {
+class TabBarWithPosition extends StatefulWidget {
   const TabBarWithPosition(
       {Key? key,
       required this.tabIcons,
@@ -196,62 +222,78 @@ class TabBarWithPosition extends StatelessWidget {
   final double menuSize;
 
   @override
+  State<TabBarWithPosition> createState() => _TabBarWithPositionState();
+}
+
+class _TabBarWithPositionState extends State<TabBarWithPosition> {
+  late List<Tab> tabs;
+
+  @override
+  void initState() {
+    tabs = [
+      Tab(
+        child: RotatedBox(
+          quarterTurns: widget.rotation == 3 ? 1 : 0,
+          child: ShadowedIcon(
+              icon: widget.tabIcons[0],
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: widget.iconSize),
+        ),
+      ),
+      Tab(
+        child: RotatedBox(
+          quarterTurns: widget.rotation == 3 ? 1 : 0,
+          child: ShadowedIcon(
+              icon: widget.tabIcons[1],
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: widget.iconSize),
+        ),
+      ),
+      Tab(
+        child: RotatedBox(
+          quarterTurns: widget.rotation == 3 ? 1 : 0,
+          child: ShadowedIcon(
+              icon: widget.tabIcons[2],
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: widget.iconSize),
+        ),
+      ),
+      Tab(
+        child: RotatedBox(
+          quarterTurns: widget.rotation == 3 ? 1 : 0,
+          child: ShadowedIcon(
+              icon: widget.tabIcons[3],
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: widget.iconSize),
+        ),
+      ),
+    ];
+    if (globals.keyPermissions.isEmpty) {
+      tabs.removeAt(1);
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: alignment,
+      alignment: widget.alignment,
       child: Padding(
-        padding: padding,
+        padding: widget.padding,
         child: RotatedBox(
-          quarterTurns: rotation,
+          quarterTurns: widget.rotation,
           child: Container(
-            width: menuSize,
+            width: widget.menuSize,
             child: TabBar(
               unselectedLabelColor: globalAlmostWhite,
               labelColor: globalAlmostWhite,
               indicatorColor: globalAlmostWhite,
-              tabs: [
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[0],
-                        color: globalAlmostWhite,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[1],
-                        color: globalAlmostWhite,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[2],
-                        color: globalAlmostWhite,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[3],
-                        color: globalAlmostWhite,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-              ],
-              controller: tabController,
+              tabs: tabs,
+              controller: widget.tabController,
               indicatorSize: TabBarIndicatorSize.label,
               labelPadding: EdgeInsets.zero,
             ),

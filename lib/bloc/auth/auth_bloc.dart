@@ -35,18 +35,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         try {
           // if we can find login information in the secure storage
           if (_applicationUser != "" && _privKey != "") {
-            // try to signin
-            bool keyIsValid = await repository.signInWithCredentials(
-                _avalonApiNode, _applicationUser, _privKey);
-            // if the signin is legit
-            if (keyIsValid) {
+            if (_applicationUser == "na") {
               emit(SignedInState(
                   firstSignIn: true, termsAccepted: _termsAccepted));
-              // if the sigin is not legit (anymore)
             } else {
-              emit(SignInFailedState(
-                  message: "login failed", username: _applicationUser));
+              // try to signin
+              bool keyIsValid = await repository.signInWithCredentials(
+                  _avalonApiNode, _applicationUser, _privKey);
+              // if the signin is legit
+              if (keyIsValid) {
+                emit(SignedInState(
+                    firstSignIn: true, termsAccepted: _termsAccepted));
+                // if the sigin is not legit (anymore)
+              } else {
+                emit(SignInFailedState(
+                    message: "login failed", username: _applicationUser));
+              }
             }
+
             // if there was no signin information stored in the secure storage
           } else {
             emit(NoSignInInformationFoundState());
@@ -94,6 +100,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(SignInFailedState(
               message: 'login failed', username: event.username));
         }
+      } catch (e) {
+        emit(AuthErrorState(message: 'unknown error\n\n' + e.toString()));
+      }
+    });
+
+    on<StartBrowseOnlyMode>((event, emit) async {
+      bool _termsAccepted = await sec.getTermsAccepted();
+      emit(SignInLoadingState());
+      try {
+        sec.persistUsernameKey("na", "na");
+        await repository.browseOnlyPermissions();
+
+        emit(SignedInState(firstSignIn: true, termsAccepted: _termsAccepted));
       } catch (e) {
         emit(AuthErrorState(message: 'unknown error\n\n' + e.toString()));
       }

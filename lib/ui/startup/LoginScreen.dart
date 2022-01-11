@@ -185,34 +185,65 @@ class _LoginFormState extends State<LoginForm> {
                             ),
                           )
                         : SizedBox(height: 16),
-                    ValueListenableBuilder<TextEditingValue>(
-                        valueListenable: usernameController,
-                        builder: (context, value, child) {
-                          return ValueListenableBuilder<TextEditingValue>(
-                              valueListenable: privateKeyController,
-                              builder: (context, value, child) {
-                                return ElevatedButton(
-                                    onPressed: usernameController.value.text !=
-                                                "" &&
-                                            privateKeyController.value.text !=
-                                                ""
-                                        ? () {
-                                            _loginBloc
-                                                .add(SignInWithCredentialsEvent(
-                                              username:
-                                                  usernameController.value.text,
-                                              privateKey: privateKeyController
-                                                  .value.text,
+                    Center(
+                      child: Container(
+                        width: 80.w,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ValueListenableBuilder<TextEditingValue>(
+                                valueListenable: usernameController,
+                                builder: (context, value, child) {
+                                  return ValueListenableBuilder<
+                                          TextEditingValue>(
+                                      valueListenable: privateKeyController,
+                                      builder: (context, value, child) {
+                                        return ElevatedButton(
+                                            onPressed:
+                                                usernameController.value.text !=
+                                                            "" &&
+                                                        privateKeyController
+                                                                .value.text !=
+                                                            ""
+                                                    ? () {
+                                                        _loginBloc.add(
+                                                            SignInWithCredentialsEvent(
+                                                          username:
+                                                              usernameController
+                                                                  .value.text,
+                                                          privateKey:
+                                                              privateKeyController
+                                                                  .value.text,
+                                                        ));
+                                                      }
+                                                    : null,
+                                            child: Text(
+                                              "Sign in",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5,
                                             ));
-                                          }
-                                        : null,
-                                    child: Text(
-                                      "Sign in",
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                    ));
-                              });
-                        }),
+                                      });
+                                }),
+                            ElevatedButton(
+                                style: Theme.of(context)
+                                    .elevatedButtonTheme
+                                    .style!
+                                    .copyWith(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Colors.green)),
+                                onPressed: () {
+                                  _loginBloc.add(StartBrowseOnlyMode());
+                                },
+                                child: Text(
+                                  "browse only",
+                                  style: Theme.of(context).textTheme.headline5,
+                                ))
+                          ],
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: EdgeInsets.only(top: 5.h),
                       child: Text("You don't have an account on DTube?",

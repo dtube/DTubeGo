@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsList.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
@@ -32,7 +34,8 @@ class _MomentsPageState extends State<MomentsPage>
   int _selectedIndex = 0;
   @override
   void initState() {
-    _tabController = new TabController(length: 2, vsync: this);
+    _tabController = new TabController(
+        length: globals.keyPermissions.isEmpty ? 1 : 2, vsync: this);
 
     _tabController.addListener(() {
       if (_tabController.index != _selectedIndex) {
@@ -79,34 +82,50 @@ class _MomentsPageState extends State<MomentsPage>
               children: [
                 TabBarView(
                   physics: NeverScrollableScrollPhysics(),
-                  children: [
-                    MomentsList(
-                      feedType: 'NewMoments',
-                      goingInBackgroundCallback: () {
-                        setState(() {
-                          widget.play = false;
-                        });
-                      },
-                      goingInForegroundCallback: () {
-                        setState(() {
-                          widget.play = true;
-                        });
-                      },
-                    ),
-                    MomentsList(
-                      feedType: 'FollowMoments',
-                      goingInBackgroundCallback: () {
-                        setState(() {
-                          widget.play = true;
-                        });
-                      },
-                      goingInForegroundCallback: () {
-                        setState(() {
-                          widget.play = true;
-                        });
-                      },
-                    ),
-                  ],
+                  children: globals.keyPermissions.isEmpty
+                      ? [
+                          MomentsList(
+                            feedType: 'NewMoments',
+                            goingInBackgroundCallback: () {
+                              setState(() {
+                                widget.play = false;
+                              });
+                            },
+                            goingInForegroundCallback: () {
+                              setState(() {
+                                widget.play = true;
+                              });
+                            },
+                          ),
+                        ]
+                      : [
+                          MomentsList(
+                            feedType: 'NewMoments',
+                            goingInBackgroundCallback: () {
+                              setState(() {
+                                widget.play = false;
+                              });
+                            },
+                            goingInForegroundCallback: () {
+                              setState(() {
+                                widget.play = true;
+                              });
+                            },
+                          ),
+                          MomentsList(
+                            feedType: 'FollowMoments',
+                            goingInBackgroundCallback: () {
+                              setState(() {
+                                widget.play = true;
+                              });
+                            },
+                            goingInForegroundCallback: () {
+                              setState(() {
+                                widget.play = true;
+                              });
+                            },
+                          ),
+                        ],
                   controller: _tabController,
                 ),
                 ResponsiveLayout(
@@ -115,9 +134,11 @@ class _MomentsPageState extends State<MomentsPage>
                     iconSize: _iconSize,
                     tabController: _tabController,
                     alignment: Alignment.topRight,
-                    padding: EdgeInsets.only(top: 13.h, right: 4.w),
+                    padding: EdgeInsets.only(top: 11.h, right: 4.w),
                     rotation: 0,
-                    menuSize: 35.w,
+                    menuSize: globals.keyPermissions.isEmpty
+                        ? globalIconSizeMedium * 2
+                        : globalIconSizeMedium * 4,
                   ),
                   landscape: TabBarWithPosition(
                     tabIcons: _tabIcons,
@@ -132,7 +153,7 @@ class _MomentsPageState extends State<MomentsPage>
                 Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
-                    padding: EdgeInsets.only(top: 8.h, left: 4.w),
+                    padding: EdgeInsets.only(top: 5.h, left: 4.w),
                     child: OverlayText(
                       text: _tabNames[_selectedIndex],
                       sizeMultiply: 1.4,
@@ -184,28 +205,41 @@ class TabBarWithPosition extends StatelessWidget {
               unselectedLabelColor: globalAlmostWhite,
               labelColor: globalAlmostWhite,
               indicatorColor: globalAlmostWhite,
-              tabs: [
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[0],
-                        color: globalAlmostWhite,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[1],
-                        color: globalAlmostWhite,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-              ],
+              tabs: globals.keyPermissions.isEmpty
+                  ? [
+                      Tab(
+                        child: RotatedBox(
+                          quarterTurns: rotation == 3 ? 1 : 0,
+                          child: ShadowedIcon(
+                              icon: tabIcons[0],
+                              color: globalAlmostWhite,
+                              shadowColor: Colors.black,
+                              size: iconSize),
+                        ),
+                      ),
+                    ]
+                  : [
+                      Tab(
+                        child: RotatedBox(
+                          quarterTurns: rotation == 3 ? 1 : 0,
+                          child: ShadowedIcon(
+                              icon: tabIcons[0],
+                              color: globalAlmostWhite,
+                              shadowColor: Colors.black,
+                              size: iconSize),
+                        ),
+                      ),
+                      Tab(
+                        child: RotatedBox(
+                          quarterTurns: rotation == 3 ? 1 : 0,
+                          child: ShadowedIcon(
+                              icon: tabIcons[1],
+                              color: globalAlmostWhite,
+                              shadowColor: Colors.black,
+                              size: iconSize),
+                        ),
+                      ),
+                    ],
               controller: tabController,
               indicatorSize: TabBarIndicatorSize.label,
               labelPadding: EdgeInsets.zero,

@@ -18,6 +18,7 @@ import 'package:bs58check/bs58check.dart' as bs58check;
 
 abstract class AuthRepository {
   Future<bool> signOut();
+  Future<bool> browseOnlyPermissions();
   Future<bool> signInWithCredentials(
       String apiNode, String username, String privateKey);
   void fetchAndStoreVerifiedUsers();
@@ -33,6 +34,11 @@ class AuthRepositoryImpl implements AuthRepository {
     } else {
       throw Exception();
     }
+  }
+
+  Future<bool> browseOnlyPermissions() async {
+    globals.keyPermissions.clear();
+    return true;
   }
 
   @override

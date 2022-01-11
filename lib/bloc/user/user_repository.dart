@@ -25,6 +25,10 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<User> getAccountData(
       String apiNode, String username, applicationUser) async {
+    // if browse only mode
+    if (username == "na") {
+      username = "null";
+    }
     var response = await http.get(Uri.parse(
         apiNode + AppConfig.accountDataUrl.replaceAll("##USERNAME", username)));
     if (response.statusCode == 200) {
