@@ -72,13 +72,13 @@ class _WizardIPFSState extends State<WizardIPFS> {
 
 // upload video to ipfs
 
-      //   _uploadData = ud;
-      //   _uploadPressed = true;
-      //   _uploadBloc.add(UploadVideo(
-      //       videoPath: _uploadData.videoLocation,
-      //       thumbnailPath: _uploadData.thumbnailLocation,
-      //       uploadData: _uploadData,
-      //       context: context));
+      _uploadData = ud;
+      _uploadPressed = true;
+      _uploadBloc.add(UploadVideo(
+          videoPath: _uploadData.videoLocation,
+          thumbnailPath: _uploadData.thumbnailLocation,
+          uploadData: _uploadData,
+          context: context));
     });
   }
 
