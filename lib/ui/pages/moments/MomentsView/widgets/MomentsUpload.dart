@@ -1,5 +1,5 @@
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
-
+import 'package:gallery_saver/gallery_saver.dart';
 import 'dart:io';
 import 'package:disk_space/disk_space.dart';
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
@@ -95,7 +95,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
       uploaded: false,
       crossPostToHive: false);
 
-  void uploadMoment(
+  void saveAndUploadMoment(
       String videoPath,
       int vpBalance,
       double vpPercent,
@@ -111,6 +111,10 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
     _uploadData.unlistVideo = momentsUploadUnlist == "true";
     _uploadData.crossPostToHive = momentsUploadCrosspost == "true";
 
+// copy file to gallery
+
+    GallerySaver.saveVideo(videoPath, albumName: "DTube");
+    // upload moment
     final info = await VideoCompress.getMediaInfo(videoPath);
 
     _uploadData.duration = (info.duration! / 1000).floor().toString();
@@ -123,7 +127,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
         uploadData: _uploadData,
         context: context));
 
-    // widget.leaveDialogWithUploadCallback();
+    widget.leaveDialogWithUploadCallback();
   }
 
   @override
@@ -261,7 +265,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
     }
 
     if (_pickedFile != null) {
-      uploadMoment(
+      saveAndUploadMoment(
           _pickedFile.path,
           widget.currentVT.floor(),
           double.parse(widget.momentsVotingWeight),
