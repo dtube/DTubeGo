@@ -1,10 +1,13 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/pages/accountHistory/AccountHistory.dart';
-import 'package:dtube_go/ui/pages/user/ProfileSettings.dart';
-import 'package:dtube_go/ui/pages/wallet/transferDialog.dart';
+import 'package:dtube_go/ui/pages/user/Pages/ProfileSettings.dart';
+import 'package:dtube_go/ui/pages/wallet/Widgets/transferDialog.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
@@ -22,12 +25,13 @@ Widget buildUserMenuSpeedDial(
   if (ownUser) {
     mainMenuButtonOptions = [
       SpeedDialChild(
-          child: CircleAvatar(
-            backgroundColor: globalRed,
-            radius: globalIconSizeMedium + 2.w,
-            foregroundColor: globalAlmostWhite,
-            child: FaIcon(FontAwesomeIcons.cogs, size: globalIconSizeMedium),
-          ),
+          child: ShadowedIcon(
+              icon: FontAwesomeIcons.cogs,
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: globalIconSizeMedium),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return MultiBlocProvider(providers: [
@@ -41,12 +45,13 @@ Widget buildUserMenuSpeedDial(
             }));
           }),
       SpeedDialChild(
-          child: CircleAvatar(
-            backgroundColor: globalRed,
-            radius: globalIconSizeMedium + 2.w,
-            foregroundColor: globalAlmostWhite,
-            child: FaIcon(FontAwesomeIcons.history, size: globalIconSizeMedium),
-          ),
+          child: ShadowedIcon(
+              icon: FontAwesomeIcons.history,
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: globalIconSizeMedium),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return BlocProvider<AccountHistoryBloc>(
@@ -58,13 +63,13 @@ Widget buildUserMenuSpeedDial(
             }));
           }),
       SpeedDialChild(
-          child: CircleAvatar(
-            backgroundColor: globalRed,
-            radius: globalIconSizeMedium + 2.w,
-            foregroundColor: globalAlmostWhite,
-            child:
-                FaIcon(FontAwesomeIcons.signOutAlt, size: globalIconSizeMedium),
-          ),
+          child: ShadowedIcon(
+              icon: FontAwesomeIcons.signOutAlt,
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: globalIconSizeMedium),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
           onTap: () {
             BlocProvider.of<AuthBloc>(context)
                 .add(SignOutEvent(context: context));
@@ -73,12 +78,13 @@ Widget buildUserMenuSpeedDial(
   } else {
     mainMenuButtonOptions = [
       SpeedDialChild(
-          child: CircleAvatar(
-            backgroundColor: globalRed,
-            radius: globalIconSizeMedium + 2.w,
-            foregroundColor: globalAlmostWhite,
-            child: FaIcon(FontAwesomeIcons.history, size: globalIconSizeMedium),
-          ),
+          child: ShadowedIcon(
+              icon: FontAwesomeIcons.history,
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: globalIconSizeMedium),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return BlocProvider<AccountHistoryBloc>(
@@ -90,13 +96,14 @@ Widget buildUserMenuSpeedDial(
             }));
           }),
       SpeedDialChild(
-          child: CircleAvatar(
-            backgroundColor: globalRed,
-            radius: globalIconSizeMedium + 2.w,
-            foregroundColor: globalAlmostWhite,
-            child: FaIcon(FontAwesomeIcons.exchangeAlt,
-                size: globalIconSizeMedium),
-          ),
+          child: ShadowedIcon(
+              icon: FontAwesomeIcons.exchangeAlt,
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: globalIconSizeMedium),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          visible: globals.keyPermissions.contains(3),
           onTap: () {
             showDialog<String>(
                 context: context,
@@ -106,16 +113,18 @@ Widget buildUserMenuSpeedDial(
                     ));
           }),
       SpeedDialChild(
-          child: CircleAvatar(
-            backgroundColor: globalRed,
-            radius: globalIconSizeMedium + 2.w,
-            foregroundColor: globalAlmostWhite,
-            child: FaIcon(
-                user.alreadyFollowing
-                    ? FontAwesomeIcons.usersSlash
-                    : FontAwesomeIcons.userFriends,
-                size: globalIconSizeMedium),
-          ),
+          child: ShadowedIcon(
+              icon: user.alreadyFollowing
+                  ? FontAwesomeIcons.usersSlash
+                  : FontAwesomeIcons.userFriends,
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: globalIconSizeMedium),
+          elevation: 0,
+          visible: user.alreadyFollowing
+              ? globals.keyPermissions.contains(8)
+              : globals.keyPermissions.contains(7),
+          backgroundColor: Colors.transparent,
           onTap: () async {
             TxData txdata = TxData(
               target: user.name,
@@ -129,25 +138,24 @@ Widget buildUserMenuSpeedDial(
   }
 
   return SpeedDial(
-      child: CircleAvatar(
-        backgroundColor: globalRed,
-        radius: 10.w,
-        foregroundColor: globalAlmostWhite,
-        child: FaIcon(FontAwesomeIcons.bars, size: 8.w),
-      ),
+      child: ShadowedIcon(
+          icon: FontAwesomeIcons.bars,
+          color: globalAlmostWhite,
+          shadowColor: Colors.transparent,
+          size: globalIconSizeMedium),
       activeIcon: FontAwesomeIcons.chevronLeft,
       direction: SpeedDialDirection.up,
       visible: true,
       closeManually: false,
       curve: Curves.bounceIn,
-      overlayColor: Colors.white,
-      overlayOpacity: 0,
+      overlayColor: Colors.black,
+      overlayOpacity: 0.5,
       onOpen: () => print('OPENING DIAL'),
       onClose: () => print('DIAL CLOSED'),
       tooltip: 'menu',
       heroTag: 'user menu button' + ownUser.toString(),
       backgroundColor: globalRed,
-      foregroundColor: Colors.white,
+      foregroundColor: globalAlmostWhite,
       elevation: 0.0,
       shape: CircleBorder(),
       gradientBoxShape: BoxShape.circle,

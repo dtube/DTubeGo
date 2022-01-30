@@ -1,10 +1,13 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
+import 'package:dtube_go/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
+import 'package:dtube_go/res/secretConfigValues.dart';
+import 'package:dtube_go/ui/pages/user/Widgets/ConnectYTChannelDialog.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:decorated_icon/decorated_icon.dart';
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc.dart';
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
-
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
@@ -53,6 +56,14 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
   bool _userDataLoaded = false;
 
   // late Map<String, String> currentSettings;
+
+  List<List<String>> _connectedYTChannels = [];
+
+  void addChannelToNewList(List<String> params) {
+    setState(() {
+      _connectedYTChannels.add([params[0], params[1]]);
+    });
+  }
 
   @override
   void initState() {
@@ -374,10 +385,12 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                     Padding(
                                       padding: const EdgeInsets.only(
                                           top: 16.0, bottom: 8.0),
-                                      child: Text("Custom Type",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1),
+                                      child: Text(
+                                        "Custom Data",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline3,
+                                      ),
                                     ),
                                     DTubeFormCard(
                                       waitBeforeFadeIn:
@@ -418,6 +431,96 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                         ),
                                       ],
                                     ),
+                                    Text(
+                                      "Connected YT channels",
+                                      style:
+                                          Theme.of(context).textTheme.headline3,
+                                    ),
+                                    DTubeFormCard(
+                                        waitBeforeFadeIn:
+                                            Duration(milliseconds: 200),
+                                        avoidAnimation:
+                                            _visitedTabs.contains(1),
+                                        childs: [
+                                          InputChip(
+                                            isEnabled: globals.keyPermissions
+                                                .contains(6),
+                                            label: Text("connect to youtube"),
+                                            backgroundColor: globalRed,
+                                            onPressed: () {
+                                              showDialog<String>(
+                                                context: context,
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    BlocProvider<
+                                                        ThirdPartyMetadataBloc>(
+                                                  create: (BuildContext
+                                                          context) =>
+                                                      ThirdPartyMetadataBloc(
+                                                          repository:
+                                                              ThirdPartyMetadataRepositoryImpl()),
+                                                  child: ConnectYTChannelDialog(
+                                                      user: _originalUserData,
+                                                      connectCallback:
+                                                          addChannelToNewList),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          _connectedYTChannels.length > 0
+                                              ? Text(
+                                                  "new added yt channels (saving still required):")
+                                              : Container(),
+                                          ListView.builder(
+                                              key: new PageStorageKey(
+                                                  'newytchannels'),
+                                              //addAutomaticKeepAlives: true,
+                                              padding: EdgeInsets.zero,
+                                              shrinkWrap: true,
+                                              physics: ClampingScrollPhysics(),
+                                              itemCount:
+                                                  _connectedYTChannels.length,
+                                              itemBuilder: (ctx, pos) {
+                                                return Text(pos.toString() +
+                                                    ': ' +
+                                                    _connectedYTChannels[pos]
+                                                        [0]);
+                                              }),
+                                          Text(
+                                              "your connected youtube channels:"),
+                                          _originalUserData.jsonString!.additionals !=
+                                                      null &&
+                                                  _originalUserData
+                                                          .jsonString!
+                                                          .additionals!
+                                                          .ytchannels !=
+                                                      null
+                                              ? ListView.builder(
+                                                  key: new PageStorageKey(
+                                                      'linkedytchannels'),
+                                                  //addAutomaticKeepAlives: true,
+                                                  padding: EdgeInsets.zero,
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      ClampingScrollPhysics(),
+                                                  itemCount: _originalUserData
+                                                      .jsonString!
+                                                      .additionals!
+                                                      .ytchannels!
+                                                      .length,
+                                                  itemBuilder: (ctx, pos) {
+                                                    return Text(pos.toString() +
+                                                        ': ' +
+                                                        decryptYTChannelId(
+                                                            _originalUserData,
+                                                            _originalUserData
+                                                                    .jsonString!
+                                                                    .additionals!
+                                                                    .ytchannels![
+                                                                pos]));
+                                                  })
+                                              : Container()
+                                        ])
                                   ],
                                 ),
                               ),
@@ -444,14 +547,14 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                 if (state is TransactionPreprocessingState &&
                     state.txType == 6) {
                   return Padding(
-                      padding: EdgeInsets.fromLTRB(0, 2.h, 4.w, 0),
+                      padding: EdgeInsets.fromLTRB(0, 1.h, 4.w, 0),
                       child: DTubeLogoPulse(size: 9.w));
                 }
 
                 if (state is TransactionInitialState) {
                   return GestureDetector(
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 2.h, 4.w, 0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 4.w, 0),
                         child: HeartBeat(
                           preferences: AnimationPreferences(
                               autoPlay: AnimationPlayStates.Loop,
@@ -459,6 +562,9 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                               duration: Duration(seconds: 1)),
                           child: DecoratedIcon(
                             FontAwesomeIcons.save,
+                            color: globals.keyPermissions.contains(6)
+                                ? globalAlmostWhite
+                                : Colors.grey,
                             size: 8.w,
                             shadows: [
                               BoxShadow(
@@ -469,36 +575,60 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                           ),
                         ),
                       ),
-                      onTap: () async {
-                        User _saveUserData = new User(
-                            sId: _originalUserData.sId,
-                            name: _originalUserData.name,
-                            pub: _originalUserData.pub,
-                            balance: _originalUserData.balance,
-                            keys: _originalUserData.keys,
-                            alreadyFollowing: false,
-                            jsonString: new JsonString(
-                                node: _originalUserData.jsonString?.node,
-                                profile: new Profile(
-                                    about: _aboutController.text,
-                                    avatar: _avatarController.text,
-                                    coverImage: _coverImageController.text,
-                                    hive: _originalUserData
-                                        .jsonString!.profile?.hive,
-                                    location: _locationController.text,
-                                    steem: _originalUserData
-                                        .jsonString!.profile?.steem,
-                                    website: _websiteController.text),
-                                additionals: new Additionals(
-                                    accountType: _accountType,
-                                    displayName: _displayNameController.text,
-                                    blocking: _originalUserData
-                                        .jsonString!.additionals!.blocking)));
+                      onTap: !globals.keyPermissions.contains(6)
+                          ? null
+                          : () async {
+                              List<String> ytChannels = [];
+                              if (_originalUserData
+                                      .jsonString!.additionals!.ytchannels !=
+                                  null) {
+                                ytChannels = _originalUserData
+                                    .jsonString!.additionals!.ytchannels!;
+                              }
+                              if (_connectedYTChannels.length > 0) {
+                                for (List<String> item
+                                    in _connectedYTChannels) {
+                                  // add encrypted yt channel id if not already in list
+                                  if (!ytChannels.contains(item[1])) {
+                                    ytChannels.add(item[1]);
+                                  }
+                                }
+                              }
 
-                        BlocProvider.of<TransactionBloc>(context)
-                            .add(ChangeProfileData(_saveUserData, context));
-                        // ignore: empty_statements
-                      });
+                              User _saveUserData = new User(
+                                  sId: _originalUserData.sId,
+                                  name: _originalUserData.name,
+                                  pub: _originalUserData.pub,
+                                  balance: _originalUserData.balance,
+                                  keys: _originalUserData.keys,
+                                  alreadyFollowing: false,
+                                  jsonString: new JsonString(
+                                      node: _originalUserData.jsonString?.node,
+                                      profile: new Profile(
+                                          about: _aboutController.text,
+                                          avatar: _avatarController.text,
+                                          coverImage:
+                                              _coverImageController.text,
+                                          hive: _originalUserData
+                                              .jsonString!.profile?.hive,
+                                          location: _locationController.text,
+                                          steem: _originalUserData
+                                              .jsonString!.profile?.steem,
+                                          website: _websiteController.text),
+                                      additionals: new Additionals(
+                                          accountType: _accountType,
+                                          displayName:
+                                              _displayNameController.text,
+                                          blocking: _originalUserData
+                                              .jsonString!
+                                              .additionals!
+                                              .blocking,
+                                          ytchannels: ytChannels)));
+
+                              BlocProvider.of<TransactionBloc>(context).add(
+                                  ChangeProfileData(_saveUserData, context));
+                              // ignore: empty_statements
+                            });
                 } else {
                   return Container();
                 }

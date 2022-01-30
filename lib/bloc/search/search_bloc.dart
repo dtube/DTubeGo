@@ -8,18 +8,12 @@ import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchRepository repository;
 
-  SearchBloc({required this.repository}) : super(SearchInitialState());
+  SearchBloc({required this.repository}) : super(SearchInitialState()) {
+    on<FetchSearchResultsEvent>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      String _currentUser = await sec.getUsername();
 
-  // @override
-
-  // SearchState get initialState => SearchInitialState();
-
-  @override
-  Stream<SearchState> mapEventToState(SearchEvent event) async* {
-    String _avalonApiNode = await sec.getNode();
-    String _currentUser = await sec.getUsername();
-    if (event is FetchSearchResultsEvent) {
-      yield SearchLoadingState();
+      emit(SearchLoadingState());
       try {
         SearchResults results = await repository.getSearchResults(
             event.searchQuery,
@@ -27,13 +21,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             _avalonApiNode,
             _currentUser);
 
-        yield SearchLoadedState(searchResults: results);
+        emit(SearchLoadedState(searchResults: results));
       } catch (e) {
-        yield SearchErrorState(message: e.toString());
+        emit(SearchErrorState(message: e.toString()));
       }
-    }
-    if (event is SetSearchInitialState) {
-      yield SearchInitialState();
-    }
+    });
+
+    on<SetSearchInitialState>((event, emit) async {
+      emit(SearchInitialState());
+    });
   }
 }

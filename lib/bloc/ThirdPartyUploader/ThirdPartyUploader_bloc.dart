@@ -11,25 +11,20 @@ class ThirdPartyUploaderBloc
   ThirdPartyUploaderRepository repository;
 
   ThirdPartyUploaderBloc({required this.repository})
-      : super(ThirdPartyUploaderInitialState());
-
-  @override
-  Stream<ThirdPartyUploaderState> mapEventToState(
-      ThirdPartyUploaderEvent event) async* {
-    String imageUploadProvider = await sec.getImageUploadService();
-// TODO: error handling
-    if (event is UploadFile) {
-      yield ThirdPartyUploaderUploadingState();
+      : super(ThirdPartyUploaderInitialState()) {
+    on<UploadFile>((event, emit) async {
+      String imageUploadProvider = await sec.getImageUploadService();
+      emit(ThirdPartyUploaderUploadingState());
       String _uploadServiceEndpoint =
           await repository.getUploadServiceEndpoint(imageUploadProvider);
 
       String resultString =
           await repository.uploadFile(event.filePath, _uploadServiceEndpoint);
 
-      yield ThirdPartyUploaderUploadedState(uploadResponse: resultString);
-    }
-    if (event is SetThirdPartyUploaderInitState) {
-      yield ThirdPartyUploaderInitialState();
-    }
+      emit(ThirdPartyUploaderUploadedState(uploadResponse: resultString));
+    });
+    on<SetThirdPartyUploaderInitState>((event, emit) async {
+      emit(ThirdPartyUploaderInitialState());
+    });
   }
 }

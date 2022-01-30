@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
@@ -26,7 +27,7 @@ class PinPadWidget extends StatelessWidget {
       key: key,
       fieldsCount: 5,
       withCursor: true,
-      textStyle: const TextStyle(fontSize: 25.0, color: Colors.white),
+      textStyle: TextStyle(fontSize: 25.0, color: globalAlmostWhite),
       eachFieldWidth: 40.0,
       eachFieldHeight: 55.0,
       onSubmit: (String pin) => print(pin),

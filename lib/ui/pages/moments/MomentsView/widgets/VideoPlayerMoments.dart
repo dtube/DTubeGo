@@ -1,3 +1,7 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
+import 'package:share_plus/share_plus.dart';
+
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
@@ -35,6 +39,9 @@ class VideoPlayerMoments extends StatefulWidget {
   String momentsUploadCrosspost;
   double currentVP;
 
+  double fixedDownvoteWeight;
+  bool fixedDownvoteActivated;
+
   UserBloc userBloc;
 
   VideoPlayerMoments(
@@ -52,7 +59,9 @@ class VideoPlayerMoments extends StatefulWidget {
       required this.momentsUploadUnlist,
       required this.momentsUploadCrosspost,
       required this.userBloc,
-      required this.currentVP})
+      required this.currentVP,
+      required this.fixedDownvoteActivated,
+      required this.fixedDownvoteWeight})
       : super(key: key);
   @override
   _VideoPlayerMomentsState createState() => _VideoPlayerMomentsState();
@@ -264,17 +273,22 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                                         _videoController.play();
                                       });
                                     },
+                                    fixedDownvoteActivated:
+                                        widget.fixedDownvoteActivated,
+                                    fixedDownvoteWeight:
+                                        widget.fixedDownvoteWeight,
                                   ),
                                 ),
                               );
                             }
                           },
                           child: ShadowedIcon(
+                            visible: globals.keyPermissions.contains(5),
                             icon: FontAwesomeIcons.thumbsUp,
                             color: widget.feedItem.alreadyVoted! &&
                                     widget.feedItem.alreadyVotedDirection!
                                 ? globalRed
-                                : Colors.white,
+                                : globalAlmostWhite,
                             shadowColor: Colors.black,
                             size: 8.w,
                           ),
@@ -323,17 +337,22 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                                         _videoController.play();
                                       });
                                     },
+                                    fixedDownvoteActivated:
+                                        widget.fixedDownvoteActivated,
+                                    fixedDownvoteWeight:
+                                        widget.fixedDownvoteWeight,
                                   ),
                                 ),
                               );
                             }
                           },
                           child: ShadowedIcon(
+                            visible: globals.keyPermissions.contains(5),
                             icon: FontAwesomeIcons.flag,
                             color: widget.feedItem.alreadyVoted! &&
                                     !widget.feedItem.alreadyVotedDirection!
                                 ? globalRed
-                                : Colors.white,
+                                : globalAlmostWhite,
                             shadowColor: Colors.black,
                             size: 8.w,
                           ),
@@ -374,8 +393,27 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             );
                           },
                           child: ShadowedIcon(
+                            visible: globals.keyPermissions.contains(4),
                             icon: FontAwesomeIcons.comment,
-                            color: Colors.white,
+                            color: globalAlmostWhite,
+                            shadowColor: Colors.black,
+                            size: 8.w,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              // widget.momentsController.pause();
+                              // _videoController.pause();
+                            });
+                            Share.share('https://d.tube/#!/v/' +
+                                widget.feedItem.author +
+                                '/' +
+                                widget.feedItem.link);
+                          },
+                          child: ShadowedIcon(
+                            icon: FontAwesomeIcons.shareAlt,
+                            color: globalAlmostWhite,
                             shadowColor: Colors.black,
                             size: 8.w,
                           ),

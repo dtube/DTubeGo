@@ -28,6 +28,9 @@ class TagListState extends State<TagList> {
   String? _defaultPostVotingWeight;
   String? _defaultPostVotingTip;
 
+  String? _fixedDownvoteActivated;
+  String? _fixedDownvoteWeight;
+
   Future<bool> getSettings() async {
     _hiddenMode = await sec.getShowHidden();
     _nsfwMode = await sec.getNSFW();
@@ -35,6 +38,8 @@ class TagListState extends State<TagList> {
     _defaultCommentVotingWeight = await sec.getDefaultVoteComments();
     _defaultPostVotingWeight = await sec.getDefaultVote();
     _defaultPostVotingTip = await sec.getDefaultVoteTip();
+    _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
+    _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
 
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
@@ -178,6 +183,8 @@ class TagListState extends State<TagList> {
               upvotesCount: searchResults[pos].upvotes!.length,
               videoSource: searchResults[pos].videoSource,
               videoUrl: searchResults[pos].videoUrl,
+              fixedDownvoteActivated: _fixedDownvoteActivated!,
+              fixedDownvoteWeight: _fixedDownvoteWeight!,
             );
           }),
     );

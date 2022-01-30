@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'dart:io';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
@@ -53,7 +55,9 @@ class PostListCardLarge extends StatefulWidget {
       required this.oc,
       required this.defaultCommentVotingWeight,
       required this.defaultPostVotingWeight,
-      required this.defaultPostVotingTip})
+      required this.defaultPostVotingTip,
+      required this.fixedDownvoteActivated,
+      required this.fixedDownvoteWeight})
       : super(key: key);
 
   final bool blur;
@@ -77,6 +81,9 @@ class PostListCardLarge extends StatefulWidget {
   final String defaultCommentVotingWeight;
   final String defaultPostVotingWeight;
   final String defaultPostVotingTip;
+
+  final String fixedDownvoteActivated;
+  final String fixedDownvoteWeight;
 
   @override
   _PostListCardLargeState createState() => _PostListCardLargeState();
@@ -307,7 +314,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                         child: Container(
                           //color: Colors.black.withAlpha(95),
                           decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: globalAlmostWhite,
                               gradient: LinearGradient(
                                   begin: FractionalOffset.topCenter,
                                   end: FractionalOffset.bottomCenter,
@@ -441,7 +448,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                         child: Container(
                           //color: Colors.black.withAlpha(95),
                           decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: globalAlmostWhite,
                               gradient: LinearGradient(
                                   begin: FractionalOffset.topCenter,
                                   end: FractionalOffset.bottomCenter,
@@ -594,7 +601,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                 //         },
                 //         icon: ShadowedIcon(
                 //           icon: FontAwesomeIcons.expand,
-                //           color: Colors.white,
+                //           color: globalAlmostWhite,
                 //           shadowColor: Colors.black,
                 //           size: globalIconSizeSmall,
                 //         )),
@@ -691,213 +698,235 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                             fontStyle: Theme.of(context).textTheme.caption),
                       ],
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: SpeedDial(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 12.w),
-                            child:
-                                // FadeIn(
-                                //   preferences: AnimationPreferences(
-                                //       offset: Duration(milliseconds: 700),
-                                //       duration: Duration(seconds: 1)),
-                                //   child:
-                                HeartBeat(
-                              preferences: AnimationPreferences(
-                                  magnitude: 1.2,
-                                  offset: Duration(seconds: 3),
-                                  autoPlay: AnimationPlayStates.Loop),
-                              child: ShadowedIcon(
-                                  icon: FontAwesomeIcons.ellipsisV,
-                                  color: Colors.white,
-                                  shadowColor: Colors.black,
-                                  size: globalIconSizeSmall),
-                            ),
-                            // ),
-                          ),
-                          activeChild: Padding(
-                            padding: EdgeInsets.only(left: 12.w),
-                            child: ShadowedIcon(
-                                icon: FontAwesomeIcons.sortDown,
-                                color: Colors.white,
-                                shadowColor: Colors.black,
-                                size: globalIconSizeSmall),
-                          ),
-                          buttonSize: globalIconSizeSmall * 2,
-                          useRotationAnimation: false,
-                          direction: SpeedDialDirection.up,
-                          visible: true,
-                          spacing: 0.0,
-                          closeManually: false,
-                          curve: Curves.bounceIn,
-                          overlayColor: Colors.white,
-                          overlayOpacity: 0,
-                          onOpen: () => print('OPENING DIAL'),
-                          onClose: () => print('DIAL CLOSED'),
-                          tooltip: 'menu',
-                          heroTag: 'submenu' + widget.title,
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Colors.white,
-                          elevation: 0.0,
-                          children: [
-                            // COMMENT BUTTON
-                            SpeedDialChild(
+                    globals.keyPermissions.isEmpty
+                        ? Container()
+                        : Align(
+                            alignment: Alignment.centerRight,
+                            child: SpeedDial(
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 7.w),
-                                  child: ShadowedIcon(
-                                      icon: FontAwesomeIcons.comment,
-                                      color: Colors.white,
-                                      shadowColor: Colors.black,
-                                      size: globalIconSizeBig),
+                                  padding: EdgeInsets.only(left: 12.w),
+                                  child:
+                                      // FadeIn(
+                                      //   preferences: AnimationPreferences(
+                                      //       offset: Duration(milliseconds: 700),
+                                      //       duration: Duration(seconds: 1)),
+                                      //   child:
+                                      HeartBeat(
+                                    preferences: AnimationPreferences(
+                                        magnitude: 1.2,
+                                        offset: Duration(seconds: 3),
+                                        autoPlay: AnimationPlayStates.Loop),
+                                    child: ShadowedIcon(
+                                        icon: FontAwesomeIcons.ellipsisV,
+                                        color: globalAlmostWhite,
+                                        shadowColor: Colors.black,
+                                        size: globalIconSizeSmall),
+                                  ),
+                                  // ),
                                 ),
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                backgroundColor: Colors.transparent,
-                                onTap: () {
-                                  showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        BlocProvider<UserBloc>(
-                                      create: (context) => UserBloc(
-                                          repository: UserRepositoryImpl()),
-                                      child: CommentDialog(
-                                        txBloc:
-                                            BlocProvider.of<TransactionBloc>(
-                                                context),
-                                        originAuthor: widget.author,
-                                        originLink: widget.link,
-                                        defaultCommentVote: double.parse(
-                                            widget.defaultCommentVotingWeight),
-                                      ),
-                                    ),
-                                  );
-                                }),
-                            // DOWNVOTE BUTTON
-                            SpeedDialChild(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 7.w),
+                                activeChild: Padding(
+                                  padding: EdgeInsets.only(left: 12.w),
                                   child: ShadowedIcon(
-                                      icon: FontAwesomeIcons.flag,
-                                      color: !widget.alreadyVoted
-                                          ? Colors.white
-                                          : globalRed,
+                                      icon: FontAwesomeIcons.sortDown,
+                                      color: globalAlmostWhite,
                                       shadowColor: Colors.black,
-                                      size: globalIconSizeBig),
+                                      size: globalIconSizeSmall),
                                 ),
-                                foregroundColor: Colors.white,
-                                elevation: 0,
+                                buttonSize: Size(globalIconSizeSmall * 2,
+                                    globalIconSizeSmall * 2),
+                                useRotationAnimation: false,
+                                direction: SpeedDialDirection.up,
+                                visible: true,
+                                spacing: 0.0,
+                                closeManually: false,
+                                curve: Curves.bounceIn,
+                                overlayColor: globalAlmostWhite,
+                                overlayOpacity: 0,
+                                onOpen: () => print('OPENING DIAL'),
+                                onClose: () => print('DIAL CLOSED'),
+                                tooltip: 'menu',
+                                heroTag: 'submenu' + widget.title,
                                 backgroundColor: Colors.transparent,
-                                onTap: () {
-                                  if (!widget.alreadyVoted) {
-                                    showDialog<String>(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          MultiBlocProvider(
-                                        providers: [
-                                          BlocProvider<PostBloc>(
-                                              create: (context) => PostBloc(
-                                                  repository:
-                                                      PostRepositoryImpl())),
-                                          BlocProvider<UserBloc>(
-                                              create: (context) => UserBloc(
-                                                  repository:
-                                                      UserRepositoryImpl())),
-                                        ],
-                                        child: VotingDialog(
-                                          txBloc:
-                                              BlocProvider.of<TransactionBloc>(
-                                                  context),
-                                          defaultVote: double.parse(
-                                              widget.defaultPostVotingWeight),
-                                          defaultTip: double.parse(
-                                              widget.defaultPostVotingTip),
-                                          author: widget.author,
-                                          link: widget.link,
-                                          downvote: true,
-                                          //currentVT: state.vtBalance['v']! + 0.0,
-                                          isPost: true,
-                                        ),
+                                foregroundColor: globalAlmostWhite,
+                                elevation: 0.0,
+                                children: [
+                                  // COMMENT BUTTON
+                                  SpeedDialChild(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 7.w),
+                                        child: ShadowedIcon(
+                                            visible: globals.keyPermissions
+                                                .contains(4),
+                                            icon: FontAwesomeIcons.comment,
+                                            color: globalAlmostWhite,
+                                            shadowColor: Colors.black,
+                                            size: globalIconSizeBig),
                                       ),
-                                    );
-                                  }
-                                }),
-                            // UPVOTE BUTTON
+                                      foregroundColor: globalAlmostWhite,
+                                      elevation: 0,
+                                      backgroundColor: Colors.transparent,
+                                      onTap: () {
+                                        showDialog<String>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              BlocProvider<UserBloc>(
+                                            create: (context) => UserBloc(
+                                                repository:
+                                                    UserRepositoryImpl()),
+                                            child: CommentDialog(
+                                              txBloc: BlocProvider.of<
+                                                  TransactionBloc>(context),
+                                              originAuthor: widget.author,
+                                              originLink: widget.link,
+                                              defaultCommentVote: double.parse(
+                                                  widget
+                                                      .defaultCommentVotingWeight),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                  // DOWNVOTE BUTTON
+                                  SpeedDialChild(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 7.w),
+                                        child: ShadowedIcon(
+                                            visible: globals.keyPermissions
+                                                .contains(5),
+                                            icon: FontAwesomeIcons.flag,
+                                            color: !widget.alreadyVoted
+                                                ? globalAlmostWhite
+                                                : globalRed,
+                                            shadowColor: Colors.black,
+                                            size: globalIconSizeBig),
+                                      ),
+                                      foregroundColor: globalAlmostWhite,
+                                      elevation: 0,
+                                      backgroundColor: Colors.transparent,
+                                      onTap: () {
+                                        if (!widget.alreadyVoted) {
+                                          showDialog<String>(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<PostBloc>(
+                                                    create: (context) => PostBloc(
+                                                        repository:
+                                                            PostRepositoryImpl())),
+                                                BlocProvider<UserBloc>(
+                                                    create: (context) => UserBloc(
+                                                        repository:
+                                                            UserRepositoryImpl())),
+                                              ],
+                                              child: VotingDialog(
+                                                txBloc: BlocProvider.of<
+                                                    TransactionBloc>(context),
+                                                defaultVote: double.parse(widget
+                                                    .defaultPostVotingWeight),
+                                                defaultTip: double.parse(widget
+                                                    .defaultPostVotingTip),
+                                                author: widget.author,
+                                                link: widget.link,
+                                                downvote: true,
+                                                //currentVT: state.vtBalance['v']! + 0.0,
+                                                isPost: true,
+                                                fixedDownvoteActivated: widget
+                                                        .fixedDownvoteActivated ==
+                                                    "true",
+                                                fixedDownvoteWeight:
+                                                    double.parse(widget
+                                                        .fixedDownvoteWeight),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      }),
+                                  // UPVOTE BUTTON
 
-                            SpeedDialChild(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 7.w),
-                                  child: ShadowedIcon(
-                                      icon: FontAwesomeIcons.thumbsUp,
-                                      color: !widget.alreadyVoted
-                                          ? Colors.white
-                                          : globalRed,
-                                      shadowColor: Colors.black,
-                                      size: globalIconSizeBig),
-                                ),
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                backgroundColor: Colors.transparent,
-                                onTap: () {
-                                  if (!widget.alreadyVoted) {
-                                    showDialog<String>(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          MultiBlocProvider(
-                                        providers: [
-                                          BlocProvider<PostBloc>(
-                                              create: (context) => PostBloc(
-                                                  repository:
-                                                      PostRepositoryImpl())),
-                                          BlocProvider<UserBloc>(
-                                              create: (context) => UserBloc(
-                                                  repository:
-                                                      UserRepositoryImpl())),
-                                        ],
-                                        child: VotingDialog(
-                                          txBloc:
-                                              BlocProvider.of<TransactionBloc>(
-                                                  context),
-                                          defaultVote: double.parse(
-                                              widget.defaultPostVotingWeight),
-                                          defaultTip: double.parse(
-                                              widget.defaultPostVotingTip),
-                                          author: widget.author,
-                                          link: widget.link,
-                                          downvote: false,
-                                          //currentVT: state.vtBalance['v']! + 0.0,
-                                          isPost: true,
-                                        ),
+                                  SpeedDialChild(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 7.w),
+                                        child: ShadowedIcon(
+                                            visible: globals.keyPermissions
+                                                .contains(5),
+                                            icon: FontAwesomeIcons.thumbsUp,
+                                            color: !widget.alreadyVoted
+                                                ? globalAlmostWhite
+                                                : globalRed,
+                                            shadowColor: Colors.black,
+                                            size: globalIconSizeBig),
                                       ),
-                                    );
-                                  }
-                                }),
-                            // GIFT BUTTON
-                            SpeedDialChild(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 7.w),
-                                  child: ShadowedIcon(
-                                      icon: FontAwesomeIcons.gift,
-                                      color: Colors.white,
-                                      shadowColor: Colors.black,
-                                      size: globalIconSizeBig),
-                                ),
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                backgroundColor: Colors.transparent,
-                                onTap: () {
-                                  showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        GiftDialog(
-                                      txBloc: BlocProvider.of<TransactionBloc>(
-                                          context),
-                                      receiver: widget.author,
-                                      originLink: widget.link,
-                                    ),
-                                  );
-                                }),
-                          ]),
-                    ),
+                                      foregroundColor: globalAlmostWhite,
+                                      elevation: 0,
+                                      backgroundColor: Colors.transparent,
+                                      onTap: () {
+                                        if (!widget.alreadyVoted) {
+                                          showDialog<String>(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<PostBloc>(
+                                                    create: (context) => PostBloc(
+                                                        repository:
+                                                            PostRepositoryImpl())),
+                                                BlocProvider<UserBloc>(
+                                                    create: (context) => UserBloc(
+                                                        repository:
+                                                            UserRepositoryImpl())),
+                                              ],
+                                              child: VotingDialog(
+                                                txBloc: BlocProvider.of<
+                                                    TransactionBloc>(context),
+                                                defaultVote: double.parse(widget
+                                                    .defaultPostVotingWeight),
+                                                defaultTip: double.parse(widget
+                                                    .defaultPostVotingTip),
+                                                author: widget.author,
+                                                link: widget.link,
+                                                downvote: false,
+                                                //currentVT: state.vtBalance['v']! + 0.0,
+                                                isPost: true,
+                                                fixedDownvoteActivated: widget
+                                                        .fixedDownvoteActivated ==
+                                                    "true",
+                                                fixedDownvoteWeight:
+                                                    double.parse(widget
+                                                        .fixedDownvoteWeight),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      }),
+                                  // GIFT BUTTON
+                                  SpeedDialChild(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 7.w),
+                                        child: ShadowedIcon(
+                                            visible: globals.keyPermissions
+                                                .contains(3),
+                                            icon: FontAwesomeIcons.gift,
+                                            color: globalAlmostWhite,
+                                            shadowColor: Colors.black,
+                                            size: globalIconSizeBig),
+                                      ),
+                                      foregroundColor: globalAlmostWhite,
+                                      elevation: 0,
+                                      backgroundColor: Colors.transparent,
+                                      onTap: () {
+                                        showDialog<String>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              GiftDialog(
+                                            txBloc: BlocProvider.of<
+                                                TransactionBloc>(context),
+                                            receiver: widget.author,
+                                            originLink: widget.link,
+                                          ),
+                                        );
+                                      }),
+                                ]),
+                          ),
                   ],
                 ),
               ),

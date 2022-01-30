@@ -24,7 +24,7 @@ List<Color> globalRedShades = [
   Colors.red[900]!,
 ];
 
-Color globalTextColor = Colors.white;
+Color globalTextColor = globalAlmostWhite;
 double globalIconSizeSmall = 25;
 double globalIconSizeMedium = 30;
 double globalIconSizeBig = 35;

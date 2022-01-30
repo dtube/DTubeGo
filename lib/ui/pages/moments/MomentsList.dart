@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/MomentsItem.dart';
@@ -13,7 +15,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 typedef Bool2VoidFunc = void Function(bool);
-typedef ListOfString2VoidFunc = void Function(List<String>);
 
 class MomentsList extends StatefulWidget {
   String feedType;
@@ -55,6 +56,8 @@ class _MomentsListState extends State<MomentsList> {
   String? _momentsUploadCrosspost;
   String? _momentsCustomTitle;
   String? _momentsCustomBody;
+  String? _fixedDownvoteActivated;
+  String? _fixedDownvoteWeight;
 
   late UserBloc _userBloc;
   double _currentVp = 0.0;
@@ -73,6 +76,8 @@ class _MomentsListState extends State<MomentsList> {
     _momentsUploadCrosspost = await sec.getMomentCrosspost();
     _momentsCustomTitle = await sec.getMomentTitle();
     _momentsCustomBody = await sec.getMomentBody();
+    _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
+    _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
 
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
@@ -121,36 +126,50 @@ class _MomentsListState extends State<MomentsList> {
                         if (state.feedType == widget.feedType) {
                           if (moments.isEmpty) {
                             for (var f in state.feed) {
-                              moments.add(MomentsItem(
-                                  VideoPlayerMoments(
-                                    momentsController: momentsController,
-                                    defaultCommentsVotingWeight:
-                                        _defaultCommentsVotingWeight!,
-                                    defaultPostsVotingWeight:
-                                        _defaultPostVotingWeight!,
-                                    defaultPostsVotingTip:
-                                        _defaultPostVotingTip!,
-                                    key: UniqueKey(),
-                                    goingInBackgroundCallback:
-                                        widget.goingInBackgroundCallback,
-                                    goingInForegroundCallback:
-                                        widget.goingInForegroundCallback,
-                                    feedItem: f,
-                                    momentsVotingWeight:
-                                        _defaultMomentsVotingWeight!,
-                                    momentsUploadNSFW: _momentsUploadNSFW!,
-                                    momentsUploadOC: _momentsUploadOC!,
-                                    momentsUploadUnlist: _momentsUploadUnlist!,
-                                    momentsUploadCrosspost:
-                                        _momentsUploadCrosspost!,
-                                    currentVP: _currentVp,
-                                    userBloc:
-                                        BlocProvider.of<UserBloc>(context),
-                                  ),
-                                  duration: Duration(
-                                      seconds: f.jsonString!.dur != ""
-                                          ? int.parse(f.jsonString!.dur) + 1
-                                          : 5)));
+                              // if moment is <= 60 seconds
+                              if (f.jsonString != null &&
+                                  f.jsonString!.dur != "" &&
+                                  int.parse(f.jsonString!.dur) <= 60 &&
+                                  // AND if no negative video
+                                  f.summaryOfVotes >= 0 &&
+                                  // AND if no nsfw video
+                                  f.jsonString!.nsfw == 0) {
+                                moments.add(MomentsItem(
+                                    VideoPlayerMoments(
+                                      momentsController: momentsController,
+                                      defaultCommentsVotingWeight:
+                                          _defaultCommentsVotingWeight!,
+                                      defaultPostsVotingWeight:
+                                          _defaultPostVotingWeight!,
+                                      defaultPostsVotingTip:
+                                          _defaultPostVotingTip!,
+                                      key: UniqueKey(),
+                                      goingInBackgroundCallback:
+                                          widget.goingInBackgroundCallback,
+                                      goingInForegroundCallback:
+                                          widget.goingInForegroundCallback,
+                                      feedItem: f,
+                                      momentsVotingWeight:
+                                          _defaultMomentsVotingWeight!,
+                                      momentsUploadNSFW: _momentsUploadNSFW!,
+                                      momentsUploadOC: _momentsUploadOC!,
+                                      momentsUploadUnlist:
+                                          _momentsUploadUnlist!,
+                                      momentsUploadCrosspost:
+                                          _momentsUploadCrosspost!,
+                                      currentVP: _currentVp,
+                                      userBloc:
+                                          BlocProvider.of<UserBloc>(context),
+                                      fixedDownvoteActivated:
+                                          _fixedDownvoteActivated == "true",
+                                      fixedDownvoteWeight:
+                                          double.parse(_fixedDownvoteWeight!),
+                                    ),
+                                    duration: Duration(
+                                        seconds: f.jsonString!.dur != ""
+                                            ? int.parse(f.jsonString!.dur) + 1
+                                            : 5)));
+                              }
                             }
                           }
                         }

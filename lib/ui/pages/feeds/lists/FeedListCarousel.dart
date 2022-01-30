@@ -30,7 +30,7 @@ class FeedListCarousel extends StatelessWidget {
       itemSelectedCallback; // only used in landscape mode for now
 
   Bool2VoidFunc scrollCallback;
-  late YoutubePlayerController _youtubePlayerController;
+
   String header;
 
   FeedListCarousel({
@@ -178,9 +178,10 @@ class FeedListCarousel extends StatelessWidget {
                     //aspectRatio: 2.0,
                     initialPage: 0,
                     enlargeCenterPage: true,
+                    enableInfiniteScroll: false,
                     autoPlay: true,
                     disableCenter: true,
-                    autoPlayInterval: Duration(seconds: generateRandom(4, 7))),
+                    autoPlayInterval: Duration(seconds: generateRandom(6, 10))),
                 itemCount: feed.length,
                 itemBuilder: (ctx, index, realIdx) {
                   if (feed[index].jsonString!.files?.youtube != null ||
@@ -228,8 +229,6 @@ class FeedListCarousel extends StatelessWidget {
                           itemSelectedCallback: itemSelectedCallback,
                           userPage: true,
                         ),
-
-                        //Text(pos.toString())
                       );
                     }
                   } else {

@@ -25,3 +25,10 @@ class SignInWithCredentialsEvent extends AuthEvent {
   @override
   List<Object> get props => List.empty();
 }
+
+class StartBrowseOnlyMode extends AuthEvent {
+  StartBrowseOnlyMode();
+
+  @override
+  List<Object> get props => List.empty();
+}

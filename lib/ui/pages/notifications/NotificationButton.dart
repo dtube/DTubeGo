@@ -1,4 +1,5 @@
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/notifications/Notifications.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
@@ -20,8 +21,8 @@ class NotificationButton extends StatefulWidget {
 class _NotificationButtonState extends State<NotificationButton> {
   @override
   void initState() {
-    BlocProvider.of<NotificationBloc>(context).add(FetchNotificationsEvent([]));
     super.initState();
+    BlocProvider.of<NotificationBloc>(context).add(FetchNotificationsEvent([]));
   }
 
   @override
@@ -71,7 +72,7 @@ class _NotificationButtonState extends State<NotificationButton> {
         Center(
           child: ShadowedIcon(
             icon: FontAwesomeIcons.bell,
-            color: newNotifications ? Colors.red : Colors.white,
+            color: newNotifications ? Colors.red : globalAlmostWhite,
             shadowColor: Colors.black,
             size: iconSize,
           ),

@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/ui/widgets/players/FullScreenButton.dart';
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
@@ -113,6 +114,10 @@ class _PostDetailsState extends State<PostDetails> {
   late double _defaultVoteWeightComments = 0;
   late double _defaultVoteTipPosts = 0;
   late double _defaultVoteTipComments = 0;
+
+  late bool _fixedDownvoteActivated = true;
+  late double _fixedDownvoteWeight = 1;
+
   late int _currentVT = 0;
   String blockedUsers = "";
   late YoutubePlayerController _ytController;
@@ -260,6 +265,12 @@ class _PostDetailsState extends State<PostDetails> {
                             state.settings[settingKey_defaultVotingWeight]!);
                         _defaultVoteWeightComments = double.parse(state
                             .settings[settingKey_defaultVotingWeightComments]!);
+
+                        _fixedDownvoteActivated =
+                            state.settings[settingKey_FixedDownvoteActivated] ==
+                                "true";
+                        _fixedDownvoteWeight = double.parse(
+                            state.settings[settingKey_FixedDownvoteWeight]!);
                         return BlocProvider<UserBloc>(
                           create: (BuildContext context) =>
                               UserBloc(repository: UserRepositoryImpl()),
@@ -275,9 +286,11 @@ class _PostDetailsState extends State<PostDetails> {
                             defaultVotingTip: _defaultVoteTipPosts,
                             scale: 0.8,
                             isPost: true,
-                            iconColor: Colors.white,
+                            iconColor: globalAlmostWhite,
                             focusVote: widget.directFocus,
                             fadeInFromLeft: false,
+                            fixedDownvoteActivated: _fixedDownvoteActivated,
+                            fixedDownvoteWeight: _fixedDownvoteWeight,
                           ),
                         );
                       } else {
@@ -327,14 +340,17 @@ class _PostDetailsState extends State<PostDetails> {
                           padding: EdgeInsets.zero,
                           itemBuilder: (BuildContext context, int index) =>
                               CommentDisplay(
-                                  widget.post.comments![index],
-                                  _defaultVoteWeightComments,
-                                  _currentVT,
-                                  widget.post.author,
-                                  widget.post.link,
-                                  _defaultVoteTipComments,
-                                  context,
-                                  blockedUsers.split(",")),
+                            widget.post.comments![index],
+                            _defaultVoteWeightComments,
+                            _currentVT,
+                            widget.post.author,
+                            widget.post.link,
+                            _defaultVoteTipComments,
+                            context,
+                            blockedUsers.split(","),
+                            _fixedDownvoteActivated,
+                            _fixedDownvoteWeight,
+                          ),
                         ),
                       )
                     : SizedBox(height: 0),

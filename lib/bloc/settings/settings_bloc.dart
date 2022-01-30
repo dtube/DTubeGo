@@ -7,16 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  SettingsBloc() : super(SettingsInitialState());
-
-  // @override
-
-  // SettingsState get initialState => SettingsInitialState();
-
-  @override
-  Stream<SettingsState> mapEventToState(SettingsEvent event) async* {
-    if (event is FetchSettingsEvent) {
-      yield SettingsLoadingState();
+  SettingsBloc() : super(SettingsInitialState()) {
+    on<FetchSettingsEvent>((event, emit) async {
+      emit(SettingsLoadingState());
       try {
         String? username = await sec.getUsername();
 
@@ -42,7 +35,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               await sec.getHiveSignerAccessTokenRequestedOn(),
           sec.settingKey_pincode: await sec.getPinCode(),
           sec.settingKey_imageUploadService: await sec.getImageUploadService(),
-          sec.settingKey_ExploreTags: await sec.getExploreTags(),
           sec.settingKey_DefaultUploadNSFW: await sec.getUploadNSFW(),
           sec.settingKey_DefaultUploadOC: await sec.getUploadOC(),
           sec.settingKey_DefaultUploadUnlist: await sec.getUploadUnlist(),
@@ -59,14 +51,21 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               await sec.getLastHivePostWithin5MinCooldown(),
           sec.settingKey_hiveSignerDefaultCommunity:
               await sec.getHiveSignerDefaultCommunity(),
+          sec.settingKey_hiveSignerDefaultTags:
+              await sec.getHiveSignerDefaultTags(),
+          sec.settingKey_FixedDownvoteActivated:
+              await sec.getFixedDownvoteActivated(),
+          sec.settingKey_FixedDownvoteWeight:
+              await sec.getFixedDownvoteWeight(),
         };
-        yield SettingsLoadedState(settings: newSettings);
+        emit(SettingsLoadedState(settings: newSettings));
       } catch (e) {
-        yield SettingsErrorState(message: 'unknown error');
+        emit(SettingsErrorState(message: 'unknown error'));
       }
-    }
-    if (event is PushSettingsEvent) {
-      yield SettingsSavingState();
+    });
+
+    on<PushSettingsEvent>((event, emit) async {
+      emit(SettingsSavingState());
       try {
         await sec.persistGeneralSettings(
             event.newSettings[sec.settingKey_showHidden]!,
@@ -77,6 +76,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           event.newSettings[sec.settingKey_defaultVotingWeightComments]!,
           event.newSettings[sec.settingKey_defaultVotingTip]!,
           event.newSettings[sec.settingKey_defaultVotingTipComments]!,
+          event.newSettings[sec.settingKey_FixedDownvoteActivated]!,
+          event.newSettings[sec.settingKey_FixedDownvoteWeight]!,
         );
         await sec.persistTemplateSettings(
           event.newSettings[sec.settingKey_templateTitle]!,
@@ -101,26 +102,24 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         );
 
         await sec.persistHiveSignerAdditionalData(
-            event.newSettings[sec.settingKey_hiveSignerDefaultCommunity]!);
+            event.newSettings[sec.settingKey_hiveSignerDefaultCommunity]!,
+            event.newSettings[sec.settingKey_hiveSignerDefaultTags]!);
 
-        await sec
-            .persistExploreTags(event.newSettings[sec.settingKey_ExploreTags]!);
-
-        yield SettingsSavedState(settings: event.newSettings);
+        emit(SettingsSavedState(settings: event.newSettings));
         Phoenix.rebirth(event.context);
       } catch (e) {
-        yield SettingsErrorState(message: 'unknown error');
+        emit(SettingsErrorState(message: 'unknown error'));
       }
-    }
-    if (event is PushNewPinEvent) {
-      yield SettingsSavingState();
+    });
+    on<PushNewPinEvent>((event, emit) async {
+      emit(SettingsSavingState());
       try {
         await sec.persistPinCode(event.newPin);
 
-        yield PinSavedState();
+        emit(PinSavedState());
       } catch (e) {
-        yield SettingsErrorState(message: 'unknown error');
+        emit(SettingsErrorState(message: 'unknown error'));
       }
-    }
+    });
   }
 }

@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/rewards/rewards_bloc.dart';
@@ -164,7 +166,7 @@ class RewardsCard extends StatefulWidget {
 
 class _RewardsCardState extends State<RewardsCard>
     with AutomaticKeepAliveClientMixin {
-  double widthLabel = 23.w;
+  double widthLabel = 25.w;
   @override
   bool get wantKeepAlive => true;
 
@@ -175,9 +177,6 @@ class _RewardsCardState extends State<RewardsCard>
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
-
     return GestureDetector(
       onTap: () {
         navigateToPostDetailPage(
@@ -187,22 +186,23 @@ class _RewardsCardState extends State<RewardsCard>
           child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-                width: 10.w,
-                height: 10.w,
-                child: AccountAvatarBase(
-                  username: widget.reward.author,
-                  avatarSize: 8.w,
-                  showVerified: true,
-                  showName: false,
-                  width: 8.w,
-                  height: 2.h,
-                )),
-            SizedBox(width: 1.w),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  children: [
+                    AccountAvatarBase(
+                      username: widget.reward.author,
+                      avatarSize: 10.h,
+                      showVerified: true,
+                      showName: true,
+                      width: 60.w,
+                      height: 10.h,
+                    ),
+                  ],
+                ),
                 Row(
                   children: [
                     SizedBox(
@@ -212,7 +212,7 @@ class _RewardsCardState extends State<RewardsCard>
                           style: Theme.of(context).textTheme.bodyText2,
                         )),
                     Container(
-                        width: deviceWidth - 310,
+                        width: 30.w,
                         child: Text(
                           widget.reward.author + '/' + widget.reward.link,
                           overflow: TextOverflow.ellipsis,
@@ -277,10 +277,6 @@ class _RewardsCardState extends State<RewardsCard>
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          "already claimed ",
-                          style: Theme.of(context).textTheme.bodyText2,
-                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -294,6 +290,10 @@ class _RewardsCardState extends State<RewardsCard>
                               child: DTubeLogoShadowed(size: 5.w),
                             ),
                           ],
+                        ),
+                        Text(
+                          "claimed",
+                          style: Theme.of(context).textTheme.bodyText2,
                         ),
                         Text(
                           TimeAgo.timeInAgoTS(widget.reward.claimed!),
@@ -419,14 +419,16 @@ class _ClaimRewardButtonState extends State<ClaimRewardButton> {
           return CircularProgressIndicator();
         } else {
           return ElevatedButton(
-            onPressed: () {
-              TxData txdata = TxData(
-                author: widget.author,
-                link: widget.link,
-              );
-              Transaction newTx = Transaction(type: 17, data: txdata);
-              _txBloc.add(SignAndSendTransactionEvent(newTx));
-            },
+            onPressed: !globals.keyPermissions.contains(17)
+                ? null
+                : () {
+                    TxData txdata = TxData(
+                      author: widget.author,
+                      link: widget.link,
+                    );
+                    Transaction newTx = Transaction(type: 17, data: txdata);
+                    _txBloc.add(SignAndSendTransactionEvent(newTx));
+                  },
             child: Padding(
               padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
               child: Column(

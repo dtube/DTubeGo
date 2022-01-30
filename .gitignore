@@ -47,3 +47,10 @@ app.*.map.json
 
 # key file
 **/android/key.properties
+
+# secret config values like encryption keys and such
+lib/res/secretConfigValues.dart
+
+# eula files
+lib/res/mds/androidEULA.md
+lib/res/mds/iOSEULA.md

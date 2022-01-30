@@ -1,5 +1,6 @@
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_go/utils/navigationShortcuts.dart';
@@ -13,12 +14,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 typedef Bool2VoidFunc = void Function(bool);
 
-class StaggeredFeed extends StatelessWidget {
-  String searchTags;
-  StaggeredFeed({Key? key, required this.searchTags}) : super(key: key);
+class GenreFeed extends StatefulWidget {
+  GenreFeed({Key? key}) : super(key: key);
 
+  @override
+  State<GenreFeed> createState() => _GenreFeedState();
+}
+
+class _GenreFeedState extends State<GenreFeed> {
   late FeedBloc postBloc;
-  final ScrollController _scrollController = ScrollController();
+
+  //final ScrollController _scrollController = ScrollController();
+
+  List<FontAwesomeIcons> genreIcons = [];
+  List<String> genreSubTagStrings = [];
   List<FeedItem> _feedItems = [];
 
   String? _nsfwMode;
@@ -53,9 +62,11 @@ class StaggeredFeed extends StatelessWidget {
                   BlocBuilder<FeedBloc, FeedState>(
                     builder: (context, state) {
                       if (state is FeedInitialState ||
-                          state is FeedLoadingState && _feedItems.isEmpty) {
+                          state is FeedLoadingState) {
+                        _feedItems = [];
                         return buildLoading(context);
                       } else if (state is FeedLoadedState) {
+                        _feedItems = [];
                         _feedItems.addAll(state.feed);
                         BlocProvider.of<FeedBloc>(context).isFetching = false;
                       } else if (state is FeedErrorState) {
@@ -63,26 +74,6 @@ class StaggeredFeed extends StatelessWidget {
                       }
                       return buildPostList(_feedItems, context);
                     },
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Container(
-                      height: 25.h,
-                      width: 200.w,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          gradient: LinearGradient(
-                              begin: FractionalOffset.topCenter,
-                              end: FractionalOffset.bottomCenter,
-                              colors: [
-                                Colors.black,
-                                Colors.black.withOpacity(0.0),
-                              ],
-                              stops: [
-                                0.0,
-                                1.0
-                              ])),
-                    ),
                   ),
                 ],
               ),
@@ -115,34 +106,34 @@ class StaggeredFeed extends StatelessWidget {
 
   Widget buildPostList(List<FeedItem> feed, BuildContext context) {
     return StaggeredGridView.countBuilder(
-      controller: _scrollController
-        ..addListener(() {
-          if (_scrollController.offset >=
-                  _scrollController.position.maxScrollExtent &&
-              !BlocProvider.of<FeedBloc>(context).isFetching) {
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(
-                  feedType: "HotFeed",
-                  fromAuthor: feed[feed.length - 1].author,
-                  fromLink: feed[feed.length - 1].link));
-          }
+      // controller: _scrollController
+      //   ..addListener(() {
+      //     if (_scrollController.offset >=
+      //             _scrollController.position.maxScrollExtent &&
+      //         !BlocProvider.of<FeedBloc>(context).isFetching) {
+      //       BlocProvider.of<FeedBloc>(context)
+      //         ..isFetching = true
+      //         ..add(FetchFeedEvent(
+      //             feedType: "HotFeed",
+      //             fromAuthor: feed[feed.length - 1].author,
+      //             fromLink: feed[feed.length - 1].link));
+      //     }
 
-          if (_scrollController.offset <=
-                  _scrollController.position.minScrollExtent &&
-              !BlocProvider.of<FeedBloc>(context).isFetching) {
-            _feedItems.clear();
-            if (searchTags != "") {
-              BlocProvider.of<FeedBloc>(context)
-                ..isFetching = true
-                ..add(FetchTagSearchResults(tags: searchTags));
-            } else {
-              BlocProvider.of<FeedBloc>(context)
-                ..isFetching = true
-                ..add(FetchFeedEvent(feedType: "HotFeed"));
-            }
-          }
-        }),
+      //     if (_scrollController.offset <=
+      //             _scrollController.position.minScrollExtent &&
+      //         !BlocProvider.of<FeedBloc>(context).isFetching) {
+      //       _feedItems.clear();
+      //       if (widget.searchTags != "") {
+      //         BlocProvider.of<FeedBloc>(context)
+      //           ..isFetching = true
+      //           ..add(FetchTagSearchResults(tags: widget.searchTags));
+      //       } else {
+      //         BlocProvider.of<FeedBloc>(context)
+      //           ..isFetching = true
+      //           ..add(FetchFeedEvent(feedType: "HotFeed"));
+      //       }
+      //     }
+      //   }),
       padding: EdgeInsets.only(top: 19.h),
       crossAxisCount: 4,
       itemCount: feed.length,

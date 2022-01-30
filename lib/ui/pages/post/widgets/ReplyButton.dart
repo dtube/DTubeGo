@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -92,13 +94,16 @@ class _ReplyButtonState extends State<ReplyButton> {
                   offset: Duration(seconds: 6),
                   duration: Duration(seconds: 1),
                   magnitude: 0.7),
-              child: InputChip(
-                label: widget.icon,
-                onPressed: () {
-                  setState(() {
-                    _replyPressed = !_replyPressed;
-                  });
-                },
+              child: Visibility(
+                visible: globals.keyPermissions.contains(4),
+                child: InputChip(
+                  label: widget.icon,
+                  onPressed: () {
+                    setState(() {
+                      _replyPressed = !_replyPressed;
+                    });
+                  },
+                ),
               ),
             ),
           ),
@@ -108,7 +113,7 @@ class _ReplyButtonState extends State<ReplyButton> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: 85.w, // TODO: make this dynamic
+                  width: 55.w, // TODO: make this dynamic
                   child: TextField(
                       autofocus: _replyPressed,
                       controller: _replyController,

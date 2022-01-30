@@ -190,6 +190,10 @@ class _PostDetailsState extends State<PostDetails> {
   late double _defaultVoteWeightComments = 0;
   late double _defaultVoteTipPosts = 0;
   late double _defaultVoteTipComments = 0;
+
+  late bool _fixedDownvoteActivated = true;
+  late double _fixedDownvoteWeight = 1;
+
   late int _currentVT = 0;
   String blockedUsers = "";
 
@@ -434,28 +438,37 @@ class _PostDetailsState extends State<PostDetails> {
                                     _defaultVoteWeightComments = double.parse(state
                                             .settings[
                                         settingKey_defaultVotingWeightComments]!);
+                                    _fixedDownvoteActivated = state.settings[
+                                            settingKey_FixedDownvoteActivated] ==
+                                        "true";
+                                    _fixedDownvoteWeight = double.parse(
+                                        state.settings[
+                                            settingKey_FixedDownvoteWeight]!);
                                     return BlocProvider<UserBloc>(
                                       create: (BuildContext context) =>
                                           UserBloc(
                                               repository: UserRepositoryImpl()),
                                       child: VotingButtons(
-                                          author: widget.post.author,
-                                          link: widget.post.link,
-                                          alreadyVoted:
-                                              widget.post.alreadyVoted!,
-                                          alreadyVotedDirection: widget
-                                              .post.alreadyVotedDirection!,
-                                          upvotes: widget.post.upvotes,
-                                          downvotes: widget.post.downvotes,
-                                          defaultVotingWeight:
-                                              _defaultVoteWeightPosts,
-                                          defaultVotingTip:
-                                              _defaultVoteTipPosts,
-                                          scale: 0.8,
-                                          isPost: true,
-                                          iconColor: Colors.white,
-                                          focusVote: widget.directFocus,
-                                          fadeInFromLeft: false),
+                                        author: widget.post.author,
+                                        link: widget.post.link,
+                                        alreadyVoted: widget.post.alreadyVoted!,
+                                        alreadyVotedDirection:
+                                            widget.post.alreadyVotedDirection!,
+                                        upvotes: widget.post.upvotes,
+                                        downvotes: widget.post.downvotes,
+                                        defaultVotingWeight:
+                                            _defaultVoteWeightPosts,
+                                        defaultVotingTip: _defaultVoteTipPosts,
+                                        scale: 0.8,
+                                        isPost: true,
+                                        iconColor: globalAlmostWhite,
+                                        focusVote: widget.directFocus,
+                                        fadeInFromLeft: false,
+                                        fixedDownvoteActivated:
+                                            _fixedDownvoteActivated,
+                                        fixedDownvoteWeight:
+                                            _fixedDownvoteWeight,
+                                      ),
                                     );
                                   } else {
                                     return SizedBox(height: 0);
@@ -534,7 +547,9 @@ class _PostDetailsState extends State<PostDetails> {
                                               widget.post.link,
                                               _defaultVoteTipComments,
                                               context,
-                                              blockedUsers.split(",")),
+                                              blockedUsers.split(","),
+                                              _fixedDownvoteActivated,
+                                              _fixedDownvoteWeight),
                                           SizedBox(
                                               height: index ==
                                                       widget.post.comments!
@@ -622,15 +637,10 @@ class _VotesOverviewState extends State<VotesOverview> {
       backgroundColor: globalAlmostBlack,
       content: Builder(
         builder: (context) {
-          return
-              //  Container(
-              //   height: 45.h,
-              //   width: 100.w,
-              //   child:
-              SingleChildScrollView(
+          return SingleChildScrollView(
             child: Container(
               height: 45.h,
-              width: 100.w,
+              width: 90.w,
               child: ListView.builder(
                 itemCount: _allVotes.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -689,7 +699,7 @@ class _VotesOverviewState extends State<VotesOverview> {
                               ? FontAwesomeIcons.thumbsUp
                               : FontAwesomeIcons.flag),
                           Container(
-                            width: 30.w,
+                            width: 20.w,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -733,7 +743,7 @@ class _VotesOverviewState extends State<VotesOverview> {
                                             child: ShadowedIcon(
                                               icon: FontAwesomeIcons.bolt,
                                               shadowColor: Colors.black,
-                                              color: Colors.white,
+                                              color: globalAlmostWhite,
                                               size: 5.w,
                                             ),
                                           ),

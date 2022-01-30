@@ -11,19 +11,11 @@ class AccountHistoryBloc
   bool isFetching = false;
 
   AccountHistoryBloc({required this.repository})
-      : super(AccountHistoryInitialState());
-
-  // @override
-
-  // AccountHistoryState get initialState => AccountHistoryInitialState();
-
-  @override
-  Stream<AccountHistoryState> mapEventToState(
-      AccountHistoryEvent event) async* {
-    String? _applicationUser = await sec.getUsername();
-    String _avalonApiNode = await sec.getNode();
-    if (event is FetchAccountHistorysEvent) {
-      yield AccountHistoryLoadingState();
+      : super(AccountHistoryInitialState()) {
+    on<FetchAccountHistorysEvent>((event, emit) async {
+      String? _applicationUser = await sec.getUsername();
+      String _avalonApiNode = await sec.getNode();
+      emit(AccountHistoryLoadingState());
       try {
         List<AvalonAccountHistoryItem> accountHistory =
             await repository.getAccountHistory(
@@ -32,13 +24,13 @@ class AccountHistoryBloc
                 event.username != null ? event.username! : _applicationUser,
                 event.fromBloc);
 
-        yield AccountHistoryLoadedState(
+        emit(AccountHistoryLoadedState(
             historyItems: accountHistory,
             username:
-                event.username != null ? event.username! : _applicationUser);
+                event.username != null ? event.username! : _applicationUser));
       } catch (e) {
-        yield AccountHistoryErrorState(message: e.toString());
+        emit(AccountHistoryErrorState(message: e.toString()));
       }
-    }
+    });
   }
 }

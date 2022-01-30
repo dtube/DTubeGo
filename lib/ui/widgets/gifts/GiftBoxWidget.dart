@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 
 import 'package:dtube_go/ui/widgets/gifts/GiftDialog.dart';
@@ -18,18 +20,21 @@ class GiftboxWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InputChip(
-      label: FaIcon(FontAwesomeIcons.gift),
-      onPressed: () {
-        showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => GiftDialog(
-            txBloc: txBloc,
-            receiver: receiver,
-            originLink: link,
-          ),
-        );
-      },
+    return Visibility(
+      visible: globals.keyPermissions.contains(3),
+      child: InputChip(
+        label: FaIcon(FontAwesomeIcons.gift),
+        onPressed: () {
+          showDialog<String>(
+            context: context,
+            builder: (BuildContext context) => GiftDialog(
+              txBloc: txBloc,
+              receiver: receiver,
+              originLink: link,
+            ),
+          );
+        },
+      ),
     );
   }
 }

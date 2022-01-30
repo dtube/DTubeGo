@@ -102,6 +102,8 @@ class Data {
   double? amount;
   String? memo;
   String? author;
+  String? pa;
+  String? pp;
 
   Data(
       {this.link,
@@ -114,6 +116,8 @@ class Data {
       this.author});
 
   Data.fromJson(Map<String, dynamic> json) {
+    pa = json['pa'] != null ? json['pa'] : "";
+    pp = json['pp'] != null ? json['pp'] : "";
     link = json['pp'] != null
         ? json['pp']
         : json['link'] != null
@@ -144,6 +148,8 @@ class Data {
     data['receiver'] = this.receiver;
     data['amount'] = this.amount;
     data['memo'] = this.memo;
+    data['pa'] = this.pa;
+    data['pp'] = this.pp;
     return data;
   }
 }

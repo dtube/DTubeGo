@@ -65,6 +65,7 @@ class _CommentDialogState extends State<CommentDialog> {
           size: 20.w,
           color: globalBGColor,
         ),
+        showTitleWidget: true,
         child: Builder(builder: (context) {
           return BlocBuilder<UserBloc, UserState>(
             bloc: _userBloc,

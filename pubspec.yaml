@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.2.1+73
+version: 1.4.3+93
 
 environment:
   sdk: ">=2.13.0 <3.0.0"
@@ -24,31 +24,33 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.1
+  cupertino_icons: ^1.0.2
 
   # CRYPTO RELATED
   pointycastle: ^3.1.1
   crypto_keys: ^0.3.0
   bs58check: ^1.0.2
-  bs58: ^1.0.1
+  bs58: ^1.0.2
   secp256k1: ^0.3.0
   hex: ^0.2.0
   elliptic: ^0.3.1
   ecdsa: ^0.0.2
+  encrypt: ^5.0.1
 
   # UI - video related
-  webview_flutter: ^2.3.1
+  webview_flutter: ^2.8.0
   video_player: ^2.2.7
   #youtube_explode_dart: ^1.9.6 #loading youtube metadata
   youtube_explode_dart: ^1.10.8 #loading youtube metadata
   better_player: ^0.0.79 # player for ipfs/sia/local files
   # youtube_plyr_iframe: ^2.0.7 # custom player for youtube
   youtube_player_iframe: ^2.2.2
-  chewie: ^1.2.2
+  gallery_saver: ^2.3.2
+ 
 
   # UI - markdown related
-  flutter_markdown: ^0.6.2  # display markdown (only post description for now)
-  url_launcher: ^6.0.4 # Needed to forward users from dtubego to browsers
+  flutter_markdown: ^0.6.8  # display markdown (only post description for now)
+  url_launcher: ^6.0.17 # Needed to forward users from dtubego to browsers
   expandable: ^5.0.1
 
   # UI - image/video related
@@ -69,11 +71,12 @@ dependencies:
 
   font_awesome_flutter: ^9.2.0 # icons
   google_fonts: ^2.1.0
-  rflutter_alert: ^2.0.2
-  flutter_speed_dial: ^4.6.6 # drop out menu
+  rflutter_alert: ^2.0.4
+  flutter_speed_dial: ^5.0.0+1 # drop out menu
   chips_input: ^0.0.6
+  textfield_tags: ^1.4.2
 
-  another_flushbar: ^1.10.25 # global snackbar to inform the user about transactions
+  another_flushbar: ^1.10.28 # global snackbar to inform the user about transactions
   loadmore: ^2.0.1 # collapsable widget for long video descriptions
   jiffy: ^4.1.0 # library to display time in a user friendly way
   # scroll_snap_list: ^0.8.1 # not needed for now (snapping lists like instagram explore page)
@@ -91,14 +94,14 @@ dependencies:
   wave: ^0.2.0 # wave animation for upload button, login screen and more
 
   # NETWORK - cache related
-  cached_network_image: ^3.1.0
+  cached_network_image: ^3.2.0
 
   # NETWORK - http related
   http: ^0.13.4
-  dio: ^4.0.3
+  dio: ^4.0.4
   # # NETWORK - authentication related
   # oauth2_client: ^2.3.0
-  flutter_web_auth: ^0.3.1
+  flutter_web_auth: ^0.3.2
 
   # OTHERS - global stuff
   flutter_phoenix: ^1.0.0 # for restarting the app on purpose (e.g. logout)
@@ -106,7 +109,7 @@ dependencies:
   package_info_plus: ^1.3.0 # reading version and build number from pubspec
 
   # state management and storage
-  flutter_bloc: ^7.1.0
+  flutter_bloc: ^8.0.1
   flutter_secure_storage: ^5.0.2
 
   # video processing
@@ -114,6 +117,8 @@ dependencies:
 
   # os related
   disk_space: ^0.2.1 # get free memory before recording video
+  path_provider: ^2.0.8
+  path: ^1.8.0
 
 # unsorted
   equatable: ^2.0.3
@@ -155,3 +160,6 @@ flutter:
     - assets/gifs/hovering_freeandprivate.gif
     - assets/gifs/hovering_free.gif
     - assets/videos/firstpage.mp4
+    - lib/res/mds/androidEULA.md
+    - lib/res/mds/iOSEULA.md
+    - lib/res/mds/uploadTerms.md

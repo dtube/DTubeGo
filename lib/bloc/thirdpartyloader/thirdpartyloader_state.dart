@@ -30,3 +30,12 @@ class ThirdPartyMetadataErrorState extends ThirdPartyMetadataState {
   @override
   List<Object> get props => [message];
 }
+
+class ThirdPartyMetadataBioContainsCodeLoadedState
+    extends ThirdPartyMetadataState {
+  bool value;
+  @override
+  ThirdPartyMetadataBioContainsCodeLoadedState({required this.value});
+
+  List<Object> get props => [value];
+}

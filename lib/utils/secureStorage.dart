@@ -20,6 +20,7 @@ const settingKey_hiveSignerAccessTokenExpiresIn = 'HSEI';
 const settingKey_hiveSignerAccessTokenRequestedOn = 'HSRO';
 
 const settingKey_hiveSignerDefaultCommunity = 'HSCOMMUNITY';
+const settingKey_hiveSignerDefaultTags = 'HSTAGS';
 
 const settingKey_OpenedOnce = 'OPENEDONCE';
 const settingKey_FirstLogin = 'FIRSTLOGIN';
@@ -27,6 +28,8 @@ const settingKey_FirstLogin = 'FIRSTLOGIN';
 const settingKey_templateTitle = 'TEMPLATETITLE';
 const settingKey_templateBody = 'TEMPLATEBODY';
 const settingKey_templateTag = 'TEMPLATETAG';
+
+const settingKey_additionalTemplates = "ADDITIONALTEMPLATES";
 
 const settingKey_momentTitle = 'MOMENTTITLE';
 const settingKey_momentBody = 'MOMENTBODY';
@@ -36,6 +39,9 @@ const settingKey_DefaultUploadOC = "DFUOC";
 const settingKey_DefaultUploadUnlist = "DFUNLIST";
 const settingKey_DefaultUploadCrosspost = "DFUCP";
 const settingKey_DefaultUploadVotingWeigth = "DFUVW";
+
+const settingKey_FixedDownvoteActivated = "FIXEDDVACTIVE";
+const settingKey_FixedDownvoteWeight = "FIXEDDVWEIGHT";
 
 const settingKey_DefaultMomentNSFW = "DFMNSFW";
 const settingKey_DefaultMomentOC = "DFMOC";
@@ -56,6 +62,9 @@ const settingKey_LastHivePost = "LASTHIVEPOST";
 const settingKey_HiveStillInCooldown = "LASTHIVEPOSTCOOLDOWN";
 
 const settingKey_BlockedUsers = "BLOCKEDUSERS";
+
+const settingKey_TermsAcceptedVersion = "TERMS1.1"; // versioning because:
+//if we would update the terms we want to view the updated version also for existing users
 
 // const _txsKey = 'TXS';
 const _storage = FlutterSecureStorage();
@@ -109,6 +118,10 @@ Future<void> persistFirstLogin() async {
   await _storage.write(key: settingKey_FirstLogin, value: "false");
 }
 
+Future<void> persistCurrentTermsAccepted() async {
+  await _storage.write(key: settingKey_TermsAcceptedVersion, value: "true");
+}
+
 Future<void> persistHiveSignerData(String accessToken, String expiresIn,
     String requestedOn, String username) async {
   await _storage.write(
@@ -120,9 +133,11 @@ Future<void> persistHiveSignerData(String accessToken, String expiresIn,
   await _storage.write(key: settingKey_hiveSignerUsername, value: username);
 }
 
-Future<void> persistHiveSignerAdditionalData(String community) async {
+Future<void> persistHiveSignerAdditionalData(
+    String community, String tags) async {
   await _storage.write(
       key: settingKey_hiveSignerDefaultCommunity, value: community);
+  await _storage.write(key: settingKey_hiveSignerDefaultTags, value: tags);
 }
 
 // app settings
@@ -140,6 +155,8 @@ Future<void> persistAvalonSettings(
   String defaultVotingWeightComments,
   String defaultVotingTip,
   String defaultVotingTipComments,
+  String fixedDownvoteActive,
+  String fixedDownvoteWeight,
 ) async {
   await _storage.write(
       key: settingKey_defaultVotingWeight, value: defaultVotingWeight);
@@ -151,6 +168,10 @@ Future<void> persistAvalonSettings(
   await _storage.write(
       key: settingKey_defaultVotingTipComments,
       value: defaultVotingTipComments);
+  await _storage.write(
+      key: settingKey_FixedDownvoteActivated, value: fixedDownvoteActive);
+  await _storage.write(
+      key: settingKey_FixedDownvoteWeight, value: fixedDownvoteWeight);
 }
 
 Future<void> persistTemplateSettings(
@@ -161,6 +182,13 @@ Future<void> persistTemplateSettings(
   await _storage.write(key: settingKey_templateTitle, value: templateTitle);
   await _storage.write(key: settingKey_templateBody, value: templateBody);
   await _storage.write(key: settingKey_templateTag, value: templateTag);
+}
+
+Future<void> persistAdditionalTemplates(
+  String templatesJSON,
+) async {
+  await _storage.write(
+      key: settingKey_additionalTemplates, value: templatesJSON);
 }
 
 Future<void> persistMomentTemplateSettings(
@@ -230,6 +258,20 @@ Future<bool> getFirstLogin() async {
     return true;
   } else {
     return false;
+  }
+}
+
+Future<bool> getTermsAccepted() async {
+  String? _accepted = "";
+  try {
+    _accepted = await _storage.read(key: settingKey_TermsAcceptedVersion);
+  } catch (e) {
+    _accepted = "false"; // fallback: not accepted current terms
+  }
+  if (_accepted == null || _accepted != "true") {
+    return false;
+  } else {
+    return true;
   }
 }
 
@@ -381,6 +423,20 @@ Future<String> getTemplateBody() async {
   String? _setting = "";
   try {
     _setting = await _storage.read(key: settingKey_templateBody);
+  } catch (e) {
+    _setting = "";
+  }
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getAdditionalTemplates() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_additionalTemplates);
   } catch (e) {
     _setting = "";
   }
@@ -619,6 +675,21 @@ Future<String> getHiveSignerDefaultCommunity() async {
   }
 }
 
+Future<String> getHiveSignerDefaultTags() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_hiveSignerDefaultTags);
+  } catch (e) {
+    _setting = "";
+  }
+
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
 Future<String> getHiveSignerAccessTokenExpiresIn() async {
   String? _setting = "";
   try {
@@ -752,6 +823,36 @@ Future<String> getDefaultVoteTipComments() async {
     return _setting;
   } else {
     return '25';
+  }
+}
+
+Future<String> getFixedDownvoteActivated() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_FixedDownvoteActivated);
+  } catch (e) {
+    _setting = "true";
+  }
+
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return 'true';
+  }
+}
+
+Future<String> getFixedDownvoteWeight() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_FixedDownvoteWeight);
+  } catch (e) {
+    _setting = "1";
+  }
+
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return '1';
   }
 }
 

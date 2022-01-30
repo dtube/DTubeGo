@@ -6,29 +6,37 @@ class ShadowedIcon extends StatelessWidget {
   IconData icon;
   Color color;
   Color shadowColor;
-  ShadowedIcon({
-    Key? key,
-    required this.size,
-    required this.icon,
-    required this.color,
-    required this.shadowColor,
-  }) : super(key: key);
+  bool? visible;
+  ShadowedIcon(
+      {Key? key,
+      required this.size,
+      required this.icon,
+      required this.color,
+      required this.shadowColor,
+      this.visible})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return new DecoratedIcon(
-      icon,
-      color: color,
-      size: size,
-      shadows: [
-        Shadow(color: shadowColor, offset: Offset(0, 0), blurRadius: 2),
-        //Shadow(color: Colors.white, offset: Offset(0, 0), blurRadius: 10),
-        Shadow(
-          offset: Offset(4.0, 3.0),
-          blurRadius: 10,
-          color: shadowColor,
-        ),
-      ],
+    if (visible == null) {
+      visible = true;
+    }
+    return Visibility(
+      visible: visible!,
+      child: new DecoratedIcon(
+        icon,
+        color: color,
+        size: size,
+        shadows: [
+          Shadow(color: shadowColor, offset: Offset(0, 0), blurRadius: 2),
+          //Shadow(color: globalAlmostWhite, offset: Offset(0, 0), blurRadius: 10),
+          Shadow(
+            offset: Offset(4.0, 3.0),
+            blurRadius: 10,
+            color: shadowColor,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -59,7 +67,7 @@ class HighlightedIcon extends StatelessWidget {
             color: highlightColor,
             offset: Offset(0, 0),
             blurRadius: highlightBlur),
-        //Shadow(color: Colors.white, offset: Offset(0, 0), blurRadius: 10),
+        //Shadow(color: globalAlmostWhite, offset: Offset(0, 0), blurRadius: 10),
       ],
     );
   }

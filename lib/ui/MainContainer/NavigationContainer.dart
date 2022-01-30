@@ -1,3 +1,9 @@
+import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
+import 'package:dtube_go/ui/pages/Explore/GenreBase.dart';
+import 'package:dtube_go/ui/pages/upload/UploadPresetSelection.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
@@ -6,17 +12,18 @@ import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsTabContainer.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-import 'package:dtube_go/ui/MainContainer/BalanceOverview.dart';
-import 'package:dtube_go/ui/MainContainer/MenuButton.dart';
-import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
+import 'package:dtube_go/ui/MainContainer/Widgets/BalanceOverview.dart';
+import 'package:dtube_go/ui/MainContainer/Widgets/MenuButton.dart';
+
 import 'package:dtube_go/ui/pages/feeds/FeedTabContainer.dart';
 import 'package:dtube_go/ui/pages/notifications/NotificationButton.dart';
-import 'package:dtube_go/ui/pages/upload/uploaderTabContainer.dart';
+import 'package:dtube_go/ui/pages/upload/UploaderMainPage.dart';
 import 'package:dtube_go/ui/pages/user/User.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/widgets/system/customSnackbar.dart';
@@ -45,7 +52,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
       icon: Center(
         child: new ShadowedIcon(
           icon: FontAwesomeIcons.alignJustify,
-          color: Colors.white,
+          color: globalAlmostWhite,
           shadowColor: Colors.black,
           size: globalIconSizeMedium,
         ),
@@ -56,7 +63,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
       icon: Center(
         child: new ShadowedIcon(
           icon: FontAwesomeIcons.globeAfrica,
-          color: Colors.white,
+          color: globalAlmostWhite,
           shadowColor: Colors.black,
           size: globalIconSizeMedium,
         ),
@@ -95,7 +102,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
             return Center(
               child: new ShadowedIcon(
                 icon: FontAwesomeIcons.plus,
-                color: Colors.white,
+                color: globals.keyPermissions.contains(4)
+                    ? globalAlmostWhite
+                    : Colors.grey,
                 shadowColor: Colors.black,
                 size: globalIconSizeMedium,
               ),
@@ -109,7 +118,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
       icon: Center(
         child: new ShadowedIcon(
           icon: FontAwesomeIcons.eye,
-          color: Colors.white,
+          color: globalAlmostWhite,
           shadowColor: Colors.black,
           size: globalIconSizeMedium,
         ),
@@ -118,15 +127,17 @@ class _NavigationContainerState extends State<NavigationContainer> {
     BottomNavigationBarItem(
       label: '',
       icon: CircleAvatar(
-        backgroundColor: Colors.white,
+        backgroundColor: globalAlmostWhite,
         radius: globalIconSizeMedium * 0.6,
-        child: AccountAvatarBase(
-            username: "you",
-            avatarSize: globalIconSizeMedium,
-            showVerified: false,
-            showName: false,
-            width: globalIconSizeMedium,
-            height: globalIconSizeMedium),
+        child: globals.keyPermissions.isEmpty
+            ? FaIcon(FontAwesomeIcons.userAstronaut)
+            : AccountAvatarBase(
+                username: "you",
+                avatarSize: globalIconSizeMedium,
+                showVerified: false,
+                showName: false,
+                width: globalIconSizeMedium,
+                height: globalIconSizeMedium),
       ),
     ),
   ];
@@ -148,6 +159,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           //the return value will be from "Yes" or "No" options
           context: context,
           builder: (context) => PopUpDialogWithTitleLogo(
+            showTitleWidget: true,
             callbackOK: () {},
             child: SingleChildScrollView(
                 child: Column(
@@ -214,10 +226,12 @@ class _NavigationContainerState extends State<NavigationContainer> {
       ),
       BlocProvider(
         create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
-        child: ExploreMainPage(),
+        child: GenreBase(),
       ),
-      UploaderMainPage(
-        callback: uploaderCallback,
+      // UploaderMainPage(
+      UploadPresetSelection(
+        //callback: uploaderCallback,
+        uploaderCallback: uploaderCallback,
         key: UniqueKey(),
       ),
       MultiBlocProvider(
@@ -258,28 +272,44 @@ class _NavigationContainerState extends State<NavigationContainer> {
           titleSpacing: 0,
           title: Align(
             alignment: Alignment.topRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                GestureDetector(
-                    child: BalanceOverviewBase(),
-                    onTap: () {
-                      BlocProvider.of<UserBloc>(context).add(FetchDTCVPEvent());
-                    }),
-                BlocProvider<NotificationBloc>(
-                  create: (context) => NotificationBloc(
-                      repository: NotificationRepositoryImpl()),
-                  child: NotificationButton(iconSize: globalIconSizeMedium),
-                ),
-                buildMainMenuSpeedDial(context)
-              ],
-            ),
+            child: globals.keyPermissions.isEmpty
+                ? Padding(
+                    padding: EdgeInsets.only(right: 2.w),
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          BlocProvider.of<AuthBloc>(context)
+                              .add(SignOutEvent(context: context));
+                          //do stuff
+                        },
+                        child: Text(
+                          "Sign in",
+                          style: Theme.of(context).textTheme.headline5,
+                        )),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                          child: BalanceOverviewBase(),
+                          onTap: () {
+                            BlocProvider.of<UserBloc>(context)
+                                .add(FetchDTCVPEvent());
+                          }),
+                      BlocProvider<NotificationBloc>(
+                        create: (context) => NotificationBloc(
+                            repository: NotificationRepositoryImpl()),
+                        child:
+                            NotificationButton(iconSize: globalIconSizeMedium),
+                      ),
+                      buildMainMenuSpeedDial(context)
+                    ],
+                  ),
           ),
         ),
         bottomNavigationBar: Container(
           height: globalIconSizeMedium * 2.4,
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: globalAlmostWhite,
               gradient: LinearGradient(
                   begin: FractionalOffset.topCenter,
                   end: FractionalOffset.bottomCenter,
@@ -299,17 +329,6 @@ class _NavigationContainerState extends State<NavigationContainer> {
             currentIndex: _currentIndex,
             onTap: (index) {
               setState(() {
-                if (index == 2) {
-                  // if the user navigated to the uploader screen
-                  // reset uploader page
-                  _screens.removeAt(2);
-                  _screens.insert(
-                      2,
-                      new UploaderMainPage(
-                        callback: uploaderCallback,
-                        key: UniqueKey(),
-                      ));
-                }
                 // if the user navigated to the moments page
                 if (index == 3) {
                   // reset moments page and set play = true
@@ -331,47 +350,74 @@ class _NavigationContainerState extends State<NavigationContainer> {
                     //  index = index;
                   );
                 } else {
-                  // if the user navigated to any other screen than the moments page
-                  // reset moments page and set play = false
-                  _screens.removeAt(3);
+                  // if the key allows to upload OR it is not the posting screen
+                  if (globals.keyPermissions.contains(4) || index != 2) {
+                    // if the user navigated to any other screen than the moments page
+                    // reset moments page and set play = false
+                    _screens.removeAt(3);
 
-                  _screens.insert(
-                      3,
-                      MomentsPage(
-                        key: UniqueKey(),
-                        play: false,
-                      ));
+                    _screens.insert(
+                        3,
+                        MomentsPage(
+                          key: UniqueKey(),
+                          play: false,
+                        ));
+                  }
                 }
                 // if pressed menu button is at the upload button position
                 if (index == 2) {
-                  // if there is a current background upload running
-                  //  show snackbar and do not navigate to the upload screen
-                  if (BlocProvider.of<AppStateBloc>(context).state
-                          is UploadStartedState ||
-                      BlocProvider.of<AppStateBloc>(context).state
-                          is UploadProcessingState) {
+                  if (globals.keyPermissions.contains(4)) {
+                    // if there is a current background upload running
+                    //  show snackbar and do not navigate to the upload screen
+                    if (BlocProvider.of<AppStateBloc>(context).state
+                            is UploadStartedState ||
+                        BlocProvider.of<AppStateBloc>(context).state
+                            is UploadProcessingState) {
+                      showCustomFlushbarOnError(
+                          "please wait until upload is finished", context);
+                    }
+                    // if the most recent background upload task is finished
+                    // reset UploadState and navigate to the upload screen
+                    if (BlocProvider.of<AppStateBloc>(context).state
+                            is UploadFinishedState ||
+                        BlocProvider.of<AppStateBloc>(context).state
+                            is UploadFailedState) {
+                      BlocProvider.of<AppStateBloc>(context).add(
+                          UploadStateChangedEvent(
+                              uploadState: UploadInitialState()));
+                      _currentIndex = index;
+                    }
+                    // if there is no background upload task running or recently finished
+                    if (BlocProvider.of<AppStateBloc>(context).state
+                        is UploadInitialState) {
+                      // navigate to the uploader screen
+                      // if the user navigated to the uploader screen
+                      // reset uploader page
+                      _screens.removeAt(2);
+                      _screens.insert(
+                          2,
+                          new
+                          //UploaderMainPage(
+                          //callback: uploaderCallback,
+                          UploadPresetSelection(
+                            uploaderCallback: uploaderCallback,
+                            key: UniqueKey(),
+                          ));
+
+                      _currentIndex = index;
+                    }
+                  } else {
                     showCustomFlushbarOnError(
-                        "please wait until upload is finished", context);
-                  }
-                  // if the most recent background upload task is finished
-                  // reset UploadState and navigate to the upload screen
-                  if (BlocProvider.of<AppStateBloc>(context).state
-                          is UploadFinishedState ||
-                      BlocProvider.of<AppStateBloc>(context).state
-                          is UploadFailedState) {
-                    BlocProvider.of<AppStateBloc>(context).add(
-                        UploadStateChangedEvent(
-                            uploadState: UploadInitialState()));
-                    _currentIndex = index;
-                  }
-                  // if there is no background upload task running or recently finished
-                  if (BlocProvider.of<AppStateBloc>(context).state
-                      is UploadInitialState) {
-                    // navigate to the uploader screen
-                    _currentIndex = index;
+                        "you need to be signed in to upload content", context);
                   }
                 } else {
-                  _currentIndex = index;
+                  if (index == 4 && globals.keyPermissions.isEmpty) {
+                    showCustomFlushbarOnError(
+                        "you need to be signed to access your profile",
+                        context);
+                  } else {
+                    _currentIndex = index;
+                  }
                 }
               });
             },

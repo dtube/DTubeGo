@@ -8,7 +8,7 @@ var txTypes = {
   6: 'USER_JSON',
   7: 'FOLLOW',
   8: 'UNFOLLOW',
-  // RESHARE: 9, // not sure
+  9: 'RESHARE', // not sure what that does
   10: 'NEW_KEY',
   11: 'REMOVE_KEY',
   12: 'CHANGE_PASSWORD',
@@ -31,10 +31,10 @@ var txTypeFriendlyDescriptionNotifications = {
   6: 'USER_JSON',
   7: 'subscribed to ##USERNAME', // 'FOLLOW',
   8: 'unsubscribed from ##USERNAME', // 'UNFOLLOW',
-  // RESHARE: 9, // not sure
-  10: 'NEW_KEY',
-  11: 'REMOVE_KEY',
-  12: 'CHANGE_PASSWORD',
+  9: 'RESHARE', // not sure
+  10: 'new custom key created',
+  11: 'custom key deleted',
+  12: 'master key changed',
   13: 'commented on ##USERNAMES content', // 'PROMOTED_COMMENT',
   14: 'TRANSFER_VT',
   15: 'TRANSFER_BW',
@@ -54,7 +54,7 @@ var txTypeFriendlyDescriptionActions = {
   6: 'USER_JSON',
   7: 'followed ##USERNAME', // 'FOLLOW',
   8: 'unfollowed ##USERNAME', // 'UNFOLLOW',
-  // RESHARE: 9, // not sure
+  9: 'RESHARE', // not sure
   10: 'NEW_KEY',
   11: 'REMOVE_KEY',
   12: 'CHANGE_PASSWORD',

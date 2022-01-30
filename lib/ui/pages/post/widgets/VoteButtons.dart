@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
@@ -30,7 +32,9 @@ class VotingButtons extends StatefulWidget {
       required this.iconColor,
       this.verticalModeCallbackVotingButtonsPressed,
       this.verticalModeCallbackVoteSent,
-      required this.fadeInFromLeft})
+      required this.fadeInFromLeft,
+      required this.fixedDownvoteActivated,
+      required this.fixedDownvoteWeight})
       : super(key: key);
 
   final String author;
@@ -48,6 +52,10 @@ class VotingButtons extends StatefulWidget {
 
   final double defaultVotingWeight;
   final double defaultVotingTip;
+
+  final double fixedDownvoteWeight;
+  final bool fixedDownvoteActivated;
+
   final Color iconColor;
 
   final double scale;
@@ -98,6 +106,7 @@ class _VotingButtonsState extends State<VotingButtons> {
                   icon: Padding(
                     padding: const EdgeInsets.only(left: 4.0),
                     child: ShadowedIcon(
+                      visible: globals.keyPermissions.contains(5),
                       icon: FontAwesomeIcons.thumbsUp,
                       color: widget.alreadyVoted && widget.alreadyVotedDirection
                           ? globalRed
@@ -220,6 +229,7 @@ class VotingButtonRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InputChip(
+            isEnabled: globals.keyPermissions.contains(5),
             label: Text(
               widget.upvotes != null && widget.upvotes!.isNotEmpty
                   ? (widget.upvotes!.length).toString()
@@ -263,6 +273,8 @@ class VotingButtonRow extends StatelessWidget {
                       downvote: false,
                       //currentVT: state.vtBalance['v']! + 0.0,
                       isPost: widget.isPost,
+                      fixedDownvoteActivated: widget.fixedDownvoteActivated,
+                      fixedDownvoteWeight: widget.fixedDownvoteWeight,
                     ),
                   ),
                 );
@@ -273,6 +285,7 @@ class VotingButtonRow extends StatelessWidget {
             width: 8,
           ),
           InputChip(
+            isEnabled: globals.keyPermissions.contains(5),
             label: Text(
               widget.downvotes != null && widget.downvotes!.isNotEmpty
                   ? (widget.downvotes!.length).toString()
@@ -308,6 +321,8 @@ class VotingButtonRow extends StatelessWidget {
                       downvote: true,
                       //currentVT: state.vtBalance['v']! + 0.0,
                       isPost: widget.isPost,
+                      fixedDownvoteActivated: widget.fixedDownvoteActivated,
+                      fixedDownvoteWeight: widget.fixedDownvoteWeight,
                     ),
                   ),
                 );

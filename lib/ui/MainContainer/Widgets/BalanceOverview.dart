@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
@@ -86,7 +87,7 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                           child: ShadowedIcon(
                             icon: FontAwesomeIcons.bolt,
                             shadowColor: Colors.black,
-                            color: Colors.white,
+                            color: globalAlmostWhite,
                             size: _iconSize,
                           ),
                         ),

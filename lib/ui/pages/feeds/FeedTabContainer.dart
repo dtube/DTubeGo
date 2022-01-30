@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_go/res/appConfigValues.dart';
@@ -25,14 +27,12 @@ class _FeedMainPageState extends State<FeedMainPage>
     with SingleTickerProviderStateMixin {
   List<String> _tabNames = [
     "Fresh Videos",
-    "Genre Feed",
     "Follow Feed",
     "Hot Videos",
     "Trending Videos"
   ];
   List<IconData> _tabIcons = [
     FontAwesomeIcons.rss,
-    FontAwesomeIcons.hashtag,
     FontAwesomeIcons.userFriends,
     FontAwesomeIcons.fire,
     FontAwesomeIcons.chartLine,
@@ -44,9 +44,37 @@ class _FeedMainPageState extends State<FeedMainPage>
   List<FilterTag> selectedMainTags = [];
   bool showTagFilter = false;
   FocusNode tagSearch = new FocusNode();
+  late List<FeedViewBase> tabBarFeedItemList = [
+    FeedViewBase(
+        feedType: 'NewFeed',
+        largeFormat: true,
+        showAuthor: false,
+        scrollCallback: (bool) {}),
+    FeedViewBase(
+        feedType: 'MyFeed',
+        largeFormat: true,
+        showAuthor: false,
+        scrollCallback: (bool) {}),
+    FeedViewBase(
+        feedType: 'HotFeed',
+        largeFormat: true,
+        showAuthor: false,
+        scrollCallback: (bool) {}),
+    FeedViewBase(
+        feedType: 'TrendingFeed',
+        largeFormat: true,
+        showAuthor: false,
+        scrollCallback: (bool) {}),
+  ];
   @override
   void initState() {
-    _tabController = new TabController(length: 5, vsync: this);
+    if (globals.keyPermissions.isEmpty) {
+      tabBarFeedItemList.removeAt(1); // remove MyFeed (followings) from tabs
+      _tabNames.removeAt(1);
+    }
+
+    _tabController =
+        new TabController(length: tabBarFeedItemList.length, vsync: this);
     _tabController.addListener(() {
       if (_tabController.index != _selectedIndex) {
         setState(() {
@@ -59,32 +87,37 @@ class _FeedMainPageState extends State<FeedMainPage>
               ..isFetching = true
               ..add(FetchFeedEvent(feedType: "NewFeed"));
             break;
-          case 1:
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchTagSearchResults(
-                  tags: selectedTagsString == ""
-                      ? "all"
-                      : selectedTagsString
-                          .replaceAll(' ', ',')
-                          .substring(0, selectedTagsString.length - 1)));
 
+          case 1:
+            if (globals.keyPermissions.isEmpty) {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "HotFeed"));
+            } else {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "MyFeed"));
+            }
             break;
+
           case 2:
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(feedType: "MyFeed"));
+            if (globals.keyPermissions.isEmpty) {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "TrendingFeed"));
+            } else {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "HotFeed"));
+            }
             break;
 
           case 3:
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(feedType: "HotFeed"));
-            break;
-          case 4:
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(feedType: "TrendingFeed"));
+            if (!globals.keyPermissions.isEmpty) {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "TrendingFeed"));
+            }
             break;
 
           default:
@@ -95,10 +128,6 @@ class _FeedMainPageState extends State<FeedMainPage>
       ..isFetching = true
       ..add(FetchFeedEvent(feedType: "NewFeed"));
 
-    for (var maintag in AppConfig.genreTags.keys) {
-      mockResults
-          .add(FilterTag(maintag, AppConfig.genreTags[maintag]!.join(' ')));
-    }
     getMainTagsFromStorage();
     super.initState();
   }
@@ -108,22 +137,11 @@ class _FeedMainPageState extends State<FeedMainPage>
     String _mainTagsString = await sec.getGenreTags();
     List<String> _mainTags = _mainTagsString.split(',');
     selectedMainTags = [];
-    setState(() {
-      for (var t in _mainTags) {
-        selectedMainTags.add(findTag(t));
-        _selectedSubTags = _selectedSubTags + findTag(t).subtags + ',';
-      }
-      selectedTagsString =
-          _selectedSubTags.substring(0, _selectedSubTags.length - 1);
-    });
   }
 
   void pushMainTagsToStorage(String tags) async {
     await sec.persistGenreTags(tags);
   }
-
-  FilterTag findTag(String name) =>
-      mockResults.firstWhere((tag) => tag.name == name);
 
   @override
   Widget build(BuildContext context) {
@@ -139,258 +157,7 @@ class _FeedMainPageState extends State<FeedMainPage>
           Padding(
             padding: _paddingTabBarView,
             child: TabBarView(
-              children: [
-                FeedViewBase(
-                    feedType: 'NewFeed',
-                    largeFormat: true,
-                    showAuthor: false,
-                    scrollCallback: (bool) {}),
-                Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    FeedViewBase(
-                        feedType: 'tagSearch',
-                        largeFormat: true,
-                        showAuthor: false,
-                        topPadding: 7.h,
-                        scrollCallback: (bool) {}),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          top: 10.h,
-                        ),
-                        child: Container(
-                          width: 75.w,
-                          // height: 10.h,
-                          child: Stack(
-                            children: [
-                              Visibility(
-                                visible: !showTagFilter,
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        setState(() async {
-                                          getMainTagsFromStorage();
-                                          showTagFilter = true;
-                                        });
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 3.5.h, left: 4.w),
-                                        child: Row(
-                                          children: [
-                                            ShadowedIcon(
-                                                size: 5.w,
-                                                icon: FontAwesomeIcons.filter,
-                                                color: Colors.white,
-                                                shadowColor: Colors.black),
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 4.w),
-                                              child: Text("show genre filter",
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyText1),
-                                            )
-                                          ],
-                                        ),
-                                      )),
-                                ),
-                              ),
-                              Visibility(
-                                visible: showTagFilter,
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 4.w),
-                                  child: Container(
-                                    width: 65.w,
-                                    child: ChipsInput(
-                                      initialValue: selectedMainTags,
-                                      cursorColor: Colors.white,
-                                      focusNode: tagSearch,
-                                      decoration: InputDecoration(
-                                        //   labelText: "Select Tags",
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.white),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.white),
-                                        ),
-                                      ),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6!
-                                          .copyWith(shadows: [
-                                        Shadow(
-                                            color: Colors.black,
-                                            offset: Offset(0, 0),
-                                            blurRadius: 2),
-                                        //Shadow(color: Colors.white, offset: Offset(0, 0), blurRadius: 10),
-                                        Shadow(
-                                          offset: Offset(4.0, 3.0),
-                                          blurRadius: 10,
-                                          color: Colors.black,
-                                        ),
-                                      ]),
-                                      textCapitalization:
-                                          TextCapitalization.words,
-                                      findSuggestions: (String query) {
-                                        if (query.isNotEmpty) {
-                                          print(query);
-                                          var lowercaseQuery =
-                                              query.toLowerCase();
-                                          final results = mockResults
-                                              .where((tag) {
-                                            return tag.name
-                                                    .toLowerCase()
-                                                    .contains(
-                                                        query.toLowerCase()) ||
-                                                tag.subtags
-                                                    .toLowerCase()
-                                                    .contains(
-                                                        query.toLowerCase());
-                                          }).toList(growable: false)
-                                            ..sort((a, b) => a.name
-                                                .toLowerCase()
-                                                .indexOf(lowercaseQuery)
-                                                .compareTo(b.name
-                                                    .toLowerCase()
-                                                    .indexOf(lowercaseQuery)));
-                                          return results;
-                                        }
-                                        return mockResults;
-                                      },
-                                      onChanged: (data) {
-                                        String selectedMainTagsString = "";
-                                        setState(() {
-                                          selectedTagsString = "";
-                                          for (var d in data) {
-                                            selectedTagsString =
-                                                selectedTagsString +
-                                                    findTag(d.toString())
-                                                        .subtags +
-                                                    ',';
-                                            selectedMainTagsString =
-                                                selectedMainTagsString +
-                                                    d.toString() +
-                                                    ',';
-                                          }
-                                          selectedTagsString =
-                                              selectedTagsString.replaceAll(
-                                                  ' ', ',');
-                                          BlocProvider.of<FeedBloc>(context)
-                                            ..isFetching = true
-                                            ..add(FetchTagSearchResults(
-                                                tags: selectedTagsString
-                                                    .substring(
-                                                        0,
-                                                        selectedTagsString
-                                                                .length -
-                                                            1)));
-                                          String _saveMainTags =
-                                              selectedMainTagsString.substring(
-                                                  0,
-                                                  selectedMainTagsString
-                                                          .length -
-                                                      1);
-                                          pushMainTagsToStorage(_saveMainTags);
-                                          tagSearch.unfocus();
-                                        });
-                                      },
-                                      chipBuilder:
-                                          (context, state, FilterTag tag) {
-                                        return Theme(
-                                          data: ThemeData(
-                                              canvasColor: Colors.transparent),
-                                          child: InputChip(
-                                            backgroundColor: Colors.transparent,
-                                            shadowColor: Colors.transparent,
-                                            selectedColor: Colors.transparent,
-                                            elevation: 0,
-                                            key: ObjectKey(tag),
-                                            // label: Text(tag.name),
-                                            label: OverlayText(
-                                              text: tag.toString(),
-                                              bold: true,
-                                              color: Colors.white,
-                                              sizeMultiply: 1.2,
-                                            ),
-                                            // deleteIconColor: Colors.white,
-                                            deleteIcon: ShadowedIcon(
-                                              icon: FontAwesomeIcons.times,
-                                              size: 4.w,
-                                              color: Colors.white,
-                                              shadowColor: Colors.black,
-                                            ),
-                                            onDeleted: () =>
-                                                state.deleteChip(tag),
-                                            materialTapTargetSize:
-                                                MaterialTapTargetSize
-                                                    .shrinkWrap,
-                                          ),
-                                        );
-                                      },
-                                      suggestionBuilder:
-                                          (context, FilterTag tag) {
-                                        return ListTile(
-                                          key: ObjectKey(tag),
-                                          title: Text(tag.toString(),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1),
-                                          subtitle: Text(tag.subtags,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .subtitle1),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Visibility(
-                                visible: showTagFilter,
-                                child: Align(
-                                  alignment: Alignment.topRight,
-                                  child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          showTagFilter = false;
-                                        });
-                                      },
-                                      icon: ShadowedIcon(
-                                          size: 5.w,
-                                          icon: FontAwesomeIcons.chevronLeft,
-                                          color: Colors.white,
-                                          shadowColor: Colors.black)),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                FeedViewBase(
-                    feedType: 'MyFeed',
-                    largeFormat: true,
-                    showAuthor: false,
-                    scrollCallback: (bool) {}),
-                FeedViewBase(
-                    feedType: 'HotFeed',
-                    largeFormat: true,
-                    showAuthor: false,
-                    scrollCallback: (bool) {}),
-                FeedViewBase(
-                    feedType: 'TrendingFeed',
-                    largeFormat: true,
-                    showAuthor: false,
-                    scrollCallback: (bool) {}),
-              ],
+              children: tabBarFeedItemList,
               controller: _tabController,
             ),
           ),
@@ -402,7 +169,9 @@ class _FeedMainPageState extends State<FeedMainPage>
               alignment: Alignment.topRight,
               padding: EdgeInsets.only(top: 11.h, right: 4.w),
               rotation: 0,
-              menuSize: globalIconSizeMedium * 6,
+              menuSize: globals.keyPermissions.isEmpty
+                  ? globalIconSizeMedium * 4
+                  : globalIconSizeMedium * 6,
             ),
             landscape: TabBarWithPosition(
               tabIcons: _tabIcons,
@@ -432,7 +201,7 @@ class _FeedMainPageState extends State<FeedMainPage>
   }
 }
 
-class TabBarWithPosition extends StatelessWidget {
+class TabBarWithPosition extends StatefulWidget {
   const TabBarWithPosition(
       {Key? key,
       required this.tabIcons,
@@ -453,72 +222,78 @@ class TabBarWithPosition extends StatelessWidget {
   final double menuSize;
 
   @override
+  State<TabBarWithPosition> createState() => _TabBarWithPositionState();
+}
+
+class _TabBarWithPositionState extends State<TabBarWithPosition> {
+  late List<Tab> tabs;
+
+  @override
+  void initState() {
+    tabs = [
+      Tab(
+        child: RotatedBox(
+          quarterTurns: widget.rotation == 3 ? 1 : 0,
+          child: ShadowedIcon(
+              icon: widget.tabIcons[0],
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: widget.iconSize),
+        ),
+      ),
+      Tab(
+        child: RotatedBox(
+          quarterTurns: widget.rotation == 3 ? 1 : 0,
+          child: ShadowedIcon(
+              icon: widget.tabIcons[1],
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: widget.iconSize),
+        ),
+      ),
+      Tab(
+        child: RotatedBox(
+          quarterTurns: widget.rotation == 3 ? 1 : 0,
+          child: ShadowedIcon(
+              icon: widget.tabIcons[2],
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: widget.iconSize),
+        ),
+      ),
+      Tab(
+        child: RotatedBox(
+          quarterTurns: widget.rotation == 3 ? 1 : 0,
+          child: ShadowedIcon(
+              icon: widget.tabIcons[3],
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: widget.iconSize),
+        ),
+      ),
+    ];
+    if (globals.keyPermissions.isEmpty) {
+      tabs.removeAt(1);
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: alignment,
+      alignment: widget.alignment,
       child: Padding(
-        padding: padding,
+        padding: widget.padding,
         child: RotatedBox(
-          quarterTurns: rotation,
+          quarterTurns: widget.rotation,
           child: Container(
-            width: menuSize,
+            width: widget.menuSize,
             child: TabBar(
-              unselectedLabelColor: Colors.white,
-              labelColor: Colors.white,
-              indicatorColor: Colors.white,
-              tabs: [
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[0],
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[1],
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[2],
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[3],
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-                Tab(
-                  child: RotatedBox(
-                    quarterTurns: rotation == 3 ? 1 : 0,
-                    child: ShadowedIcon(
-                        icon: tabIcons[4],
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                        size: iconSize),
-                  ),
-                ),
-              ],
-              controller: tabController,
+              unselectedLabelColor: globalAlmostWhite,
+              labelColor: globalAlmostWhite,
+              indicatorColor: globalAlmostWhite,
+              tabs: tabs,
+              controller: widget.tabController,
               indicatorSize: TabBarIndicatorSize.label,
               labelPadding: EdgeInsets.zero,
             ),

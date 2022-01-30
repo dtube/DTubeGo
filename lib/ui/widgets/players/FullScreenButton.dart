@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:overlay_dialog/overlay_dialog.dart';
 import 'package:dtube_go/ui/widgets/players/BetterPlayerFullScreen.dart';
@@ -40,7 +41,7 @@ class FullScreenButton extends StatelessWidget {
         },
         icon: ShadowedIcon(
           icon: FontAwesomeIcons.expand,
-          color: Colors.white,
+          color: globalAlmostWhite,
           shadowColor: Colors.black,
           size: iconSize,
         ));

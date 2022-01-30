@@ -75,7 +75,7 @@ class AvalonConfig {
   late int tagMaxLength;
   late int tagMaxPerContent;
   late int tippedVotePrecision;
-  late bool tmpForceTs;
+  //late bool tmpForceTs;
   late int txExpirationTime;
   late TxLimits txLimits;
   late int vtGrowth;
@@ -137,7 +137,7 @@ class AvalonConfig {
       required this.tagMaxLength,
       required this.tagMaxPerContent,
       required this.tippedVotePrecision,
-      required this.tmpForceTs,
+      //required this.tmpForceTs,
       required this.txExpirationTime,
       required this.txLimits,
       required this.vtGrowth,
@@ -199,7 +199,7 @@ class AvalonConfig {
     tagMaxLength = json['tagMaxLength'];
     tagMaxPerContent = json['tagMaxPerContent'];
     tippedVotePrecision = json['tippedVotePrecision'];
-    tmpForceTs = json['tmpForceTs'];
+    //tmpForceTs = json['tmpForceTs'];
     txExpirationTime = json['txExpirationTime'];
     txLimits = TxLimits.fromJson(json['txLimits']);
     vtGrowth = json['vtGrowth'];
@@ -264,7 +264,7 @@ class AvalonConfig {
     data['tagMaxLength'] = this.tagMaxLength;
     data['tagMaxPerContent'] = this.tagMaxPerContent;
     data['tippedVotePrecision'] = this.tippedVotePrecision;
-    data['tmpForceTs'] = this.tmpForceTs;
+    //data['tmpForceTs'] = this.tmpForceTs;
     data['txExpirationTime'] = this.txExpirationTime;
     data['txLimits'] = this.txLimits.toJson();
 

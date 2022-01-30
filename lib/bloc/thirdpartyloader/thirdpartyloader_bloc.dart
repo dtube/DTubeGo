@@ -11,24 +11,27 @@ class ThirdPartyMetadataBloc
     extends Bloc<ThirdPartyMetadataEvent, ThirdPartyMetadataState> {
   ThirdPartyMetadataRepository repository;
   ThirdPartyMetadataBloc({required this.repository})
-      : super(ThirdPartyMetadataInitialState());
-
-  // @override
-
-  // ThirdPartyMetadataState get initialState => ThirdPartyMetadataInitialState();
-
-  @override
-  Stream<ThirdPartyMetadataState> mapEventToState(
-      ThirdPartyMetadataEvent event) async* {
-    if (event is LoadThirdPartyMetadataEvent) {
-      yield ThirdPartyMetadataLoadingState();
+      : super(ThirdPartyMetadataInitialState()) {
+    on<LoadThirdPartyMetadataEvent>((event, emit) async {
       try {
         ThirdPartyMetadata _metadata =
             await repository.getMetadata(event.foreignSystemLink);
-        yield ThirdPartyMetadataLoadedState(metadata: _metadata);
+        emit(ThirdPartyMetadataLoadedState(metadata: _metadata));
       } catch (e) {
-        yield ThirdPartyMetadataErrorState(message: 'unknown error');
+        emit(ThirdPartyMetadataErrorState(message: 'unknown error'));
       }
-    }
+    });
+
+    on<CheckIfBioContainsVerificationCodeEvent>((event, emit) async {
+      emit(ThirdPartyMetadataLoadingState());
+      try {
+        bool bioContainsCode = await repository.getChannelCodeInserted(
+            event.channelId, event.code);
+        emit(ThirdPartyMetadataBioContainsCodeLoadedState(
+            value: bioContainsCode));
+      } catch (e) {
+        emit(ThirdPartyMetadataErrorState(message: 'incorrect channel id'));
+      }
+    });
   }
 }

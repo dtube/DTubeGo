@@ -77,38 +77,59 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
-                    alignment: Alignment.topCenter,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.vertical(
-                            top: new Radius.circular(16.0)),
-                        image: DecorationImage(
-                            image: NetworkImage(widget.thumbnailUrl),
-                            fit: BoxFit.fitWidth)),
-                    width: double.infinity,
-                    height: 30.h
-                    // child: Center(
-                    //   child: AspectRatio(
-                    //     aspectRatio: 16 / 9,
-                    //     child: widget.blur
-                    //         ? ClipRect(
-                    //             child: ImageFiltered(
-                    //               imageFilter: ImageFilter.blur(
-                    //                 sigmaY: 5,
-                    //                 sigmaX: 5,
-                    //               ),
-                    //               child: CachedNetworkImage(
-                    //                 imageUrl: widget.thumbnailUrl,
-                    //               ),
-                    //             ),
-                    //           )
-                    //         : CachedNetworkImage(
-                    //             imageUrl: widget.thumbnailUrl,
-                    //             fit: BoxFit.fitWidth,
-                    //           ),
-                    //   ),
-                    // ),
-                    ),
+                widget.thumbnailUrl != ""
+                    ? Container(
+                        alignment: Alignment.topCenter,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.vertical(
+                                top: new Radius.circular(16.0)),
+                            image: DecorationImage(
+                                image: NetworkImage(widget.thumbnailUrl),
+                                fit: BoxFit.fitWidth)),
+                        width: double.infinity,
+                        height: 30.h
+                        // child: Center(
+                        //   child: AspectRatio(
+                        //     aspectRatio: 16 / 9,
+                        //     child: widget.blur
+                        //         ? ClipRect(
+                        //             child: ImageFiltered(
+                        //               imageFilter: ImageFilter.blur(
+                        //                 sigmaY: 5,
+                        //                 sigmaX: 5,
+                        //               ),
+                        //               child: CachedNetworkImage(
+                        //                 imageUrl: widget.thumbnailUrl,
+                        //               ),
+                        //             ),
+                        //           )
+                        //         : CachedNetworkImage(
+                        //             imageUrl: widget.thumbnailUrl,
+                        //             fit: BoxFit.fitWidth,
+                        //           ),
+                        //   ),
+                        // ),
+                        )
+                    : Container(
+                        width: double.infinity,
+                        height: 30.h,
+                        alignment: Alignment.topCenter,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.vertical(
+                              top: new Radius.circular(16.0)),
+                        ),
+                        child: Center(
+                          child: AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: Container(
+                              color: globalBGColor,
+                              child: DTubeLogo(
+                                size: 20.w,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                 SizedBox(width: 4),
                 Padding(
                   padding: const EdgeInsets.all(8.0),

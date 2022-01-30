@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 
@@ -27,7 +28,7 @@ Future<File> cropImage(File currentThumbnail) async {
       androidUiSettings: AndroidUiSettings(
           toolbarTitle: 'Cropper',
           toolbarColor: Colors.deepOrange,
-          toolbarWidgetColor: Colors.white,
+          toolbarWidgetColor: globalAlmostWhite,
           initAspectRatio: CropAspectRatioPreset.ratio16x9,
           hideBottomControls: false,
           lockAspectRatio: true),

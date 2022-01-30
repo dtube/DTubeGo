@@ -35,6 +35,7 @@ class ThirdPartyMetadata {
   late bool nsfw;
   late bool unlist;
   late double burnDTC;
+  late String channelId;
 
   ThirdPartyMetadata({
     required this.sId,
@@ -48,6 +49,7 @@ class ThirdPartyMetadata {
     required this.nsfw,
     required this.unlist,
     required this.burnDTC,
+    required this.channelId,
   });
 
   ThirdPartyMetadata.fromJson(Map<String, dynamic> json, String currentUser) {
@@ -62,6 +64,7 @@ class ThirdPartyMetadata {
     nsfw = json['nsfw'];
     unlist = json['unlist'];
     burnDTC = json['burnDTC'];
+    channelId = json['channelId'];
   }
 
   Map<String, dynamic> toJson(String username) {
@@ -78,6 +81,7 @@ class ThirdPartyMetadata {
     data['nsfw'] = this.nsfw;
     data['unlist'] = this.unlist;
     data['burnDTC'] = this.burnDTC;
+    data['channelId'] = this.channelId;
     return data;
   }
 }

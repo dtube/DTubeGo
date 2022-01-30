@@ -526,7 +526,7 @@ class Comment {
       required this.alreadyVotedDirection});
 
   Comment.fromJson(Map<String, dynamic> json, String currentUser) {
-    id = json['id'];
+    id = json['id'] != null ? json['id'] : "";
     author = json['author'];
     link = json['link'];
     pa = json['pa'];
