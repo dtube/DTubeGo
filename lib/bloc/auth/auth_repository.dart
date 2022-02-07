@@ -5,7 +5,7 @@ import 'package:dtube_go/bloc/auth/auth_response_model.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_go/res/appConfigValues.dart';
-import 'package:dtube_go/utils/privToPub.dart';
+import 'package:dtube_go/utils/crypto_convert.dart';
 import 'package:hex/hex.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -20,6 +20,8 @@ abstract class AuthRepository {
   Future<bool> signOut();
   Future<bool> browseOnlyPermissions();
   Future<bool> signInWithCredentials(
+      String apiNode, String username, String privateKey);
+  Future<List<int>> getTxTypesForCredentials(
       String apiNode, String username, String privateKey);
   void fetchAndStoreVerifiedUsers();
 }
@@ -93,6 +95,52 @@ class AuthRepositoryImpl implements AuthRepository {
       }
     }
     return _keyIsValid;
+  }
+
+  Future<List<int>> getTxTypesForCredentials(
+      String apiNode, String username, String privateKey) async {
+    bool _keyIsValid = false;
+
+    var pub = privToPub(privateKey);
+
+//load user
+    var response;
+    try {
+      response = await http
+          .get(
+        Uri.parse(apiNode +
+            AppConfig.accountDataUrl.replaceAll("##USERNAME", username)),
+      )
+          .catchError((e) {
+        return [];
+      });
+    } catch (e) {
+      return [];
+    }
+    if (response.statusCode == 404) {
+      // username unknown
+      return [];
+    } else {
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        Auth authInformation = ApiResultModel.fromJson(data).auth;
+        List<int> _txTypes = [];
+        if (pub.toString() == authInformation.pub) {
+          for (var txType in txTypes.keys) {
+            _txTypes.add(txType);
+          }
+        } else {
+          for (Keys key in authInformation.keys) {
+            if (key.pub == pub.toString()) {
+              return key.types;
+            }
+          }
+        }
+        return _txTypes;
+      } else {
+        return [];
+      }
+    }
   }
 
   void fetchAndStoreVerifiedUsers() async {

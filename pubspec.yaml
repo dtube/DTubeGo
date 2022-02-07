@@ -1,21 +1,8 @@
 name: dtube_go
 description: Client to interact with the avalon blockchain
-
-# The following line prevents the package from being accidentally published to
-# pub.dev using `pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.4.3+93
+version: 1.5.0+100
 
 environment:
   sdk: ">=2.13.0 <3.0.0"
@@ -26,6 +13,19 @@ dependencies:
 
   cupertino_icons: ^1.0.2
 
+  # auth related - web enabled
+  google_sign_in: ^5.2.0 #android, ios and web
+  cloud_firestore: ^2.5.1 #android, ios, mac, web
+  firebase_auth: ^3.1.4 #android, ios, mac, web
+  firebase_core: ^1.8.0 #android, ios, mac, web
+  flutter_facebook_auth: ^4.0.1  #android, ios, web
+  flutter_web_auth: ^0.3.2 #android, ios, mac, web
+
+  # auth related - not web enabled
+  twitter_login: ^3.0.8 #android, ios
+  github_sign_in: ^0.0.5-dev.4  #android, ios
+
+  
   # CRYPTO RELATED
   pointycastle: ^3.1.1
   crypto_keys: ^0.3.0
@@ -36,14 +36,13 @@ dependencies:
   elliptic: ^0.3.1
   ecdsa: ^0.0.2
   encrypt: ^5.0.1
+  crypto: ^3.0.1
 
   # UI - video related
-  webview_flutter: ^2.8.0
+  webview_flutter: ^3.0.0
   video_player: ^2.2.7
-  #youtube_explode_dart: ^1.9.6 #loading youtube metadata
   youtube_explode_dart: ^1.10.8 #loading youtube metadata
   better_player: ^0.0.79 # player for ipfs/sia/local files
-  # youtube_plyr_iframe: ^2.0.7 # custom player for youtube
   youtube_player_iframe: ^2.2.2
   gallery_saver: ^2.3.2
  
@@ -99,9 +98,7 @@ dependencies:
   # NETWORK - http related
   http: ^0.13.4
   dio: ^4.0.4
-  # # NETWORK - authentication related
-  # oauth2_client: ^2.3.0
-  flutter_web_auth: ^0.3.2
+  
 
   # OTHERS - global stuff
   flutter_phoenix: ^1.0.0 # for restarting the app on purpose (e.g. logout)

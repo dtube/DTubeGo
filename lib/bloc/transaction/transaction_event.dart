@@ -6,8 +6,13 @@ import 'package:flutter/cupertino.dart';
 abstract class TransactionEvent extends Equatable {}
 
 class SignAndSendTransactionEvent extends TransactionEvent {
-  SignAndSendTransactionEvent(this.tx);
+  SignAndSendTransactionEvent(
+      {required this.tx,
+      this.administrativeUsername,
+      this.administrativePrivateKey});
   Transaction tx;
+  String? administrativePrivateKey;
+  String? administrativeUsername;
 
   @override
   List<Object> get props => List.empty();

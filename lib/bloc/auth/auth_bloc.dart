@@ -1,3 +1,6 @@
+import 'package:dtube_go/res/loadRemoteConf.dart' as remoteConfig;
+
+import 'package:dtube_go/utils/crypto_convert.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'package:dtube_go/bloc/auth/auth_event.dart';
@@ -15,10 +18,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc({required this.repository}) : super(AuthInitialState()) {
     on<AppStartedEvent>((event, emit) async {
+      await remoteConfig.initConf();
       String _avalonApiNode = await sec.getNode();
       String? _applicationUser = await sec.getUsername();
       String? _privKey = await sec.getPrivateKey();
-      bool _openedOnce = await sec.getOpenedOnce();
+      bool _onbordingJourneyDone = await sec.getOnbordingJourneyDone();
       bool _termsAccepted = await sec.getTermsAccepted();
 
       emit(SignInLoadingState());
@@ -28,7 +32,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       repository.fetchAndStoreVerifiedUsers();
 
       // if the app has never been opened before
-      if (!_openedOnce) {
+      if (!_onbordingJourneyDone) {
         emit(NeverUsedTheAppBeforeState());
       } else {
         // if the app has been opened before
@@ -105,6 +109,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
+    on<CheckCredentialsEvent>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      try {
+        // check the signin data
+        List<int> _txTypes = await repository.getTxTypesForCredentials(
+            _avalonApiNode, event.username, event.privateKey);
+        // if the login is legit
+        if (_txTypes.isNotEmpty) {
+          emit(CheckCredentialsValidState(
+              publicKey: privToPub(event.privateKey), txTypes: _txTypes));
+        } else {
+          // if the login is not legit
+          emit(CheckCredentialsInValidState());
+        }
+      } catch (e) {
+        emit(CheckCredentialsInValidState());
+      }
+    });
+
     on<StartBrowseOnlyMode>((event, emit) async {
       bool _termsAccepted = await sec.getTermsAccepted();
       emit(SignInLoadingState());
@@ -116,6 +139,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } catch (e) {
         emit(AuthErrorState(message: 'unknown error\n\n' + e.toString()));
       }
+    });
+
+    on<AuthSetInitState>((event, emit) async {
+      emit(AuthInitialState());
     });
   }
 }

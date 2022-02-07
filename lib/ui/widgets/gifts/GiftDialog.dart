@@ -1,5 +1,5 @@
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
-import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
+import 'package:dtube_go/ui/widgets/Inputs/OverlayInputs.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
@@ -133,7 +133,7 @@ class _GiftDialogState extends State<GiftDialog> {
                                   .floor(),
                           memo: _memo);
                       Transaction newTx = Transaction(type: 3, data: txdata);
-                      _txBloc.add(SignAndSendTransactionEvent(newTx));
+                      _txBloc.add(SignAndSendTransactionEvent(tx: newTx));
                       Navigator.of(context).pop();
                     }),
               ],

@@ -1,7 +1,7 @@
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
-import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
+import 'package:dtube_go/ui/widgets/Inputs/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:flutter_animator/flutter_animator.dart';
@@ -556,7 +556,7 @@ class _VotingSliderState extends State<VotingSlider> {
 
                                               _txBloc.add(
                                                   SignAndSendTransactionEvent(
-                                                      newTx));
+                                                      tx: newTx));
                                               setState(() {
                                                 _sendButtonPressed = true;
                                               });
@@ -740,8 +740,8 @@ class _VotingSliderState extends State<VotingSlider> {
                                       Transaction newTx = Transaction(
                                           type: _txType, data: txdata);
 
-                                      _txBloc.add(
-                                          SignAndSendTransactionEvent(newTx));
+                                      _txBloc.add(SignAndSendTransactionEvent(
+                                          tx: newTx));
                                       widget
                                           .verticalModeCallbackVotingButtonsPressed;
                                       setState(() {
@@ -957,8 +957,8 @@ class _VotingSliderStandaloneState extends State<VotingSliderStandalone> {
                                   Transaction newTx =
                                       Transaction(type: _txType, data: txdata);
 
-                                  _txBloc
-                                      .add(SignAndSendTransactionEvent(newTx));
+                                  _txBloc.add(
+                                      SignAndSendTransactionEvent(tx: newTx));
                                   setState(() {
                                     _sendButtonPressed = true;
                                   });

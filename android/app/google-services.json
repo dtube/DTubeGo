@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1051132892930",
+    "project_id": "dtubeutils",
+    "storage_bucket": "dtubeutils.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1051132892930:android:92293a91fe7624f83d141b",
+        "android_client_info": {
+          "package_name": "dtube.go.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1051132892930-7cf5r3r5lk1tb8c37iss1hapeu8d7i2q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dtube.go.app",
+            "certificate_hash": "bba283d7721287c681d73f56c43bfca10ca99f47"
+          }
+        },
+        {
+          "client_id": "1051132892930-90462sfmsspcvqm7ghgrmr424rluh2su.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRKLLmNE2-iKJY0n8z1PH3Yg0iO0dem3c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1051132892930-90462sfmsspcvqm7ghgrmr424rluh2su.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1051132892930-r6q3ojalk13rk6jes52vvjbviam1ujba.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sociallogin"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

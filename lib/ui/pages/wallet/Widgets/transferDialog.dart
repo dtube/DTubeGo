@@ -91,7 +91,7 @@ class _TransferDialogState extends State<TransferDialog> {
                     (double.parse(_amountController.value.text) * 100).floor(),
                 memo: _memoController.value.text);
             Transaction newTx = Transaction(type: 3, data: txdata);
-            _txBloc.add(SignAndSendTransactionEvent(newTx));
+            _txBloc.add(SignAndSendTransactionEvent(tx: newTx));
             Navigator.of(context).pop();
           },
           child: Text(

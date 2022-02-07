@@ -1,7 +1,7 @@
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
 import 'package:dtube_go/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
-import 'package:dtube_go/res/secretConfigValues.dart';
+import 'package:dtube_go/res/secretConfigValues.dart' as secretConfig;
 import 'package:dtube_go/ui/pages/user/Widgets/ConnectYTChannelDialog.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -488,7 +488,11 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                               }),
                                           Text(
                                               "your connected youtube channels:"),
-                                          _originalUserData.jsonString!.additionals !=
+                                          _originalUserData
+                                                          .jsonString !=
+                                                      null &&
+                                                  _originalUserData.jsonString!
+                                                          .additionals !=
                                                       null &&
                                                   _originalUserData
                                                           .jsonString!
@@ -511,7 +515,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                                   itemBuilder: (ctx, pos) {
                                                     return Text(pos.toString() +
                                                         ': ' +
-                                                        decryptYTChannelId(
+                                                        secretConfig.decryptYTChannelId(
                                                             _originalUserData,
                                                             _originalUserData
                                                                     .jsonString!
@@ -579,9 +583,10 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                           ? null
                           : () async {
                               List<String> ytChannels = [];
-                              if (_originalUserData
-                                      .jsonString!.additionals!.ytchannels !=
-                                  null) {
+                              if (_originalUserData.jsonString != null &&
+                                  _originalUserData.jsonString!.additionals!
+                                          .ytchannels !=
+                                      null) {
                                 ytChannels = _originalUserData
                                     .jsonString!.additionals!.ytchannels!;
                               }
@@ -607,22 +612,30 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                       profile: new Profile(
                                           about: _aboutController.text,
                                           avatar: _avatarController.text,
-                                          coverImage:
-                                              _coverImageController.text,
+                                          coverImage: _coverImageController
+                                              .text,
                                           hive: _originalUserData
-                                              .jsonString!.profile?.hive,
+                                              .jsonString?.profile?.hive,
                                           location: _locationController.text,
                                           steem: _originalUserData
-                                              .jsonString!.profile?.steem,
+                                              .jsonString?.profile?.steem,
                                           website: _websiteController.text),
                                       additionals: new Additionals(
                                           accountType: _accountType,
                                           displayName:
                                               _displayNameController.text,
-                                          blocking: _originalUserData
-                                              .jsonString!
-                                              .additionals!
-                                              .blocking,
+                                          blocking:
+                                              _originalUserData.jsonString !=
+                                                          null &&
+                                                      _originalUserData
+                                                              .jsonString!
+                                                              .additionals !=
+                                                          null
+                                                  ? _originalUserData
+                                                      .jsonString!
+                                                      .additionals!
+                                                      .blocking
+                                                  : [],
                                           ytchannels: ytChannels)));
 
                               BlocProvider.of<TransactionBloc>(context).add(

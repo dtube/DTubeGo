@@ -1,5 +1,6 @@
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/upload/widgets/InitiativeDialog.dart';
+import 'package:dtube_go/ui/widgets/Inputs/CustomChoiceCard.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -67,28 +68,19 @@ class InitiativePresetCard extends StatelessWidget {
         height: 15.h,
         child: Stack(
           children: [
-            GestureDetector(
-                child: Card(
-                  color: globalBlue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Center(
-                              child: FaIcon(initiative.icon,
-                                  size: 10.w, color: globalAlmostWhite)),
-                          Text(initiative.name,
-                              style: Theme.of(context).textTheme.headline6)
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  onTapCallback();
-                }),
+            CustomChoiceCard(
+              backgroundColor: globalBlue,
+              height: 15.h,
+              icon: initiative.icon,
+              iconColor: globalAlmostWhite,
+              iconSize: 10.w,
+              label: initiative.name,
+              onTapped: () {
+                onTapCallback();
+              },
+              textStyle: Theme.of(context).textTheme.headline6!,
+              width: 30.w,
+            ),
             Align(
               alignment: Alignment.topRight,
               child: IconButton(

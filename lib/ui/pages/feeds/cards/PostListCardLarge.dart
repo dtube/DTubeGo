@@ -8,7 +8,7 @@ import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/Comments/CommentDialog.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
-import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
+import 'package:dtube_go/ui/widgets/Inputs/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
@@ -536,7 +536,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                           Transaction(type: 3, data: txdata);
                                       BlocProvider.of<TransactionBloc>(context)
                                           .add(SignAndSendTransactionEvent(
-                                              newTx));
+                                              tx: newTx));
                                       setState(() {
                                         _showGiftInput = false;
                                       });

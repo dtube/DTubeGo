@@ -427,7 +427,7 @@ class _ClaimRewardButtonState extends State<ClaimRewardButton> {
                       link: widget.link,
                     );
                     Transaction newTx = Transaction(type: 17, data: txdata);
-                    _txBloc.add(SignAndSendTransactionEvent(newTx));
+                    _txBloc.add(SignAndSendTransactionEvent(tx: newTx));
                   },
             child: Padding(
               padding: EdgeInsets.only(top: 1.h, bottom: 1.h),

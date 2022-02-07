@@ -63,6 +63,15 @@ const settingKey_HiveStillInCooldown = "LASTHIVEPOSTCOOLDOWN";
 
 const settingKey_BlockedUsers = "BLOCKEDUSERS";
 
+const settingKey_suAcc = "SUACC";
+const settingKey_suLogin = "SULOGIN";
+const settingKey_twaKey = "TWAKEY";
+const settingKey_twaSec = "TWASEC";
+const settingKey_ghaCl = "GHACL";
+const settingKey_ghaSec = "GHASEC";
+const settingKey_ghaRU = "GHARU";
+const settingKey_currentHF = "CURHF";
+
 const settingKey_TermsAcceptedVersion = "TERMS1.1"; // versioning because:
 //if we would update the terms we want to view the updated version also for existing users
 
@@ -110,7 +119,7 @@ Future<void> persistNotificationSeen(int tsLast) async {
       key: settingKey_tsLastNotificationSeen, value: tsLast.toString());
 }
 
-Future<void> persistOpenedOnce() async {
+Future<void> persistOnbordingJourneyDone() async {
   await _storage.write(key: settingKey_OpenedOnce, value: "true");
 }
 
@@ -233,7 +242,7 @@ Future<void> persistDefaultUploadAndMomentSettings(
 
 // GET
 
-Future<bool> getOpenedOnce() async {
+Future<bool> getOnbordingJourneyDone() async {
   String? _setting = "";
   try {
     _setting = await _storage.read(key: settingKey_OpenedOnce);
@@ -885,6 +894,21 @@ Future<String> getNSFW() async {
     return 'Hide';
   }
 }
+
+Future<String> getLocalConfigString(String configKey) async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: configKey);
+  } catch (e) {
+    _setting = "";
+  }
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
 // DELETE
 
 Future<bool> deleteUsernameKey() async {

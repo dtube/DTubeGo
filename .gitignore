@@ -50,7 +50,11 @@ app.*.map.json
 
 # secret config values like encryption keys and such
 lib/res/secretConfigValues.dart
+lib/res/loadRemoteConf.dart
 
 # eula files
 lib/res/mds/androidEULA.md
 lib/res/mds/iOSEULA.md
+
+#firebase facebook auth data
+/android/app/src/main/res/values/strings.xml

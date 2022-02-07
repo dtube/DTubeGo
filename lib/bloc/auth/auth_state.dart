@@ -71,3 +71,19 @@ class NeverUsedTheAppBeforeState extends AuthState {
   @override
   List<Object> get props => [];
 }
+
+class CheckCredentialsValidState extends AuthState {
+  CheckCredentialsValidState({required this.publicKey, required this.txTypes});
+  String publicKey;
+  List<int> txTypes;
+
+  @override
+  List<Object> get props => [publicKey, txTypes];
+}
+
+class CheckCredentialsInValidState extends AuthState {
+  CheckCredentialsInValidState();
+
+  @override
+  List<Object> get props => [];
+}

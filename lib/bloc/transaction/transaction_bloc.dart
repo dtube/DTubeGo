@@ -67,13 +67,15 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
     on<SignAndSendTransactionEvent>((event, emit) async {
       final String _avalonApiNode = await sec.getNode();
-      final String? _applicationUser = await sec.getUsername();
-      final String? _privKey = await sec.getPrivateKey();
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String? _applicationUser = await sec.getUsername();
+      String? _privKey = await sec.getPrivateKey();
+      if (event.administrativePrivateKey != null) {
+        _privKey = event.administrativePrivateKey;
+        _applicationUser = event.administrativeUsername;
+      }
 
       String result = "";
-      //for (var i = 0; i < 5; i++) {
-      //yield TransactionSinging(tx: event.tx);
+
       try {
         result = "";
         result = await repository

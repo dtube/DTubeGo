@@ -32,3 +32,19 @@ class StartBrowseOnlyMode extends AuthEvent {
   @override
   List<Object> get props => List.empty();
 }
+
+class CheckCredentialsEvent extends AuthEvent {
+  CheckCredentialsEvent({required this.username, required this.privateKey});
+  final String username;
+  final String privateKey;
+
+  @override
+  List<Object> get props => List.empty();
+}
+
+class AuthSetInitState extends AuthEvent {
+  AuthSetInitState();
+
+  @override
+  List<Object> get props => List.empty();
+}

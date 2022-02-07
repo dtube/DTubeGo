@@ -1,3 +1,6 @@
+// @dart=2.9
+//
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
@@ -27,9 +30,10 @@ const MaterialColor kPrimaryColor = const MaterialColor(
   },
 );
 
-void main() {
+void main() async {
   // deactivate landscape mode
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 

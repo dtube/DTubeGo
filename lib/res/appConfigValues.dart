@@ -37,6 +37,7 @@ class AppConfig {
   // other avalon url schemes
   static String sendTransactionUrl = "/transactWaitConfirm";
   static String avalonConfig = "/config";
+  static String accountPriceUrl = "/accountPrice/##USERNAME";
 
 // storage providers and upload endpoints
   static String ipfsVideoUrl = "https://ipfs.d.tube/ipfs/";
@@ -97,6 +98,7 @@ class AppConfig {
 // urls for login screen
   static String signUpUrl = "https://signup.d.tube";
   static String readmoreUrl = "https://token.d.tube";
+  static String discordUrl = "https://discord.gg/dtube";
   static String faqUrl = "https://d.tube/#!/wiki/faq/README";
   static String gitDTubeGoUrl = "https://github.com/dtube/DTubeGo";
   static String gitAvalonUrl = "https://github.com/dtube/avalon";
@@ -369,4 +371,7 @@ class AppConfig {
     //    "imageURL": ""
     // },
   ];
+
+// REGISTER
+  static int usernameMinLength = 12;
 }

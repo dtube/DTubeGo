@@ -189,7 +189,7 @@ class _NewKeyDialogState extends State<NewKeyDialog> {
                               types: _selectedTxTypes);
                           Transaction newTx =
                               Transaction(type: 10, data: txdata);
-                          _txBloc.add(SignAndSendTransactionEvent(newTx));
+                          _txBloc.add(SignAndSendTransactionEvent(tx: newTx));
                           Navigator.of(context).pop();
                         }
                       : null,
