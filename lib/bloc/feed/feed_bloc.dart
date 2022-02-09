@@ -50,7 +50,19 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
                 _applicationUser)
             : await repository.getMyFeedFiltered(_avalonApiNode,
                 "&tags=DTubeGo-Moments", _tsRangeFilter, _applicationUser);
-        emit(FeedLoadedState(feed: feed, feedType: event.feedType));
+
+        // remove already seen moments
+        List<FeedItem> feedCopy = List.from(feed);
+        for (var f in feedCopy) {
+          bool momentAlreadySeen =
+              await sec.getSeenMomentAlready(f.author + "/" + f.link);
+          if (momentAlreadySeen) {
+            feed.remove(f);
+          }
+        }
+        // reverse feed to have the moments in ascending order
+        List<FeedItem> feedReversed = new List.from(feed.reversed);
+        emit(FeedLoadedState(feed: feedReversed, feedType: event.feedType));
       } catch (e) {
         print(e.toString());
         emit(FeedErrorState(message: e.toString()));

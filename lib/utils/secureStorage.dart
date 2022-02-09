@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const authKey_usernameKey = 'USERNAME';
@@ -71,6 +74,8 @@ const settingKey_ghaCl = "GHACL";
 const settingKey_ghaSec = "GHASEC";
 const settingKey_ghaRU = "GHARU";
 const settingKey_currentHF = "CURHF";
+
+const settingKey_seenMoments = "SEENMOMENTS";
 
 const settingKey_TermsAcceptedVersion = "TERMS1.1"; // versioning because:
 //if we would update the terms we want to view the updated version also for existing users
@@ -240,7 +245,106 @@ Future<void> persistDefaultUploadAndMomentSettings(
       key: settingKey_DefaultMomentVotingWeigth, value: momentVotingWeight);
 }
 
+Future<void> addSeenMoments(
+  String seenMomentpostIdentity,
+  String seenMomentTS,
+) async {
+  String? _seenMoments = "";
+  int visibilityDuration = ((DateTime.now()
+              .add(Duration(days: AppConfig.momentsPastXDays))
+              .millisecondsSinceEpoch /
+          1000))
+      .round(); // duration until we hide moments from the moments page
+  try {
+    _seenMoments = await _storage.read(key: settingKey_seenMoments);
+  } catch (e) {
+    _seenMoments = "[]";
+  }
+  if (_seenMoments == null) {
+    _seenMoments = "[]";
+  }
+  SeenMomentsList _seenMomentsList = new SeenMomentsList(seenMoments: []);
+  // read previous seen Moments
+  if (_seenMoments != "[]") {
+    var _seenMomentsJSON = jsonDecode(_seenMoments);
+    _seenMomentsList = SeenMomentsList.fromJson(_seenMomentsJSON);
+  }
+  // add new Moment
+  _seenMomentsList.seenMoments.add(SeenMoment(
+      ts: int.parse(seenMomentTS), postIdentity: seenMomentpostIdentity));
+
+  // remove old moments outside of the duration we show
+  for (var m in _seenMomentsList.seenMoments) {
+    if (m.ts < visibilityDuration) {
+      _seenMomentsList.seenMoments.remove(m);
+    }
+  }
+  // convert new list
+  var _seenMomentsJSONResult = _seenMomentsList.toJson();
+  //store new list
+  await _storage.write(
+      key: settingKey_seenMoments, value: jsonEncode(_seenMomentsJSONResult));
+}
+
+// PODO Object class for the JSON mapping
+class SeenMomentsList {
+  late List<SeenMoment> seenMoments;
+
+  SeenMomentsList({required this.seenMoments});
+
+  SeenMomentsList.fromJson(Map<String, dynamic> json) {
+    if (json['seenMoments'] != null) {
+      seenMoments = [];
+      json['seenMoments'].forEach((v) {
+        seenMoments.add(new SeenMoment.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.seenMoments != null) {
+      data['seenMoments'] = this.seenMoments.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class SeenMoment {
+  late int ts;
+  late String postIdentity; // author/link;
+
+  SeenMoment({required this.ts, required this.postIdentity});
+
+  SeenMoment.fromJson(Map<String, dynamic> json) {
+    ts = json['ts'];
+    postIdentity = json['postIdentity'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ts'] = this.ts;
+    data['postIdentity'] = this.postIdentity;
+
+    return data;
+  }
+}
+
 // GET
+
+Future<bool> getSeenMomentAlready(String postIdentity) async {
+  String? _seenMoments = "";
+  try {
+    _seenMoments = await _storage.read(key: settingKey_seenMoments);
+    if (_seenMoments!.contains(postIdentity)) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    return false; // fallback: never opened that app before
+  }
+}
 
 Future<bool> getOnbordingJourneyDone() async {
   String? _setting = "";
