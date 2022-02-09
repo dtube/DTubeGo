@@ -455,6 +455,16 @@ class _NavigationContainerState extends State<NavigationContainer> {
                       BlocProvider.of<AppStateBloc>(context).add(
                           UploadStateChangedEvent(
                               uploadState: UploadInitialState()));
+                      _screens.removeAt(2);
+                      _screens.insert(
+                          2,
+                          new
+                          //UploaderMainPage(
+                          //callback: uploaderCallback,
+                          UploadPresetSelection(
+                            uploaderCallback: uploaderCallback,
+                            key: UniqueKey(),
+                          ));
                       _currentIndex = index;
                     }
                     // if there is no background upload task running or recently finished

@@ -349,18 +349,18 @@ class _UploadFormState extends State<UploadForm> {
                                         onPressed: _formIsFilled &&
                                                 _termsAccepted
                                             ? () async {
-                                                String _stillInHiveCooldown =
-                                                    await sec
-                                                        .getLastHivePostWithin5MinCooldown();
+                                                int _hiveCooldown = await sec
+                                                    .getSecondsUntilHiveCooldownEnds();
                                                 if (stateUploadData
                                                         .crossPostToHive &&
-                                                    _stillInHiveCooldown ==
-                                                        "true") {
+                                                    _hiveCooldown > 0) {
                                                   showDialog<String>(
                                                     context: context,
                                                     builder: (BuildContext
                                                             context) =>
-                                                        HivePostCooldownDetectedDialog(),
+                                                        HivePostCooldownDetectedDialog(
+                                                      cooldown: _hiveCooldown,
+                                                    ),
                                                   );
                                                 } else {
                                                   widget.callback(
