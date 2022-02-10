@@ -1,5 +1,7 @@
 // @dart=2.9
 //
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -13,6 +15,8 @@ import 'package:dtube_go/ui/startup/Startup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/auth/auth_event.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:dtube_go/res/secretConfigValues.dart' as secretConfig;
 
 const MaterialColor kPrimaryColor = const MaterialColor(
   0xFF223154,
@@ -33,7 +37,22 @@ const MaterialColor kPrimaryColor = const MaterialColor(
 void main() async {
   // deactivate landscape mode
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: FirebaseOptions(
+          apiKey: secretConfig.fbWeb_apiKey,
+          authDomain: secretConfig.fbWeb_authDomain,
+          projectId: secretConfig.fbWeb_projectId,
+          storageBucket: secretConfig.fbWeb_storageBucket,
+          messagingSenderId: secretConfig.fbWeb_messagingSenderId,
+          appId: secretConfig.fbWeb_appId,
+          measurementId: secretConfig.fbWeb_measurementId),
+    );
+  } else {
+    if (Platform.isAndroid) {
+      await Firebase.initializeApp();
+    }
+  }
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 

@@ -39,7 +39,7 @@ dependencies:
   crypto: ^3.0.1
 
   # UI - video related
-  webview_flutter: ^3.0.0
+  # webview_flutter: ^3.0.0
   video_player: ^2.2.7
   youtube_explode_dart: ^1.10.8 #loading youtube metadata
   better_player: ^0.0.79 # player for ipfs/sia/local files
