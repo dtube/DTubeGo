@@ -37,7 +37,6 @@ class _PinPadScreenState extends State<PinPadScreen> {
   }
 
   void eulaAcceptedCallback() async {
-    await sec.persistOpenedOnce();
     await sec.persistCurrentTermsAccepted();
 
     setState(() {

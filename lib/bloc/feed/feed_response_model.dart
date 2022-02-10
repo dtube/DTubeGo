@@ -148,7 +148,7 @@ class FeedItem {
       }
     } else {
       if (jsonString?.files?.youtube != null) {
-        thumbUrl = "https://img.youtube.com/vi/" +
+        thumbUrl = "https://i.ytimg.com/vi/" +
             jsonString!.files!.youtube! +
             "/mqdefault.jpg";
       } else {

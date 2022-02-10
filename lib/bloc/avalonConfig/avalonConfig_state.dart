@@ -30,3 +30,33 @@ class AvalonConfigErrorState extends AvalonConfigState {
   @override
   List<Object> get props => [message];
 }
+
+class AvalonAccountAvailableState extends AvalonConfigState {
+  int dtcCosts;
+
+  AvalonAccountAvailableState({required this.dtcCosts});
+
+  @override
+  List<Object> get props => [dtcCosts];
+}
+
+class AvalonAccountNotAvailableState extends AvalonConfigState {
+  AvalonAccountNotAvailableState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class AvalonAccountLoadingState extends AvalonConfigState {
+  AvalonAccountLoadingState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class AvalonAccountErrorState extends AvalonConfigState {
+  AvalonAccountErrorState();
+
+  @override
+  List<Object> get props => [];
+}

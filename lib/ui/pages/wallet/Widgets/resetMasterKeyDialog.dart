@@ -141,7 +141,7 @@ class _ResetMasterKeyDialogState extends State<ResetMasterKeyDialog> {
                           );
                           Transaction newTx =
                               Transaction(type: 12, data: txdata);
-                          _txBloc.add(SignAndSendTransactionEvent(newTx));
+                          _txBloc.add(SignAndSendTransactionEvent(tx: newTx));
                           Navigator.of(context).pop();
                         }
                       : null,

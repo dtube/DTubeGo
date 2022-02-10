@@ -54,5 +54,22 @@
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<dict>
+  <!-- ... other tags -->
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>CFBundleURLName</key>
+      <string>dtubeutils.firebaseapp.com</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>https</string>
+      </array>
+    </dict>
+  </array>
+  <!-- ... other tags -->
+</dict>
 </dict>
 </plist>

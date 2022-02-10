@@ -7,9 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HiveSignerForm extends StatefulWidget {
-  HiveSignerForm({Key? key, required this.username}) : super(key: key);
+  HiveSignerForm({Key? key, required this.username, this.validCallback})
+      : super(key: key);
 
   String username;
+  VoidCallback? validCallback;
 
   @override
   _HiveSignerFormState createState() => _HiveSignerFormState();
@@ -91,10 +93,13 @@ class _HiveSignerFormState extends State<HiveSignerForm> {
         ),
         BlocBuilder<HivesignerBloc, HivesignerState>(builder: (context, state) {
           if (state is HiveSignerAccessTokenValidState) {
+            if (widget.validCallback != null) {
+              widget.validCallback!();
+            }
             return _usernameFilled
                 ? Column(
                     children: [
-                      Text("hivesigner authorization is still valid"),
+                      Text("hivesigner authorization is valid"),
                       InputChip(
                         label: Text("remove"),
                         avatar: FaIcon(
@@ -115,8 +120,7 @@ class _HiveSignerFormState extends State<HiveSignerForm> {
                   )
                 : SizedBox(height: 0);
           } else {
-            return Text(
-                "click to check current hivesigner authorization connection");
+            return Text("click to renew hivesigner authorization");
           }
         }),
       ],

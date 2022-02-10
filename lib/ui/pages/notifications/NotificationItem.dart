@@ -1,5 +1,6 @@
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
+import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/config/txTypes.dart';
@@ -49,13 +50,19 @@ class NotificationItem extends StatelessWidget {
                           BlocProvider<UserBloc>(
                             create: (BuildContext context) =>
                                 UserBloc(repository: UserRepositoryImpl()),
-                            child: AccountAvatarBase(
-                              username: sender,
-                              avatarSize: 15.w,
-                              showVerified: true,
-                              showName: false,
-                              width: 30.w,
-                              height: 7.h,
+                            child: GestureDetector(
+                              onTap: () {
+                                navigateToUserDetailPage(
+                                    context, sender, () {});
+                              },
+                              child: AccountAvatarBase(
+                                username: sender,
+                                avatarSize: 15.w,
+                                showVerified: true,
+                                showName: false,
+                                width: 30.w,
+                                height: 7.h,
+                              ),
                             ),
                           ),
                           Text(
@@ -72,7 +79,7 @@ class NotificationItem extends StatelessWidget {
                     ),
                     Container(
                       width: 47.w,
-                      child: NotificationTitle(
+                      child: NotificationDetails(
                         sender: sender,
                         tx: tx,
                         username: username,
@@ -100,8 +107,8 @@ class NotificationItem extends StatelessWidget {
   }
 }
 
-class NotificationTitle extends StatelessWidget {
-  const NotificationTitle(
+class NotificationDetails extends StatelessWidget {
+  const NotificationDetails(
       {Key? key,
       required this.sender,
       required this.username,

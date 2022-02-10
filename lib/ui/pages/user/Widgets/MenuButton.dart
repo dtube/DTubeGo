@@ -132,7 +132,7 @@ Widget buildUserMenuSpeedDial(
             Transaction newTx =
                 Transaction(type: user.alreadyFollowing ? 8 : 7, data: txdata);
             BlocProvider.of<TransactionBloc>(context)
-                .add(SignAndSendTransactionEvent(newTx));
+                .add(SignAndSendTransactionEvent(tx: newTx));
           }),
     ];
   }

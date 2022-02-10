@@ -8,6 +8,10 @@ abstract class AvalonConfigRepository {
   Future<AvalonConfig> getAvalonConfig(
     String apiNode,
   );
+  Future<int> getAvalonAccountPrice(
+    String accountName,
+    String apiNode,
+  );
 }
 
 class AvalonConfigRepositoryImpl implements AvalonConfigRepository {
@@ -16,9 +20,24 @@ class AvalonConfigRepositoryImpl implements AvalonConfigRepository {
     var response = await http.get(Uri.parse(apiNode + AppConfig.avalonConfig));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-      print(response.body);
+
       AvalonConfig config = ApiResultModelAvalonConfig.fromJson(data).conf;
       return config;
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future<int> getAvalonAccountPrice(String apiNode, String accountName) async {
+    var response = await http.get(Uri.parse(apiNode +
+        AppConfig.accountPriceUrl.replaceAll("##USERNAME", accountName)));
+    if (response.statusCode == 200) {
+      var data = response.body;
+      if (int.tryParse(data) != null) {
+        return int.tryParse(data)!;
+      } else {
+        return 0;
+      }
     } else {
       throw Exception();
     }

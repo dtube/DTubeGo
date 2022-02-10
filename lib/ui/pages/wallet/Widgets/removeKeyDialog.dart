@@ -81,7 +81,7 @@ class _RemoveKeyDialogState extends State<RemoveKeyDialog> {
                       id: widget.keyId,
                     );
                     Transaction newTx = Transaction(type: 11, data: txdata);
-                    _txBloc.add(SignAndSendTransactionEvent(newTx));
+                    _txBloc.add(SignAndSendTransactionEvent(tx: newTx));
                     Navigator.of(context).pop();
                   },
                 ),

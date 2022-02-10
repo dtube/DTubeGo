@@ -1,3 +1,5 @@
+import 'package:dtube_go/ui/pages/upload/dialogs/HivePostCooldownDialog.dart';
+import 'package:dtube_go/utils/CountDownTimer.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 import 'package:gallery_saver/gallery_saver.dart';
 import 'dart:io';
@@ -154,71 +156,13 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
 
     double? _freeSpace = await DiskSpace.getFreeDiskSpace;
     if (_freeSpace! > AppConfig.minFreeSpaceRecordVideoInMB) {
-      String _stillInHiveCooldown =
-          await sec.getLastHivePostWithin5MinCooldown();
-      if (_uploadData.crossPostToHive && _stillInHiveCooldown == "true") {
+      int _hiveCooldown = await sec.getSecondsUntilHiveCooldownEnds();
+      if (_uploadData.crossPostToHive && _hiveCooldown > 0) {
         showDialog<String>(
           context: context,
-          builder: (BuildContext context) => PopUpDialogWithTitleLogo(
-              showTitleWidget: true,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text("Please wait a bit!",
-                        style: Theme.of(context).textTheme.headline4,
-                        textAlign: TextAlign.center),
-                    SizedBox(height: 2.h),
-                    Text(
-                        "You want to cross post to hive but you already have posted something within the last 5 minutes.",
-                        style: Theme.of(context).textTheme.bodyText1,
-                        textAlign: TextAlign.center),
-                    Text(
-                        "Please wait for the 5 min hive cooldown to expire and try it again.",
-                        style: Theme.of(context).textTheme.bodyText1,
-                        textAlign: TextAlign.center),
-                    SizedBox(height: 3.h),
-                    Text(
-                        "This cooldown is a property coming from the hive blockchain. We just want to avoid upload errors when you crosspost.",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6!
-                            .copyWith(color: globalRed),
-                        textAlign: TextAlign.center),
-                    SizedBox(height: 2.h),
-                    InkWell(
-                        child: Container(
-                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                          decoration: BoxDecoration(
-                            color: globalRed,
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(20.0),
-                                bottomRight: Radius.circular(20.0)),
-                          ),
-                          child: Text(
-                            "Okay thanks!",
-                            style: Theme.of(context).textTheme.headline4,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          FocusScope.of(context).unfocus();
-                        }),
-                  ],
-                ),
-              ),
-              titleWidget: Center(
-                child: FaIcon(
-                  FontAwesomeIcons.cloudUploadAlt,
-                  size: 8.h,
-                ),
-              ),
-              callbackOK: () {},
-              titleWidgetPadding: 10.w,
-              titleWidgetSize: 10.w),
+          builder: (BuildContext context) => HivePostCooldownDetectedDialog(
+            cooldown: _hiveCooldown,
+          ),
         );
       } else {
         _pickedFile = await _picker.pickVideo(

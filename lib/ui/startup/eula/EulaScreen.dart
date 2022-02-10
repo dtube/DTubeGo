@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
@@ -21,38 +22,53 @@ class EULAScreen extends StatefulWidget {
 class _EULAScreenState extends State<EULAScreen> {
   String? _eulaTextAndroid;
   String? _eulaTextIOS;
+
   bool _eulaCompleted = false;
 
   var _controller = ScrollController();
 
   void loadEulaAssets() async {
-    if (Platform.isAndroid) {
-      final _loadedEulaAndroidData =
-          await rootBundle.loadString('lib/res/mds/androidEULA.md');
-
-      setState(() {
-        _eulaTextAndroid = _loadedEulaAndroidData;
-      });
-    } else if (Platform.isIOS) {
-      final _loadedEulaIOSData =
-          await rootBundle.loadString('lib/res/mds/iOSEULA.md');
-
-      setState(() {
-        _eulaTextIOS = _loadedEulaIOSData;
-      });
+    if (kIsWeb) {
+      print("web release");
     } else {
-      setState(() {
-        _eulaCompleted = true;
-      });
+      if (Platform.isAndroid) {
+        final _loadedEulaAndroidData =
+            await rootBundle.loadString('lib/res/mds/androidEULA.md');
+
+        setState(() {
+          _eulaTextAndroid = _loadedEulaAndroidData;
+        });
+      } else if (Platform.isIOS) {
+        final _loadedEulaIOSData =
+            await rootBundle.loadString('lib/res/mds/iOSEULA.md');
+
+        setState(() {
+          _eulaTextIOS = _loadedEulaIOSData;
+        });
+      }
     }
   }
 
   @override
   void initState() {
     loadEulaAssets();
-    _controller.addListener(() {
-      if (_controller.position.atEdge) {
-        if (_controller.position.pixels == 0) {
+    if (kIsWeb) {
+      widget.eulaAcceptedCallback();
+    } else {
+      _controller.addListener(() {
+        if (_controller.position.atEdge) {
+          if (_controller.position.pixels == 0) {
+            setState(() {
+              if (_eulaTextIOS == null && _eulaTextAndroid == null) {
+                _eulaCompleted = false;
+              }
+            });
+          } else {
+            setState(() {
+              _eulaCompleted = true;
+            });
+          }
+        } else {
           setState(() {
             if (_eulaTextIOS == null && _eulaTextAndroid == null) {
               _eulaCompleted = true;
@@ -60,21 +76,9 @@ class _EULAScreenState extends State<EULAScreen> {
               _eulaCompleted = false;
             }
           });
-        } else {
-          setState(() {
-            _eulaCompleted = true;
-          });
         }
-      } else {
-        setState(() {
-          if (_eulaTextIOS == null && _eulaTextAndroid == null) {
-            _eulaCompleted = true;
-          } else {
-            _eulaCompleted = false;
-          }
-        });
-      }
-    });
+      });
+    }
     super.initState();
   }
 

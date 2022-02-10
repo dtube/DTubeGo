@@ -1,6 +1,6 @@
 import 'package:dtube_go/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/res/secretConfigValues.dart';
+import 'package:dtube_go/res/secretConfigValues.dart' as secretConfig;
 import 'package:flutter/services.dart';
 
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
@@ -246,7 +246,8 @@ class _ConnectYTChannelDialogState extends State<ConnectYTChannelDialog> {
                                   _channelIdController.value.text != ""
                               ? () async {
                                   String encryptedChannelID =
-                                      encryptYTChannelId(widget.user,
+                                      secretConfig.encryptYTChannelId(
+                                          widget.user,
                                           _channelIdController.value.text);
                                   print(encryptedChannelID);
                                   widget.connectCallback([

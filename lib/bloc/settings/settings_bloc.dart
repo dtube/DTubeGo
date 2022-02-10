@@ -48,7 +48,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           sec.settingKey_DefaultMomentVotingWeigth:
               await sec.getMomentVotingWeight(),
           sec.settingKey_HiveStillInCooldown:
-              await sec.getLastHivePostWithin5MinCooldown(),
+              await sec.getSecondsUntilHiveCooldownEnds().toString(),
           sec.settingKey_hiveSignerDefaultCommunity:
               await sec.getHiveSignerDefaultCommunity(),
           sec.settingKey_hiveSignerDefaultTags:

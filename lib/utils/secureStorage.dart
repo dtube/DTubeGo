@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const authKey_usernameKey = 'USERNAME';
@@ -63,6 +66,17 @@ const settingKey_HiveStillInCooldown = "LASTHIVEPOSTCOOLDOWN";
 
 const settingKey_BlockedUsers = "BLOCKEDUSERS";
 
+const settingKey_suAcc = "SUACC";
+const settingKey_suLogin = "SULOGIN";
+const settingKey_twaKey = "TWAKEY";
+const settingKey_twaSec = "TWASEC";
+const settingKey_ghaCl = "GHACL";
+const settingKey_ghaSec = "GHASEC";
+const settingKey_ghaRU = "GHARU";
+const settingKey_currentHF = "CURHF";
+
+const settingKey_seenMoments = "SEENMOMENTS";
+
 const settingKey_TermsAcceptedVersion = "TERMS1.1"; // versioning because:
 //if we would update the terms we want to view the updated version also for existing users
 
@@ -110,7 +124,7 @@ Future<void> persistNotificationSeen(int tsLast) async {
       key: settingKey_tsLastNotificationSeen, value: tsLast.toString());
 }
 
-Future<void> persistOpenedOnce() async {
+Future<void> persistOnbordingJourneyDone() async {
   await _storage.write(key: settingKey_OpenedOnce, value: "true");
 }
 
@@ -231,9 +245,108 @@ Future<void> persistDefaultUploadAndMomentSettings(
       key: settingKey_DefaultMomentVotingWeigth, value: momentVotingWeight);
 }
 
+Future<void> addSeenMoments(
+  String seenMomentpostIdentity,
+  String seenMomentTS,
+) async {
+  String? _seenMoments = "";
+  int visibilityDuration = ((DateTime.now()
+              .add(Duration(days: AppConfig.momentsPastXDays))
+              .millisecondsSinceEpoch /
+          1000))
+      .round(); // duration until we hide moments from the moments page
+  try {
+    _seenMoments = await _storage.read(key: settingKey_seenMoments);
+  } catch (e) {
+    _seenMoments = "[]";
+  }
+  if (_seenMoments == null) {
+    _seenMoments = "[]";
+  }
+  SeenMomentsList _seenMomentsList = new SeenMomentsList(seenMoments: []);
+  // read previous seen Moments
+  if (_seenMoments != "[]") {
+    var _seenMomentsJSON = jsonDecode(_seenMoments);
+    _seenMomentsList = SeenMomentsList.fromJson(_seenMomentsJSON);
+  }
+  // add new Moment
+  _seenMomentsList.seenMoments.add(SeenMoment(
+      ts: int.parse(seenMomentTS), postIdentity: seenMomentpostIdentity));
+
+  // remove old moments outside of the duration we show
+  for (var m in _seenMomentsList.seenMoments) {
+    if (m.ts < visibilityDuration) {
+      _seenMomentsList.seenMoments.remove(m);
+    }
+  }
+  // convert new list
+  var _seenMomentsJSONResult = _seenMomentsList.toJson();
+  //store new list
+  await _storage.write(
+      key: settingKey_seenMoments, value: jsonEncode(_seenMomentsJSONResult));
+}
+
+// PODO Object class for the JSON mapping
+class SeenMomentsList {
+  late List<SeenMoment> seenMoments;
+
+  SeenMomentsList({required this.seenMoments});
+
+  SeenMomentsList.fromJson(Map<String, dynamic> json) {
+    if (json['seenMoments'] != null) {
+      seenMoments = [];
+      json['seenMoments'].forEach((v) {
+        seenMoments.add(new SeenMoment.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.seenMoments != null) {
+      data['seenMoments'] = this.seenMoments.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class SeenMoment {
+  late int ts;
+  late String postIdentity; // author/link;
+
+  SeenMoment({required this.ts, required this.postIdentity});
+
+  SeenMoment.fromJson(Map<String, dynamic> json) {
+    ts = json['ts'];
+    postIdentity = json['postIdentity'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ts'] = this.ts;
+    data['postIdentity'] = this.postIdentity;
+
+    return data;
+  }
+}
+
 // GET
 
-Future<bool> getOpenedOnce() async {
+Future<bool> getSeenMomentAlready(String postIdentity) async {
+  String? _seenMoments = "";
+  try {
+    _seenMoments = await _storage.read(key: settingKey_seenMoments);
+    if (_seenMoments!.contains(postIdentity)) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    return false; // fallback: never opened that app before
+  }
+}
+
+Future<bool> getOnbordingJourneyDone() async {
   String? _setting = "";
   try {
     _setting = await _storage.read(key: settingKey_OpenedOnce);
@@ -275,29 +388,28 @@ Future<bool> getTermsAccepted() async {
   }
 }
 
-Future<String> getLastHivePostWithin5MinCooldown() async {
+Future<int> getSecondsUntilHiveCooldownEnds() async {
   DateTime _curTime = new DateTime.now(); //Current local time
-  DateTime _before5Min = _curTime.subtract(Duration(minutes: 5));
-
   try {
-    // read DateTime of recent hive post
+    // read DateTime of last hive post
     String? _lastPostString = await _storage.read(key: settingKey_LastHivePost);
     if (_lastPostString != null) {
       DateTime _lastPost = DateTime.parse(_lastPostString);
-      // if the recent post is within the last 5 minute cooldown
-      if (_lastPost.isAfter(_before5Min)) {
-        return "true";
+      int _timeUntilCooldownEnds =
+          _lastPost.add(Duration(seconds: 300)).difference(_curTime).inSeconds;
+      if (_timeUntilCooldownEnds > 0) {
+        return _timeUntilCooldownEnds;
       } else {
-        return "false";
+        return 0;
       }
     } else {
-      return "false";
+      return 0;
     }
 
     // if no DateTime found or it is not parsable
     // it was never set before
   } catch (e) {
-    return "false";
+    return 0;
   }
 }
 
@@ -885,6 +997,21 @@ Future<String> getNSFW() async {
     return 'Hide';
   }
 }
+
+Future<String> getLocalConfigString(String configKey) async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: configKey);
+  } catch (e) {
+    _setting = "";
+  }
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
 // DELETE
 
 Future<bool> deleteUsernameKey() async {

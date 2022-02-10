@@ -1,4 +1,7 @@
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
+import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
+import 'package:dtube_go/ui/pages/settings/HiveSignerForm.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/pages/Explore/GenreBase.dart';
@@ -130,7 +133,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
         backgroundColor: globalAlmostWhite,
         radius: globalIconSizeMedium * 0.6,
         child: globals.keyPermissions.isEmpty
-            ? FaIcon(FontAwesomeIcons.userAstronaut)
+            ? FaIcon(FontAwesomeIcons.userSecret)
             : AccountAvatarBase(
                 username: "you",
                 avatarSize: globalIconSizeMedium,
@@ -215,6 +218,72 @@ class _NavigationContainerState extends State<NavigationContainer> {
     _firstTimeLogin = await sec.getFirstLogin();
   }
 
+  void revalidateHiveSigner() async {
+    String _hivesignerUsername = await sec.getHiveSignerUsername();
+    String _hivesignerAccessToken = await sec.getHiveSignerAccessToken();
+    String _hivesignerAccessTokenExpiresIn =
+        await sec.getHiveSignerAccessTokenExpiresIn();
+    String _hivesignerAccessTokenRequestedOn =
+        await sec.getHiveSignerAccessTokenRequestedOn();
+    // uncomment to invalidate hivesigner connection
+    // await sec.persistHiveSignerData(
+    //     _hivesignerAccessToken,
+    //     _hivesignerAccessTokenExpiresIn,
+    //     "2022-01-26 00:02:37.965113",
+    //     _hivesignerUsername);
+    // check if set
+    if (_hivesignerAccessToken != '') {
+      DateTime requestDate = DateTime.parse(_hivesignerAccessTokenRequestedOn);
+      if (DateTime.now().isAfter(requestDate.add(
+          Duration(seconds: int.parse(_hivesignerAccessTokenExpiresIn))))) {
+        showDialog(
+            context: context,
+            builder: (context) => PopUpDialogWithTitleLogo(
+                  showTitleWidget: true,
+                  titleWidget: Center(
+                      child: FaIcon(
+                    FontAwesomeIcons.hive,
+                    size: 18.w,
+                    color: globalRed,
+                  )),
+                  titleWidgetPadding: 10.h,
+                  titleWidgetSize: 20.w,
+                  callbackOK: () {},
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text("Hivesigner outdated",
+                              style: Theme.of(context).textTheme.headline4),
+                          Padding(
+                            padding: EdgeInsets.only(top: 1.h),
+                            child: Text(
+                                "The authorization for your hive account is not valid anymore. This happens automatically after 7 days for security reasons. Please renew the authorization by clicking on the button below.",
+                                style: Theme.of(context).textTheme.bodyText1),
+                          ),
+                          BlocProvider<HivesignerBloc>(
+                            create: (BuildContext context) => HivesignerBloc(
+                                repository: HivesignerRepositoryImpl()),
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 2.h),
+                              child: HiveSignerForm(
+                                username: _hivesignerUsername,
+                                validCallback: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ));
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -254,6 +323,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
       ),
     ];
     isFirstLogin();
+    revalidateHiveSigner();
   }
 
   @override
@@ -282,8 +352,8 @@ class _NavigationContainerState extends State<NavigationContainer> {
                           //do stuff
                         },
                         child: Text(
-                          "Sign in",
-                          style: Theme.of(context).textTheme.headline5,
+                          "Join / Login",
+                          style: Theme.of(context).textTheme.headline6,
                         )),
                   )
                 : Row(
@@ -385,6 +455,16 @@ class _NavigationContainerState extends State<NavigationContainer> {
                       BlocProvider.of<AppStateBloc>(context).add(
                           UploadStateChangedEvent(
                               uploadState: UploadInitialState()));
+                      _screens.removeAt(2);
+                      _screens.insert(
+                          2,
+                          new
+                          //UploaderMainPage(
+                          //callback: uploaderCallback,
+                          UploadPresetSelection(
+                            uploaderCallback: uploaderCallback,
+                            key: UniqueKey(),
+                          ));
                       _currentIndex = index;
                     }
                     // if there is no background upload task running or recently finished
@@ -411,10 +491,27 @@ class _NavigationContainerState extends State<NavigationContainer> {
                         "you need to be signed in to upload content", context);
                   }
                 } else {
-                  if (index == 4 && globals.keyPermissions.isEmpty) {
-                    showCustomFlushbarOnError(
-                        "you need to be signed to access your profile",
-                        context);
+                  if (index == 4) {
+                    // if the selected page is the profile page
+                    if (globals.keyPermissions.isEmpty) {
+                      showCustomFlushbarOnError(
+                          "you need to be signed in to access your profile",
+                          context);
+                    } else {
+                      _screens.removeAt(4);
+                      _screens.insert(
+                        4,
+                        BlocProvider(
+                          create: (context) =>
+                              UserBloc(repository: UserRepositoryImpl()),
+                          child: UserPage(
+                            ownUserpage: true,
+                            //key: UniqueKey(),
+                          ),
+                        ),
+                      );
+                      _currentIndex = index;
+                    }
                   } else {
                     _currentIndex = index;
                   }

@@ -269,7 +269,7 @@ class Source {
       thumbUrl = jsonstring!.thumbnailUrl!;
     } else {
       if (jsonstring?.files?.youtube != null) {
-        thumbUrl = "https://img.youtube.com/vi/" +
+        thumbUrl = "https://i.ytimg.com/vi/" +
             jsonstring!.files!.youtube! +
             "/mqdefault.jpg";
       } else {

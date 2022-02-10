@@ -1,11 +1,9 @@
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
-import 'package:dtube_go/bloc/settings/settings_bloc.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_go/bloc/user/user_bloc.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/res/secretConfigValues.dart';
+import 'package:dtube_go/res/secretConfigValues.dart' as secretConfig;
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/upload/widgets/PresetCards.dart';
 import 'package:dtube_go/ui/pages/upload/widgets/uploadForm.dart';
@@ -203,7 +201,7 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
                                   null &&
                               stateuserdata
                                   .user.jsonString!.additionals!.ytchannels!
-                                  .contains(encryptYTChannelId(
+                                  .contains(secretConfig.encryptYTChannelId(
                                       stateuserdata.user,
                                       state.metadata.channelId))) {
                             _uploadData = UploadData(

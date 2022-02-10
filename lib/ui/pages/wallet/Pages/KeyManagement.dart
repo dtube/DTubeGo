@@ -10,7 +10,7 @@ import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/config/txTypes.dart';
 import 'package:dtube_go/ui/pages/wallet/Widgets/removeKeyDialog.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
-import 'package:dtube_go/utils/privToPub.dart';
+import 'package:dtube_go/utils/crypto_convert.dart';
 import 'package:elliptic/elliptic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hex/hex.dart';

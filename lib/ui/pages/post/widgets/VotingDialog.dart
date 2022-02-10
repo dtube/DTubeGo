@@ -1,6 +1,6 @@
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
-import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
+import 'package:dtube_go/ui/widgets/Inputs/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/utils/shortBalanceStrings.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -333,7 +333,8 @@ class _VotingDialogState extends State<VotingDialog> {
                                 Transaction newTx =
                                     Transaction(type: _txType, data: txdata);
 
-                                _txBloc.add(SignAndSendTransactionEvent(newTx));
+                                _txBloc.add(
+                                    SignAndSendTransactionEvent(tx: newTx));
                                 Navigator.of(context).pop();
 
                                 if (widget.okCallback != null) {

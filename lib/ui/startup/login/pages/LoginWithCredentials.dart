@@ -1,51 +1,45 @@
-import 'package:dtube_go/ui/startup/eula/EulaScreen.dart';
-
-import 'package:dtube_go/ui/startup/OnboardingJourney/OnboardingJourney.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/style/OpenableHyperlink.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dtube_go/ui/startup/login/pages/RegisterNewAccount.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class LoginForm extends StatefulWidget {
-  String? message;
-  String? username;
-  bool showOnboardingJourney;
-
-  LoginForm(
-      {Key? key,
-      this.message,
-      this.username,
-      required this.showOnboardingJourney})
+class LoginWithCredentials extends StatefulWidget {
+  LoginWithCredentials(
+      {Key? key, required this.username, required this.message})
       : super(key: key);
+  String? username;
+  String? message;
 
   @override
-  _LoginFormState createState() => _LoginFormState();
+  State<LoginWithCredentials> createState() => _LoginWithCredentialsState();
 }
 
-class _LoginFormState extends State<LoginForm> {
-  late bool _journeyDone;
-
-  late AuthBloc _loginBloc;
+class _LoginWithCredentialsState extends State<LoginWithCredentials> {
   TextEditingController usernameController = new TextEditingController();
   TextEditingController privateKeyController = new TextEditingController();
+
+  late AuthBloc _loginBloc;
+
   String _scanBarcode = 'Unknown';
+  bool _registerAccountScreen = false;
+
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    _journeyDone = !widget.showOnboardingJourney;
 
     _loginBloc = BlocProvider.of<AuthBloc>(context);
     if (widget.username != null) {
       usernameController = TextEditingController(text: widget.username);
     }
-    //if logindata already stored
   }
 
 // QR scan is not shown until the QR generator on the website is fixed
@@ -69,30 +63,23 @@ class _LoginFormState extends State<LoginForm> {
     });
   }
 
-  void journeyDoneCallback() async {
-    setState(() {
-      _journeyDone = true;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: globalBlue,
-      body: Stack(
+    return Center(
+      child: Stack(
         children: [
-          Center(
-            child: SingleChildScrollView(
-              child: Form(
+          Visibility(
+            visible: !_registerAccountScreen,
+            child: Form(
+              child: Container(
+                width: 80.w,
                 child: Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(bottom: 5.h),
-                      child: Image.asset('assets/images/dtube_logo_white.png',
-                          width: 40.w),
+                      padding: EdgeInsets.only(top: 2.h),
+                      child: Text("Please enter your dtube credentials:",
+                          style: Theme.of(context).textTheme.headline6),
                     ),
-                    Text("Login with your DTube credentials",
-                        style: Theme.of(context).textTheme.headline6),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -185,111 +172,61 @@ class _LoginFormState extends State<LoginForm> {
                             ),
                           )
                         : SizedBox(height: 16),
-                    Center(
-                      child: Container(
-                        width: 80.w,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ValueListenableBuilder<TextEditingValue>(
-                                valueListenable: usernameController,
-                                builder: (context, value, child) {
-                                  return ValueListenableBuilder<
-                                          TextEditingValue>(
-                                      valueListenable: privateKeyController,
-                                      builder: (context, value, child) {
-                                        return ElevatedButton(
-                                            onPressed:
-                                                usernameController.value.text !=
-                                                            "" &&
-                                                        privateKeyController
-                                                                .value.text !=
-                                                            ""
-                                                    ? () {
-                                                        _loginBloc.add(
-                                                            SignInWithCredentialsEvent(
-                                                          username:
-                                                              usernameController
-                                                                  .value.text,
-                                                          privateKey:
-                                                              privateKeyController
-                                                                  .value.text,
-                                                        ));
-                                                      }
-                                                    : null,
-                                            child: Text(
-                                              "Sign in",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5,
-                                            ));
-                                      });
-                                }),
-                            ElevatedButton(
-                                style: Theme.of(context)
-                                    .elevatedButtonTheme
-                                    .style!
-                                    .copyWith(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.green)),
-                                onPressed: () {
-                                  _loginBloc.add(StartBrowseOnlyMode());
-                                },
-                                child: Text(
-                                  "browse only",
-                                  style: Theme.of(context).textTheme.headline5,
-                                ))
-                          ],
-                        ),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: usernameController,
+                            builder: (context, value, child) {
+                              return ValueListenableBuilder<TextEditingValue>(
+                                  valueListenable: privateKeyController,
+                                  builder: (context, value, child) {
+                                    return ElevatedButton(
+                                        onPressed: usernameController
+                                                        .value.text !=
+                                                    "" &&
+                                                privateKeyController
+                                                        .value.text !=
+                                                    ""
+                                            ? () {
+                                                _loginBloc.add(
+                                                    SignInWithCredentialsEvent(
+                                                  username: usernameController
+                                                      .value.text,
+                                                  privateKey:
+                                                      privateKeyController
+                                                          .value.text,
+                                                ));
+                                              }
+                                            : null,
+                                        child: Text(
+                                          "Sign in",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        ));
+                                  });
+                            }),
+                        // ElevatedButton(
+                        //     onPressed: () {
+                        //       setState(() {
+                        //         _registerAccountScreen =
+                        //             !_registerAccountScreen;
+                        //       });
+                        //     },
+                        //     child: Text(
+                        //       "register",
+                        //       style: Theme.of(context).textTheme.headline5,
+                        //     )),
+                      ],
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 5.h),
-                      child: Text("You don't have an account on DTube?",
-                          style: Theme.of(context).textTheme.bodyText1),
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          launch(AppConfig.signUpUrl);
-                        },
-                        child: Text(
-                          "register for free!",
-                          style: Theme.of(context).textTheme.bodyText1,
-                        )),
-                    Padding(
-                      padding: EdgeInsets.only(top: 2.h),
-                      child: Text("You want to know more about DTube?",
-                          style: Theme.of(context).textTheme.bodyText1),
-                    ),
-                    InputChip(
-                        backgroundColor: globalAlmostWhite,
-                        onPressed: () {
-                          launch(AppConfig.readmoreUrl);
-                        },
-                        label: Text(
-                          "read this!",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1!
-                              .copyWith(color: globalBlue),
-                        )),
                   ],
                 ),
               ),
             ),
           ),
-          // if the app is opened for the first time
-          // show EULA
-
-          // if the app is opened for the first time and eula got accepted
-          // show onboarding journey
           Visibility(
-            child: OnboardingJourney(
-              journeyDoneCallback: journeyDoneCallback,
-            ),
-            visible: !_journeyDone,
-          ),
+              visible: _registerAccountScreen, child: RegisterNewAccount())
         ],
       ),
     );

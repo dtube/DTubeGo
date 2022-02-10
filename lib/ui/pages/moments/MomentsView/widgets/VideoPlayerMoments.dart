@@ -1,3 +1,4 @@
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
 import 'package:share_plus/share_plus.dart';
@@ -80,6 +81,12 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
 
   late bool _momentUploading;
 
+  void setMomentSeen() async {
+    await sec.addSeenMoments(
+        widget.feedItem.author + "/" + widget.feedItem.link,
+        widget.feedItem.ts.toString());
+  }
+
   @override
   void initState() {
     super.initState();
@@ -95,6 +102,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
       ..initialize().then((_) {
         _videoController.play();
         widget.momentsController.play();
+
         setState(() {});
       });
     BlocProvider.of<IPFSUploadBloc>(context).add(IPFSUploaderInitState());
@@ -120,6 +128,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
         if (visiblePercentage > 90) {
           _videoController.play();
           widget.momentsController.play();
+          setMomentSeen();
         }
       },
       child: Container(

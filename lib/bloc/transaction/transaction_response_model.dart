@@ -50,6 +50,7 @@ class TxData {
   String? id;
   String? pub;
   List<int>? types;
+  String? name;
 
   TxData(
       {this.author,
@@ -67,7 +68,8 @@ class TxData {
       this.burn,
       this.id,
       this.pub,
-      this.types});
+      this.types,
+      this.name});
 
   TxData.fromJson(Map<String, dynamic> json) {
     author = json['author'];
@@ -86,6 +88,7 @@ class TxData {
     id = json['id'];
     pub = json['pub'];
     types = json['types'];
+    name = json['name'];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -141,6 +144,9 @@ class TxData {
 
     if (this.types != null) {
       data['types'] = this.types;
+    }
+    if (this.name != null) {
+      data['name'] = this.name;
     }
 
     return data;

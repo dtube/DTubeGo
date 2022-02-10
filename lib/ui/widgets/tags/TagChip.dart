@@ -91,3 +91,36 @@ class TagChipWidget extends StatelessWidget {
     );
   }
 }
+
+class TagChipWidgetWithoutNavigation extends StatelessWidget {
+  TagChipWidgetWithoutNavigation(
+      {Key? key,
+      required this.tagName,
+      required this.width,
+      required this.fontStyle})
+      : super(key: key);
+
+  final String tagName;
+  final double width;
+  TextStyle? fontStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return InputChip(
+      padding: EdgeInsets.zero,
+      onPressed: () {},
+      label: Container(
+        width: width,
+        child: Center(
+          child: Text(
+            tagName,
+            style: fontStyle != null
+                ? fontStyle
+                : Theme.of(context).textTheme.bodyText1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+    );
+  }
+}

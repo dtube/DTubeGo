@@ -10,3 +10,10 @@ class FetchAvalonConfigEvent extends AvalonConfigEvent {
   @override
   List<Object> get props => List.empty();
 }
+
+class FetchAvalonAccountPriceEvent extends AvalonConfigEvent {
+  FetchAvalonAccountPriceEvent(this.accountName);
+  String accountName;
+  @override
+  List<Object> get props => List.empty();
+}
