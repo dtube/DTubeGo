@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/notifications/Notifications.dart';
@@ -67,26 +68,30 @@ class _NotificationButtonState extends State<NotificationButton> {
 
   Widget buildNotificationIcon(
       bool newNotifications, double iconSize, int newNotificationsCount) {
-    return Stack(
-      children: [
-        Center(
-          child: ShadowedIcon(
-            icon: FontAwesomeIcons.bell,
-            color: newNotifications ? Colors.red : globalAlmostWhite,
-            shadowColor: Colors.black,
-            size: iconSize,
-          ),
-        ),
-        newNotificationsCount > 0
-            ? Center(
-                child: OverlayText(
-                  text: newNotificationsCount.toString(),
-                  sizeMultiply: 0.8,
-                  bold: true,
-                ),
-              )
-            : Container(),
-      ],
+    return Badge(
+      child: ShadowedIcon(
+        icon: FontAwesomeIcons.bell,
+        color: globalAlmostWhite,
+        shadowColor: Colors.black,
+        size: iconSize,
+      ),
+      badgeContent: Text(
+          // newNotificationsCount.toString(),
+          "10",
+          style: Theme.of(context).textTheme.bodyText2),
+      animationType: BadgeAnimationType.scale,
+      showBadge: newNotificationsCount > 0,
     );
+    //     newNotificationsCount > 0
+    //         ? Center(
+    //             child: OverlayText(
+    //               text: newNotificationsCount.toString(),
+    //               sizeMultiply: 0.8,
+    //               bold: true,
+    //             ),
+    //           )
+    //         : Container(),
+    //   ],
+    // );
   }
 }

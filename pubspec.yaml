@@ -67,6 +67,7 @@ dependencies:
   # UI - specific elements related
   intl: ^0.17.0 # convert datetime to friendly strings
   uni_links: ^0.5.1 # To open DTubeGo from other apps, when https://d.tube is detected
+  badges: ^2.0.2 # notification count
 
   font_awesome_flutter: ^9.2.0 # icons
   google_fonts: ^2.1.0
