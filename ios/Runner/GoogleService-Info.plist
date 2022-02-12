@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1051132892930-c4sontnejkodepfb7rrlc062lle7u5fd.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1051132892930-c4sontnejkodepfb7rrlc062lle7u5fd</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1051132892930-7cf5r3r5lk1tb8c37iss1hapeu8d7i2q.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAVzoY2HtTvfvXbdzkNA7Isen6imn-SP0o</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1051132892930</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>dtube.go.app</string>
+	<key>PROJECT_ID</key>
+	<string>dtubeutils</string>
+	<key>STORAGE_BUCKET</key>
+	<string>dtubeutils.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1051132892930:ios:ee5e30c2ca6cf0973d141b</string>
+</dict>
+</plist>
