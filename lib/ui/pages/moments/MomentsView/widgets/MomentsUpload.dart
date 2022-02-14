@@ -246,12 +246,12 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ShadowedIcon(
-                    size: 10.w,
+                    size: globalIconSizeMedium,
                     icon: FontAwesomeIcons.eye,
                     color: globalAlmostWhite,
                     shadowColor: Colors.black),
                 ShadowedIcon(
-                    size: 5.w,
+                    size: globalIconSizeMedium / 2,
                     icon: FontAwesomeIcons.plus,
                     color: globalAlmostWhite,
                     shadowColor: Colors.black)

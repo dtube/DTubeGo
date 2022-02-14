@@ -237,16 +237,20 @@ class MomentsViewState extends State<MomentsView>
               bottom: widget.inline ? false : true,
               // we use SafeArea here for notched and bezeles phones
               child: Container(
+                height: 100.h,
                 padding: EdgeInsets.symmetric(
                   horizontal: 5.w,
                   vertical: 1,
                 ),
-                child: PageBar(
-                  widget.momentsItems
-                      .map((it) => PageData(it!.duration, it.shown))
-                      .toList(),
-                  this._currentAnimation,
-                  key: UniqueKey(),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: PageBar(
+                    widget.momentsItems
+                        .map((it) => PageData(it!.duration, it.shown))
+                        .toList(),
+                    this._currentAnimation,
+                    key: UniqueKey(),
+                  ),
                 ),
               ),
             ),

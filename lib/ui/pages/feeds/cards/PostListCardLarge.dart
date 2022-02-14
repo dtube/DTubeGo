@@ -849,7 +849,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                                         child: ShadowedIcon(
                                             visible: globals.keyPermissions
                                                 .contains(5),
-                                            icon: FontAwesomeIcons.thumbsUp,
+                                            icon: FontAwesomeIcons.heart,
                                             color: !widget.alreadyVoted
                                                 ? globalAlmostWhite
                                                 : globalRed,

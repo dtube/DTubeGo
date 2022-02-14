@@ -73,8 +73,6 @@ class _MomentsPageState extends State<MomentsPage>
 
   @override
   Widget build(BuildContext context) {
-    double _iconSize = 5.w;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: widget.play
@@ -131,34 +129,23 @@ class _MomentsPageState extends State<MomentsPage>
                 ResponsiveLayout(
                   portrait: TabBarWithPosition(
                     tabIcons: _tabIcons,
-                    iconSize: _iconSize,
+                    iconSize: globalIconSizeSmall,
                     tabController: _tabController,
                     alignment: Alignment.topRight,
-                    padding: EdgeInsets.only(top: 11.h, right: 4.w),
+                    padding: EdgeInsets.only(top: 12.h, right: 2.w),
                     rotation: 0,
                     menuSize: globals.keyPermissions.isEmpty
-                        ? globalIconSizeMedium * 2
-                        : globalIconSizeMedium * 4,
+                        ? globalIconSizeSmall * 2
+                        : globalIconSizeSmall * 4,
                   ),
                   landscape: TabBarWithPosition(
                     tabIcons: _tabIcons,
-                    iconSize: _iconSize,
+                    iconSize: globalIconSizeSmall,
                     tabController: _tabController,
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.zero,
                     rotation: 3,
                     menuSize: 80.h,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 5.h, left: 4.w),
-                    child: OverlayText(
-                      text: _tabNames[_selectedIndex],
-                      sizeMultiply: 1.4,
-                      bold: true,
-                    ),
                   ),
                 ),
               ],

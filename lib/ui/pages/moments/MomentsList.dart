@@ -300,7 +300,7 @@ class _MomentsContainerState extends State<MomentsContainer> {
             if (state is UserDTCVPLoadedState) {
               return MomentsOverlay(
                   alignment: Alignment.topLeft,
-                  padding: EdgeInsets.only(left: 5.w, top: 15.h),
+                  padding: EdgeInsets.only(left: 2.w, top: 14.h),
                   width: 25.w,
                   height: 25.h,
                   child: MomentsUploadButton(

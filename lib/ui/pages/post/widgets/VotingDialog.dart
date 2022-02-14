@@ -93,7 +93,7 @@ class _VotingDialogState extends State<VotingDialog> {
         titleWidgetSize: 20.w,
         callbackOK: () {},
         titleWidget: FaIcon(
-          widget.downvote ? FontAwesomeIcons.flag : FontAwesomeIcons.thumbsUp,
+          widget.downvote ? FontAwesomeIcons.flag : FontAwesomeIcons.heart,
           size: 20.w,
           color: widget.downvote ? globalRed : globalBGColor,
         ),

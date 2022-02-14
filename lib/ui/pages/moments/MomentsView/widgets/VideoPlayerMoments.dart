@@ -77,6 +77,8 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
 
   late bool _showCommentInput;
 
+  bool _showPauseIcon = false;
+
   TextEditingController _replyController = new TextEditingController();
 
   late bool _momentUploading;
@@ -141,10 +143,16 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                 onLongPressStart: (details) {
                   widget.momentsController.pause();
                   _videoController.pause();
+                  setState(() {
+                    _showPauseIcon = true;
+                  });
                 },
                 onLongPressEnd: (details) {
                   widget.momentsController.play();
                   _videoController.play();
+                  setState(() {
+                    _showPauseIcon = false;
+                  });
                 },
                 onHorizontalDragEnd: (DragEndDetails details) {
                   if (details.primaryVelocity != null &&
@@ -159,7 +167,18 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                     ? Center(
                         child: AspectRatio(
                           aspectRatio: _videoController.value.aspectRatio,
-                          child: VideoPlayer(_videoController),
+                          child: Stack(
+                            children: [
+                              VideoPlayer(_videoController),
+                              _showPauseIcon
+                                  ? Center(
+                                      child: FaIcon(
+                                      FontAwesomeIcons.pause,
+                                      size: 30.w,
+                                    ))
+                                  : Container(),
+                            ],
+                          ),
                         ),
                       )
                     : Center(child: Container(height: 100.h, width: 100.w)),
@@ -214,26 +233,74 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
               Align(
                 alignment: Alignment.bottomRight,
                 child: Padding(
-                    padding: EdgeInsets.only(bottom: 10.h),
-                    child: IconButton(
-                      icon: FaIcon(FontAwesomeIcons.externalLinkAlt),
-                      onPressed: () {
-                        // widget.parentStoryController.pause();
-                        widget.goingInBackgroundCallback();
-                        navigateToPostDetailPage(
-                            context,
-                            widget.feedItem.author,
-                            widget.feedItem.link,
-                            "none",
-                            false,
-                            widget.goingInForegroundCallback);
-                      },
-                    )),
+                  padding: EdgeInsets.only(bottom: 13.h, right: 2.w),
+                  child: GestureDetector(
+                    onTap: () {
+                      if (!widget.feedItem.alreadyVoted!) {
+                        setState(() {
+                          widget.momentsController.pause();
+                          _videoController.pause();
+                        });
+
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider<PostBloc>(
+                                  create: (context) => PostBloc(
+                                      repository: PostRepositoryImpl())),
+                              BlocProvider<UserBloc>(
+                                  create: (context) => UserBloc(
+                                      repository: UserRepositoryImpl())),
+                            ],
+                            child: VotingDialog(
+                              txBloc: BlocProvider.of<TransactionBloc>(context),
+                              defaultVote:
+                                  double.parse(widget.momentsVotingWeight),
+                              defaultTip:
+                                  double.parse(widget.defaultPostsVotingTip),
+                              author: widget.feedItem.author,
+                              link: widget.feedItem.link,
+                              downvote: true,
+                              //currentVT: state.vtBalance['v']! + 0.0,
+                              isPost: true,
+                              okCallback: () {
+                                setState(() {
+                                  widget.momentsController.play();
+                                  _videoController.play();
+                                });
+                              },
+                              cancelCallback: () {
+                                setState(() {
+                                  widget.momentsController.play();
+                                  _videoController.play();
+                                });
+                              },
+                              fixedDownvoteActivated:
+                                  widget.fixedDownvoteActivated,
+                              fixedDownvoteWeight: widget.fixedDownvoteWeight,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    child: ShadowedIcon(
+                      visible: globals.keyPermissions.contains(5),
+                      icon: FontAwesomeIcons.flag,
+                      color: widget.feedItem.alreadyVoted! &&
+                              !widget.feedItem.alreadyVotedDirection!
+                          ? globalRed
+                          : globalAlmostWhite,
+                      shadowColor: Colors.black,
+                      size: globalIconSizeSmall,
+                    ),
+                  ),
+                ),
               ),
               Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
-                  padding: EdgeInsets.only(right: 5.w),
+                  padding: EdgeInsets.only(right: 2.w),
                   child: Container(
                     height: 20.h,
                     child: Column(
@@ -293,77 +360,13 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                           },
                           child: ShadowedIcon(
                             visible: globals.keyPermissions.contains(5),
-                            icon: FontAwesomeIcons.thumbsUp,
+                            icon: FontAwesomeIcons.heart,
                             color: widget.feedItem.alreadyVoted! &&
                                     widget.feedItem.alreadyVotedDirection!
                                 ? globalRed
                                 : globalAlmostWhite,
                             shadowColor: Colors.black,
-                            size: 8.w,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            if (!widget.feedItem.alreadyVoted!) {
-                              setState(() {
-                                widget.momentsController.pause();
-                                _videoController.pause();
-                              });
-
-                              showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    MultiBlocProvider(
-                                  providers: [
-                                    BlocProvider<PostBloc>(
-                                        create: (context) => PostBloc(
-                                            repository: PostRepositoryImpl())),
-                                    BlocProvider<UserBloc>(
-                                        create: (context) => UserBloc(
-                                            repository: UserRepositoryImpl())),
-                                  ],
-                                  child: VotingDialog(
-                                    txBloc: BlocProvider.of<TransactionBloc>(
-                                        context),
-                                    defaultVote: double.parse(
-                                        widget.momentsVotingWeight),
-                                    defaultTip: double.parse(
-                                        widget.defaultPostsVotingTip),
-                                    author: widget.feedItem.author,
-                                    link: widget.feedItem.link,
-                                    downvote: true,
-                                    //currentVT: state.vtBalance['v']! + 0.0,
-                                    isPost: true,
-                                    okCallback: () {
-                                      setState(() {
-                                        widget.momentsController.play();
-                                        _videoController.play();
-                                      });
-                                    },
-                                    cancelCallback: () {
-                                      setState(() {
-                                        widget.momentsController.play();
-                                        _videoController.play();
-                                      });
-                                    },
-                                    fixedDownvoteActivated:
-                                        widget.fixedDownvoteActivated,
-                                    fixedDownvoteWeight:
-                                        widget.fixedDownvoteWeight,
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          child: ShadowedIcon(
-                            visible: globals.keyPermissions.contains(5),
-                            icon: FontAwesomeIcons.flag,
-                            color: widget.feedItem.alreadyVoted! &&
-                                    !widget.feedItem.alreadyVotedDirection!
-                                ? globalRed
-                                : globalAlmostWhite,
-                            shadowColor: Colors.black,
-                            size: 8.w,
+                            size: globalIconSizeSmall,
                           ),
                         ),
                         GestureDetector(
@@ -406,7 +409,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             icon: FontAwesomeIcons.comment,
                             color: globalAlmostWhite,
                             shadowColor: Colors.black,
-                            size: 8.w,
+                            size: globalIconSizeSmall,
                           ),
                         ),
                         GestureDetector(
@@ -421,11 +424,31 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                                 widget.feedItem.link);
                           },
                           child: ShadowedIcon(
-                            icon: FontAwesomeIcons.shareAlt,
+                            icon: FontAwesomeIcons.share,
                             color: globalAlmostWhite,
                             shadowColor: Colors.black,
-                            size: 8.w,
+                            size: globalIconSizeSmall,
                           ),
+                        ),
+                        GestureDetector(
+                          child: ShadowedIcon(
+                            visible: globals.keyPermissions.contains(5),
+                            icon: FontAwesomeIcons.externalLinkAlt,
+                            color: globalAlmostWhite,
+                            shadowColor: Colors.black,
+                            size: globalIconSizeSmall,
+                          ),
+                          onTap: () {
+                            // widget.parentStoryController.pause();
+                            widget.goingInBackgroundCallback();
+                            navigateToPostDetailPage(
+                                context,
+                                widget.feedItem.author,
+                                widget.feedItem.link,
+                                "none",
+                                false,
+                                widget.goingInForegroundCallback);
+                          },
                         ),
                       ],
                     ),
