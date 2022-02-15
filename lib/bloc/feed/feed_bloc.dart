@@ -52,16 +52,16 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
                 "&tags=DTubeGo-Moments", _tsRangeFilter, _applicationUser);
 
         // remove already seen moments
-        // uncomment this to see aso seen moments
+        //uncomment this to see aso seen moments
 
-        // List<FeedItem> feedCopy = List.from(feed);
-        // for (var f in feedCopy) {
-        //   bool momentAlreadySeen =
-        //       await sec.getSeenMomentAlready(f.author + "/" + f.link);
-        //   if (momentAlreadySeen) {
-        //     feed.remove(f);
-        //   }
-        // }
+        List<FeedItem> feedCopy = List.from(feed);
+        for (var f in feedCopy) {
+          bool momentAlreadySeen =
+              await sec.getSeenMomentAlready(f.author + "/" + f.link);
+          if (momentAlreadySeen) {
+            feed.remove(f);
+          }
+        }
         // reverse feed to have the moments in ascending order
         List<FeedItem> feedReversed = new List.from(feed.reversed);
         emit(FeedLoadedState(feed: feedReversed, feedType: event.feedType));
