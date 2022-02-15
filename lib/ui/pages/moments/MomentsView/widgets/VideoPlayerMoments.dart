@@ -45,25 +45,25 @@ class VideoPlayerMoments extends StatefulWidget {
 
   UserBloc userBloc;
 
-  VideoPlayerMoments(
-      {Key? key, //required this.link,
-      required this.feedItem,
-      required this.momentsController,
-      required this.goingInBackgroundCallback,
-      required this.goingInForegroundCallback,
-      required this.defaultCommentsVotingWeight,
-      required this.defaultPostsVotingTip,
-      required this.defaultPostsVotingWeight,
-      required this.momentsVotingWeight,
-      required this.momentsUploadNSFW,
-      required this.momentsUploadOC,
-      required this.momentsUploadUnlist,
-      required this.momentsUploadCrosspost,
-      required this.userBloc,
-      required this.currentVP,
-      required this.fixedDownvoteActivated,
-      required this.fixedDownvoteWeight})
-      : super(key: key);
+  VideoPlayerMoments({
+    Key? key, //required this.link,
+    required this.feedItem,
+    required this.momentsController,
+    required this.goingInBackgroundCallback,
+    required this.goingInForegroundCallback,
+    required this.defaultCommentsVotingWeight,
+    required this.defaultPostsVotingTip,
+    required this.defaultPostsVotingWeight,
+    required this.momentsVotingWeight,
+    required this.momentsUploadNSFW,
+    required this.momentsUploadOC,
+    required this.momentsUploadUnlist,
+    required this.momentsUploadCrosspost,
+    required this.userBloc,
+    required this.currentVP,
+    required this.fixedDownvoteActivated,
+    required this.fixedDownvoteWeight,
+  }) : super(key: key);
   @override
   _VideoPlayerMomentsState createState() => _VideoPlayerMomentsState();
 }
@@ -76,6 +76,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
   late bool _showVotingBars;
 
   late bool _showCommentInput;
+  bool _volumeMute = false;
 
   bool _showPauseIcon = false;
 
@@ -455,6 +456,32 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                   ),
                 ),
               ),
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 18.h, right: 2.w),
+                  child: GestureDetector(
+                    child: ShadowedIcon(
+                      size: globalIconSizeSmall,
+                      icon: _volumeMute
+                          ? FontAwesomeIcons.volumeUp
+                          : FontAwesomeIcons.volumeMute,
+                      color: globalAlmostWhite,
+                      shadowColor: Colors.black,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        _volumeMute = !_volumeMute;
+                        if (_volumeMute) {
+                          _videoController.setVolume(0);
+                        } else {
+                          _videoController.setVolume(1);
+                        }
+                      });
+                    },
+                  ),
+                ),
+              )
             ],
           ),
         ),

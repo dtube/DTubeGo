@@ -1,4 +1,8 @@
+import 'dart:ffi';
+
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
@@ -61,6 +65,8 @@ class _MomentsListState extends State<MomentsList> {
   String? _momentsCustomBody;
   String? _fixedDownvoteActivated;
   String? _fixedDownvoteWeight;
+  bool volumeMute = false;
+  late List<FeedItem> feedItems = [];
 
   late UserBloc _userBloc;
   double _currentVp = 0.0;
@@ -127,6 +133,7 @@ class _MomentsListState extends State<MomentsList> {
                         return buildLoading(context);
                       } else if (state is FeedLoadedState) {
                         if (state.feedType == widget.feedType) {
+                          feedItems = state.feed;
                           if (moments.isEmpty) {
                             for (var f in state.feed) {
                               // if moment is <= 60 seconds
@@ -273,6 +280,13 @@ class _MomentsContainerState extends State<MomentsContainer> {
   String author = "";
   String title = "";
   int pos = 0;
+  bool _volumeMute = false;
+
+  void changeVolume() {
+    setState(() {
+      _volumeMute = !_volumeMute;
+    });
+  }
 
   @override
   void initState() {
@@ -302,43 +316,52 @@ class _MomentsContainerState extends State<MomentsContainer> {
           BlocBuilder<UserBloc, UserState>(builder: (context, state) {
             if (state is UserDTCVPLoadedState) {
               return MomentsOverlay(
-                  alignment: Alignment.topLeft,
-                  padding: EdgeInsets.only(left: 2.w, top: 14.h),
-                  width: 25.w,
-                  height: 25.h,
-                  child: MomentsUploadButton(
-                      size: globalIconSizeMedium,
-                      currentVT: state.vtBalance['v']! + 0.0,
-                      defaultVotingWeight: double.parse(widget
-                          .defaultMomentsVotingWeight), // todo make this dynamic
-                      clickedCallback: () {
-                        // setState(() {
-                        //   widget.momentsController.pause();
-                        //   _videoController.pause();
-                        // });
-                      },
-                      leaveDialogWithUploadCallback: () {
-                        // setState(() {
-                        //   widget.momentsController.pause();
-                        //   _videoController.pause();
-                        //   _momentUploading = true;
-                        // });
-                      },
-                      leaveDialogWithoutUploadCallback: () {
-                        //   widget.momentsController.play();
-                        //   _videoController.play();
-                        //   _momentUploading = false;
-                      },
-                      momentsVotingWeight: widget.defaultMomentsVotingWeight,
-                      momentsUploadNSFW: widget.momentsUploadNSFW,
-                      momentsUploadOC: widget.momentsUploadOC,
-                      momentsUploadUnlist: widget.momentsUploadUnlist,
-                      momentsUploadCrosspost: widget.momentsUploadCrosspost,
-                      customMomentTitle: widget.momentsCustomTitle,
-                      customMomentBody: widget.momentsCustomBody));
+                alignment: Alignment.topLeft,
+                padding: EdgeInsets.only(left: 2.w),
+                width: 100.w,
+                height: 25.h,
+                child: Row(
+                  children: [
+                    MomentsUploadButton(
+                        size: globalIconSizeMedium,
+                        currentVT: state.vtBalance['v']! + 0.0,
+                        defaultVotingWeight: double.parse(widget
+                            .defaultMomentsVotingWeight), // todo make this dynamic
+                        clickedCallback: () {
+                          // setState(() {
+                          //   widget.momentsController.pause();
+                          //   _videoController.pause();
+                          // });
+                        },
+                        leaveDialogWithUploadCallback: () {
+                          // setState(() {
+                          //   widget.momentsController.pause();
+                          //   _videoController.pause();
+                          //   _momentUploading = true;
+                          // });
+                        },
+                        leaveDialogWithoutUploadCallback: () {
+                          //   widget.momentsController.play();
+                          //   _videoController.play();
+                          //   _momentUploading = false;
+                        },
+                        momentsVotingWeight: widget.defaultMomentsVotingWeight,
+                        momentsUploadNSFW: widget.momentsUploadNSFW,
+                        momentsUploadOC: widget.momentsUploadOC,
+                        momentsUploadUnlist: widget.momentsUploadUnlist,
+                        momentsUploadCrosspost: widget.momentsUploadCrosspost,
+                        customMomentTitle: widget.momentsCustomTitle,
+                        customMomentBody: widget.momentsCustomBody),
+                    Padding(
+                      padding: EdgeInsets.only(left: 2.w),
+                      child: OverlayText(text: "New Moment"),
+                    )
+                  ],
+                ),
+              );
             }
             return SizedBox(height: 0, width: 0);
-          })
+          }),
         ],
       );
     } else {
@@ -349,10 +372,18 @@ class _MomentsContainerState extends State<MomentsContainer> {
           ),
           MomentsOverlay(
               alignment: Alignment.topLeft,
-              padding: EdgeInsets.only(left: 2.w, top: 15.h),
-              width: 25.w,
+              padding: EdgeInsets.only(left: 2.w),
+              width: 100.w,
               height: 25.h,
-              child: MomentsUpload(widget: widget, size: globalIconSizeMedium))
+              child: Row(
+                children: [
+                  MomentsUpload(widget: widget, size: globalIconSizeMedium),
+                  Padding(
+                    padding: EdgeInsets.only(left: 2.w),
+                    child: OverlayText(text: "New Moment"),
+                  )
+                ],
+              ))
         ],
       );
     }
