@@ -37,6 +37,7 @@ class MomentsUploadButton extends StatefulWidget {
   String momentsUploadCrosspost;
   String customMomentTitle;
   String customMomentBody;
+  double size;
 
   MomentsUploadButton(
       {Key? key,
@@ -51,7 +52,8 @@ class MomentsUploadButton extends StatefulWidget {
       required this.momentsUploadUnlist,
       required this.momentsUploadCrosspost,
       required this.customMomentTitle,
-      required this.customMomentBody})
+      required this.customMomentBody,
+      required this.size})
       : super(key: key);
 
   @override
@@ -244,14 +246,15 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
           child: GestureDetector(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ShadowedIcon(
-                    size: globalIconSizeMedium,
+                    size: widget.size,
                     icon: FontAwesomeIcons.eye,
                     color: globalAlmostWhite,
                     shadowColor: Colors.black),
                 ShadowedIcon(
-                    size: globalIconSizeMedium / 2,
+                    size: widget.size / 2,
                     icon: FontAwesomeIcons.plus,
                     color: globalAlmostWhite,
                     shadowColor: Colors.black)
