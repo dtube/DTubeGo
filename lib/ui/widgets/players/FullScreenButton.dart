@@ -1,7 +1,7 @@
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:overlay_dialog/overlay_dialog.dart';
-import 'package:dtube_go/ui/widgets/players/BetterPlayerFullScreen.dart';
+import 'package:dtube_go/ui/widgets/players/ChewiePlayerFullScreen.dart';
 import 'package:dtube_go/ui/widgets/players/YTPlayerFullScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

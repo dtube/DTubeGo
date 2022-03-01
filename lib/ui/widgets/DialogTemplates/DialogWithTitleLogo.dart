@@ -42,15 +42,12 @@ class _PopUpDialogWithTitleLogoState extends State<PopUpDialogWithTitleLogo> {
     return Stack(
       children: <Widget>[
         Container(
-            // padding: EdgeInsets.only(top: 50 + 20),
-            // margin: EdgeInsets.only(top: 50),
             padding: EdgeInsets.only(top: widget.titleWidgetSize),
             margin: EdgeInsets.only(top: widget.titleWidgetSize / 2),
             decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 color: globalBGColor,
                 borderRadius: BorderRadius.circular(20),
-                // border: Border.all(width: 5, color: globalAlmostWhite),
                 boxShadow: [
                   BoxShadow(
                       color: Colors.black,

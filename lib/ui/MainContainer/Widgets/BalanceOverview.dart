@@ -2,6 +2,7 @@ import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
+import 'package:flutter/foundation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:async';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
@@ -66,51 +67,9 @@ class _BalanceOverviewState extends State<BalanceOverview> {
           return SizedBox(width: 0);
         } else if (state is UserDTCVPLoadedState) {
           try {
-            return Container(
-              width: 25.w,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 2.w),
-                  child:
-                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                            width: 5.w,
-                            height: 5.w,
-                            child: DTubeLogoShadowed(size: _iconSize)),
-                        Container(
-                          width: 5.w,
-                          height: 5.w,
-                          child: ShadowedIcon(
-                            icon: FontAwesomeIcons.bolt,
-                            shadowColor: Colors.black,
-                            color: globalAlmostWhite,
-                            size: _iconSize,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        OverlayText(
-                          text: shortDTC(state.dtcBalance),
-                          sizeMultiply: 1,
-                          bold: true,
-                        ),
-                        OverlayText(
-                            text: shortVP(state.vtBalance['v']!),
-                            sizeMultiply: 1,
-                            bold: true),
-                      ],
-                    ),
-                  ]),
-                ),
-              ),
-            );
+            return kIsWeb
+                ? WebBalanceOverview(iconSize: _iconSize, state: state)
+                : MobileBalanceOverview(iconSize: _iconSize, state: state);
           } catch (e) {
             return FaIcon(FontAwesomeIcons.times);
           }
@@ -120,6 +79,114 @@ class _BalanceOverviewState extends State<BalanceOverview> {
           return FaIcon(FontAwesomeIcons.times);
         }
       },
+    );
+  }
+}
+
+class MobileBalanceOverview extends StatelessWidget {
+  const MobileBalanceOverview(
+      {Key? key, required double iconSize, required this.state})
+      : _iconSize = iconSize,
+        super(key: key);
+
+  final double _iconSize;
+  final UserDTCVPLoadedState state;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 25.w,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Padding(
+          padding: EdgeInsets.only(right: 2.w),
+          child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                    width: 5.w,
+                    height: 5.w,
+                    child: DTubeLogoShadowed(size: _iconSize)),
+                Container(
+                  width: 5.w,
+                  height: 5.w,
+                  child: ShadowedIcon(
+                    icon: FontAwesomeIcons.bolt,
+                    shadowColor: Colors.black,
+                    color: globalAlmostWhite,
+                    size: _iconSize,
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                OverlayText(
+                  text: shortDTC(state.dtcBalance),
+                  sizeMultiply: 1,
+                  bold: true,
+                ),
+                OverlayText(
+                    text: shortVP(state.vtBalance['v']!),
+                    sizeMultiply: 1,
+                    bold: true),
+              ],
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+}
+
+class WebBalanceOverview extends StatelessWidget {
+  const WebBalanceOverview(
+      {Key? key, required double iconSize, required this.state})
+      : _iconSize = iconSize,
+        super(key: key);
+
+  final double _iconSize;
+  final UserDTCVPLoadedState state;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 25.w,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Padding(
+          padding: EdgeInsets.only(right: 2.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                  width: 1.w,
+                  height: 1.w,
+                  child: DTubeLogoShadowed(size: _iconSize)),
+              OverlayText(
+                text: shortDTC(state.dtcBalance),
+                sizeMultiply: 1,
+                bold: true,
+              ),
+              Container(
+                width: 1.w,
+                height: 1.w,
+                child: ShadowedIcon(
+                  icon: FontAwesomeIcons.bolt,
+                  shadowColor: Colors.black,
+                  color: globalAlmostWhite,
+                  size: 1.w,
+                ),
+              ),
+              OverlayText(
+                  text: shortVP(state.vtBalance['v']!),
+                  sizeMultiply: 1,
+                  bold: true),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

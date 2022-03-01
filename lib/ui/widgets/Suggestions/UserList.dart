@@ -8,11 +8,13 @@ class UserList extends StatefulWidget {
       {Key? key,
       required this.userlist,
       required this.title,
-      required this.showCount})
+      required this.showCount,
+      required this.avatarSize})
       : super(key: key);
   List<String> userlist;
   String title;
   bool showCount;
+  double avatarSize;
 
   @override
   State<UserList> createState() => _UserListState();
@@ -38,15 +40,19 @@ class _UserListState extends State<UserList> {
                   : ""),
           style: Theme.of(context).textTheme.headline5),
       Container(
-        height: 17.h,
+        height: widget.avatarSize * 1.5,
         width: double.infinity,
         child: ListView.builder(
           // controller: _scrollController,
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
+
           itemCount: widget.userlist.length,
-          itemBuilder: (ctx, index) =>
-              OtherUsersAvatar(username: widget.userlist[index]),
+
+          itemBuilder: (ctx, index) => OtherUsersAvatar(
+            username: widget.userlist[index],
+            avatarSize: widget.avatarSize,
+          ),
         ),
       ),
     ]);

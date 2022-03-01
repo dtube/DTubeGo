@@ -1,8 +1,9 @@
 // currently unused
 
-import 'package:dtube_go/ui/widgets/players/BetterPlayer.dart';
+import 'package:dtube_go/ui/widgets/players/ChewiePlayer.dart';
 import 'package:dtube_go/utils/GetAppDocDirectory.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:video_player/video_player.dart';
 
 class OnboardingVideo extends StatefulWidget {
@@ -37,7 +38,7 @@ class _OnboardingVideoState extends State<OnboardingVideo> {
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             if (snapshot.data != null) {
               //return BetterPlayer.file(snapshot.data!);
-              return BP(
+              return ChewiePlayer(
                   videoUrl: snapshot.data!,
                   looping: false,
                   autoplay: true,
@@ -46,6 +47,8 @@ class _OnboardingVideoState extends State<OnboardingVideo> {
                   usedAsPreview: false,
                   allowFullscreen: false,
                   portraitVideoPadding: 50.0,
+                  placeholderWidth: 100.w,
+                  placeholderSize: 40.w,
                   videocontroller: _videocontroller);
             } else {
               return const SizedBox();

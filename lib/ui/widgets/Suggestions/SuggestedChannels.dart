@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SuggestedChannels extends StatefulWidget {
-  SuggestedChannels({
-    Key? key,
-  }) : super(key: key);
+  SuggestedChannels({Key? key, required this.avatarSize}) : super(key: key);
 
+  double avatarSize;
   @override
   State<SuggestedChannels> createState() => _SuggestedChannelsState();
 }
@@ -41,6 +40,7 @@ class _SuggestedChannelsState extends State<SuggestedChannels> {
               userlist: state.users,
               title: "Suggested Channels",
               showCount: true,
+              avatarSize: widget.avatarSize,
             ),
           );
         } else {

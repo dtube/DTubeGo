@@ -6,6 +6,7 @@ import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/utils/ResponsiveLayout.dart';
+import 'package:flutter/foundation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
@@ -100,7 +101,7 @@ class _PinPadScreenState extends State<PinPadScreen> {
             body: Center(
               child: DtubeLogoPulseWithSubtitle(
                 subtitle: "loading your settings..",
-                size: 40.w,
+                size: kIsWeb ? 10.w : 40.w,
               ),
             ));
       });

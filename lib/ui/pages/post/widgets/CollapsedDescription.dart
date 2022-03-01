@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 
 class CollapsedDescription extends StatefulWidget {
-  const CollapsedDescription({
-    Key? key,
-    required this.description,
-  }) : super(key: key);
+  CollapsedDescription(
+      {Key? key, required this.description, required this.startCollapsed})
+      : super(key: key);
 
   final String description;
+  bool startCollapsed;
 
   @override
   _CollapsedDescriptionState createState() => _CollapsedDescriptionState();
@@ -21,6 +21,7 @@ class _CollapsedDescriptionState extends State<CollapsedDescription> {
   @override
   Widget build(BuildContext context) {
     return ExpandableNotifier(
+      initialExpanded: !widget.startCollapsed,
       child: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
         child: ScrollOnExpand(

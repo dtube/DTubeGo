@@ -52,48 +52,13 @@ class _FeedViewBaseState extends State<FeedViewBase>
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      portrait: FeedList(
-          feedType: widget.feedType,
-          largeFormat: widget.largeFormat,
-          showAuthor: widget.showAuthor,
-          scrollCallback: widget.scrollCallback,
-          enableNavigation: true,
-          topPadding: widget.topPadding != null ? widget.topPadding : 0),
-      landscape: Align(
-        alignment: Alignment.topLeft,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Container(
-              width: 44.w,
-              child: FeedList(
-                  feedType: widget.feedType,
-                  largeFormat: false,
-                  showAuthor: widget.showAuthor,
-                  scrollCallback: widget.scrollCallback,
-                  topPaddingForFirstEntry: 15.h,
-                  heightPerEntry: 15.h,
-                  width: 46.w,
-                  enableNavigation: false,
-                  itemSelectedCallback: showPost),
-            ),
-            VerticalDivider(),
-            ValueListenableBuilder(
-                valueListenable: _notifierPost,
-                builder:
-                    (BuildContext context, List<String> vals, Widget? child) {
-                  print(vals);
-                  return PostView(
-                    postAuthor: vals[0],
-                    postLink: vals[1],
-                  );
-                }),
-          ],
-        ),
-      ),
-    );
+    return FeedList(
+        feedType: widget.feedType,
+        largeFormat: widget.largeFormat,
+        showAuthor: widget.showAuthor,
+        scrollCallback: widget.scrollCallback,
+        enableNavigation: true,
+        topPadding: widget.topPadding != null ? widget.topPadding : 0);
   }
 }
 

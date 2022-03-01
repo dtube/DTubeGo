@@ -16,15 +16,14 @@ import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 typedef Bool2VoidFunc = void Function(bool);
 typedef ListOfString2VoidFunc = void Function(List<String>);
 
-class FeedList extends StatelessWidget {
+class FeedListSuggested extends StatelessWidget {
   String feedType;
   String? username;
   bool largeFormat;
   bool showAuthor;
-  double? topPaddingForFirstEntry;
   double? sidepadding;
-  double? bottompadding;
-  double? width;
+
+  double width;
   double? heightPerEntry;
   bool enableNavigation;
   ListOfString2VoidFunc?
@@ -34,16 +33,14 @@ class FeedList extends StatelessWidget {
   Bool2VoidFunc scrollCallback;
   late YoutubePlayerController _youtubePlayerController;
 
-  FeedList({
+  FeedListSuggested({
     required this.feedType,
     this.username,
     required this.largeFormat,
     required this.showAuthor,
     required this.scrollCallback,
-    this.topPaddingForFirstEntry,
     this.sidepadding,
-    this.bottompadding,
-    this.width,
+    required this.width,
     this.heightPerEntry,
     required this.enableNavigation,
     this.itemSelectedCallback,
@@ -87,97 +84,61 @@ class FeedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (topPaddingForFirstEntry == null) {
-      topPaddingForFirstEntry = 16.h;
-    }
-    if (topPadding == null) {
-      topPadding = 0;
-    }
-
-    if (width == null) {
-      width = 100.w;
-    }
-
     if (heightPerEntry == null) {
       heightPerEntry = 10.h;
     }
 
     return Center(
-      child: Container(
-        height: 100.h,
-        width: width,
-        child: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                  left: sidepadding != null ? sidepadding! : 0.0,
-                  right: sidepadding != null ? sidepadding! : 0.0,
-                  top: topPadding!),
-              child: FutureBuilder<bool>(
-                  future: getSettings(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState != ConnectionState.done) {
-                      return buildLoading(context);
-                    } else {
-                      return Container(
-                        height: 80.h + topPaddingForFirstEntry!,
-                        width: width,
-                        child: BlocBuilder<FeedBloc, FeedState>(
-                          builder: (context, state) {
-                            if (state is FeedInitialState ||
-                                state is FeedLoadingState &&
-                                    _feedItems.isEmpty) {
-                              return buildLoading(context);
-                            } else if (state is FeedLoadedState) {
-                              if (state.feedType == feedType) {
-                                if (state.feedType == "tagSearch") {
-                                  _feedItems.clear();
-                                }
-                                if (_feedItems.isNotEmpty) {
-                                  if (_feedItems.first.link ==
-                                      state.feed.first.link) {
-                                    _feedItems.clear();
-                                  } else {
-                                    _feedItems.removeLast();
-                                  }
-                                }
-                                _feedItems.addAll(state.feed);
+      child: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              left: sidepadding != null ? sidepadding! : 0.0,
+              right: sidepadding != null ? sidepadding! : 0.0,
+            ),
+            child: FutureBuilder<bool>(
+                future: getSettings(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return buildLoading(context);
+                  } else {
+                    return Container(
+                      // height: heightPerEntry! * 1.5,
+                      width: width,
+                      child: BlocBuilder<FeedBloc, FeedState>(
+                        builder: (context, state) {
+                          if (state is FeedInitialState ||
+                              state is FeedLoadingState && _feedItems.isEmpty) {
+                            return buildLoading(context);
+                          } else if (state is FeedLoadedState) {
+                            if (state.feedType == feedType) {
+                              if (state.feedType == "tagSearch") {
+                                _feedItems.clear();
                               }
-                              BlocProvider.of<FeedBloc>(context).isFetching =
-                                  false;
-                            } else if (state is FeedErrorState) {
-                              return buildErrorUi(state.message);
+                              if (_feedItems.isNotEmpty) {
+                                if (_feedItems.first.link ==
+                                    state.feed.first.link) {
+                                  _feedItems.clear();
+                                } else {
+                                  _feedItems.removeLast();
+                                }
+                              }
+                              _feedItems.addAll(state.feed);
                             }
-                            return buildPostList(_feedItems, largeFormat, true,
-                                context, feedType);
-                          },
-                        ),
-                      );
-                    }
-                  }),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                height: feedType == "UserFeed" ? 0.h : 15.h,
-                width: 200.w,
-                decoration: BoxDecoration(
-                    color: globalAlmostWhite,
-                    gradient: LinearGradient(
-                        begin: FractionalOffset.topCenter,
-                        end: FractionalOffset.bottomCenter,
-                        colors: [
-                          Colors.black,
-                          Colors.black.withOpacity(0.0),
-                        ],
-                        stops: [
-                          0.0,
-                          1.0
-                        ])),
-              ),
-            ),
-          ],
-        ),
+                            BlocProvider.of<FeedBloc>(context).isFetching =
+                                false;
+                          } else if (state is FeedErrorState) {
+                            return buildErrorUi(state.message);
+                          }
+                          return buildPostList(
+                              _feedItems, largeFormat, true, context, feedType);
+                        },
+                      ),
+                    );
+                  }
+                }),
+          ),
+        ],
       ),
     );
   }
@@ -252,8 +213,7 @@ class FeedList extends StatelessWidget {
               (feed[pos].jsonString!.hide == 1 &&
                   feed[pos].author != _applicationUser)) {
             return Padding(
-              padding: EdgeInsets.only(
-                  top: pos == 0 ? topPaddingForFirstEntry! : 2.0),
+              padding: EdgeInsets.only(top: 1.h),
               child: SizedBox(
                 height: 0,
               ),
@@ -261,68 +221,55 @@ class FeedList extends StatelessWidget {
           } else {
             return BlocProvider<UserBloc>(
               create: (context) => UserBloc(repository: UserRepositoryImpl()),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    top: pos == 0 && topPaddingForFirstEntry != null
-                        ? topPaddingForFirstEntry!
-                        : 2.0,
-                    bottom: pos == feed.length && bottompadding != null
-                        ? bottompadding!
-                        : 2.0),
-                child: PostListCard(
-                  width: width!,
-                  heightPerEntry: heightPerEntry!,
-                  largeFormat: largeFormat,
-                  showAuthor: showAuthor,
-                  blur: (_nsfwMode == 'Blur' &&
-                              feed[pos].jsonString?.nsfw == 1) ||
-                          (_hiddenMode == 'Blur' &&
-                              feed[pos].summaryOfVotes < 0)
-                      ? true
-                      : false,
-                  title: feed[pos].jsonString!.title,
-                  description: feed[pos].jsonString!.desc != null
-                      ? feed[pos].jsonString!.desc!
-                      : "",
-                  author: feed[pos].author,
-                  link: feed[pos].link,
-                  publishDate: TimeAgo.timeInAgoTSShort(feed[pos].ts),
-                  dtcValue: (feed[pos].dist / 100).round().toString(),
-                  duration: new Duration(
-                      seconds: int.tryParse(feed[pos].jsonString!.dur) != null
-                          ? int.parse(feed[pos].jsonString!.dur)
-                          : 0),
-                  thumbnailUrl: feed[pos].thumbUrl,
-                  videoUrl: feed[pos].videoUrl,
-                  videoSource: feed[pos].videoSource,
-                  alreadyVoted: feed[pos].alreadyVoted!,
-                  alreadyVotedDirection: feed[pos].alreadyVotedDirection!,
-                  upvotesCount: feed[pos].upvotes!.length,
-                  downvotesCount: feed[pos].downvotes!.length,
-                  indexOfList: pos,
-                  mainTag: feed[pos].jsonString!.tag,
-                  oc: feed[pos].jsonString!.oc == 1 ? true : false,
-                  enableNavigation: enableNavigation,
-                  itemSelectedCallback: itemSelectedCallback,
-                  feedType: feedType,
-                  defaultCommentVotingWeight: _defaultCommentVotingWeight,
-                  defaultPostVotingWeight: _defaultPostVotingWeight,
-                  defaultPostVotingTip: _defaultPostVotingTip,
-                  fixedDownvoteActivated: _fixedDownvoteActivated,
-                  fixedDownvoteWeight: _fixedDownvoteWeight,
-                  parentContext: context,
-                ),
-                //Text(pos.toString())
+
+              child: PostListCard(
+                width: width,
+                heightPerEntry: heightPerEntry!,
+                largeFormat: largeFormat,
+                showAuthor: showAuthor,
+                blur: (_nsfwMode == 'Blur' &&
+                            feed[pos].jsonString?.nsfw == 1) ||
+                        (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
+                    ? true
+                    : false,
+                title: feed[pos].jsonString!.title,
+                description: feed[pos].jsonString!.desc != null
+                    ? feed[pos].jsonString!.desc!
+                    : "",
+                author: feed[pos].author,
+                link: feed[pos].link,
+                publishDate: TimeAgo.timeInAgoTSShort(feed[pos].ts),
+                dtcValue: (feed[pos].dist / 100).round().toString(),
+                duration: new Duration(
+                    seconds: int.tryParse(feed[pos].jsonString!.dur) != null
+                        ? int.parse(feed[pos].jsonString!.dur)
+                        : 0),
+                thumbnailUrl: feed[pos].thumbUrl,
+                videoUrl: feed[pos].videoUrl,
+                videoSource: feed[pos].videoSource,
+                alreadyVoted: feed[pos].alreadyVoted!,
+                alreadyVotedDirection: feed[pos].alreadyVotedDirection!,
+                upvotesCount: feed[pos].upvotes!.length,
+                downvotesCount: feed[pos].downvotes!.length,
+                indexOfList: pos,
+                mainTag: feed[pos].jsonString!.tag,
+                oc: feed[pos].jsonString!.oc == 1 ? true : false,
+                enableNavigation: enableNavigation,
+                itemSelectedCallback: itemSelectedCallback,
+                feedType: feedType,
+                defaultCommentVotingWeight: _defaultCommentVotingWeight,
+                defaultPostVotingWeight: _defaultPostVotingWeight,
+                defaultPostVotingTip: _defaultPostVotingTip,
+                fixedDownvoteActivated: _fixedDownvoteActivated,
+                fixedDownvoteWeight: _fixedDownvoteWeight,
+                parentContext: context,
               ),
+              //Text(pos.toString())
             );
           }
         } else {
-          return Padding(
-            padding:
-                EdgeInsets.only(top: pos == 0 ? topPaddingForFirstEntry! : 0.0),
-            child: SizedBox(
-              height: 0,
-            ),
+          return SizedBox(
+            height: 0,
           );
         }
       },

@@ -1,5 +1,7 @@
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/pages/feeds/lists/FeedList.dart';
 import 'package:dtube_go/ui/pages/feeds/lists/FeedListCarousel.dart';
+import 'package:dtube_go/ui/pages/feeds/lists/FeedListSuggested.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/MenuButton.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/TopBarCustomClipper.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/TopBarCustomPainter.dart';
@@ -8,6 +10,7 @@ import 'package:dtube_go/ui/widgets/Suggestions/UserList.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/UsersMoreInfoButton.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannels.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -84,7 +87,9 @@ class _UserState extends State<UserPage> {
                 } else if (state is UserLoadingState) {
                   return buildLoading();
                 } else if (state is UserLoadedState) {
-                  return buildUserPage(state.user, widget.ownUserpage);
+                  return kIsWeb
+                      ? buildUserPageWeb(state.user, widget.ownUserpage)
+                      : buildUserPageMobile(state.user, widget.ownUserpage);
                 } else if (state is UserErrorState) {
                   return buildErrorUi(state.message);
                 } else {
@@ -118,7 +123,7 @@ class _UserState extends State<UserPage> {
     );
   }
 
-  Widget buildUserPage(User user, bool ownUsername) {
+  Widget buildUserPageMobile(User user, bool ownUsername) {
     return
         // Expanded(
         //   child:
@@ -177,12 +182,13 @@ class _UserState extends State<UserPage> {
                         FeedBloc(repository: FeedRepositoryImpl())
                           ..add(FetchSuggestedUsersForUserHistory(
                               username: user.name)),
-                    child: SuggestedChannels(),
+                    child: SuggestedChannels(avatarSize: 18.w),
                   ),
                   user.followers != null
                       ? UserList(
                           userlist: user.followers!,
                           title: "Followers",
+                          avatarSize: 18.w,
                           showCount: true,
                         )
                       : SizedBox(height: 0),
@@ -190,6 +196,7 @@ class _UserState extends State<UserPage> {
                       ? UserList(
                           userlist: user.follows!,
                           title: "Following",
+                          avatarSize: 18.w,
                           showCount: true,
                         )
                       : SizedBox(height: 0),
@@ -343,6 +350,251 @@ class _UserState extends State<UserPage> {
                   showName: false,
                   width: 32.w,
                   height: 32.w,
+                ),
+              ),
+            ),
+          ),
+        ])),
+        Positioned(
+          bottom: 10.h,
+          right: 3.w,
+          child: FadeIn(
+              preferences: AnimationPreferences(
+                  offset: Duration(milliseconds: 1000),
+                  duration: Duration(seconds: 1)),
+              child: buildUserMenuSpeedDial(
+                  context, user, widget.ownUserpage, userBloc)),
+        ),
+      ],
+      //   ),
+    );
+  }
+
+  Widget buildUserPageWeb(User user, bool ownUsername) {
+    return
+        // Expanded(
+        //   child:
+
+        Stack(
+      children: [
+        SingleChildScrollView(
+            child: Stack(children: [
+          //SizedBox(height: 8),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 28.h),
+              child: SingleChildScrollView(
+                  child: Column(
+                children: [
+                  BlocProvider<FeedBloc>(
+                    create: (context) =>
+                        FeedBloc(repository: FeedRepositoryImpl())
+                          ..add(FetchUserFeedEvent(username: user.name)),
+                    child: FeedListSuggested(
+                      feedType: 'UserFeed',
+                      username: user.name,
+                      showAuthor: false,
+                      largeFormat: false,
+                      heightPerEntry: 30.h,
+                      width: 50.w,
+                      sidepadding: 5.w,
+                      scrollCallback: (bool) {},
+                      enableNavigation: true,
+                      // header: "Fresh Uploads"
+                    ),
+                  ),
+                  BlocProvider<FeedBloc>(
+                    create: (context) =>
+                        FeedBloc(repository: FeedRepositoryImpl())
+                          ..add(FetchMomentsOfUserEvent(
+                              feedType: "NewUserMoments", username: user.name)),
+                    child: FeedListSuggested(
+                      feedType: 'NewUserMoments',
+                      username: user.name,
+                      showAuthor: false,
+                      largeFormat: false,
+                      heightPerEntry: 30.h,
+                      width: 50.w,
+                      sidepadding: 5.w,
+                      scrollCallback: (bool) {},
+                      enableNavigation: true,
+                      // header: "Fresh Moments"
+                    ),
+                  ),
+                  BlocProvider<FeedBloc>(
+                    create: (context) =>
+                        FeedBloc(repository: FeedRepositoryImpl())
+                          ..add(FetchSuggestedUsersForUserHistory(
+                              username: user.name)),
+                    child: SuggestedChannels(avatarSize: 5.w),
+                  ),
+                  user.followers != null
+                      ? UserList(
+                          userlist: user.followers!,
+                          title: "Followers",
+                          avatarSize: 5.w,
+                          showCount: true,
+                        )
+                      : SizedBox(height: 0),
+                  user.follows != null
+                      ? UserList(
+                          userlist: user.follows!,
+                          title: "Following",
+                          avatarSize: 5.w,
+                          showCount: true,
+                        )
+                      : SizedBox(height: 0),
+                  SizedBox(height: 10.h)
+                ],
+              )),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              height: 15.h,
+              width: 100.w,
+              decoration: BoxDecoration(
+                  color: globalAlmostWhite,
+                  gradient: LinearGradient(
+                      begin: FractionalOffset.topCenter,
+                      end: FractionalOffset.bottomCenter,
+                      colors: [
+                        Colors.black,
+                        Colors.black.withOpacity(0.0),
+                      ],
+                      stops: [
+                        0.0,
+                        1.0
+                      ])),
+            ),
+          ),
+
+          user.jsonString != null &&
+                  user.jsonString!.profile != null &&
+                  user.jsonString!.profile!.coverImage != null &&
+                  user.jsonString!.profile!.coverImage != ""
+              ? ClipPath(
+                  clipper: TopBarCustomClipper(),
+                  child: Align(
+                      alignment: Alignment.center,
+                      // heightFactor: 5,
+                      // // widthFactor: 0.5,
+                      child: Container(
+                        height: 25.h,
+                        width: double.infinity,
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Image.network(
+                            user.jsonString!.profile!.coverImage!,
+                            //  fit: BoxFit.fitWidth,
+                            // fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                      )),
+                )
+              : CustomPaint(
+                  painter: TopBarCustomPainter(),
+                ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              height: 35.h,
+              width: 100.w,
+              decoration: BoxDecoration(
+                  color: globalAlmostWhite,
+                  gradient: LinearGradient(
+                      begin: FractionalOffset.topCenter,
+                      end: FractionalOffset.bottomCenter,
+                      colors: [
+                        Colors.black,
+                        Colors.black.withOpacity(0.0),
+                      ],
+                      stops: [
+                        0.0,
+                        1.0
+                      ])),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 5.h, left: 40.w),
+            child: FadeIn(
+              preferences:
+                  AnimationPreferences(offset: Duration(milliseconds: 1100)),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 45.w,
+                    height: 20.h,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        OverlayText(
+                          text: user.jsonString != null &&
+                                  user.jsonString!.additionals != null &&
+                                  user.jsonString!.additionals!.displayName !=
+                                      null
+                              ? user.jsonString!.additionals!.displayName!
+                              : user.name,
+                          sizeMultiply: 1.6,
+                          bold: true,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                        OverlayText(
+                          text: user.jsonString != null &&
+                                  user.jsonString!.additionals != null &&
+                                  user.jsonString!.additionals!.displayName !=
+                                      null
+                              ? '@' + user.name
+                              : "",
+                          sizeMultiply: 1.2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      !widget.ownUserpage
+                          ? BlocProvider(
+                              create: (context) =>
+                                  UserBloc(repository: UserRepositoryImpl()),
+                              child: UserBlockButton(
+                                user: user,
+                              ),
+                            )
+                          : Container(),
+                      UserMoreInfoButton(
+                        context: context,
+                        user: user,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(top: 7.h, left: 4.w),
+              child: FadeIn(
+                preferences:
+                    AnimationPreferences(offset: Duration(milliseconds: 500)),
+                child: AccountAvatarBase(
+                  username: user.name,
+                  avatarSize: 15.w,
+                  showVerified: true,
+                  showName: false,
+                  width: 16.w,
+                  height: 16.w,
                 ),
               ),
             ),

@@ -138,7 +138,7 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
                       width: widget.userPage
                           ? widget.width * 0.7
                           : widget.width * 0.5,
-                      height: 10.h,
+                      height: 15.h,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,

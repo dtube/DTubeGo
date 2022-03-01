@@ -121,17 +121,17 @@ class TagListState extends State<TagList> {
 
   Widget buildLoading() {
     return Container(
-      height: 400,
+      height: 80.h,
       child: DtubeLogoPulseWithSubtitle(
         subtitle: "loading posts..",
-        size: 30.w,
+        size: 20.w,
       ),
     );
   }
 
   Widget buildBlank() {
     return Container(
-      height: 400,
+      height: 80.h,
       child: SizedBox(height: 0),
     );
   }

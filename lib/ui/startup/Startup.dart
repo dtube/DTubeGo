@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc.dart';
@@ -19,11 +20,15 @@ class StartUp extends StatefulWidget {
 
 class _StartUpState extends State<StartUp> {
 // Create storage
-
+  double _logoSize = 40.w;
   @override
   void initState() {
     super.initState();
     print(Device.width);
+    if (kIsWeb) {
+      _logoSize = 10.w;
+    }
+
     // sec.deleteAllSettings(); // flush ALL app settings including logindata, hivesigner and so on
   }
 
@@ -75,7 +80,7 @@ class _StartUpState extends State<StartUp> {
               child: DtubeLogoPulseWithSubtitle(
                 subtitle:
                     "No API node can be reached. Check your internet connnection or contact us on discord...",
-                size: 40.w,
+                size: _logoSize,
               ),
             ),
           );
@@ -90,7 +95,7 @@ class _StartUpState extends State<StartUp> {
                 children: [
                   DtubeLogoPulseWithSubtitle(
                     subtitle: "error on login",
-                    size: 40.w,
+                    size: _logoSize,
                   ),
                   Container(
                       color: globalBGColor,
@@ -117,7 +122,7 @@ class _StartUpState extends State<StartUp> {
             child: DtubeLogoPulseWithSubtitle(
               subtitle:
                   "We are currently searching for the fastest Avalon API node...",
-              size: 40.w,
+              size: _logoSize,
             ),
           ),
         );

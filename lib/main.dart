@@ -49,7 +49,7 @@ void main() async {
           measurementId: secretConfig.fbWeb_measurementId),
     );
   } else {
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isIOS) {
       await Firebase.initializeApp();
     }
   }

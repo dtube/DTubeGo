@@ -161,16 +161,27 @@ class _FeedMainPageState extends State<FeedMainPage>
               controller: _tabController,
             ),
           ),
-          TabBarWithPosition(
-            tabIcons: _tabIcons,
-            iconSize: globalIconSizeMedium,
-            tabController: _tabController,
-            alignment: Alignment.topRight,
-            padding: EdgeInsets.only(top: 11.h, right: 4.w),
-            rotation: 0,
-            menuSize: globals.keyPermissions.isEmpty
-                ? globalIconSizeMedium * 4
-                : globalIconSizeMedium * 6,
+          ResponsiveLayout(
+            portrait: TabBarWithPosition(
+              tabIcons: _tabIcons,
+              iconSize: globalIconSizeMedium,
+              tabController: _tabController,
+              alignment: Alignment.topRight,
+              padding: EdgeInsets.only(top: 11.h, right: 4.w),
+              rotation: 0,
+              menuSize: globals.keyPermissions.isEmpty
+                  ? globalIconSizeMedium * 4
+                  : globalIconSizeMedium * 6,
+            ),
+            landscape: TabBarWithPosition(
+              tabIcons: _tabIcons,
+              iconSize: globalIconSizeMedium,
+              tabController: _tabController,
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.zero,
+              rotation: 3,
+              menuSize: 80.h,
+            ),
           ),
           Align(
             alignment: Alignment.topLeft,

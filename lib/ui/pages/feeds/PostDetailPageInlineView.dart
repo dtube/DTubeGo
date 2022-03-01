@@ -10,7 +10,7 @@ import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dtube_go/ui/widgets/players/BetterPlayer.dart';
+import 'package:dtube_go/ui/widgets/players/ChewiePlayer.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/pages/post/widgets/CollapsedDescription.dart';
 import 'package:dtube_go/ui/pages/post/widgets/Comments.dart';
@@ -168,7 +168,7 @@ class _PostDetailsState extends State<PostDetails> {
                         allowFullscreen: false,
                         controller: _ytController)
                     : ["ipfs", "sia"].contains(widget.post.videoSource)
-                        ? BP(
+                        ? ChewiePlayer(
                             videoUrl: widget.post.videoUrl!,
                             autoplay: !(widget.directFocus != "none"),
                             looping: false,
@@ -177,6 +177,8 @@ class _PostDetailsState extends State<PostDetails> {
                             usedAsPreview: false,
                             allowFullscreen: false,
                             portraitVideoPadding: 50.0,
+                            placeholderWidth: 100.w,
+                            placeholderSize: 40.w,
                             videocontroller: _videocontroller)
                         : Text("no player detected"),
                 Row(
@@ -300,6 +302,7 @@ class _PostDetailsState extends State<PostDetails> {
                   ],
                 ),
                 CollapsedDescription(
+                    startCollapsed: false,
                     description: widget.post.jsonString!.desc != null
                         ? widget.post.jsonString!.desc!
                         : ""),

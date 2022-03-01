@@ -1,11 +1,12 @@
+import 'package:chewie/chewie.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:io';
-import 'package:better_player/better_player.dart';
+
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-class BP extends StatefulWidget {
+class ChewiePlayer extends StatefulWidget {
   final String videoUrl;
   final bool looping;
   final bool autoplay;
@@ -16,8 +17,10 @@ class BP extends StatefulWidget {
   final double portraitVideoPadding;
   bool? openInFullscreen;
   VideoPlayerController videocontroller;
+  double placeholderWidth;
+  double placeholderSize;
 
-  BP({
+  ChewiePlayer({
     required this.videoUrl,
     required this.looping,
     required this.autoplay,
@@ -28,56 +31,39 @@ class BP extends StatefulWidget {
     required this.portraitVideoPadding,
     this.openInFullscreen,
     required this.videocontroller,
+    required this.placeholderSize,
+    required this.placeholderWidth,
     Key? key,
   }) : super(key: key);
 
   @override
-  _BPState createState() => _BPState();
+  _ChewiePlayerState createState() => _ChewiePlayerState();
 }
 
-class _BPState extends State<BP> {
-  late BetterPlayerController _betterPlayerController;
-  // late VideoPlayerController _videocontroller;
+class _ChewiePlayerState extends State<ChewiePlayer> {
+  late ChewieController _chewiePlayerController;
+
   late Future<void> _future;
   late double aspectRatio;
   Future<void> initVideoPlayer() async {
     await widget.videocontroller.initialize();
 
     setState(() {
-      BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-        !widget.localFile
-            ? BetterPlayerDataSourceType.network
-            : BetterPlayerDataSourceType.file,
-        widget.videoUrl,
-        bufferingConfiguration: BetterPlayerBufferingConfiguration(
-          minBufferMs: Duration(seconds: 10).inMilliseconds,
-          maxBufferMs: Duration(seconds: 60).inMilliseconds,
-        ),
-      );
       aspectRatio = widget.videocontroller.value.size.width /
           widget.videocontroller.value.size.height;
 
-      _betterPlayerController = BetterPlayerController(
-        BetterPlayerConfiguration(
-          fullScreenByDefault: widget.openInFullscreen != null
-              ? widget.openInFullscreen!
-              : false,
-          autoDetectFullscreenDeviceOrientation: true,
-          controlsConfiguration: BetterPlayerControlsConfiguration(
-              enablePlayPause: true,
-              enableSkips: false,
-              showControlsOnInitialize: false,
-              enableFullscreen: widget.allowFullscreen),
-          autoPlay: widget.autoplay,
-          autoDispose: true,
+      _chewiePlayerController = ChewieController(
+          videoPlayerController: widget.videocontroller,
           aspectRatio: aspectRatio != null
               ? !(aspectRatio > 0.0)
                   ? 1
                   : aspectRatio
               : 1.77,
-        ),
-        betterPlayerDataSource: betterPlayerDataSource,
-      );
+          autoPlay: widget.autoplay,
+          looping: true,
+          allowFullScreen: widget.allowFullscreen,
+          allowMuting: true,
+          showControls: widget.controls);
     });
   }
 
@@ -92,21 +78,20 @@ class _BPState extends State<BP> {
 
   @override
   void dispose() {
-    _betterPlayerController.pause();
-    _betterPlayerController.dispose();
     widget.videocontroller.dispose();
-
+    _chewiePlayerController.pause();
+    _chewiePlayerController.dispose();
     super.dispose();
   }
 
   buildPlaceholderImage() {
     return Container(
-      width: 120.w,
+      width: widget.placeholderWidth,
       child: AspectRatio(
         aspectRatio: 8 / 5,
         child: Center(
           child: DtubeLogoPulseWithSubtitle(
-            size: 40.w,
+            size: widget.placeholderSize,
             subtitle: "loading video",
             // width: 100.w,
           ),
@@ -121,9 +106,6 @@ class _BPState extends State<BP> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          // double _aspectRatio = widget.videocontroller.value.size.width /
-          //     widget.videocontroller.value.size.height;
-
           return Center(
             child: Padding(
               padding: EdgeInsets.only(
@@ -133,9 +115,21 @@ class _BPState extends State<BP> {
                 children: [
                   AspectRatio(
                     aspectRatio: aspectRatio > 0.0 ? aspectRatio : 16 / 9,
-                    child: BetterPlayer(
-                      controller: _betterPlayerController,
-                    ),
+                    child: widget.controls
+                        ? Chewie(
+                            controller: _chewiePlayerController,
+                          )
+                        : GestureDetector(
+                            child: Chewie(
+                              controller: _chewiePlayerController,
+                            ),
+                            onTap: () {
+                              if (_chewiePlayerController.isPlaying) {
+                                _chewiePlayerController.pause();
+                              } else {
+                                _chewiePlayerController.play();
+                              }
+                            }),
                   ),
                   widget.usedAsPreview
                       ? aspectRatio > 1

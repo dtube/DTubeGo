@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dtube_go/utils/randomGenerator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
@@ -131,8 +132,11 @@ class FeedListCarousel extends StatelessWidget {
                 } else if (state is FeedErrorState) {
                   return buildErrorUi(state.message);
                 }
-                return buildPostList(
-                    _feedItems, largeFormat, true, context, feedType, header);
+                return kIsWeb
+                    ? buildPostListWeb(_feedItems, largeFormat, true, context,
+                        feedType, header)
+                    : buildPostListMobile(_feedItems, largeFormat, true,
+                        context, feedType, header);
               },
             );
           }
@@ -162,8 +166,93 @@ class FeedListCarousel extends StatelessWidget {
     );
   }
 
-  Widget buildPostList(List<FeedItem> feed, bool bigThumbnail, bool showAuthor,
-      BuildContext context, String gpostType, String header) {
+  Widget buildPostListMobile(List<FeedItem> feed, bool bigThumbnail,
+      bool showAuthor, BuildContext context, String gpostType, String header) {
+    if (feed.length > 0) {
+      return Container(
+        height: 52.h,
+        width: width,
+        child: Column(
+          children: [
+            Text(header, style: Theme.of(context).textTheme.headline5),
+            Container(
+              height: 45.h,
+              child: CarouselSlider.builder(
+                options: CarouselOptions(
+                    //aspectRatio: 2.0,
+                    initialPage: 0,
+                    enlargeCenterPage: true,
+                    enableInfiniteScroll: false,
+                    autoPlay: true,
+                    disableCenter: true,
+                    autoPlayInterval: Duration(seconds: generateRandom(6, 10))),
+                itemCount: feed.length,
+                itemBuilder: (ctx, index, realIdx) {
+                  if (feed[index].jsonString!.files?.youtube != null ||
+                      feed[index].jsonString!.files?.ipfs != null ||
+                      feed[index].jsonString!.files?.sia != null) {
+                    if ((_nsfwMode == 'Hide' &&
+                            feed[index].jsonString?.nsfw == 1) ||
+                        (_hiddenMode == 'Hide' &&
+                            feed[index].summaryOfVotes < 0) ||
+                        (feed[index].jsonString!.hide == 1 &&
+                            feed[index].author != _applicationUser)) {
+                      return SizedBox(
+                        height: 0,
+                      );
+                    } else {
+                      return BlocProvider<UserBloc>(
+                        create: (context) =>
+                            UserBloc(repository: UserRepositoryImpl()),
+                        child: PostListCardNarrow(
+                          width: width!,
+                          height: heightPerEntry!,
+                          blur: (_nsfwMode == 'Blur' &&
+                                      feed[index].jsonString?.nsfw == 1) ||
+                                  (_hiddenMode == 'Blur' &&
+                                      feed[index].summaryOfVotes < 0)
+                              ? true
+                              : false,
+                          thumbnailUrl: feed[index].thumbUrl,
+                          title: feed[index].jsonString!.title,
+                          description: feed[index].jsonString!.desc != null
+                              ? feed[index].jsonString!.desc!
+                              : "",
+                          author: feed[index].author,
+                          link: feed[index].link,
+                          publishDate: TimeAgo.timeInAgoTSShort(feed[index].ts),
+                          duration: new Duration(
+                              seconds:
+                                  int.tryParse(feed[index].jsonString!.dur) !=
+                                          null
+                                      ? int.parse(feed[index].jsonString!.dur)
+                                      : 0),
+                          dtcValue: (feed[index].dist / 100).round().toString(),
+                          indexOfList: index,
+                          enableNavigation: enableNavigation,
+                          itemSelectedCallback: itemSelectedCallback,
+                          userPage: true,
+                        ),
+                      );
+                    }
+                  } else {
+                    return SizedBox(
+                      height: 0,
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget buildPostListWeb(List<FeedItem> feed, bool bigThumbnail,
+      bool showAuthor, BuildContext context, String gpostType, String header) {
     if (feed.length > 0) {
       return Container(
         height: 52.h,

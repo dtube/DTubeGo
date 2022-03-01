@@ -1,6 +1,8 @@
 import 'package:auto_orientation/auto_orientation.dart';
-import 'package:better_player/better_player.dart';
+import 'package:chewie/chewie.dart';
+
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/players/ChewiePlayer.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_dialog/overlay_dialog.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -22,7 +24,7 @@ class BetterPlayerFullScreenPage extends StatefulWidget {
 class _BetterPlayerFullScreenPageState
     extends State<BetterPlayerFullScreenPage> {
   final String link;
-  late BetterPlayerController _betterPlayerController;
+  late ChewieController _chewiePlayerController;
   late VideoPlayerController _videocontroller;
 
   late Future<void> _future;
@@ -58,8 +60,8 @@ class _BetterPlayerFullScreenPageState
 
     _videocontroller.dispose();
 
-    _betterPlayerController.pause();
-    _betterPlayerController.dispose();
+    _chewiePlayerController.pause();
+    _chewiePlayerController.dispose();
     // _videocontroller = null;
     super.dispose();
   }
@@ -68,31 +70,34 @@ class _BetterPlayerFullScreenPageState
     await _videocontroller.initialize();
 
     setState(() {
-      BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network,
-        widget.link,
-        bufferingConfiguration: BetterPlayerBufferingConfiguration(
-          minBufferMs: Duration(seconds: 10).inMilliseconds,
-          maxBufferMs: Duration(seconds: 60).inMilliseconds,
-        ),
-      );
+      // BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
+      //   BetterPlayerDataSourceType.network,
+      //   widget.link,
+      //   bufferingConfiguration: BetterPlayerBufferingConfiguration(
+      //     minBufferMs: Duration(seconds: 10).inMilliseconds,
+      //     maxBufferMs: Duration(seconds: 60).inMilliseconds,
+      //   ),
+      // );
       double aspectRatio = _videocontroller.value.size.width /
           _videocontroller.value.size.height;
 
-      _betterPlayerController = BetterPlayerController(
-        BetterPlayerConfiguration(
-          fullScreenByDefault: true,
-          autoDetectFullscreenDeviceOrientation: true,
-          controlsConfiguration: BetterPlayerControlsConfiguration(
-              enablePlayPause: true,
-              enableSkips: false,
-              showControlsOnInitialize: false,
-              enableFullscreen: true),
-          autoPlay: true,
-          autoDispose: true,
-          aspectRatio: aspectRatio,
-        ),
-        betterPlayerDataSource: betterPlayerDataSource,
+      _chewiePlayerController = ChewieController(
+        // BetterPlayerConfiguration(
+        //   fullScreenByDefault: true,
+        //   autoDetectFullscreenDeviceOrientation: true,
+        //   controlsConfiguration: BetterPlayerControlsConfiguration(
+        //       enablePlayPause: true,
+        //       enableSkips: false,
+        //       showControlsOnInitialize: false,
+        //       enableFullscreen: true),
+        //   autoPlay: true,
+        //   autoDispose: true,
+        //   aspectRatio: aspectRatio,
+        // ),
+        // betterPlayerDataSource: betterPlayerDataSource,
+        videoPlayerController: _videocontroller,
+        autoPlay: true,
+        looping: true,
       );
     });
   }
@@ -127,8 +132,8 @@ class _BetterPlayerFullScreenPageState
                   children: [
                     AspectRatio(
                       aspectRatio: _aspectRatio,
-                      child: BetterPlayer(
-                        controller: _betterPlayerController,
+                      child: Chewie(
+                        controller: _chewiePlayerController,
                       ),
                     ),
                     Padding(
@@ -139,7 +144,7 @@ class _BetterPlayerFullScreenPageState
                                   Colors.transparent)),
                           onPressed: () async {
                             _videocontroller.pause();
-                            _betterPlayerController.pause();
+                            _chewiePlayerController.pause();
                             await Future.delayed(Duration(seconds: 2));
                             // _videocontroller.pause();
                             // _videocontroller.//Navigator.pop(context);

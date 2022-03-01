@@ -22,7 +22,7 @@ import 'package:disk_space/disk_space.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/ui/widgets/players/BetterPlayer.dart';
+import 'package:dtube_go/ui/widgets/players/ChewiePlayer.dart';
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
 
 import 'package:dtube_go/utils/secureStorage.dart';
@@ -438,17 +438,20 @@ class _UploadFormState extends State<UploadForm> {
             avoidAnimation: true,
             waitBeforeFadeIn: Duration(seconds: 0),
             childs: [
-              BP(
-                  videoUrl: _videoUrl,
-                  looping: false,
-                  autoplay: false,
-                  localFile: false,
-                  controls: true,
-                  //key: UniqueKey(),
-                  usedAsPreview: true,
-                  allowFullscreen: false,
-                  portraitVideoPadding: 50.0,
-                  videocontroller: _videocontroller),
+              ChewiePlayer(
+                videoUrl: _videoUrl,
+                looping: false,
+                autoplay: false,
+                localFile: false,
+                controls: true,
+                //key: UniqueKey(),
+                usedAsPreview: true,
+                allowFullscreen: false,
+                portraitVideoPadding: 50.0,
+                videocontroller: _videocontroller,
+                placeholderWidth: 100.w,
+                placeholderSize: 40.w,
+              ),
             ]),
       );
     } else {
@@ -506,7 +509,7 @@ class _UploadFormState extends State<UploadForm> {
                     // e.g. open issue on https://github.com/jhomlala/betterplayer/issues
                     ? Column(children: [
                         showVideoPreview
-                            ? BP(
+                            ? ChewiePlayer(
                                 videoUrl: stateUploadData.videoLocation ==
                                         "IPFS"
                                     ? AppConfig.ipfsVideoUrl +
@@ -524,7 +527,10 @@ class _UploadFormState extends State<UploadForm> {
                                 usedAsPreview: true,
                                 allowFullscreen: false,
                                 portraitVideoPadding: 50.0,
-                                videocontroller: _videocontroller)
+                                videocontroller: _videocontroller,
+                                placeholderWidth: 100.w,
+                                placeholderSize: 40.w,
+                              )
                             : SizedBox(height: 0),
                         InputChip(
                             selectedColor: globalRed,
