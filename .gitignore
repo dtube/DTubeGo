@@ -58,3 +58,7 @@ lib/res/mds/iOSEULA.md
 
 #firebase facebook auth data
 /android/app/src/main/res/values/strings.xml
+
+
+#ios
+GoogleService-Info.plist
