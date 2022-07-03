@@ -22,7 +22,7 @@ dependencies:
   flutter_web_auth: ^0.3.2 #android, ios, mac, web
 
   # auth related - not web enabled
-  twitter_login: ^3.0.8 #android, ios
+  twitter_login: ^4.2.3 #android, ios
   github_sign_in: ^0.0.5-dev.4  #android, ios
 
   
@@ -122,9 +122,7 @@ dependencies:
   equatable: ^2.0.3
   carousel_slider: ^4.0.0
   visibility_detector: ^0.2.2
-
-  
-
+  win32: ^2.5.0
 
 dev_dependencies:
   flutter_test:
