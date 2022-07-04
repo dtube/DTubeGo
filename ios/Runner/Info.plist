@@ -71,5 +71,7 @@
   </array>
   <!-- ... other tags -->
 </dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>
