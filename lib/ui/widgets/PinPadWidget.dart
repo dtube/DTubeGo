@@ -1,6 +1,6 @@
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:flutter/material.dart';
-import 'package:pinput/pin_put/pin_put.dart';
+import 'package:pinput/pinput.dart';
 
 class PinPadWidget extends StatelessWidget {
   PinPadWidget(
@@ -23,29 +23,32 @@ class PinPadWidget extends StatelessWidget {
   );
   @override
   Widget build(BuildContext context) {
-    return PinPut(
+    return Pinput(
       key: key,
-      fieldsCount: 5,
-      withCursor: true,
-      textStyle: TextStyle(fontSize: 25.0, color: globalAlmostWhite),
-      eachFieldWidth: 40.0,
-      eachFieldHeight: 55.0,
-      onSubmit: (String pin) => print(pin),
+
+      length: 5,
+      defaultPinTheme: PinTheme(
+        width: 56,
+        height: 56,
+        textStyle: TextStyle(fontSize: 25.0, color: globalAlmostWhite),
+        decoration: BoxDecoration(
+          border: Border.all(color: Color.fromRGBO(234, 239, 243, 1)),
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+
+      showCursor: true,
+
+      // eachFieldWidth: 40.0,
+      // eachFieldHeight: 55.0,
+      onSubmitted: (String pin) => print(pin),
       focusNode: _pinPutFocusNode,
       controller: _pinPutController,
       autofocus: requestFocus,
-      submittedFieldDecoration: pinPutDecoration,
-      selectedFieldDecoration: pinPutDecoration,
-      followingFieldDecoration: pinPutDecoration,
+      submittedPinTheme: PinTheme(decoration: pinPutDecoration),
+      focusedPinTheme: PinTheme(decoration: pinPutDecoration),
+      followingPinTheme: PinTheme(decoration: pinPutDecoration),
       pinAnimationType: PinAnimationType.fade,
-      inputDecoration: InputDecoration(
-        border: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        errorBorder: InputBorder.none,
-        disabledBorder: InputBorder.none,
-        counterText: "",
-      ),
 
       //keyboardType: TextInputType.name,
       //useNativeKeyboard: true,

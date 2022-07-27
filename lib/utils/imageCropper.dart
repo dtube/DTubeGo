@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 
 Future<File> cropImage(File currentThumbnail) async {
-  File? croppedFile = await ImageCropper.cropImage(
+  CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: currentThumbnail.path,
       aspectRatioPresets: Platform.isAndroid
           ? [
@@ -25,18 +25,20 @@ Future<File> cropImage(File currentThumbnail) async {
               //     CropAspectRatioPreset.ratio7x5,
               CropAspectRatioPreset.ratio16x9
             ],
-      androidUiSettings: AndroidUiSettings(
-          toolbarTitle: 'Cropper',
-          toolbarColor: Colors.deepOrange,
-          toolbarWidgetColor: globalAlmostWhite,
-          initAspectRatio: CropAspectRatioPreset.ratio16x9,
-          hideBottomControls: false,
-          lockAspectRatio: true),
-      iosUiSettings: IOSUiSettings(
-        title: 'Cropper',
-      ));
+      uiSettings: [
+        AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: globalAlmostWhite,
+            initAspectRatio: CropAspectRatioPreset.ratio16x9,
+            hideBottomControls: false,
+            lockAspectRatio: true),
+        IOSUiSettings(
+          title: 'Cropper',
+        )
+      ]);
   if (croppedFile != null) {
-    return croppedFile;
+    return File(croppedFile.path);
   } else {
     return currentThumbnail;
   }

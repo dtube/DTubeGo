@@ -14,12 +14,12 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   # auth related - web enabled
-  google_sign_in: ^5.2.0 #android, ios and web
-  cloud_firestore: ^2.5.1 #android, ios, mac, web
-  firebase_auth: ^3.1.4 #android, ios, mac, web
-  firebase_core: ^1.8.0 #android, ios, mac, web
-  flutter_facebook_auth: ^4.0.1  #android, ios, web
-  flutter_web_auth: ^0.3.2 #android, ios, mac, web
+  google_sign_in: ^5.4.0 #android, ios and web
+  cloud_firestore: ^3.4.1 #android, ios, mac, web
+  firebase_auth: ^3.6.0 #android, ios, mac, web
+  firebase_core: ^1.20.0 #android, ios, mac, web
+  flutter_facebook_auth: ^4.4.0+1  #android, ios, web
+  flutter_web_auth: ^0.4.1 #android, ios, mac, web
 
   # auth related - not web enabled
   twitter_login: ^4.2.3 #android, ios
@@ -40,65 +40,66 @@ dependencies:
 
   # UI - video related
   # webview_flutter: ^3.0.0
-  video_player: ^2.2.7
+  video_player: ^2.4.5
   youtube_explode_dart: ^1.10.8 #loading youtube metadata
   #better_player: ^0.0.79 # player for ipfs/sia/local files
-  youtube_player_iframe: ^2.2.2
+  youtube_player_iframe: ^2.3.0
   gallery_saver: ^2.3.2
-  chewie: ^1.3.0
+  chewie: ^1.3.4
 
   # UI - markdown related
-  flutter_markdown: ^0.6.8  # display markdown (only post description for now)
+  flutter_markdown: ^0.6.10+3  # display markdown (only post description for now)
   url_launcher: ^6.0.17 # Needed to forward users from dtubego to browsers
   expandable: ^5.0.1
 
   # UI - image/video related
   #camera: ^0.8.1+3 # gives possibility to capture camera input in own widget
-  image_picker: ^0.8.4+4 # open file browser / record image/video
-  image_cropper: ^1.4.1 # cropping tool for thumbnails
-
+  
+  image_cropper: ^2.0.3 # cropping tool for thumbnails
+  image_picker: ^0.8.5+3 # open file browser / record image/video
+  
   # UI - responsive design
   native_device_orientation: ^1.0.0 # get the real device orientation
-  responsive_sizer: ^3.0.4+4 # measuring sizes related to the screen size
-  auto_orientation: ^2.1.0 # rotate screen from code
+  responsive_sizer: ^3.1.0 # measuring sizes related to the screen size
+  auto_orientation: ^2.2.1 # rotate screen from code
   overlay_dialog: ^0.2.1 # used as workaround for fullscreen video
   # responsive_framework: ^0.1.4 #detect device type
 
   # UI - specific elements related
   intl: ^0.17.0 # convert datetime to friendly strings
   uni_links: ^0.5.1 # To open DTubeGo from other apps, when https://d.tube is detected
-  badges: ^2.0.2 # notification count
+  badges: ^2.0.3 # notification count
 
-  font_awesome_flutter: ^9.2.0 # icons
-  google_fonts: ^2.1.0
+  font_awesome_flutter: ^10.1.0 # icons
+  google_fonts: ^3.0.1
   rflutter_alert: ^2.0.4
-  flutter_speed_dial: ^5.0.0+1 # drop out menu
-  chips_input: ^0.0.6
-  textfield_tags: ^1.4.2
+  flutter_speed_dial: ^6.0.0 # drop out menu
+  chips_input: ^0.1.0
+  textfield_tags: ^1.4.2 # crete list of tags in a textfield style <=== UPGRADE NEXT
 
-  another_flushbar: ^1.10.28 # global snackbar to inform the user about transactions
+  another_flushbar: ^1.10.29 # global snackbar to inform the user about transactions
   loadmore: ^2.0.1 # collapsable widget for long video descriptions
   jiffy: ^4.1.0 # library to display time in a user friendly way
   # scroll_snap_list: ^0.8.1 # not needed for now (snapping lists like instagram explore page)
-  share_plus: ^3.0.4 # share post
-  introduction_screen: ^2.1.0 # onboarding screen
+  share_plus: ^4.0.10 # share post
+  introduction_screen: ^3.0.2 # onboarding screen
   #material_floating_search_bar: ^0.3.4
   flutter_barcode_scanner: ^2.0.0 #qr scan
   decorated_icon: ^1.2.1 # shadows for icons
-  simple_shadow: ^0.2.0 #shadows for png files (dtube icon)
-  flutter_staggered_grid_view: ^0.4.1 # explore page
-  pinput: ^1.2.2 # pin input field on startup
+  simple_shadow: ^0.3.0 #shadows for png files (dtube icon)
+  flutter_staggered_grid_view: ^0.4.1 # explore page <=== UPGRADE NEXT
+  pinput: ^2.2.11 # pin input field on startup
   shimmer_animation: ^2.1.0+1 # glow animation over images
-  flutter_animator: ^3.2.0 # various transform animations
-  animations: ^2.0.2
-  wave: ^0.2.0 # wave animation for upload button, login screen and more
+  flutter_animator: ^3.2.2 # various transform animations
+  animations: ^2.0.3
+  wave: ^0.2.2 # wave animation for upload button, login screen and more
 
   # NETWORK - cache related
-  cached_network_image: ^3.2.0
+  cached_network_image: ^3.2.1
 
   # NETWORK - http related
   http: ^0.13.4
-  dio: ^4.0.4
+  dio: ^4.0.6
   
 
   # OTHERS - global stuff
@@ -111,18 +112,17 @@ dependencies:
   flutter_secure_storage: ^5.0.2
 
   # video processing
-  video_compress: ^3.1.0 # compression & spize/aspect ratio & thumbnail generator
+  video_compress: ^3.1.1 # compression & spize/aspect ratio & thumbnail generator
 
   # os related
   disk_space: ^0.2.1 # get free memory before recording video
-  path_provider: ^2.0.8
-  path: ^1.8.0
+  path_provider: ^2.0.11
+  path: ^1.8.1
 
 # unsorted
   equatable: ^2.0.3
-  carousel_slider: ^4.0.0
-  visibility_detector: ^0.2.2
-  win32: ^2.5.0
+  carousel_slider: ^4.1.1
+  visibility_detector: ^0.3.3
 
 dev_dependencies:
   flutter_test:

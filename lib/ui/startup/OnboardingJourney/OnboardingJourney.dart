@@ -32,7 +32,7 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
     var pageDecoration = PageDecoration(
       titleTextStyle: Theme.of(context).textTheme.headline1!,
       bodyTextStyle: Theme.of(context).textTheme.bodyText1!,
-      descriptionPadding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+      // descriptionPadding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
       pageColor: globalBlue,
       imagePadding: EdgeInsets.only(top: 20.h),
       imageFlex: 3,
@@ -70,7 +70,7 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
       onDone: () => widget.journeyDoneCallback(),
       //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
       showSkipButton: true,
-      skipFlex: 0,
+      // skipFlex: 0,
       nextFlex: 0,
       //rtl: true, // Display as right-to-left
       skip: Text(
