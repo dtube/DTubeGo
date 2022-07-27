@@ -410,36 +410,33 @@ class _PostListCardState extends State<PostListCard>
   @override
   Widget build(BuildContext context) {
     if (widget.largeFormat) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: BlocProvider<UserBloc>(
-          create: (BuildContext context) =>
-              UserBloc(repository: UserRepositoryImpl()),
-          child: PostListCardLarge(
-            blur: widget.blur,
-            thumbnailUrl: widget.thumbnailUrl,
-            title: widget.title,
-            description: widget.description,
-            author: widget.author,
-            link: widget.link,
-            publishDate: widget.publishDate,
-            duration: widget.duration,
-            dtcValue: widget.dtcValue,
-            videoUrl: widget.videoUrl,
-            videoSource: widget.videoSource,
-            alreadyVoted: widget.alreadyVoted,
-            alreadyVotedDirection: widget.alreadyVotedDirection,
-            upvotesCount: widget.upvotesCount,
-            downvotesCount: widget.downvotesCount,
-            indexOfList: widget.indexOfList,
-            mainTag: widget.mainTag,
-            oc: widget.oc,
-            defaultCommentVotingWeight: widget.defaultCommentVotingWeight!,
-            defaultPostVotingWeight: widget.defaultPostVotingWeight!,
-            defaultPostVotingTip: widget.defaultPostVotingTip!,
-            fixedDownvoteActivated: widget.fixedDownvoteActivated!,
-            fixedDownvoteWeight: widget.fixedDownvoteWeight!,
-          ),
+      return BlocProvider<UserBloc>(
+        create: (BuildContext context) =>
+            UserBloc(repository: UserRepositoryImpl()),
+        child: PostListCardLarge(
+          blur: widget.blur,
+          thumbnailUrl: widget.thumbnailUrl,
+          title: widget.title,
+          description: widget.description,
+          author: widget.author,
+          link: widget.link,
+          publishDate: widget.publishDate,
+          duration: widget.duration,
+          dtcValue: widget.dtcValue,
+          videoUrl: widget.videoUrl,
+          videoSource: widget.videoSource,
+          alreadyVoted: widget.alreadyVoted,
+          alreadyVotedDirection: widget.alreadyVotedDirection,
+          upvotesCount: widget.upvotesCount,
+          downvotesCount: widget.downvotesCount,
+          indexOfList: widget.indexOfList,
+          mainTag: widget.mainTag,
+          oc: widget.oc,
+          defaultCommentVotingWeight: widget.defaultCommentVotingWeight!,
+          defaultPostVotingWeight: widget.defaultPostVotingWeight!,
+          defaultPostVotingTip: widget.defaultPostVotingTip!,
+          fixedDownvoteActivated: widget.fixedDownvoteActivated!,
+          fixedDownvoteWeight: widget.fixedDownvoteWeight!,
         ),
       );
     } else {

@@ -46,7 +46,7 @@ class ThirdPartyMetadataRepositoryImpl implements ThirdPartyMetadataRepository {
 
       var channelabout = await yt.channels.getAboutPage(channelId);
 
-      return channelabout.description.contains(code);
+      return channelabout.description!.contains(code);
     } catch (e) {
       print(e.toString());
       throw Exception();

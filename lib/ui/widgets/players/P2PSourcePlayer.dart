@@ -1,4 +1,5 @@
-import 'package:chewie/chewie.dart';
+import 'package:better_player/better_player.dart';
+// import 'package:chewie/chewie.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:io';
@@ -41,38 +42,46 @@ class ChewiePlayer extends StatefulWidget {
 }
 
 class _ChewiePlayerState extends State<ChewiePlayer> {
-  late ChewieController _chewiePlayerController;
+  late BetterPlayerController _chewiePlayerController;
 
   late Future<void> _future;
   late double aspectRatio;
   Future<void> initVideoPlayer() async {
-    await widget.videocontroller.initialize();
+    // await widget.videocontroller.initialize();
 
     setState(() {
       aspectRatio = widget.videocontroller.value.size.width /
           widget.videocontroller.value.size.height;
+      BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
+          !widget.localFile
+              ? BetterPlayerDataSourceType.network
+              : BetterPlayerDataSourceType.file,
+          widget.videoUrl);
 
-      _chewiePlayerController = ChewieController(
-          videoPlayerController: widget.videocontroller,
-          aspectRatio: aspectRatio != null
-              ? !(aspectRatio > 0.0)
-                  ? 1
-                  : aspectRatio
-              : 1.77,
-          autoPlay: widget.autoplay,
-          looping: true,
-          allowFullScreen: widget.allowFullscreen,
-          allowMuting: true,
-          showControls: widget.controls);
+      // _chewiePlayerController = ChewieController(
+      //     videoPlayerController: widget.videocontroller,
+      //     aspectRatio: !(aspectRatio > 0.0) ? 1 : aspectRatio,
+      //     autoPlay: widget.autoplay,
+      //     looping: true,
+      //     allowFullScreen: widget.allowFullscreen,
+      //     allowMuting: true,
+      //     showControls: widget.controls);
+      _chewiePlayerController = BetterPlayerController(
+          BetterPlayerConfiguration(
+              autoDetectFullscreenAspectRatio: true,
+              fit: BoxFit.contain,
+              autoDispose: true,
+              autoPlay: widget.autoplay),
+          betterPlayerDataSource: betterPlayerDataSource);
     });
   }
 
   @override
   void initState() {
     super.initState();
-    widget.videocontroller = !widget.localFile
-        ? VideoPlayerController.network(widget.videoUrl)
-        : VideoPlayerController.file(File(widget.videoUrl));
+    // widget.videocontroller = !widget.localFile
+    //     ? VideoPlayerController.network(widget.videoUrl)
+    //     : VideoPlayerController.file(File(widget.videoUrl));
     _future = initVideoPlayer();
   }
 
@@ -106,33 +115,35 @@ class _ChewiePlayerState extends State<ChewiePlayer> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return Center(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: aspectRatio < 1 ? widget.portraitVideoPadding : 0.0,
-                  right: aspectRatio < 1 ? widget.portraitVideoPadding : 0.0),
-              child: Column(
-                children: [
-                  AspectRatio(
-                    aspectRatio: aspectRatio > 0.0 ? aspectRatio : 16 / 9,
-                    child: widget.controls
-                        ? Chewie(
-                            controller: _chewiePlayerController,
-                          )
-                        : GestureDetector(
-                            child: Chewie(
-                              controller: _chewiePlayerController,
-                            ),
-                            onTap: () {
-                              if (_chewiePlayerController.isPlaying) {
-                                _chewiePlayerController.pause();
-                              } else {
-                                _chewiePlayerController.play();
-                              }
-                            }),
-                  ),
-                  widget.usedAsPreview
-                      ? aspectRatio > 1
+          return
+              // Center(
+              //   child:
+              Padding(
+                  padding: EdgeInsets.only(
+                      left: aspectRatio < 1 ? widget.portraitVideoPadding : 0.0,
+                      right:
+                          aspectRatio < 1 ? widget.portraitVideoPadding : 0.0),
+                  child: !widget.usedAsPreview
+                      ? AspectRatio(
+                          aspectRatio:
+                              aspectRatio > 0.0 ? aspectRatio : 16 / 11,
+                          child: widget.controls
+                              ? BetterPlayer(
+                                  controller: _chewiePlayerController,
+                                )
+                              : GestureDetector(
+                                  child: BetterPlayer(
+                                    controller: _chewiePlayerController,
+                                  ),
+                                  onTap: () {
+                                    if (_chewiePlayerController.isPlaying()!) {
+                                      _chewiePlayerController.pause();
+                                    } else {
+                                      _chewiePlayerController.play();
+                                    }
+                                  }),
+                        )
+                      : aspectRatio > 1
                           ? Column(
                               children: [
                                 Padding(
@@ -147,11 +158,8 @@ class _ChewiePlayerState extends State<ChewiePlayer> {
                               ],
                             )
                           : SizedBox(height: 0)
-                      : SizedBox(height: 0),
-                ],
-              ),
-            ),
-          );
+                  //),
+                  );
         } else {
           return buildPlaceholderImage();
         }

@@ -26,7 +26,6 @@ class _YTPlayerIFrameState extends State<YTPlayerIFrame> {
   @override
   void initState() {
     super.initState();
-
     widget.controller.onEnterFullscreen = () {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.landscapeLeft,

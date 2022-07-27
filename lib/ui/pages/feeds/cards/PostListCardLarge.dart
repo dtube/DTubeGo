@@ -122,7 +122,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
       initialVideoId: widget.videoUrl,
       params: YoutubePlayerParams(
           showControls: true,
-          showFullscreenButton: false,
+          showFullscreenButton: true,
           desktopMode: kIsWeb ? true : !Platform.isIOS,
           privacyEnhanced: true,
           useHybridComposition: true,
@@ -201,41 +201,44 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                 });
               },
             )
-          : MobilePostData(
-              thumbnailTapped: _thumbnailTapped,
-              widget: widget,
-              bpController: _bpController,
-              ytController: _ytController,
-              showVotingBars: _showVotingBars,
-              userBloc: _userBloc,
-              votingDirection: _votingDirection,
-              showCommentInput: _showCommentInput,
-              replyController: _replyController,
-              showGiftInput: _showGiftInput,
-              giftDTCController: _giftDTCController,
-              giftMemoController: _giftMemoController,
-              avatarSize: _avatarSize,
-              thumbnailTappedCallback: () {
-                setState(() {
-                  _thumbnailTapped = true;
-                });
-              },
-              votingCancelCallback: () {
-                setState(() {
-                  _showVotingBars = false;
-                });
-              },
-              commentCancelCallback: () {
-                setState(() {
-                  _showCommentInput = false;
-                  _replyController.text = '';
-                });
-              },
-              giftCancelCallback: () {
-                setState(() {
-                  _showGiftInput = false;
-                });
-              },
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MobilePostData(
+                thumbnailTapped: _thumbnailTapped,
+                widget: widget,
+                bpController: _bpController,
+                ytController: _ytController,
+                showVotingBars: _showVotingBars,
+                userBloc: _userBloc,
+                votingDirection: _votingDirection,
+                showCommentInput: _showCommentInput,
+                replyController: _replyController,
+                showGiftInput: _showGiftInput,
+                giftDTCController: _giftDTCController,
+                giftMemoController: _giftMemoController,
+                avatarSize: _avatarSize,
+                thumbnailTappedCallback: () {
+                  setState(() {
+                    _thumbnailTapped = true;
+                  });
+                },
+                votingCancelCallback: () {
+                  setState(() {
+                    _showVotingBars = false;
+                  });
+                },
+                commentCancelCallback: () {
+                  setState(() {
+                    _showCommentInput = false;
+                    _replyController.text = '';
+                  });
+                },
+                giftCancelCallback: () {
+                  setState(() {
+                    _showGiftInput = false;
+                  });
+                },
+              ),
             ),
     );
   }
@@ -1629,21 +1632,23 @@ class PlayerWidget extends StatelessWidget {
             //     allowFullscreen: false,
             //     portraitVideoPadding: 30.w,
             //   )
-            ? AspectRatio(
-                aspectRatio: 16 / 9,
-                child: ChewiePlayer(
-                  videoUrl: widget.videoUrl,
-                  autoplay: true,
-                  looping: false,
-                  localFile: false,
-                  controls: true,
-                  usedAsPreview: false,
-                  allowFullscreen: false,
-                  portraitVideoPadding: 33.w,
-                  videocontroller: _bpController,
-                  placeholderWidth: placeholderWidth,
-                  placeholderSize: placeholderSize,
-                ),
+            ?
+            // AspectRatio(
+            //     aspectRatio: 16 / 9,
+            // child:
+            ChewiePlayer(
+                videoUrl: widget.videoUrl,
+                autoplay: true,
+                looping: false,
+                localFile: false,
+                controls: true,
+                usedAsPreview: false,
+                allowFullscreen: true,
+                portraitVideoPadding: 33.w,
+                videocontroller: _bpController,
+                placeholderWidth: placeholderWidth,
+                placeholderSize: placeholderSize,
+                // ),
               )
             : (widget.videoSource == 'youtube' && widget.videoUrl != "")
                 ? YTPlayerIFrame(

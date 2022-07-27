@@ -1,6 +1,5 @@
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-import 'package:dtube_go/ui/widgets/players/FullScreenButton.dart';
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -10,7 +9,7 @@ import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dtube_go/ui/widgets/players/ChewiePlayer.dart';
+import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/pages/post/widgets/CollapsedDescription.dart';
 import 'package:dtube_go/ui/pages/post/widgets/Comments.dart';
@@ -197,11 +196,11 @@ class _PostDetailsState extends State<PostDetails> {
                             context, widget.post.author, () {});
                       },
                     ),
-                    FullScreenButton(
-                      videoUrl: widget.post.videoUrl!,
-                      videoSource: widget.post.videoSource,
-                      iconSize: 15,
-                    ),
+                    // FullScreenButton(
+                    //   videoUrl: widget.post.videoUrl!,
+                    //   videoSource: widget.post.videoSource,
+                    //   iconSize: 15,
+                    // ),
                   ],
                 ),
                 Row(
