@@ -143,19 +143,9 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
       onVisibilityChanged: (visibilityInfo) {
         var visiblePercentage = visibilityInfo.visibleFraction * 100;
 
-        if (visiblePercentage < 1) {
+        if (visiblePercentage < 95) {
           _ytController.pause();
           _bpController.pause();
-          print("VISIBILITY OF " +
-              widget.author +
-              "/" +
-              widget.link +
-              "CHANGED TO " +
-              visiblePercentage.toString());
-        }
-        if (visiblePercentage > 90) {
-          _ytController.play();
-          _bpController.play();
           print("VISIBILITY OF " +
               widget.author +
               "/" +

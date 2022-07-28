@@ -265,19 +265,6 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
       child: YoutubePlayerControllerProvider(
           controller: _controller,
           child: Container(
-              child: VisibilityDetector(
-            key: Key('post-details' + widget.post.link),
-            onVisibilityChanged: (visibilityInfo) {
-              var visiblePercentage = visibilityInfo.visibleFraction * 100;
-              if (visiblePercentage < 1) {
-                _controller.pause();
-                _videocontroller.pause();
-              }
-              if (visiblePercentage > 90) {
-                _controller.play();
-                _videocontroller.play();
-              }
-            },
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.only(top: 5.h),
@@ -596,7 +583,7 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
                 ),
               ),
             ),
-          ))),
+          )),
     );
   }
 }
