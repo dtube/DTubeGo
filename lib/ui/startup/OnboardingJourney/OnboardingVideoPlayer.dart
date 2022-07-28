@@ -1,6 +1,6 @@
 // currently unused
 
-import 'package:dtube_go/ui/widgets/players/ChewiePlayer.dart';
+import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer.dart';
 import 'package:dtube_go/utils/GetAppDocDirectory.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';

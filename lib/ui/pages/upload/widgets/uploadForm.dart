@@ -22,7 +22,7 @@ import 'package:disk_space/disk_space.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/ui/widgets/players/ChewiePlayer.dart';
+import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer.dart';
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
 
 import 'package:dtube_go/utils/secureStorage.dart';

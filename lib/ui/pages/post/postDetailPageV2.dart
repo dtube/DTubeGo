@@ -25,7 +25,7 @@ import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dtube_go/ui/widgets/players/ChewiePlayer.dart';
+import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/pages/post/widgets/CollapsedDescription.dart';
 import 'package:dtube_go/ui/pages/post/widgets/Comments.dart';
