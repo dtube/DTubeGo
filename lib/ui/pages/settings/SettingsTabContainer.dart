@@ -42,6 +42,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   late TextEditingController _hiveDefaultCommunityController;
   //late TextEditingController _hiveDefaultTagsController;
   late String _pinCode;
+  late bool _videoAutoPause;
 
   late String _imageUploadProvider;
 
@@ -73,6 +74,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
 
   bool _showDisplayHints = false;
   bool _showSecurityHints = false;
+  bool _showBehaviourAutoPauseHints = false;
+
   bool _showInterestsHints = false;
 
   bool _showVotingWeightHints = false;
@@ -181,6 +184,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           _downvoteFixed.toString(),
                       sec.settingKey_FixedDownvoteWeight:
                           _downvoteFixedAmount.toString(),
+                      sec.settingKey_videoAutoPause: _videoAutoPause.toString(),
                     };
 
                     _settingsBloc.add(PushSettingsEvent(
@@ -280,6 +284,10 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
             _pinCode = settings[sec.settingKey_pincode] != null
                 ? settings[sec.settingKey_pincode]!
                 : "";
+
+            _videoAutoPause = settings[sec.settingKey_videoAutoPause] != null
+                ? settings[sec.settingKey_videoAutoPause]! == "true"
+                : false;
 
             _imageUploadProvider =
                 settings[sec.settingKey_imageUploadService] != null
@@ -547,6 +555,59 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                     showHint: _showSecurityHints,
                                     hintText:
                                         "Your login data is stored in a secure storage on your device. The app will automatically login you when you start the app. To prevent anyone else to use your account on your device, make sure to set this pin."),
+                              ],
+                            ),
+                            DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 400),
+                              avoidAnimation: _visitedTabs.contains(0),
+                              childs: [
+                                Stack(
+                                  children: [
+                                    ShowHintIcon(
+                                      onPressed: () {
+                                        setState(() {
+                                          _showBehaviourAutoPauseHints =
+                                              !_showBehaviourAutoPauseHints;
+                                        });
+                                      },
+                                      alignment: Alignment.topRight,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 1.h),
+                                      child: Text("Behaviour",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: 60.w,
+                                      child: Text(
+                                          "pause video playback on popups",
+                                          maxLines: 2,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1),
+                                    ),
+                                    Switch(
+                                      value: _videoAutoPause,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _videoAutoPause = value;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                VisibilityHintText(
+                                    showHint: _showBehaviourAutoPauseHints,
+                                    hintText:
+                                        "If you play back a video and you are goign to comment / vote on it - the video playback is automatically paused. You can turn off this behvaiour with this setting."),
                               ],
                             ),
                             // deactivated until we have more providers

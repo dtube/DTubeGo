@@ -55,6 +55,7 @@ const settingKey_DefaultMomentVotingWeigth = "DFMVW";
 const settingKey_tsLastNotificationSeen = 'LASTNOT';
 
 const settingKey_pincode = "PINC";
+const settingKey_videoAutoPause = "VAPAUSE";
 
 const settingKey_imageUploadService = "IMGUS";
 
@@ -112,6 +113,10 @@ Future<void> persistImageUploadService(String service) async {
 
 Future<void> persistPinCode(String pin) async {
   await _storage.write(key: settingKey_pincode, value: pin);
+}
+
+Future<void> persistVideoAutoPause(String autoPause) async {
+  await _storage.write(key: settingKey_videoAutoPause, value: autoPause);
 }
 
 Future<void> persistLastHivePost() async {
@@ -468,6 +473,20 @@ Future<String> getPinCode() async {
     return _setting;
   } else {
     return "";
+  }
+}
+
+Future<String> getVideoAutoPause() async {
+  String? _setting = "false";
+  try {
+    _setting = await _storage.read(key: settingKey_videoAutoPause);
+  } catch (e) {
+    _setting = "false";
+  }
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "false";
   }
 }
 

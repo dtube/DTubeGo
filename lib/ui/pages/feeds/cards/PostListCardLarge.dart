@@ -1,3 +1,4 @@
+import 'package:better_player/better_player.dart';
 import 'package:dtube_go/ui/pages/feeds/cards/widets/CollapsedDescription.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
@@ -59,10 +60,12 @@ class PostListCardLarge extends StatefulWidget {
       required this.defaultPostVotingWeight,
       required this.defaultPostVotingTip,
       required this.fixedDownvoteActivated,
-      required this.fixedDownvoteWeight})
+      required this.fixedDownvoteWeight,
+      required this.autoPauseVideoOnPopup})
       : super(key: key);
 
   final bool blur;
+  final bool autoPauseVideoOnPopup;
   final String thumbnailUrl;
   final String title;
   final String description;
@@ -143,7 +146,10 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
       onVisibilityChanged: (visibilityInfo) {
         var visiblePercentage = visibilityInfo.visibleFraction * 100;
 
-        if (visiblePercentage < 95) {
+        if (visiblePercentage < 95 &&
+            !_showCommentInput &&
+            !_showGiftInput &&
+            !_showVotingBars) {
           _ytController.pause();
           _bpController.pause();
           print("VISIBILITY OF " +
@@ -158,7 +164,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
           ? WebPostData(
               thumbnailTapped: _thumbnailTapped,
               widget: widget,
-              bpController: _bpController,
+              videoController: _bpController,
               ytController: _ytController,
               showVotingBars: _showVotingBars,
               userBloc: _userBloc,
@@ -212,18 +218,18 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                     _thumbnailTapped = true;
                   });
                 },
-                votingCancelCallback: () {
+                votingOpenCallback: () {
                   setState(() {
                     _showVotingBars = false;
                   });
                 },
-                commentCancelCallback: () {
+                commentOpenCallback: () {
                   setState(() {
                     _showCommentInput = false;
                     _replyController.text = '';
                   });
                 },
-                giftCancelCallback: () {
+                giftOpenCallback: () {
                   setState(() {
                     _showGiftInput = false;
                   });
@@ -234,7 +240,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
   }
 }
 
-class MobilePostData extends StatelessWidget {
+class MobilePostData extends StatefulWidget {
   MobilePostData({
     Key? key,
     required bool thumbnailTapped,
@@ -251,9 +257,9 @@ class MobilePostData extends StatelessWidget {
     required TextEditingController giftMemoController,
     required double avatarSize,
     required this.thumbnailTappedCallback,
-    required this.votingCancelCallback,
-    required this.commentCancelCallback,
-    required this.giftCancelCallback,
+    required this.votingOpenCallback,
+    required this.commentOpenCallback,
+    required this.giftOpenCallback,
   })  : _thumbnailTapped = thumbnailTapped,
         _bpController = bpController,
         _ytController = ytController,
@@ -273,20 +279,25 @@ class MobilePostData extends StatelessWidget {
   final VideoPlayerController _bpController;
 
   final YoutubePlayerController _ytController;
-  final bool _showVotingBars;
+  bool _showVotingBars;
   final UserBloc _userBloc;
   final bool _votingDirection;
-  final bool _showCommentInput;
+  bool _showCommentInput;
   final TextEditingController _replyController;
-  final bool _showGiftInput;
+  bool _showGiftInput;
   final TextEditingController _giftDTCController;
   final TextEditingController _giftMemoController;
   final double _avatarSize;
   VoidCallback thumbnailTappedCallback;
-  VoidCallback votingCancelCallback;
-  VoidCallback commentCancelCallback;
-  VoidCallback giftCancelCallback;
+  VoidCallback votingOpenCallback;
+  VoidCallback commentOpenCallback;
+  VoidCallback giftOpenCallback;
 
+  @override
+  State<MobilePostData> createState() => _MobilePostDataState();
+}
+
+class _MobilePostDataState extends State<MobilePostData> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -295,57 +306,60 @@ class MobilePostData extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            thumbnailTappedCallback();
+            widget.thumbnailTappedCallback();
           },
           child: Stack(
             alignment: Alignment.topCenter,
             children: [
               ThumbnailWidget(
-                  thumbnailTapped: _thumbnailTapped, widget: widget),
+                  thumbnailTapped: widget._thumbnailTapped,
+                  widget: widget.widget),
               PlayerWidget(
-                thumbnailTapped: _thumbnailTapped,
-                bpController: _bpController,
-                widget: widget,
-                ytController: _ytController,
+                thumbnailTapped: widget._thumbnailTapped,
+                bpController: widget._bpController,
+                widget: widget.widget,
+                ytController: widget._ytController,
                 placeholderWidth: 100.w,
                 placeholderSize: 40.w,
               ),
-              // VOTING DIALOG
-              VotingDialogWidget(
-                  showVotingBars: _showVotingBars,
-                  userBloc: _userBloc,
-                  votingDirection: _votingDirection,
-                  widget: widget,
-                  cancelCallback: () {
-                    votingCancelCallback();
-                  }),
-              // COMMENT DIALOG
-              CommentDialogWidget(
-                showCommentInput: _showCommentInput,
-                replyController: _replyController,
-                userBloc: _userBloc,
-                widget: widget,
-                cancelCallback: () {
-                  commentCancelCallback();
-                },
-              ),
-              // GIFT DIALOG
-              GiftDialogWidget(
-                showGiftInput: _showGiftInput,
-                giftDTCController: _giftDTCController,
-                giftMemoController: _giftMemoController,
-                widget: widget,
-                cancelCallback: () {
-                  giftCancelCallback();
-                },
-              ),
             ],
           ),
-          //),
         ),
         PostInfoBaseRow(
-          avatarSize: _avatarSize,
-          widget: widget,
+          avatarSize: widget._avatarSize,
+          widget: widget.widget,
+          videoController: widget._bpController,
+          ytController: widget._ytController,
+          commentCloseCallback: () {
+            setState(() {
+              widget._showCommentInput = false;
+            });
+          },
+          votingCloseCallback: () {
+            setState(() {
+              widget._showVotingBars = false;
+            });
+          },
+          giftCloseCallback: () {
+            setState(() {
+              widget._showGiftInput = false;
+            });
+          },
+          commentOpenCallback: () {
+            setState(() {
+              widget._showCommentInput = true;
+            });
+          },
+          votingOpenCallback: () {
+            setState(() {
+              widget._showVotingBars = true;
+            });
+          },
+          giftOpenCallback: () {
+            setState(() {
+              widget._showGiftInput = true;
+            });
+          },
         ),
         FadeInDown(
           preferences:
@@ -353,7 +367,7 @@ class MobilePostData extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.only(left: 12.w),
             child: PostInfoDetailsRow(
-              widget: widget,
+              widget: widget.widget,
             ),
           ),
         ),
@@ -369,7 +383,7 @@ class WebPostData extends StatelessWidget {
     Key? key,
     required bool thumbnailTapped,
     required this.widget,
-    required VideoPlayerController bpController,
+    required VideoPlayerController videoController,
     required YoutubePlayerController ytController,
     required bool showVotingBars,
     required UserBloc userBloc,
@@ -385,7 +399,7 @@ class WebPostData extends StatelessWidget {
     required this.commentCancelCallback,
     required this.giftCancelCallback,
   })  : _thumbnailTapped = thumbnailTapped,
-        _bpController = bpController,
+        _videoController = videoController,
         _ytController = ytController,
         _showVotingBars = showVotingBars,
         _userBloc = userBloc,
@@ -400,7 +414,7 @@ class WebPostData extends StatelessWidget {
 
   final bool _thumbnailTapped;
   final PostListCardLarge widget;
-  final VideoPlayerController _bpController;
+  final VideoPlayerController _videoController;
 
   final YoutubePlayerController _ytController;
   final bool _showVotingBars;
@@ -439,7 +453,7 @@ class WebPostData extends StatelessWidget {
                       thumbnailTapped: _thumbnailTapped, widget: widget),
                   PlayerWidget(
                     thumbnailTapped: _thumbnailTapped,
-                    bpController: _bpController,
+                    bpController: _videoController,
                     widget: widget,
                     ytController: _ytController,
                     placeholderWidth: 30.w,
@@ -447,13 +461,14 @@ class WebPostData extends StatelessWidget {
                   ),
                   // VOTING DIALOG
                   VotingDialogWidget(
-                      showVotingBars: _showVotingBars,
-                      userBloc: _userBloc,
-                      votingDirection: _votingDirection,
-                      widget: widget,
-                      cancelCallback: () {
-                        votingCancelCallback();
-                      }),
+                    showVotingBars: _showVotingBars,
+                    userBloc: _userBloc,
+                    votingDirection: _votingDirection,
+                    widget: widget,
+                    cancelCallback: () {
+                      votingCancelCallback();
+                    },
+                  ),
                   // COMMENT DIALOG
                   CommentDialogWidget(
                     showCommentInput: _showCommentInput,
@@ -481,6 +496,8 @@ class WebPostData extends StatelessWidget {
             PostInfoColumn(
               avatarSize: 10.h,
               widget: widget,
+              videoController: _videoController,
+              ytController: _ytController,
             ),
           ],
         ),
@@ -915,16 +932,32 @@ class VotingDialogWidget extends StatelessWidget {
 }
 
 class PostInfoBaseRow extends StatelessWidget {
-  const PostInfoBaseRow({
+  PostInfoBaseRow({
     Key? key,
     required this.widget,
     required double avatarSize,
+    required this.ytController,
+    required this.videoController,
+    required this.votingCloseCallback,
+    required this.votingOpenCallback,
+    required this.commentOpenCallback,
+    required this.commentCloseCallback,
+    required this.giftOpenCallback,
+    required this.giftCloseCallback,
   })  : _avatarSize = avatarSize,
         super(key: key);
 
   final PostListCardLarge widget;
 
   final double _avatarSize;
+  YoutubePlayerController ytController;
+  VideoPlayerController videoController;
+  VoidCallback votingOpenCallback;
+  VoidCallback commentOpenCallback;
+  VoidCallback giftOpenCallback;
+  VoidCallback votingCloseCallback;
+  VoidCallback commentCloseCallback;
+  VoidCallback giftCloseCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -1077,6 +1110,12 @@ class PostInfoBaseRow extends StatelessWidget {
                                 elevation: 0,
                                 backgroundColor: Colors.transparent,
                                 onTap: () {
+                                  if (widget.autoPauseVideoOnPopup) {
+                                    videoController.pause();
+                                    ytController.pause();
+                                  }
+                                  commentOpenCallback();
+
                                   showDialog<String>(
                                     context: context,
                                     builder: (BuildContext context) =>
@@ -1091,6 +1130,20 @@ class PostInfoBaseRow extends StatelessWidget {
                                         originLink: widget.link,
                                         defaultCommentVote: double.parse(
                                             widget.defaultCommentVotingWeight),
+                                        okCallback: () {
+                                          commentCloseCallback();
+                                          if (widget.autoPauseVideoOnPopup) {
+                                            ytController.play();
+                                            videoController.play();
+                                          }
+                                        },
+                                        cancelCallback: () {
+                                          commentCloseCallback();
+                                          if (widget.autoPauseVideoOnPopup) {
+                                            ytController.play();
+                                            videoController.play();
+                                          }
+                                        },
                                       ),
                                     ),
                                   );
@@ -1114,6 +1167,11 @@ class PostInfoBaseRow extends StatelessWidget {
                                 backgroundColor: Colors.transparent,
                                 onTap: () {
                                   if (!widget.alreadyVoted) {
+                                    if (widget.autoPauseVideoOnPopup) {
+                                      videoController.pause();
+                                      ytController.pause();
+                                    }
+                                    votingOpenCallback();
                                     showDialog<String>(
                                       context: context,
                                       builder: (BuildContext context) =>
@@ -1146,6 +1204,20 @@ class PostInfoBaseRow extends StatelessWidget {
                                                   "true",
                                           fixedDownvoteWeight: double.parse(
                                               widget.fixedDownvoteWeight),
+                                          okCallback: () {
+                                            votingCloseCallback();
+                                            if (widget.autoPauseVideoOnPopup) {
+                                              ytController.play();
+                                              videoController.play();
+                                            }
+                                          },
+                                          cancelCallback: () {
+                                            votingCloseCallback();
+                                            if (widget.autoPauseVideoOnPopup) {
+                                              ytController.play();
+                                              videoController.play();
+                                            }
+                                          },
                                         ),
                                       ),
                                     );
@@ -1171,6 +1243,12 @@ class PostInfoBaseRow extends StatelessWidget {
                                 backgroundColor: Colors.transparent,
                                 onTap: () {
                                   if (!widget.alreadyVoted) {
+                                    votingOpenCallback();
+                                    if (widget.autoPauseVideoOnPopup) {
+                                      videoController.pause();
+                                      ytController.pause();
+                                    }
+
                                     showDialog<String>(
                                       context: context,
                                       builder: (BuildContext context) =>
@@ -1203,6 +1281,20 @@ class PostInfoBaseRow extends StatelessWidget {
                                                   "true",
                                           fixedDownvoteWeight: double.parse(
                                               widget.fixedDownvoteWeight),
+                                          okCallback: () {
+                                            votingCloseCallback();
+                                            if (widget.autoPauseVideoOnPopup) {
+                                              ytController.play();
+                                              videoController.play();
+                                            }
+                                          },
+                                          cancelCallback: () {
+                                            votingCloseCallback();
+                                            if (widget.autoPauseVideoOnPopup) {
+                                              ytController.play();
+                                              videoController.play();
+                                            }
+                                          },
                                         ),
                                       ),
                                     );
@@ -1224,10 +1316,28 @@ class PostInfoBaseRow extends StatelessWidget {
                                 elevation: 0,
                                 backgroundColor: Colors.transparent,
                                 onTap: () {
+                                  if (widget.autoPauseVideoOnPopup) {
+                                    videoController.pause();
+                                    ytController.pause();
+                                  }
                                   showDialog<String>(
                                     context: context,
                                     builder: (BuildContext context) =>
                                         GiftDialog(
+                                      okCallback: () {
+                                        giftCloseCallback();
+                                        if (widget.autoPauseVideoOnPopup) {
+                                          ytController.play();
+                                          videoController.play();
+                                        }
+                                      },
+                                      cancelCallback: () {
+                                        giftCloseCallback();
+                                        if (widget.autoPauseVideoOnPopup) {
+                                          ytController.play();
+                                          videoController.play();
+                                        }
+                                      },
                                       txBloc: BlocProvider.of<TransactionBloc>(
                                           context),
                                       receiver: widget.author,
@@ -1249,6 +1359,8 @@ class PostInfoColumn extends StatelessWidget {
   const PostInfoColumn({
     Key? key,
     required this.widget,
+    required this.videoController,
+    required this.ytController,
     required double avatarSize,
   })  : _avatarSize = avatarSize,
         super(key: key);
@@ -1256,6 +1368,8 @@ class PostInfoColumn extends StatelessWidget {
   final PostListCardLarge widget;
 
   final double _avatarSize;
+  final VideoPlayerController videoController;
+  final YoutubePlayerController ytController;
 
   @override
   Widget build(BuildContext context) {
@@ -1422,6 +1536,10 @@ class PostInfoColumn extends StatelessWidget {
                                       elevation: 0,
                                       backgroundColor: Colors.transparent,
                                       onTap: () {
+                                        if (widget.autoPauseVideoOnPopup) {
+                                          videoController.pause();
+                                          ytController.pause();
+                                        }
                                         showDialog<String>(
                                           context: context,
                                           builder: (BuildContext context) =>
@@ -1437,6 +1555,20 @@ class PostInfoColumn extends StatelessWidget {
                                               defaultCommentVote: double.parse(
                                                   widget
                                                       .defaultCommentVotingWeight),
+                                              okCallback: () {
+                                                if (widget
+                                                    .autoPauseVideoOnPopup) {
+                                                  ytController.play();
+                                                  videoController.play();
+                                                }
+                                              },
+                                              cancelCallback: () {
+                                                if (widget
+                                                    .autoPauseVideoOnPopup) {
+                                                  ytController.play();
+                                                  videoController.play();
+                                                }
+                                              },
                                             ),
                                           ),
                                         );
@@ -1457,6 +1589,10 @@ class PostInfoColumn extends StatelessWidget {
                                       backgroundColor: Colors.transparent,
                                       onTap: () {
                                         if (!widget.alreadyVoted) {
+                                          if (widget.autoPauseVideoOnPopup) {
+                                            videoController.pause();
+                                            ytController.pause();
+                                          }
                                           showDialog<String>(
                                             context: context,
                                             builder: (BuildContext context) =>
@@ -1489,6 +1625,20 @@ class PostInfoColumn extends StatelessWidget {
                                                 fixedDownvoteWeight:
                                                     double.parse(widget
                                                         .fixedDownvoteWeight),
+                                                okCallback: () {
+                                                  if (widget
+                                                      .autoPauseVideoOnPopup) {
+                                                    ytController.play();
+                                                    videoController.play();
+                                                  }
+                                                },
+                                                cancelCallback: () {
+                                                  if (widget
+                                                      .autoPauseVideoOnPopup) {
+                                                    ytController.play();
+                                                    videoController.play();
+                                                  }
+                                                },
                                               ),
                                             ),
                                           );
@@ -1511,6 +1661,10 @@ class PostInfoColumn extends StatelessWidget {
                                       backgroundColor: Colors.transparent,
                                       onTap: () {
                                         if (!widget.alreadyVoted) {
+                                          if (widget.autoPauseVideoOnPopup) {
+                                            videoController.pause();
+                                            ytController.pause();
+                                          }
                                           showDialog<String>(
                                             context: context,
                                             builder: (BuildContext context) =>
@@ -1543,6 +1697,20 @@ class PostInfoColumn extends StatelessWidget {
                                                 fixedDownvoteWeight:
                                                     double.parse(widget
                                                         .fixedDownvoteWeight),
+                                                okCallback: () {
+                                                  if (widget
+                                                      .autoPauseVideoOnPopup) {
+                                                    ytController.play();
+                                                    videoController.play();
+                                                  }
+                                                },
+                                                cancelCallback: () {
+                                                  if (widget
+                                                      .autoPauseVideoOnPopup) {
+                                                    ytController.play();
+                                                    videoController.play();
+                                                  }
+                                                },
                                               ),
                                             ),
                                           );
@@ -1569,6 +1737,20 @@ class PostInfoColumn extends StatelessWidget {
                                                 TransactionBloc>(context),
                                             receiver: widget.author,
                                             originLink: widget.link,
+                                            okCallback: () {
+                                              if (widget
+                                                  .autoPauseVideoOnPopup) {
+                                                ytController.play();
+                                                videoController.play();
+                                              }
+                                            },
+                                            cancelCallback: () {
+                                              if (widget
+                                                  .autoPauseVideoOnPopup) {
+                                                ytController.play();
+                                                videoController.play();
+                                              }
+                                            },
                                           ),
                                         );
                                       }),

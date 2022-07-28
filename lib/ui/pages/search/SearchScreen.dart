@@ -49,6 +49,7 @@ class SearchScreenState extends State<SearchScreen> {
 
   String? _nsfwMode;
   String? _hiddenMode;
+  bool? _autoPauseVideoOnPopup;
 
   @override
   void initState() {
@@ -76,6 +77,7 @@ class SearchScreenState extends State<SearchScreen> {
     _defaultPostVotingTip = await sec.getDefaultVoteTip();
     _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
     _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
+    _autoPauseVideoOnPopup = await sec.getVideoAutoPause() == "true";
 
     _nsfwMode = await sec.getNSFW();
     _hiddenMode = await sec.getShowHidden();
@@ -356,6 +358,7 @@ class SearchScreenState extends State<SearchScreen> {
                     videoSource:
                         searchResults.hits!.hits![pos].sSource!.videoSource,
                     videoUrl: searchResults.hits!.hits![pos].sSource!.videoUrl,
+                    autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
                   ),
                 );
               }
@@ -428,6 +431,7 @@ class SearchScreenState extends State<SearchScreen> {
                   upvotesCount: searchResults[pos].upvotes!.length,
                   videoSource: searchResults[pos].videoSource,
                   videoUrl: searchResults[pos].videoUrl,
+                  autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
                 ),
               );
             }

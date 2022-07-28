@@ -774,18 +774,18 @@ class _VotingSliderState extends State<VotingSlider> {
 }
 
 class VotingSliderStandalone extends StatefulWidget {
-  VotingSliderStandalone(
-      {Key? key,
-      required this.author,
-      required this.link,
-      required this.downvote,
-      required this.defaultVote,
-      required this.defaultTip,
-      required this.currentVT,
-      required this.isPost,
-      this.sendCallback,
-      this.cancelCallback})
-      : super(key: key);
+  VotingSliderStandalone({
+    Key? key,
+    required this.author,
+    required this.link,
+    required this.downvote,
+    required this.defaultVote,
+    required this.defaultTip,
+    required this.currentVT,
+    required this.isPost,
+    this.sendCallback,
+    this.cancelCallback,
+  }) : super(key: key);
 
   String author;
   String link;

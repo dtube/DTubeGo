@@ -30,6 +30,7 @@ class TagListState extends State<TagList> {
 
   String? _fixedDownvoteActivated;
   String? _fixedDownvoteWeight;
+  bool? _autoPauseVideoOnPopup;
 
   Future<bool> getSettings() async {
     _hiddenMode = await sec.getShowHidden();
@@ -40,6 +41,7 @@ class TagListState extends State<TagList> {
     _defaultPostVotingTip = await sec.getDefaultVoteTip();
     _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
     _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
+    _autoPauseVideoOnPopup = await sec.getVideoAutoPause() == "true";
 
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
@@ -185,6 +187,7 @@ class TagListState extends State<TagList> {
               videoUrl: searchResults[pos].videoUrl,
               fixedDownvoteActivated: _fixedDownvoteActivated!,
               fixedDownvoteWeight: _fixedDownvoteWeight!,
+              autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
             );
           }),
     );

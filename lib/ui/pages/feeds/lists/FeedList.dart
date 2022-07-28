@@ -65,6 +65,8 @@ class FeedList extends StatelessWidget {
   String? _fixedDownvoteActivated;
   String? _fixedDownvoteWeight;
 
+  bool? _autoauseVideoOnPopup;
+
   Future<bool> getSettings() async {
     _hiddenMode = await sec.getShowHidden();
     _nsfwMode = await sec.getNSFW();
@@ -75,7 +77,7 @@ class FeedList extends StatelessWidget {
 
     _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
     _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
-
+    _autoauseVideoOnPopup = await sec.getVideoAutoPause() == "true";
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
     }
@@ -311,6 +313,7 @@ class FeedList extends StatelessWidget {
                   fixedDownvoteActivated: _fixedDownvoteActivated,
                   fixedDownvoteWeight: _fixedDownvoteWeight,
                   parentContext: context,
+                  autoPauseVideoOnPopup: _autoauseVideoOnPopup,
                 ),
                 //Text(pos.toString())
               ),
@@ -362,6 +365,7 @@ class PostListCard extends StatefulWidget {
 
   final String? fixedDownvoteActivated;
   final String? fixedDownvoteWeight;
+  final bool? autoPauseVideoOnPopup;
   final BuildContext parentContext;
 
   PostListCard(
@@ -396,7 +400,8 @@ class PostListCard extends StatefulWidget {
       this.defaultPostVotingTip,
       required this.fixedDownvoteActivated,
       required this.fixedDownvoteWeight,
-      required this.parentContext})
+      required this.parentContext,
+      required this.autoPauseVideoOnPopup})
       : super(key: key);
 
   @override
@@ -437,6 +442,7 @@ class _PostListCardState extends State<PostListCard>
           defaultPostVotingTip: widget.defaultPostVotingTip!,
           fixedDownvoteActivated: widget.fixedDownvoteActivated!,
           fixedDownvoteWeight: widget.fixedDownvoteWeight!,
+          autoPauseVideoOnPopup: widget.autoPauseVideoOnPopup!,
         ),
       );
     } else {
