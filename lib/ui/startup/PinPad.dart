@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/ui/startup/eula/EulaScreen.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
@@ -24,12 +26,14 @@ class PinPadScreen extends StatefulWidget {
   PinPadScreen({Key? key, required this.currentTermsAccepted})
       : super(key: key);
   bool currentTermsAccepted;
+
   @override
   _PinPadScreenState createState() => _PinPadScreenState();
 }
 
 class _PinPadScreenState extends State<PinPadScreen> {
   late bool _termsAccepted;
+  late String apiNode;
 
   @override
   void initState() {
@@ -100,7 +104,9 @@ class _PinPadScreenState extends State<PinPadScreen> {
             backgroundColor: globalBlue,
             body: Center(
               child: DtubeLogoPulseWithSubtitle(
-                subtitle: "loading your settings..",
+                subtitle: "we are using:\n" +
+                    globals.currentApiNode +
+                    "\n\nloading your settings..",
                 size: kIsWeb ? 10.w : 40.w,
               ),
             ));

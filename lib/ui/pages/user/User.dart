@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/feeds/lists/FeedList.dart';
 import 'package:dtube_go/ui/pages/feeds/lists/FeedListCarousel.dart';
@@ -272,98 +274,66 @@ class _UserState extends State<UserPage> {
                       ])),
             ),
           ),
+
           Padding(
             padding: EdgeInsets.only(top: 5.h, left: 40.w),
-            child: FadeIn(
-              preferences:
-                  AnimationPreferences(offset: Duration(milliseconds: 1100)),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 45.w,
-                    height: 20.h,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        OverlayText(
-                          text: user.jsonString != null &&
-                                  user.jsonString!.additionals != null &&
-                                  user.jsonString!.additionals!.displayName !=
-                                      null
-                              ? user.jsonString!.additionals!.displayName!
-                              : user.name,
-                          sizeMultiply: 1.6,
-                          bold: true,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
-                        OverlayText(
-                          text: user.jsonString != null &&
-                                  user.jsonString!.additionals != null &&
-                                  user.jsonString!.additionals!.displayName !=
-                                      null
-                              ? '@' + user.name
-                              : "",
-                          sizeMultiply: 1.2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+            child: globals.disableAnimations
+                ? NameDisplayNameContainer(
+                    context: context,
+                    ownUserpage: widget.ownUserpage,
+                    user: user,
+                  )
+                : FadeIn(
+                    preferences: AnimationPreferences(
+                        offset: Duration(milliseconds: 1100)),
+                    child: NameDisplayNameContainer(
+                      context: context,
+                      ownUserpage: widget.ownUserpage,
+                      user: user,
                     ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      !widget.ownUserpage
-                          ? BlocProvider(
-                              create: (context) =>
-                                  UserBloc(repository: UserRepositoryImpl()),
-                              child: UserBlockButton(
-                                user: user,
-                              ),
-                            )
-                          : Container(),
-                      UserMoreInfoButton(
-                        context: context,
-                        user: user,
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
           ),
 
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
               padding: EdgeInsets.only(top: 7.h, left: 4.w),
-              child: FadeIn(
-                preferences:
-                    AnimationPreferences(offset: Duration(milliseconds: 500)),
-                child: AccountAvatarBase(
-                  username: user.name,
-                  avatarSize: 30.w,
-                  showVerified: true,
-                  showName: false,
-                  width: 32.w,
-                  height: 32.w,
-                ),
-              ),
+              child: globals.disableAnimations
+                  ? AccountAvatarBase(
+                      username: user.name,
+                      avatarSize: 30.w,
+                      showVerified: true,
+                      showName: false,
+                      width: 32.w,
+                      height: 32.w,
+                    )
+                  : FadeIn(
+                      preferences: AnimationPreferences(
+                          offset: Duration(milliseconds: 500)),
+                      child: AccountAvatarBase(
+                        username: user.name,
+                        avatarSize: 30.w,
+                        showVerified: true,
+                        showName: false,
+                        width: 32.w,
+                        height: 32.w,
+                      ),
+                    ),
             ),
           ),
         ])),
         Positioned(
           bottom: 10.h,
           right: 3.w,
-          child: FadeIn(
-              preferences: AnimationPreferences(
-                  offset: Duration(milliseconds: 1000),
-                  duration: Duration(seconds: 1)),
-              child: buildUserMenuSpeedDial(
-                  context, user, widget.ownUserpage, userBloc)),
+          child: globals.disableAnimations
+              ? buildUserMenuSpeedDial(
+                  context, user, widget.ownUserpage, userBloc)
+              : FadeIn(
+                  preferences: AnimationPreferences(
+                      offset: Duration(milliseconds: 1000),
+                      duration: Duration(seconds: 1)),
+                  child: buildUserMenuSpeedDial(
+                      context, user, widget.ownUserpage, userBloc)),
         ),
       ],
       //   ),
@@ -612,6 +582,77 @@ class _UserState extends State<UserPage> {
         ),
       ],
       //   ),
+    );
+  }
+}
+
+class NameDisplayNameContainer extends StatelessWidget {
+  const NameDisplayNameContainer(
+      {Key? key,
+      required this.context,
+      required this.user,
+      required this.ownUserpage})
+      : super(key: key);
+
+  final BuildContext context;
+  final User user;
+  final bool ownUserpage;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          width: 45.w,
+          height: 20.h,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              OverlayText(
+                text: user.jsonString != null &&
+                        user.jsonString!.additionals != null &&
+                        user.jsonString!.additionals!.displayName != null
+                    ? user.jsonString!.additionals!.displayName!
+                    : user.name,
+                sizeMultiply: 1.6,
+                bold: true,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              OverlayText(
+                text: user.jsonString != null &&
+                        user.jsonString!.additionals != null &&
+                        user.jsonString!.additionals!.displayName != null
+                    ? '@' + user.name
+                    : "",
+                sizeMultiply: 1.2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            !ownUserpage
+                ? BlocProvider(
+                    create: (context) =>
+                        UserBloc(repository: UserRepositoryImpl()),
+                    child: UserBlockButton(
+                      user: user,
+                    ),
+                  )
+                : Container(),
+            UserMoreInfoButton(
+              context: context,
+              user: user,
+            ),
+          ],
+        )
+      ],
     );
   }
 }

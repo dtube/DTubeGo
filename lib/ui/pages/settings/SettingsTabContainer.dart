@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:flutter_animator/flutter_animator.dart';
@@ -43,6 +45,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   //late TextEditingController _hiveDefaultTagsController;
   late String _pinCode;
   late bool _videoAutoPause;
+  late bool _disableAnimation;
 
   late String _imageUploadProvider;
 
@@ -74,7 +77,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
 
   bool _showDisplayHints = false;
   bool _showSecurityHints = false;
-  bool _showBehaviourAutoPauseHints = false;
+  bool _showBehaviourHints = false;
 
   bool _showInterestsHints = false;
 
@@ -185,6 +188,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                       sec.settingKey_FixedDownvoteWeight:
                           _downvoteFixedAmount.toString(),
                       sec.settingKey_videoAutoPause: _videoAutoPause.toString(),
+                      sec.settingKey_disableAnimations:
+                          _disableAnimation.toString(),
                     };
 
                     _settingsBloc.add(PushSettingsEvent(
@@ -288,6 +293,10 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
             _videoAutoPause = settings[sec.settingKey_videoAutoPause] != null
                 ? settings[sec.settingKey_videoAutoPause]! == "true"
                 : false;
+            _disableAnimation =
+                settings[sec.settingKey_disableAnimations] != null
+                    ? settings[sec.settingKey_disableAnimations]! == "true"
+                    : false;
 
             _imageUploadProvider =
                 settings[sec.settingKey_imageUploadService] != null
@@ -400,7 +409,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                   false, // to get accepted by google we had to remove this option
                               child: DTubeFormCard(
                                 waitBeforeFadeIn: Duration(milliseconds: 200),
-                                avoidAnimation: _visitedTabs.contains(0),
+                                avoidAnimation: _visitedTabs.contains(0) ||
+                                    globals.disableAnimations,
                                 childs: [
                                   Stack(
                                     children: [
@@ -498,7 +508,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
 
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
-                              avoidAnimation: _visitedTabs.contains(0),
+                              avoidAnimation: _visitedTabs.contains(0) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Stack(
                                   children: [
@@ -559,15 +570,16 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
-                              avoidAnimation: _visitedTabs.contains(0),
+                              avoidAnimation: _visitedTabs.contains(0) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Stack(
                                   children: [
                                     ShowHintIcon(
                                       onPressed: () {
                                         setState(() {
-                                          _showBehaviourAutoPauseHints =
-                                              !_showBehaviourAutoPauseHints;
+                                          _showBehaviourHints =
+                                              !_showBehaviourHints;
                                         });
                                       },
                                       alignment: Alignment.topRight,
@@ -587,8 +599,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                   children: [
                                     Container(
                                       width: 60.w,
-                                      child: Text(
-                                          "pause video playback on popups",
+                                      child: Text("pause video on popups",
                                           maxLines: 2,
                                           style: Theme.of(context)
                                               .textTheme
@@ -605,9 +616,35 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                   ],
                                 ),
                                 VisibilityHintText(
-                                    showHint: _showBehaviourAutoPauseHints,
+                                    showHint: _showBehaviourHints,
                                     hintText:
                                         "If you play back a video and you are goign to comment / vote on it - the video playback is automatically paused. You can turn off this behvaiour with this setting."),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: 60.w,
+                                      child: Text("disable app animations",
+                                          maxLines: 2,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1),
+                                    ),
+                                    Switch(
+                                      value: _disableAnimation,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _disableAnimation = value;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                VisibilityHintText(
+                                    showHint: _showBehaviourHints,
+                                    hintText:
+                                        "You can turn off all animations in the app to receive a more resource-saving experience without many distractions."),
                               ],
                             ),
                             // deactivated until we have more providers
@@ -654,7 +691,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             SizedBox(height: 16),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 200),
-                              avoidAnimation: _visitedTabs.contains(1),
+                              avoidAnimation: _visitedTabs.contains(1) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -758,7 +796,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
-                              avoidAnimation: _visitedTabs.contains(1),
+                              avoidAnimation: _visitedTabs.contains(1) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -858,7 +897,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
-                              avoidAnimation: _visitedTabs.contains(1),
+                              avoidAnimation: _visitedTabs.contains(1) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -957,7 +997,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           children: [
                             SizedBox(height: 16),
                             DTubeFormCard(
-                              avoidAnimation: _visitedTabs.contains(2),
+                              avoidAnimation: _visitedTabs.contains(2) ||
+                                  globals.disableAnimations,
                               waitBeforeFadeIn: Duration(milliseconds: 600),
                               childs: [
                                 Stack(children: [
@@ -1016,7 +1057,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             SizedBox(height: 20),
                             DTubeFormCard(
-                              avoidAnimation: _visitedTabs.contains(2),
+                              avoidAnimation: _visitedTabs.contains(2) ||
+                                  globals.disableAnimations,
                               waitBeforeFadeIn: Duration(milliseconds: 800),
                               childs: [
                                 Stack(children: [
@@ -1078,7 +1120,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               ],
                             ),
                             DTubeFormCard(
-                              avoidAnimation: _visitedTabs.contains(2),
+                              avoidAnimation: _visitedTabs.contains(2) ||
+                                  globals.disableAnimations,
                               waitBeforeFadeIn: Duration(milliseconds: 900),
                               childs: [
                                 Stack(children: [
@@ -1240,7 +1283,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 200),
-                              avoidAnimation: _visitedTabs.contains(2),
+                              avoidAnimation: _visitedTabs.contains(2) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -1405,7 +1449,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               ],
                             ),
                             DTubeFormCard(
-                              avoidAnimation: _visitedTabs.contains(3),
+                              avoidAnimation: _visitedTabs.contains(3) ||
+                                  globals.disableAnimations,
                               waitBeforeFadeIn: Duration(milliseconds: 200),
                               childs: [
                                 Padding(
@@ -1431,7 +1476,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
-                              avoidAnimation: _visitedTabs.contains(3),
+                              avoidAnimation: _visitedTabs.contains(3) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Padding(
                                   padding:
@@ -1461,7 +1507,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 600),
-                              avoidAnimation: _visitedTabs.contains(3),
+                              avoidAnimation: _visitedTabs.contains(3) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Padding(
                                   padding:
@@ -1486,7 +1533,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 800),
-                              avoidAnimation: _visitedTabs.contains(3),
+                              avoidAnimation: _visitedTabs.contains(3) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Padding(
                                   padding:
@@ -1526,7 +1574,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
-                              avoidAnimation: _visitedTabs.contains(4),
+                              avoidAnimation: _visitedTabs.contains(4) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -1704,7 +1753,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 200),
-                              avoidAnimation: _visitedTabs.contains(4),
+                              avoidAnimation: _visitedTabs.contains(4) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Padding(
                                   padding:
@@ -1729,7 +1779,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
-                              avoidAnimation: _visitedTabs.contains(4),
+                              avoidAnimation: _visitedTabs.contains(4) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Padding(
                                   padding:
@@ -1759,7 +1810,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 800),
-                              avoidAnimation: _visitedTabs.contains(4),
+                              avoidAnimation: _visitedTabs.contains(4) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Padding(
                                   padding:

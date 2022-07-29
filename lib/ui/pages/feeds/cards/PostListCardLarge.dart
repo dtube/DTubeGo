@@ -36,33 +36,33 @@ import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class PostListCardLarge extends StatefulWidget {
-  const PostListCardLarge(
-      {Key? key,
-      required this.blur,
-      required this.thumbnailUrl,
-      required this.title,
-      required this.description,
-      required this.author,
-      required this.link,
-      required this.publishDate,
-      required this.duration,
-      required this.dtcValue,
-      required this.videoUrl,
-      required this.videoSource,
-      required this.alreadyVoted,
-      required this.alreadyVotedDirection,
-      required this.upvotesCount,
-      required this.downvotesCount,
-      required this.indexOfList,
-      required this.mainTag,
-      required this.oc,
-      required this.defaultCommentVotingWeight,
-      required this.defaultPostVotingWeight,
-      required this.defaultPostVotingTip,
-      required this.fixedDownvoteActivated,
-      required this.fixedDownvoteWeight,
-      required this.autoPauseVideoOnPopup})
-      : super(key: key);
+  const PostListCardLarge({
+    Key? key,
+    required this.blur,
+    required this.thumbnailUrl,
+    required this.title,
+    required this.description,
+    required this.author,
+    required this.link,
+    required this.publishDate,
+    required this.duration,
+    required this.dtcValue,
+    required this.videoUrl,
+    required this.videoSource,
+    required this.alreadyVoted,
+    required this.alreadyVotedDirection,
+    required this.upvotesCount,
+    required this.downvotesCount,
+    required this.indexOfList,
+    required this.mainTag,
+    required this.oc,
+    required this.defaultCommentVotingWeight,
+    required this.defaultPostVotingWeight,
+    required this.defaultPostVotingTip,
+    required this.fixedDownvoteActivated,
+    required this.fixedDownvoteWeight,
+    required this.autoPauseVideoOnPopup,
+  }) : super(key: key);
 
   final bool blur;
   final bool autoPauseVideoOnPopup;
@@ -112,6 +112,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
   int _currentVp = 0;
   late VideoPlayerController _bpController;
   late YoutubePlayerController _ytController;
+
   @override
   void initState() {
     super.initState();
@@ -361,16 +362,20 @@ class _MobilePostDataState extends State<MobilePostData> {
             });
           },
         ),
-        FadeInDown(
-          preferences:
-              AnimationPreferences(offset: Duration(milliseconds: 500)),
-          child: Padding(
-            padding: EdgeInsets.only(left: 12.w),
-            child: PostInfoDetailsRow(
-              widget: widget.widget,
-            ),
-          ),
-        ),
+        globals.disableAnimations
+            ? PostInfoDetailsRow(
+                widget: widget.widget,
+              )
+            : FadeInDown(
+                preferences:
+                    AnimationPreferences(offset: Duration(milliseconds: 500)),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 12.w),
+                  child: PostInfoDetailsRow(
+                    widget: widget.widget,
+                  ),
+                ),
+              ),
         SizedBox(height: 1.h),
       ],
     );
@@ -967,49 +972,25 @@ class PostInfoBaseRow extends StatelessWidget {
       children: <Widget>[
         Row(
           children: [
-            FadeIn(
-              preferences: AnimationPreferences(
-                  offset: Duration(milliseconds: 500),
-                  duration: Duration(seconds: 1)),
-              child: InkWell(
-                onTap: () {
-                  navigateToUserDetailPage(context, widget.author, () {});
-                },
-                child: SizedBox(
-                  width: 10.w,
-                  child: AccountAvatarBase(
-                      username: widget.author,
-                      avatarSize: _avatarSize,
-                      showVerified: true,
-                      showName: false,
-                      nameFontSizeMultiply: 1,
-                      width: 10.w,
-                      height: _avatarSize),
-                ),
-              ),
-            ),
-            SizedBox(width: 2.w),
-            FadeInLeftBig(
-              preferences: AnimationPreferences(
-                offset: Duration(milliseconds: 100),
-                duration: Duration(milliseconds: 350),
-              ),
-              child: Container(
-                width: 55.w,
-                child: InkWell(
-                  onTap: () {
-                    navigateToPostDetailPage(context, widget.author,
-                        widget.link, "none", false, () {});
-                  },
-                  child: Text(
-                    widget.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.headline6,
+            globals.disableAnimations
+                ? BaseRowContainer(widget: widget, avatarSize: _avatarSize)
+                : FadeIn(
+                    preferences: AnimationPreferences(
+                        offset: Duration(milliseconds: 500),
+                        duration: Duration(seconds: 1)),
+                    child: BaseRowContainer(
+                        widget: widget, avatarSize: _avatarSize),
                   ),
-                ),
-              ),
-            ),
+            SizedBox(width: 2.w),
+            globals.disableAnimations
+                ? TitleWidgetForRow(widget: widget)
+                : FadeInLeftBig(
+                    preferences: AnimationPreferences(
+                      offset: Duration(milliseconds: 100),
+                      duration: Duration(milliseconds: 350),
+                    ),
+                    child: TitleWidgetForRow(widget: widget),
+                  ),
           ],
         ),
         SizedBox(height: 2.h),
@@ -1021,18 +1002,14 @@ class PostInfoBaseRow extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   widget.oc
-                      ? FadeIn(
-                          preferences: AnimationPreferences(
-                              offset: Duration(milliseconds: 700),
-                              duration: Duration(seconds: 1)),
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 2.w),
-                            child: FaIcon(
-                              FontAwesomeIcons.award,
-                              size: globalIconSizeSmall * 0.6,
-                            ),
-                          ),
-                        )
+                      ? globals.disableAnimations
+                          ? OriginalContentIcon()
+                          : FadeIn(
+                              preferences: AnimationPreferences(
+                                  offset: Duration(milliseconds: 700),
+                                  duration: Duration(seconds: 1)),
+                              child: OriginalContentIcon(),
+                            )
                       : SizedBox(width: globalIconSizeSmall),
                   TagChip(
                       waitBeforeFadeIn: Duration(milliseconds: 600),
@@ -1049,23 +1026,23 @@ class PostInfoBaseRow extends StatelessWidget {
                       child: SpeedDial(
                           child: Padding(
                             padding: EdgeInsets.only(left: 12.w),
-                            child:
-                                // FadeIn(
-                                //   preferences: AnimationPreferences(
-                                //       offset: Duration(milliseconds: 700),
-                                //       duration: Duration(seconds: 1)),
-                                //   child:
-                                HeartBeat(
-                              preferences: AnimationPreferences(
-                                  magnitude: 1.2,
-                                  offset: Duration(seconds: 3),
-                                  autoPlay: AnimationPlayStates.Loop),
-                              child: ShadowedIcon(
-                                  icon: FontAwesomeIcons.ellipsisV,
-                                  color: globalAlmostWhite,
-                                  shadowColor: Colors.black,
-                                  size: globalIconSizeSmall),
-                            ),
+                            child: globals.disableAnimations
+                                ? ShadowedIcon(
+                                    icon: FontAwesomeIcons.ellipsisV,
+                                    color: globalAlmostWhite,
+                                    shadowColor: Colors.black,
+                                    size: globalIconSizeSmall)
+                                : HeartBeat(
+                                    preferences: AnimationPreferences(
+                                        magnitude: 1.2,
+                                        offset: Duration(seconds: 3),
+                                        autoPlay: AnimationPlayStates.Loop),
+                                    child: ShadowedIcon(
+                                        icon: FontAwesomeIcons.ellipsisV,
+                                        color: globalAlmostWhite,
+                                        shadowColor: Colors.black,
+                                        size: globalIconSizeSmall),
+                                  ),
                             // ),
                           ),
                           activeChild: Padding(
@@ -1355,6 +1332,83 @@ class PostInfoBaseRow extends StatelessWidget {
   }
 }
 
+class BaseRowContainer extends StatelessWidget {
+  const BaseRowContainer({
+    Key? key,
+    required this.widget,
+    required double avatarSize,
+  })  : _avatarSize = avatarSize,
+        super(key: key);
+
+  final PostListCardLarge widget;
+  final double _avatarSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        navigateToUserDetailPage(context, widget.author, () {});
+      },
+      child: SizedBox(
+        width: 10.w,
+        child: AccountAvatarBase(
+            username: widget.author,
+            avatarSize: _avatarSize,
+            showVerified: true,
+            showName: false,
+            nameFontSizeMultiply: 1,
+            width: 10.w,
+            height: _avatarSize),
+      ),
+    );
+  }
+}
+
+class OriginalContentIcon extends StatelessWidget {
+  const OriginalContentIcon({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(right: 2.w),
+      child: FaIcon(
+        FontAwesomeIcons.award,
+        size: globalIconSizeSmall * 0.6,
+      ),
+    );
+  }
+}
+
+class TitleWidgetForRow extends StatelessWidget {
+  const TitleWidgetForRow({
+    Key? key,
+    required this.widget,
+  }) : super(key: key);
+
+  final PostListCardLarge widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 55.w,
+      child: InkWell(
+        onTap: () {
+          navigateToPostDetailPage(
+              context, widget.author, widget.link, "none", false, () {});
+        },
+        child: Text(
+          widget.title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      ),
+    );
+  }
+}
+
 class PostInfoColumn extends StatelessWidget {
   const PostInfoColumn({
     Key? key,
@@ -1398,40 +1452,23 @@ class PostInfoColumn extends StatelessWidget {
         SizedBox(height: 1.h),
         Row(
           children: [
-            FadeInLeftBig(
-              preferences: AnimationPreferences(
-                offset: Duration(milliseconds: 100),
-                duration: Duration(milliseconds: 350),
-              ),
-              child: Container(
-                width: 30.w,
-                child: InkWell(
-                  onTap: () {
-                    navigateToPostDetailPage(context, widget.author,
-                        widget.link, "none", false, () {});
-                  },
-                  child: Text(
-                    widget.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                ),
-              ),
-            ),
-            widget.oc
-                ? FadeIn(
+            globals.disableAnimations
+                ? TitleWidgetForColumn(widget: widget)
+                : FadeInLeftBig(
                     preferences: AnimationPreferences(
-                        offset: Duration(milliseconds: 700),
-                        duration: Duration(seconds: 1)),
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 2.w),
-                      child: FaIcon(
-                        FontAwesomeIcons.award,
-                        size: globalIconSizeSmall * 0.6,
-                      ),
+                      offset: Duration(milliseconds: 100),
+                      duration: Duration(milliseconds: 350),
                     ),
-                  )
+                    child: TitleWidgetForColumn(widget: widget),
+                  ),
+            widget.oc
+                ? globals.disableAnimations
+                    ? OriginalContentIcon()
+                    : FadeIn(
+                        preferences: AnimationPreferences(
+                            offset: Duration(milliseconds: 700),
+                            duration: Duration(seconds: 1)),
+                        child: OriginalContentIcon())
                 : SizedBox(width: globalIconSizeSmall),
             TagChip(
                 waitBeforeFadeIn: Duration(milliseconds: 600),
@@ -1487,17 +1524,24 @@ class PostInfoColumn extends StatelessWidget {
                       globals.keyPermissions.isEmpty
                           ? Container()
                           : SpeedDial(
-                              child: HeartBeat(
-                                preferences: AnimationPreferences(
-                                    magnitude: 1.2,
-                                    offset: Duration(seconds: 3),
-                                    autoPlay: AnimationPlayStates.Loop),
-                                child: ShadowedIcon(
-                                    icon: FontAwesomeIcons.ellipsisV,
-                                    color: globalAlmostWhite,
-                                    shadowColor: Colors.black,
-                                    size: globalIconSizeSmall),
-                              ),
+                              child: globals.disableAnimations
+                                  ? ShadowedIcon(
+                                      icon: FontAwesomeIcons.ellipsisVertical,
+                                      color: globalAlmostWhite,
+                                      shadowColor: Colors.black,
+                                      size: globalIconSizeSmall)
+                                  : HeartBeat(
+                                      preferences: AnimationPreferences(
+                                          magnitude: 1.2,
+                                          offset: Duration(seconds: 3),
+                                          autoPlay: AnimationPlayStates.Loop),
+                                      child: ShadowedIcon(
+                                          icon:
+                                              FontAwesomeIcons.ellipsisVertical,
+                                          color: globalAlmostWhite,
+                                          shadowColor: Colors.black,
+                                          size: globalIconSizeSmall),
+                                    ),
                               // ),
 
                               activeChild: ShadowedIcon(
@@ -1766,6 +1810,34 @@ class PostInfoColumn extends StatelessWidget {
   }
 }
 
+class TitleWidgetForColumn extends StatelessWidget {
+  const TitleWidgetForColumn({
+    Key? key,
+    required this.widget,
+  }) : super(key: key);
+
+  final PostListCardLarge widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 30.w,
+      child: InkWell(
+        onTap: () {
+          navigateToPostDetailPage(
+              context, widget.author, widget.link, "none", false, () {});
+        },
+        child: Text(
+          widget.title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      ),
+    );
+  }
+}
+
 class PlayerWidget extends StatelessWidget {
   PlayerWidget(
       {Key? key,
@@ -1868,21 +1940,34 @@ class ThumbnailWidget extends StatelessWidget {
                   ),
                 ),
               )
-            :
-            // shimmer creates a light color cast even if the animation is not present
-            Shimmer(
-                duration: Duration(seconds: 5),
-                interval: Duration(seconds: generateRandom(3, 15)),
-                color: globalAlmostWhite,
-                colorOpacity: 0.1,
-                child: CachedNetworkImage(
-                  imageUrl: widget.thumbnailUrl,
-                  fit: BoxFit.fitWidth,
-                  errorWidget: (context, url, error) => DTubeLogo(
-                    size: 50,
-                  ),
-                ),
-              ),
+            : globals.disableAnimations
+                ? ThumbnailContainer(widget: widget)
+                : Shimmer(
+                    duration: Duration(seconds: 5),
+                    interval: Duration(seconds: generateRandom(3, 15)),
+                    color: globalAlmostWhite,
+                    colorOpacity: 0.1,
+                    child: ThumbnailContainer(widget: widget)),
+      ),
+    );
+  }
+}
+
+class ThumbnailContainer extends StatelessWidget {
+  const ThumbnailContainer({
+    Key? key,
+    required this.widget,
+  }) : super(key: key);
+
+  final PostListCardLarge widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return CachedNetworkImage(
+      imageUrl: widget.thumbnailUrl,
+      fit: BoxFit.fitWidth,
+      errorWidget: (context, url, error) => DTubeLogo(
+        size: 50,
       ),
     );
   }

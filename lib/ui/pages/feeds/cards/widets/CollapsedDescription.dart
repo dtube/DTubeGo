@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -69,19 +71,13 @@ class _CollapsedDescriptionState extends State<CollapsedDescription> {
                         builder: (context) {
                           var controller =
                               ExpandableController.of(context, required: true)!;
-                          return FadeIn(
-                            preferences: AnimationPreferences(
-                                offset: Duration(seconds: 1)),
-                            child: InputChip(
-                              label: Text(
-                                controller.expanded ? "collapse" : "read more",
-                                style: Theme.of(context).textTheme.bodyText2,
-                              ),
-                              onPressed: () {
-                                controller.toggle();
-                              },
-                            ),
-                          );
+                          return globals.disableAnimations
+                              ? ReadmoreChip(controller: controller)
+                              : FadeIn(
+                                  preferences: AnimationPreferences(
+                                      offset: Duration(seconds: 1)),
+                                  child: ReadmoreChip(controller: controller),
+                                );
                         },
                       ),
                     ],
@@ -93,6 +89,28 @@ class _CollapsedDescriptionState extends State<CollapsedDescription> {
           //),
         ),
       ),
+    );
+  }
+}
+
+class ReadmoreChip extends StatelessWidget {
+  const ReadmoreChip({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final ExpandableController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return InputChip(
+      label: Text(
+        controller.expanded ? "collapse" : "read more",
+        style: Theme.of(context).textTheme.bodyText2,
+      ),
+      onPressed: () {
+        controller.toggle();
+      },
     );
   }
 }

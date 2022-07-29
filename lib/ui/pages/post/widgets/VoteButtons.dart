@@ -183,23 +183,33 @@ class _VotingButtonsState extends State<VotingButtons> {
       ]);
     } else {
       if (widget.fadeInFromLeft) {
-        return SlideInLeft(
-          preferences:
-              AnimationPreferences(offset: Duration(milliseconds: 100)),
-          child: VotingButtonRow(
-              upvotePressed: _upvotePressed,
-              downvotePressed: _downvotePressed,
-              widget: widget),
-        );
+        return globals.disableAnimations
+            ? VotingButtonRow(
+                upvotePressed: _upvotePressed,
+                downvotePressed: _downvotePressed,
+                widget: widget)
+            : SlideInLeft(
+                preferences:
+                    AnimationPreferences(offset: Duration(milliseconds: 100)),
+                child: VotingButtonRow(
+                    upvotePressed: _upvotePressed,
+                    downvotePressed: _downvotePressed,
+                    widget: widget),
+              );
       } else {
-        return SlideInRight(
-          preferences:
-              AnimationPreferences(offset: Duration(milliseconds: 100)),
-          child: VotingButtonRow(
-              upvotePressed: _upvotePressed,
-              downvotePressed: _downvotePressed,
-              widget: widget),
-        );
+        return globals.disableAnimations
+            ? VotingButtonRow(
+                upvotePressed: _upvotePressed,
+                downvotePressed: _downvotePressed,
+                widget: widget)
+            : SlideInRight(
+                preferences:
+                    AnimationPreferences(offset: Duration(milliseconds: 100)),
+                child: VotingButtonRow(
+                    upvotePressed: _upvotePressed,
+                    downvotePressed: _downvotePressed,
+                    widget: widget),
+              );
       }
     }
   }

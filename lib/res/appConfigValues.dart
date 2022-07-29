@@ -90,7 +90,7 @@ class AppConfig {
   ];
 
 // node discovery & api node configs
-  static Duration nodeDescoveryTimeout = Duration(milliseconds: 100);
+  static Duration nodeDescoveryTimeout = Duration(milliseconds: 200);
 
   static int minFreeSpaceRecordVideoInMB =
       50; // min free space to enable the user to record video in app

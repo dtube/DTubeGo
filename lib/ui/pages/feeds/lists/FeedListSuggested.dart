@@ -62,6 +62,7 @@ class FeedListSuggested extends StatelessWidget {
   String? _fixedDownvoteActivated;
   String? _fixedDownvoteWeight;
   bool? _autoPauseOnPopup;
+  bool? _disableAnimation;
 
   Future<bool> getSettings() async {
     _hiddenMode = await sec.getShowHidden();
@@ -74,6 +75,7 @@ class FeedListSuggested extends StatelessWidget {
     _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
     _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
     _autoPauseOnPopup = await sec.getVideoAutoPause() == "true";
+    _disableAnimation = await sec.getDisableAnimations() == "true";
 
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';

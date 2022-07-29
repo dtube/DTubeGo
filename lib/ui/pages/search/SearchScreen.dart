@@ -50,6 +50,7 @@ class SearchScreenState extends State<SearchScreen> {
   String? _nsfwMode;
   String? _hiddenMode;
   bool? _autoPauseVideoOnPopup;
+  bool? _disableAnimation;
 
   @override
   void initState() {
@@ -78,6 +79,7 @@ class SearchScreenState extends State<SearchScreen> {
     _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
     _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
     _autoPauseVideoOnPopup = await sec.getVideoAutoPause() == "true";
+    _disableAnimation = await sec.getDisableAnimations() == "true";
 
     _nsfwMode = await sec.getNSFW();
     _hiddenMode = await sec.getShowHidden();

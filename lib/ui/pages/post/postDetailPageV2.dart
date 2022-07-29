@@ -1,3 +1,4 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/feed/feed_bloc.dart';
 import 'package:dtube_go/bloc/feed/feed_event.dart';
@@ -278,39 +279,26 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
                             Container(
                               alignment: Alignment.topRight,
                               margin: EdgeInsets.all(5.0),
-                              child: SlideInDown(
-                                preferences: AnimationPreferences(
-                                    offset: Duration(milliseconds: 500)),
-                                child: InputChip(
-                                  label: AccountAvatarBase(
-                                    username: widget.post.author,
-                                    avatarSize: 12.w,
-                                    showVerified: true,
-                                    showName: true,
-                                    nameFontSizeMultiply: 0.8,
-                                    width: 35.w,
-                                    height: 5.h,
+                              child: globals.disableAnimations
+                                  ? AccountNavigationChip(
+                                      author: widget.post.author)
+                                  : SlideInDown(
+                                      preferences: AnimationPreferences(
+                                          offset: Duration(milliseconds: 500)),
+                                      child: AccountNavigationChip(
+                                          author: widget.post.author),
+                                    ),
+                            ),
+                            globals.disableAnimations
+                                ? TitleWidget(
+                                    title: widget.post.jsonString!.title)
+                                : FadeInLeft(
+                                    preferences: AnimationPreferences(
+                                        offset: Duration(milliseconds: 700),
+                                        duration: Duration(seconds: 1)),
+                                    child: TitleWidget(
+                                        title: widget.post.jsonString!.title),
                                   ),
-                                  onPressed: () {
-                                    navigateToUserDetailPage(
-                                        context, widget.post.author, () {});
-                                  },
-                                ),
-                              ),
-                            ),
-                            FadeInLeft(
-                              preferences: AnimationPreferences(
-                                  offset: Duration(milliseconds: 700),
-                                  duration: Duration(seconds: 1)),
-                              child: Container(
-                                alignment: Alignment.topLeft,
-                                padding: EdgeInsets.all(10.0),
-                                child: Text(
-                                  widget.post.jsonString!.title,
-                                  style: Theme.of(context).textTheme.headline5,
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                         widget.post.videoSource == "youtube"
@@ -373,179 +361,217 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
                                       ],
                                     )
                                   : SizedBox(height: 0),
-                              BounceIn(
-                                preferences: AnimationPreferences(
-                                    offset: Duration(milliseconds: 1200)),
-                                child: InputChip(
-                                  label: Row(
-                                    children: [
-                                      Text(
-                                        (widget.post.dist / 100)
-                                            .round()
-                                            .toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5,
+                              globals.disableAnimations
+                                  ? DtubeCoinsChip(
+                                      dist: widget.post.dist,
+                                      post: widget.post,
+                                    )
+                                  : BounceIn(
+                                      preferences: AnimationPreferences(
+                                          offset: Duration(milliseconds: 1200)),
+                                      child: DtubeCoinsChip(
+                                        dist: widget.post.dist,
+                                        post: widget.post,
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 2.w),
-                                        child: DTubeLogoShadowed(size: 5.w),
-                                      ),
-                                    ],
-                                  ),
-                                  onPressed: () {
-                                    showDialog<String>(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          VotesOverview(post: widget.post),
-                                    );
-                                  },
-                                ),
-                              ),
+                                    ),
                             ],
                           ),
                         ),
-
-                        FadeInRight(
-                          preferences: AnimationPreferences(
-                              offset: Duration(milliseconds: 200)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              BlocBuilder<SettingsBloc, SettingsState>(
-                                  builder: (context, state) {
-                                if (state is SettingsLoadedState) {
-                                  _defaultVoteWeightPosts = double.parse(
-                                      state.settings[
-                                          settingKey_defaultVotingWeight]!);
-                                  _defaultVoteTipPosts = double.parse(
-                                      state.settings[
-                                          settingKey_defaultVotingWeight]!);
-                                  _defaultVoteWeightComments = double.parse(state
-                                          .settings[
-                                      settingKey_defaultVotingWeightComments]!);
-                                  _fixedDownvoteActivated = state.settings[
-                                          settingKey_FixedDownvoteActivated] ==
-                                      "true";
-                                  _fixedDownvoteWeight = double.parse(
-                                      state.settings[
-                                          settingKey_FixedDownvoteWeight]!);
-                                  return BlocProvider<UserBloc>(
-                                    create: (BuildContext context) => UserBloc(
-                                        repository: UserRepositoryImpl()),
-                                    child: VotingButtons(
-                                      author: widget.post.author,
+// todo refactor twice used code:
+                        globals.disableAnimations
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  BlocBuilder<SettingsBloc, SettingsState>(
+                                      builder: (context, state) {
+                                    if (state is SettingsLoadedState) {
+                                      _defaultVoteWeightPosts = double.parse(
+                                          state.settings[
+                                              settingKey_defaultVotingWeight]!);
+                                      _defaultVoteTipPosts = double.parse(
+                                          state.settings[
+                                              settingKey_defaultVotingWeight]!);
+                                      _defaultVoteWeightComments = double.parse(
+                                          state.settings[
+                                              settingKey_defaultVotingWeightComments]!);
+                                      _fixedDownvoteActivated = state.settings[
+                                              settingKey_FixedDownvoteActivated] ==
+                                          "true";
+                                      _fixedDownvoteWeight = double.parse(
+                                          state.settings[
+                                              settingKey_FixedDownvoteWeight]!);
+                                      return BlocProvider<UserBloc>(
+                                        create: (BuildContext context) =>
+                                            UserBloc(
+                                                repository:
+                                                    UserRepositoryImpl()),
+                                        child: VotingButtons(
+                                          author: widget.post.author,
+                                          link: widget.post.link,
+                                          alreadyVoted:
+                                              widget.post.alreadyVoted!,
+                                          alreadyVotedDirection: widget
+                                              .post.alreadyVotedDirection!,
+                                          upvotes: widget.post.upvotes,
+                                          downvotes: widget.post.downvotes,
+                                          defaultVotingWeight:
+                                              _defaultVoteWeightPosts,
+                                          defaultVotingTip:
+                                              _defaultVoteTipPosts,
+                                          scale: 0.8,
+                                          isPost: true,
+                                          iconColor: globalAlmostWhite,
+                                          focusVote: widget.directFocus,
+                                          fadeInFromLeft: false,
+                                          fixedDownvoteActivated:
+                                              _fixedDownvoteActivated,
+                                          fixedDownvoteWeight:
+                                              _fixedDownvoteWeight,
+                                        ),
+                                      );
+                                    } else {
+                                      return SizedBox(height: 0);
+                                    }
+                                  }),
+                                  SizedBox(width: 8),
+                                  GiftboxWidget(
+                                    receiver: widget.post.author,
+                                    link: widget.post.link,
+                                    txBloc: BlocProvider.of<TransactionBloc>(
+                                        context),
+                                  ),
+                                ],
+                              )
+                            : FadeInRight(
+                                preferences: AnimationPreferences(
+                                    offset: Duration(milliseconds: 200)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    BlocBuilder<SettingsBloc, SettingsState>(
+                                        builder: (context, state) {
+                                      if (state is SettingsLoadedState) {
+                                        _defaultVoteWeightPosts = double.parse(
+                                            state.settings[
+                                                settingKey_defaultVotingWeight]!);
+                                        _defaultVoteTipPosts = double.parse(state
+                                                .settings[
+                                            settingKey_defaultVotingWeight]!);
+                                        _defaultVoteWeightComments =
+                                            double.parse(state.settings[
+                                                settingKey_defaultVotingWeightComments]!);
+                                        _fixedDownvoteActivated = state
+                                                    .settings[
+                                                settingKey_FixedDownvoteActivated] ==
+                                            "true";
+                                        _fixedDownvoteWeight = double.parse(state
+                                                .settings[
+                                            settingKey_FixedDownvoteWeight]!);
+                                        return BlocProvider<UserBloc>(
+                                          create: (BuildContext context) =>
+                                              UserBloc(
+                                                  repository:
+                                                      UserRepositoryImpl()),
+                                          child: VotingButtons(
+                                            author: widget.post.author,
+                                            link: widget.post.link,
+                                            alreadyVoted:
+                                                widget.post.alreadyVoted!,
+                                            alreadyVotedDirection: widget
+                                                .post.alreadyVotedDirection!,
+                                            upvotes: widget.post.upvotes,
+                                            downvotes: widget.post.downvotes,
+                                            defaultVotingWeight:
+                                                _defaultVoteWeightPosts,
+                                            defaultVotingTip:
+                                                _defaultVoteTipPosts,
+                                            scale: 0.8,
+                                            isPost: true,
+                                            iconColor: globalAlmostWhite,
+                                            focusVote: widget.directFocus,
+                                            fadeInFromLeft: false,
+                                            fixedDownvoteActivated:
+                                                _fixedDownvoteActivated,
+                                            fixedDownvoteWeight:
+                                                _fixedDownvoteWeight,
+                                          ),
+                                        );
+                                      } else {
+                                        return SizedBox(height: 0);
+                                      }
+                                    }),
+                                    SizedBox(width: 8),
+                                    GiftboxWidget(
+                                      receiver: widget.post.author,
                                       link: widget.post.link,
-                                      alreadyVoted: widget.post.alreadyVoted!,
-                                      alreadyVotedDirection:
-                                          widget.post.alreadyVotedDirection!,
-                                      upvotes: widget.post.upvotes,
-                                      downvotes: widget.post.downvotes,
-                                      defaultVotingWeight:
-                                          _defaultVoteWeightPosts,
-                                      defaultVotingTip: _defaultVoteTipPosts,
-                                      scale: 0.8,
-                                      isPost: true,
-                                      iconColor: globalAlmostWhite,
-                                      focusVote: widget.directFocus,
-                                      fadeInFromLeft: false,
+                                      txBloc: BlocProvider.of<TransactionBloc>(
+                                          context),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                        globals.disableAnimations
+                            ? CollapsedDescription(
+                                startCollapsed: false,
+                                description:
+                                    widget.post.jsonString!.desc != null
+                                        ? widget.post.jsonString!.desc!
+                                        : "")
+                            : FadeInDown(
+                                child: CollapsedDescription(
+                                    startCollapsed: false,
+                                    description:
+                                        widget.post.jsonString!.desc != null
+                                            ? widget.post.jsonString!.desc!
+                                            : ""),
+                              ),
+                        globals.disableAnimations
+                            ? ShareAndCommentChips(
+                                author: widget.post.author,
+                                link: widget.post.link,
+                                directFocus: widget.directFocus,
+                                defaultVoteWeightComments:
+                                    _defaultVoteWeightComments,
+                              )
+                            : FadeInUp(
+                                child: ShareAndCommentChips(
+                                  author: widget.post.author,
+                                  link: widget.post.link,
+                                  directFocus: widget.directFocus,
+                                  defaultVoteWeightComments:
+                                      _defaultVoteWeightComments,
+                                ),
+                              ),
+                        // SizedBox(height: 16),
+                        widget.post.comments != null &&
+                                widget.post.comments!.length > 0
+                            ? globals.disableAnimations
+                                ? CommentContainer(
+                                    post: widget.post,
+                                    defaultVoteWeightComments:
+                                        _defaultVoteWeightComments,
+                                    currentVT: _currentVT,
+                                    defaultVoteTipComments:
+                                        _defaultVoteTipComments,
+                                    blockedUsers: blockedUsers,
+                                    fixedDownvoteActivated:
+                                        _fixedDownvoteActivated,
+                                    fixedDownvoteWeight: _fixedDownvoteWeight,
+                                  )
+                                : SlideInLeft(
+                                    child: CommentContainer(
+                                      post: widget.post,
+                                      defaultVoteWeightComments:
+                                          _defaultVoteWeightComments,
+                                      currentVT: _currentVT,
+                                      defaultVoteTipComments:
+                                          _defaultVoteTipComments,
+                                      blockedUsers: blockedUsers,
                                       fixedDownvoteActivated:
                                           _fixedDownvoteActivated,
                                       fixedDownvoteWeight: _fixedDownvoteWeight,
                                     ),
-                                  );
-                                } else {
-                                  return SizedBox(height: 0);
-                                }
-                              }),
-                              SizedBox(width: 8),
-                              GiftboxWidget(
-                                receiver: widget.post.author,
-                                link: widget.post.link,
-                                txBloc:
-                                    BlocProvider.of<TransactionBloc>(context),
-                              ),
-                            ],
-                          ),
-                        ),
-                        FadeInDown(
-                          child: CollapsedDescription(
-                              startCollapsed: false,
-                              description: widget.post.jsonString!.desc != null
-                                  ? widget.post.jsonString!.desc!
-                                  : ""),
-                        ),
-                        FadeInUp(
-                          child: Column(
-                            children: [
-                              Divider(),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  InputChip(
-                                    label: FaIcon(FontAwesomeIcons.shareAlt),
-                                    onPressed: () {
-                                      Share.share('https://d.tube/#!/v/' +
-                                          widget.post.author +
-                                          '/' +
-                                          widget.post.link);
-                                    },
-                                  ),
-                                  SizedBox(width: 8),
-                                  ReplyButton(
-                                    icon: FaIcon(FontAwesomeIcons.comment),
-                                    author: widget.post.author,
-                                    link: widget.post.link,
-                                    parentAuthor: widget.post.author,
-                                    parentLink: widget.post.link,
-                                    votingWeight: _defaultVoteWeightComments,
-                                    scale: 1,
-                                    focusOnNewComment:
-                                        widget.directFocus == "newcomment",
-                                    isMainPost: true,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        // SizedBox(height: 16),
-                        widget.post.comments != null &&
-                                widget.post.comments!.length > 0
-                            ? SlideInLeft(
-                                child: Container(
-                                  height: 100.h,
-                                  child: ListView.builder(
-                                    itemCount: widget.post.comments!.length,
-                                    padding: EdgeInsets.zero,
-                                    itemBuilder:
-                                        (BuildContext context, int index) =>
-                                            Column(
-                                      children: [
-                                        CommentDisplay(
-                                            widget.post.comments![index],
-                                            _defaultVoteWeightComments,
-                                            _currentVT,
-                                            widget.post.author,
-                                            widget.post.link,
-                                            _defaultVoteTipComments,
-                                            context,
-                                            blockedUsers.split(","),
-                                            _fixedDownvoteActivated,
-                                            _fixedDownvoteWeight),
-                                        SizedBox(
-                                            height: index ==
-                                                    widget.post.comments!
-                                                            .length -
-                                                        1
-                                                ? 200
-                                                : 0)
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
+                                  )
                             : SizedBox(height: 0),
 
                         BlocProvider<FeedBloc>(
@@ -584,6 +610,190 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
               ),
             ),
           )),
+    );
+  }
+}
+
+class CommentContainer extends StatelessWidget {
+  const CommentContainer({
+    Key? key,
+    required double defaultVoteWeightComments,
+    required int currentVT,
+    required double defaultVoteTipComments,
+    required this.blockedUsers,
+    required bool fixedDownvoteActivated,
+    required double fixedDownvoteWeight,
+    required this.post,
+  })  : _defaultVoteWeightComments = defaultVoteWeightComments,
+        _currentVT = currentVT,
+        _defaultVoteTipComments = defaultVoteTipComments,
+        _fixedDownvoteActivated = fixedDownvoteActivated,
+        _fixedDownvoteWeight = fixedDownvoteWeight,
+        super(key: key);
+
+  final Post post;
+  final double _defaultVoteWeightComments;
+  final int _currentVT;
+  final double _defaultVoteTipComments;
+  final String blockedUsers;
+  final bool _fixedDownvoteActivated;
+  final double _fixedDownvoteWeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 100.h,
+      child: ListView.builder(
+        itemCount: post.comments!.length,
+        padding: EdgeInsets.zero,
+        itemBuilder: (BuildContext context, int index) => Column(
+          children: [
+            CommentDisplay(
+                post.comments![index],
+                _defaultVoteWeightComments,
+                _currentVT,
+                post.author,
+                post.link,
+                _defaultVoteTipComments,
+                context,
+                blockedUsers.split(","),
+                _fixedDownvoteActivated,
+                _fixedDownvoteWeight),
+            SizedBox(height: index == post.comments!.length - 1 ? 200 : 0)
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ShareAndCommentChips extends StatelessWidget {
+  const ShareAndCommentChips({
+    Key? key,
+    required this.author,
+    required this.directFocus,
+    required this.link,
+    required double defaultVoteWeightComments,
+  })  : _defaultVoteWeightComments = defaultVoteWeightComments,
+        super(key: key);
+
+  final String author;
+  final String link;
+  final double _defaultVoteWeightComments;
+  final String directFocus;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InputChip(
+              label: FaIcon(FontAwesomeIcons.shareAlt),
+              onPressed: () {
+                Share.share('https://d.tube/#!/v/' + author + '/' + link);
+              },
+            ),
+            SizedBox(width: 8),
+            ReplyButton(
+              icon: FaIcon(FontAwesomeIcons.comment),
+              author: author,
+              link: link,
+              parentAuthor: author,
+              parentLink: link,
+              votingWeight: _defaultVoteWeightComments,
+              scale: 1,
+              focusOnNewComment: directFocus == "newcomment",
+              isMainPost: true,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class DtubeCoinsChip extends StatelessWidget {
+  const DtubeCoinsChip({
+    Key? key,
+    required this.dist,
+    required this.post,
+  }) : super(key: key);
+
+  final double dist;
+  final Post post;
+  @override
+  Widget build(BuildContext context) {
+    return InputChip(
+      label: Row(
+        children: [
+          Text(
+            (dist / 100).round().toString(),
+            style: Theme.of(context).textTheme.headline5,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 2.w),
+            child: DTubeLogoShadowed(size: 5.w),
+          ),
+        ],
+      ),
+      onPressed: () {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => VotesOverview(post: post),
+        );
+      },
+    );
+  }
+}
+
+class TitleWidget extends StatelessWidget {
+  const TitleWidget({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topLeft,
+      padding: EdgeInsets.all(10.0),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.headline5,
+      ),
+    );
+  }
+}
+
+class AccountNavigationChip extends StatelessWidget {
+  const AccountNavigationChip({
+    Key? key,
+    required this.author,
+  }) : super(key: key);
+
+  final String author;
+
+  @override
+  Widget build(BuildContext context) {
+    return InputChip(
+      label: AccountAvatarBase(
+        username: author,
+        avatarSize: 12.w,
+        showVerified: true,
+        showName: true,
+        nameFontSizeMultiply: 0.8,
+        width: 35.w,
+        height: 5.h,
+      ),
+      onPressed: () {
+        navigateToUserDetailPage(context, author, () {});
+      },
     );
   }
 }
@@ -703,42 +913,27 @@ class _WebPostDetailsState extends State<WebPostDetails> {
                           Column(
                             children: [
                               Container(
-                                alignment: Alignment.topRight,
-                                margin: EdgeInsets.all(5.0),
-                                child: SlideInDown(
-                                  preferences: AnimationPreferences(
-                                      offset: Duration(milliseconds: 500)),
-                                  child: InputChip(
-                                    label: AccountAvatarBase(
-                                      username: widget.post.author,
-                                      avatarSize: 6.w,
-                                      showVerified: true,
-                                      showName: true,
-                                      nameFontSizeMultiply: 1.2,
-                                      width: 17.w,
-                                      height: 6.w,
-                                    ),
-                                    onPressed: () {
-                                      navigateToUserDetailPage(
-                                          context, widget.post.author, () {});
-                                    },
-                                  ),
-                                ),
-                              ),
-                              FadeInLeft(
-                                preferences: AnimationPreferences(
-                                    offset: Duration(milliseconds: 700),
-                                    duration: Duration(seconds: 1)),
-                                child: Container(
-                                  alignment: Alignment.topLeft,
-                                  padding: EdgeInsets.all(10.0),
-                                  child: Text(
-                                    widget.post.jsonString!.title,
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                  ),
-                                ),
-                              ),
+                                  alignment: Alignment.topRight,
+                                  margin: EdgeInsets.all(5.0),
+                                  child: globals.disableAnimations
+                                      ? AccountNavigationChip(
+                                          author: widget.post.author)
+                                      : SlideInDown(
+                                          preferences: AnimationPreferences(
+                                              offset:
+                                                  Duration(milliseconds: 500)),
+                                          child: AccountNavigationChip(
+                                              author: widget.post.author))),
+                              globals.disableAnimations
+                                  ? TitleWidget(
+                                      title: widget.post.jsonString!.title)
+                                  : FadeInLeft(
+                                      preferences: AnimationPreferences(
+                                          offset: Duration(milliseconds: 700),
+                                          duration: Duration(seconds: 1)),
+                                      child: TitleWidget(
+                                          title:
+                                              widget.post.jsonString!.title)),
                             ],
                           ),
                           Container(
@@ -807,185 +1002,220 @@ class _WebPostDetailsState extends State<WebPostDetails> {
                                         ],
                                       )
                                     : SizedBox(height: 0),
-                                BounceIn(
-                                  preferences: AnimationPreferences(
-                                      offset: Duration(milliseconds: 1200)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: InputChip(
-                                      label: Row(
-                                        children: [
-                                          Text(
-                                            (widget.post.dist / 100)
-                                                .round()
-                                                .toString(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 2.w),
-                                            child: DTubeLogoShadowed(size: 1.w),
-                                          ),
-                                        ],
+                                globals.disableAnimations
+                                    ? DtubeCoinsChip(
+                                        dist: widget.post.dist,
+                                        post: widget.post,
+                                      )
+                                    : BounceIn(
+                                        preferences: AnimationPreferences(
+                                            offset:
+                                                Duration(milliseconds: 1200)),
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: DtubeCoinsChip(
+                                              dist: widget.post.dist,
+                                              post: widget.post,
+                                            )),
                                       ),
-                                      onPressed: () {
-                                        showDialog<String>(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              VotesOverview(post: widget.post),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
                               ],
                             ),
                           ),
-
-                          FadeInRight(
-                            preferences: AnimationPreferences(
-                                offset: Duration(milliseconds: 200)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                BlocBuilder<SettingsBloc, SettingsState>(
-                                    builder: (context, state) {
-                                  if (state is SettingsLoadedState) {
-                                    _defaultVoteWeightPosts = double.parse(
-                                        state.settings[
-                                            settingKey_defaultVotingWeight]!);
-                                    _defaultVoteTipPosts = double.parse(
-                                        state.settings[
-                                            settingKey_defaultVotingWeight]!);
-                                    _defaultVoteWeightComments = double.parse(state
-                                            .settings[
-                                        settingKey_defaultVotingWeightComments]!);
-                                    _fixedDownvoteActivated = state.settings[
-                                            settingKey_FixedDownvoteActivated] ==
-                                        "true";
-                                    _fixedDownvoteWeight = double.parse(
-                                        state.settings[
-                                            settingKey_FixedDownvoteWeight]!);
-                                    return BlocProvider<UserBloc>(
-                                      create: (BuildContext context) =>
-                                          UserBloc(
-                                              repository: UserRepositoryImpl()),
-                                      child: VotingButtons(
-                                        author: widget.post.author,
-                                        link: widget.post.link,
-                                        alreadyVoted: widget.post.alreadyVoted!,
-                                        alreadyVotedDirection:
-                                            widget.post.alreadyVotedDirection!,
-                                        upvotes: widget.post.upvotes,
-                                        downvotes: widget.post.downvotes,
-                                        defaultVotingWeight:
-                                            _defaultVoteWeightPosts,
-                                        defaultVotingTip: _defaultVoteTipPosts,
-                                        scale: 0.8,
-                                        isPost: true,
-                                        iconColor: globalAlmostWhite,
-                                        focusVote: widget.directFocus,
-                                        fadeInFromLeft: false,
-                                        fixedDownvoteActivated:
-                                            _fixedDownvoteActivated,
-                                        fixedDownvoteWeight:
-                                            _fixedDownvoteWeight,
-                                      ),
-                                    );
-                                  } else {
-                                    return SizedBox(height: 0);
-                                  }
-                                }),
-                                SizedBox(width: 8),
-                                GiftboxWidget(
-                                  receiver: widget.post.author,
-                                  link: widget.post.link,
-                                  txBloc:
-                                      BlocProvider.of<TransactionBloc>(context),
-                                ),
-                              ],
-                            ),
-                          ),
-                          FadeInDown(
-                            child: CollapsedDescription(
-                                startCollapsed: true,
-                                description:
-                                    widget.post.jsonString!.desc != null
-                                        ? widget.post.jsonString!.desc!
-                                        : ""),
-                          ),
-                          FadeInUp(
-                            child: Column(
-                              children: [
-                                Divider(),
-                                Row(
+// refactor twice used code..
+                          globals.disableAnimations
+                              ? Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    InputChip(
-                                      label: FaIcon(FontAwesomeIcons.shareAlt),
-                                      onPressed: () {
-                                        Share.share('https://d.tube/#!/v/' +
-                                            widget.post.author +
-                                            '/' +
-                                            widget.post.link);
-                                      },
-                                    ),
+                                    BlocBuilder<SettingsBloc, SettingsState>(
+                                        builder: (context, state) {
+                                      if (state is SettingsLoadedState) {
+                                        _defaultVoteWeightPosts = double.parse(
+                                            state.settings[
+                                                settingKey_defaultVotingWeight]!);
+                                        _defaultVoteTipPosts = double.parse(state
+                                                .settings[
+                                            settingKey_defaultVotingWeight]!);
+                                        _defaultVoteWeightComments =
+                                            double.parse(state.settings[
+                                                settingKey_defaultVotingWeightComments]!);
+                                        _fixedDownvoteActivated = state
+                                                    .settings[
+                                                settingKey_FixedDownvoteActivated] ==
+                                            "true";
+                                        _fixedDownvoteWeight = double.parse(state
+                                                .settings[
+                                            settingKey_FixedDownvoteWeight]!);
+                                        return BlocProvider<UserBloc>(
+                                          create: (BuildContext context) =>
+                                              UserBloc(
+                                                  repository:
+                                                      UserRepositoryImpl()),
+                                          child: VotingButtons(
+                                            author: widget.post.author,
+                                            link: widget.post.link,
+                                            alreadyVoted:
+                                                widget.post.alreadyVoted!,
+                                            alreadyVotedDirection: widget
+                                                .post.alreadyVotedDirection!,
+                                            upvotes: widget.post.upvotes,
+                                            downvotes: widget.post.downvotes,
+                                            defaultVotingWeight:
+                                                _defaultVoteWeightPosts,
+                                            defaultVotingTip:
+                                                _defaultVoteTipPosts,
+                                            scale: 0.8,
+                                            isPost: true,
+                                            iconColor: globalAlmostWhite,
+                                            focusVote: widget.directFocus,
+                                            fadeInFromLeft: false,
+                                            fixedDownvoteActivated:
+                                                _fixedDownvoteActivated,
+                                            fixedDownvoteWeight:
+                                                _fixedDownvoteWeight,
+                                          ),
+                                        );
+                                      } else {
+                                        return SizedBox(height: 0);
+                                      }
+                                    }),
                                     SizedBox(width: 8),
-                                    ReplyButton(
-                                      icon: FaIcon(FontAwesomeIcons.comment),
-                                      author: widget.post.author,
+                                    GiftboxWidget(
+                                      receiver: widget.post.author,
                                       link: widget.post.link,
-                                      parentAuthor: widget.post.author,
-                                      parentLink: widget.post.link,
-                                      votingWeight: _defaultVoteWeightComments,
-                                      scale: 1,
-                                      focusOnNewComment:
-                                          widget.directFocus == "newcomment",
-                                      isMainPost: true,
+                                      txBloc: BlocProvider.of<TransactionBloc>(
+                                          context),
                                     ),
                                   ],
+                                )
+                              : FadeInRight(
+                                  preferences: AnimationPreferences(
+                                      offset: Duration(milliseconds: 200)),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      BlocBuilder<SettingsBloc, SettingsState>(
+                                          builder: (context, state) {
+                                        if (state is SettingsLoadedState) {
+                                          _defaultVoteWeightPosts =
+                                              double.parse(state.settings[
+                                                  settingKey_defaultVotingWeight]!);
+                                          _defaultVoteTipPosts = double.parse(state
+                                                  .settings[
+                                              settingKey_defaultVotingWeight]!);
+                                          _defaultVoteWeightComments =
+                                              double.parse(state.settings[
+                                                  settingKey_defaultVotingWeightComments]!);
+                                          _fixedDownvoteActivated = state
+                                                      .settings[
+                                                  settingKey_FixedDownvoteActivated] ==
+                                              "true";
+                                          _fixedDownvoteWeight = double.parse(state
+                                                  .settings[
+                                              settingKey_FixedDownvoteWeight]!);
+                                          return BlocProvider<UserBloc>(
+                                            create: (BuildContext context) =>
+                                                UserBloc(
+                                                    repository:
+                                                        UserRepositoryImpl()),
+                                            child: VotingButtons(
+                                              author: widget.post.author,
+                                              link: widget.post.link,
+                                              alreadyVoted:
+                                                  widget.post.alreadyVoted!,
+                                              alreadyVotedDirection: widget
+                                                  .post.alreadyVotedDirection!,
+                                              upvotes: widget.post.upvotes,
+                                              downvotes: widget.post.downvotes,
+                                              defaultVotingWeight:
+                                                  _defaultVoteWeightPosts,
+                                              defaultVotingTip:
+                                                  _defaultVoteTipPosts,
+                                              scale: 0.8,
+                                              isPost: true,
+                                              iconColor: globalAlmostWhite,
+                                              focusVote: widget.directFocus,
+                                              fadeInFromLeft: false,
+                                              fixedDownvoteActivated:
+                                                  _fixedDownvoteActivated,
+                                              fixedDownvoteWeight:
+                                                  _fixedDownvoteWeight,
+                                            ),
+                                          );
+                                        } else {
+                                          return SizedBox(height: 0);
+                                        }
+                                      }),
+                                      SizedBox(width: 8),
+                                      GiftboxWidget(
+                                        receiver: widget.post.author,
+                                        link: widget.post.link,
+                                        txBloc:
+                                            BlocProvider.of<TransactionBloc>(
+                                                context),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
+                          globals.disableAnimations
+                              ? CollapsedDescription(
+                                  startCollapsed: true,
+                                  description:
+                                      widget.post.jsonString!.desc != null
+                                          ? widget.post.jsonString!.desc!
+                                          : "")
+                              : FadeInDown(
+                                  child: CollapsedDescription(
+                                      startCollapsed: true,
+                                      description:
+                                          widget.post.jsonString!.desc != null
+                                              ? widget.post.jsonString!.desc!
+                                              : ""),
+                                ),
+                          globals.disableAnimations
+                              ? ShareAndCommentChips(
+                                  author: widget.post.author,
+                                  link: widget.post.link,
+                                  directFocus: widget.directFocus,
+                                  defaultVoteWeightComments:
+                                      _defaultVoteWeightComments,
+                                )
+                              : FadeInUp(
+                                  child: ShareAndCommentChips(
+                                  author: widget.post.author,
+                                  link: widget.post.link,
+                                  directFocus: widget.directFocus,
+                                  defaultVoteWeightComments:
+                                      _defaultVoteWeightComments,
+                                )),
                           // SizedBox(height: 16),
                           widget.post.comments != null &&
                                   widget.post.comments!.length > 0
-                              ? SlideInLeft(
-                                  child: Container(
-                                    height: 100.h,
-                                    child: ListView.builder(
-                                      itemCount: widget.post.comments!.length,
-                                      padding: EdgeInsets.zero,
-                                      itemBuilder:
-                                          (BuildContext context, int index) =>
-                                              Column(
-                                        children: [
-                                          CommentDisplay(
-                                              widget.post.comments![index],
-                                              _defaultVoteWeightComments,
-                                              _currentVT,
-                                              widget.post.author,
-                                              widget.post.link,
-                                              _defaultVoteTipComments,
-                                              context,
-                                              blockedUsers.split(","),
-                                              _fixedDownvoteActivated,
-                                              _fixedDownvoteWeight),
-                                          SizedBox(
-                                              height: index ==
-                                                      widget.post.comments!
-                                                              .length -
-                                                          1
-                                                  ? 200
-                                                  : 0)
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )
+                              ? globals.disableAnimations
+                                  ? CommentContainer(
+                                      post: widget.post,
+                                      defaultVoteWeightComments:
+                                          _defaultVoteWeightComments,
+                                      currentVT: _currentVT,
+                                      defaultVoteTipComments:
+                                          _defaultVoteTipComments,
+                                      blockedUsers: blockedUsers,
+                                      fixedDownvoteActivated:
+                                          _fixedDownvoteActivated,
+                                      fixedDownvoteWeight: _fixedDownvoteWeight,
+                                    )
+                                  : SlideInLeft(
+                                      child: CommentContainer(
+                                      post: widget.post,
+                                      defaultVoteWeightComments:
+                                          _defaultVoteWeightComments,
+                                      currentVT: _currentVT,
+                                      defaultVoteTipComments:
+                                          _defaultVoteTipComments,
+                                      blockedUsers: blockedUsers,
+                                      fixedDownvoteActivated:
+                                          _fixedDownvoteActivated,
+                                      fixedDownvoteWeight: _fixedDownvoteWeight,
+                                    ))
                               : SizedBox(height: 0),
 
                           BlocProvider<FeedBloc>(

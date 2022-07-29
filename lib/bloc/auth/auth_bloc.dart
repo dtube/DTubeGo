@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/res/loadRemoteConf.dart' as remoteConfig;
 
 import 'package:dtube_go/utils/crypto_convert.dart';
@@ -29,6 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // commented out for debugging
       _avalonApiNode = await discoverAPINode();
       await sec.persistNode(_avalonApiNode);
+      globals.currentApiNode = _avalonApiNode;
       repository.fetchAndStoreVerifiedUsers();
 
       // if the app has never been opened before

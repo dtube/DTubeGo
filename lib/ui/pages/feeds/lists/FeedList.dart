@@ -78,6 +78,7 @@ class FeedList extends StatelessWidget {
     _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
     _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
     _autoauseVideoOnPopup = await sec.getVideoAutoPause() == "true";
+
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
     }
@@ -366,43 +367,44 @@ class PostListCard extends StatefulWidget {
   final String? fixedDownvoteActivated;
   final String? fixedDownvoteWeight;
   final bool? autoPauseVideoOnPopup;
+
   final BuildContext parentContext;
 
-  PostListCard(
-      {Key? key,
-      required this.showAuthor,
-      required this.largeFormat,
-      required this.blur,
-      required this.thumbnailUrl,
-      required this.title,
-      required this.description,
-      required this.author,
-      required this.link,
-      required this.publishDate,
-      required this.duration,
-      required this.dtcValue,
-      required this.videoUrl,
-      required this.videoSource,
-      required this.alreadyVoted,
-      required this.alreadyVotedDirection,
-      required this.upvotesCount,
-      required this.downvotesCount,
-      required this.indexOfList,
-      required this.mainTag,
-      required this.oc,
-      required this.width,
-      required this.heightPerEntry,
-      required this.enableNavigation,
-      this.itemSelectedCallback,
-      required this.feedType,
-      this.defaultCommentVotingWeight,
-      this.defaultPostVotingWeight,
-      this.defaultPostVotingTip,
-      required this.fixedDownvoteActivated,
-      required this.fixedDownvoteWeight,
-      required this.parentContext,
-      required this.autoPauseVideoOnPopup})
-      : super(key: key);
+  PostListCard({
+    Key? key,
+    required this.showAuthor,
+    required this.largeFormat,
+    required this.blur,
+    required this.thumbnailUrl,
+    required this.title,
+    required this.description,
+    required this.author,
+    required this.link,
+    required this.publishDate,
+    required this.duration,
+    required this.dtcValue,
+    required this.videoUrl,
+    required this.videoSource,
+    required this.alreadyVoted,
+    required this.alreadyVotedDirection,
+    required this.upvotesCount,
+    required this.downvotesCount,
+    required this.indexOfList,
+    required this.mainTag,
+    required this.oc,
+    required this.width,
+    required this.heightPerEntry,
+    required this.enableNavigation,
+    this.itemSelectedCallback,
+    required this.feedType,
+    this.defaultCommentVotingWeight,
+    this.defaultPostVotingWeight,
+    this.defaultPostVotingTip,
+    required this.fixedDownvoteActivated,
+    required this.fixedDownvoteWeight,
+    required this.parentContext,
+    required this.autoPauseVideoOnPopup,
+  }) : super(key: key);
 
   @override
   State<PostListCard> createState() => _PostListCardState();

@@ -1,3 +1,4 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/tags/TagList.dart';
@@ -22,24 +23,28 @@ class TagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (fadeInFromLeft) {
-      return FadeInLeftBig(
-        preferences: AnimationPreferences(
-            offset: waitBeforeFadeIn, duration: Duration(seconds: 1)),
-        child: TagChipWidget(
-          tagName: tagName,
-          width: width,
-          fontStyle: fontStyle,
-        ),
-      );
-    } else {
-      return FadeInRightBig(
-        preferences: AnimationPreferences(
-            offset: waitBeforeFadeIn, duration: Duration(seconds: 1)),
-        child:
-            TagChipWidget(tagName: tagName, width: width, fontStyle: fontStyle),
-      );
-    }
+    return globals.disableAnimations
+        ? TagChipWidget(
+            tagName: tagName,
+            width: width,
+            fontStyle: fontStyle,
+          )
+        : fadeInFromLeft
+            ? FadeInLeftBig(
+                preferences: AnimationPreferences(
+                    offset: waitBeforeFadeIn, duration: Duration(seconds: 1)),
+                child: TagChipWidget(
+                  tagName: tagName,
+                  width: width,
+                  fontStyle: fontStyle,
+                ),
+              )
+            : FadeInRightBig(
+                preferences: AnimationPreferences(
+                    offset: waitBeforeFadeIn, duration: Duration(seconds: 1)),
+                child: TagChipWidget(
+                    tagName: tagName, width: width, fontStyle: fontStyle),
+              );
   }
 }
 

@@ -1,3 +1,5 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/bloc/settings/settings_event.dart';
 import 'package:dtube_go/bloc/settings/settings_state.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
@@ -35,6 +37,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               await sec.getHiveSignerAccessTokenRequestedOn(),
           sec.settingKey_pincode: await sec.getPinCode(),
           sec.settingKey_videoAutoPause: await sec.getVideoAutoPause(),
+          sec.settingKey_disableAnimations: await sec.getDisableAnimations(),
           sec.settingKey_imageUploadService: await sec.getImageUploadService(),
           sec.settingKey_DefaultUploadNSFW: await sec.getUploadNSFW(),
           sec.settingKey_DefaultUploadOC: await sec.getUploadOC(),
@@ -58,8 +61,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               await sec.getFixedDownvoteActivated(),
           sec.settingKey_FixedDownvoteWeight:
               await sec.getFixedDownvoteWeight(),
-          sec.settingKey_videoAutoPause: await sec.getVideoAutoPause()
+          sec.settingKey_videoAutoPause: await sec.getVideoAutoPause(),
+          sec.settingKey_disableAnimations: await sec.getDisableAnimations()
         };
+        globals.disableAnimations = await sec.getDisableAnimations() == "true";
         emit(SettingsLoadedState(settings: newSettings));
       } catch (e) {
         emit(SettingsErrorState(message: 'unknown error'));
@@ -109,6 +114,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
         await sec.persistVideoAutoPause(
             event.newSettings[sec.settingKey_videoAutoPause]!);
+
+        await sec.persistDisableAnimations(
+            event.newSettings[sec.settingKey_disableAnimations]!);
+        globals.disableAnimations =
+            event.newSettings[sec.settingKey_disableAnimations]! == "true";
 
         emit(SettingsSavedState(settings: event.newSettings));
         Phoenix.rebirth(event.context);

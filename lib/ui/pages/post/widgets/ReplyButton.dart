@@ -86,26 +86,38 @@ class _ReplyButtonState extends State<ReplyButton> {
         children: [
           Transform.scale(
             scale: widget.scale,
-            child: RubberBand(
-              preferences: AnimationPreferences(
-                  autoPlay: !_replyPressed && widget.isMainPost
-                      ? AnimationPlayStates.Loop
-                      : AnimationPlayStates.None,
-                  offset: Duration(seconds: 6),
-                  duration: Duration(seconds: 1),
-                  magnitude: 0.7),
-              child: Visibility(
-                visible: globals.keyPermissions.contains(4),
-                child: InputChip(
-                  label: widget.icon,
-                  onPressed: () {
-                    setState(() {
-                      _replyPressed = !_replyPressed;
-                    });
-                  },
-                ),
-              ),
-            ),
+            child: globals.disableAnimations
+                ? Visibility(
+                    visible: globals.keyPermissions.contains(4),
+                    child: InputChip(
+                      label: widget.icon,
+                      onPressed: () {
+                        setState(() {
+                          _replyPressed = !_replyPressed;
+                        });
+                      },
+                    ),
+                  )
+                : RubberBand(
+                    preferences: AnimationPreferences(
+                        autoPlay: !_replyPressed && widget.isMainPost
+                            ? AnimationPlayStates.Loop
+                            : AnimationPlayStates.None,
+                        offset: Duration(seconds: 6),
+                        duration: Duration(seconds: 1),
+                        magnitude: 0.7),
+                    child: Visibility(
+                      visible: globals.keyPermissions.contains(4),
+                      child: InputChip(
+                        label: widget.icon,
+                        onPressed: () {
+                          setState(() {
+                            _replyPressed = !_replyPressed;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
           ),
           Visibility(
             visible: _replyPressed,
