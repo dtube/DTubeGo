@@ -1,6 +1,7 @@
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/rewards/rewards_bloc.dart';
 import 'package:dtube_go/bloc/rewards/rewards_bloc_full.dart';
@@ -27,6 +28,13 @@ class _RewardsPageState extends State<RewardsPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
+  List<String> pageNames = ["Claimable", "Pending", "Claimed"];
+  List<IconData> pagesIcons = [
+    FontAwesomeIcons.calendar,
+    FontAwesomeIcons.calendarDay,
+    FontAwesomeIcons.calendarCheck
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -38,20 +46,28 @@ class _RewardsPageState extends State<RewardsPage>
   Widget build(BuildContext context) {
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           TabBar(
             unselectedLabelColor: Colors.grey,
             labelColor: globalAlmostWhite,
             indicatorColor: globalRed,
+            isScrollable: true,
             tabs: [
               Tab(
-                text: 'Claimable',
+                icon: FaIcon(
+                  pagesIcons[0],
+                  size: globalIconSizeSmall,
+                ),
+                text: "claimable",
               ),
               Tab(
-                text: 'Pending',
+                icon: FaIcon(pagesIcons[1], size: globalIconSizeSmall),
+                text: "pending",
               ),
               Tab(
-                text: 'Claimed',
+                icon: FaIcon(pagesIcons[2], size: globalIconSizeSmall),
+                text: "claimed",
               )
             ],
             controller: _tabController,
@@ -195,11 +211,11 @@ class _RewardsCardState extends State<RewardsCard>
                   children: [
                     AccountAvatarBase(
                       username: widget.reward.author,
-                      avatarSize: 10.h,
+                      avatarSize: 20.w,
                       showVerified: true,
                       showName: true,
-                      width: 60.w,
-                      height: 10.h,
+                      width: 55.w,
+                      height: 7.h,
                     ),
                   ],
                 ),
@@ -272,7 +288,8 @@ class _RewardsCardState extends State<RewardsCard>
               ],
             ),
             Container(
-              width: 28.w,
+              width: 27.w,
+              //height: 10.h,
               child: widget.reward.claimed != null
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -306,11 +323,14 @@ class _RewardsCardState extends State<RewardsCard>
                           // gets its own tranactionbloc to avoid spamming snackbars
                           create: (context) => TransactionBloc(
                               repository: TransactionRepositoryImpl()),
-                          child: ClaimRewardButton(
-                            author: widget.reward.author,
-                            claimable: widget.reward.claimable,
-                            link: widget.reward.link,
-                            topLevelWidget: widget.parentWidget,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: ClaimRewardButton(
+                              author: widget.reward.author,
+                              claimable: widget.reward.claimable,
+                              link: widget.reward.link,
+                              topLevelWidget: widget.parentWidget,
+                            ),
                           ),
                         )
                       : Column(

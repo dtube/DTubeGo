@@ -214,6 +214,10 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
                 giftDTCController: _giftDTCController,
                 giftMemoController: _giftMemoController,
                 avatarSize: _avatarSize,
+                blur: widget.blur,
+                thumbUrl: widget.thumbnailUrl,
+                videoSource: widget.videoSource,
+                videoUrl: widget.videoUrl,
                 thumbnailTappedCallback: () {
                   setState(() {
                     _thumbnailTapped = true;
@@ -242,26 +246,30 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
 }
 
 class MobilePostData extends StatefulWidget {
-  MobilePostData({
-    Key? key,
-    required bool thumbnailTapped,
-    required this.widget,
-    required VideoPlayerController bpController,
-    required YoutubePlayerController ytController,
-    required bool showVotingBars,
-    required UserBloc userBloc,
-    required bool votingDirection,
-    required bool showCommentInput,
-    required TextEditingController replyController,
-    required bool showGiftInput,
-    required TextEditingController giftDTCController,
-    required TextEditingController giftMemoController,
-    required double avatarSize,
-    required this.thumbnailTappedCallback,
-    required this.votingOpenCallback,
-    required this.commentOpenCallback,
-    required this.giftOpenCallback,
-  })  : _thumbnailTapped = thumbnailTapped,
+  MobilePostData(
+      {Key? key,
+      required bool thumbnailTapped,
+      required this.widget,
+      required VideoPlayerController bpController,
+      required YoutubePlayerController ytController,
+      required bool showVotingBars,
+      required UserBloc userBloc,
+      required bool votingDirection,
+      required bool showCommentInput,
+      required TextEditingController replyController,
+      required bool showGiftInput,
+      required TextEditingController giftDTCController,
+      required TextEditingController giftMemoController,
+      required double avatarSize,
+      required this.thumbnailTappedCallback,
+      required this.votingOpenCallback,
+      required this.commentOpenCallback,
+      required this.giftOpenCallback,
+      required this.videoSource,
+      required this.videoUrl,
+      required this.thumbUrl,
+      required this.blur})
+      : _thumbnailTapped = thumbnailTapped,
         _bpController = bpController,
         _ytController = ytController,
         _showVotingBars = showVotingBars,
@@ -293,6 +301,10 @@ class MobilePostData extends StatefulWidget {
   VoidCallback votingOpenCallback;
   VoidCallback commentOpenCallback;
   VoidCallback giftOpenCallback;
+  String videoSource;
+  String videoUrl;
+  bool blur;
+  String thumbUrl;
 
   @override
   State<MobilePostData> createState() => _MobilePostDataState();
@@ -314,11 +326,13 @@ class _MobilePostDataState extends State<MobilePostData> {
             children: [
               ThumbnailWidget(
                   thumbnailTapped: widget._thumbnailTapped,
-                  widget: widget.widget),
+                  blur: widget.blur,
+                  thumbUrl: widget.thumbUrl),
               PlayerWidget(
                 thumbnailTapped: widget._thumbnailTapped,
                 bpController: widget._bpController,
-                widget: widget.widget,
+                videoSource: widget.videoSource,
+                videoUrl: widget.videoUrl,
                 ytController: widget._ytController,
                 placeholderWidth: 100.w,
                 placeholderSize: 40.w,
@@ -455,11 +469,14 @@ class WebPostData extends StatelessWidget {
                 alignment: Alignment.topCenter,
                 children: [
                   ThumbnailWidget(
-                      thumbnailTapped: _thumbnailTapped, widget: widget),
+                      thumbnailTapped: _thumbnailTapped,
+                      blur: widget.blur,
+                      thumbUrl: widget.thumbnailUrl),
                   PlayerWidget(
                     thumbnailTapped: _thumbnailTapped,
                     bpController: _videoController,
-                    widget: widget,
+                    videoSource: widget.videoSource,
+                    videoUrl: widget.videoUrl,
                     ytController: _ytController,
                     placeholderWidth: 30.w,
                     placeholderSize: 20.w,
@@ -1842,7 +1859,8 @@ class PlayerWidget extends StatelessWidget {
   PlayerWidget(
       {Key? key,
       required bool thumbnailTapped,
-      required this.widget,
+      required this.videoSource,
+      required this.videoUrl,
       required VideoPlayerController bpController,
       required YoutubePlayerController ytController,
       required this.placeholderSize,
@@ -1853,7 +1871,8 @@ class PlayerWidget extends StatelessWidget {
         super(key: key);
 
   final bool _thumbnailTapped;
-  final PostListCardLarge widget;
+  String videoSource;
+  String videoUrl;
   final VideoPlayerController _bpController;
   final YoutubePlayerController _ytController;
   double placeholderWidth;
@@ -1864,8 +1883,7 @@ class PlayerWidget extends StatelessWidget {
     return Center(
       child: Visibility(
         visible: _thumbnailTapped,
-        child: (["sia", "ipfs"].contains(widget.videoSource) &&
-                widget.videoUrl != "")
+        child: (["sia", "ipfs"].contains(videoSource) && videoUrl != "")
             // ? BP(
             //     videoUrl: widget.videoUrl,
             //     autoplay: true,
@@ -1881,7 +1899,7 @@ class PlayerWidget extends StatelessWidget {
             //     aspectRatio: 16 / 9,
             // child:
             ChewiePlayer(
-                videoUrl: widget.videoUrl,
+                videoUrl: videoUrl,
                 autoplay: true,
                 looping: false,
                 localFile: false,
@@ -1894,9 +1912,9 @@ class PlayerWidget extends StatelessWidget {
                 placeholderSize: placeholderSize,
                 // ),
               )
-            : (widget.videoSource == 'youtube' && widget.videoUrl != "")
+            : (videoSource == 'youtube' && videoUrl != "")
                 ? YTPlayerIFrame(
-                    videoUrl: widget.videoUrl,
+                    videoUrl: videoUrl,
                     autoplay: true,
                     allowFullscreen: false,
                     controller: _ytController,
@@ -1911,12 +1929,14 @@ class ThumbnailWidget extends StatelessWidget {
   const ThumbnailWidget({
     Key? key,
     required bool thumbnailTapped,
-    required this.widget,
+    required this.blur,
+    required this.thumbUrl,
   })  : _thumbnailTapped = thumbnailTapped,
         super(key: key);
 
   final bool _thumbnailTapped;
-  final PostListCardLarge widget;
+  final bool blur;
+  final String thumbUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -1924,7 +1944,7 @@ class ThumbnailWidget extends StatelessWidget {
       visible: !_thumbnailTapped,
       child: AspectRatio(
         aspectRatio: 16 / 9,
-        child: widget.blur
+        child: blur
             ? ClipRect(
                 child: ImageFiltered(
                   imageFilter: ImageFilter.blur(
@@ -1933,7 +1953,7 @@ class ThumbnailWidget extends StatelessWidget {
                   ),
                   child: CachedNetworkImage(
                     fit: BoxFit.fitWidth,
-                    imageUrl: widget.thumbnailUrl,
+                    imageUrl: thumbUrl,
                     errorWidget: (context, url, error) => DTubeLogo(
                       size: 50,
                     ),
@@ -1941,13 +1961,13 @@ class ThumbnailWidget extends StatelessWidget {
                 ),
               )
             : globals.disableAnimations
-                ? ThumbnailContainer(widget: widget)
+                ? ThumbnailContainer(thumbUrl: thumbUrl)
                 : Shimmer(
                     duration: Duration(seconds: 5),
                     interval: Duration(seconds: generateRandom(3, 15)),
                     color: globalAlmostWhite,
                     colorOpacity: 0.1,
-                    child: ThumbnailContainer(widget: widget)),
+                    child: ThumbnailContainer(thumbUrl: thumbUrl)),
       ),
     );
   }
@@ -1956,15 +1976,15 @@ class ThumbnailWidget extends StatelessWidget {
 class ThumbnailContainer extends StatelessWidget {
   const ThumbnailContainer({
     Key? key,
-    required this.widget,
+    required this.thumbUrl,
   }) : super(key: key);
 
-  final PostListCardLarge widget;
+  final String thumbUrl;
 
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: widget.thumbnailUrl,
+      imageUrl: thumbUrl,
       fit: BoxFit.fitWidth,
       errorWidget: (context, url, error) => DTubeLogo(
         size: 50,

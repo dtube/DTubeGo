@@ -41,6 +41,10 @@ class _WalletPageState extends State<WalletPage>
         child: Center(
           child: Column(
             children: [
+              Text(
+                "Wallet",
+                style: Theme.of(context).textTheme.headline6,
+              ),
               Align(
                 alignment: Alignment.topCenter,
                 child: InputChip(

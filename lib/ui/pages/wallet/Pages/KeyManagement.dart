@@ -154,12 +154,20 @@ class _KeyManagementPageState extends State<KeyManagementPage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Container(width: 25.w, child: Text("Name:")),
+                        Container(
+                            width: 25.w,
+                            child: Text(
+                              "Name:",
+                              style: Theme.of(context).textTheme.headline6,
+                            )),
                         Padding(
                           padding: EdgeInsets.only(left: 2.w),
                           child: Container(
                             width: 60.w,
-                            child: Text(user.keys[pos].id),
+                            child: Text(
+                              user.keys[pos].id,
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
                           ),
                         ),
                       ],
@@ -228,7 +236,7 @@ class _KeyManagementPageState extends State<KeyManagementPage>
                   }),
                 ),
               ],
-              avoidAnimation: false,
+              avoidAnimation: globals.disableAnimations,
               waitBeforeFadeIn: Duration(
                 milliseconds: pos * 200,
               ));

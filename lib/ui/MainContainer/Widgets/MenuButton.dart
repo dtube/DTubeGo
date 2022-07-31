@@ -44,7 +44,7 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
         }),
     SpeedDialChild(
         child: ShadowedIcon(
-            icon: FontAwesomeIcons.wallet,
+            icon: FontAwesomeIcons.hotel,
             color: globalAlmostWhite,
             shadowColor: Colors.black,
             size: globalIconSizeMedium),

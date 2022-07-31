@@ -105,7 +105,7 @@ class _ResetMasterKeyDialogState extends State<ResetMasterKeyDialog> {
                         ),
                       ),
                       Container(
-                          width: 22.w,
+                          width: 20.w,
                           child: ElevatedButton(
                               onPressed: () {
                                 setState(() {
@@ -115,7 +115,7 @@ class _ResetMasterKeyDialogState extends State<ResetMasterKeyDialog> {
                                     text:
                                         "name / usage: MASTERKEY\npublic key: ${_newPubController.value.text}\nprivate key: ${_newPrivController.value.text}"));
                               },
-                              child: Center(child: Text("copy key details")))),
+                              child: Center(child: Text("copy")))),
                     ],
                   ),
                 ),

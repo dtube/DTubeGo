@@ -25,9 +25,9 @@ List<Color> globalRedShades = [
 ];
 
 Color globalTextColor = globalAlmostWhite;
-double globalIconSizeSmall = 25;
-double globalIconSizeMedium = 30;
-double globalIconSizeBig = 35;
+double globalIconSizeSmall = 15;
+double globalIconSizeMedium = 20;
+double globalIconSizeBig = 30;
 
 final ThemeData dtubeDarkTheme = ThemeData(
   primarySwatch: MaterialColor(4280361249, {

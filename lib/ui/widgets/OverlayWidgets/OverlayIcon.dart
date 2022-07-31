@@ -72,3 +72,43 @@ class HighlightedIcon extends StatelessWidget {
     );
   }
 }
+
+class BorderedIcon extends StatelessWidget {
+  double size;
+  IconData icon;
+  Color color;
+  Color borderColor;
+  bool? visible;
+  BorderedIcon(
+      {Key? key,
+      required this.size,
+      required this.icon,
+      required this.color,
+      required this.borderColor,
+      this.visible})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (visible == null) {
+      visible = true;
+    }
+    return Visibility(
+      visible: visible!,
+      child: new DecoratedIcon(
+        icon,
+        color: color,
+        size: size,
+        shadows: [
+          Shadow(color: borderColor, offset: Offset(0, 0), blurRadius: 2),
+          //Shadow(color: globalAlmostWhite, offset: Offset(0, 0), blurRadius: 10),
+          // Shadow(
+          //   offset: Offset(4.0, 3.0),
+          //   blurRadius: 10,
+          //   color: borderColor,
+          // ),
+        ],
+      ),
+    );
+  }
+}

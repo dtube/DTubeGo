@@ -144,7 +144,7 @@ class _NewKeyDialogState extends State<NewKeyDialog> {
                         ),
                       ),
                       Container(
-                          width: 22.w,
+                          width: 20.w,
                           child: ElevatedButton(
                               onPressed: _keyNameController.value.text != ""
                                   ? () {
@@ -156,7 +156,7 @@ class _NewKeyDialogState extends State<NewKeyDialog> {
                                               "name / usage: ${_keyNameController.value.text}\npublic key: ${_newPubController.value.text}\nprivate key: ${_newPrivController.value.text}"));
                                     }
                                   : null,
-                              child: Center(child: Text("copy key details")))),
+                              child: Center(child: Text("copy")))),
                     ],
                   ),
                 ),

@@ -24,6 +24,9 @@ class AppConfig {
   static String accountHistoryFeedUrl = "/history/##USERNAME/##FROMBLOC";
   static String accountHistoryFeedUrlFromBlock = "/history/##USERNAME/##BLOCK";
 
+  // DAO url schemes
+  static String daoUrl = "/dao/##STATUS/##TYPE";
+
   // detail url schemes
   static String postDataUrl = "/content/##AUTHOR/##LINK";
   static String accountDataUrl = "/account/##USERNAME";
@@ -72,11 +75,11 @@ class AppConfig {
 // node discovery & api node configs
 
   static bool useDevNodes =
-      false; //activate for new features which has not been integrated
+      true; //activate for new features which has not been integrated
 
   static List<String> apiNodesDev = [
     // development nodes for new features
-    'https://dtube.club/mainnetapi',
+    // 'https://dtube.club/mainnetapi',
     'https://avalon.tibfox.com'
   ];
 

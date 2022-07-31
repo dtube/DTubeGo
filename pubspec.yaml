@@ -93,7 +93,8 @@ dependencies:
   flutter_animator: ^3.2.2 # various transform animations
   animations: ^2.0.3
   wave: ^0.2.2 # wave animation for upload button, login screen and more
-
+  fl_chart: ^0.55.0 # charts
+  
   # NETWORK - cache related
   cached_network_image: ^3.2.1
 
