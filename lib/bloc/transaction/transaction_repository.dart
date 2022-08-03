@@ -72,8 +72,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
       return response.body;
     } else {
       print(response.body);
-      throw Exception(
-          "\n\nUsually this is a problem with your private key.\nPlease check if this key provides the needed permissions to execute this function.");
+      throw Exception(response.body);
     } // should be the block
   }
 }

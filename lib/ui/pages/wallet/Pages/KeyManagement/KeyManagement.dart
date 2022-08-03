@@ -1,26 +1,22 @@
+import 'package:dtube_go/ui/pages/wallet/Pages/KeyManagement/Widgets/newKeyDialog.dart';
+import 'package:dtube_go/ui/pages/wallet/Pages/KeyManagement/Widgets/removeKeyDialog.dart';
+import 'package:dtube_go/ui/pages/wallet/Pages/KeyManagement/Widgets/resetMasterKeyDialog.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
-
-import 'package:bs58check/bs58check.dart' as bs58check;
-import 'package:dtube_go/ui/pages/wallet/Widgets/resetMasterKeyDialog.dart';
 
 export 'package:dtube_go/bloc/auth/auth_repository.dart';
 
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_go/bloc/config/txTypes.dart';
-import 'package:dtube_go/ui/pages/wallet/Widgets/removeKeyDialog.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/utils/crypto_convert.dart';
-import 'package:elliptic/elliptic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hex/hex.dart';
+
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_go/bloc/user/user_bloc.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/ui/pages/wallet/Widgets/newKeyDialog.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/system/customSnackbar.dart';
 import 'package:flutter/material.dart';

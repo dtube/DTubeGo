@@ -66,6 +66,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     });
 
     on<SignAndSendTransactionEvent>((event, emit) async {
+      emit(TransactionSinging(tx: event.tx));
       final String _avalonApiNode = await sec.getNode();
       String? _applicationUser = await sec.getUsername();
       String? _privKey = await sec.getPrivateKey();

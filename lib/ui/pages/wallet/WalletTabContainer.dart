@@ -3,16 +3,15 @@ import 'package:dtube_go/bloc/dao/dao_bloc.dart';
 import 'package:dtube_go/bloc/dao/dao_repository.dart';
 import 'package:dtube_go/bloc/rewards/rewards_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_go/bloc/user/user_bloc.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/ui/pages/wallet/Pages/DAO/DAOPage.dart';
-import 'package:dtube_go/ui/pages/wallet/Pages/KeyManagement.dart';
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
+import 'package:dtube_go/ui/pages/wallet/Pages/Governance/Governance.dart';
 
-import 'package:dtube_go/ui/pages/wallet/Pages/RewardsPage.dart';
-import 'package:dtube_go/ui/pages/wallet/Pages/WalletPage.dart';
+import 'package:dtube_go/ui/pages/wallet/Pages/KeyManagement/KeyManagement.dart';
+
+import 'package:dtube_go/ui/pages/wallet/Pages/Rewards/RewardsPage.dart';
+import 'package:dtube_go/ui/pages/wallet/Pages/Wallet/WalletPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -27,7 +26,7 @@ class WalletMainPage extends StatefulWidget {
 
 class _WalletMainPageState extends State<WalletMainPage>
     with SingleTickerProviderStateMixin {
-  List<String> walletPages = ["Rewards", "Wallet", "Keys", "Government"];
+  List<String> walletPages = ["Rewards", "Wallet", "Keys", "Governance"];
   List<IconData> walletPagesIcons = [
     FontAwesomeIcons.coins,
     FontAwesomeIcons.paperPlane,
@@ -67,43 +66,53 @@ class _WalletMainPageState extends State<WalletMainPage>
                   ),
                 ),
               ),
-              TabBar(
-                unselectedLabelColor: Colors.grey,
-                labelColor: globalAlmostWhite,
-                indicatorColor: globalRed,
-                isScrollable: true,
-                tabs: [
-                  Tab(
-                    text: walletPages[0],
-                    icon: FaIcon(
-                      walletPagesIcons[0],
-                      size: globalIconSizeMedium,
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Container(
+                  height: 7.h,
+                  width: 80.w,
+                  child: Center(
+                    child: TabBar(
+                      labelPadding: EdgeInsets.all(8.9),
+                      unselectedLabelColor: Colors.grey,
+                      labelColor: globalAlmostWhite,
+                      indicatorColor: globalRed,
+                      isScrollable: true,
+                      tabs: [
+                        Tab(
+                          text: walletPages[0],
+                          icon: FaIcon(
+                            walletPagesIcons[0],
+                            size: globalIconSizeSmall,
+                          ),
+                        ),
+                        Tab(
+                          text: walletPages[1],
+                          icon: FaIcon(
+                            walletPagesIcons[1],
+                            size: globalIconSizeSmall,
+                          ),
+                        ),
+                        Tab(
+                          text: walletPages[2],
+                          icon: FaIcon(
+                            walletPagesIcons[2],
+                            size: globalIconSizeSmall,
+                          ),
+                        ),
+                        Tab(
+                          text: walletPages[3],
+                          icon: FaIcon(
+                            walletPagesIcons[3],
+                            size: globalIconSizeSmall,
+                          ),
+                        ),
+                      ],
+                      controller: _tabController,
+                      indicatorSize: TabBarIndicatorSize.tab,
                     ),
                   ),
-                  Tab(
-                    text: walletPages[1],
-                    icon: FaIcon(
-                      walletPagesIcons[1],
-                      size: globalIconSizeMedium,
-                    ),
-                  ),
-                  Tab(
-                    text: walletPages[2],
-                    icon: FaIcon(
-                      walletPagesIcons[2],
-                      size: globalIconSizeMedium,
-                    ),
-                  ),
-                  Tab(
-                    text: walletPages[3],
-                    icon: FaIcon(
-                      walletPagesIcons[3],
-                      size: globalIconSizeMedium,
-                    ),
-                  ),
-                ],
-                controller: _tabController,
-                indicatorSize: TabBarIndicatorSize.tab,
+                ),
               ),
             ],
           ),
@@ -140,7 +149,7 @@ class _WalletMainPageState extends State<WalletMainPage>
                           create: (context) =>
                               DaoBloc(repository: DaoRepositoryImpl())),
                     ],
-                    child: DAOPage(),
+                    child: GovernancePage(),
                   ),
                 ],
                 controller: _tabController,

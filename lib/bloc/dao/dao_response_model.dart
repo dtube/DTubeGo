@@ -52,6 +52,9 @@ class DAOItem {
   int? deadline;
   List<String>? leaderSnapshot;
   int? threshold;
+  List<DaoVote>? votes;
+  List<DaoContributor>? contrib;
+  String? voters;
 
   DAOItem(
       {this.iId,
@@ -73,7 +76,10 @@ class DAOItem {
       this.fundingEnds,
       this.deadline,
       this.leaderSnapshot,
-      this.threshold});
+      this.threshold,
+      this.votes,
+      this.contrib,
+      this.voters});
 
   DAOItem.fromJson(Map<String, dynamic> json) {
     iId = json['_id'];
@@ -95,6 +101,11 @@ class DAOItem {
     fundingEnds = json['fundingEnds'];
     deadline = json['deadline'];
     threshold = json['threshold'];
+    if (json['contrib'] != null) {
+      contrib =
+          ApiContributorResultModel.fromMap(json['contrib']).daoContributorList;
+    } else
+      contrib = [];
     leaderSnapshot = json['leaderSnapshot'].cast<String>();
   }
 
@@ -120,6 +131,137 @@ class DAOItem {
     data['deadline'] = this.deadline;
     data['threshold'] = this.threshold;
     data['leaderSnapshot'] = this.leaderSnapshot;
+    data['votes'] = this.votes;
+    data['voters'] = this.voters;
+    data['contrib'] = this.contrib;
+    return data;
+  }
+}
+
+class ApiVoteResultModel {
+  late String status;
+  late int totalResults;
+  late List<DaoVote> daoVoteList;
+
+  ApiVoteResultModel(
+      {required this.status,
+      required this.totalResults,
+      required this.daoVoteList});
+
+  ApiVoteResultModel.fromJson(List<dynamic> json) {
+    totalResults = json.length;
+    daoVoteList = [];
+    if (json.isNotEmpty) {
+      json.forEach((v) {
+        daoVoteList.add(new DaoVote.fromJson(v));
+      });
+    }
+    print(daoVoteList);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['totalResults'] = this.totalResults;
+    if (this.daoVoteList.isNotEmpty) {
+      data['FeedItems'] = this.daoVoteList.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class DaoVote {
+  String? sId;
+  int? proposalId;
+  String? voter;
+  int? amount;
+  int? bonus;
+  bool? veto;
+  int? end;
+
+  DaoVote(
+      {this.sId,
+      this.proposalId,
+      this.voter,
+      this.amount,
+      this.bonus,
+      this.veto,
+      this.end});
+
+  DaoVote.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    proposalId = json['proposal_id'];
+    voter = json['voter'];
+    amount = json['amount'];
+    bonus = json['bonus'];
+    veto = json['veto'];
+    end = json['end'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['proposal_id'] = this.proposalId;
+    data['voter'] = this.voter;
+    data['amount'] = this.amount;
+    data['bonus'] = this.bonus;
+    data['veto'] = this.veto;
+    data['end'] = this.end;
+    return data;
+  }
+}
+
+class ApiContributorResultModel {
+  late String status;
+  late int totalResults;
+  late List<DaoContributor> daoContributorList;
+
+  ApiContributorResultModel(
+      {required this.status,
+      required this.totalResults,
+      required this.daoContributorList});
+
+  ApiContributorResultModel.fromMap(Map<String, dynamic> map) {
+    totalResults = map.length;
+    daoContributorList = [];
+    if (map.isNotEmpty) {
+      map.forEach((key, value) {
+        daoContributorList.add(new DaoContributor.fromArguments(key, value));
+      });
+    }
+    print(daoContributorList);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['totalResults'] = this.totalResults;
+    if (this.daoContributorList.isNotEmpty) {
+      data['FeedItems'] =
+          this.daoContributorList.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class DaoContributor {
+  String? contribName;
+  int? contribAmount;
+
+  DaoContributor({
+    this.contribName,
+    this.contribAmount,
+  });
+
+  DaoContributor.fromArguments(String key, int value) {
+    contribName = key;
+    contribAmount = value;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['contribName'] = this.contribName;
+    data['contribAmount'] = this.contribAmount;
     return data;
   }
 }

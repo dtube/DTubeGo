@@ -26,6 +26,10 @@ class AppConfig {
 
   // DAO url schemes
   static String daoUrl = "/dao/##STATUS/##TYPE";
+  static String daoVotesUrl = "/proposal/votes/##DAOID";
+
+// leaderboard url schemes
+  static String leaderboardUrl = "/allminers";
 
   // detail url schemes
   static String postDataUrl = "/content/##AUTHOR/##LINK";

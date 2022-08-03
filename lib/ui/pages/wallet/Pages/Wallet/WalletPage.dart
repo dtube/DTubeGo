@@ -1,8 +1,8 @@
+import 'package:dtube_go/ui/pages/wallet/Pages/Wallet/transferDialog.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/ui/pages/wallet/Widgets/transferDialog.dart';
 import 'package:dtube_go/ui/widgets/system/customSnackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,10 +41,6 @@ class _WalletPageState extends State<WalletPage>
         child: Center(
           child: Column(
             children: [
-              Text(
-                "Wallet",
-                style: Theme.of(context).textTheme.headline6,
-              ),
               Align(
                 alignment: Alignment.topCenter,
                 child: InputChip(

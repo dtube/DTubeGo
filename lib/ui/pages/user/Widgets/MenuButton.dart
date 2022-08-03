@@ -1,19 +1,14 @@
+import 'package:dtube_go/ui/pages/wallet/Pages/Wallet/transferDialog.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
-
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/pages/accountHistory/AccountHistory.dart';
 import 'package:dtube_go/ui/pages/user/Pages/ProfileSettings.dart';
-import 'package:dtube_go/ui/pages/wallet/Widgets/transferDialog.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
-
-import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
-
 import 'package:dtube_go/style/ThemeData.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';

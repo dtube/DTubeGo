@@ -1,12 +1,12 @@
 import 'package:dtube_go/bloc/dao/dao_bloc_full.dart';
-import 'package:dtube_go/ui/pages/wallet/Pages/DAO/DaoCard.dart';
+import 'package:dtube_go/ui/pages/wallet/Pages/Governance/DAO/ProposalCard.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class DaoList extends StatefulWidget {
-  const DaoList(
+class ProposalList extends StatefulWidget {
+  const ProposalList(
       {Key? key,
       required this.daoState,
       required this.daoType,
@@ -19,10 +19,10 @@ class DaoList extends StatefulWidget {
   final int daoVotingPeriod;
 
   @override
-  _DaoListState createState() => _DaoListState();
+  _ProposalListState createState() => _ProposalListState();
 }
 
-class _DaoListState extends State<DaoList> {
+class _ProposalListState extends State<ProposalList> {
   late DaoBloc _daoBloc;
 
   @override
@@ -60,7 +60,7 @@ class _DaoListState extends State<DaoList> {
                 key: new PageStorageKey('daos' + widget.daoState + 'listview'),
                 itemCount: _daoItems.length,
                 itemBuilder: (ctx, pos) {
-                  return DaoCard(
+                  return ProposalCard(
                       daoItem: _daoItems[pos],
                       daoThreshold: widget.daoVotingThreshold);
                 });

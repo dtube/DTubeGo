@@ -4,11 +4,28 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 class PiChart extends StatefulWidget {
   const PiChart(
-      {Key? key, required this.goalValue, required this.receivedValue})
+      {Key? key,
+      required this.goalValue,
+      required this.receivedValue,
+      required this.height,
+      required this.width,
+      required this.centerRadius,
+      required this.outerRadius,
+      required this.startFromDegree,
+      required this.showLabels,
+      required this.raisedLabel,
+      required this.onTapCallback})
       : super(key: key);
   final int goalValue;
   final int receivedValue;
-
+  final double height;
+  final double width;
+  final double startFromDegree;
+  final double centerRadius;
+  final double outerRadius;
+  final bool showLabels;
+  final String raisedLabel;
+  final VoidCallback onTapCallback;
   @override
   State<PiChart> createState() => _DaoStateChartState();
 }
@@ -19,46 +36,39 @@ class _DaoStateChartState extends State<PiChart> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 10.h,
-      width: 20.w,
+      height: widget.height,
+      width: widget.width,
       child: PieChart(
         PieChartData(
-            startDegreeOffset: 270,
+            startDegreeOffset: widget.startFromDegree,
             pieTouchData: PieTouchData(
                 touchCallback: (FlTouchEvent event, pieTouchResponse) {
-              setState(() {
-                if (!event.isInterestedForInteractions ||
-                    pieTouchResponse == null ||
-                    pieTouchResponse.touchedSection == null) {
-                  touchedIndex = -1;
-                  return;
-                }
-                touchedIndex =
-                    pieTouchResponse.touchedSection!.touchedSectionIndex;
-              });
+              widget.onTapCallback();
             }),
             borderData: FlBorderData(
               show: false,
             ),
             sectionsSpace: 0,
             centerSpaceRadius: 0,
-            sections: generateSections(widget.receivedValue, widget.goalValue)),
+            sections: generateSections(widget.receivedValue, widget.goalValue,
+                widget.outerRadius, widget.showLabels, widget.raisedLabel)),
       ),
     );
   }
 
-  List<PieChartSectionData> generateSections(int received, int goal) {
+  List<PieChartSectionData> generateSections(int received, int goal,
+      double radius, bool showLabels, String raisedLabel) {
     return List.generate(2, (i) {
-      final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 25.0 : 16.0;
+      final fontSize = Theme.of(context).textTheme.caption!.fontSize;
       // final radius = isTouched ? 40.0 : 30.0;
-      final radius = 30.0;
+
       switch (i) {
         case 0:
           return PieChartSectionData(
             color: Colors.greenAccent[700],
             value: received.toDouble(),
-            title: '',
+            title: showLabels ? raisedLabel : '',
+            titlePositionPercentageOffset: 0.8,
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,

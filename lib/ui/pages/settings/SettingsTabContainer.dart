@@ -358,42 +358,46 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
 
           return Column(
             children: [
-              TabBar(
-                unselectedLabelColor: Colors.grey,
-                labelColor: globalAlmostWhite,
-                indicatorColor: globalRed,
-                onTap: (index) {
-                  setState(() {
-                    if (!_visitedTabs.contains(index)) {
-                      // add page to visited to avoid rebuilding the animation
-                      _visitedTabs.add(index);
-                    }
-                    //add first tab to visited because it is the default one
-                    if (index > 0 && !_visitedTabs.contains(0)) {
-                      // add page to visited to avoid rebuilding the animation
-                      _visitedTabs.add(0);
-                    }
-                  });
-                },
-                tabs: [
-                  Tab(
-                    text: 'General',
-                  ),
-                  Tab(
-                    text: 'Avalon',
-                  ),
-                  Tab(
-                    text: 'Hive',
-                  ),
-                  Tab(
-                    text: 'Uploads',
-                  ),
-                  Tab(
-                    text: 'Moments',
-                  ),
-                ],
-                controller: _tabController,
-                indicatorSize: TabBarIndicatorSize.tab,
+              Container(
+                height: 7.h,
+                child: TabBar(
+                  unselectedLabelColor: Colors.grey,
+                  isScrollable: true,
+                  labelColor: globalAlmostWhite,
+                  indicatorColor: globalRed,
+                  onTap: (index) {
+                    setState(() {
+                      if (!_visitedTabs.contains(index)) {
+                        // add page to visited to avoid rebuilding the animation
+                        _visitedTabs.add(index);
+                      }
+                      //add first tab to visited because it is the default one
+                      if (index > 0 && !_visitedTabs.contains(0)) {
+                        // add page to visited to avoid rebuilding the animation
+                        _visitedTabs.add(0);
+                      }
+                    });
+                  },
+                  tabs: [
+                    Tab(
+                      text: 'General',
+                    ),
+                    Tab(
+                      text: 'Avalon',
+                    ),
+                    Tab(
+                      text: 'Hive',
+                    ),
+                    Tab(
+                      text: 'Uploads',
+                    ),
+                    Tab(
+                      text: 'Moments',
+                    ),
+                  ],
+                  controller: _tabController,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                ),
               ),
               Expanded(
                 child: Padding(

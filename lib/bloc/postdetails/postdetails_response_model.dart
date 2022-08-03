@@ -171,7 +171,9 @@ class Post {
       thumbUrl = jsonString!.thumbnailUrl;
     } else {
       String _gateway = AppConfig.ipfsVideoUrl;
-      if (jsonString?.files?.ipfs!.gw != null) {
+
+      if (jsonString?.files?.ipfs != null &&
+          jsonString?.files?.ipfs!.gw != null) {
         _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
       }
 
