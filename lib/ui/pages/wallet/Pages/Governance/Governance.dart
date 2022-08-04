@@ -1,4 +1,5 @@
 import 'package:dtube_go/bloc/avalonConfig/avalonConfig_bloc_full.dart';
+import 'package:dtube_go/bloc/dao/dao_bloc_full.dart';
 import 'package:dtube_go/bloc/leaderboard/leaderboard_bloc_full.dart';
 
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
@@ -85,7 +86,7 @@ class _GovernancePageState extends State<GovernancePage>
                       Column(children: [
                         StateTabBar(tabControllerFR: _tabControllerFR),
                         StateTabBarView(
-                          tabControllerCU: _tabControllerFR,
+                          tabController: _tabControllerFR,
                           daoType: 1,
                           daoVotingPeriodSeconds:
                               state.config.daoVotingPeriodSeconds,
@@ -95,7 +96,7 @@ class _GovernancePageState extends State<GovernancePage>
                       Column(children: [
                         StateTabBar(tabControllerFR: _tabControllerCU),
                         StateTabBarView(
-                          tabControllerCU: _tabControllerCU,
+                          tabController: _tabControllerCU,
                           daoType: 2,
                           daoVotingPeriodSeconds:
                               state.config.daoVotingPeriodSeconds,
@@ -132,10 +133,10 @@ class StateTabBarView extends StatelessWidget {
       required this.daoType,
       required this.daoVotingPeriodSeconds,
       required this.daoVotingThreshold,
-      required this.tabControllerCU})
+      required this.tabController})
       : super(key: key);
 
-  final TabController tabControllerCU;
+  final TabController tabController;
   final int daoType;
   final int daoVotingPeriodSeconds;
   final int daoVotingThreshold;
@@ -143,24 +144,33 @@ class StateTabBarView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: TabBarView(controller: tabControllerCU, children: [
-        ProposalList(
-          daoState: "0",
-          daoType: daoType.toString(),
-          daoVotingPeriod: daoVotingPeriodSeconds,
-          daoVotingThreshold: daoVotingThreshold,
+      child: TabBarView(controller: tabController, children: [
+        BlocProvider(
+          create: (context) => DaoBloc(repository: DaoRepositoryImpl()),
+          child: ProposalList(
+            daoState: "0",
+            daoType: daoType.toString(),
+            daoVotingPeriod: daoVotingPeriodSeconds,
+            daoVotingThreshold: daoVotingThreshold,
+          ),
         ),
-        ProposalList(
-          daoState: "1",
-          daoType: daoType.toString(),
-          daoVotingPeriod: daoVotingPeriodSeconds,
-          daoVotingThreshold: daoVotingThreshold,
+        BlocProvider(
+          create: (context) => DaoBloc(repository: DaoRepositoryImpl()),
+          child: ProposalList(
+            daoState: "1",
+            daoType: daoType.toString(),
+            daoVotingPeriod: daoVotingPeriodSeconds,
+            daoVotingThreshold: daoVotingThreshold,
+          ),
         ),
-        ProposalList(
-          daoState: "2",
-          daoType: daoType.toString(),
-          daoVotingPeriod: daoVotingPeriodSeconds,
-          daoVotingThreshold: daoVotingThreshold,
+        BlocProvider(
+          create: (context) => DaoBloc(repository: DaoRepositoryImpl()),
+          child: ProposalList(
+            daoState: "2",
+            daoType: daoType.toString(),
+            daoVotingPeriod: daoVotingPeriodSeconds,
+            daoVotingThreshold: daoVotingThreshold,
+          ),
         ),
       ]),
     );

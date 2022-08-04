@@ -145,9 +145,6 @@ class _WalletMainPageState extends State<WalletMainPage>
                           create: (context) => AvalonConfigBloc(
                               repository: AvalonConfigRepositoryImpl())
                             ..add(FetchAvalonConfigEvent())),
-                      BlocProvider(
-                          create: (context) =>
-                              DaoBloc(repository: DaoRepositoryImpl())),
                     ],
                     child: GovernancePage(),
                   ),
