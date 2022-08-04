@@ -22,5 +22,19 @@ class DaoBloc extends Bloc<DaoEvent, DaoState> {
         emit(DaoErrorState(message: e.toString()));
       }
     });
+
+    on<FetchProsposalEvent>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+
+      emit(ProposalLoadingState());
+      try {
+        DAOItem daoItem =
+            await repository.getProposal(_avalonApiNode, event.id);
+
+        emit(ProposalLoadedState(daoItem: daoItem));
+      } catch (e) {
+        emit(DaoErrorState(message: e.toString()));
+      }
+    });
   }
 }

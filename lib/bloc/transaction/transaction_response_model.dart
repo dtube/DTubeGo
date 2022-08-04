@@ -214,3 +214,58 @@ class UploadData {
       required this.uploaded,
       required this.crossPostToHive});
 }
+
+class DAOTransaction {
+  String? sender;
+  int? ts;
+  String? signature;
+  String? hash;
+  int type;
+  DAOTxData data;
+
+  DAOTransaction({required this.type, required this.data});
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> txdata = new Map<String, dynamic>();
+    txdata['type'] = this.type;
+    txdata['data'] = this.data.toJson();
+
+    if (this.sender != null) {
+      txdata['sender'] = this.sender;
+    }
+
+    if (this.ts != null) {
+      txdata['ts'] = this.ts;
+    }
+
+    if (this.signature != null) {
+      txdata['signature'] = this.signature;
+    }
+
+    if (this.hash != null) {
+      txdata['hash'] = this.hash;
+    }
+
+    return txdata;
+  }
+}
+
+class DAOTxData {
+  int? id;
+  int? amount;
+
+  DAOTxData({this.id, this.amount});
+
+  DAOTxData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    amount = json['amount'];
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['id'] = this.id;
+    data['amount'] = this.amount;
+
+    return data;
+  }
+}

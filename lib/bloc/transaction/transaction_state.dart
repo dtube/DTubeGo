@@ -16,6 +16,14 @@ class TransactionSinging extends TransactionState {
   List<Object> get props => [tx];
 }
 
+class DAOTransactionSinging extends TransactionState {
+  DAOTransaction tx;
+
+  DAOTransactionSinging({required this.tx});
+  @override
+  List<Object> get props => [tx];
+}
+
 // used only for uploading videos
 class TransactionPreprocessingState extends TransactionState {
   TransactionPreprocessingState({required this.txType});

@@ -33,50 +33,10 @@ class _ProposalCardState extends State<ProposalCard>
   @override
   bool get wantKeepAlive => true;
   late int _daoThreshold;
-  late String phase; // voting, funding, execution
-  late String status; // open,failed, closed
 
   @override
   void initState() {
     super.initState();
-    if (DateTime.fromMillisecondsSinceEpoch(widget.daoItem.votingEnds!)
-            .compareTo(DateTime.now()) >
-        0) {
-      // proposal is in voting phase
-      phase = "voting";
-      status = "open";
-    } else {
-      if (widget.daoItem.approvals! < widget.daoThreshold) {
-        // proposal failed in voting phase
-        phase = "voting";
-        status = "failed";
-      } else {
-        if (DateTime.fromMillisecondsSinceEpoch(widget.daoItem.fundingEnds!)
-                    .compareTo(DateTime.now()) >
-                0 &&
-            widget.daoItem.raised! < widget.daoItem.requested!) {
-          // proposal is in funding phase
-          phase = "funding";
-          status = "open";
-        } else {
-          if (widget.daoItem.raised! < widget.daoItem.requested!) {
-            // proposal failed in funding phase
-            phase = "funding";
-            status = "failed";
-          } else {
-            if (widget.daoItem.status == 4) {
-              // proposal is completed
-              phase = "execution";
-              status = "closed";
-            } else {
-              // proposal is being completed
-              phase = "execution";
-              status = "open";
-            }
-          }
-        }
-      }
-    }
 
     if (widget.daoItem.threshold == null) {
       _daoThreshold = widget.daoThreshold;
@@ -98,8 +58,7 @@ class _ProposalCardState extends State<ProposalCard>
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        navigateToDaoDetailPage(
-            context, widget.daoItem, _daoThreshold, phase, status);
+        navigateToDaoDetailPage(context, widget.daoItem, _daoThreshold);
       },
       child: DTubeFormCard(
           avoidAnimation: globals.disableAnimations,
@@ -110,10 +69,9 @@ class _ProposalCardState extends State<ProposalCard>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ProposalStateChip(
-                    daoItem: widget.daoItem,
-                    daoThreshold: _daoThreshold,
-                    phase: phase,
-                    status: status),
+                  daoItem: widget.daoItem,
+                  daoThreshold: _daoThreshold,
+                ),
               ],
             ),
             Row(
@@ -135,10 +93,8 @@ class _ProposalCardState extends State<ProposalCard>
                     outerRadius: 30.0,
                     startFromDegree: 270,
                     width: 20.w,
-                    phase: phase,
-                    status: status,
                     onTap: () {
-                      if (phase == "voting") {
+                      if ([0, 1].contains(widget.daoItem.status!)) {
                         if (widget.daoItem.votes != null &&
                             widget.daoItem.votes!.isNotEmpty) {
                           showDialog<String>(

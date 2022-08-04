@@ -3,18 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProposalStateChip extends StatefulWidget {
-  ProposalStateChip(
-      {Key? key,
-      required this.daoItem,
-      required this.daoThreshold,
-      required this.phase,
-      required this.status})
-      : super(key: key);
+  ProposalStateChip({
+    Key? key,
+    required this.daoItem,
+    required this.daoThreshold,
+  }) : super(key: key);
 
   DAOItem daoItem;
   int daoThreshold;
-  String phase;
-  String status;
 
   @override
   State<ProposalStateChip> createState() => _ProposalStateChipState();
@@ -23,8 +19,8 @@ class ProposalStateChip extends StatefulWidget {
 class _ProposalStateChipState extends State<ProposalStateChip> {
   @override
   Widget build(BuildContext context) {
-    if (widget.phase == "voting") {
-      if (widget.status == "open") {
+    if ([0, 1].contains(widget.daoItem.status!)) {
+      if (widget.daoItem.status == 0) {
         return InputChip(
             avatar: FaIcon(FontAwesomeIcons.checkToSlot),
             onSelected: (bool) {},
@@ -45,8 +41,8 @@ class _ProposalStateChipState extends State<ProposalStateChip> {
       }
     }
 
-    if (widget.phase == "funding") {
-      if (widget.status == "open") {
+    if ([2, 4].contains(widget.daoItem.status!)) {
+      if ([2].contains(widget.daoItem.status!)) {
         return InputChip(
             avatar: FaIcon(FontAwesomeIcons.arrowUpFromBracket),
             backgroundColor: Colors.orange[800],
@@ -66,8 +62,8 @@ class _ProposalStateChipState extends State<ProposalStateChip> {
             ));
       }
     }
-    if (widget.phase == "execution") {
-      if (widget.status == "open") {
+    if ([3, 5, 6, 8].contains(widget.daoItem.status)) {
+      if ([3, 5, 8].contains(widget.daoItem.status)) {
         return InputChip(
             avatar: FaIcon(FontAwesomeIcons.hammer),
             backgroundColor: Colors.purple[600],
@@ -77,17 +73,25 @@ class _ProposalStateChipState extends State<ProposalStateChip> {
               style: Theme.of(context).textTheme.caption,
             ));
       } else {
-        if (widget.daoItem.status == 4) {
-          return InputChip(
-              avatar: FaIcon(FontAwesomeIcons.check),
-              backgroundColor: Colors.purple[600],
-              onSelected: (bool) {},
-              label: Text(
-                'completed',
-                style: Theme.of(context).textTheme.caption,
-              ));
-        }
+        return InputChip(
+            avatar: FaIcon(FontAwesomeIcons.check),
+            backgroundColor: Colors.purple[600],
+            onSelected: (bool) {},
+            label: Text(
+              'completed',
+              style: Theme.of(context).textTheme.caption,
+            ));
       }
+    }
+    if (widget.daoItem.status == 7) {
+      return InputChip(
+          avatar: FaIcon(FontAwesomeIcons.hammer),
+          backgroundColor: Colors.red[600],
+          onSelected: (bool) {},
+          label: Text(
+            'expired',
+            style: Theme.of(context).textTheme.caption,
+          ));
     }
     return Text("state unknown");
   }

@@ -69,7 +69,7 @@ class _WalletMainPageState extends State<WalletMainPage>
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Container(
-                  height: 7.h,
+                  height: 8.h,
                   width: 80.w,
                   child: Center(
                     child: TabBar(

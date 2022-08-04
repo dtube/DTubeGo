@@ -10,3 +10,11 @@ class FetchDaoEvent extends DaoEvent {
   @override
   List<Object> get props => List.empty();
 }
+
+class FetchProsposalEvent extends DaoEvent {
+  late int id;
+  FetchProsposalEvent({required this.id});
+
+  @override
+  List<Object> get props => List.empty();
+}

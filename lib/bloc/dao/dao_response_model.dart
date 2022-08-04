@@ -156,7 +156,6 @@ class ApiVoteResultModel {
         daoVoteList.add(new DaoVote.fromJson(v));
       });
     }
-    print(daoVoteList);
   }
 
   Map<String, dynamic> toJson() {
@@ -229,7 +228,6 @@ class ApiContributorResultModel {
         daoContributorList.add(new DaoContributor.fromArguments(key, value));
       });
     }
-    print(daoContributorList);
   }
 
   Map<String, dynamic> toJson() {

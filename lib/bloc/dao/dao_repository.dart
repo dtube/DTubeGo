@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 abstract class DaoRepository {
-  Future<List<DAOItem>> getDao(
-      String apiNode, String applicationUser, String voteType);
+  Future<List<DAOItem>> getDao(String apiNode, String daoState, String daoType);
+  Future<DAOItem> getProposal(String apiNode, int id);
 }
 
 class DaoRepositoryImpl implements DaoRepository {
@@ -45,6 +45,37 @@ class DaoRepositoryImpl implements DaoRepository {
       }
 
       return daoList;
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future<DAOItem> getProposal(String apiNode, int id) async {
+    var response = await http.get(Uri.parse(apiNode +
+        AppConfig.daoProposalUrl.replaceAll("##DAOID", id.toString())));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+
+      DAOItem daoItem = DAOItem.fromJson(data);
+      var votesResponse = await http.get(Uri.parse(apiNode +
+          AppConfig.daoVotesUrl.replaceAll("##DAOID", daoItem.iId.toString())));
+
+      if (votesResponse.statusCode == 200) {
+        var voteData = json.decode(votesResponse.body);
+        daoItem.votes = ApiVoteResultModel.fromJson(voteData).daoVoteList;
+
+        if (daoItem.votes != null) {
+          String voters = "";
+          for (var element in daoItem.votes!) {
+            voters = voters + element.voter!;
+          }
+          daoItem.voters = voters;
+        }
+      } else {
+        throw Exception();
+      }
+
+      return daoItem;
     } else {
       throw Exception();
     }

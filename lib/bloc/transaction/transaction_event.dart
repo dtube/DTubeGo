@@ -61,3 +61,16 @@ class TransactionPreprocessingFailed extends TransactionEvent {
   @override
   List<Object> get props => List.empty();
 }
+
+class SignAndSendDAOTransactionEvent extends TransactionEvent {
+  SignAndSendDAOTransactionEvent(
+      {required this.tx,
+      this.administrativeUsername,
+      this.administrativePrivateKey});
+  DAOTransaction tx;
+  String? administrativePrivateKey;
+  String? administrativeUsername;
+
+  @override
+  List<Object> get props => List.empty();
+}

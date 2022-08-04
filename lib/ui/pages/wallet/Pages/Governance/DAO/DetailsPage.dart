@@ -1,9 +1,13 @@
 import 'package:dtube_go/bloc/dao/dao_bloc_full.dart';
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/ui/pages/wallet/Pages/Governance/DAO/Widgets/ContribOverview.dart';
+import 'package:dtube_go/ui/pages/wallet/Pages/Governance/DAO/Widgets/FundingDialog.dart';
 import 'package:dtube_go/ui/pages/wallet/Pages/Governance/DAO/Widgets/StateChart.dart';
 import 'package:dtube_go/ui/pages/wallet/Pages/Governance/DAO/Widgets/StateChip.dart';
 import 'package:dtube_go/ui/pages/wallet/Pages/Governance/DAO/Widgets/VoteOverview.dart';
 import 'package:dtube_go/ui/pages/wallet/Pages/Governance/DAO/Widgets/VotingDialog.dart';
+import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/players/VideoPlayerFromURL.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
@@ -27,17 +31,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ProposalDetailPage extends StatefulWidget {
-  DAOItem daoItem;
+  int proposalId;
   int daoThreshold;
 
-  String phase;
-  String status;
-
-  ProposalDetailPage(
-      {required this.daoItem,
-      required this.daoThreshold,
-      required this.phase,
-      required this.status});
+  ProposalDetailPage({required this.daoThreshold, required this.proposalId});
 
   @override
   _ProposalDetailPageState createState() => _ProposalDetailPageState();
@@ -46,43 +43,54 @@ class ProposalDetailPage extends StatefulWidget {
 class _ProposalDetailPageState extends State<ProposalDetailPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // resizeToAvoidBottomInset: true,
-      extendBodyBehindAppBar: true,
-      // backgroundColor: Colors.transparent,
-      appBar: kIsWeb
-          ? null
-          : AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              toolbarHeight: 10.h,
-            ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: MobileDaoDetails(
-          daoItem: widget.daoItem,
-          daoThreshold: widget.daoThreshold,
-          phase: widget.phase,
-          status: widget.status,
-        ),
-      ),
-    );
+    return BlocListener<TransactionBloc, TransactionState>(
+        bloc: BlocProvider.of<TransactionBloc>(context),
+        listener: (context, state) {
+          if (state is TransactionSent) {
+            BlocProvider.of<DaoBloc>(context)
+                .add(FetchProsposalEvent(id: widget.proposalId));
+          }
+        },
+        child: Scaffold(
+            // resizeToAvoidBottomInset: true,
+            extendBodyBehindAppBar: true,
+            // backgroundColor: Colors.transparent,
+            appBar: kIsWeb
+                ? null
+                : AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    toolbarHeight: 10.h,
+                  ),
+            body: BlocBuilder<DaoBloc, DaoState>(builder: (context, state) {
+              if (state is ProposalLoadedState) {
+                DAOItem _daoItem = state.daoItem;
+                return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MobileDaoDetails(
+                      daoItem: _daoItem,
+                      daoThreshold: widget.daoThreshold,
+                    ));
+              }
+              return Center(
+                child: DtubeLogoPulseWithSubtitle(
+                  subtitle: "loading proposal..",
+                  size: 30.w,
+                ),
+              );
+            })));
   }
 }
 
 class MobileDaoDetails extends StatefulWidget {
   final DAOItem daoItem;
   final int daoThreshold;
-  String phase;
-  String status;
 
-  MobileDaoDetails(
-      {Key? key,
-      required this.daoItem,
-      required this.daoThreshold,
-      required this.phase,
-      required this.status})
-      : super(key: key);
+  MobileDaoDetails({
+    Key? key,
+    required this.daoItem,
+    required this.daoThreshold,
+  }) : super(key: key);
 
   @override
   _MobileDaoDetailsState createState() => _MobileDaoDetailsState();
@@ -130,8 +138,6 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
               ProposalStateChip(
                 daoItem: widget.daoItem,
                 daoThreshold: _daoThreshold,
-                phase: widget.phase,
-                status: widget.status,
               ),
             ],
           ),
@@ -160,28 +166,32 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
                     children: [
                       Text("created: " +
                           TimeAgo.timeInAgoTSShort(widget.daoItem.ts!)),
-                      Row(
-                        children: [
-                          Text((widget.status == "failed"
-                                  ? "asked for: "
-                                  : "asks for: ") +
-                              (widget.daoItem.requested! > 99900
-                                  ? (widget.daoItem.requested! / 100000)
-                                          .toStringAsFixed(2) +
-                                      'K'
-                                  : (widget.daoItem.requested! / 100)
-                                      .round()
-                                      .toString())),
-                          Padding(
-                            padding: EdgeInsets.only(left: 2.w),
-                            child: DTubeLogo(size: 4.w),
-                          )
-                        ],
-                      ),
-                      widget.phase == "funding" || widget.phase == "execution"
+                      widget.daoItem.type == 1
                           ? Row(
                               children: [
-                                Text((widget.status == "failed"
+                                Text(([1, 4, 7].contains(widget.daoItem.status!)
+                                        ? "asked for: "
+                                        : "asks for: ") +
+                                    (widget.daoItem.requested! > 99900
+                                        ? (widget.daoItem.requested! / 100000)
+                                                .toStringAsFixed(2) +
+                                            'K'
+                                        : (widget.daoItem.requested! / 100)
+                                            .round()
+                                            .toString())),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 2.w),
+                                  child: DTubeLogo(size: 4.w),
+                                )
+                              ],
+                            )
+                          : SizedBox(
+                              width: 0,
+                            ),
+                      widget.daoItem.type == 1 && widget.daoItem.status! > 1
+                          ? Row(
+                              children: [
+                                Text(([5, 7].contains(widget.daoItem.status!)
                                         ? "released: "
                                         : "received: ") +
                                     (widget.daoItem.raised! > 99900
@@ -197,10 +207,11 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
                                 )
                               ],
                             )
-                          : SizedBox(height: 0),
+                          : SizedBox(width: 0),
                     ],
                   ),
-                  widget.daoItem.creator! != widget.daoItem.receiver!
+                  widget.daoItem.receiver != null &&
+                          widget.daoItem.creator! != widget.daoItem.receiver!
                       ? Column(
                           children: [
                             Row(
@@ -218,17 +229,23 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
                             SizedBox(
                               height: 2.h,
                             ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text("Benficiary: ",
-                                    style:
-                                        Theme.of(context).textTheme.headline6),
-                                AccountNavigationChip(
-                                    author: widget.daoItem.receiver!),
-                              ],
-                            ),
+                            widget.daoItem.type == 1
+                                ? Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text("Benficiary: ",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6),
+                                      AccountNavigationChip(
+                                          author: widget.daoItem.receiver!),
+                                    ],
+                                  )
+                                : SizedBox(
+                                    height: 0,
+                                  ),
                           ],
                         )
                       : Row(
@@ -251,44 +268,61 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
               postLink: postUrlLink,
             ),
           ),
-          widget.status == "open"
-              ? InputChip(
-                  backgroundColor: globalRed,
-                  avatar: FaIcon(
-                    widget.phase == "voting"
-                        ? FontAwesomeIcons.thumbsUp
-                        : FontAwesomeIcons.arrowUpFromBracket,
-                    size: globalIconSizeBig,
-                  ),
-                  label: Text(
-                      widget.phase == "voting" ? "vote for it" : "donate",
-                      style: Theme.of(context).textTheme.headlineLarge),
-                  onSelected: ((bool) {
-                    if (widget.daoItem.voters == null ||
-                        !widget.daoItem.voters!
-                            .contains(globals.applicationUsername)) {
-                      showDialog<String>(
-                        context: context,
-                        builder: (BuildContext context) => MultiBlocProvider(
-                          providers: [
-                            BlocProvider<PostBloc>(
-                                create: (context) =>
-                                    PostBloc(repository: PostRepositoryImpl())),
-                            BlocProvider<UserBloc>(
-                                create: (context) =>
-                                    UserBloc(repository: UserRepositoryImpl())),
-                          ],
-                          child: VotingDialog(
-                            txBloc: BlocProvider.of<TransactionBloc>(context),
-                            daoItem: widget.daoItem,
-                            //currentVT: state.vtBalance['v']! + 0.0,
-                          ),
-                        ),
-                      );
-                    } else {}
-                    // }
-                  }),
-                )
+          (widget.daoItem.type == 1 && // if porposal is fund request
+                      [0, 2].contains(widget.daoItem
+                          .status!)) // and status is open voting / open funding
+                  ||
+                  (widget.daoItem.type == 2 &&
+                      widget.daoItem.status ==
+                          0) // or proposal is chain update and open voting
+              ? widget.daoItem.status == 0 &&
+                      widget.daoItem.voters!
+                          .contains(globals.applicationUsername)
+                  ? Text("You have already voted for it!")
+                  : InputChip(
+                      backgroundColor: globalRed,
+                      avatar: FaIcon(
+                        widget.daoItem.status == 0
+                            ? FontAwesomeIcons.thumbsUp
+                            : FontAwesomeIcons.arrowUpFromBracket,
+                        size: globalIconSizeMedium,
+                      ),
+                      label: Text(
+                          widget.daoItem.status == 0 &&
+                                  widget.daoItem.type ==
+                                      1 // if voting open and fund request
+                              ? "vote for it"
+                              : "help to fund it",
+                          style: Theme.of(context).textTheme.headline3),
+                      onSelected: ((bool) {
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => MultiBlocProvider(
+                              providers: [
+                                BlocProvider<UserBloc>(
+                                    create: (context) => UserBloc(
+                                        repository: UserRepositoryImpl())),
+                              ],
+                              child: widget.daoItem.status == 0 &&
+                                      !widget.daoItem.voters!
+                                          .contains(globals.applicationUsername)
+                                  ? VotingDialog(
+                                      txBloc: BlocProvider.of<TransactionBloc>(
+                                          context),
+                                      daoItem: widget.daoItem,
+                                      //currentVT: state.vtBalance['v']! + 0.0,
+                                    )
+                                  : FundingDialog(
+                                      txBloc: BlocProvider.of<TransactionBloc>(
+                                          context),
+                                      daoItem: widget.daoItem,
+                                      //currentVT: state.vtBalance['v']! + 0.0,
+                                    )),
+                        );
+                        //     } else {}
+                        // }
+                      }),
+                    )
               : SizedBox(
                   height: 0,
                 ),
@@ -301,15 +335,13 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
               startFromDegree: 270,
               width: 100.w,
               showLabels: true,
-              phase: widget.phase,
-              status: widget.status,
-              raisedLabel: widget.phase == "voting"
+              raisedLabel: [0, 1].contains(widget.daoItem.status!)
                   ? 'approved\n' +
                       (widget.daoItem.approvals! / 100 / 1000)
                           .toStringAsFixed(2)
                           .toString() +
                       'k'
-                  : widget.phase == "funding"
+                  : widget.daoItem.status == 2
                       ? 'raised\n' +
                           (widget.daoItem.raised! / 100)
                               .toStringAsFixed(2)
@@ -317,7 +349,7 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
                           'k'
                       : '',
               onTap: () {
-                if (widget.phase == "voting") {
+                if ([0, 1].contains(widget.daoItem.status!)) {
                   if (widget.daoItem.votes != null &&
                       widget.daoItem.votes!.isNotEmpty) {
                     showDialog<String>(

@@ -122,6 +122,43 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       }
     });
 
+    on<SignAndSendDAOTransactionEvent>((event, emit) async {
+      emit(DAOTransactionSinging(tx: event.tx));
+      final String _avalonApiNode = await sec.getNode();
+      String? _applicationUser = await sec.getUsername();
+      String? _privKey = await sec.getPrivateKey();
+      if (event.administrativePrivateKey != null) {
+        _privKey = event.administrativePrivateKey;
+        _applicationUser = event.administrativeUsername;
+      }
+
+      String result = "";
+
+      try {
+        result = "";
+        result = await repository
+            .signDAO(event.tx, _applicationUser!, _privKey!)
+            .then((value) => repository.sendDAO(_avalonApiNode, value));
+
+        if (int.tryParse(result) != null) {
+          emit(TransactionSent(
+              block: int.parse(result),
+              successMessage: "success",
+              txType: event.tx.type,
+              isDownvote: event.tx.data.amount! < 0 ? true : false,
+              isParentContent: false));
+        } else {
+          emit(TransactionError(
+              message: result, txType: event.tx.type, isParentContent: false));
+        }
+      } catch (e) {
+        emit(TransactionError(
+            message: e.toString(),
+            txType: event.tx.type,
+            isParentContent: false));
+      }
+    });
+
     on<ChangeProfileData>((event, emit) async {
       final String _avalonApiNode = await sec.getNode();
       final String? _applicationUser = await sec.getUsername();

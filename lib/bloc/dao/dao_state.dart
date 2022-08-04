@@ -23,6 +23,20 @@ class DaoLoadedState extends DaoState {
   List<Object> get props => [daoList];
 }
 
+class ProposalLoadingState extends DaoState {
+  @override
+  List<Object> get props => [];
+}
+
+class ProposalLoadedState extends DaoState {
+  DAOItem daoItem;
+
+  ProposalLoadedState({required this.daoItem});
+
+  @override
+  List<Object> get props => [daoItem];
+}
+
 class DaoErrorState extends DaoState {
   String message;
 

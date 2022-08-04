@@ -27,6 +27,7 @@ class AppConfig {
   // DAO url schemes
   static String daoUrl = "/dao/##STATUS/##TYPE";
   static String daoVotesUrl = "/proposal/votes/##DAOID";
+  static String daoProposalUrl = "/proposal/##DAOID";
 
 // leaderboard url schemes
   static String leaderboardUrl = "/allminers";
@@ -84,6 +85,7 @@ class AppConfig {
   static List<String> apiNodesDev = [
     // development nodes for new features
     // 'https://dtube.club/mainnetapi',
+    //'https://testnetapi.avalonblocks.com'
     'https://avalon.tibfox.com'
   ];
 

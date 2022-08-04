@@ -21,15 +21,19 @@ void navigateToPostDetailPage(BuildContext context, String author, String link,
   }));
 }
 
-void navigateToDaoDetailPage(BuildContext context, DAOItem daoItem,
-    int daoThreshold, String phase, String status) {
+void navigateToDaoDetailPage(
+    BuildContext context, DAOItem daoItem, int daoThreshold) {
   Navigator.push(context, MaterialPageRoute(builder: (context) {
-    return ProposalDetailPage(
-      daoItem: daoItem,
-      daoThreshold: daoThreshold,
-      phase: phase,
-      status: status,
-    );
+    return BlocProvider<DaoBloc>(
+        create: (context) {
+          // add the AppStartedEvent to try to login with perhaps existing login credentails and forward to the startup "dialog"
+          return DaoBloc(repository: DaoRepositoryImpl())
+            ..add(FetchProsposalEvent(id: daoItem.iId!));
+        },
+        child: ProposalDetailPage(
+          proposalId: daoItem.iId!,
+          daoThreshold: daoThreshold,
+        ));
   }));
 }
 

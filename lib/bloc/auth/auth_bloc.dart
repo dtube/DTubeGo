@@ -32,6 +32,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       _avalonApiNode = await discoverAPINode();
       await sec.persistNode(_avalonApiNode);
       globals.currentApiNode = _avalonApiNode;
+      globals.applicationUsername = _applicationUser;
       repository.fetchAndStoreVerifiedUsers();
 
       // if the app has never been opened before

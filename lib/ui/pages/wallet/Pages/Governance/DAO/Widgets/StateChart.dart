@@ -3,21 +3,19 @@ import 'package:dtube_go/ui/pages/wallet/Pages/Governance/DAO/PieChart.dart';
 import 'package:flutter/material.dart';
 
 class ProposalStateChart extends StatefulWidget {
-  ProposalStateChart(
-      {Key? key,
-      required this.daoItem,
-      required this.votingThreshold,
-      required this.height,
-      required this.width,
-      required this.outerRadius,
-      required this.centerRadius,
-      required this.startFromDegree,
-      this.showLabels,
-      this.raisedLabel,
-      required this.onTap,
-      required this.phase,
-      required this.status})
-      : super(key: key);
+  ProposalStateChart({
+    Key? key,
+    required this.daoItem,
+    required this.votingThreshold,
+    required this.height,
+    required this.width,
+    required this.outerRadius,
+    required this.centerRadius,
+    required this.startFromDegree,
+    this.showLabels,
+    this.raisedLabel,
+    required this.onTap,
+  }) : super(key: key);
   DAOItem daoItem;
   final int votingThreshold;
   final double height;
@@ -28,8 +26,6 @@ class ProposalStateChart extends StatefulWidget {
   bool? showLabels;
   String? raisedLabel;
   VoidCallback onTap;
-  String phase;
-  String status;
 
   @override
   State<ProposalStateChart> createState() => _ProposalStateChartState();
@@ -39,22 +35,18 @@ class _ProposalStateChartState extends State<ProposalStateChart> {
   @override
   void initState() {
     super.initState();
-    if (widget.showLabels == null) {
-      widget.showLabels = false;
-    }
-    if (widget.raisedLabel == null) {
-      widget.raisedLabel = '';
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     // proposal is in voting phase
     return PiChart(
-      goalValue: widget.phase == "voting"
+      goalValue: [0, 1].contains(widget.daoItem.status)
           ? widget.votingThreshold
-          : widget.daoItem.requested!,
-      receivedValue: widget.phase == "voting"
+          : widget.daoItem.requested != null
+              ? widget.daoItem.requested!
+              : 0,
+      receivedValue: [0, 1].contains(widget.daoItem.status)
           ? widget.daoItem.approvals!
           : widget.daoItem.raised!,
       centerRadius: widget.centerRadius,
@@ -62,8 +54,8 @@ class _ProposalStateChartState extends State<ProposalStateChart> {
       outerRadius: widget.outerRadius,
       startFromDegree: widget.startFromDegree,
       width: widget.width,
-      showLabels: widget.showLabels!,
-      raisedLabel: widget.raisedLabel!,
+      showLabels: widget.showLabels == null ? false : widget.showLabels!,
+      raisedLabel: widget.raisedLabel == null ? '' : widget.raisedLabel!,
       onTapCallback: widget.onTap,
     );
   }
