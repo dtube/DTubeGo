@@ -85,8 +85,8 @@ class AppConfig {
   static List<String> apiNodesDev = [
     // development nodes for new features
     // 'https://dtube.club/mainnetapi',
-    //'https://testnetapi.avalonblocks.com'
-    'https://avalon.tibfox.com'
+    'https://testnetapi.avalonblocks.com'
+    //'https://avalon.tibfox.com'
   ];
 
   static List<String> apiNodes = [

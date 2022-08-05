@@ -184,7 +184,14 @@ class _FundingDialogState extends State<FundingDialog> {
                                 DAOTxData txdata = DAOTxData(
                                     id: widget.daoItem.iId,
                                     amount:
-                                        (state.dtcBalance / 100 * _fundValue)
+                                        ((state.dtcBalance / 100 * _fundValue) >
+                                                    (widget.daoItem.requested! -
+                                                        widget.daoItem.raised!)
+                                                ? (widget.daoItem.requested! -
+                                                    widget.daoItem.raised!)
+                                                : (state.dtcBalance /
+                                                    100 *
+                                                    _fundValue))
                                             .floor());
 
                                 DAOTransaction newTx =
