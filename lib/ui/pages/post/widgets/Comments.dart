@@ -95,8 +95,7 @@ class CommentDisplay extends StatelessWidget {
                   BlocProvider<PostBloc>(
                       create: (context) =>
                           PostBloc(repository: PostRepositoryImpl())
-                      //..add(FetchPostEvent(root.author, root.link))
-                      ),
+                            ..add(FetchPostEvent(root.author, root.link))),
                   BlocProvider<UserBloc>(
                       create: (BuildContext context) =>
                           UserBloc(repository: UserRepositoryImpl())),
@@ -185,8 +184,7 @@ class CommentDisplay extends StatelessWidget {
                     BlocProvider<PostBloc>(
                         create: (context) =>
                             PostBloc(repository: PostRepositoryImpl())
-                        //..add(FetchPostEvent(root.author, root.link))
-                        ),
+                              ..add(FetchPostEvent(root.author, root.link))),
                     BlocProvider<UserBloc>(
                         create: (BuildContext context) =>
                             UserBloc(repository: UserRepositoryImpl())),
