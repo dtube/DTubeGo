@@ -51,19 +51,15 @@ class NotificationItem extends StatelessWidget {
                             create: (BuildContext context) =>
                                 UserBloc(repository: UserRepositoryImpl()),
                             child: GestureDetector(
-                              onTap: () {
-                                navigateToUserDetailPage(
-                                    context, sender, () {});
-                              },
-                              child: AccountAvatarBase(
-                                username: sender,
-                                avatarSize: 15.w,
-                                showVerified: true,
-                                showName: false,
-                                width: 30.w,
-                                height: 7.h,
-                              ),
-                            ),
+                                onTap: () {
+                                  navigateToUserDetailPage(
+                                      context, sender, () {});
+                                },
+                                child: AccountIconBase(
+                                  avatarSize: 15.w,
+                                  showVerified: true,
+                                  username: sender,
+                                )),
                           ),
                           Text(
                             sender,

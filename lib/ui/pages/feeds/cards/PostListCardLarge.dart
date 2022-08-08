@@ -1,4 +1,3 @@
-import 'package:better_player/better_player.dart';
 import 'package:dtube_go/ui/pages/feeds/cards/widets/CollapsedDescription.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
@@ -1367,16 +1366,12 @@ class BaseRowContainer extends StatelessWidget {
         navigateToUserDetailPage(context, widget.author, () {});
       },
       child: SizedBox(
-        width: 10.w,
-        child: AccountAvatarBase(
-            username: widget.author,
+          width: 10.w,
+          child: AccountIconBase(
             avatarSize: _avatarSize,
             showVerified: true,
-            showName: false,
-            nameFontSizeMultiply: 1,
-            width: 10.w,
-            height: _avatarSize),
-      ),
+            username: widget.author,
+          )),
     );
   }
 }
@@ -1884,16 +1879,6 @@ class PlayerWidget extends StatelessWidget {
       child: Visibility(
         visible: _thumbnailTapped,
         child: (["sia", "ipfs"].contains(videoSource) && videoUrl != "")
-            // ? BP(
-            //     videoUrl: widget.videoUrl,
-            //     autoplay: true,
-            //     looping: false,
-            //     localFile: false,
-            //     controls: true,
-            //     usedAsPreview: false,
-            //     allowFullscreen: false,
-            //     portraitVideoPadding: 30.w,
-            //   )
             ?
             // AspectRatio(
             //     aspectRatio: 16 / 9,

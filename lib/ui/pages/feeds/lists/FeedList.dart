@@ -107,7 +107,7 @@ class FeedList extends StatelessWidget {
 
     return Center(
       child: Container(
-        height: 100.h,
+        height: 110.h,
         width: width,
         child: Stack(
           children: [
@@ -123,7 +123,7 @@ class FeedList extends StatelessWidget {
                       return buildLoading(context);
                     } else {
                       return Container(
-                        height: 80.h + topPaddingForFirstEntry!,
+                        height: 90.h + topPaddingForFirstEntry!,
                         width: width,
                         child: BlocBuilder<FeedBloc, FeedState>(
                           builder: (context, state) {

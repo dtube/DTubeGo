@@ -129,19 +129,14 @@ class _NavigationContainerState extends State<NavigationContainer> {
     ),
     BottomNavigationBarItem(
       label: 'Profile',
-      icon: CircleAvatar(
-        backgroundColor: globalAlmostWhite,
-        radius: globalIconSizeMedium * 0.6,
-        child: globals.keyPermissions.isEmpty
-            ? FaIcon(FontAwesomeIcons.userSecret)
-            : AccountAvatarBase(
-                username: "you",
-                avatarSize: globalIconSizeMedium,
-                showVerified: false,
-                showName: false,
-                width: globalIconSizeBig,
-                height: globalIconSizeBig),
-      ),
+      icon: globals.keyPermissions.isEmpty
+          ? FaIcon(FontAwesomeIcons.userSecret)
+          : AccountIconBase(
+              avatarSize: globalIconSizeBig,
+              showVerified: false,
+              username: "you",
+              showBorder: true,
+            ),
     ),
   ];
 

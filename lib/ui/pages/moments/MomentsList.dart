@@ -354,7 +354,7 @@ class _MomentsContainerState extends State<MomentsContainer> {
                         customMomentBody: widget.momentsCustomBody),
                     Padding(
                       padding: EdgeInsets.only(left: 2.w),
-                      child: OverlayText(text: "New Moment"),
+                      child: OverlayText(text: "Create"),
                     )
                   ],
                 ),
@@ -380,7 +380,7 @@ class _MomentsContainerState extends State<MomentsContainer> {
                   MomentsUpload(widget: widget, size: globalIconSizeMedium),
                   Padding(
                     padding: EdgeInsets.only(left: 2.w),
-                    child: OverlayText(text: "New Moment"),
+                    child: OverlayText(text: "Create"),
                   )
                 ],
               ))

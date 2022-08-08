@@ -1,10 +1,8 @@
+import 'package:dtube_go/bloc/web3storage/web3storage_bloc_full.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
-import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc.dart';
-import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
-import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_event.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/ui/pages/upload/widgets/PresetCards.dart';
@@ -27,7 +25,7 @@ class WizardIPFS extends StatefulWidget {
 
 class _WizardIPFSState extends State<WizardIPFS> {
   bool _uploadPressed = false;
-  late IPFSUploadBloc _uploadBloc;
+  late Web3StorageBloc _uploadBloc;
 
   late TransactionBloc _txBloc;
   late HivesignerBloc _hivesignerBloc;
@@ -85,7 +83,7 @@ class _WizardIPFSState extends State<WizardIPFS> {
   @override
   void initState() {
     super.initState();
-    _uploadBloc = BlocProvider.of<IPFSUploadBloc>(context);
+    _uploadBloc = BlocProvider.of<Web3StorageBloc>(context);
 
     loadHiveSignerAccessToken();
   }

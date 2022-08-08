@@ -57,6 +57,9 @@ class AppConfig {
     "https://3.btfsu.d.tube",
     "https://4.btfsu.d.tube"
   ];
+
+  static List<String> web3StorageEndpoints = ["https://api.web3.storage"];
+  static String web3StorageGateway = "https://ipfs.io";
   static int maxUploadRetries = 7;
 
   static String ipfsSnapUrl = 'https://snap1.d.tube/ipfs/';

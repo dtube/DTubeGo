@@ -27,7 +27,7 @@ class _MomentsPageState extends State<MomentsPage>
   ];
   List<IconData> _tabIcons = [
     FontAwesomeIcons.globe,
-    FontAwesomeIcons.userFriends,
+    FontAwesomeIcons.userGroup,
   ];
   late TabController _tabController;
   // late StoryController storyController;

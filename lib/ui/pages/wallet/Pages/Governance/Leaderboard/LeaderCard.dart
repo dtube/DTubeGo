@@ -64,14 +64,11 @@ class _LeaderCardState extends State<LeaderCard>
                       Padding(
                         padding: EdgeInsets.only(right: 2.w),
                         child: Center(
-                          child: AccountAvatarBase(
-                              username: widget.leaderItem.name!,
-                              avatarSize: 10.w,
-                              showVerified: true,
-                              showName: false,
-                              width: 10.w,
-                              height: 10.w),
-                        ),
+                            child: AccountIconBase(
+                          avatarSize: 10.w,
+                          showVerified: true,
+                          username: widget.leaderItem.name!,
+                        )),
                       ),
                       Text(
                         widget.leaderItem.name!,

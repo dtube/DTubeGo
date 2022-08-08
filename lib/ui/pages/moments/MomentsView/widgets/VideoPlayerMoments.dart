@@ -1,3 +1,5 @@
+import 'package:dtube_go/bloc/web3storage/web3storage_bloc.dart';
+import 'package:dtube_go/bloc/web3storage/web3storage_bloc_full.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
@@ -108,7 +110,8 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
 
         setState(() {});
       });
-    BlocProvider.of<IPFSUploadBloc>(context).add(IPFSUploaderInitState());
+    // BlocProvider.of<IPFSUploadBloc>(context).add(IPFSUploaderInitState());
+    BlocProvider.of<Web3StorageBloc>(context).add(Web3StorageInitState());
   }
 
   @override
@@ -293,7 +296,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                           ? globalRed
                           : globalAlmostWhite,
                       shadowColor: Colors.black,
-                      size: globalIconSizeSmall,
+                      size: globalIconSizeMedium,
                     ),
                   ),
                 ),
@@ -367,7 +370,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                                 ? globalRed
                                 : globalAlmostWhite,
                             shadowColor: Colors.black,
-                            size: globalIconSizeSmall,
+                            size: globalIconSizeMedium,
                           ),
                         ),
                         GestureDetector(
@@ -410,7 +413,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             icon: FontAwesomeIcons.comment,
                             color: globalAlmostWhite,
                             shadowColor: Colors.black,
-                            size: globalIconSizeSmall,
+                            size: globalIconSizeMedium,
                           ),
                         ),
                         GestureDetector(
@@ -428,7 +431,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             icon: FontAwesomeIcons.share,
                             color: globalAlmostWhite,
                             shadowColor: Colors.black,
-                            size: globalIconSizeSmall,
+                            size: globalIconSizeMedium,
                           ),
                         ),
                         GestureDetector(
@@ -437,7 +440,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             icon: FontAwesomeIcons.externalLinkAlt,
                             color: globalAlmostWhite,
                             shadowColor: Colors.black,
-                            size: globalIconSizeSmall,
+                            size: globalIconSizeMedium,
                           ),
                           onTap: () {
                             // widget.parentStoryController.pause();
@@ -462,7 +465,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                   padding: EdgeInsets.only(top: 18.h, right: 2.w),
                   child: GestureDetector(
                     child: ShadowedIcon(
-                      size: globalIconSizeSmall,
+                      size: globalIconSizeMedium,
                       icon: _volumeMute
                           ? FontAwesomeIcons.volumeUp
                           : FontAwesomeIcons.volumeMute,

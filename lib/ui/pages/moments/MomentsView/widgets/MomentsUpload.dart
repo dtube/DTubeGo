@@ -1,3 +1,5 @@
+import 'package:dtube_go/bloc/web3storage/web3storage_bloc.dart';
+import 'package:dtube_go/bloc/web3storage/web3storage_bloc_full.dart';
 import 'package:dtube_go/ui/pages/upload/dialogs/HivePostCooldownDialog.dart';
 import 'package:dtube_go/utils/CountDownTimer.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
@@ -13,9 +15,9 @@ import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc.dart';
-import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
-import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_event.dart';
+// import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc.dart';
+// import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
+// import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_event.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:flutter/material.dart';
@@ -61,7 +63,8 @@ class MomentsUploadButton extends StatefulWidget {
 }
 
 class _MomentsUploadButtontate extends State<MomentsUploadButton> {
-  late IPFSUploadBloc _uploadBloc;
+  // late IPFSUploadBloc _uploadBloc;
+  late Web3StorageBloc _uploadBloc;
 
   File? _image;
   File? _video;
@@ -125,6 +128,11 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
     // // this will turn the global "+" icon to a rotating DTube Logo and deactivate further uploas until current is finished
     // BlocProvider.of<AppStateBloc>(context)
     //     .add(UploadStateChangedEvent(uploadState: UploadStartedState()));
+    // _uploadBloc.add(UploadVideo(
+    //     videoPath: _uploadData.videoLocation,
+    //     thumbnailPath: "",
+    //     uploadData: _uploadData,
+    //     context: context));
     _uploadBloc.add(UploadVideo(
         videoPath: _uploadData.videoLocation,
         thumbnailPath: "",
@@ -137,7 +145,8 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
   @override
   void initState() {
     super.initState();
-    _uploadBloc = BlocProvider.of<IPFSUploadBloc>(context);
+    // _uploadBloc = BlocProvider.of<IPFSUploadBloc>(context);
+    _uploadBloc = BlocProvider.of<Web3StorageBloc>(context);
     if (widget.customMomentTitle != "") {
       _uploadData.title = widget.customMomentTitle;
     }

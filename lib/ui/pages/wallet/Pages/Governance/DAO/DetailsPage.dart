@@ -618,17 +618,13 @@ class _VotesOverviewState extends State<VotesOverview> {
                             child: Row(
                               children: [
                                 Container(
-                                  height: 10.w,
-                                  width: 10.w,
-                                  child: AccountAvatarBase(
-                                    username: _allVotes[index].u,
-                                    avatarSize: 10.w,
-                                    showVerified: true,
-                                    showName: false,
+                                    height: 10.w,
                                     width: 10.w,
-                                    height: 5.h,
-                                  ),
-                                ),
+                                    child: AccountIconBase(
+                                      avatarSize: 10.w,
+                                      showVerified: true,
+                                      username: _allVotes[index].u,
+                                    )),
                                 SizedBox(width: 2.w),
                                 Container(
                                   width: 30.w,

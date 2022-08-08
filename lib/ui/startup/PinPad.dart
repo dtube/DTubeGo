@@ -1,3 +1,4 @@
+import 'package:dtube_go/bloc/web3storage/web3storage_bloc_full.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/startup/eula/EulaScreen.dart';
@@ -84,9 +85,13 @@ class _PinPadScreenState extends State<PinPadScreen> {
                     AuthBloc(repository: AuthRepositoryImpl()),
               ),
               // TODO: delete?
+              // BlocProvider(
+              //   create: (context) =>
+              //       IPFSUploadBloc(repository: IPFSUploadRepositoryImpl()),
+              // ),
               BlocProvider(
                 create: (context) =>
-                    IPFSUploadBloc(repository: IPFSUploadRepositoryImpl()),
+                    Web3StorageBloc(repository: Web3StorageRepositoryImpl()),
               ),
               BlocProvider(
                 create: (context) => FeedBloc(repository: FeedRepositoryImpl()),

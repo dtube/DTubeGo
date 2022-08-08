@@ -184,6 +184,8 @@ class UploadData {
   bool uploaded;
   bool crossPostToHive;
 
+  String? ipfsGateway;
+
   UploadData(
       {required this.link,
       required this.parentAuthor,
@@ -212,7 +214,8 @@ class UploadData {
       required this.thumbnail640Hash,
       required this.thumbnail210Hash,
       required this.uploaded,
-      required this.crossPostToHive});
+      required this.crossPostToHive,
+      this.ipfsGateway});
 }
 
 class DAOTransaction {

@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/ui/widgets/Suggestions/OtherUsersAvatar.dart';
@@ -39,20 +40,36 @@ class _UserListState extends State<UserList> {
                   ? " (" + widget.userlist.length.toString() + ")"
                   : ""),
           style: Theme.of(context).textTheme.headline5),
-      Container(
-        height: widget.avatarSize * 1.5,
-        width: double.infinity,
-        child: ListView.builder(
-          // controller: _scrollController,
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-
-          itemCount: widget.userlist.length,
-
-          itemBuilder: (ctx, index) => OtherUsersAvatar(
-            username: widget.userlist[index],
-            avatarSize: widget.avatarSize,
-          ),
+      Padding(
+        padding: EdgeInsets.only(top: 2.h, bottom: 2.h),
+        child: Container(
+          height: widget.avatarSize + 3.h,
+          width: double.infinity,
+          child: ListView.builder(
+              // controller: _scrollController,
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.userlist.length,
+              itemBuilder: (ctx, index) => Padding(
+                    padding: EdgeInsets.only(left: 2.w),
+                    child: Column(
+                      children: [
+                        AccountIconBase(
+                          avatarSize: widget.avatarSize,
+                          showVerified: true,
+                          username: widget.userlist[index],
+                          showBorder: true,
+                        ),
+                        Container(
+                          height: 2.h,
+                          width: widget.avatarSize,
+                          child: Text(widget.userlist[index],
+                              style: Theme.of(context).textTheme.bodyText2,
+                              overflow: TextOverflow.ellipsis),
+                        )
+                      ],
+                    ),
+                  )),
         ),
       ),
     ]);

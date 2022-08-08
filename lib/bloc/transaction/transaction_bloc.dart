@@ -309,12 +309,19 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                 "ipfs": {
                   "vid": vidJson,
                   "img": {"spr": _upload.videoSpriteHash},
-                  "gw": "https://player.d.tube"
+                  "gw": _upload.ipfsGateway == null
+                      ? "https://player.d.tube"
+                      : _upload.ipfsGateway
                 }
               };
             } else {
               fileJson = {
-                "ipfs": {"vid": vidJson, "gw": "https://player.d.tube"}
+                "ipfs": {
+                  "vid": vidJson,
+                  "gw": _upload.ipfsGateway == null
+                      ? "https://player.d.tube"
+                      : _upload.ipfsGateway
+                }
               };
             }
           }

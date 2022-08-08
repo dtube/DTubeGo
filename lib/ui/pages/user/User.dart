@@ -299,26 +299,28 @@ class _UserState extends State<UserPage> {
             child: Padding(
               padding: EdgeInsets.only(top: 7.h, left: 4.w),
               child: globals.disableAnimations
-                  ? AccountAvatarBase(
-                      username: user.name,
-                      avatarSize: 30.w,
-                      showVerified: true,
-                      showName: false,
-                      width: 32.w,
-                      height: 32.w,
+                  ? Container(
+                      height: 31.w,
+                      width: 31.w,
+                      child: AccountIconBase(
+                        avatarSize: 30.w,
+                        showVerified: true,
+                        username: user.name,
+                        showBorder: true,
+                      ),
                     )
                   : FadeIn(
                       preferences: AnimationPreferences(
                           offset: Duration(milliseconds: 500)),
-                      child: AccountAvatarBase(
-                        username: user.name,
-                        avatarSize: 30.w,
-                        showVerified: true,
-                        showName: false,
-                        width: 32.w,
-                        height: 32.w,
-                      ),
-                    ),
+                      child: Container(
+                          height: 31.w,
+                          width: 31.w,
+                          child: AccountIconBase(
+                            avatarSize: 30.w,
+                            showVerified: true,
+                            username: user.name,
+                            showBorder: true,
+                          ))),
             ),
           ),
         ])),
@@ -556,17 +558,13 @@ class _UserState extends State<UserPage> {
             child: Padding(
               padding: EdgeInsets.only(top: 7.h, left: 4.w),
               child: FadeIn(
-                preferences:
-                    AnimationPreferences(offset: Duration(milliseconds: 500)),
-                child: AccountAvatarBase(
-                  username: user.name,
-                  avatarSize: 15.w,
-                  showVerified: true,
-                  showName: false,
-                  width: 16.w,
-                  height: 16.w,
-                ),
-              ),
+                  preferences:
+                      AnimationPreferences(offset: Duration(milliseconds: 500)),
+                  child: AccountIconBase(
+                    avatarSize: 15.w,
+                    showVerified: true,
+                    username: user.name,
+                  )),
             ),
           ),
         ])),
