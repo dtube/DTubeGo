@@ -169,82 +169,81 @@ class FeedListCarousel extends StatelessWidget {
   Widget buildPostListMobile(List<FeedItem> feed, bool bigThumbnail,
       bool showAuthor, BuildContext context, String gpostType, String header) {
     if (feed.length > 0) {
-      return Container(
-        height: 52.h,
-        width: width,
-        child: Column(
-          children: [
-            Text(header, style: Theme.of(context).textTheme.headline5),
-            Container(
-              height: 45.h,
-              child: CarouselSlider.builder(
-                options: CarouselOptions(
-                    //aspectRatio: 2.0,
-                    initialPage: 0,
-                    enlargeCenterPage: true,
-                    enableInfiniteScroll: false,
-                    autoPlay: true,
-                    disableCenter: true,
-                    autoPlayInterval: Duration(seconds: generateRandom(6, 10))),
-                itemCount: feed.length,
-                itemBuilder: (ctx, index, realIdx) {
-                  if (feed[index].jsonString!.files?.youtube != null ||
-                      feed[index].jsonString!.files?.ipfs != null ||
-                      feed[index].jsonString!.files?.sia != null) {
-                    if ((_nsfwMode == 'Hide' &&
-                            feed[index].jsonString?.nsfw == 1) ||
-                        (_hiddenMode == 'Hide' &&
-                            feed[index].summaryOfVotes < 0) ||
-                        (feed[index].jsonString!.hide == 1 &&
-                            feed[index].author != _applicationUser)) {
-                      return SizedBox(
-                        height: 0,
-                      );
-                    } else {
-                      return BlocProvider<UserBloc>(
-                        create: (context) =>
-                            UserBloc(repository: UserRepositoryImpl()),
-                        child: PostListCardNarrow(
-                          width: width!,
-                          height: heightPerEntry!,
-                          blur: (_nsfwMode == 'Blur' &&
-                                      feed[index].jsonString?.nsfw == 1) ||
-                                  (_hiddenMode == 'Blur' &&
-                                      feed[index].summaryOfVotes < 0)
-                              ? true
-                              : false,
-                          thumbnailUrl: feed[index].thumbUrl,
-                          title: feed[index].jsonString!.title,
-                          description: feed[index].jsonString!.desc != null
-                              ? feed[index].jsonString!.desc!
-                              : "",
-                          author: feed[index].author,
-                          link: feed[index].link,
-                          publishDate: TimeAgo.timeInAgoTSShort(feed[index].ts),
-                          duration: new Duration(
-                              seconds:
-                                  int.tryParse(feed[index].jsonString!.dur) !=
-                                          null
-                                      ? int.parse(feed[index].jsonString!.dur)
-                                      : 0),
-                          dtcValue: (feed[index].dist / 100).round().toString(),
-                          indexOfList: index,
-                          enableNavigation: enableNavigation,
-                          itemSelectedCallback: itemSelectedCallback,
-                          userPage: true,
-                        ),
-                      );
-                    }
-                  } else {
+      return Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
+            child: Text(header, style: Theme.of(context).textTheme.headline5),
+          ),
+          Container(
+            height: 38.h,
+            child: CarouselSlider.builder(
+              options: CarouselOptions(
+                  //aspectRatio: 2.0,
+                  initialPage: 0,
+                  enlargeCenterPage: true,
+                  enableInfiniteScroll: false,
+                  autoPlay: true,
+                  disableCenter: true,
+                  autoPlayInterval: Duration(seconds: generateRandom(6, 10))),
+              itemCount: feed.length,
+              itemBuilder: (ctx, index, realIdx) {
+                if (feed[index].jsonString!.files?.youtube != null ||
+                    feed[index].jsonString!.files?.ipfs != null ||
+                    feed[index].jsonString!.files?.sia != null) {
+                  if ((_nsfwMode == 'Hide' &&
+                          feed[index].jsonString?.nsfw == 1) ||
+                      (_hiddenMode == 'Hide' &&
+                          feed[index].summaryOfVotes < 0) ||
+                      (feed[index].jsonString!.hide == 1 &&
+                          feed[index].author != _applicationUser)) {
                     return SizedBox(
                       height: 0,
                     );
+                  } else {
+                    return BlocProvider<UserBloc>(
+                      create: (context) =>
+                          UserBloc(repository: UserRepositoryImpl()),
+                      child: PostListCardNarrow(
+                        width: width!,
+                        height: heightPerEntry!,
+                        blur: (_nsfwMode == 'Blur' &&
+                                    feed[index].jsonString?.nsfw == 1) ||
+                                (_hiddenMode == 'Blur' &&
+                                    feed[index].summaryOfVotes < 0)
+                            ? true
+                            : false,
+                        thumbnailUrl: feed[index].thumbUrl,
+                        title: feed[index].jsonString!.title,
+                        description: feed[index].jsonString!.desc != null
+                            ? feed[index].jsonString!.desc!
+                            : "",
+                        author: feed[index].author,
+                        link: feed[index].link,
+                        publishDate: TimeAgo.timeInAgoTSShort(feed[index].ts),
+                        duration: new Duration(
+                            seconds:
+                                int.tryParse(feed[index].jsonString!.dur) !=
+                                        null
+                                    ? int.parse(feed[index].jsonString!.dur)
+                                    : 0),
+                        dtcValue: (feed[index].dist / 100).round().toString(),
+                        indexOfList: index,
+                        enableNavigation: enableNavigation,
+                        itemSelectedCallback: itemSelectedCallback,
+                        userPage: true,
+                      ),
+                    );
                   }
-                },
-              ),
+                } else {
+                  return SizedBox(
+                    height: 0,
+                  );
+                }
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       );
     } else {
       return Container();

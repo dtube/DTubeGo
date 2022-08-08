@@ -138,7 +138,7 @@ class _UserState extends State<UserPage> {
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: EdgeInsets.only(top: 28.h),
+              padding: EdgeInsets.only(top: 26.h),
               child: SingleChildScrollView(
                   child: Column(
                 children: [
@@ -158,7 +158,7 @@ class _UserState extends State<UserPage> {
                         bottompadding: 0.h,
                         scrollCallback: (bool) {},
                         enableNavigation: true,
-                        header: "Fresh Uploads"),
+                        header: "Regular Uploads"),
                   ),
                   BlocProvider<FeedBloc>(
                     create: (context) =>
@@ -177,7 +177,7 @@ class _UserState extends State<UserPage> {
                         bottompadding: 0.h,
                         scrollCallback: (bool) {},
                         enableNavigation: true,
-                        header: "Fresh Moments"),
+                        header: "Moments"),
                   ),
                   BlocProvider<FeedBloc>(
                     create: (context) =>

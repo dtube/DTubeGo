@@ -593,7 +593,7 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
                               username: widget.post.author,
                               showAuthor: true,
                               largeFormat: false,
-                              heightPerEntry: 30.h,
+                              heightPerEntry: 20.h,
                               width: 150.w,
                               topPaddingForFirstEntry: 0,
                               sidepadding: 5.w,
