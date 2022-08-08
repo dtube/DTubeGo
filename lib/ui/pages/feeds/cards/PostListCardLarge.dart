@@ -478,7 +478,7 @@ class WebPostData extends StatelessWidget {
                     videoUrl: widget.videoUrl,
                     ytController: _ytController,
                     placeholderWidth: 30.w,
-                    placeholderSize: 20.w,
+                    placeholderSize: globalIconSizeMedium,
                   ),
                   // VOTING DIALOG
                   VotingDialogWidget(
@@ -1044,20 +1044,20 @@ class PostInfoBaseRow extends StatelessWidget {
                             padding: EdgeInsets.only(left: 12.w),
                             child: globals.disableAnimations
                                 ? ShadowedIcon(
-                                    icon: FontAwesomeIcons.ellipsisV,
+                                    icon: FontAwesomeIcons.ellipsisVertical,
                                     color: globalAlmostWhite,
                                     shadowColor: Colors.black,
-                                    size: globalIconSizeSmall)
+                                    size: globalIconSizeMedium)
                                 : HeartBeat(
                                     preferences: AnimationPreferences(
                                         magnitude: 1.2,
                                         offset: Duration(seconds: 3),
                                         autoPlay: AnimationPlayStates.Loop),
                                     child: ShadowedIcon(
-                                        icon: FontAwesomeIcons.ellipsisV,
+                                        icon: FontAwesomeIcons.ellipsisVertical,
                                         color: globalAlmostWhite,
                                         shadowColor: Colors.black,
-                                        size: globalIconSizeSmall),
+                                        size: globalIconSizeMedium),
                                   ),
                             // ),
                           ),
@@ -1180,13 +1180,15 @@ class PostInfoBaseRow extends StatelessWidget {
                                                       UserRepositoryImpl())),
                                         ],
                                         child: VotingDialog(
-                                          txBloc:
-                                              BlocProvider.of<TransactionBloc>(
-                                                  context),
                                           defaultVote: double.parse(
                                               widget.defaultPostVotingWeight),
                                           defaultTip: double.parse(
                                               widget.defaultPostVotingTip),
+                                          postBloc: BlocProvider.of<PostBloc>(
+                                              context),
+                                          txBloc:
+                                              BlocProvider.of<TransactionBloc>(
+                                                  context),
                                           author: widget.author,
                                           link: widget.link,
                                           downvote: true,
@@ -1257,13 +1259,15 @@ class PostInfoBaseRow extends StatelessWidget {
                                                       UserRepositoryImpl())),
                                         ],
                                         child: VotingDialog(
-                                          txBloc:
-                                              BlocProvider.of<TransactionBloc>(
-                                                  context),
                                           defaultVote: double.parse(
                                               widget.defaultPostVotingWeight),
                                           defaultTip: double.parse(
                                               widget.defaultPostVotingTip),
+                                          postBloc: BlocProvider.of<PostBloc>(
+                                              context),
+                                          txBloc:
+                                              BlocProvider.of<TransactionBloc>(
+                                                  context),
                                           author: widget.author,
                                           link: widget.link,
                                           downvote: false,
@@ -1541,7 +1545,7 @@ class PostInfoColumn extends StatelessWidget {
                                       icon: FontAwesomeIcons.ellipsisVertical,
                                       color: globalAlmostWhite,
                                       shadowColor: Colors.black,
-                                      size: globalIconSizeSmall)
+                                      size: globalIconSizeMedium)
                                   : HeartBeat(
                                       preferences: AnimationPreferences(
                                           magnitude: 1.2,
@@ -1552,7 +1556,7 @@ class PostInfoColumn extends StatelessWidget {
                                               FontAwesomeIcons.ellipsisVertical,
                                           color: globalAlmostWhite,
                                           shadowColor: Colors.black,
-                                          size: globalIconSizeSmall),
+                                          size: globalIconSizeMedium),
                                     ),
                               // ),
 
@@ -1664,15 +1668,19 @@ class PostInfoColumn extends StatelessWidget {
                                                             UserRepositoryImpl())),
                                               ],
                                               child: VotingDialog(
-                                                txBloc: BlocProvider.of<
-                                                    TransactionBloc>(context),
                                                 defaultVote: double.parse(widget
                                                     .defaultPostVotingWeight),
                                                 defaultTip: double.parse(widget
                                                     .defaultPostVotingTip),
                                                 author: widget.author,
+
                                                 link: widget.link,
                                                 downvote: true,
+                                                postBloc:
+                                                    BlocProvider.of<PostBloc>(
+                                                        context),
+                                                txBloc: BlocProvider.of<
+                                                    TransactionBloc>(context),
                                                 //currentVT: state.vtBalance['v']! + 0.0,
                                                 isPost: true,
                                                 fixedDownvoteActivated: widget
@@ -1736,12 +1744,15 @@ class PostInfoColumn extends StatelessWidget {
                                                             UserRepositoryImpl())),
                                               ],
                                               child: VotingDialog(
-                                                txBloc: BlocProvider.of<
-                                                    TransactionBloc>(context),
                                                 defaultVote: double.parse(widget
                                                     .defaultPostVotingWeight),
                                                 defaultTip: double.parse(widget
                                                     .defaultPostVotingTip),
+                                                postBloc:
+                                                    BlocProvider.of<PostBloc>(
+                                                        context),
+                                                txBloc: BlocProvider.of<
+                                                    TransactionBloc>(context),
                                                 author: widget.author,
                                                 link: widget.link,
                                                 downvote: false,

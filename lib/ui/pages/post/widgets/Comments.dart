@@ -87,16 +87,21 @@ class CommentDisplay extends StatelessWidget {
           ),
           Stack(
             children: [
-              BlocProvider<UserBloc>(
-                create: (BuildContext context) =>
-                    UserBloc(repository: UserRepositoryImpl()),
+              MultiBlocProvider(
+                providers: [
+                  BlocProvider<TransactionBloc>(
+                      create: (context) => TransactionBloc(
+                          repository: TransactionRepositoryImpl())),
+                  BlocProvider<PostBloc>(
+                      create: (context) =>
+                          PostBloc(repository: PostRepositoryImpl())
+                      //..add(FetchPostEvent(root.author, root.link))
+                      ),
+                  BlocProvider<UserBloc>(
+                      create: (BuildContext context) =>
+                          UserBloc(repository: UserRepositoryImpl())),
+                ],
                 child: VotingButtons(
-                  author: root.author,
-                  link: root.link,
-                  alreadyVoted: root.alreadyVoted,
-                  alreadyVotedDirection: root.alreadyVotedDirection,
-                  upvotes: root.upvotes,
-                  downvotes: root.downvotes,
                   defaultVotingWeight: defaultVoteWeight,
                   defaultVotingTip: defaultVoteTip,
                   scale: 0.5,
@@ -172,22 +177,31 @@ class CommentDisplay extends StatelessWidget {
             ),
             Stack(
               children: [
-                VotingButtons(
-                  author: root.author,
-                  link: root.link,
-                  alreadyVoted: root.alreadyVoted,
-                  alreadyVotedDirection: root.alreadyVotedDirection,
-                  upvotes: root.upvotes,
-                  downvotes: root.downvotes,
-                  defaultVotingWeight: defaultVoteWeight,
-                  defaultVotingTip: defaultVoteTip,
-                  scale: 0.5,
-                  isPost: false,
-                  iconColor: globalAlmostWhite,
-                  focusVote: "",
-                  fadeInFromLeft: true,
-                  fixedDownvoteActivated: fixedDownvoteActivated,
-                  fixedDownvoteWeight: fixedDownvoteWeight,
+                MultiBlocProvider(
+                  providers: [
+                    BlocProvider<TransactionBloc>(
+                        create: (context) => TransactionBloc(
+                            repository: TransactionRepositoryImpl())),
+                    BlocProvider<PostBloc>(
+                        create: (context) =>
+                            PostBloc(repository: PostRepositoryImpl())
+                        //..add(FetchPostEvent(root.author, root.link))
+                        ),
+                    BlocProvider<UserBloc>(
+                        create: (BuildContext context) =>
+                            UserBloc(repository: UserRepositoryImpl())),
+                  ],
+                  child: VotingButtons(
+                    defaultVotingWeight: defaultVoteWeight,
+                    defaultVotingTip: defaultVoteTip,
+                    scale: 0.5,
+                    isPost: false,
+                    iconColor: globalAlmostWhite,
+                    focusVote: "",
+                    fadeInFromLeft: true,
+                    fixedDownvoteActivated: fixedDownvoteActivated,
+                    fixedDownvoteWeight: fixedDownvoteWeight,
+                  ),
                 ),
                 Align(
                   alignment: Alignment.topRight,

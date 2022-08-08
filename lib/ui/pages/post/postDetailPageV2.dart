@@ -1,3 +1,4 @@
+import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/feed/feed_bloc.dart';
@@ -84,6 +85,12 @@ class _PostDetailPageState extends State<PostDetailPage> {
       Navigator.pop(context);
     }
     return true;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -205,6 +212,8 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
 
   late int _currentVT = 0;
   String blockedUsers = "";
+  late BlocProvider _votingTransactionBloc;
+  late BlocProvider _votingPostBloc;
 
   void fetchBlockedUsers() async {
     blockedUsers = await sec.getBlockedUsers();
@@ -242,6 +251,12 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
     };
     _videocontroller =
         VideoPlayerController.asset('assets/videos/firstpage.mp4');
+    _votingTransactionBloc = BlocProvider<TransactionBloc>(
+        create: (BuildContext context) =>
+            TransactionBloc(repository: TransactionRepositoryImpl()));
+    _votingPostBloc = BlocProvider<PostBloc>(
+        create: (BuildContext context) =>
+            PostBloc(repository: PostRepositoryImpl()));
   }
 
   @override
@@ -400,20 +415,28 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
                                       _fixedDownvoteWeight = double.parse(
                                           state.settings[
                                               settingKey_FixedDownvoteWeight]!);
-                                      return BlocProvider<UserBloc>(
-                                        create: (BuildContext context) =>
-                                            UserBloc(
-                                                repository:
-                                                    UserRepositoryImpl()),
+                                      return MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider<TransactionBloc>(
+                                              create: (BuildContext context) =>
+                                                  TransactionBloc(
+                                                      repository:
+                                                          TransactionRepositoryImpl())),
+                                          BlocProvider<PostBloc>(
+                                              create: (BuildContext context) =>
+                                                  PostBloc(
+                                                      repository:
+                                                          PostRepositoryImpl())
+                                                    ..add(FetchPostEvent(
+                                                        widget.post.author,
+                                                        widget.post.link))),
+                                          BlocProvider<UserBloc>(
+                                              create: (BuildContext context) =>
+                                                  UserBloc(
+                                                      repository:
+                                                          UserRepositoryImpl())),
+                                        ],
                                         child: VotingButtons(
-                                          author: widget.post.author,
-                                          link: widget.post.link,
-                                          alreadyVoted:
-                                              widget.post.alreadyVoted!,
-                                          alreadyVotedDirection: widget
-                                              .post.alreadyVotedDirection!,
-                                          upvotes: widget.post.upvotes,
-                                          downvotes: widget.post.downvotes,
                                           defaultVotingWeight:
                                               _defaultVoteWeightPosts,
                                           defaultVotingTip:
@@ -467,20 +490,31 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
                                         _fixedDownvoteWeight = double.parse(state
                                                 .settings[
                                             settingKey_FixedDownvoteWeight]!);
-                                        return BlocProvider<UserBloc>(
-                                          create: (BuildContext context) =>
-                                              UserBloc(
-                                                  repository:
-                                                      UserRepositoryImpl()),
+                                        return MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider<TransactionBloc>(
+                                                create: (BuildContext
+                                                        context) =>
+                                                    TransactionBloc(
+                                                        repository:
+                                                            TransactionRepositoryImpl())),
+                                            BlocProvider<PostBloc>(
+                                                create: (BuildContext
+                                                        context) =>
+                                                    PostBloc(
+                                                        repository:
+                                                            PostRepositoryImpl())
+                                                      ..add(FetchPostEvent(
+                                                          widget.post.author,
+                                                          widget.post.link))),
+                                            BlocProvider<UserBloc>(
+                                                create: (BuildContext
+                                                        context) =>
+                                                    UserBloc(
+                                                        repository:
+                                                            UserRepositoryImpl())),
+                                          ],
                                           child: VotingButtons(
-                                            author: widget.post.author,
-                                            link: widget.post.link,
-                                            alreadyVoted:
-                                                widget.post.alreadyVoted!,
-                                            alreadyVotedDirection: widget
-                                                .post.alreadyVotedDirection!,
-                                            upvotes: widget.post.upvotes,
-                                            downvotes: widget.post.downvotes,
                                             defaultVotingWeight:
                                                 _defaultVoteWeightPosts,
                                             defaultVotingTip:
@@ -1045,20 +1079,28 @@ class _WebPostDetailsState extends State<WebPostDetails> {
                                         _fixedDownvoteWeight = double.parse(state
                                                 .settings[
                                             settingKey_FixedDownvoteWeight]!);
-                                        return BlocProvider<UserBloc>(
-                                          create: (BuildContext context) =>
-                                              UserBloc(
-                                                  repository:
-                                                      UserRepositoryImpl()),
+                                        return MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider<TransactionBloc>(
+                                                create: (context) =>
+                                                    TransactionBloc(
+                                                        repository:
+                                                            TransactionRepositoryImpl())),
+                                            BlocProvider<PostBloc>(
+                                                create: (context) => PostBloc(
+                                                    repository:
+                                                        PostRepositoryImpl())
+                                                  ..add(FetchPostEvent(
+                                                      widget.post.author,
+                                                      widget.post.link))),
+                                            BlocProvider<UserBloc>(
+                                                create: (BuildContext
+                                                        context) =>
+                                                    UserBloc(
+                                                        repository:
+                                                            UserRepositoryImpl())),
+                                          ],
                                           child: VotingButtons(
-                                            author: widget.post.author,
-                                            link: widget.post.link,
-                                            alreadyVoted:
-                                                widget.post.alreadyVoted!,
-                                            alreadyVotedDirection: widget
-                                                .post.alreadyVotedDirection!,
-                                            upvotes: widget.post.upvotes,
-                                            downvotes: widget.post.downvotes,
                                             defaultVotingWeight:
                                                 _defaultVoteWeightPosts,
                                             defaultVotingTip:
@@ -1112,20 +1154,28 @@ class _WebPostDetailsState extends State<WebPostDetails> {
                                           _fixedDownvoteWeight = double.parse(state
                                                   .settings[
                                               settingKey_FixedDownvoteWeight]!);
-                                          return BlocProvider<UserBloc>(
-                                            create: (BuildContext context) =>
-                                                UserBloc(
-                                                    repository:
-                                                        UserRepositoryImpl()),
+                                          return MultiBlocProvider(
+                                            providers: [
+                                              BlocProvider<TransactionBloc>(
+                                                  create: (context) =>
+                                                      TransactionBloc(
+                                                          repository:
+                                                              TransactionRepositoryImpl())),
+                                              BlocProvider<PostBloc>(
+                                                  create: (context) => PostBloc(
+                                                      repository:
+                                                          PostRepositoryImpl())
+                                                    ..add(FetchPostEvent(
+                                                        widget.post.author,
+                                                        widget.post.link))),
+                                              BlocProvider<UserBloc>(
+                                                  create: (BuildContext
+                                                          context) =>
+                                                      UserBloc(
+                                                          repository:
+                                                              UserRepositoryImpl())),
+                                            ],
                                             child: VotingButtons(
-                                              author: widget.post.author,
-                                              link: widget.post.link,
-                                              alreadyVoted:
-                                                  widget.post.alreadyVoted!,
-                                              alreadyVotedDirection: widget
-                                                  .post.alreadyVotedDirection!,
-                                              upvotes: widget.post.upvotes,
-                                              downvotes: widget.post.downvotes,
                                               defaultVotingWeight:
                                                   _defaultVoteWeightPosts,
                                               defaultVotingTip:

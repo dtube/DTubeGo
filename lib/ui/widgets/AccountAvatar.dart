@@ -480,8 +480,8 @@ class _AccountIconState extends State<AccountIcon> {
                                       .replaceAll("http:", "https:"),
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
-                                    width: widget.avatarSize,
-                                    height: widget.avatarSize,
+                                    width: widget.avatarSize - 1.w,
+                                    height: widget.avatarSize - 1.w,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       image: DecorationImage(

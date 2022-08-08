@@ -15,7 +15,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class VotingDialog extends StatefulWidget {
   VotingDialog(
       {Key? key,
-      required this.txBloc,
       required this.author,
       required this.link,
       required this.downvote,
@@ -27,10 +26,11 @@ class VotingDialog extends StatefulWidget {
       this.verticalModeCallbackVotingButtonsPressed,
       this.okCallback,
       this.cancelCallback,
+      required this.postBloc,
+      required this.txBloc,
       required this.fixedDownvoteActivated,
       required this.fixedDownvoteWeight})
       : super(key: key);
-  TransactionBloc txBloc;
 
   String author;
   String link;
@@ -47,6 +47,8 @@ class VotingDialog extends StatefulWidget {
 
   VoidCallback? okCallback;
   VoidCallback? cancelCallback;
+  PostBloc postBloc;
+  TransactionBloc txBloc;
 
   @override
   _VotingDialogState createState() => _VotingDialogState();
@@ -55,10 +57,9 @@ class VotingDialog extends StatefulWidget {
 class _VotingDialogState extends State<VotingDialog> {
   late double _vpValue;
   late double _tipValue;
-  late TransactionBloc _txBloc;
+
   late TextEditingController _tagController;
 
-  late PostBloc _postBloc;
   late UserBloc _userBloc;
   late double _currentVT;
   bool _sendButtonPressed = false;
@@ -66,8 +67,7 @@ class _VotingDialogState extends State<VotingDialog> {
   @override
   void initState() {
     super.initState();
-    _txBloc = BlocProvider.of<TransactionBloc>(context);
-    _postBloc = BlocProvider.of<PostBloc>(context);
+
     _userBloc = BlocProvider.of<UserBloc>(context);
     _tagController = TextEditingController();
     _userBloc.add(FetchDTCVPEvent());
@@ -111,9 +111,10 @@ class _VotingDialogState extends State<VotingDialog> {
               return SingleChildScrollView(
                 child: BlocListener<TransactionBloc, TransactionState>(
                   listener: (context, state) {
-                    if (state is TransactionSent) {
-                      _postBloc.add(FetchPostEvent(widget.author, widget.link));
-                    }
+                    // if (state is TransactionSent) {
+                    //   widget.postBloc
+                    //       .add(FetchPostEvent(widget.author, widget.link));
+                    // }
                   },
                   child: !_sendButtonPressed
                       ? Column(
@@ -333,7 +334,7 @@ class _VotingDialogState extends State<VotingDialog> {
                                 Transaction newTx =
                                     Transaction(type: _txType, data: txdata);
 
-                                _txBloc.add(
+                                widget.txBloc.add(
                                     SignAndSendTransactionEvent(tx: newTx));
                                 Navigator.of(context).pop();
 

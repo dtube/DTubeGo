@@ -258,7 +258,6 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                                       repository: UserRepositoryImpl())),
                             ],
                             child: VotingDialog(
-                              txBloc: BlocProvider.of<TransactionBloc>(context),
                               defaultVote:
                                   double.parse(widget.momentsVotingWeight),
                               defaultTip:
@@ -266,6 +265,9 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                               author: widget.feedItem.author,
                               link: widget.feedItem.link,
                               downvote: true,
+                              postBloc: BlocProvider.of<PostBloc>(context),
+                              txBloc: BlocProvider.of<TransactionBloc>(context),
+
                               //currentVT: state.vtBalance['v']! + 0.0,
                               isPost: true,
                               okCallback: () {
@@ -330,10 +332,12 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                                             repository: UserRepositoryImpl())),
                                   ],
                                   child: VotingDialog(
-                                    txBloc: BlocProvider.of<TransactionBloc>(
-                                        context),
                                     defaultVote: double.parse(
                                         widget.momentsVotingWeight),
+                                    postBloc:
+                                        BlocProvider.of<PostBloc>(context),
+                                    txBloc: BlocProvider.of<TransactionBloc>(
+                                        context),
                                     defaultTip: double.parse(
                                         widget.defaultPostsVotingTip),
                                     author: widget.feedItem.author,

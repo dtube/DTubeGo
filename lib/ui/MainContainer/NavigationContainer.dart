@@ -132,7 +132,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
       icon: globals.keyPermissions.isEmpty
           ? FaIcon(FontAwesomeIcons.userSecret)
           : AccountIconBase(
-              avatarSize: globalIconSizeBig,
+              avatarSize: globalIconSizeBig + 2.w,
               showVerified: false,
               username: "you",
               showBorder: true,
