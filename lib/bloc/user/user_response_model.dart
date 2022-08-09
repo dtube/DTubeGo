@@ -38,6 +38,7 @@ class User {
   int? nodeAppr;
   String? pubLeader;
   late bool alreadyFollowing;
+  Created? created;
 
   User(
       {required this.sId,
@@ -55,7 +56,8 @@ class User {
       this.approves,
       this.nodeAppr,
       this.pubLeader,
-      required this.alreadyFollowing});
+      required this.alreadyFollowing,
+      this.created});
 
   User.fromJson(Map<String, dynamic> json, String currentUser) {
     sId = json['_id'];
@@ -65,6 +67,8 @@ class User {
     bw = json['bw'] != null ? new Bw.fromJson(json['bw']) : null;
     vt = json['vt'] != null ? new Bw.fromJson(json['vt']) : null;
     pr = json['pr'] != null ? new Bw.fromJson(json['pr']) : null;
+    created =
+        json['created'] != null ? new Created.fromJson(json['created']) : null;
     uv = json['uv'];
     follows = json['follows'] != null ? json['follows'].cast<String>() : null;
     followers =
@@ -139,6 +143,25 @@ class Bw {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['v'] = this.v;
     data['t'] = this.t;
+    return data;
+  }
+}
+
+class Created {
+  late String by;
+  late int ts;
+
+  Created({required this.by, required this.ts});
+
+  Created.fromJson(Map<String, dynamic> json) {
+    by = json['by'];
+    ts = json['ts'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['by'] = this.by;
+    data['ts'] = this.ts;
     return data;
   }
 }

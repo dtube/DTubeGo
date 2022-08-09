@@ -50,15 +50,23 @@ class _RewardsCardState extends State<RewardsCard>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    AccountAvatarBase(
+                    AccountIconBase(
                       username: widget.reward.author,
                       avatarSize: 20.w,
                       showVerified: true,
-                      showName: true,
-                      width: 55.w,
-                      height: 7.h,
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 2.w),
+                      child: AccountNameBase(
+                        username: widget.reward.author,
+                        width: 40.w,
+                        height: 10.h,
+                        mainStyle: Theme.of(context).textTheme.headline4!,
+                        subStyle: Theme.of(context).textTheme.bodyText1!,
+                      ),
+                    )
                   ],
                 ),
                 Row(

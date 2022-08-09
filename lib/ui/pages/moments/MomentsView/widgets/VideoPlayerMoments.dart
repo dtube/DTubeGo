@@ -222,13 +222,25 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             widget.feedItem.author,
                             widget.goingInForegroundCallback);
                       },
-                      child: AccountAvatarBase(
-                        username: widget.feedItem.author,
-                        avatarSize: 10.h,
-                        showVerified: true,
-                        showName: true,
-                        width: 60.w,
-                        height: 10.h,
+                      child: Row(
+                        children: [
+                          AccountIconBase(
+                            username: widget.feedItem.author,
+                            avatarSize: 10.h,
+                            showVerified: true,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 2.w),
+                            child: AccountNameBase(
+                                username: widget.feedItem.author,
+                                width: 50.w,
+                                height: 10.h,
+                                mainStyle:
+                                    Theme.of(context).textTheme.headline4!,
+                                subStyle:
+                                    Theme.of(context).textTheme.bodyText1!),
+                          )
+                        ],
                       ),
                     ),
                   ),

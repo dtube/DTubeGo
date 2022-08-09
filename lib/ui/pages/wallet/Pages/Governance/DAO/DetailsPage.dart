@@ -404,33 +404,6 @@ class TitleWidget extends StatelessWidget {
   }
 }
 
-class AccountNavigationChip extends StatelessWidget {
-  const AccountNavigationChip({
-    Key? key,
-    required this.author,
-  }) : super(key: key);
-
-  final String author;
-
-  @override
-  Widget build(BuildContext context) {
-    return InputChip(
-      label: AccountAvatarBase(
-        username: author,
-        avatarSize: 12.w,
-        showVerified: true,
-        showName: true,
-        nameFontSizeMultiply: 0.8,
-        width: 35.w,
-        height: 5.h,
-      ),
-      onPressed: () {
-        navigateToUserDetailPage(context, author, () {});
-      },
-    );
-  }
-}
-
 class VotesOverview extends StatefulWidget {
   VotesOverview({
     Key? key,

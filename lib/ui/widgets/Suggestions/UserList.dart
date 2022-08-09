@@ -1,4 +1,5 @@
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
+import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/ui/widgets/Suggestions/OtherUsersAvatar.dart';
@@ -52,22 +53,28 @@ class _UserListState extends State<UserList> {
               itemCount: widget.userlist.length,
               itemBuilder: (ctx, index) => Padding(
                     padding: EdgeInsets.only(left: 2.w),
-                    child: Column(
-                      children: [
-                        AccountIconBase(
-                          avatarSize: widget.avatarSize,
-                          showVerified: true,
-                          username: widget.userlist[index],
-                          showBorder: true,
-                        ),
-                        Container(
-                          height: 2.h,
-                          width: widget.avatarSize,
-                          child: Text(widget.userlist[index],
-                              style: Theme.of(context).textTheme.bodyText2,
-                              overflow: TextOverflow.ellipsis),
-                        )
-                      ],
+                    child: GestureDetector(
+                      onTap: (() {
+                        navigateToUserDetailPage(
+                            context, widget.userlist[index], () {});
+                      }),
+                      child: Column(
+                        children: [
+                          AccountIconBase(
+                            avatarSize: widget.avatarSize,
+                            showVerified: true,
+                            username: widget.userlist[index],
+                            showBorder: true,
+                          ),
+                          Container(
+                            height: 2.h,
+                            width: widget.avatarSize,
+                            child: Text(widget.userlist[index],
+                                style: Theme.of(context).textTheme.bodyText2,
+                                overflow: TextOverflow.ellipsis),
+                          )
+                        ],
+                      ),
                     ),
                   )),
         ),

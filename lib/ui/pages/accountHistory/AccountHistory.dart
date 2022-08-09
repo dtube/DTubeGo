@@ -252,13 +252,20 @@ class ActivityItem extends StatelessWidget {
                     InkWell(
                       child: Row(
                         children: [
-                          AccountAvatarBase(
+                          AccountIconBase(
+                            username: txData.sender,
+                            avatarSize: 10.w,
+                            showVerified: true,
+                            // showName: true,
+                            // width: 30.w,
+                            // height: 10.h
+                          ),
+                          AccountNameBase(
                               username: txData.sender,
-                              avatarSize: 10.w,
-                              showVerified: true,
-                              showName: true,
                               width: 30.w,
-                              height: 10.h),
+                              height: 10.h,
+                              mainStyle: Theme.of(context).textTheme.headline5!,
+                              subStyle: Theme.of(context).textTheme.bodyText1!)
                         ],
                       ),
                       onTap: () {

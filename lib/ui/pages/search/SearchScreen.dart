@@ -174,62 +174,58 @@ class SearchScreenState extends State<SearchScreen> {
       appBar: dtubeSubAppBar(true, "", context, null),
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    width: 50.w,
-                    child: TextField(
-                      controller: searchTextController,
-                      decoration: InputDecoration(hintText: "Search"),
-                      cursorColor: globalRed,
-                      maxLines: 1,
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: 50.w,
+                  child: TextField(
+                    controller: searchTextController,
+                    decoration: InputDecoration(hintText: "Search"),
+                    cursorColor: globalRed,
+                    maxLines: 1,
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
-                  SizedBox(width: 40.w, child: _buildChips()),
-                ],
-              ),
-              _selectedEntity == 2
-                  ? BlocBuilder<FeedBloc, FeedState>(builder: (context, state) {
-                      if (state is FeedInitialState) {
+                ),
+                SizedBox(width: 40.w, child: _buildChips()),
+              ],
+            ),
+            _selectedEntity == 2
+                ? BlocBuilder<FeedBloc, FeedState>(builder: (context, state) {
+                    if (state is FeedInitialState) {
+                      return buildBlank();
+                    } else if (state is FeedLoadingState) {
+                      return buildLoading();
+                    } else if (state is FeedLoadedState) {
+                      hashtagResults = state.feed;
+                      BlocProvider.of<FeedBloc>(context).isFetching = false;
+                      return buildResultsListForTagResults(hashtagResults);
+                    } else if (state is FeedErrorState) {
+                      return buildErrorUi(state.message);
+                    } else {
+                      return buildErrorUi('');
+                    }
+                  })
+                : BlocBuilder<SearchBloc, SearchState>(
+                    builder: (context, state) {
+                      if (state is SearchInitialState) {
                         return buildBlank();
-                      } else if (state is FeedLoadingState) {
+                      } else if (state is SearchLoadingState) {
                         return buildLoading();
-                      } else if (state is FeedLoadedState) {
-                        hashtagResults = state.feed;
-                        BlocProvider.of<FeedBloc>(context).isFetching = false;
-                        return buildResultsListForTagResults(hashtagResults);
-                      } else if (state is FeedErrorState) {
+                      } else if (state is SearchLoadedState) {
+                        searchResults = state.searchResults;
+                        return buildResultsListForSearchResults(searchResults);
+                      } else if (state is SearchErrorState) {
                         return buildErrorUi(state.message);
                       } else {
                         return buildErrorUi('');
                       }
-                    })
-                  : BlocBuilder<SearchBloc, SearchState>(
-                      builder: (context, state) {
-                        if (state is SearchInitialState) {
-                          return buildBlank();
-                        } else if (state is SearchLoadingState) {
-                          return buildLoading();
-                        } else if (state is SearchLoadedState) {
-                          searchResults = state.searchResults;
-                          return buildResultsListForSearchResults(
-                              searchResults);
-                        } else if (state is SearchErrorState) {
-                          return buildErrorUi(state.message);
-                        } else {
-                          return buildErrorUi('');
-                        }
-                      },
-                    ),
-            ],
-          ),
+                    },
+                  ),
+          ],
         ),
       ),
     );
@@ -266,7 +262,7 @@ class SearchScreenState extends State<SearchScreen> {
 
   Widget buildResultsListForSearchResults(SearchResults searchResults) {
     return Container(
-      height: 800,
+      height: 100.h,
       alignment: Alignment.topLeft,
       child: ListView.builder(
         padding: EdgeInsets.zero,

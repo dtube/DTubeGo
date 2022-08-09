@@ -12,362 +12,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class AccountAvatarBase extends StatelessWidget {
-  AccountAvatarBase(
-      {Key? key,
-      required this.username,
-      required this.avatarSize,
-      required this.showVerified,
-      required this.showName,
-      this.nameFontSizeMultiply,
-      this.showNameLeft,
-      this.showFullUserInfo,
-      required this.width,
-      required this.height,
-      this.showAvatar})
-      : super(key: key);
-  final String username;
-  final double avatarSize;
-  final bool showVerified;
-  final bool showName;
-  double? nameFontSizeMultiply;
-  bool? showNameLeft;
-  bool? showFullUserInfo;
-  double width;
-  double height;
-  bool? showAvatar;
-
-  @override
-  Widget build(BuildContext context) {
-    if (nameFontSizeMultiply == null) {
-      nameFontSizeMultiply = 1;
-    }
-    if (showNameLeft == null) {
-      showNameLeft = false;
-    }
-    if (showFullUserInfo == null) {
-      showFullUserInfo = false;
-    }
-    if (showAvatar == null) {
-      showAvatar = true;
-    }
-
-    return BlocProvider(
-      create: (context) => UserBloc(repository: UserRepositoryImpl()),
-      child: AccountAvatar(
-        username: username,
-        avatarSize: avatarSize,
-        showVerified: showVerified,
-        showName: showName,
-        nameFontSizeMultiply: nameFontSizeMultiply!,
-        showNameLeft: showNameLeft!,
-        showFullUserInfo: showFullUserInfo!,
-        width: width,
-        height: height,
-        showAvatar: showAvatar!,
-      ),
-    );
-  }
-}
-
-class AccountAvatar extends StatefulWidget {
-  const AccountAvatar(
-      {Key? key,
-      required this.username,
-      required this.avatarSize,
-      required this.showVerified,
-      required this.showName,
-      required this.nameFontSizeMultiply,
-      required this.showNameLeft,
-      required this.showFullUserInfo,
-      required this.width,
-      required this.height,
-      required this.showAvatar})
-      : super(key: key);
-  final String username;
-  final double avatarSize;
-  final bool showVerified;
-  final bool showName;
-  final double nameFontSizeMultiply;
-  final bool showNameLeft;
-  final bool showFullUserInfo;
-  final double width;
-  final double height;
-  final bool showAvatar;
-
-  @override
-  _AccountAvatarState createState() => _AccountAvatarState();
-}
-
-class _AccountAvatarState extends State<AccountAvatar> {
-  late UserBloc _userBlocAvatar;
-  @override
-  void initState() {
-    super.initState();
-    _userBlocAvatar = BlocProvider.of<UserBloc>(context);
-    _userBlocAvatar.add(FetchAccountDataEvent(username: widget.username));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<UserBloc, UserState>(
-      bloc: _userBlocAvatar,
-      builder: (context, state) {
-        if (state is UserLoadingState) {
-          return Container(
-              width: widget.width,
-              height: widget.height,
-              child: Center(child: CircularProgressIndicator()));
-        } else if (state is UserLoadedState) {
-          try {
-            return Container(
-              width: widget.width,
-              height: widget.height,
-              child: Row(
-                mainAxisAlignment: !widget.showName
-                    ? MainAxisAlignment.center
-                    : MainAxisAlignment.start,
-                children: [
-                  widget.showName && widget.showNameLeft
-                      ? Row(
-                          children: [
-                            widget.showFullUserInfo
-                                ? FullInfo(
-                                    userData: state.user,
-                                    nameFontSizeMultiply:
-                                        widget.nameFontSizeMultiply,
-                                    width:
-                                        widget.width - widget.avatarSize - 5.w,
-                                  )
-                                : ShowName(
-                                    userData: state.user,
-                                    sizeMultiply: widget.nameFontSizeMultiply,
-                                    width: widget.width,
-                                  ),
-                            SizedBox(width: 8)
-                          ],
-                        )
-                      : SizedBox(
-                          width: 0,
-                        ),
-                  widget.showAvatar
-                      ? Stack(
-                          children: [
-                            state.user.jsonString != null &&
-                                    state.user.jsonString?.profile != null &&
-                                    state.user.jsonString?.profile?.avatar != ""
-                                ? CachedNetworkImage(
-                                    imageUrl: state
-                                        .user.jsonString!.profile!.avatar!
-                                        .replaceAll("http:", "https:"),
-                                    imageBuilder: (context, imageProvider) =>
-                                        Container(
-                                      width: widget.avatarSize,
-                                      height: widget.avatarSize,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover),
-                                      ),
-                                    ),
-                                    placeholder: (context, url) => Container(
-                                        width: widget.avatarSize,
-                                        height: widget.avatarSize,
-                                        child: AvatarLoadingPlaceholder(
-                                            size: widget.avatarSize)),
-                                    errorWidget: (context, url, error) =>
-                                        Container(
-                                            width: widget.avatarSize,
-                                            height: widget.avatarSize,
-                                            child: AvatarLoadingPlaceholder(
-                                                size: widget.avatarSize)),
-                                  )
-                                : AvatarLoadingPlaceholder(
-                                    size: widget.avatarSize,
-                                  ),
-                            state.verified && widget.showVerified
-                                ? BounceIn(
-                                    preferences: AnimationPreferences(
-                                        offset: Duration(milliseconds: 1000)),
-                                    child: Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: CircleAvatar(
-                                          maxRadius: widget.avatarSize / 8,
-                                          backgroundColor: globalRed,
-                                          child: FaIcon(
-                                            FontAwesomeIcons.check,
-                                            color: globalAlmostWhite,
-                                            size: widget.avatarSize / 8,
-                                          )),
-                                    ),
-                                  )
-                                : SizedBox(height: 0),
-                          ],
-                        )
-                      : SizedBox(
-                          width: 0,
-                          height: 0,
-                        ),
-                  widget.showName && !widget.showNameLeft
-                      ? Row(
-                          children: [
-                            SizedBox(width: 8),
-                            widget.showFullUserInfo
-                                ? FullInfo(
-                                    userData: state.user,
-                                    nameFontSizeMultiply:
-                                        widget.nameFontSizeMultiply,
-                                    width: widget.width - widget.avatarSize,
-                                  )
-                                : ShowName(
-                                    userData: state.user,
-                                    sizeMultiply: widget.nameFontSizeMultiply,
-                                    width: widget.width - widget.avatarSize,
-                                  ),
-                          ],
-                        )
-                      : SizedBox(
-                          width: 0,
-                        )
-                ],
-              ),
-            );
-          } catch (e) {
-            return AvatarLoadingPlaceholder(
-              size: widget.avatarSize,
-            );
-          }
-        } else if (state is UserErrorState) {
-          print(state.toString() + " happened for");
-          return AvatarLoadingPlaceholder(size: widget.avatarSize);
-        } else {
-          print(state.toString() + " happened");
-          return AvatarLoadingPlaceholder(size: widget.avatarSize);
-        }
-      },
-    );
-  }
-}
-
-class FullInfo extends StatelessWidget {
-  const FullInfo(
-      {Key? key,
-      required this.userData,
-      required this.nameFontSizeMultiply,
-      required this.width})
-      : super(key: key);
-
-  final User userData;
-
-  final double nameFontSizeMultiply;
-  final double width;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ShowName(
-            userData: userData,
-            sizeMultiply: nameFontSizeMultiply,
-            width: width,
-          ),
-          userData.jsonString?.profile?.location != null
-              ? FadeInLeft(
-                  preferences: AnimationPreferences(
-                      offset: Duration(milliseconds: 1400)),
-                  child: OverlayText(
-                    text: userData.jsonString!.profile!.location!,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    sizeMultiply: 1,
-                    // style:
-                    //     Theme.of(context).textTheme.bodyText2,
-                  ),
-                )
-              : SizedBox(
-                  height: 0,
-                ),
-          userData.jsonString?.profile?.about != null
-              ? FadeInLeft(
-                  preferences: AnimationPreferences(
-                      offset: Duration(milliseconds: 1700)),
-                  child: OverlayText(
-                    text: userData.jsonString!.profile!.about!,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    // style:
-                    //     Theme.of(context).textTheme.bodyText2,
-                  ),
-                )
-              : SizedBox(
-                  height: 0,
-                ),
-          userData.jsonString?.profile?.website != null
-              ? FadeIn(
-                  preferences: AnimationPreferences(
-                      offset: Duration(milliseconds: 2200)),
-                  child: OpenableHyperlink(
-                    url: userData.jsonString!.profile!.website!,
-                  ))
-              : SizedBox(
-                  height: 0,
-                ),
-        ],
-      ),
-    );
-  }
-}
-
-class ShowName extends StatelessWidget {
-  const ShowName(
-      {Key? key,
-      required this.userData,
-      required this.sizeMultiply,
-      required this.width})
-      : super(key: key);
-
-  final User userData;
-  final double sizeMultiply;
-  final double width;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width - 8,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          userData.jsonString?.additionals?.displayName != null
-              ? OverlayText(
-                  text: userData.jsonString!.additionals!.displayName!,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  sizeMultiply: sizeMultiply,
-                )
-              : SizedBox(
-                  height: 0,
-                ),
-          OverlayText(
-            text: userData.jsonString?.additionals?.displayName != null
-                ? '(@' + userData.name + ')'
-                : userData.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            sizeMultiply: userData.jsonString?.additionals?.displayName != null
-                ? 0.8
-                : sizeMultiply,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class AvatarErrorPlaceholder extends StatelessWidget {
   const AvatarErrorPlaceholder({
     Key? key,
@@ -404,6 +48,37 @@ class AvatarLoadingPlaceholder extends StatelessWidget {
             fit: BoxFit.cover),
       ),
     );
+  }
+}
+
+class AccountNameBase extends StatelessWidget {
+  AccountNameBase(
+      {Key? key,
+      required this.username,
+      required this.width,
+      required this.height,
+      required this.mainStyle,
+      required this.subStyle})
+      : super(key: key);
+  final String username;
+  final double width;
+  final double height;
+  TextStyle mainStyle;
+  TextStyle subStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+        create: (context) => UserBloc(repository: UserRepositoryImpl())
+          ..add(username == "you"
+              ? FetchMyAccountDataEvent()
+              : FetchAccountDataEvent(username: username)),
+        child: AccountName(
+          width: width,
+          height: height,
+          mainStyle: mainStyle,
+          subStyle: subStyle,
+        ));
   }
 }
 
@@ -585,6 +260,71 @@ class _AccountIconState extends State<AccountIcon> {
   }
 }
 
+class AccountName extends StatefulWidget {
+  AccountName(
+      {Key? key,
+      required this.width,
+      required this.height,
+      required this.mainStyle,
+      required this.subStyle})
+      : super(key: key);
+
+  double width;
+  double height;
+  TextStyle mainStyle;
+  TextStyle subStyle;
+  @override
+  State<AccountName> createState() => _AccountNameState();
+}
+
+class _AccountNameState extends State<AccountName> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) {
+        if (state is UserLoadingState) {
+          return Container(
+              width: widget.width,
+              height: widget.height,
+              child: Center(child: CircularProgressIndicator()));
+        } else if (state is UserLoadedState) {
+          return Container(
+              width: widget.width,
+              height: widget.height,
+              child: state.user.jsonString != null &&
+                      state.user.jsonString!.additionals != null &&
+                      state.user.jsonString!.additionals!.displayName != null
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          state.user.jsonString!.additionals!.displayName!,
+                          overflow: TextOverflow.ellipsis,
+                          style: widget.mainStyle,
+                        ),
+                        Text(
+                          "@" + state.user.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: widget.subStyle,
+                        )
+                      ],
+                    )
+                  : Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        state.user.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: widget.mainStyle,
+                      ),
+                    ));
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
+}
+
 class AccountNavigationChip extends StatelessWidget {
   const AccountNavigationChip({
     Key? key,
@@ -596,14 +336,25 @@ class AccountNavigationChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InputChip(
-      label: AccountAvatarBase(
-        username: author,
-        avatarSize: 12.w,
-        showVerified: true,
-        showName: true,
-        nameFontSizeMultiply: 0.8,
-        width: 35.w,
-        height: 5.h,
+      label: Container(
+        width: 40.w,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            AccountIconBase(
+              username: author,
+              avatarSize: 12.w,
+              showVerified: true,
+            ),
+            AccountNameBase(
+              username: author,
+              width: 25.w,
+              height: 5.h,
+              mainStyle: Theme.of(context).textTheme.headline6!,
+              subStyle: Theme.of(context).textTheme.bodyText1!,
+            ),
+          ],
+        ),
       ),
       onPressed: () {
         navigateToUserDetailPage(context, author, () {});

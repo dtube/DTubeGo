@@ -1455,14 +1455,15 @@ class PostInfoColumn extends StatelessWidget {
             onTap: () {
               navigateToUserDetailPage(context, widget.author, () {});
             },
-            child: AccountAvatarBase(
-                username: widget.author,
-                avatarSize: _avatarSize,
-                showVerified: true,
-                showName: true,
-                nameFontSizeMultiply: 1.5,
-                width: 25.w,
-                height: _avatarSize),
+            child: AccountIconBase(
+              username: widget.author,
+              avatarSize: _avatarSize,
+              showVerified: true,
+              // showName: true,
+              // nameFontSizeMultiply: 1.5,
+              // width: 25.w,
+              // height: _avatarSize
+            ),
           ),
         ),
         SizedBox(height: 1.h),

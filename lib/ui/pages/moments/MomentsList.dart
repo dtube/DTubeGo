@@ -415,7 +415,7 @@ class AllMomentsSeenWidget extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(top: 2.h),
               child: Text(
-                "Feel free to share a moment of your life by tapping on the big icon above!",
+                "Feel free to share a moment of your life by tapping on the following icon:",
                 style: Theme.of(context).textTheme.bodyText1,
               ),
             ),

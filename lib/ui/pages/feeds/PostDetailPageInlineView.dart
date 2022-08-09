@@ -189,13 +189,24 @@ class _PostDetailsState extends State<PostDetails> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InputChip(
-                      label: AccountAvatarBase(
-                          username: widget.post.author,
-                          avatarSize: 5.h,
-                          showVerified: true,
-                          showName: true,
-                          width: 15.w,
-                          height: 10.h),
+                      label: Row(
+                        children: [
+                          AccountIconBase(
+                            username: widget.post.author,
+                            avatarSize: 10.w,
+                            showVerified: true,
+                            // showName: true,
+                            // width: 30.w,
+                            // height: 10.h
+                          ),
+                          AccountNameBase(
+                              username: widget.post.author,
+                              width: 30.w,
+                              height: 10.h,
+                              mainStyle: Theme.of(context).textTheme.headline5!,
+                              subStyle: Theme.of(context).textTheme.bodyText1!)
+                        ],
+                      ),
                       onPressed: () {
                         navigateToUserDetailPage(
                             context, widget.post.author, () {});
