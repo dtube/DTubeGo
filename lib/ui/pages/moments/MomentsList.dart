@@ -323,6 +323,7 @@ class _MomentsContainerState extends State<MomentsContainer> {
                 child: Row(
                   children: [
                     MomentsUploadButton(
+                        text: "Create",
                         size: globalIconSizeMedium,
                         currentVT: state.vtBalance['v']! + 0.0,
                         defaultVotingWeight: double.parse(widget
@@ -352,10 +353,6 @@ class _MomentsContainerState extends State<MomentsContainer> {
                         momentsUploadCrosspost: widget.momentsUploadCrosspost,
                         customMomentTitle: widget.momentsCustomTitle,
                         customMomentBody: widget.momentsCustomBody),
-                    Padding(
-                      padding: EdgeInsets.only(left: 2.w),
-                      child: OverlayText(text: "Create"),
-                    )
                   ],
                 ),
               );
@@ -377,11 +374,11 @@ class _MomentsContainerState extends State<MomentsContainer> {
               height: 25.h,
               child: Row(
                 children: [
-                  MomentsUpload(widget: widget, size: globalIconSizeMedium),
-                  Padding(
-                    padding: EdgeInsets.only(left: 2.w),
-                    child: OverlayText(text: "Create"),
-                  )
+                  MomentsUpload(
+                    widget: widget,
+                    size: globalIconSizeBig,
+                    withText: true,
+                  ),
                 ],
               ))
         ],
@@ -402,7 +399,7 @@ class AllMomentsSeenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50.h,
-      width: 50.w,
+      width: 100.w,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -411,16 +408,24 @@ class AllMomentsSeenWidget extends StatelessWidget {
             "Oops! You have seen all recent moments!",
             style: Theme.of(context).textTheme.headline5,
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 2.h),
-            child: MomentsUpload(widget: widget, size: globalIconSizeBig * 2),
-          ),
+
           // FaIcon(FontAwesomeIcons.search, size: 20.w,),
+          Container(
+            width: 80.w,
+            child: Padding(
+              padding: EdgeInsets.only(top: 2.h),
+              child: Text(
+                "Feel free to share a moment of your life by tapping on the big icon above!",
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+            ),
+          ),
           Padding(
             padding: EdgeInsets.only(top: 2.h),
-            child: Text(
-              "Feel free to share a moment of your life by tapping on the big icon above!",
-              style: Theme.of(context).textTheme.bodyText1,
+            child: MomentsUpload(
+              widget: widget,
+              size: globalIconSizeBig * 2,
+              withText: false,
             ),
           ),
         ],
@@ -430,14 +435,16 @@ class AllMomentsSeenWidget extends StatelessWidget {
 }
 
 class MomentsUpload extends StatelessWidget {
-  const MomentsUpload({
-    Key? key,
-    required this.widget,
-    required this.size,
-  }) : super(key: key);
+  const MomentsUpload(
+      {Key? key,
+      required this.widget,
+      required this.size,
+      required this.withText})
+      : super(key: key);
 
   final MomentsContainer widget;
   final double size;
+  final bool withText;
 
   @override
   Widget build(BuildContext context) {
@@ -445,6 +452,7 @@ class MomentsUpload extends StatelessWidget {
       if (state is UserDTCVPLoadedState) {
         return MomentsUploadButton(
             size: size,
+            text: withText ? "Create" : "",
             currentVT: state.vtBalance['v']! + 0.0,
             defaultVotingWeight: double.parse(
                 widget.defaultPostsVotingWeight), // todo make this dynamic

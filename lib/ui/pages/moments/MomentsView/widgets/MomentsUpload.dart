@@ -1,6 +1,7 @@
 import 'package:dtube_go/bloc/web3storage/web3storage_bloc.dart';
 import 'package:dtube_go/bloc/web3storage/web3storage_bloc_full.dart';
 import 'package:dtube_go/ui/pages/upload/dialogs/HivePostCooldownDialog.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/utils/CountDownTimer.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 import 'package:gallery_saver/gallery_saver.dart';
@@ -40,6 +41,7 @@ class MomentsUploadButton extends StatefulWidget {
   String customMomentTitle;
   String customMomentBody;
   double size;
+  String text;
 
   MomentsUploadButton(
       {Key? key,
@@ -55,6 +57,7 @@ class MomentsUploadButton extends StatefulWidget {
       required this.momentsUploadCrosspost,
       required this.customMomentTitle,
       required this.customMomentBody,
+      required this.text,
       required this.size})
       : super(key: key);
 
@@ -254,19 +257,37 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
           visible: globals.keyPermissions.contains(4),
           child: GestureDetector(
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ShadowedIcon(
-                    size: widget.size,
-                    icon: FontAwesomeIcons.eye,
-                    color: globalAlmostWhite,
-                    shadowColor: Colors.black),
-                ShadowedIcon(
-                    size: widget.size / 2,
-                    icon: FontAwesomeIcons.plus,
-                    color: globalAlmostWhite,
-                    shadowColor: Colors.black)
+                Container(
+                  width: widget.size * 0.9,
+                  height: widget.size,
+                  child: Stack(
+                    children: [
+                      ShadowedIcon(
+                          size: widget.size,
+                          icon: FontAwesomeIcons.podcast,
+                          color: globalAlmostWhite,
+                          shadowColor: Colors.black),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: ShadowedIcon(
+                            size: widget.size / 2,
+                            icon: FontAwesomeIcons.circlePlus,
+                            color: globalAlmostWhite,
+                            shadowColor: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 2.w),
+                  child: OverlayText(
+                    text: widget.text,
+                    sizeMultiply: 1.5,
+                  ),
+                )
               ],
             ),
             onTap: () async {

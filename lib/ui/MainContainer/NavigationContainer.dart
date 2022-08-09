@@ -120,7 +120,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
       label: 'Moments',
       icon: Center(
         child: new BorderedIcon(
-          icon: FontAwesomeIcons.eye,
+          icon: FontAwesomeIcons.podcast,
           color: globalAlmostWhite,
           borderColor: Colors.black,
           size: globalIconSizeBig,

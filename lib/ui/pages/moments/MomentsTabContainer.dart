@@ -129,10 +129,10 @@ class _MomentsPageState extends State<MomentsPage>
                 ResponsiveLayout(
                   portrait: TabBarWithPosition(
                     tabIcons: _tabIcons,
-                    iconSize: globalIconSizeSmall,
+                    iconSize: globalIconSizeMedium,
                     tabController: _tabController,
                     alignment: Alignment.topRight,
-                    padding: EdgeInsets.only(top: 12.h, right: 2.w),
+                    padding: EdgeInsets.only(top: 10.h, right: 2.w),
                     rotation: 0,
                     menuSize: globals.keyPermissions.isEmpty
                         ? globalIconSizeSmall * 2
@@ -140,7 +140,7 @@ class _MomentsPageState extends State<MomentsPage>
                   ),
                   landscape: TabBarWithPosition(
                     tabIcons: _tabIcons,
-                    iconSize: globalIconSizeSmall,
+                    iconSize: globalIconSizeMedium,
                     tabController: _tabController,
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.zero,
@@ -171,6 +171,7 @@ class TabBarWithPosition extends StatelessWidget {
       : super(key: key);
 
   final List<IconData> tabIcons;
+
   final double iconSize;
   final TabController tabController;
   final Alignment alignment;
