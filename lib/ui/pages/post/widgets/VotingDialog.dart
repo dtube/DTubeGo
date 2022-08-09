@@ -72,6 +72,9 @@ class _VotingDialogState extends State<VotingDialog> {
     _tagController = TextEditingController();
     _userBloc.add(FetchDTCVPEvent());
     _vpValue = widget.defaultVote;
+    if (_vpValue < 1) {
+      _vpValue = 1;
+    }
     if (!widget.downvote) {
       _tipValue = widget.defaultTip;
     } else {

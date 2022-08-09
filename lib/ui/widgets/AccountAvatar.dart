@@ -1,6 +1,7 @@
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
+import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -579,6 +580,33 @@ class _AccountIconState extends State<AccountIcon> {
           print(state.toString() + " happened");
           return AvatarLoadingPlaceholder(size: widget.avatarSize);
         }
+      },
+    );
+  }
+}
+
+class AccountNavigationChip extends StatelessWidget {
+  const AccountNavigationChip({
+    Key? key,
+    required this.author,
+  }) : super(key: key);
+
+  final String author;
+
+  @override
+  Widget build(BuildContext context) {
+    return InputChip(
+      label: AccountAvatarBase(
+        username: author,
+        avatarSize: 12.w,
+        showVerified: true,
+        showName: true,
+        nameFontSizeMultiply: 0.8,
+        width: 35.w,
+        height: 5.h,
+      ),
+      onPressed: () {
+        navigateToUserDetailPage(context, author, () {});
       },
     );
   }

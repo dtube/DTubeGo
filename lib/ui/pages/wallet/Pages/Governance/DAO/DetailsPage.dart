@@ -152,7 +152,8 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
               ? BlocProvider<PostBloc>(
                   create: (BuildContext context) =>
                       PostBloc(repository: PostRepositoryImpl())
-                        ..add(FetchPostEvent(postUrlAuthor, postUrlLink)),
+                        ..add(FetchPostEvent(
+                            postUrlAuthor, postUrlLink, "DAODetailsPage.dart")),
                   child: VideoPlayerFromURL(url: widget.daoItem.url!))
               : Text("no video url detected"),
           Padding(
@@ -378,142 +379,6 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
           SizedBox(height: 10.h)
         ],
       ),
-    );
-  }
-}
-
-class CommentContainer extends StatelessWidget {
-  const CommentContainer({
-    Key? key,
-    required double defaultVoteWeightComments,
-    required int currentVT,
-    required double defaultVoteTipComments,
-    required this.blockedUsers,
-    required bool fixedDownvoteActivated,
-    required double fixedDownvoteWeight,
-    required this.post,
-  })  : _defaultVoteWeightComments = defaultVoteWeightComments,
-        _currentVT = currentVT,
-        _defaultVoteTipComments = defaultVoteTipComments,
-        _fixedDownvoteActivated = fixedDownvoteActivated,
-        _fixedDownvoteWeight = fixedDownvoteWeight,
-        super(key: key);
-
-  final Post post;
-  final double _defaultVoteWeightComments;
-  final int _currentVT;
-  final double _defaultVoteTipComments;
-  final String blockedUsers;
-  final bool _fixedDownvoteActivated;
-  final double _fixedDownvoteWeight;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 100.h,
-      child: ListView.builder(
-        itemCount: post.comments!.length,
-        padding: EdgeInsets.zero,
-        itemBuilder: (BuildContext context, int index) => Column(
-          children: [
-            CommentDisplay(
-                post.comments![index],
-                _defaultVoteWeightComments,
-                _currentVT,
-                post.author,
-                post.link,
-                _defaultVoteTipComments,
-                context,
-                blockedUsers.split(","),
-                _fixedDownvoteActivated,
-                _fixedDownvoteWeight),
-            SizedBox(height: index == post.comments!.length - 1 ? 200 : 0)
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ShareAndCommentChips extends StatelessWidget {
-  const ShareAndCommentChips({
-    Key? key,
-    required this.author,
-    required this.directFocus,
-    required this.link,
-    required double defaultVoteWeightComments,
-  })  : _defaultVoteWeightComments = defaultVoteWeightComments,
-        super(key: key);
-
-  final String author;
-  final String link;
-  final double _defaultVoteWeightComments;
-  final String directFocus;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InputChip(
-              label: FaIcon(FontAwesomeIcons.shareAlt),
-              onPressed: () {
-                Share.share('https://d.tube/#!/v/' + author + '/' + link);
-              },
-            ),
-            SizedBox(width: 8),
-            ReplyButton(
-              icon: FaIcon(FontAwesomeIcons.comment),
-              author: author,
-              link: link,
-              parentAuthor: author,
-              parentLink: link,
-              votingWeight: _defaultVoteWeightComments,
-              scale: 1,
-              focusOnNewComment: directFocus == "newcomment",
-              isMainPost: true,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class DtubeCoinsChip extends StatelessWidget {
-  const DtubeCoinsChip({
-    Key? key,
-    required this.dist,
-    required this.post,
-  }) : super(key: key);
-
-  final double dist;
-  final Post post;
-  @override
-  Widget build(BuildContext context) {
-    return InputChip(
-      label: Row(
-        children: [
-          Text(
-            (dist / 100).round().toString(),
-            style: Theme.of(context).textTheme.headline5,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 2.w),
-            child: DTubeLogoShadowed(size: 5.w),
-          ),
-        ],
-      ),
-      onPressed: () {
-        showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => VotesOverview(post: post),
-        );
-      },
     );
   }
 }

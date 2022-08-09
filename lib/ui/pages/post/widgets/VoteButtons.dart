@@ -103,7 +103,7 @@ class _VotingButtonsState extends State<VotingButtons> {
                               ? globalRed
                               : widget.iconColor,
                           shadowColor: Colors.black,
-                          size: 5.w,
+                          size: globalIconSizeMedium * widget.scale,
                         ),
                       ),
                       onPressed: () {
@@ -135,7 +135,7 @@ class _VotingButtonsState extends State<VotingButtons> {
                               ? globalRed
                               : widget.iconColor,
                           shadowColor: Colors.black,
-                          size: 5.w,
+                          size: globalIconSizeMedium * widget.scale,
                         ),
                       ),
                       onPressed: () {
@@ -181,6 +181,7 @@ class _VotingButtonsState extends State<VotingButtons> {
                     downvotePressed: _downvotePressed,
                     postBloc: BlocProvider.of<PostBloc>(context),
                     txBloc: BlocProvider.of<TransactionBloc>(context),
+                    scale: widget.scale,
                     widget: widget,
                     post: state.post)
                 : SlideInLeft(
@@ -192,6 +193,7 @@ class _VotingButtonsState extends State<VotingButtons> {
                         widget: widget,
                         postBloc: BlocProvider.of<PostBloc>(context),
                         txBloc: BlocProvider.of<TransactionBloc>(context),
+                        scale: widget.scale,
                         post: state.post),
                   );
           } else {
@@ -200,6 +202,7 @@ class _VotingButtonsState extends State<VotingButtons> {
                     upvotePressed: _upvotePressed,
                     postBloc: BlocProvider.of<PostBloc>(context),
                     txBloc: BlocProvider.of<TransactionBloc>(context),
+                    scale: widget.scale,
                     downvotePressed: _downvotePressed,
                     widget: widget,
                     post: state.post)
@@ -211,6 +214,7 @@ class _VotingButtonsState extends State<VotingButtons> {
                         downvotePressed: _downvotePressed,
                         postBloc: BlocProvider.of<PostBloc>(context),
                         txBloc: BlocProvider.of<TransactionBloc>(context),
+                        scale: widget.scale,
                         widget: widget,
                         post: state.post),
                   );
@@ -231,6 +235,7 @@ class VotingButtonRow extends StatelessWidget {
       required this.widget,
       required this.postBloc,
       required this.txBloc,
+      required this.scale,
       required this.post})
       : _upvotePressed = upvotePressed,
         _downvotePressed = downvotePressed,
@@ -241,124 +246,125 @@ class VotingButtonRow extends StatelessWidget {
   final Post post;
   final PostBloc postBloc;
   final TransactionBloc txBloc;
-
+  final double scale;
   final VotingButtons widget;
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<TransactionBloc, TransactionState>(
-      //bloc: ,
-      listener: (context, state) {
-        if (state is TransactionSent) {
-          print(post.author + '/' + post.link);
-          BlocProvider.of<PostBloc>(context)
-              .add(FetchPostEvent(post.author, post.link));
-        }
-      },
-      child: Visibility(
-        visible: !_upvotePressed && !_downvotePressed,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InputChip(
-              isEnabled: globals.keyPermissions.contains(5),
-              label: Text(
-                post.upvotes != null && post.upvotes!.isNotEmpty
-                    ? (post.upvotes!.length).toString()
-                    : '0',
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-              avatar: Padding(
-                padding: const EdgeInsets.only(left: 4.0),
-                child: FaIcon(
-                  FontAwesomeIcons.heart,
-                  color: post.alreadyVoted! && post.alreadyVotedDirection!
-                      ? globalRed
-                      : widget.iconColor,
+    return Transform.scale(
+      scale: widget.scale,
+      alignment: Alignment.centerRight,
+      child: BlocListener<TransactionBloc, TransactionState>(
+        listener: (context, state) {
+          if (state is TransactionSent) {
+            print(post.author + '/' + post.link);
+            BlocProvider.of<PostBloc>(context).add(
+                FetchPostEvent(post.author, post.link, "VoteButtons.dart"));
+          }
+        },
+        child: Visibility(
+          visible: !_upvotePressed && !_downvotePressed,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InputChip(
+                isEnabled: globals.keyPermissions.contains(5),
+                label: Text(
+                  post.upvotes != null && post.upvotes!.isNotEmpty
+                      ? (post.upvotes!.length).toString()
+                      : '0',
+                  style: Theme.of(context).textTheme.bodyText2,
                 ),
-              ),
-              onPressed: () {
-                if (!post.alreadyVoted!) {
-                  // setState(() {
-                  //   _upvotePressed = !_upvotePressed;
-                  //   if (_upvotePressed) {
-                  //     _downvotePressed = false;
-                  //   }
-                  // });
-                  showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => MultiBlocProvider(
-                      providers: [
-                        BlocProvider<UserBloc>(
-                            create: (context) =>
-                                UserBloc(repository: UserRepositoryImpl())),
-                      ],
-                      child: VotingDialog(
-                        defaultVote: widget.defaultVotingWeight,
-                        defaultTip: widget.defaultVotingTip,
-                        author: post.author,
-                        link: post.link,
-                        postBloc: postBloc,
-                        txBloc: txBloc,
-                        downvote: false,
-                        //currentVT: state.vtBalance['v']! + 0.0,
-                        isPost: widget.isPost,
-                        fixedDownvoteActivated: widget.fixedDownvoteActivated,
-                        fixedDownvoteWeight: widget.fixedDownvoteWeight,
+                avatar: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: FaIcon(
+                    FontAwesomeIcons.heart,
+                    color: post.alreadyVoted! && post.alreadyVotedDirection!
+                        ? globalRed
+                        : widget.iconColor,
+                    size: globalIconSizeMedium,
+                  ),
+                ),
+                onPressed: () {
+                  if (!post.alreadyVoted!) {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider<UserBloc>(
+                              create: (context) =>
+                                  UserBloc(repository: UserRepositoryImpl())),
+                        ],
+                        child: VotingDialog(
+                          defaultVote: widget.defaultVotingWeight,
+                          defaultTip: widget.defaultVotingTip,
+                          author: post.author,
+                          link: post.link,
+                          postBloc: postBloc,
+                          txBloc: txBloc,
+                          downvote: false,
+                          //currentVT: state.vtBalance['v']! + 0.0,
+                          isPost: widget.isPost,
+                          fixedDownvoteActivated: widget.fixedDownvoteActivated,
+                          fixedDownvoteWeight: widget.fixedDownvoteWeight,
+                        ),
                       ),
-                    ),
-                  );
-                }
-              },
-            ),
-            SizedBox(
-              width: 8,
-            ),
-            InputChip(
-              isEnabled: globals.keyPermissions.contains(5),
-              label: Text(
-                post.downvotes != null && post.downvotes!.isNotEmpty
-                    ? (post.downvotes!.length).toString()
-                    : '0',
-                style: Theme.of(context).textTheme.bodyText2,
+                    );
+                  }
+                },
               ),
-              avatar: Padding(
-                padding: const EdgeInsets.only(left: 4.0),
-                child: FaIcon(FontAwesomeIcons.flag,
+              SizedBox(
+                width: 8,
+              ),
+              InputChip(
+                isEnabled: globals.keyPermissions.contains(5),
+                label: Text(
+                  post.downvotes != null && post.downvotes!.isNotEmpty
+                      ? (post.downvotes!.length).toString()
+                      : '0',
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+                avatar: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: FaIcon(
+                    FontAwesomeIcons.flag,
                     color: post.alreadyVoted! && !post.alreadyVotedDirection!
                         ? globalRed
-                        : widget.iconColor),
-              ),
-              onPressed: () {
-                if (!post.alreadyVoted!) {
-                  showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => MultiBlocProvider(
-                      providers: [
-                        BlocProvider<UserBloc>(
-                            create: (context) =>
-                                UserBloc(repository: UserRepositoryImpl())),
-                      ],
-                      child: VotingDialog(
-                        defaultVote: widget.defaultVotingWeight,
-                        defaultTip: widget.defaultVotingTip,
-                        author: post.author,
-                        link: post.link,
-                        downvote: true,
-                        postBloc: postBloc,
-                        txBloc: txBloc,
-                        //currentVT: state.vtBalance['v']! + 0.0,
-                        isPost: widget.isPost,
-                        fixedDownvoteActivated: widget.fixedDownvoteActivated,
-                        fixedDownvoteWeight: widget.fixedDownvoteWeight,
+                        : widget.iconColor,
+                    size: globalIconSizeMedium,
+                  ),
+                ),
+                onPressed: () {
+                  if (!post.alreadyVoted!) {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider<UserBloc>(
+                              create: (context) =>
+                                  UserBloc(repository: UserRepositoryImpl())),
+                        ],
+                        child: VotingDialog(
+                          defaultVote: widget.defaultVotingWeight,
+                          defaultTip: widget.defaultVotingTip,
+                          author: post.author,
+                          link: post.link,
+                          downvote: true,
+                          postBloc: postBloc,
+                          txBloc: txBloc,
+                          //currentVT: state.vtBalance['v']! + 0.0,
+                          isPost: widget.isPost,
+                          fixedDownvoteActivated: widget.fixedDownvoteActivated,
+                          fixedDownvoteWeight: widget.fixedDownvoteWeight,
+                        ),
                       ),
-                    ),
-                  );
-                }
-              },
-            ),
-          ],
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -400,8 +406,6 @@ class _VotingSliderState extends State<VotingSlider> {
   late double _tipValue;
   late TransactionBloc _txBloc;
   late TextEditingController _tagController;
-
-  late PostBloc _postBloc;
   late double _currentVT;
   bool _sendButtonPressed = false;
   late UserBloc _userBloc;
@@ -410,11 +414,11 @@ class _VotingSliderState extends State<VotingSlider> {
   void initState() {
     super.initState();
     _txBloc = BlocProvider.of<TransactionBloc>(context);
-    _postBloc = BlocProvider.of<PostBloc>(context);
+
     _tagController = TextEditingController();
     _userBloc = BlocProvider.of<UserBloc>(context);
 
-    _userBloc.add(FetchDTCVPEvent());
+    //_userBloc.add(FetchDTCVPEvent());
 
     _vpValue = widget.defaultVote;
     _tipValue = widget.defaultTip;

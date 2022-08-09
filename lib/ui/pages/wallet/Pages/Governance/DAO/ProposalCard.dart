@@ -126,8 +126,8 @@ class _ProposalCardState extends State<ProposalCard>
                 ? BlocProvider<PostBloc>(
                     create: (BuildContext context) =>
                         PostBloc(repository: PostRepositoryImpl())
-                          ..add(FetchPostEvent(
-                              widget.postUrlAuthor, widget.postUrlLink)),
+                          ..add(FetchPostEvent(widget.postUrlAuthor,
+                              widget.postUrlLink, "ProposalCard.dart")),
                     child: VideoPlayerFromURL(url: widget.daoItem.url!))
                 : Text("no video url detected")
           ]),

@@ -42,6 +42,9 @@ class PostDetailPageInlineView extends StatefulWidget {
 
 class _PostDetailPageInlineViewState extends State<PostDetailPageInlineView> {
   int reloadCount = 0;
+  late PostBloc postBloc = new PostBloc(repository: PostRepositoryImpl());
+  late TransactionBloc txBloc =
+      new TransactionBloc(repository: TransactionRepositoryImpl());
 
   @override
   void dispose() {
@@ -56,7 +59,8 @@ class _PostDetailPageInlineViewState extends State<PostDetailPageInlineView> {
           key: UniqueKey(),
           create: (BuildContext context) =>
               PostBloc(repository: PostRepositoryImpl())
-                ..add(FetchPostEvent(widget.author, widget.link)),
+                ..add(FetchPostEvent(
+                    widget.author, widget.link, "PageDetailsPageV2.dart")),
         ),
         BlocProvider<UserBloc>(
             create: (BuildContext context) =>
@@ -80,7 +84,8 @@ class _PostDetailPageInlineViewState extends State<PostDetailPageInlineView> {
               PostDetails(
             post: state.post,
             directFocus: reloadCount <= 1 ? widget.directFocus : "none",
-
+            postBloc: postBloc,
+            txBloc: txBloc,
             //),
           );
         } else {
@@ -96,12 +101,16 @@ class _PostDetailPageInlineViewState extends State<PostDetailPageInlineView> {
 class PostDetails extends StatefulWidget {
   final Post post;
   final String directFocus;
+  final PostBloc postBloc;
+  final TransactionBloc txBloc;
 
-  PostDetails({
-    Key? key,
-    required this.post,
-    required this.directFocus,
-  }) : super(key: key);
+  PostDetails(
+      {Key? key,
+      required this.post,
+      required this.directFocus,
+      required this.postBloc,
+      required this.txBloc})
+      : super(key: key);
 
   @override
   _PostDetailsState createState() => _PostDetailsState();
@@ -118,7 +127,6 @@ class _PostDetailsState extends State<PostDetails> {
   late bool _fixedDownvoteActivated = true;
   late double _fixedDownvoteWeight = 1;
 
-  late int _currentVT = 0;
   String blockedUsers = "";
   late YoutubePlayerController _ytController;
   void fetchBlockedUsers() async {
@@ -147,11 +155,7 @@ class _PostDetailsState extends State<PostDetails> {
   Widget build(BuildContext context) {
     return BlocListener<UserBloc, UserState>(
       listener: (context, state) {
-        if (state is UserDTCVPLoadedState) {
-          setState(() {
-            _currentVT = state.vtBalance["v"]!;
-          });
-        }
+        if (state is UserDTCVPLoadedState) {}
       },
       child: SingleChildScrollView(
         child: Padding(
@@ -279,10 +283,12 @@ class _PostDetailsState extends State<PostDetails> {
                                 create: (context) => TransactionBloc(
                                     repository: TransactionRepositoryImpl())),
                             BlocProvider<PostBloc>(
-                                create: (context) => PostBloc(
-                                    repository: PostRepositoryImpl())
-                                  ..add(FetchPostEvent(
-                                      widget.post.author, widget.post.link))),
+                                create: (context) =>
+                                    PostBloc(repository: PostRepositoryImpl())
+                                      ..add(FetchPostEvent(
+                                          widget.post.author,
+                                          widget.post.link,
+                                          "PageDetailsPageV2.dart"))),
                             BlocProvider<UserBloc>(
                                 create: (BuildContext context) =>
                                     UserBloc(repository: UserRepositoryImpl())),
@@ -326,16 +332,17 @@ class _PostDetailsState extends State<PostDetails> {
                     ),
                     SizedBox(width: 8),
                     ReplyButton(
-                      icon: FaIcon(FontAwesomeIcons.comment),
-                      author: widget.post.author,
-                      link: widget.post.link,
-                      parentAuthor: widget.post.author,
-                      parentLink: widget.post.link,
-                      votingWeight: _defaultVoteWeightComments,
-                      scale: 1,
-                      focusOnNewComment: widget.directFocus == "newcomment",
-                      isMainPost: true,
-                    ),
+                        icon: FaIcon(FontAwesomeIcons.comment),
+                        author: widget.post.author,
+                        link: widget.post.link,
+                        parentAuthor: widget.post.author,
+                        parentLink: widget.post.link,
+                        votingWeight: _defaultVoteWeightComments,
+                        scale: 1,
+                        focusOnNewComment: widget.directFocus == "newcomment",
+                        isMainPost: true,
+                        postBloc: widget.postBloc,
+                        txBloc: widget.txBloc),
                   ],
                 ),
                 // SizedBox(height: 16),
@@ -347,16 +354,17 @@ class _PostDetailsState extends State<PostDetails> {
                           padding: EdgeInsets.zero,
                           itemBuilder: (BuildContext context, int index) =>
                               CommentDisplay(
-                            widget.post.comments![index],
-                            _defaultVoteWeightComments,
-                            _currentVT,
-                            widget.post.author,
-                            widget.post.link,
-                            _defaultVoteTipComments,
-                            context,
-                            blockedUsers.split(","),
-                            _fixedDownvoteActivated,
-                            _fixedDownvoteWeight,
+                            entry: widget.post.comments![index],
+                            defaultVoteWeight: _defaultVoteWeightComments,
+                            parentAuthor: widget.post.author,
+                            parentLink: widget.post.link,
+                            defaultVoteTip: _defaultVoteTipComments,
+                            parentContext: context,
+                            blockedUsers: blockedUsers.split(","),
+                            fixedDownvoteActivated: _fixedDownvoteActivated,
+                            fixedDownvoteWeight: _fixedDownvoteWeight,
+                            postBloc: widget.postBloc,
+                            txBloc: widget.txBloc,
                           ),
                         ),
                       )

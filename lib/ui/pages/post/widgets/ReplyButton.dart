@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
@@ -24,6 +25,8 @@ class ReplyButton extends StatefulWidget {
   final double scale;
   bool focusOnNewComment;
   bool isMainPost;
+  final PostBloc postBloc;
+  final TransactionBloc txBloc;
 
   //final Comment comment;
 
@@ -37,7 +40,9 @@ class ReplyButton extends StatefulWidget {
       required this.votingWeight,
       required this.scale,
       required this.focusOnNewComment,
-      required this.isMainPost})
+      required this.isMainPost,
+      required this.postBloc,
+      required this.txBloc})
       : super(key: key);
 
   @override
@@ -51,7 +56,6 @@ class _ReplyButtonState extends State<ReplyButton> {
   bool _sendPressed = false;
 
   late UserBloc _userBloc;
-  late PostBloc _postBloc;
 
   late int _currentVp;
 
@@ -65,8 +69,7 @@ class _ReplyButtonState extends State<ReplyButton> {
     }
     _replyController = new TextEditingController();
 
-    _userBloc = BlocProvider.of<UserBloc>(context);
-    _postBloc = BlocProvider.of<PostBloc>(context);
+    _userBloc = BlocProvider.of<UserBloc>(context)..add(FetchDTCVPEvent());
 
     //_userBloc.add(FetchDTCVPEvent());
   }
@@ -74,18 +77,21 @@ class _ReplyButtonState extends State<ReplyButton> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<TransactionBloc, TransactionState>(
-      //bloc: _txBloc,
+      bloc: widget.txBloc,
       listener: (context, state) {
-        // if (state is TransactionSent) {
-        //   print(widget.author + '/' + widget.link);
-        //   _postBloc.add(FetchPostEvent(widget.parentAuthor, widget.parentLink));
-        // }
+        if (state is TransactionSent) {
+          setState(() {
+            _replyController.text = "";
+            _replyPressed = false;
+          });
+        }
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Transform.scale(
             scale: widget.scale,
+            alignment: Alignment.topRight,
             child: globals.disableAnimations
                 ? Visibility(
                     visible: globals.keyPermissions.contains(4),
@@ -125,10 +131,11 @@ class _ReplyButtonState extends State<ReplyButton> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: 55.w, // TODO: make this dynamic
+                  width: 70.w,
                   child: TextField(
                       autofocus: _replyPressed,
                       controller: _replyController,
+                      cursorColor: globalRed,
                       style: Theme.of(context).textTheme.bodyText1),
                 ),
                 BlocBuilder<UserBloc, UserState>(
@@ -157,6 +164,7 @@ class _ReplyButtonState extends State<ReplyButton> {
                                 setState(() {
                                   _sendPressed = true;
                                 });
+                                print("SEND PRESSED");
                                 UploadData _uploadData = new UploadData(
                                     link: "",
                                     parentAuthor: widget.author,
@@ -188,7 +196,7 @@ class _ReplyButtonState extends State<ReplyButton> {
                                     uploaded: false,
                                     crossPostToHive: false);
 
-                                BlocProvider.of<TransactionBloc>(context)
+                                widget.txBloc
                                     .add(SendCommentEvent(_uploadData));
                               },
                               label: Text(
@@ -197,7 +205,6 @@ class _ReplyButtonState extends State<ReplyButton> {
               ],
             ),
           ),
-          SizedBox(height: 16)
         ],
       ),
     );

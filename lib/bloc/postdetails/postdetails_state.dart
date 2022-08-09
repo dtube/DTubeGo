@@ -22,6 +22,20 @@ class PostLoadedState extends PostState {
   List<Object> get props => [Post];
 }
 
+class TopLevelPostLoadingState extends PostState {
+  @override
+  List<Object> get props => [];
+}
+
+class TopLevelPostLoadedState extends PostState {
+  Post post;
+
+  TopLevelPostLoadedState({required this.post});
+
+  @override
+  List<Object> get props => [Post];
+}
+
 class PostErrorState extends PostState {
   String message;
 
