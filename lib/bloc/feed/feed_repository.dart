@@ -5,25 +5,13 @@ import 'dart:convert';
 
 abstract class FeedRepository {
   Future<List<FeedItem>> getMyFeed(String apiNode, String applicationUser,
-      String? fromAuthor, String? fromLink);
-  Future<List<FeedItem>> getHotFeed(
-    String apiNode,
-    String? fromAuthor,
-    String? fromLink,
-    String applicationUser,
-  );
-  Future<List<FeedItem>> getTrendingFeed(
-    String apiNode,
-    String? fromAuthor,
-    String? fromLink,
-    String applicationUser,
-  );
-  Future<List<FeedItem>> getNewFeed(
-    String apiNode,
-    String? fromAuthor,
-    String? fromLink,
-    String applicationUser,
-  );
+      String? fromAuthor, String? fromLink, String blockedUsers);
+  Future<List<FeedItem>> getHotFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers);
+  Future<List<FeedItem>> getTrendingFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers);
+  Future<List<FeedItem>> getNewFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers);
   Future<List<FeedItem>> getUserFeed(
     String apiNode,
     String username,
@@ -31,18 +19,10 @@ abstract class FeedRepository {
     String? fromLink,
     String applicationUser,
   );
-  Future<List<FeedItem>> getNewFeedFiltered(
-    String apiNode,
-    String filterString,
-    String tsRangeFilter,
-    String applicationUser,
-  );
-  Future<List<FeedItem>> getMyFeedFiltered(
-    String apiNode,
-    String filterString,
-    String tsRangeFilter,
-    String applicationUser,
-  );
+  Future<List<FeedItem>> getNewFeedFiltered(String apiNode, String filterString,
+      String tsRangeFilter, String applicationUsers);
+  Future<List<FeedItem>> getMyFeedFiltered(String apiNode, String filterString,
+      String tsRangeFilter, String applicationUser);
 }
 
 class FeedRepositoryImpl implements FeedRepository {
@@ -50,12 +30,8 @@ class FeedRepositoryImpl implements FeedRepository {
 
 //moments feeds
 
-  Future<List<FeedItem>> getNewFeedFiltered(
-    String apiNode,
-    String filterString,
-    String tsRangeFilter,
-    String applicationUser,
-  ) async {
+  Future<List<FeedItem>> getNewFeedFiltered(String apiNode, String filterString,
+      String tsRangeFilter, String applicationUser) async {
     String _url = apiNode +
         AppConfig.newFeedUrlFiltered.replaceAll(
             "##FILTERSTRING",
@@ -69,7 +45,29 @@ class FeedRepositoryImpl implements FeedRepository {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
-      List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+      List<FeedItem> _preFilterFeed =
+          ApiResultModel.fromJson(data, applicationUser).feed;
+
+      List<FeedItem> feed = [];
+
+      for (var f in _preFilterFeed) {
+        // go through downvotes and check if one is from the applicationuser
+        if (f.downvotes != null && f.downvotes!.length > 0) {
+          bool downvotedByAppUser = false;
+
+          for (var v in f.downvotes!) {
+            if (v.u == applicationUser) {
+              downvotedByAppUser = true;
+              break;
+            }
+          }
+          if (!downvotedByAppUser) {
+            feed.add(f);
+          }
+        } else {
+          feed.add(f);
+        }
+      }
 
       return feed;
     } else {
@@ -77,12 +75,8 @@ class FeedRepositoryImpl implements FeedRepository {
     }
   }
 
-  Future<List<FeedItem>> getMyFeedFiltered(
-    String apiNode,
-    String filterString,
-    String tsRangeFilter,
-    String applicationUser,
-  ) async {
+  Future<List<FeedItem>> getMyFeedFiltered(String apiNode, String filterString,
+      String tsRangeFilter, String applicationUser) async {
     String _url = apiNode +
         AppConfig.myFeedUrlFiltered
             .replaceAll("##USERNAME", applicationUser)
@@ -92,7 +86,29 @@ class FeedRepositoryImpl implements FeedRepository {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
-      List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+      List<FeedItem> _preFilterFeed =
+          ApiResultModel.fromJson(data, applicationUser).feed;
+
+      List<FeedItem> feed = [];
+
+      for (var f in _preFilterFeed) {
+        // go through downvotes and check if one is from the applicationuser
+        if (f.downvotes != null && f.downvotes!.length > 0) {
+          bool downvotedByAppUser = false;
+
+          for (var v in f.downvotes!) {
+            if (v.u == applicationUser) {
+              downvotedByAppUser = true;
+              break;
+            }
+          }
+          if (!downvotedByAppUser) {
+            feed.add(f);
+          }
+        } else {
+          feed.add(f);
+        }
+      }
       return feed;
     } else {
       throw Exception();
@@ -102,7 +118,7 @@ class FeedRepositoryImpl implements FeedRepository {
   // common feeds
 
   Future<List<FeedItem>> getMyFeed(String apiNode, String applicationUser,
-      String? fromAuthor, String? fromLink) async {
+      String? fromAuthor, String? fromLink, String blockedUsers) async {
     String _url = apiNode +
         AppConfig.myFeedUrlFirst.replaceAll("##USERNAME", applicationUser);
     if (fromAuthor != null && fromLink != null) {
@@ -117,20 +133,41 @@ class FeedRepositoryImpl implements FeedRepository {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
-      List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+      List<String> _blockedUsers = blockedUsers.split(",");
+      List<FeedItem> _preFilterFeed =
+          ApiResultModel.fromJson(data, applicationUser).feed;
+      List<FeedItem> feed = [];
+      for (var f in _preFilterFeed) {
+        // check if creator is blocked from applicationUser
+        if (!_blockedUsers.contains(f.author)) {
+          // go through downvotes and check if one is from the applicationuser
+          if (f.downvotes != null && f.downvotes!.length > 0) {
+            bool downvotedByAppUser = false;
+
+            for (var v in f.downvotes!) {
+              if (v.u == applicationUser) {
+                downvotedByAppUser = true;
+                break;
+              }
+            }
+            if (!downvotedByAppUser) {
+              feed.add(f);
+            }
+          } else {
+            feed.add(f);
+          }
+        }
+      }
       return feed;
     } else {
       throw Exception();
     }
   }
 
-  Future<List<FeedItem>> getHotFeed(
-    String apiNode,
-    String? fromAuthor,
-    String? fromLink,
-    String applicationUser,
-  ) async {
+  Future<List<FeedItem>> getHotFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers) async {
     String _url = apiNode + AppConfig.hotFeedUrlFirst;
+
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
           AppConfig.hotFeedUrlMore
@@ -141,19 +178,39 @@ class FeedRepositoryImpl implements FeedRepository {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
-      List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+      List<String> _blockedUsers = blockedUsers.split(",");
+      List<FeedItem> _preFilterFeed =
+          ApiResultModel.fromJson(data, applicationUser).feed;
+      List<FeedItem> feed = [];
+      for (var f in _preFilterFeed) {
+        // check if creator is blocked from applicationUser
+        if (!_blockedUsers.contains(f.author)) {
+          // go through downvotes and check if one is from the applicationuser
+          if (f.downvotes != null && f.downvotes!.length > 0) {
+            bool downvotedByAppUser = false;
+
+            for (var v in f.downvotes!) {
+              if (v.u == applicationUser) {
+                downvotedByAppUser = true;
+                break;
+              }
+            }
+            if (!downvotedByAppUser) {
+              feed.add(f);
+            }
+          } else {
+            feed.add(f);
+          }
+        }
+      }
       return feed;
     } else {
       throw Exception();
     }
   }
 
-  Future<List<FeedItem>> getTrendingFeed(
-    String apiNode,
-    String? fromAuthor,
-    String? fromLink,
-    String applicationUser,
-  ) async {
+  Future<List<FeedItem>> getTrendingFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers) async {
     String _url = apiNode + AppConfig.trendingFeedUrlFirst;
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
@@ -165,19 +222,39 @@ class FeedRepositoryImpl implements FeedRepository {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
-      List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+      List<String> _blockedUsers = blockedUsers.split(",");
+      List<FeedItem> _preFilterFeed =
+          ApiResultModel.fromJson(data, applicationUser).feed;
+      List<FeedItem> feed = [];
+      for (var f in _preFilterFeed) {
+        // check if creator is blocked from applicationUser
+        if (!_blockedUsers.contains(f.author)) {
+          // go through downvotes and check if one is from the applicationuser
+          if (f.downvotes != null && f.downvotes!.length > 0) {
+            bool downvotedByAppUser = false;
+
+            for (var v in f.downvotes!) {
+              if (v.u == applicationUser) {
+                downvotedByAppUser = true;
+                break;
+              }
+            }
+            if (!downvotedByAppUser) {
+              feed.add(f);
+            }
+          } else {
+            feed.add(f);
+          }
+        }
+      }
       return feed;
     } else {
       throw Exception();
     }
   }
 
-  Future<List<FeedItem>> getNewFeed(
-    String apiNode,
-    String? fromAuthor,
-    String? fromLink,
-    String applicationUser,
-  ) async {
+  Future<List<FeedItem>> getNewFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers) async {
     String _url = apiNode + AppConfig.newFeedUrlFirst;
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
@@ -189,7 +266,32 @@ class FeedRepositoryImpl implements FeedRepository {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
-      List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+      List<String> _blockedUsers = blockedUsers.split(",");
+      List<FeedItem> _preFilterFeed =
+          ApiResultModel.fromJson(data, applicationUser).feed;
+      List<FeedItem> feed = [];
+
+      for (var f in _preFilterFeed) {
+        // check if creator is blocked from applicationUser
+        if (!_blockedUsers.contains(f.author)) {
+          // go through downvotes and check if one is from the applicationuser
+          if (f.downvotes != null && f.downvotes!.length > 0) {
+            bool downvotedByAppUser = false;
+
+            for (var v in f.downvotes!) {
+              if (v.u == applicationUser) {
+                downvotedByAppUser = true;
+                break;
+              }
+            }
+            if (!downvotedByAppUser) {
+              feed.add(f);
+            }
+          } else {
+            feed.add(f);
+          }
+        }
+      }
 
       return feed;
     } else {

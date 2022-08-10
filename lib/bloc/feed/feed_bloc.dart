@@ -12,43 +12,77 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   FeedRepository repository;
   bool isFetching = false;
 
-  FeedBloc({required this.repository}) : super(FeedInitialState());
+  FeedBloc({required this.repository}) : super(FeedInitialState()) {
+    on<InitFeedEvent>((event, emit) async {
+      emit(FeedInitialState());
+    });
 
-  @override
-  Stream<FeedState> mapEventToState(FeedEvent event) async* {
-    String _avalonApiNode = await sec.getNode();
-    String? _applicationUser = await sec.getUsername();
-    // event to reset the feed state
-    if (event is InitFeedEvent) {
-      yield FeedInitialState();
-    }
-    // event to fetch moments
-    if (event is FetchMomentsEvent) {
+    on<FetchMomentsEvent>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      String? _applicationUser = await sec.getUsername();
+
+      // read and prepare the blocked list for the search filters
+      String? _blockedUsers = await sec.getBlockedUsers();
+      String _blockedUsersFilter = "";
+      if (_blockedUsers != "") {
+        for (var u in _blockedUsers.split(",")) {
+          _blockedUsersFilter = ",%5E" + u;
+        }
+      }
       String _tsRangeFilter = '&tsrange=' +
-          (DateTime.now().add(Duration(days: -14)).millisecondsSinceEpoch /
+          (DateTime.now()
+                      .add(Duration(days: AppConfig.momentsPastXDays))
+                      .millisecondsSinceEpoch /
                   1000)
               .toString() +
           ',' +
           (DateTime.now().millisecondsSinceEpoch / 1000).toString();
 
-      yield FeedLoadingState();
+      emit(FeedLoadingState());
       try {
         List<FeedItem> feed = event.feedType == "NewMoments"
             ? await repository.getNewFeedFiltered(
                 _avalonApiNode,
-                "&authors=all,%5Es3rk47&tags=DTubeGo-Moments",
+                "&authors=all,%5Es3rk47" +
+                    _blockedUsersFilter +
+                    "&tags=DTubeGo-Moments",
                 _tsRangeFilter,
                 _applicationUser)
             : await repository.getMyFeedFiltered(_avalonApiNode,
                 "&tags=DTubeGo-Moments", _tsRangeFilter, _applicationUser);
-        yield FeedLoadedState(feed: feed, feedType: event.feedType);
+
+        // remove already seen moments
+        //uncomment this to see aso seen moments
+
+        List<FeedItem> feedCopy = List.from(feed);
+        for (var f in feedCopy) {
+          bool momentAlreadySeen =
+              await sec.getSeenMomentAlready(f.author + "/" + f.link);
+          if (momentAlreadySeen) {
+            feed.remove(f);
+          }
+        }
+        // reverse feed to have the moments in ascending order
+        List<FeedItem> feedReversed = new List.from(feed.reversed);
+        emit(FeedLoadedState(feed: feedReversed, feedType: event.feedType));
       } catch (e) {
         print(e.toString());
-        yield FeedErrorState(message: e.toString());
+        emit(FeedErrorState(message: e.toString()));
       }
-    }
-// event to fetch user moments
-    if (event is FetchMomentsOfUserEvent) {
+    });
+
+    on<FetchMomentsOfUserEvent>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      String? _applicationUser = await sec.getUsername();
+
+      // read and prepare the blocked list for the search filters
+      String? _blockedUsers = await sec.getBlockedUsers();
+      String _blockedUsersFilter = "";
+      if (_blockedUsers != "") {
+        for (var u in _blockedUsers.split(",")) {
+          _blockedUsersFilter = ",%5E" + u;
+        }
+      }
       String _tsRangeFilter = '&tsrange=' +
           (DateTime.now()
                       .add(Duration(
@@ -59,7 +93,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           ',' +
           (DateTime.now().millisecondsSinceEpoch / 1000).toString();
 
-      yield FeedLoadingState();
+      emit(FeedLoadingState());
       try {
         List<FeedItem> feed = event.feedType == "NewUserMoments"
             ? await repository.getNewFeedFiltered(
@@ -69,15 +103,25 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
                 _applicationUser)
             : await repository.getMyFeedFiltered(_avalonApiNode,
                 "&tags=DTubeGo-Moments", _tsRangeFilter, _applicationUser);
-        yield FeedLoadedState(feed: feed, feedType: event.feedType);
+        emit(FeedLoadedState(feed: feed, feedType: event.feedType));
       } catch (e) {
         print(e.toString());
-        yield FeedErrorState(message: e.toString());
+        emit(FeedErrorState(message: e.toString()));
       }
-    }
+    });
 
-    // even to fetch tag list entries of the last x days
-    if (event is FetchTagSearchResults) {
+    on<FetchTagSearchResults>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      String? _applicationUser = await sec.getUsername();
+
+      // read and prepare the blocked list for the search filters
+      String? _blockedUsers = await sec.getBlockedUsers();
+      String _blockedUsersFilter = "";
+      if (_blockedUsers != "") {
+        for (var u in _blockedUsers.split(",")) {
+          _blockedUsersFilter = ",%5E" + u;
+        }
+      }
       String _tsRangeFilter = '&tsrange=' +
           (DateTime.now()
                       .add(Duration(
@@ -88,60 +132,100 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           ',' +
           (DateTime.now().millisecondsSinceEpoch / 1000).toString();
 
-      yield FeedLoadingState();
+      emit(FeedLoadingState());
       try {
         List<FeedItem> feed = await repository.getNewFeedFiltered(
             _avalonApiNode,
-            event.tags != "all" ? "&tags=" + event.tags : "",
+            (event.tags != "all" ? "&tags=" + event.tags : "") +
+                "&authors=all,%5Es3rk47" +
+                _blockedUsersFilter,
             _tsRangeFilter,
             _applicationUser);
-        yield FeedLoadedState(feed: feed, feedType: "tagSearch");
+        emit(FeedLoadedState(feed: feed, feedType: "tagSearch"));
       } catch (e) {
         print(e.toString());
-        yield FeedErrorState(message: e.toString());
+        emit(FeedErrorState(message: e.toString()));
       }
-    }
-    // event to fetch posts of a specific feed
-    if (event is FetchFeedEvent) {
+    });
+
+    on<FetchFeedEvent>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      String? _applicationUser = await sec.getUsername();
+
+      // read and prepare the blocked list for the search filters
+      String? _blockedUsers = await sec.getBlockedUsers();
+      String _blockedUsersFilter = "";
+      if (_blockedUsers != "") {
+        for (var u in _blockedUsers.split(",")) {
+          _blockedUsersFilter = ",%5E" + u;
+        }
+      }
       print("FETCH " + event.feedType);
-      yield FeedLoadingState();
+      emit(FeedLoadingState());
       try {
         List<FeedItem> feed = [];
         switch (event.feedType) {
           case 'MyFeed':
             {
-              feed = await repository.getMyFeed(_avalonApiNode,
-                  _applicationUser, event.fromAuthor, event.fromLink);
+              feed = await repository.getMyFeed(
+                  _avalonApiNode,
+                  _applicationUser,
+                  event.fromAuthor,
+                  event.fromLink,
+                  _blockedUsers);
             }
             break;
           case 'HotFeed':
             {
-              feed = await repository.getHotFeed(_avalonApiNode,
-                  event.fromAuthor, event.fromLink, _applicationUser);
+              feed = await repository.getHotFeed(
+                  _avalonApiNode,
+                  event.fromAuthor,
+                  event.fromLink,
+                  _applicationUser,
+                  _blockedUsers);
             }
             break;
           case 'TrendingFeed':
             {
-              feed = await repository.getTrendingFeed(_avalonApiNode,
-                  event.fromAuthor, event.fromLink, _applicationUser);
+              feed = await repository.getTrendingFeed(
+                  _avalonApiNode,
+                  event.fromAuthor,
+                  event.fromLink,
+                  _applicationUser,
+                  _blockedUsers);
             }
             break;
           case 'NewFeed':
             {
-              feed = await repository.getNewFeed(_avalonApiNode,
-                  event.fromAuthor, event.fromLink, _applicationUser);
+              feed = await repository.getNewFeed(
+                  _avalonApiNode,
+                  event.fromAuthor,
+                  event.fromLink,
+                  _applicationUser,
+                  _blockedUsers);
             }
             break;
         }
 
-        yield FeedLoadedState(feed: feed, feedType: event.feedType);
+        emit(FeedLoadedState(feed: feed, feedType: event.feedType));
       } catch (e) {
-        yield FeedErrorState(message: e.toString());
+        emit(FeedErrorState(message: e.toString()));
       }
-    }
-    // event to fetch videos of a specific user
-    if (event is FetchUserFeedEvent) {
-      yield FeedLoadingState();
+    });
+
+    on<FetchUserFeedEvent>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      String? _applicationUser = await sec.getUsername();
+
+      // read and prepare the blocked list for the search filters
+      String? _blockedUsers = await sec.getBlockedUsers();
+      String _blockedUsersFilter = "";
+      if (_blockedUsers != "") {
+        for (var u in _blockedUsers.split(",")) {
+          _blockedUsersFilter = ",%5E" + u;
+        }
+      }
+      emit(FeedLoadingState());
       try {
         List<FeedItem> feed = await repository.getNewFeedFiltered(
             _avalonApiNode,
@@ -149,15 +233,26 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             "" // tsrange currently not used here to load all uploads of the user
             ,
             _applicationUser);
-        yield FeedLoadedState(feed: feed, feedType: "UserFeed");
+        emit(FeedLoadedState(feed: feed, feedType: "UserFeed"));
       } catch (e) {
         print(e.toString());
-        yield FeedErrorState(message: e.toString());
+        emit(FeedErrorState(message: e.toString()));
       }
-    }
-    // event to fetch authors of videos with tags of the recent vdeos of the specific user
-    if (event is FetchSuggestedUsersForUserHistory) {
-      yield SuggestedUsersLoadingState();
+    });
+
+    on<FetchSuggestedUsersForUserHistory>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      String? _applicationUser = await sec.getUsername();
+
+      // read and prepare the blocked list for the search filters
+      String? _blockedUsers = await sec.getBlockedUsers();
+      String _blockedUsersFilter = "";
+      if (_blockedUsers != "") {
+        for (var u in _blockedUsers.split(",")) {
+          _blockedUsersFilter = ",%5E" + u;
+        }
+      }
+      emit(SuggestedUsersLoadingState());
 
       try {
         String _tsRangeFilterUser = '&tsrange=' +
@@ -170,7 +265,6 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             ',' +
             (DateTime.now().millisecondsSinceEpoch / 1000).toString();
         // get recent posts of the user
-
         List<FeedItem> _feed = await repository.getNewFeedFiltered(
             _avalonApiNode,
             "&authors=" + event.username + "&tags=all,%5EDTubeGo-Moments",
@@ -209,6 +303,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
               _avalonApiNode,
               "&authors=all,%5E" +
                   event.username + // not from the same user
+                  _blockedUsersFilter + // not from blocked users
                   "&tags=" +
                   _tags.join(',') + // with tags of the users videos
                   ",%5EDTubeGo-Moments",
@@ -240,17 +335,28 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           }
         }
 
-        yield SuggestedUsersLoadedState(
-            users: _suggestedUsers.take(AppConfig.maxUserSuggestions).toList());
+        emit(SuggestedUsersLoadedState(
+            users:
+                _suggestedUsers.take(AppConfig.maxUserSuggestions).toList()));
       } catch (e) {
         print(e.toString());
-        yield FeedErrorState(message: e.toString());
+        emit(FeedErrorState(message: e.toString()));
       }
-    }
+    });
 
-    // event to fetch authors of videos with the tags of the current video
-    if (event is FetchSuggestedUsersForPost) {
-      yield SuggestedUsersLoadingState();
+    on<FetchSuggestedUsersForPost>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      String? _applicationUser = await sec.getUsername();
+
+      // read and prepare the blocked list for the search filters
+      String? _blockedUsers = await sec.getBlockedUsers();
+      String _blockedUsersFilter = "";
+      if (_blockedUsers != "") {
+        for (var u in _blockedUsers.split(",")) {
+          _blockedUsersFilter = ",%5E" + u;
+        }
+      }
+      emit(SuggestedUsersLoadingState());
 
       try {
         List<String> _suggestedUsers = [];
@@ -272,6 +378,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
               _avalonApiNode,
               "&authors=all,%5E" +
                   event.currentUsername + // not from the same user
+                  _blockedUsersFilter // not from blocked users
+                  +
                   "&tags=" +
                   event.tags.join(',') + // with tags of the users video
                   ",%5EDTubeGo-Moments",
@@ -303,16 +411,28 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           }
         }
 
-        yield SuggestedUsersLoadedState(
-            users: _suggestedUsers.take(AppConfig.maxUserSuggestions).toList());
+        emit(SuggestedUsersLoadedState(
+            users:
+                _suggestedUsers.take(AppConfig.maxUserSuggestions).toList()));
       } catch (e) {
         print(e.toString());
-        yield FeedErrorState(message: e.toString());
+        emit(FeedErrorState(message: e.toString()));
       }
-    }
-    // event to fetch rercent videos with the same tags of the current video
-    if (event is FetchSuggestedPostsForPost) {
-      yield FeedLoadingState();
+    });
+
+    on<FetchSuggestedPostsForPost>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      String? _applicationUser = await sec.getUsername();
+
+      // read and prepare the blocked list for the search filters
+      String? _blockedUsers = await sec.getBlockedUsers();
+      String _blockedUsersFilter = "";
+      if (_blockedUsers != "") {
+        for (var u in _blockedUsers.split(",")) {
+          _blockedUsersFilter = ",%5E" + u;
+        }
+      }
+      emit(FeedLoadingState());
 
       try {
         List<FeedItem> _suggestedPosts = [];
@@ -331,18 +451,19 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             _avalonApiNode,
             "&authors=all,%5E" +
                 event.currentUsername + // not from the same user
+                _blockedUsersFilter + // not from blocked users
                 "&tags=" +
                 event.tags.join(',') + // with tags of the users video
                 ",%5EDTubeGo-Moments",
             _tsRangeFilterOtherUsers, // only last x days
             _applicationUser);
-        yield FeedLoadedState(
+        emit(FeedLoadedState(
             feed: _otherUsersFeed.take(AppConfig.maxUserSuggestions).toList(),
-            feedType: "SuggestedPosts");
+            feedType: "SuggestedPosts"));
       } catch (e) {
         print(e.toString());
-        yield FeedErrorState(message: e.toString());
+        emit(FeedErrorState(message: e.toString()));
       }
-    }
+    });
   }
 }

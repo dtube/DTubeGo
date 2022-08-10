@@ -1,8 +1,7 @@
-import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
-import 'package:dtube_go/utils/globalVariables.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
 import 'package:dtube_go/bloc/config/txTypes.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
@@ -12,44 +11,72 @@ import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:bloc/bloc.dart';
 import 'package:dtube_go/bloc/transaction/transaction_event.dart';
 import 'package:dtube_go/bloc/transaction/transaction_repository.dart';
-
 import 'package:dtube_go/bloc/transaction/transaction_state.dart';
-
 import 'package:dtube_go/utils/randomPermlink.dart';
 
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   TransactionRepository repository;
 
   TransactionBloc({required this.repository})
-      : super(TransactionInitialState());
+      : super(TransactionInitialState()) {
+// TODO: support more providers
+    Future<String> uploadThumbnail(String localFilePath) async {
+      //String _url = endpoint;
+      String _url = "https://api.imgur.com/3/image";
 
-  // @override
-  // TransactionState get initialState => TransactionInitialState();
+      String authHeader = "Client-ID fc2dde68a83c037";
 
-  @override
-  Stream<TransactionState> mapEventToState(TransactionEvent event) async* {
-    final String _avalonApiNode = await sec.getNode();
-    final String? _applicationUser = await sec.getUsername();
-    final String? _privKey = await sec.getPrivateKey();
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      var dio = Dio();
+      dio.options.headers["Authorization"] = authHeader;
+      String fileName = localFilePath.split('/').last;
 
-    if (event is SetInitState) {
-      yield TransactionInitialState();
+      FormData data = FormData.fromMap({
+        "image": await MultipartFile.fromFile(
+          localFilePath,
+          filename: fileName,
+        ),
+      });
+
+      var response = await dio.post(
+        _url,
+        data: data,
+      );
+
+      if (response.statusCode == 200) {
+        var uploadedUrl = response.data['data']['link'];
+
+        return uploadedUrl;
+      } else {
+        throw Exception();
+      }
     }
-    if (event is TransactionPreprocessing) {
-      yield TransactionPreprocessingState(txType: event.txType);
-    }
-    if (event is TransactionPreprocessingFailed) {
-      yield TransactionError(
+
+    on<SetInitState>((event, emit) async {
+      emit(TransactionInitialState());
+    });
+
+    on<TransactionPreprocessing>((event, emit) async {
+      emit(TransactionPreprocessingState(txType: event.txType));
+    });
+    on<TransactionPreprocessingFailed>((event, emit) async {
+      emit(TransactionError(
           message: "error preparing transaction\n" + event.errorMessage,
           txType: event.txType,
-          isParentContent: false);
-    }
+          isParentContent: false));
+    });
 
-    if (event is SignAndSendTransactionEvent) {
+    on<SignAndSendTransactionEvent>((event, emit) async {
+      emit(TransactionSinging(tx: event.tx));
+      final String _avalonApiNode = await sec.getNode();
+      String? _applicationUser = await sec.getUsername();
+      String? _privKey = await sec.getPrivateKey();
+      if (event.administrativePrivateKey != null) {
+        _privKey = event.administrativePrivateKey;
+        _applicationUser = event.administrativeUsername;
+      }
+
       String result = "";
-      //for (var i = 0; i < 5; i++) {
-      //yield TransactionSinging(tx: event.tx);
+
       try {
         result = "";
         result = await repository
@@ -57,7 +84,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             .then((value) => repository.send(_avalonApiNode, value));
 
         if (int.tryParse(result) != null) {
-          yield TransactionSent(
+          emit(TransactionSent(
               block: int.parse(result),
               successMessage: txTypeFriendlyDescriptionActions[event.tx.type]!
                   .replaceAll(
@@ -69,38 +96,84 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
                   .replaceAll('##TIPAMOUNT', event.tx.data.tip.toString())
                   .replaceAll('##USERNAME', event.tx.data.target.toString()),
               txType: event.tx.type,
+              isDownvote: event.tx.type == 5 &&
+                      event.tx.data.vt != null &&
+                      event.tx.data.vt! < 0
+                  ? true
+                  : false,
               isParentContent:
                   (event.tx.data.pa == "" || event.tx.data.pa == null) &&
-                      (event.tx.type == 4 || event.tx.type == 13));
+                      (event.tx.type == 4 || event.tx.type == 13)));
         } else {
-          yield TransactionError(
+          emit(TransactionError(
               message: result,
               txType: event.tx.type,
               isParentContent:
                   ((event.tx.data.pa == "" || event.tx.data.pa == null) &&
-                      (event.tx.type == 4 || event.tx.type == 13)));
+                      (event.tx.type == 4 || event.tx.type == 13))));
         }
       } catch (e) {
-        yield TransactionError(
+        emit(TransactionError(
             message: e.toString(),
             txType: event.tx.type,
             isParentContent:
                 ((event.tx.data.pa == "" || event.tx.data.pa == null) &&
-                    (event.tx.type == 4 || event.tx.type == 13)));
+                    (event.tx.type == 4 || event.tx.type == 13))));
       }
-    }
+    });
 
-    if (event is ChangeProfileData) {
+    on<SignAndSendDAOTransactionEvent>((event, emit) async {
+      emit(DAOTransactionSinging(tx: event.tx));
+      final String _avalonApiNode = await sec.getNode();
+      String? _applicationUser = await sec.getUsername();
+      String? _privKey = await sec.getPrivateKey();
+      if (event.administrativePrivateKey != null) {
+        _privKey = event.administrativePrivateKey;
+        _applicationUser = event.administrativeUsername;
+      }
+
+      String result = "";
+
+      try {
+        result = "";
+        result = await repository
+            .signDAO(event.tx, _applicationUser!, _privKey!)
+            .then((value) => repository.sendDAO(_avalonApiNode, value));
+
+        if (int.tryParse(result) != null) {
+          emit(TransactionSent(
+              block: int.parse(result),
+              successMessage: "success",
+              txType: event.tx.type,
+              isDownvote: event.tx.data.amount! < 0 ? true : false,
+              isParentContent: false));
+        } else {
+          emit(TransactionError(
+              message: result, txType: event.tx.type, isParentContent: false));
+        }
+      } catch (e) {
+        emit(TransactionError(
+            message: e.toString(),
+            txType: event.tx.type,
+            isParentContent: false));
+      }
+    });
+
+    on<ChangeProfileData>((event, emit) async {
+      final String _avalonApiNode = await sec.getNode();
+      final String? _applicationUser = await sec.getUsername();
+      final String? _privKey = await sec.getPrivateKey();
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
       int _txType = 6;
       User _userData = event.userData;
-      yield TransactionPreprocessingState(txType: _txType);
+      emit(TransactionPreprocessingState(txType: _txType));
       Map<String, dynamic> jsonMetadata = {};
 
       TxData _txData = new TxData(
         jsonmetadata: _userData.jsonString!.toJson(),
       );
 
-// change profile
       Transaction _tx = new Transaction(type: _txType, data: _txData);
 
       int _block = 0;
@@ -112,21 +185,28 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             .sign(_tx, _applicationUser!, _privKey!)
             .then((value) => repository.send(_avalonApiNode, value));
       } catch (e) {
-        yield TransactionError(
+        emit(TransactionError(
             message: e.toString(),
             txType: _tx.type,
             isParentContent: ((_tx.data.pa == "" || _tx.data.pa == null) &&
-                (_tx.type == 4 || _tx.type == 13)));
+                (_tx.type == 4 || _tx.type == 13))));
       }
 
-      yield TransactionSent(
+      emit(TransactionSent(
           block: _block,
           isParentContent: false,
           successMessage: "profile updated",
-          txType: _txType);
-    }
+          txType: _txType));
+      Phoenix.rebirth(event.context);
+    });
 
-    if (event is SendCommentEvent) {
+    on<SendCommentEvent>((event, emit) async {
+      final String _avalonApiNode = await sec.getNode();
+      final String? _applicationUser = await sec.getUsername();
+      final String? _privKey = await sec.getPrivateKey();
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+      bool errorOnUpload = false;
       String _hiveAuthor = await sec.getHiveSignerUsername();
       UploadData _upload = event.uploadData;
       String result = "";
@@ -156,7 +236,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             link: _upload.link,
             vt: _upload.isEditing
                 ? 1
-                : (_upload.vpBalance * _upload.vpPercent / 100).floor(),
+                : (_upload.vpBalance * _upload.vpPercent / 100).floor() < 1
+                    ? 1
+                    : (_upload.vpBalance * _upload.vpPercent / 100).floor(),
             tag: _upload.tag,
             pa: _upload.parentAuthor,
             pp: _upload.parentPermlink,
@@ -167,7 +249,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               link: _upload.link,
               vt: _upload.isEditing
                   ? 1
-                  : (_upload.vpBalance * _upload.vpPercent / 100).floor(),
+                  : (_upload.vpBalance * _upload.vpPercent / 100).floor() < 1
+                      ? 1
+                      : (_upload.vpBalance * _upload.vpPercent / 100).floor(),
               tag: _upload.tag,
               jsonmetadata: jsonMetadata,
               pa: _upload.parentAuthor,
@@ -179,24 +263,73 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       if (_upload.videoLocation != "") {
         // we have a source hash => ipfs uploaded video
         if (_upload.videoSourceHash != "") {
+          errorOnUpload = false;
+
+          var fileJson = {};
+          var vidJson = {};
+
+          if (_upload.video480pHash != "" && _upload.video240pHash != "") {
+            vidJson = {
+              "240": _upload.video240pHash,
+              "480": _upload.video480pHash,
+              "src": _upload.videoSourceHash
+            };
+          } else if (_upload.video480pHash != "") {
+            vidJson = {
+              "480": _upload.video480pHash,
+              "src": _upload.videoSourceHash
+            };
+          } else if (_upload.video240pHash != "") {
+            vidJson = {
+              "240": _upload.video240pHash,
+              "src": _upload.videoSourceHash
+            };
+          } else {
+            vidJson = {"src": _upload.videoSourceHash};
+          }
+
+          if (_upload.videoLocation == "Skynet") {
+            if (_upload.videoSpriteHash != "") {
+              fileJson = {
+                "sia": {
+                  "vid": vidJson,
+                  "img": {"spr": _upload.videoSpriteHash},
+                }
+              };
+            } else {
+              fileJson = {
+                "sia": {
+                  "vid": vidJson,
+                }
+              };
+            }
+          } else {
+            if (_upload.videoSpriteHash != "") {
+              fileJson = {
+                "ipfs": {
+                  "vid": vidJson,
+                  "img": {"spr": _upload.videoSpriteHash},
+                  "gw": _upload.ipfsGateway == null
+                      ? "https://player.d.tube"
+                      : _upload.ipfsGateway
+                }
+              };
+            } else {
+              fileJson = {
+                "ipfs": {
+                  "vid": vidJson,
+                  "gw": _upload.ipfsGateway == null
+                      ? "https://player.d.tube"
+                      : _upload.ipfsGateway
+                }
+              };
+            }
+          }
+
           // we have NO thumbnail location defined => ipfs uploaded image
           if (_upload.thumbnailLocation == "") {
             jsonMetadata = {
-              "files": {
-                "ipfs": {
-                  "vid": {
-                    "240": _upload.video240pHash,
-                    "480": _upload.video480pHash,
-                    "src": _upload.videoSourceHash
-                  },
-                  "img": {
-                    "118": _upload.thumbnail210Hash,
-                    "360": _upload.thumbnail640Hash,
-                    "spr": _upload.videoSpriteHash
-                  },
-                  "gw": "https://player.d.tube"
-                },
-              },
+              "files": fileJson,
               "title": _upload.title,
               "description": _upload.description,
               "dur": _upload.duration,
@@ -214,18 +347,17 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             };
           } else {
             // we have a thumbnail location defined => no ipfs uploaded image so third party thumbnail
+
+            // TODO: use the thirdpartyupload bloc!
+            String _thumbUrl = "";
+            if (!_upload.thumbnailLocation.contains("http")) {
+              _thumbUrl = await uploadThumbnail(_upload.thumbnailLocation);
+            } else {
+              _thumbUrl = _upload.thumbnailLocation;
+            }
+
             jsonMetadata = {
-              "files": {
-                "ipfs": {
-                  "vid": {
-                    "240": _upload.video240pHash,
-                    "480": _upload.video480pHash,
-                    "src": _upload.videoSourceHash
-                  },
-                  "img": {"spr": _upload.videoSpriteHash},
-                  "gw": "https://player.d.tube"
-                },
-              },
+              "files": fileJson,
               "title": _upload.title,
               "description": _upload.description,
               "dur": _upload.duration,
@@ -233,8 +365,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               "hide": _upload.unlistVideo ? 1 : 0,
               "nsfw": _upload.nSFWContent ? 1 : 0,
               "oc": _upload.originalContent ? 1 : 0,
-              "thumbnailUrlExternal": _upload.thumbnailLocation,
-              "thumbnailUrl": _upload.thumbnailLocation,
+              "thumbnailUrlExternal": _thumbUrl,
+              "thumbnailUrl": _thumbUrl,
               "app": "dtube.go.app_" +
                   packageInfo.version +
                   '+' +
@@ -246,135 +378,157 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           }
         } else {
           // we have NO source hash => third party video
-          // and we have A defined thumbnail location => take the uploaded thumbnail
-          if (_upload.thumbnailLocation != "" && !_upload.localThumbnail) {
-            jsonMetadata = {
-              "files": {"youtube": _upload.videoLocation},
-              "title": _upload.title,
-              "description": _upload.description,
-              "dur": _upload.duration,
-              "tag": _upload.tag,
-              "hide": _upload.unlistVideo ? 1 : 0,
-              "nsfw": _upload.nSFWContent ? 1 : 0,
-              "oc": _upload.originalContent ? 1 : 0,
-              "thumbnailUrlExternal": _upload.thumbnailLocation,
-              "thumbnailUrl": _upload.thumbnailLocation,
-              "app": "dtube.go.app_" +
-                  packageInfo.version +
-                  '+' +
-                  packageInfo.buildNumber,
-              "refs": (_upload.crossPostToHive == false)
-                  ? []
-                  : ["hive/" + _hiveAuthor + "/" + _upload.link]
-            };
+          // double check: if there is no path in _videoLocation because of upload issues
+          if (!_upload.videoLocation.contains("/")) {
+            // and we have A defined thumbnail location => take the uploaded thumbnail
+            if (_upload.thumbnailLocation != "") {
+              // TODO: use the thirdpartyupload bloc!
+              String _thumbUrl = "";
+              if (!_upload.thumbnailLocation.contains("http")) {
+                _thumbUrl = await uploadThumbnail(_upload.thumbnailLocation);
+              } else {
+                _thumbUrl = _upload.thumbnailLocation;
+              }
+              jsonMetadata = {
+                "files": {"youtube": _upload.videoLocation},
+                "title": _upload.title,
+                "description": _upload.description,
+                "dur": _upload.duration,
+                "tag": _upload.tag,
+                "hide": _upload.unlistVideo ? 1 : 0,
+                "nsfw": _upload.nSFWContent ? 1 : 0,
+                "oc": _upload.originalContent ? 1 : 0,
+                "thumbnailUrlExternal": _thumbUrl,
+                "thumbnailUrl": _thumbUrl,
+                "app": "dtube.go.app_" +
+                    packageInfo.version +
+                    '+' +
+                    packageInfo.buildNumber,
+                "refs": (_upload.crossPostToHive == false)
+                    ? []
+                    : ["hive/" + _hiveAuthor + "/" + _upload.link]
+              };
+            } else {
+              // we have NO source hash => third party video
+              // and we have NO defined thumbnail location => take the youtube thumbnail (default)
+              jsonMetadata = {
+                "files": {"youtube": _upload.videoLocation},
+                "title": _upload.title,
+                "description": _upload.description,
+                "dur": _upload.duration,
+                "tag": _upload.tag,
+                "hide": _upload.unlistVideo ? 1 : 0,
+                "nsfw": _upload.nSFWContent ? 1 : 0,
+                "oc": _upload.originalContent ? 1 : 0,
+                "app": "dtube.go.app_" +
+                    packageInfo.version +
+                    '+' +
+                    packageInfo.buildNumber,
+                "refs": (_upload.crossPostToHive == false)
+                    ? []
+                    : ["hive/" + _hiveAuthor + "/" + _upload.link]
+              };
+            }
           } else {
-            // we have NO source hash => third party video
-            // and we have NO defined thumbnail location => take the youtube thumbnail (default)
-            jsonMetadata = {
-              "files": {"youtube": _upload.videoLocation},
-              "title": _upload.title,
-              "description": _upload.description,
-              "dur": _upload.duration,
-              "tag": _upload.tag,
-              "hide": _upload.unlistVideo ? 1 : 0,
-              "nsfw": _upload.nSFWContent ? 1 : 0,
-              "oc": _upload.originalContent ? 1 : 0,
-              "app": "dtube.go.app_" +
-                  packageInfo.version +
-                  '+' +
-                  packageInfo.buildNumber,
-              "refs": (_upload.crossPostToHive == false)
-                  ? []
-                  : ["hive/" + _hiveAuthor + "/" + _upload.link]
-            };
+            // if there is a path in the videoLocation -> upload probably failed silently
+            errorOnUpload = true;
           }
         }
-
-        _txData = new TxData(
-            link: _upload.link,
-            vt: _upload.isEditing
-                ? 1
-                : (_upload.vpBalance * _upload.vpPercent / 100).floor(),
-            tag: _upload.tag,
-            pa: _upload.parentAuthor != "" ? _upload.parentAuthor : null,
-            pp: _upload.parentPermlink != "" ? _upload.parentPermlink : null,
-            jsonmetadata: jsonMetadata);
-
-        if (_upload.isPromoted) {
+        if (!errorOnUpload) {
           _txData = new TxData(
               link: _upload.link,
               vt: _upload.isEditing
                   ? 1
                   : (_upload.vpBalance * _upload.vpPercent / 100).floor(),
               tag: _upload.tag,
-              jsonmetadata: jsonMetadata,
               pa: _upload.parentAuthor != "" ? _upload.parentAuthor : null,
               pp: _upload.parentPermlink != "" ? _upload.parentPermlink : null,
-              burn: _upload.burnDtc.floor());
-        }
-      }
+              jsonmetadata: jsonMetadata);
 
-      Transaction _tx =
-          new Transaction(type: _upload.isPromoted ? 13 : 4, data: _txData);
-
-      try {
-        result = "";
-        result = await repository
-            .sign(_tx, _applicationUser!, _privKey!)
-            .then((value) => repository.send(_avalonApiNode, value));
-        print(result);
-        if (!result.contains("error") && int.tryParse(result) != null) {
-          yield TransactionSent(
-              block: int.parse(result),
-              successMessage: txTypeFriendlyDescriptionActions[_tx.type]!,
-              txType: _tx.type,
-              isParentContent: (_tx.data.pa == "" || _tx.data.pa == null) &&
-                  (_tx.type == 4 || _tx.type == 13),
-              authorPerm: (_tx.data.pa == "" || _tx.data.pa == null) &&
-                      (_tx.type == 4 || _tx.type == 13) &&
-                      _tx.data.link != null
-                  ? _applicationUser + '/' + _tx.data.link!
-                  : null);
-
-          if (_upload.crossPostToHive) {
-            HivesignerBloc _hiveSignerBloc =
-                HivesignerBloc(repository: HivesignerRepositoryImpl());
-            if (_upload.thumbnailLocation.contains('img.youtube')) {
-              _hiveSignerBloc.add(SendPostToHive(
-                  postTitle: _upload.title,
-                  postBody: _upload.description,
-                  permlink: _upload.link,
-                  dtubeUrl: _upload.link,
-                  thumbnailUrl: _upload.thumbnailLocation,
-                  videoUrl: _upload.videoSourceHash,
-                  storageType: "youtube",
-                  tag: _upload.tag,
-                  dtubeuser: _applicationUser));
-            } else {
-              _hiveSignerBloc.add(SendPostToHive(
-                  postTitle: _upload.title,
-                  postBody: _upload.description,
-                  permlink: _upload.link,
-                  dtubeUrl: _upload.link,
-                  thumbnailUrl: _upload.thumbnailLocation,
-                  videoUrl: _upload.videoSourceHash,
-                  storageType: "ipfs",
-                  tag: _upload.tag,
-                  dtubeuser: _applicationUser));
-            }
+          if (_upload.isPromoted) {
+            _txData = new TxData(
+                link: _upload.link,
+                vt: _upload.isEditing
+                    ? 1
+                    : (_upload.vpBalance * _upload.vpPercent / 100).floor(),
+                tag: _upload.tag,
+                jsonmetadata: jsonMetadata,
+                pa: _upload.parentAuthor != "" ? _upload.parentAuthor : null,
+                pp: _upload.parentPermlink != ""
+                    ? _upload.parentPermlink
+                    : null,
+                burn: _upload.burnDtc.floor());
           }
-        } else {
-          yield TransactionError(
-              message: result,
-              txType: 3,
-              isParentContent: event.uploadData.parentPermlink == "");
         }
-      } catch (e) {
-        yield TransactionError(
-            message: e.toString(),
-            txType: 3,
-            isParentContent: event.uploadData.parentPermlink == "");
       }
-    }
+      if (_upload.videoLocation == "" || !errorOnUpload) {
+        Transaction _tx =
+            new Transaction(type: _upload.isPromoted ? 13 : 4, data: _txData);
+
+        try {
+          result = "";
+          result = await repository
+              .sign(_tx, _applicationUser!, _privKey!)
+              .then((value) => repository.send(_avalonApiNode, value));
+          print(result);
+          if (!result.contains("error") && int.tryParse(result) != null) {
+            emit(TransactionSent(
+                block: int.parse(result),
+                successMessage: txTypeFriendlyDescriptionActions[_tx.type]!,
+                txType: _tx.type,
+                isParentContent: (_tx.data.pa == "" || _tx.data.pa == null) &&
+                    (_tx.type == 4 || _tx.type == 13),
+                authorPerm: (_tx.data.pa == "" || _tx.data.pa == null) &&
+                        (_tx.type == 4 || _tx.type == 13) &&
+                        _tx.data.link != null
+                    ? _applicationUser + '/' + _tx.data.link!
+                    : null));
+
+            if (_upload.crossPostToHive) {
+              HivesignerBloc _hiveSignerBloc =
+                  HivesignerBloc(repository: HivesignerRepositoryImpl());
+              if (_upload.thumbnailLocation.contains('img.youtube')) {
+                _hiveSignerBloc.add(SendPostToHive(
+                    postTitle: _upload.title,
+                    postBody: _upload.description,
+                    permlink: _upload.link,
+                    dtubeUrl: _upload.link,
+                    thumbnailUrl: _upload.thumbnailLocation,
+                    videoUrl: _upload.videoSourceHash,
+                    storageType: "youtube",
+                    tag: _upload.tag,
+                    dtubeuser: _applicationUser));
+              } else {
+                _hiveSignerBloc.add(SendPostToHive(
+                    postTitle: _upload.title,
+                    postBody: _upload.description,
+                    permlink: _upload.link,
+                    dtubeUrl: _upload.link,
+                    thumbnailUrl: _upload.thumbnailLocation,
+                    videoUrl: _upload.videoSourceHash,
+                    storageType: "ipfs",
+                    tag: _upload.tag,
+                    dtubeuser: _applicationUser));
+              }
+            }
+          } else {
+            emit(TransactionError(
+                message: result,
+                txType: 3,
+                isParentContent: event.uploadData.parentPermlink == ""));
+          }
+        } catch (e) {
+          emit(TransactionError(
+              message: e.toString(),
+              txType: 3,
+              isParentContent: event.uploadData.parentPermlink == ""));
+        }
+      } else {
+        emit(TransactionError(
+            message: "Upload failed - please try again",
+            txType: 3,
+            isParentContent: event.uploadData.parentPermlink == ""));
+      }
+    });
   }
 }

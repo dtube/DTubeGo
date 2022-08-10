@@ -1,5 +1,7 @@
 // list of global static application configurations
 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 class AppConfig {
   // feed url schemes
   static String myFeedUrlFirst = "/feed/##USERNAME";
@@ -22,6 +24,14 @@ class AppConfig {
   static String accountHistoryFeedUrl = "/history/##USERNAME/##FROMBLOC";
   static String accountHistoryFeedUrlFromBlock = "/history/##USERNAME/##BLOCK";
 
+  // DAO url schemes
+  static String daoUrl = "/dao/##STATUS/##TYPE";
+  static String daoVotesUrl = "/proposal/votes/##DAOID";
+  static String daoProposalUrl = "/proposal/##DAOID";
+
+// leaderboard url schemes
+  static String leaderboardUrl = "/allminers";
+
   // detail url schemes
   static String postDataUrl = "/content/##AUTHOR/##LINK";
   static String accountDataUrl = "/account/##USERNAME";
@@ -35,6 +45,7 @@ class AppConfig {
   // other avalon url schemes
   static String sendTransactionUrl = "/transactWaitConfirm";
   static String avalonConfig = "/config";
+  static String accountPriceUrl = "/accountPrice/##USERNAME";
 
 // storage providers and upload endpoints
   static String ipfsVideoUrl = "https://ipfs.d.tube/ipfs/";
@@ -46,6 +57,9 @@ class AppConfig {
     "https://3.btfsu.d.tube",
     "https://4.btfsu.d.tube"
   ];
+
+  static List<String> web3StorageEndpoints = ["https://api.web3.storage"];
+  static String web3StorageGateway = "https://ipfs.io";
   static int maxUploadRetries = 7;
 
   static String ipfsSnapUrl = 'https://snap1.d.tube/ipfs/';
@@ -67,25 +81,28 @@ class AppConfig {
       'https://hivesigner.com/api/broadcast';
 
 // node discovery & api node configs
-  static Duration nodeDescoveryTimeout = Duration(seconds: 2);
 
   static bool useDevNodes =
-      false; //activate for new features which has not been integrated
+      true; //activate for new features which has not been integrated
 
   static List<String> apiNodesDev = [
     // development nodes for new features
-    'https://dtube.club/mainnetapi',
-    'https://avalon.tibfox.com'
+    // 'https://dtube.club/mainnetapi',
+    'https://testnetapi.avalonblocks.com'
+    //'https://avalon.tibfox.com'
   ];
 
   static List<String> apiNodes = [
     // common api nodes
     'https://avalon.tibfox.com',
     'https://avalon.d.tube',
-    'https://dtube.club/mainnetapi',
-    // 'https://avalon.oneloved.tube',
+    // 'https://dtube.club/mainnetapi',
+    'https://avalon.oneloved.tube',
     'https://dtube.fso.ovh'
   ];
+
+// node discovery & api node configs
+  static Duration nodeDescoveryTimeout = Duration(milliseconds: 200);
 
   static int minFreeSpaceRecordVideoInMB =
       50; // min free space to enable the user to record video in app
@@ -93,7 +110,11 @@ class AppConfig {
 // urls for login screen
   static String signUpUrl = "https://signup.d.tube";
   static String readmoreUrl = "https://token.d.tube";
+  static String discordUrl = "https://discord.gg/dtube";
   static String faqUrl = "https://d.tube/#!/wiki/faq/README";
+  static String gitDTubeGoUrl = "https://github.com/dtube/DTubeGo";
+  static String gitAvalonUrl = "https://github.com/dtube/avalon";
+  static String gitDtubeUrl = "https://github.com/dtube/dtube";
 
   // activate/deactivate first user journey
   static bool faqStartup = true; // show on first startup
@@ -101,6 +122,9 @@ class AppConfig {
 
 // generic curation tags to exclude from suggested channels/videos
   static List<String> genericCurationTags = ["vdc", "onelovedtube"];
+
+// only show moments of the last x days
+  static int momentsPastXDays = -7;
 
   // global settings -> tags: those are the possible tags
   static List<String> possibleExploreTags = [
@@ -147,75 +171,143 @@ class AppConfig {
     "horology",
     // communities
     "skatehive",
-    "cleanplanet",
-    "onelovedtube"
+    "cleanplanet"
   ];
-  static var genreTags = {
-    "music": [
-      "song",
-      "music",
-      "acoustic",
-      "songs",
-      "guitar",
-      "piano",
-      "acapella"
-    ],
-    "sports": [
-      "sports",
-      "football",
-      "skate",
-      "skatehive",
-      "running",
-      "marathon",
-      "gym",
-      "workout"
-    ],
-    "gaming": ["ps4", "ps5", "gaming"],
-    "health": ["yoga", "health"],
-    "science": ["physics", "chemistry", "math"],
-    "diy": [
-      "woodworking",
-      "diy",
-      "crafting",
-      "3dprinting",
-      "cooking",
-      "tutorial"
-    ],
-    "tech": ["coding", "tech", "software"],
-    "blockchains": [
-      "nft",
-      "crypto",
-      "cryptocurrency",
-      "bitcoing",
-      "etherium",
-      "opensea",
-      "objkt",
-      "tezos",
-      "litecoin",
-      "binance",
-      "hex",
-      // asd
-      "nft",
-      "crypto",
-      "cryptocurrency",
-      "bitcoing",
-      "etherium",
-      "opensea",
-      "objkt",
-      "tezos",
-      "litecoin",
-      "binance",
-      "hex"
-    ],
-    "art": ["drawing", "painting", "art", "dance", "dancing"],
-    "vlogs": ["vlog", "dailyvlog", "vlogs"],
-    "communities": ["onelovedtube", "cleanplanet", "skatehive"],
-    "lifestyle": ["lifestyle", "fashion", "makeup", "travel"],
-    "entertainment": ["funny", "entertainment", "skit", "comedy", "talks"],
-    "news": ["news", "politics"],
-    "nature": ["nature", "animals", "gardening", "forrest"],
-    "food": ["cooking", "restaurant", "dinner", "lunch", "food"]
-  };
+  static var genreTags = [
+    {
+      "mainTag": "music",
+      "icon": FontAwesomeIcons.music,
+      "subtags": [
+        "song",
+        "music",
+        "acoustic",
+        "songs",
+        "guitar",
+        "piano",
+        "acapella"
+      ]
+    },
+    {
+      "mainTag": "sports",
+      "icon": FontAwesomeIcons.running,
+      "subtags": [
+        "sports",
+        "football",
+        "skate",
+        "skatehive",
+        "running",
+        "marathon",
+        "gym",
+        "workout"
+      ],
+    },
+    {
+      "mainTag": "gaming",
+      "icon": FontAwesomeIcons.gamepad,
+      "subtags": ["ps4", "ps5", "gaming"],
+    },
+    {
+      "mainTag": "health",
+      "icon": FontAwesomeIcons.heartbeat,
+      "subtags": ["yoga", "health"],
+    },
+    {
+      "mainTag": "science",
+      "icon": FontAwesomeIcons.userAstronaut,
+      "subtags": ["physics", "chemistry", "math"],
+    },
+    {
+      "mainTag": "diy",
+      "icon": FontAwesomeIcons.wrench,
+      "subtags": [
+        "woodworking",
+        "diy",
+        "crafting",
+        "3dprinting",
+        "cooking",
+        "tutorial"
+      ],
+    },
+    {
+      "mainTag": "tech",
+      "icon": FontAwesomeIcons.laptop,
+      "subtags": ["coding", "tech", "software"],
+    },
+    {
+      "mainTag": "blockchains",
+      "icon": FontAwesomeIcons.dice,
+      "subtags": [
+        "nft",
+        "crypto",
+        "cryptocurrency",
+        "bitcoing",
+        "etherium",
+        "opensea",
+        "objkt",
+        "tezos",
+        "litecoin",
+        "binance",
+        "hex",
+        // asd
+        "nft",
+        "crypto",
+        "cryptocurrency",
+        "bitcoing",
+        "etherium",
+        "opensea",
+        "objkt",
+        "tezos",
+        "litecoin",
+        "binance",
+        "hex"
+      ],
+    },
+    {
+      "mainTag": "art",
+      "icon": FontAwesomeIcons.paintBrush,
+      "subtags": ["drawing", "painting", "art", "dance", "dancing"],
+    },
+    {
+      "mainTag": "vlogs",
+      "icon": FontAwesomeIcons.video,
+      "subtags": ["vlog", "dailyvlog", "vlogs"],
+    },
+    {
+      "mainTag": "communities",
+      "icon": FontAwesomeIcons.cubes,
+      "subtags": ["cleanplanet", "skatehive"],
+    },
+    {
+      "mainTag": "lifestyle",
+      "icon": FontAwesomeIcons.vestPatches,
+      "subtags": ["lifestyle", "fashion", "makeup", "travel"],
+    },
+    {
+      "mainTag": "fun",
+      "icon": FontAwesomeIcons.tv,
+      "subtags": ["funny", "entertainment", "skit", "comedy"],
+    },
+    {
+      "mainTag": "news",
+      "icon": FontAwesomeIcons.newspaper,
+      "subtags": ["news", "politics"],
+    },
+    {
+      "mainTag": "talks",
+      "icon": FontAwesomeIcons.microphoneAlt,
+      "subtags": ["talks", "podcasts"],
+    },
+    {
+      "mainTag": "nature",
+      "icon": FontAwesomeIcons.leaf,
+      "subtags": ["nature", "animals", "gardening", "forrest"],
+    },
+    {
+      "mainTag": "food",
+      "icon": FontAwesomeIcons.utensils,
+      "subtags": ["cooking", "restaurant", "dinner", "lunch", "food"]
+    },
+  ];
   // suggestion params
   static int maxUserSuggestions =
       50; // max count of users shown in the suggestions
@@ -224,4 +316,74 @@ class AppConfig {
 
   static int maxDaysInPastForSuggestions =
       75; // max count of days the suggestion algorythm should check the past
+
+  static var initiativePresets = [
+    {
+      "name": "cleanplanet",
+      "icon": FontAwesomeIcons.globe,
+      "tag": "cleanplanet",
+      "subject": "Cleanplanet walk",
+      "description": "",
+      "details": "## BASICS\n" +
+          "Cleanplanet is an initiative to reward you for the act of picking litter in nature and your neighborhood.\n" +
+          "## PROVE IT\n" +
+          "Take a video of you or your friends while you pick up litter, put what you have collected in a public trash and tell us the date and your username as proof.\n" +
+          "## UPLOAD IT\n" +
+          "Upload your video on d.tube using the preset.\n\n" +
+          "## GET REWARDED\n" +
+          "Get rewarded for your eco-citizen act by a big like of the community!",
+      "moreInfoURL": "https://cleanplanet.io",
+      "imageURL":
+          "https://cleanplanet.io/wp-content/uploads/2019/01/logo_clean_planet_Plan-de-travail-1-copie-3-3.png"
+    },
+    {
+      "name": "diyhub",
+      "icon": FontAwesomeIcons.tools,
+      "tag": "diyhub",
+      "subject": "DIYHub: ",
+      "description": "",
+      "details": "## BASICS\n" +
+          "DIYHub is an initiative to reward you for sharing your knowledge in form of how-tos with the community.\n" +
+          "## TOPICS\n" +
+          "As long as you provide a value by descibing a process the topic is not important.\n" +
+          "## UPLOAD\n" +
+          "Upload your video on d.tube using the preset.\n\n" +
+          "## GET REWARDED\n" +
+          "Get rewarded for the video by a big like of the community!",
+      "moreInfoURL": "https://peakd.com/@diyhub",
+      "imageURL":
+          "https://images.hive.blog/p/5bEGgqZEHBMe6s3wiPgGFTi3naqHERgdwJew6rJYRaB3RR7sSAdZKnpKTieuFqSBhG6vQvFwpLVYoK2oxZAk7Ed6QDpcWhrN?format=match&mode=fit"
+    },
+    {
+      "name": "aliveandthriving",
+      "icon": FontAwesomeIcons.heartbeat,
+      "tag": "aliveandthriving",
+      "subject": "AliveAndThriving: ",
+      "description": "",
+      "details": "## BASICS\n" +
+          "Alive And Thriving is about you sharing your journey to Thrive in life, physical, mental and financial, and to live your life to it's fullest.\n" +
+          "## TOPICS\n" +
+          "Share your journey to Thrive in life in your video, and how you live it to it's fullest.\n" +
+          "## UPLOAD\n" +
+          "Upload your video on d.tube using the preset.\n\n" +
+          "## GET REWARDED\n" +
+          "Get rewarded for the video by a big like of the community!",
+      "moreInfoURL": "https://peakd.com/@aliveandthriving",
+      "imageURL":
+          "https://files.peakd.com/file/peakd-hive/aliveandthriving/RoundPhoto_Dec162021_163720.png?format=match&mode=fit"
+    },
+    // {
+    //   "name": "alive",
+    //   "icon": FontAwesomeIcons.handsHelping,
+    //   "tag": "alive",
+    //   "subject": "subject addition",
+    //   "description": "description addition",
+    //   "details": "more details text",
+    //   "moreURL": "https://d.tube",
+    //    "imageURL": ""
+    // },
+  ];
+
+// REGISTER
+  static int usernameMinLength = 12;
 }

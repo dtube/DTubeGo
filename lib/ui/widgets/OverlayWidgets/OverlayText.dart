@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:flutter/material.dart';
 
 class OverlayText extends StatelessWidget {
@@ -31,10 +32,10 @@ class OverlayText extends StatelessWidget {
         fontWeight: bold != null && bold == true
             ? FontWeight.bold
             : Theme.of(context).textTheme.bodyText1!.fontWeight,
-        color: color != null ? color : Colors.white,
+        color: color != null ? color : globalAlmostWhite,
         shadows: [
           Shadow(color: Colors.black, offset: Offset(0, 0), blurRadius: 2),
-          //Shadow(color: Colors.white, offset: Offset(0, 0), blurRadius: 10),
+          //Shadow(color: globalAlmostWhite, offset: Offset(0, 0), blurRadius: 10),
           Shadow(
             offset: Offset(4.0, 3.0),
             blurRadius: 10,

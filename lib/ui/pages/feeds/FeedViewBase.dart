@@ -1,12 +1,10 @@
 import 'package:dtube_go/ui/pages/feeds/lists/FeedList.dart';
 import 'package:dtube_go/ui/pages/feeds/PostDetailPageInlineView.dart';
-
 import 'package:dtube_go/utils/ResponsiveLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 typedef Bool2VoidFunc = void Function(bool);
-typedef ListOfString2VoidFunc = void Function(List<String>);
 
 class FeedViewBase extends StatefulWidget {
   String feedType;
@@ -37,12 +35,9 @@ class _FeedViewBaseState extends State<FeedViewBase>
   ValueNotifier<List<String>> _notifierPost = ValueNotifier(["", ""]);
 
   void showPost(List<String> params) {
-// params: author, link
-    // setState(() {
     _notifierPost.value[0] = params[0];
     _notifierPost.value[1] = params[1];
     _notifierPost.value = [params[0], params[1]];
-    //});
   }
 
   @override
@@ -57,50 +52,13 @@ class _FeedViewBaseState extends State<FeedViewBase>
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      portrait: FeedList(
-          feedType: widget.feedType,
-          largeFormat: widget.largeFormat,
-          showAuthor: widget.showAuthor,
-          scrollCallback: widget.scrollCallback,
-          enableNavigation: true,
-          topPadding: widget.topPadding != null ? widget.topPadding : 0),
-      landscape: Align(
-        alignment: Alignment.topLeft,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Container(
-              width: 44.w,
-
-              child: FeedList(
-                  feedType: widget.feedType,
-                  largeFormat: false,
-                  showAuthor: widget.showAuthor,
-                  scrollCallback: widget.scrollCallback,
-                  topPaddingForFirstEntry: 15.h,
-                  heightPerEntry: 15.h,
-                  width: 46.w,
-                  enableNavigation: false,
-                  itemSelectedCallback: showPost),
-              // child: Text("test")
-            ),
-            VerticalDivider(),
-            ValueListenableBuilder(
-                valueListenable: _notifierPost,
-                builder:
-                    (BuildContext context, List<String> vals, Widget? child) {
-                  print(vals);
-                  return PostView(
-                    postAuthor: vals[0],
-                    postLink: vals[1],
-                  );
-                }),
-          ],
-        ),
-      ),
-    );
+    return FeedList(
+        feedType: widget.feedType,
+        largeFormat: widget.largeFormat,
+        showAuthor: widget.showAuthor,
+        scrollCallback: widget.scrollCallback,
+        enableNavigation: true,
+        topPadding: widget.topPadding != null ? widget.topPadding : 0);
   }
 }
 
@@ -117,7 +75,6 @@ class PostView extends StatefulWidget {
 class _PostViewState extends State<PostView> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

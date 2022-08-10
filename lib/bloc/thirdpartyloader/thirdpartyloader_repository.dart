@@ -5,6 +5,7 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 abstract class ThirdPartyMetadataRepository {
   Future<ThirdPartyMetadata> getMetadata(String foreignUrl);
+  Future<bool> getChannelCodeInserted(String channelId, String code);
 }
 
 class ThirdPartyMetadataRepositoryImpl implements ThirdPartyMetadataRepository {
@@ -29,9 +30,23 @@ class ThirdPartyMetadataRepositoryImpl implements ThirdPartyMetadataRepository {
           oc: false,
           nsfw: false,
           unlist: false,
-          burnDTC: 0.0);
+          burnDTC: 0.0,
+          channelId: video.channelId.value);
       yt.close();
       return _meta;
+    } catch (e) {
+      print(e.toString());
+      throw Exception();
+    }
+  }
+
+  Future<bool> getChannelCodeInserted(String channelId, String code) async {
+    try {
+      var yt = YoutubeExplode();
+
+      var channelabout = await yt.channels.getAboutPage(channelId);
+
+      return channelabout.description!.contains(code);
     } catch (e) {
       print(e.toString());
       throw Exception();

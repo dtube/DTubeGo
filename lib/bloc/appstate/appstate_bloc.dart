@@ -9,13 +9,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // Currently this is only used for the upload state of videos / moments but can become the main state handler in near future.
 
 class AppStateBloc extends Bloc<AppStateEvent, AppState> {
-  AppStateBloc() : super(UploadInitialState());
-
-  @override
-  Stream<AppState> mapEventToState(AppStateEvent event) async* {
-    if (event is UploadStateChangedEvent) {
-      yield event.uploadState;
+  AppStateBloc() : super(UploadInitialState()) {
+    on<UploadStateChangedEvent>((event, emit) async {
+      emit(event.uploadState);
       print(event.uploadState);
-    }
+    });
   }
 }

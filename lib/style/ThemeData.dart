@@ -1,6 +1,5 @@
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:flutter/material.dart';
 
 Color globalBlue = Color.fromRGBO(34, 49, 84, 1);
@@ -25,10 +24,10 @@ List<Color> globalRedShades = [
   Colors.red[900]!,
 ];
 
-Color globalTextColor = Colors.white;
-double globalIconSizeSmall = 25;
-double globalIconSizeMedium = 30;
-double globalIconSizeBig = 35;
+Color globalTextColor = globalAlmostWhite;
+double globalIconSizeSmall = 15;
+double globalIconSizeMedium = 20;
+double globalIconSizeBig = 30;
 
 final ThemeData dtubeDarkTheme = ThemeData(
   primarySwatch: MaterialColor(4280361249, {
@@ -48,8 +47,6 @@ final ThemeData dtubeDarkTheme = ThemeData(
   primaryColorBrightness: Brightness.dark,
   primaryColorLight: Color(0xff9e9e9e),
   primaryColorDark: Color(0xff000000),
-  accentColor: Color(0xffef1a30),
-  accentColorBrightness: Brightness.light,
   canvasColor: globalBGColor,
   scaffoldBackgroundColor: globalBGColor,
   cardColor: Color(0xff424242),
@@ -59,7 +56,6 @@ final ThemeData dtubeDarkTheme = ThemeData(
   selectedRowColor: Color(0xfff5f5f5),
   unselectedWidgetColor: globalTextColor,
   disabledColor: Color(0x4dffffff),
-  buttonColor: Color(0xff223153),
   toggleableActiveColor: Color(0xffef192f),
   secondaryHeaderColor: Color(0xff616161),
   backgroundColor: Color(0xff616161),
@@ -67,7 +63,10 @@ final ThemeData dtubeDarkTheme = ThemeData(
   indicatorColor: Color(0xff64ffda),
   hintColor: Color(0x80ffffff),
   errorColor: Color(0xffd32f2f),
-  appBarTheme: AppBarTheme(backgroundColor: globalBGColor, elevation: 0),
+  // appBarTheme: AppBarTheme(backgroundColor: globalBGColor, elevation: 0),
+  appBarTheme: AppBarTheme(
+    systemOverlayStyle: SystemUiOverlayStyle.light,
+  ),
   elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
     alignment: Alignment.center,
@@ -111,80 +110,80 @@ final ThemeData dtubeDarkTheme = ThemeData(
   textTheme: TextTheme(
     headline1: GoogleFonts.workSans(
       color: globalTextColor,
-      fontSize: 30,
+      fontSize: 25,
       fontWeight: FontWeight.w900,
       fontStyle: FontStyle.normal,
     ),
     headline2: GoogleFonts.workSans(
       color: globalTextColor,
-      fontSize: 30,
+      fontSize: 23,
       fontWeight: FontWeight.w700,
       fontStyle: FontStyle.normal,
     ),
     headline3: GoogleFonts.workSans(
       color: globalTextColor,
-      fontSize: 25,
+      fontSize: 21,
       fontWeight: FontWeight.w900,
       fontStyle: FontStyle.normal,
     ),
     headline4: GoogleFonts.workSans(
       color: globalTextColor,
-      fontSize: 25,
+      fontSize: 19,
       fontWeight: FontWeight.w700,
       fontStyle: FontStyle.normal,
     ),
     headline5: GoogleFonts.workSans(
       color: globalTextColor,
-      fontSize: 20,
+      fontSize: 17,
       fontWeight: FontWeight.w700,
       fontStyle: FontStyle.normal,
     ),
     headline6: GoogleFonts.workSans(
       color: globalTextColor,
-      fontSize: 17,
+      fontSize: 15,
       fontWeight: FontWeight.w700,
       fontStyle: FontStyle.normal,
     ),
     subtitle1: GoogleFonts.workSans(
       color: globalTextColor,
-      fontSize: 17,
+      fontSize: 15,
       fontWeight: FontWeight.w200,
       fontStyle: FontStyle.normal,
     ),
     bodyText1: GoogleFonts.workSans(
       color: globalTextColor,
-      fontSize: 17,
+      fontSize: 15,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
     bodyText2: GoogleFonts.workSans(
       color: globalTextColor,
-      fontSize: 15,
+      fontSize: 13,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
     caption: GoogleFonts.workSans(
       color: globalTextColor,
-      fontSize: 15,
+      fontSize: 13,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
     button: GoogleFonts.workSans(
       color: globalTextColor,
-      fontSize: 17,
+      fontSize: 15,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
     subtitle2: GoogleFonts.workSans(
       color: globalTextColor,
-      fontSize: 14,
+      fontSize: 13,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
     overline: GoogleFonts.workSans(
       decoration: TextDecoration.underline,
       color: globalTextColor,
-      fontSize: 17,
+      fontSize: 13,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),

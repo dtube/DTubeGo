@@ -4,29 +4,42 @@ import 'package:dtube_go/bloc/avalonConfig/avalonConfig_repository.dart';
 import 'package:dtube_go/bloc/avalonConfig/avalonConfig_response_model.dart';
 import 'package:dtube_go/bloc/avalonConfig/avalonConfig_state.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:flutter/material.dart';
 
 class AvalonConfigBloc extends Bloc<AvalonConfigEvent, AvalonConfigState> {
   AvalonConfigRepository repository;
 
   AvalonConfigBloc({required this.repository})
-      : super(AvalonConfigInitialState());
-
-  // @override
-
-  // AvalonConfigState get initialState => AvalonConfigInitialState();
-
-  @override
-  Stream<AvalonConfigState> mapEventToState(AvalonConfigEvent event) async* {
-    String _avalonApiNode = await sec.getNode();
-    if (event is FetchAvalonConfigEvent) {
-      yield AvalonConfigLoadingState();
+      : super(AvalonConfigInitialState()) {
+    on<FetchAvalonConfigEvent>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      emit(AvalonConfigLoadingState());
       try {
         AvalonConfig config = await repository.getAvalonConfig(_avalonApiNode);
 
-        yield AvalonConfigLoadedState(config: config);
+        emit(AvalonConfigLoadedState(config: config));
       } catch (e) {
-        yield AvalonConfigErrorState(message: e.toString());
+        emit(AvalonConfigErrorState(message: e.toString()));
       }
-    }
+    });
+
+    on<FetchAvalonAccountPriceEvent>((event, emit) async {
+      String _avalonApiNode = await sec.getNode();
+      emit(AvalonAccountLoadingState());
+      try {
+        int _accountPrice = await repository.getAvalonAccountPrice(
+          _avalonApiNode,
+          event.accountName,
+        );
+        print("acc price " + _accountPrice.toString());
+        if (_accountPrice > 0) {
+          emit(AvalonAccountAvailableState(dtcCosts: _accountPrice));
+        } else {
+          emit(AvalonAccountNotAvailableState());
+        }
+      } catch (e) {
+        emit(AvalonConfigErrorState(message: e.toString()));
+      }
+    });
   }
 }

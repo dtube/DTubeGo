@@ -1,20 +1,22 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
-import 'package:dtube_go/ui/pages/settings/HiveSignerButton.dart';
+import 'package:dtube_go/ui/pages/settings/HiveSignerForm.dart';
 import 'package:dtube_go/ui/pages/settings/PinCodeDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:textfield_tags/textfield_tags.dart';
 
 class SettingsTabContainer extends StatefulWidget {
   SettingsTabContainer({Key? key}) : super(key: key);
@@ -33,11 +35,17 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   late double _defaultVoteComments;
   late double _defaultTip;
   late double _defaultTipComments;
+
   late String _showHidden;
   late String _showNsfw;
   late String _hiveUsername;
-
+  late String _hiveDefaultCommunity;
+  late List<String> _hiveDefaultTags;
+  late TextEditingController _hiveDefaultCommunityController;
+  //late TextEditingController _hiveDefaultTagsController;
   late String _pinCode;
+  late bool _videoAutoPause;
+  late bool _disableAnimation;
 
   late String _imageUploadProvider;
 
@@ -49,8 +57,6 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   late TextEditingController _momentTitleController;
   late TextEditingController _momentBodyController;
   late String _momentPreviewBody;
-
-  late List<String> _selectedExploreTags;
 
   List<String> _showHiddentNsfwOptions = ['Show', 'Hide', 'Blur'];
 
@@ -66,16 +72,26 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
   bool _defaultMomentsCrossPost = false;
   double _defaultMomentVotingWeight = 5;
 
+  bool _downvoteFixed = false;
+  double _downvoteFixedAmount = 1;
+
   bool _showDisplayHints = false;
   bool _showSecurityHints = false;
+  bool _showBehaviourHints = false;
+
   bool _showInterestsHints = false;
 
   bool _showVotingWeightHints = false;
   bool _showVotingTipHints = false;
+  bool _showDefaultDownvoteHints = false;
 
   bool _showVotingUploadDefaultsHints = false;
   bool _showVotingMomentDefaultsHints = false;
   bool _showHivesignerHints = false;
+  bool _showHiveDefaultCommunityHint = false;
+  bool _showHiveDefaultTagsHint = false;
+
+  bool _showNSFWSettings = false;
 
   List<String> _imageUploadProviders = ['imgur', 'ipfs'];
   List<int> _visitedTabs = [];
@@ -92,7 +108,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
     _templateTagController = TextEditingController(text: "");
     _momentBodyController = TextEditingController(text: "");
     _momentTitleController = TextEditingController(text: "");
-
+    _hiveDefaultCommunityController = TextEditingController(text: "");
+    //  _hiveDefaultTagsController = TextEditingController(text: "");
     _templatePreviewBody = "";
     _momentPreviewBody = "";
 
@@ -105,6 +122,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
       // Todo abstract this to dtubeSubAppBar
       appBar: AppBar(
           centerTitle: true,
+          backgroundColor: globalBGColor,
+          elevation: 0,
           title: DTubeLogo(
             size: 60,
           ),
@@ -119,7 +138,6 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                 child: GestureDetector(
                   child: FaIcon(FontAwesomeIcons.save),
                   onTap: () async {
-                    _selectedExploreTags.remove("");
                     Map<String, String> newSettings = {
                       sec.settingKey_defaultVotingWeight:
                           _defaultVote.toString(),
@@ -137,8 +155,6 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                       sec.settingKey_templateTag:
                           _templateTagController.value.text,
                       sec.settingKey_imageUploadService: _imageUploadProvider,
-                      sec.settingKey_ExploreTags:
-                          _selectedExploreTags.join(","),
                       sec.settingKey_DefaultUploadNSFW:
                           _defaultUploadNSFW.toString(),
                       sec.settingKey_DefaultUploadOC:
@@ -163,7 +179,19 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           _momentTitleController.value.text,
                       sec.settingKey_momentBody:
                           _momentBodyController.value.text,
+                      sec.settingKey_hiveSignerDefaultCommunity:
+                          _hiveDefaultCommunityController.value.text,
+                      sec.settingKey_hiveSignerDefaultTags:
+                          _hiveDefaultTags.join(","),
+                      sec.settingKey_FixedDownvoteActivated:
+                          _downvoteFixed.toString(),
+                      sec.settingKey_FixedDownvoteWeight:
+                          _downvoteFixedAmount.toString(),
+                      sec.settingKey_videoAutoPause: _videoAutoPause.toString(),
+                      sec.settingKey_disableAnimations:
+                          _disableAnimation.toString(),
                     };
+
                     _settingsBloc.add(PushSettingsEvent(
                         newSettings: newSettings, context: context));
                   },
@@ -209,6 +237,25 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
             _hiveUsername = settings[sec.settingKey_hiveSignerUsername] != null
                 ? settings[sec.settingKey_hiveSignerUsername]!
                 : "";
+            _hiveDefaultCommunity =
+                settings[sec.settingKey_hiveSignerDefaultCommunity] != null &&
+                        settings[sec.settingKey_hiveSignerDefaultCommunity] !=
+                            ""
+                    ? settings[sec.settingKey_hiveSignerDefaultCommunity]!
+                    : "hive-196037";
+            _hiveDefaultCommunityController = new TextEditingController(
+                text: settings[sec.settingKey_hiveSignerDefaultCommunity] !=
+                            null &&
+                        settings[sec.settingKey_hiveSignerDefaultCommunity]!
+                            .startsWith("hive-")
+                    ? settings[sec.settingKey_hiveSignerDefaultCommunity]!
+                    : "hive-196037");
+
+            _hiveDefaultTags =
+                settings[sec.settingKey_hiveSignerDefaultTags] != null &&
+                        settings[sec.settingKey_hiveSignerDefaultTags] != ""
+                    ? settings[sec.settingKey_hiveSignerDefaultTags]!.split(",")
+                    : [];
 
             _templateTitleController = new TextEditingController(
                 text: settings[sec.settingKey_templateTitle] != null
@@ -238,21 +285,23 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                 text: settings[sec.settingKey_templateTag] != null
                     ? settings[sec.settingKey_templateTag]!
                     : "");
-            _hiveUsername = settings[sec.settingKey_hiveSignerUsername] != null
-                ? settings[sec.settingKey_hiveSignerUsername]!
-                : "";
+
             _pinCode = settings[sec.settingKey_pincode] != null
                 ? settings[sec.settingKey_pincode]!
                 : "";
+
+            _videoAutoPause = settings[sec.settingKey_videoAutoPause] != null
+                ? settings[sec.settingKey_videoAutoPause]! == "true"
+                : false;
+            _disableAnimation =
+                settings[sec.settingKey_disableAnimations] != null
+                    ? settings[sec.settingKey_disableAnimations]! == "true"
+                    : false;
 
             _imageUploadProvider =
                 settings[sec.settingKey_imageUploadService] != null
                     ? settings[sec.settingKey_imageUploadService]!
                     : "imgur";
-
-            _selectedExploreTags = settings[sec.settingKey_ExploreTags] != null
-                ? settings[sec.settingKey_ExploreTags]!.split((','))
-                : [];
 
             _defaultUploadNSFW =
                 settings[sec.settingKey_DefaultUploadNSFW] != null
@@ -296,46 +345,59 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                     ? double.parse(
                         settings[sec.settingKey_DefaultMomentVotingWeigth]!)
                     : 5.0;
+            _downvoteFixed =
+                settings[sec.settingKey_FixedDownvoteActivated] != null
+                    ? settings[sec.settingKey_FixedDownvoteActivated] == "true"
+                    : true;
+            _downvoteFixedAmount =
+                settings[sec.settingKey_FixedDownvoteWeight] != null
+                    ? double.parse(
+                        settings[sec.settingKey_FixedDownvoteWeight]!)
+                    : 1.0;
           }
 
           return Column(
             children: [
-              TabBar(
-                unselectedLabelColor: Colors.grey,
-                labelColor: globalAlmostWhite,
-                indicatorColor: globalRed,
-                onTap: (index) {
-                  setState(() {
-                    if (!_visitedTabs.contains(index)) {
-                      // add page to visited to avoid rebuilding the animation
-                      _visitedTabs.add(index);
-                    }
-                    //add first tab to visited because it is the default one
-                    if (index > 0 && !_visitedTabs.contains(0)) {
-                      // add page to visited to avoid rebuilding the animation
-                      _visitedTabs.add(0);
-                    }
-                  });
-                },
-                tabs: [
-                  Tab(
-                    text: 'General',
-                  ),
-                  Tab(
-                    text: 'Avalon',
-                  ),
-                  Tab(
-                    text: 'Hive',
-                  ),
-                  Tab(
-                    text: 'Uploads',
-                  ),
-                  Tab(
-                    text: 'Moments',
-                  ),
-                ],
-                controller: _tabController,
-                indicatorSize: TabBarIndicatorSize.tab,
+              Container(
+                height: 7.h,
+                child: TabBar(
+                  unselectedLabelColor: Colors.grey,
+                  isScrollable: true,
+                  labelColor: globalAlmostWhite,
+                  indicatorColor: globalRed,
+                  onTap: (index) {
+                    setState(() {
+                      if (!_visitedTabs.contains(index)) {
+                        // add page to visited to avoid rebuilding the animation
+                        _visitedTabs.add(index);
+                      }
+                      //add first tab to visited because it is the default one
+                      if (index > 0 && !_visitedTabs.contains(0)) {
+                        // add page to visited to avoid rebuilding the animation
+                        _visitedTabs.add(0);
+                      }
+                    });
+                  },
+                  tabs: [
+                    Tab(
+                      text: 'General',
+                    ),
+                    Tab(
+                      text: 'Avalon',
+                    ),
+                    Tab(
+                      text: 'Hive',
+                    ),
+                    Tab(
+                      text: 'Uploads',
+                    ),
+                    Tab(
+                      text: 'Moments',
+                    ),
+                  ],
+                  controller: _tabController,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                ),
               ),
               Expanded(
                 child: Padding(
@@ -346,100 +408,112 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                       SingleChildScrollView(
                         child: Column(
                           children: [
-                            DTubeFormCard(
-                              waitBeforeFadeIn: Duration(milliseconds: 200),
-                              avoidAnimation: _visitedTabs.contains(0),
-                              childs: [
-                                Stack(
-                                  children: [
-                                    ShowHintIcon(
-                                      onPressed: () {
-                                        setState(() {
-                                          _showDisplayHints =
-                                              !_showDisplayHints;
-                                        });
-                                      },
-                                      alignment: Alignment.topRight,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 1.h),
-                                      child: Text("Display",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 1.h),
-                                  child: Text(
-                                      "How do you want to see those kind of videos in the app?",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1),
-                                ),
-                                DropdownButtonFormField(
-                                  decoration: InputDecoration(
-                                      //filled: true,
-                                      //fillColor: Hexcolor('#ecedec'),
-                                      labelText: 'negative videos:',
-                                      labelStyle:
-                                          Theme.of(context).textTheme.headline5
-                                      //border: new CustomBorderTextFieldSkin().getSkin(),
+                            Visibility(
+                              visible:
+                                  false, // to get accepted by google we had to remove this option
+                              child: DTubeFormCard(
+                                waitBeforeFadeIn: Duration(milliseconds: 200),
+                                avoidAnimation: _visitedTabs.contains(0) ||
+                                    globals.disableAnimations,
+                                childs: [
+                                  Stack(
+                                    children: [
+                                      ShowHintIcon(
+                                        onPressed: () {
+                                          setState(() {
+                                            _showDisplayHints =
+                                                !_showDisplayHints;
+                                          });
+                                        },
+                                        alignment: Alignment.topRight,
                                       ),
-                                  value: _showHidden,
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _showHidden = newValue.toString();
-                                      // widget.justSaved = false;
-                                    });
-                                  },
-                                  items: _showHiddentNsfwOptions.map((option) {
-                                    return DropdownMenuItem(
-                                      child: new Text(option),
-                                      value: option,
-                                    );
-                                  }).toList(),
-                                ),
-                                VisibilityHintText(
-                                    showHint: _showDisplayHints,
-                                    hintText:
-                                        "If a video has a higher sum of VP spent for downvotes than for upvotes it counts as a \"negative\" video."),
-                                DropdownButtonFormField(
-                                  decoration: InputDecoration(
-                                      //filled: true,
-                                      //fillColor: Hexcolor('#ecedec'),
-                                      labelText: 'NSFW videos:',
-                                      labelStyle:
-                                          Theme.of(context).textTheme.headline5
-                                      //border: new CustomBorderTextFieldSkin().getSkin(),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 1.h),
+                                        child: Text("Display",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5),
                                       ),
-                                  value: _showNsfw,
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _showNsfw = newValue.toString();
-                                      // widget.justSaved = false;
-                                    });
-                                  },
-                                  items: _showHiddentNsfwOptions.map((option) {
-                                    return DropdownMenuItem(
-                                      child: new Text(option),
-                                      value: option,
-                                    );
-                                  }).toList(),
-                                ),
-                                VisibilityHintText(
-                                    showHint: _showDisplayHints,
-                                    hintText:
-                                        "The author can tag the new video as NSFW (not safe for work). But also curators can vote with the NSFW curator tag. If this tag has more VP spent than the original video tag the video will also count as \"NSFW\"."),
-                              ],
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 1.h),
+                                    child: Text(
+                                        "How do you want to see those kind of videos in the app?",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1),
+                                  ),
+                                  DropdownButtonFormField(
+                                    decoration: InputDecoration(
+                                        //filled: true,
+                                        //fillColor: Hexcolor('#ecedec'),
+                                        labelText: 'negative videos:',
+                                        labelStyle: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                        //border: new CustomBorderTextFieldSkin().getSkin(),
+                                        ),
+                                    value: _showHidden,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        _showHidden = newValue.toString();
+                                        // widget.justSaved = false;
+                                      });
+                                    },
+                                    items:
+                                        _showHiddentNsfwOptions.map((option) {
+                                      return DropdownMenuItem(
+                                        child: new Text(option),
+                                        value: option,
+                                      );
+                                    }).toList(),
+                                  ),
+                                  VisibilityHintText(
+                                      showHint: _showDisplayHints,
+                                      hintText:
+                                          "If a video has a higher sum of VP spent for downvotes than for upvotes it counts as a \"negative\" video."),
+                                  DropdownButtonFormField(
+                                    decoration: InputDecoration(
+                                        //filled: true,
+                                        //fillColor: Hexcolor('#ecedec'),
+                                        labelText: 'NSFW videos:',
+                                        labelStyle: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                        //border: new CustomBorderTextFieldSkin().getSkin(),
+                                        ),
+                                    value: _showNsfw,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        _showNsfw = newValue.toString();
+                                        // widget.justSaved = false;
+                                      });
+                                    },
+                                    items:
+                                        _showHiddentNsfwOptions.map((option) {
+                                      return DropdownMenuItem(
+                                        child: new Text(option),
+                                        value: option,
+                                      );
+                                    }).toList(),
+                                  ),
+                                  VisibilityHintText(
+                                      showHint: _showDisplayHints,
+                                      hintText:
+                                          "The author can tag the new video as NSFW (not safe for work). But also curators can vote with the NSFW curator tag. If this tag has more VP spent than the original video tag the video will also count as \"NSFW\"."),
+                                ],
+                              ),
                             ),
 
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
-                              avoidAnimation: _visitedTabs.contains(0),
+                              avoidAnimation: _visitedTabs.contains(0) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Stack(
                                   children: [
@@ -498,6 +572,85 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                         "Your login data is stored in a secure storage on your device. The app will automatically login you when you start the app. To prevent anyone else to use your account on your device, make sure to set this pin."),
                               ],
                             ),
+                            DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 400),
+                              avoidAnimation: _visitedTabs.contains(0) ||
+                                  globals.disableAnimations,
+                              childs: [
+                                Stack(
+                                  children: [
+                                    ShowHintIcon(
+                                      onPressed: () {
+                                        setState(() {
+                                          _showBehaviourHints =
+                                              !_showBehaviourHints;
+                                        });
+                                      },
+                                      alignment: Alignment.topRight,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 1.h),
+                                      child: Text("Behaviour",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: 60.w,
+                                      child: Text("pause video on popups",
+                                          maxLines: 2,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1),
+                                    ),
+                                    Switch(
+                                      value: _videoAutoPause,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _videoAutoPause = value;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                VisibilityHintText(
+                                    showHint: _showBehaviourHints,
+                                    hintText:
+                                        "If you play back a video and you are goign to comment / vote on it - the video playback is automatically paused. You can turn off this behvaiour with this setting."),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: 60.w,
+                                      child: Text("disable app animations",
+                                          maxLines: 2,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1),
+                                    ),
+                                    Switch(
+                                      value: _disableAnimation,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _disableAnimation = value;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                VisibilityHintText(
+                                    showHint: _showBehaviourHints,
+                                    hintText:
+                                        "You can turn off all animations in the app to receive a more resource-saving experience without many distractions."),
+                              ],
+                            ),
                             // deactivated until we have more providers
                             // Padding(
                             //   padding: const EdgeInsets.only(top: 16.0),
@@ -531,75 +684,6 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             //     ),
                             //   ],
                             // ),
-                            DTubeFormCard(
-                              waitBeforeFadeIn: Duration(milliseconds: 600),
-                              avoidAnimation: _visitedTabs.contains(0),
-                              childs: [
-                                Stack(children: [
-                                  ShowHintIcon(
-                                    onPressed: () {
-                                      setState(() {
-                                        _showInterestsHints =
-                                            !_showInterestsHints;
-                                      });
-                                    },
-                                    alignment: Alignment.topRight,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 16.0),
-                                    child: Text("Interests",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5),
-                                  ),
-                                ]),
-                                Row(
-                                  children: [
-                                    Text(
-                                        "define your interests to auto filter the explore page",
-                                        maxLines: 2,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1),
-                                  ],
-                                ),
-                                Wrap(children: [
-                                  for (var _possibleTag
-                                      in AppConfig.possibleExploreTags)
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 1.w),
-                                      child: InputChip(
-                                        label: Text(_possibleTag),
-                                        selectedColor: globalRed,
-                                        labelStyle: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                        //!.copyWith(color: globalAlmostWhite)
-                                        ,
-                                        backgroundColor: globalBGColorNoOpacity,
-                                        selected: _selectedExploreTags
-                                            .contains(_possibleTag),
-                                        onSelected: (value) {
-                                          print(_possibleTag);
-                                          setState(() {
-                                            if (value == true) {
-                                              _selectedExploreTags
-                                                  .add(_possibleTag);
-                                            } else {
-                                              _selectedExploreTags
-                                                  .remove(_possibleTag);
-                                            }
-                                          });
-                                        },
-                                      ),
-                                    )
-                                ]),
-                                VisibilityHintText(
-                                    showHint: _showInterestsHints,
-                                    hintText:
-                                        "The explore page of DTube (globe icon) shows the newest videos filtered by the above ativated tags. If you do not activate any of those tags the explore page will display all trending videos by default."),
-                              ],
-                            ),
                           ],
                         ),
                       ),
@@ -611,7 +695,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             SizedBox(height: 16),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 200),
-                              avoidAnimation: _visitedTabs.contains(1),
+                              avoidAnimation: _visitedTabs.contains(1) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -637,7 +722,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                         "default voting weight (posts):",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6)),
+                                            .bodyText1)),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -673,7 +758,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                         "default voting weight (comments):",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6)),
+                                            .bodyText1)),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -715,7 +800,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
-                              avoidAnimation: _visitedTabs.contains(1),
+                              avoidAnimation: _visitedTabs.contains(1) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -737,7 +823,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 ]),
                                 Text("default voting tip (posts):",
                                     style:
-                                        Theme.of(context).textTheme.headline6),
+                                        Theme.of(context).textTheme.bodyText1),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -773,7 +859,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                         "default voting tip (comments):",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6)),
+                                            .bodyText1)),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -813,6 +899,99 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 ),
                               ],
                             ),
+                            DTubeFormCard(
+                              waitBeforeFadeIn: Duration(milliseconds: 400),
+                              avoidAnimation: _visitedTabs.contains(1) ||
+                                  globals.disableAnimations,
+                              childs: [
+                                Stack(children: [
+                                  ShowHintIcon(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showDefaultDownvoteHints =
+                                            !_showDefaultDownvoteHints;
+                                      });
+                                    },
+                                    alignment: Alignment.topRight,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 1.h),
+                                    child: Text("Downvotes",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                ]),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                        value: _downvoteFixed,
+                                        onChanged: (bool) {
+                                          setState(() {
+                                            _downvoteFixed = !_downvoteFixed;
+                                          });
+                                        }),
+                                    Text("downvote with a FIXED weight",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1)
+                                  ],
+                                ),
+                                _downvoteFixed
+                                    ? Column(
+                                        children: [
+                                          Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                  "default downvote weight:",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1)),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Expanded(
+                                                flex: 2,
+                                                child: Slider(
+                                                  min: 0.1,
+                                                  max: 100.0,
+                                                  value: _downvoteFixedAmount,
+                                                  label: _downvoteFixedAmount
+                                                          .floor()
+                                                          .toString() +
+                                                      "%",
+                                                  divisions: 20,
+                                                  inactiveColor: globalBlue,
+                                                  activeColor: globalRed,
+                                                  onChanged: (dynamic value) {
+                                                    setState(() {
+                                                      _downvoteFixedAmount =
+                                                          value;
+                                                      // widget.justSaved = false;
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                              Text(
+                                                _downvoteFixedAmount
+                                                        .floor()
+                                                        .toString() +
+                                                    "%",
+                                                style: TextStyle(fontSize: 18),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                    : Container(),
+                                VisibilityHintText(
+                                  showHint: _showDefaultDownvoteHints,
+                                  hintText:
+                                      "If you activate the fixed downvote setting you will not be able to set the downvote weight anymore. This setting does not affect the user experience inside of the app. All downvoted posts will get hidden automatically for you. ",
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -822,7 +1001,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                           children: [
                             SizedBox(height: 16),
                             DTubeFormCard(
-                              avoidAnimation: _visitedTabs.contains(2),
+                              avoidAnimation: _visitedTabs.contains(2) ||
+                                  globals.disableAnimations,
                               waitBeforeFadeIn: Duration(milliseconds: 600),
                               childs: [
                                 Stack(children: [
@@ -847,11 +1027,11 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                 Row(
                                   children: [
                                     Container(
-                                      width: 100.w,
+                                      width: 85.w,
                                       child: Column(
                                         children: [
                                           Text(
-                                              "Cross-posting to the hive blockchain is possible by authorizing the app via hivesigner:",
+                                              "Cross-posting to the hive blockchain is possible by authorizing the app via hivesigner.",
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyText1),
@@ -862,7 +1042,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                                   HivesignerBloc(
                                                       repository:
                                                           HivesignerRepositoryImpl()),
-                                              child: HiveSignerButton(
+                                              child: HiveSignerForm(
                                                 username: _hiveUsername,
                                               ),
                                             ),
@@ -880,6 +1060,219 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               ],
                             ),
                             SizedBox(height: 20),
+                            DTubeFormCard(
+                              avoidAnimation: _visitedTabs.contains(2) ||
+                                  globals.disableAnimations,
+                              waitBeforeFadeIn: Duration(milliseconds: 800),
+                              childs: [
+                                Stack(children: [
+                                  ShowHintIcon(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showHiveDefaultCommunityHint =
+                                            !_showHiveDefaultCommunityHint;
+                                      });
+                                    },
+                                    alignment: Alignment.topRight,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 1.h, bottom: 1.h),
+                                    child: Text("Hive community",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                ]),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 85.w,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                              "Cross-posted videos are usually published in the DTube-Community on Hive. Here you can change this to any other hive community by entering the correct community ID (e.g. hive-196037 for DTube).",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: TextFormField(
+                                              controller:
+                                                  _hiveDefaultCommunityController,
+                                              cursorColor: globalRed,
+                                              decoration: new InputDecoration(
+                                                  labelText:
+                                                      "hive community id:"),
+                                              maxLines: 1,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1,
+                                            ),
+                                          ),
+                                          VisibilityHintText(
+                                            showHint:
+                                                _showHiveDefaultCommunityHint,
+                                            hintText:
+                                                "The code is very important in order to post your video in the correct community! You can look the id for your desired community up on a hive user interface like peakd.com.",
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            DTubeFormCard(
+                              avoidAnimation: _visitedTabs.contains(2) ||
+                                  globals.disableAnimations,
+                              waitBeforeFadeIn: Duration(milliseconds: 900),
+                              childs: [
+                                Stack(children: [
+                                  ShowHintIcon(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showHiveDefaultTagsHint =
+                                            !_showHiveDefaultTagsHint;
+                                      });
+                                    },
+                                    alignment: Alignment.topRight,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 1.h, bottom: 1.h),
+                                    child: Text("Hive Tags",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                ]),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 85.w,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                              "Cross-posted videos can get tagged with up to 8 custom tags.",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1),
+                                          Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: TextFieldTags(
+                                                initialTags: _hiveDefaultTags,
+                                                textFieldStyler:
+                                                    TextFieldStyler(
+                                                  //These are properties you can tweek for customization
+
+                                                  // bool textFieldFilled = false,
+                                                  // Icon icon,
+                                                  helperText: _hiveDefaultTags
+                                                          .length
+                                                          .toString() +
+                                                      ' tags (hit space to add tag)\n' +
+                                                      _hiveDefaultTags
+                                                          .join("\n"),
+                                                  // TextStyle helperStyle,
+                                                  hintText: '',
+                                                  textStyle: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1,
+                                                  // TextStyle hintStyle,
+                                                  // EdgeInsets contentPadding,
+                                                  // Color textFieldFilledColor,
+                                                  // bool isDense = true,
+                                                  // bool textFieldEnabled = true,
+                                                  // OutlineInputBorder textFieldBorder = const OutlineInputBorder(),
+                                                  // OutlineInputBorder textFieldFocusedBorder,
+                                                  // OutlineInputBorder textFieldDisabledBorder,
+                                                  // OutlineInputBorder textFieldEnabledBorder
+                                                ),
+                                                tagsStyler: TagsStyler(
+                                                  //These are properties you can tweek for customization
+
+                                                  // showHashtag = false,
+                                                  // EdgeInsets tagPadding = const EdgeInsets.all(4.0),
+                                                  // EdgeInsets tagMargin = const EdgeInsets.symmetric(horizontal: 4.0),
+                                                  tagDecoration: BoxDecoration(
+                                                      shape: BoxShape.rectangle,
+                                                      borderRadius:
+                                                          new BorderRadius.all(
+                                                        Radius.circular(10.0),
+                                                      ),
+                                                      color: globalRed),
+                                                  tagTextStyle:
+                                                      Theme.of(context)
+                                                          .textTheme
+                                                          .bodyText1,
+                                                  tagCancelIcon: Icon(
+                                                      Icons.cancel,
+                                                      size: 4.w,
+                                                      color: globalAlmostWhite),
+                                                ),
+                                                onTag: (tag) {
+                                                  setState(() {
+                                                    _hiveDefaultTags.add(tag);
+                                                  });
+                                                },
+                                                onDelete: (tag) {
+                                                  setState(() {
+                                                    _hiveDefaultTags
+                                                        .remove(tag);
+                                                  });
+                                                },
+                                                validator: (tag) {
+                                                  if (_hiveDefaultTags.length ==
+                                                      8) {
+                                                    return "max 8 tags allowed";
+                                                  }
+                                                  if (!RegExp(r'^[a-z]+$')
+                                                      .hasMatch(tag)) {
+                                                    return "only alhabetic characters allowed";
+                                                  }
+                                                  if (_hiveDefaultTags
+                                                      .contains(tag)) {
+                                                    return "tag is already in the list";
+                                                  }
+                                                  if (tag.toLowerCase() ==
+                                                      "dtube") {
+                                                    return "dtube is as default in the list";
+                                                  }
+                                                  return null;
+                                                },
+                                                tagsDistanceFromBorderEnd: 0.50,
+
+                                                //scrollableTagsMargin: EdgeInsets.only(left: 9),
+                                                //scrollableTagsPadding: EdgeInsets.only(left: 9),
+                                              )
+
+                                              // TextFormField(
+                                              //   controller:
+                                              //       _hiveDefaultTagsController,
+                                              //   cursorColor: globalRed,
+                                              //   decoration: new InputDecoration(
+                                              //       labelText:
+                                              //           "hive tags (space-separated):"),
+                                              //   maxLines: 1,
+                                              //   style: Theme.of(context)
+                                              //       .textTheme
+                                              //       .bodyText1,
+                                              // ),
+                                              ),
+                                          VisibilityHintText(
+                                            showHint: _showHiveDefaultTagsHint,
+                                            hintText:
+                                                "Your cross-posted video will receive those tags on the hive blockchain. Only up to 8 tags are allowed (dtube and the tag of your post will be added automatically) and you should set them separated by spaces in the textfield above.",
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -890,11 +1283,12 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             Padding(
                               padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
                               child: Text("Default Values for Regular Uploads",
-                                  style: Theme.of(context).textTheme.headline3),
+                                  style: Theme.of(context).textTheme.headline5),
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 200),
-                              avoidAnimation: _visitedTabs.contains(2),
+                              avoidAnimation: _visitedTabs.contains(2) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -940,27 +1334,31 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                                 !_defaultUploadOC;
                                           });
                                         }),
-                                    ChoiceChip(
-                                        selected: _defaultUploadNSFW,
-                                        label: Text('nsfw content'),
-                                        labelStyle: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                        avatar: _defaultUploadNSFW
-                                            ? FaIcon(
-                                                FontAwesomeIcons.check,
-                                                size: 15,
-                                              )
-                                            : null,
-                                        backgroundColor:
-                                            Colors.grey.withAlpha(30),
-                                        selectedColor: Colors.green[700],
-                                        onSelected: (bool selected) {
-                                          setState(() {
-                                            _defaultUploadNSFW =
-                                                !_defaultUploadNSFW;
-                                          });
-                                        }),
+                                    Visibility(
+                                      visible:
+                                          false, // to get accepted by google we had to remove this option
+                                      child: ChoiceChip(
+                                          selected: _defaultUploadNSFW,
+                                          label: Text('nsfw content'),
+                                          labelStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                          avatar: _defaultUploadNSFW
+                                              ? FaIcon(
+                                                  FontAwesomeIcons.check,
+                                                  size: 15,
+                                                )
+                                              : null,
+                                          backgroundColor:
+                                              Colors.grey.withAlpha(30),
+                                          selectedColor: Colors.green[700],
+                                          onSelected: (bool selected) {
+                                            setState(() {
+                                              _defaultUploadNSFW =
+                                                  !_defaultUploadNSFW;
+                                            });
+                                          }),
+                                    ),
                                     ChoiceChip(
                                         selected: _defaultUploadUnlist,
                                         label: Text('unlist video'),
@@ -1055,7 +1453,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                               ],
                             ),
                             DTubeFormCard(
-                              avoidAnimation: _visitedTabs.contains(3),
+                              avoidAnimation: _visitedTabs.contains(3) ||
+                                  globals.disableAnimations,
                               waitBeforeFadeIn: Duration(milliseconds: 200),
                               childs: [
                                 Padding(
@@ -1081,7 +1480,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
-                              avoidAnimation: _visitedTabs.contains(3),
+                              avoidAnimation: _visitedTabs.contains(3) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Padding(
                                   padding:
@@ -1111,7 +1511,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 600),
-                              avoidAnimation: _visitedTabs.contains(3),
+                              avoidAnimation: _visitedTabs.contains(3) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Padding(
                                   padding:
@@ -1136,7 +1537,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 800),
-                              avoidAnimation: _visitedTabs.contains(3),
+                              avoidAnimation: _visitedTabs.contains(3) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Padding(
                                   padding:
@@ -1172,11 +1574,12 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             Padding(
                               padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
                               child: Text("Moment Values",
-                                  style: Theme.of(context).textTheme.headline3),
+                                  style: Theme.of(context).textTheme.headline5),
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
-                              avoidAnimation: _visitedTabs.contains(4),
+                              avoidAnimation: _visitedTabs.contains(4) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Stack(children: [
                                   ShowHintIcon(
@@ -1234,27 +1637,31 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                                                 !_defaultMomentsOC;
                                           });
                                         }),
-                                    ChoiceChip(
-                                        selected: _defaultMomentsNSFW,
-                                        label: Text('nsfw content'),
-                                        labelStyle: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                        avatar: _defaultMomentsNSFW
-                                            ? FaIcon(
-                                                FontAwesomeIcons.check,
-                                                size: 15,
-                                              )
-                                            : null,
-                                        backgroundColor:
-                                            Colors.grey.withAlpha(30),
-                                        selectedColor: Colors.green[700],
-                                        onSelected: (bool selected) {
-                                          setState(() {
-                                            _defaultMomentsNSFW =
-                                                !_defaultMomentsNSFW;
-                                          });
-                                        }),
+                                    Visibility(
+                                      visible:
+                                          false, // to get accepted by google we had to remove this option
+                                      child: ChoiceChip(
+                                          selected: _defaultMomentsNSFW,
+                                          label: Text('nsfw content'),
+                                          labelStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                          avatar: _defaultMomentsNSFW
+                                              ? FaIcon(
+                                                  FontAwesomeIcons.check,
+                                                  size: 15,
+                                                )
+                                              : null,
+                                          backgroundColor:
+                                              Colors.grey.withAlpha(30),
+                                          selectedColor: Colors.green[700],
+                                          onSelected: (bool selected) {
+                                            setState(() {
+                                              _defaultMomentsNSFW =
+                                                  !_defaultMomentsNSFW;
+                                            });
+                                          }),
+                                    ),
                                     ChoiceChip(
                                         selected: _defaultMomentsUnlist,
                                         label: Text('only show in moments'),
@@ -1350,7 +1757,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 200),
-                              avoidAnimation: _visitedTabs.contains(4),
+                              avoidAnimation: _visitedTabs.contains(4) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Padding(
                                   padding:
@@ -1375,7 +1783,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 400),
-                              avoidAnimation: _visitedTabs.contains(4),
+                              avoidAnimation: _visitedTabs.contains(4) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Padding(
                                   padding:
@@ -1405,7 +1814,8 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                             ),
                             DTubeFormCard(
                               waitBeforeFadeIn: Duration(milliseconds: 800),
-                              avoidAnimation: _visitedTabs.contains(4),
+                              avoidAnimation: _visitedTabs.contains(4) ||
+                                  globals.disableAnimations,
                               childs: [
                                 Padding(
                                   padding:

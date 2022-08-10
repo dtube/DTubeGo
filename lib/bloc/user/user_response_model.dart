@@ -38,6 +38,7 @@ class User {
   int? nodeAppr;
   String? pubLeader;
   late bool alreadyFollowing;
+  Created? created;
 
   User(
       {required this.sId,
@@ -55,7 +56,8 @@ class User {
       this.approves,
       this.nodeAppr,
       this.pubLeader,
-      required this.alreadyFollowing});
+      required this.alreadyFollowing,
+      this.created});
 
   User.fromJson(Map<String, dynamic> json, String currentUser) {
     sId = json['_id'];
@@ -65,6 +67,8 @@ class User {
     bw = json['bw'] != null ? new Bw.fromJson(json['bw']) : null;
     vt = json['vt'] != null ? new Bw.fromJson(json['vt']) : null;
     pr = json['pr'] != null ? new Bw.fromJson(json['pr']) : null;
+    created =
+        json['created'] != null ? new Created.fromJson(json['created']) : null;
     uv = json['uv'];
     follows = json['follows'] != null ? json['follows'].cast<String>() : null;
     followers =
@@ -143,6 +147,25 @@ class Bw {
   }
 }
 
+class Created {
+  late String by;
+  late int ts;
+
+  Created({required this.by, required this.ts});
+
+  Created.fromJson(Map<String, dynamic> json) {
+    by = json['by'];
+    ts = json['ts'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['by'] = this.by;
+    data['ts'] = this.ts;
+    return data;
+  }
+}
+
 class Keys {
   late String id;
   late String pub;
@@ -196,12 +219,12 @@ class JsonString {
 }
 
 class Node {
-  late String ws;
+  late String? ws;
 
   Node({required this.ws});
 
   Node.fromJson(Map<String, dynamic> json) {
-    ws = json['ws'];
+    ws = json['ws'] != null ? json['ws'] : "";
   }
 
   Map<String, dynamic> toJson() {
@@ -248,6 +271,7 @@ class Profile {
     data['website'] = this.website;
     data['steem'] = this.steem;
     data['hive'] = this.hive;
+
     return data;
   }
 }
@@ -255,21 +279,35 @@ class Profile {
 class Additionals {
   String? displayName;
   String? accountType;
+  List<String>? blocking;
+  List<String>? ytchannels;
 
-  Additionals({
-    this.displayName,
-    this.accountType,
-  });
+  Additionals(
+      {this.displayName, this.accountType, this.blocking, this.ytchannels});
 
   Additionals.fromJson(Map<String, dynamic> json) {
     displayName = json['displayName'] != null ? json['displayName'] : '';
     accountType = json['accountType'] != null ? json['accountType'] : '';
+    blocking = [];
+    if (json['blocking'] != null && json['blocking'] != []) {
+      json['blocking'].forEach((v) {
+        blocking!.add(v);
+      });
+    }
+    ytchannels = [];
+    if (json['ytchannels'] != null && json['ytchannels'] != []) {
+      json['ytchannels'].forEach((v) {
+        ytchannels!.add(v);
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['displayName'] = this.displayName;
     data['accountType'] = this.accountType;
+    data['blocking'] = this.blocking;
+    data['ytchannels'] = this.ytchannels;
 
     return data;
   }

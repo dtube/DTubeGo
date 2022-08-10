@@ -8,7 +8,7 @@ var txTypes = {
   6: 'USER_JSON',
   7: 'FOLLOW',
   8: 'UNFOLLOW',
-  // RESHARE: 9, // not sure
+  9: 'RESHARE', // not sure what that does
   10: 'NEW_KEY',
   11: 'REMOVE_KEY',
   12: 'CHANGE_PASSWORD',
@@ -18,7 +18,27 @@ var txTypes = {
   16: 'LIMIT_VT',
   17: 'CLAIM_REWARD',
   18: 'ENABLE_NODE',
-  19: 'TIPPED_VOTE'
+  19: 'TIPPED_VOTE',
+  20: 'NEW_WEIGHTED_KEY',
+  21: 'SET_SIG_THRESHOLD',
+  22: 'SET_PASSWORD_WEIGHT',
+  23: 'UNSET_SIG_THRESHOLD',
+  24: 'NEW_ACCOUNT_WITH_BW',
+  25: 'PLAYLIST_JSON',
+  26: 'PLAYLIST_PUSH',
+  27: 'PLAYLIST_POP',
+  28: 'COMMENT_EDIT',
+  29: 'ACCOUNT_AUTHORIZE',
+  30: 'ACCOUNT_REVOKE',
+  31: 'FUND_REQUEST_CREATE',
+  32: 'FUND_REQUEST_CONTRIB',
+  33: 'FUND_REQUEST_WORK',
+  34: 'FUND_REQUEST_WORK_REVIEW',
+  35: 'PROPOSAL_VOTE',
+  36: 'PROPOSAL_EDIT',
+  37: 'CHAIN_UPDATE_CREATE',
+  38: 'MD_QUEUE',
+  39: 'MD_SIGN',
 };
 
 var txTypeFriendlyDescriptionNotifications = {
@@ -31,17 +51,37 @@ var txTypeFriendlyDescriptionNotifications = {
   6: 'USER_JSON',
   7: 'subscribed to ##USERNAME', // 'FOLLOW',
   8: 'unsubscribed from ##USERNAME', // 'UNFOLLOW',
-  // RESHARE: 9, // not sure
-  10: 'NEW_KEY',
-  11: 'REMOVE_KEY',
-  12: 'CHANGE_PASSWORD',
+  9: 'RESHARE', // not sure
+  10: 'new custom key created',
+  11: 'custom key deleted',
+  12: 'master key changed',
   13: 'commented on ##USERNAMES content', // 'PROMOTED_COMMENT',
   14: 'TRANSFER_VT',
   15: 'TRANSFER_BW',
   16: 'LIMIT_VT',
   17: 'claimed rewards from a vote on ##USERNAMES content',
   18: 'ENABLE_NODE',
-  19: 'voted on ##USERNAME content (##TIPAMOUNT%Tip)' //'TIPPED_VOTE'
+  19: 'voted on ##USERNAME content (##TIPAMOUNT%Tip)', //'TIPPED_VOTE'
+  20: 'NEW_WEIGHTED_KEY', //'NEW_WEIGHTED_KEY',
+  21: 'SET_SIG_THRESHOLD', //'SET_SIG_THRESHOLD',
+  22: 'SET_PASSWORD_WEIGHT', //'SET_PASSWORD_WEIGHT',
+  23: 'UNSET_SIG_THRESHOLD', //'UNSET_SIG_THRESHOLD',
+  24: 'NEW_ACCOUNT_WITH_BW', //'NEW_ACCOUNT_WITH_BW',
+  25: 'PLAYLIST_JSON', //'PLAYLIST_JSON',
+  26: 'PLAYLIST_PUSH', //'PLAYLIST_PUSH',
+  27: 'PLAYLIST_POP', //'PLAYLIST_POP',
+  28: 'COMMENT_EDIT', //'COMMENT_EDIT',
+  29: 'ACCOUNT_AUTHORIZE', //'ACCOUNT_AUTHORIZE',
+  30: 'ACCOUNT_REVOKE', //'ACCOUNT_REVOKE',
+  31: 'FUND_REQUEST_CREATE', //'FUND_REQUEST_CREATE',
+  32: 'FUND_REQUEST_CONTRIB', //'FUND_REQUEST_CONTRIB',
+  33: 'FUND_REQUEST_WORK', //'FUND_REQUEST_WORK',
+  34: 'FUND_REQUEST_WORK_REVIEW', //'FUND_REQUEST_WORK_REVIEW',
+  35: 'PROPOSAL_VOTE', //'PROPOSAL_VOTE',
+  36: 'PROPOSAL_EDIT', //'PROPOSAL_EDIT',
+  37: 'CHAIN_UPDATE_CREATE', //'CHAIN_UPDATE_CREATE',
+  38: 'MD_QUEUE', // 'MD_QUEUE',
+  39: 'MD_SIGN', // 'MD_SIGN',
 };
 
 var txTypeFriendlyDescriptionActions = {
@@ -54,7 +94,7 @@ var txTypeFriendlyDescriptionActions = {
   6: 'USER_JSON',
   7: 'followed ##USERNAME', // 'FOLLOW',
   8: 'unfollowed ##USERNAME', // 'UNFOLLOW',
-  // RESHARE: 9, // not sure
+  9: 'RESHARE', // not sure
   10: 'NEW_KEY',
   11: 'REMOVE_KEY',
   12: 'CHANGE_PASSWORD',
@@ -64,5 +104,25 @@ var txTypeFriendlyDescriptionActions = {
   16: 'LIMIT_VT',
   17: '##DTCAMMOUNT DTC claimed',
   18: 'ENABLE_NODE',
-  19: 'successfully voted with ##TIPAMOUNT% tip' //'TIPPED_VOTE'
+  19: 'successfully voted with ##TIPAMOUNT% tip', //'TIPPED_VOTE'
+  20: 'NEW_WEIGHTED_KEY', //'NEW_WEIGHTED_KEY',
+  21: 'SET_SIG_THRESHOLD', //'SET_SIG_THRESHOLD',
+  22: 'SET_PASSWORD_WEIGHT', //'SET_PASSWORD_WEIGHT',
+  23: 'UNSET_SIG_THRESHOLD', //'UNSET_SIG_THRESHOLD',
+  24: 'NEW_ACCOUNT_WITH_BW', //'NEW_ACCOUNT_WITH_BW',
+  25: 'PLAYLIST_JSON', //'PLAYLIST_JSON',
+  26: 'PLAYLIST_PUSH', //'PLAYLIST_PUSH',
+  27: 'PLAYLIST_POP', //'PLAYLIST_POP',
+  28: 'COMMENT_EDIT', //'COMMENT_EDIT',
+  29: 'ACCOUNT_AUTHORIZE', //'ACCOUNT_AUTHORIZE',
+  30: 'ACCOUNT_REVOKE', //'ACCOUNT_REVOKE',
+  31: 'FUND_REQUEST_CREATE', //'FUND_REQUEST_CREATE',
+  32: 'FUND_REQUEST_CONTRIB', //'FUND_REQUEST_CONTRIB',
+  33: 'FUND_REQUEST_WORK', //'FUND_REQUEST_WORK',
+  34: 'FUND_REQUEST_WORK_REVIEW', //'FUND_REQUEST_WORK_REVIEW',
+  35: 'PROPOSAL_VOTE', //'PROPOSAL_VOTE',
+  36: 'PROPOSAL_EDIT', //'PROPOSAL_EDIT',
+  37: 'CHAIN_UPDATE_CREATE', //'CHAIN_UPDATE_CREATE',
+  38: 'MD_QUEUE', // 'MD_QUEUE',
+  39: 'MD_SIGN', // 'MD_SIGN',
 };

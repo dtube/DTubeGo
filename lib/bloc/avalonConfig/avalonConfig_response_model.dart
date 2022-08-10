@@ -75,73 +75,113 @@ class AvalonConfig {
   late int tagMaxLength;
   late int tagMaxPerContent;
   late int tippedVotePrecision;
-  late bool tmpForceTs;
+  //late bool tmpForceTs;
   late int txExpirationTime;
   late TxLimits txLimits;
   late int vtGrowth;
   late int vtPerBurn;
-
-  AvalonConfig(
-      {required this.accountPriceBase,
-      required this.accountPriceCharMult,
-      required this.accountPriceChars,
-      required this.accountPriceMin,
-      required this.accountMaxLength,
-      required this.accountMinLength,
-      required this.allowedUsernameChars,
-      required this.allowedUsernameCharsOnlyMiddle,
-      required this.allowRevotes,
-      required this.b58Alphabet,
-      required this.block0ts,
-      required this.blockTime,
-      required this.bwGrowth,
-      required this.bwMax,
-      required this.consensusRounds,
-      required this.ecoBaseRent,
-      required this.ecoBlocks,
-      required this.ecoClaimPrecision,
-      required this.ecoClaimTime,
-      required this.ecoPunishAuthor,
-      required this.ecoPunishPercent,
-      required this.ecoRentStartTime,
-      required this.ecoRentEndTime,
-      required this.ecoRentPrecision,
-      required this.ecoStartRent,
-      required this.followsMax,
-      required this.hotfix1,
-      required this.jsonMaxBytes,
-      required this.keyIdMaxLength,
-      required this.leaderReward,
-      required this.leaderRewardVT,
-      required this.leaders,
-      required this.leaderShufflePrecision,
-      required this.leaderMaxVotes,
-      required this.masterBalance,
-      required this.masterFee,
-      required this.masterName,
-      required this.masterPaysForUsernames,
-      required this.masterPub,
-      required this.masterPubLeader,
-      required this.maxDrift,
-      required this.maxTxPerBlock,
-      required this.memoMaxLength,
-      required this.notifPurge,
-      required this.notifPurgeAfter,
-      required this.notifMaxMentions,
-      required this.originHash,
-      required this.randomBytesLength,
-      required this.rewardPoolMin,
-      required this.rewardPoolMult,
-      required this.rewardPoolMaxShare,
-      required this.rewardPoolUsers,
-      required this.tagMaxLength,
-      required this.tagMaxPerContent,
-      required this.tippedVotePrecision,
-      required this.tmpForceTs,
-      required this.txExpirationTime,
-      required this.txLimits,
-      required this.vtGrowth,
-      required this.vtPerBurn});
+  late int playlistLinkMin;
+  late int playlistLinkMax;
+  late int playlistContentLinkMin;
+  late int playlistContentLinkMax;
+  late int playlistSequenceMax;
+  late int playlistSequenceIdMax;
+  late int daoVotingPeriodSeconds;
+  late int daoVotingThreshold;
+  late int daoVotingLeaderBonus;
+  late int chainUpdateFee;
+  late int chainUpdateMaxParams;
+  late int chainUpdateGracePeriodSeconds;
+  late int fundRequestBaseFee;
+  late int fundRequestSubFee;
+  late int fundRequestSubMult;
+  late int fundRequestSubStart;
+  late int fundRequestContribPeriodSeconds;
+  late int fundRequestDeadlineSeconds;
+  late int fundRequestDeadlineExtSeconds;
+  late int fundRequestReviewPeriodSeconds;
+  AvalonConfig({
+    required this.accountPriceBase,
+    required this.accountPriceCharMult,
+    required this.accountPriceChars,
+    required this.accountPriceMin,
+    required this.accountMaxLength,
+    required this.accountMinLength,
+    required this.allowedUsernameChars,
+    required this.allowedUsernameCharsOnlyMiddle,
+    required this.allowRevotes,
+    required this.b58Alphabet,
+    required this.block0ts,
+    required this.blockTime,
+    required this.bwGrowth,
+    required this.bwMax,
+    required this.consensusRounds,
+    required this.ecoBaseRent,
+    required this.ecoBlocks,
+    required this.ecoClaimPrecision,
+    required this.ecoClaimTime,
+    required this.ecoPunishAuthor,
+    required this.ecoPunishPercent,
+    required this.ecoRentStartTime,
+    required this.ecoRentEndTime,
+    required this.ecoRentPrecision,
+    required this.ecoStartRent,
+    required this.followsMax,
+    required this.hotfix1,
+    required this.jsonMaxBytes,
+    required this.keyIdMaxLength,
+    required this.leaderReward,
+    required this.leaderRewardVT,
+    required this.leaders,
+    required this.leaderShufflePrecision,
+    required this.leaderMaxVotes,
+    required this.masterBalance,
+    required this.masterFee,
+    required this.masterName,
+    required this.masterPaysForUsernames,
+    required this.masterPub,
+    required this.masterPubLeader,
+    required this.maxDrift,
+    required this.maxTxPerBlock,
+    required this.memoMaxLength,
+    required this.notifPurge,
+    required this.notifPurgeAfter,
+    required this.notifMaxMentions,
+    required this.originHash,
+    required this.randomBytesLength,
+    required this.rewardPoolMin,
+    required this.rewardPoolMult,
+    required this.rewardPoolMaxShare,
+    required this.rewardPoolUsers,
+    required this.tagMaxLength,
+    required this.tagMaxPerContent,
+    required this.tippedVotePrecision,
+    //required this.tmpForceTs,
+    required this.txExpirationTime,
+    required this.txLimits,
+    required this.vtGrowth,
+    required this.vtPerBurn,
+    required this.playlistLinkMin,
+    required this.playlistLinkMax,
+    required this.playlistContentLinkMin,
+    required this.playlistContentLinkMax,
+    required this.playlistSequenceMax,
+    required this.playlistSequenceIdMax,
+    required this.daoVotingPeriodSeconds,
+    required this.daoVotingThreshold,
+    required this.daoVotingLeaderBonus,
+    required this.chainUpdateFee,
+    required this.chainUpdateMaxParams,
+    required this.chainUpdateGracePeriodSeconds,
+    required this.fundRequestBaseFee,
+    required this.fundRequestSubFee,
+    required this.fundRequestSubMult,
+    required this.fundRequestSubStart,
+    required this.fundRequestContribPeriodSeconds,
+    required this.fundRequestDeadlineSeconds,
+    required this.fundRequestDeadlineExtSeconds,
+    required this.fundRequestReviewPeriodSeconds,
+  });
 
   AvalonConfig.fromJson(Map<String, dynamic> json) {
     accountPriceBase = json['accountPriceBase'];
@@ -199,11 +239,31 @@ class AvalonConfig {
     tagMaxLength = json['tagMaxLength'];
     tagMaxPerContent = json['tagMaxPerContent'];
     tippedVotePrecision = json['tippedVotePrecision'];
-    tmpForceTs = json['tmpForceTs'];
+    //tmpForceTs = json['tmpForceTs'];
     txExpirationTime = json['txExpirationTime'];
     txLimits = TxLimits.fromJson(json['txLimits']);
     vtGrowth = json['vtGrowth'];
     vtPerBurn = json['vtPerBurn'];
+    playlistLinkMin = json['playlistLinkMin'];
+    playlistLinkMax = json['playlistLinkMax'];
+    playlistContentLinkMin = json['playlistContentLinkMin'];
+    playlistContentLinkMax = json['playlistContentLinkMax'];
+    playlistSequenceMax = json['playlistSequenceMax'];
+    playlistSequenceIdMax = json['playlistSequenceIdMax'];
+    daoVotingPeriodSeconds = json['daoVotingPeriodSeconds'];
+    daoVotingThreshold = json['daoVotingThreshold'];
+    daoVotingLeaderBonus = json['daoVotingLeaderBonus'];
+    chainUpdateFee = json['chainUpdateFee'];
+    chainUpdateMaxParams = json['chainUpdateMaxParams'];
+    chainUpdateGracePeriodSeconds = json['chainUpdateGracePeriodSeconds'];
+    fundRequestBaseFee = json['fundRequestBaseFee'];
+    fundRequestSubFee = json['fundRequestSubFee'];
+    fundRequestSubMult = json['fundRequestSubMult'];
+    fundRequestSubStart = json['fundRequestSubStart'];
+    fundRequestContribPeriodSeconds = json['fundRequestContribPeriodSeconds'];
+    fundRequestDeadlineSeconds = json['fundRequestDeadlineSeconds'];
+    fundRequestDeadlineExtSeconds = json['fundRequestDeadlineExtSeconds'];
+    fundRequestReviewPeriodSeconds = json['fundRequestReviewPeriodSeconds'];
   }
 
   Map<String, dynamic> toJson() {
@@ -264,12 +324,34 @@ class AvalonConfig {
     data['tagMaxLength'] = this.tagMaxLength;
     data['tagMaxPerContent'] = this.tagMaxPerContent;
     data['tippedVotePrecision'] = this.tippedVotePrecision;
-    data['tmpForceTs'] = this.tmpForceTs;
+    //data['tmpForceTs'] = this.tmpForceTs;
     data['txExpirationTime'] = this.txExpirationTime;
     data['txLimits'] = this.txLimits.toJson();
 
     data['vtGrowth'] = this.vtGrowth;
     data['vtPerBurn'] = this.vtPerBurn;
+    data['playlistLinkMin'] = this.playlistLinkMin;
+    data['playlistLinkMax'] = this.playlistLinkMax;
+    data['playlistContentLinkMin'] = this.playlistContentLinkMin;
+    data['playlistContentLinkMax'] = this.playlistContentLinkMax;
+    data['playlistSequenceMax'] = this.playlistSequenceMax;
+    data['playlistSequenceIdMax'] = this.playlistSequenceIdMax;
+    data['daoVotingPeriodSeconds'] = this.daoVotingPeriodSeconds;
+    data['daoVotingThreshold'] = this.daoVotingThreshold;
+    data['daoVotingLeaderBonus'] = this.daoVotingLeaderBonus;
+    data['chainUpdateFee'] = this.chainUpdateFee;
+    data['chainUpdateMaxParams'] = this.chainUpdateMaxParams;
+    data['chainUpdateGracePeriodSeconds'] = this.chainUpdateGracePeriodSeconds;
+    data['fundRequestBaseFee'] = this.fundRequestBaseFee;
+    data['fundRequestSubFee'] = this.fundRequestSubFee;
+    data['fundRequestSubMult'] = this.fundRequestSubMult;
+    data['fundRequestSubStart'] = this.fundRequestSubStart;
+    data['fundRequestContribPeriodSeconds'] =
+        this.fundRequestContribPeriodSeconds;
+    data['fundRequestDeadlineSeconds'] = this.fundRequestDeadlineSeconds;
+    data['fundRequestDeadlineExtSeconds'] = this.fundRequestDeadlineExtSeconds;
+    data['fundRequestReviewPeriodSeconds'] =
+        this.fundRequestReviewPeriodSeconds;
     return data;
   }
 }

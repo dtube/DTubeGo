@@ -1,32 +1,22 @@
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
-import 'package:dtube_go/ui/widgets/InputFields/OverlayInputs.dart';
+import 'package:dtube_go/ui/widgets/Inputs/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
-
 import 'package:dtube_go/style/ThemeData.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flutter/material.dart';
 
 class VotingButtons extends StatefulWidget {
   VotingButtons(
       {Key? key,
-      this.upvotes,
-      this.downvotes,
-      required this.author,
-      required this.link,
-      required this.alreadyVoted,
-      required this.alreadyVotedDirection,
       required this.defaultVotingWeight,
       required this.defaultVotingTip,
       required this.scale,
@@ -36,15 +26,11 @@ class VotingButtons extends StatefulWidget {
       required this.iconColor,
       this.verticalModeCallbackVotingButtonsPressed,
       this.verticalModeCallbackVoteSent,
-      required this.fadeInFromLeft})
+      required this.fadeInFromLeft,
+      required this.fixedDownvoteActivated,
+      required this.fixedDownvoteWeight})
       : super(key: key);
 
-  final String author;
-  final String link;
-  final List<Votes>? upvotes;
-  final List<Votes>? downvotes;
-  final bool alreadyVoted;
-  final bool alreadyVotedDirection;
   final String focusVote;
   final bool? vertical; // only used in moments for now
   final VoidCallback?
@@ -54,6 +40,10 @@ class VotingButtons extends StatefulWidget {
 
   final double defaultVotingWeight;
   final double defaultVotingTip;
+
+  final double fixedDownvoteWeight;
+  final bool fixedDownvoteActivated;
+
   final Color iconColor;
 
   final double scale;
@@ -90,237 +80,292 @@ class _VotingButtonsState extends State<VotingButtons> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.vertical != null && widget.vertical! == true) {
-      return Stack(children: [
-        Visibility(
-          visible: !_upvotePressed && !_downvotePressed,
-          child: Align(
-            alignment: Alignment.topRight,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                IconButton(
-                  icon: Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: ShadowedIcon(
-                      icon: FontAwesomeIcons.thumbsUp,
-                      color: widget.alreadyVoted && widget.alreadyVotedDirection
-                          ? globalRed
-                          : widget.iconColor,
-                      shadowColor: Colors.black,
-                      size: 5.w,
-                    ),
-                  ),
-                  onPressed: () {
-                    if (!widget.alreadyVoted) {
-                      setState(() {
-                        _upvotePressed = !_upvotePressed;
-                        if (widget.verticalModeCallbackVotingButtonsPressed !=
-                            null) {
-                          widget.verticalModeCallbackVotingButtonsPressed;
-                        }
-                        if (_upvotePressed) {
-                          _downvotePressed = false;
-                        }
-                      });
-                    }
-                  },
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                IconButton(
-                  icon: Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: ShadowedIcon(
-                      icon: FontAwesomeIcons.thumbsDown,
-                      color:
-                          widget.alreadyVoted && !widget.alreadyVotedDirection
+    return BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+      if (state is PostLoadedState) {
+        if (widget.vertical != null && widget.vertical! == true) {
+          return Stack(children: [
+            Visibility(
+              visible: !_upvotePressed && !_downvotePressed,
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: ShadowedIcon(
+                          visible: globals.keyPermissions.contains(5),
+                          icon: FontAwesomeIcons.heart,
+                          color: state.post.alreadyVoted! &&
+                                  state.post.alreadyVotedDirection!
                               ? globalRed
                               : widget.iconColor,
-                      shadowColor: Colors.black,
-                      size: 5.w,
-                    ),
-                  ),
-                  onPressed: () {
-                    if (!widget.alreadyVoted) {
-                      widget.verticalModeCallbackVotingButtonsPressed;
-                      setState(() {
-                        _downvotePressed = !_downvotePressed;
-
-                        if (_downvotePressed) {
-                          _upvotePressed = false;
+                          shadowColor: Colors.black,
+                          size: globalIconSizeMedium * widget.scale,
+                        ),
+                      ),
+                      onPressed: () {
+                        if (!state.post.alreadyVoted!) {
+                          setState(() {
+                            _upvotePressed = !_upvotePressed;
+                            if (widget
+                                    .verticalModeCallbackVotingButtonsPressed !=
+                                null) {
+                              widget.verticalModeCallbackVotingButtonsPressed;
+                            }
+                            if (_upvotePressed) {
+                              _downvotePressed = false;
+                            }
+                          });
                         }
-                      });
-                    }
-                  },
+                      },
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    IconButton(
+                      icon: Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: ShadowedIcon(
+                          icon: FontAwesomeIcons.flag,
+                          color: state.post.alreadyVoted! &&
+                                  !state.post.alreadyVotedDirection!
+                              ? globalRed
+                              : widget.iconColor,
+                          shadowColor: Colors.black,
+                          size: globalIconSizeMedium * widget.scale,
+                        ),
+                      ),
+                      onPressed: () {
+                        if (!state.post.alreadyVoted!) {
+                          widget.verticalModeCallbackVotingButtonsPressed;
+                          setState(() {
+                            _downvotePressed = !_downvotePressed;
+
+                            if (_downvotePressed) {
+                              _upvotePressed = false;
+                            }
+                          });
+                        }
+                      },
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-        Visibility(
-          visible: _upvotePressed || _downvotePressed,
-          child: BlocProvider<UserBloc>(
-            create: (BuildContext context) =>
-                UserBloc(repository: UserRepositoryImpl()),
-            child: VotingSlider(
-              defaultVote: widget.defaultVotingWeight,
-              defaultTip: widget.defaultVotingTip,
-              author: widget.author,
-              link: widget.link,
-              downvote: _downvotePressed,
-              //currentVT: state.vtBalance['v']! + 0.0,
-              isPost: widget.isPost,
-              vertical: widget.vertical,
+            Visibility(
+              visible: _upvotePressed || _downvotePressed,
+              child: BlocProvider<UserBloc>(
+                create: (BuildContext context) =>
+                    UserBloc(repository: UserRepositoryImpl()),
+                child: VotingSlider(
+                  defaultVote: widget.defaultVotingWeight,
+                  defaultTip: widget.defaultVotingTip,
+                  author: state.post.author,
+                  link: state.post.link,
+                  downvote: _downvotePressed,
+                  //currentVT: state.vtBalance['v']! + 0.0,
+                  isPost: widget.isPost,
+                  vertical: widget.vertical,
+                ),
+              ),
             ),
-          ),
-        ),
-      ]);
-    } else {
-      if (widget.fadeInFromLeft) {
-        return SlideInLeft(
-          preferences:
-              AnimationPreferences(offset: Duration(milliseconds: 100)),
-          child: VotingButtonRow(
-              upvotePressed: _upvotePressed,
-              downvotePressed: _downvotePressed,
-              widget: widget),
-        );
+          ]);
+        } else {
+          if (widget.fadeInFromLeft) {
+            return globals.disableAnimations
+                ? VotingButtonRow(
+                    upvotePressed: _upvotePressed,
+                    downvotePressed: _downvotePressed,
+                    postBloc: BlocProvider.of<PostBloc>(context),
+                    txBloc: BlocProvider.of<TransactionBloc>(context),
+                    scale: widget.scale,
+                    widget: widget,
+                    post: state.post)
+                : SlideInLeft(
+                    preferences: AnimationPreferences(
+                        offset: Duration(milliseconds: 100)),
+                    child: VotingButtonRow(
+                        upvotePressed: _upvotePressed,
+                        downvotePressed: _downvotePressed,
+                        widget: widget,
+                        postBloc: BlocProvider.of<PostBloc>(context),
+                        txBloc: BlocProvider.of<TransactionBloc>(context),
+                        scale: widget.scale,
+                        post: state.post),
+                  );
+          } else {
+            return globals.disableAnimations
+                ? VotingButtonRow(
+                    upvotePressed: _upvotePressed,
+                    postBloc: BlocProvider.of<PostBloc>(context),
+                    txBloc: BlocProvider.of<TransactionBloc>(context),
+                    scale: widget.scale,
+                    downvotePressed: _downvotePressed,
+                    widget: widget,
+                    post: state.post)
+                : SlideInRight(
+                    preferences: AnimationPreferences(
+                        offset: Duration(milliseconds: 100)),
+                    child: VotingButtonRow(
+                        upvotePressed: _upvotePressed,
+                        downvotePressed: _downvotePressed,
+                        postBloc: BlocProvider.of<PostBloc>(context),
+                        txBloc: BlocProvider.of<TransactionBloc>(context),
+                        scale: widget.scale,
+                        widget: widget,
+                        post: state.post),
+                  );
+          }
+        }
       } else {
-        return SlideInRight(
-          preferences:
-              AnimationPreferences(offset: Duration(milliseconds: 100)),
-          child: VotingButtonRow(
-              upvotePressed: _upvotePressed,
-              downvotePressed: _downvotePressed,
-              widget: widget),
-        );
+        return CircularProgressIndicator();
       }
-    }
+    });
   }
 }
 
 class VotingButtonRow extends StatelessWidget {
-  const VotingButtonRow({
-    Key? key,
-    required bool upvotePressed,
-    required bool downvotePressed,
-    required this.widget,
-  })  : _upvotePressed = upvotePressed,
+  const VotingButtonRow(
+      {Key? key,
+      required bool upvotePressed,
+      required bool downvotePressed,
+      required this.widget,
+      required this.postBloc,
+      required this.txBloc,
+      required this.scale,
+      required this.post})
+      : _upvotePressed = upvotePressed,
         _downvotePressed = downvotePressed,
         super(key: key);
 
   final bool _upvotePressed;
   final bool _downvotePressed;
-
+  final Post post;
+  final PostBloc postBloc;
+  final TransactionBloc txBloc;
+  final double scale;
   final VotingButtons widget;
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: !_upvotePressed && !_downvotePressed,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          InputChip(
-            label: Text(
-              widget.upvotes != null && widget.upvotes!.isNotEmpty
-                  ? (widget.upvotes!.length).toString()
-                  : '0',
-              style: Theme.of(context).textTheme.bodyText2,
-            ),
-            avatar: Padding(
-              padding: const EdgeInsets.only(left: 4.0),
-              child: FaIcon(
-                FontAwesomeIcons.thumbsUp,
-                color: widget.alreadyVoted && widget.alreadyVotedDirection
-                    ? globalRed
-                    : widget.iconColor,
+    return Transform.scale(
+      scale: widget.scale,
+      alignment: Alignment.centerRight,
+      child: BlocListener<TransactionBloc, TransactionState>(
+        listener: (context, state) {
+          if (state is TransactionSent) {
+            print(post.author + '/' + post.link);
+            BlocProvider.of<PostBloc>(context).add(
+                FetchPostEvent(post.author, post.link, "VoteButtons.dart"));
+          }
+        },
+        child: Visibility(
+          visible: !_upvotePressed && !_downvotePressed,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InputChip(
+                isEnabled: globals.keyPermissions.contains(5),
+                label: Text(
+                  post.upvotes != null && post.upvotes!.isNotEmpty
+                      ? (post.upvotes!.length).toString()
+                      : '0',
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+                avatar: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: FaIcon(
+                    FontAwesomeIcons.heart,
+                    color: post.alreadyVoted! && post.alreadyVotedDirection!
+                        ? globalRed
+                        : widget.iconColor,
+                    size: globalIconSizeMedium,
+                  ),
+                ),
+                onPressed: () {
+                  if (!post.alreadyVoted!) {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider<UserBloc>(
+                              create: (context) =>
+                                  UserBloc(repository: UserRepositoryImpl())),
+                        ],
+                        child: VotingDialog(
+                          defaultVote: widget.defaultVotingWeight,
+                          defaultTip: widget.defaultVotingTip,
+                          author: post.author,
+                          link: post.link,
+                          postBloc: postBloc,
+                          txBloc: txBloc,
+                          downvote: false,
+                          //currentVT: state.vtBalance['v']! + 0.0,
+                          isPost: widget.isPost,
+                          fixedDownvoteActivated: widget.fixedDownvoteActivated,
+                          fixedDownvoteWeight: widget.fixedDownvoteWeight,
+                        ),
+                      ),
+                    );
+                  }
+                },
               ),
-            ),
-            onPressed: () {
-              if (!widget.alreadyVoted) {
-                // setState(() {
-                //   _upvotePressed = !_upvotePressed;
-                //   if (_upvotePressed) {
-                //     _downvotePressed = false;
-                //   }
-                // });
-                showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) => MultiBlocProvider(
-                    providers: [
-                      BlocProvider<PostBloc>(
-                          create: (context) =>
-                              PostBloc(repository: PostRepositoryImpl())),
-                      BlocProvider<UserBloc>(
-                          create: (context) =>
-                              UserBloc(repository: UserRepositoryImpl())),
-                    ],
-                    child: VotingDialog(
-                      txBloc: BlocProvider.of<TransactionBloc>(context),
-                      defaultVote: widget.defaultVotingWeight,
-                      defaultTip: widget.defaultVotingTip,
-                      author: widget.author,
-                      link: widget.link,
-                      downvote: false,
-                      //currentVT: state.vtBalance['v']! + 0.0,
-                      isPost: widget.isPost,
-                    ),
+              SizedBox(
+                width: 8,
+              ),
+              InputChip(
+                isEnabled: globals.keyPermissions.contains(5),
+                label: Text(
+                  post.downvotes != null && post.downvotes!.isNotEmpty
+                      ? (post.downvotes!.length).toString()
+                      : '0',
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+                avatar: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: FaIcon(
+                    FontAwesomeIcons.flag,
+                    color: post.alreadyVoted! && !post.alreadyVotedDirection!
+                        ? globalRed
+                        : widget.iconColor,
+                    size: globalIconSizeMedium,
                   ),
-                );
-              }
-            },
+                ),
+                onPressed: () {
+                  if (!post.alreadyVoted!) {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider<UserBloc>(
+                              create: (context) =>
+                                  UserBloc(repository: UserRepositoryImpl())),
+                        ],
+                        child: VotingDialog(
+                          defaultVote: widget.defaultVotingWeight,
+                          defaultTip: widget.defaultVotingTip,
+                          author: post.author,
+                          link: post.link,
+                          downvote: true,
+                          postBloc: postBloc,
+                          txBloc: txBloc,
+                          //currentVT: state.vtBalance['v']! + 0.0,
+                          isPost: widget.isPost,
+                          fixedDownvoteActivated: widget.fixedDownvoteActivated,
+                          fixedDownvoteWeight: widget.fixedDownvoteWeight,
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
           ),
-          SizedBox(
-            width: 8,
-          ),
-          InputChip(
-            label: Text(
-              widget.downvotes != null && widget.downvotes!.isNotEmpty
-                  ? (widget.downvotes!.length).toString()
-                  : '0',
-              style: Theme.of(context).textTheme.bodyText2,
-            ),
-            avatar: Padding(
-              padding: const EdgeInsets.only(left: 4.0),
-              child: FaIcon(FontAwesomeIcons.thumbsDown,
-                  color: widget.alreadyVoted && !widget.alreadyVotedDirection
-                      ? globalRed
-                      : widget.iconColor),
-            ),
-            onPressed: () {
-              if (!widget.alreadyVoted) {
-                showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) => MultiBlocProvider(
-                    providers: [
-                      BlocProvider<PostBloc>(
-                          create: (context) =>
-                              PostBloc(repository: PostRepositoryImpl())),
-                      BlocProvider<UserBloc>(
-                          create: (context) =>
-                              UserBloc(repository: UserRepositoryImpl())),
-                    ],
-                    child: VotingDialog(
-                      txBloc: BlocProvider.of<TransactionBloc>(context),
-                      defaultVote: widget.defaultVotingWeight,
-                      defaultTip: widget.defaultVotingTip,
-                      author: widget.author,
-                      link: widget.link,
-                      downvote: true,
-                      //currentVT: state.vtBalance['v']! + 0.0,
-                      isPost: widget.isPost,
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -361,8 +406,6 @@ class _VotingSliderState extends State<VotingSlider> {
   late double _tipValue;
   late TransactionBloc _txBloc;
   late TextEditingController _tagController;
-
-  late PostBloc _postBloc;
   late double _currentVT;
   bool _sendButtonPressed = false;
   late UserBloc _userBloc;
@@ -371,11 +414,11 @@ class _VotingSliderState extends State<VotingSlider> {
   void initState() {
     super.initState();
     _txBloc = BlocProvider.of<TransactionBloc>(context);
-    _postBloc = BlocProvider.of<PostBloc>(context);
+
     _tagController = TextEditingController();
     _userBloc = BlocProvider.of<UserBloc>(context);
 
-    _userBloc.add(FetchDTCVPEvent());
+    //_userBloc.add(FetchDTCVPEvent());
 
     _vpValue = widget.defaultVote;
     _tipValue = widget.defaultTip;
@@ -393,394 +436,369 @@ class _VotingSliderState extends State<VotingSlider> {
             } else if (state is UserDTCVPLoadingState) {
               return SizedBox(width: 0);
             } else if (state is UserDTCVPLoadedState) {
-              return BlocListener<TransactionBloc, TransactionState>(
-                listener: (context, state) {
-                  if (state is TransactionSent) {
-                    _postBloc.add(FetchPostEvent(widget.author, widget.link));
-                  }
-                },
-                child: !_sendButtonPressed
-                    ? Align(
-                        alignment: Alignment.topRight,
-                        child: Container(
-                          width: 40.w,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              OverlayText(
-                                text: widget.downvote ? "Downvote" : "Upvote",
-                                bold: true,
-                                sizeMultiply: 1.4,
-                              ),
-                              SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      OverlayText(
-                                        text: "weight: ",
-                                        bold: true,
-                                        sizeMultiply: 1,
-                                        maxLines: 2,
-                                      ),
-                                      OverlayText(
-                                        text: (_vpValue.floor() *
-                                                    (widget.downvote ? -1 : 1))
-                                                .toString() +
-                                            '%',
-                                        bold: true,
-                                        sizeMultiply: 1,
-                                      ),
-                                      RotatedBox(
-                                        quarterTurns: 1,
-                                        child: Slider(
-                                          min: 1,
-                                          max: 100.0,
-                                          value: _vpValue,
-
-                                          label: (widget.downvote ? "-" : "") +
-                                              _vpValue.floor().toString() +
-                                              "%",
-                                          //divisions: 40,
-                                          inactiveColor: globalBlue,
-                                          activeColor: globalRed,
-                                          onChanged: (dynamic value) {
-                                            setState(() {
-                                              _vpValue = value;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  widget.downvote
-                                      ? SizedBox(width: 0)
-                                      : Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            OverlayText(
-                                              text: "vote tip: ",
-                                              bold: true,
-                                              sizeMultiply: 1,
-                                            ),
-                                            OverlayText(
-                                              text:
-                                                  _tipValue.floor().toString() +
-                                                      '%',
-                                              bold: true,
-                                              sizeMultiply: 1,
-                                            ),
-                                            RotatedBox(
-                                              quarterTurns: 1,
-                                              child: Slider(
-                                                min: 0.0,
-                                                max: 100.0,
-                                                value: _tipValue,
-                                                label: _tipValue
-                                                        .floor()
-                                                        .toString() +
-                                                    "%",
-                                                //divisions: 20,
-                                                inactiveColor: globalBlue,
-                                                activeColor: globalRed,
-                                                onChanged: (dynamic value) {
-                                                  setState(() {
-                                                    _tipValue = value;
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                ],
-                              ),
-                              Container(
-                                width: 25.w,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+              return !_sendButtonPressed
+                  ? Align(
+                      alignment: Alignment.topRight,
+                      child: Container(
+                        width: 40.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            OverlayText(
+                              text: widget.downvote ? "Downvote" : "Upvote",
+                              bold: true,
+                              sizeMultiply: 1.4,
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    widget.isPost
-                                        ? TextFormField(
-                                            controller: _tagController,
-                                            decoration: new InputDecoration(
-                                              labelText: "curator tag",
-                                            ),
-                                          )
-                                        : SizedBox(width: 0),
-                                    SizedBox(height: 8),
-                                    BlocBuilder<UserBloc, UserState>(
-                                        builder: (context, state) {
-                                      if (state is UserDTCVPLoadedState) {
-                                        _currentVT =
-                                            state.vtBalance["v"]!.toDouble();
-                                        return ElevatedButton(
-                                            onPressed: () {
-                                              var voteValue = (_currentVT *
-                                                      (_vpValue / 100))
-                                                  .floor();
-                                              int _txType = 5;
-                                              TxData txdata = TxData(
-                                                author: widget.author,
-                                                link: widget.link,
-                                                tag: _tagController.value.text,
-                                                vt: voteValue *
-                                                    (widget.downvote ? -1 : 1),
-                                              );
+                                    OverlayText(
+                                      text: "weight: ",
+                                      bold: true,
+                                      sizeMultiply: 1,
+                                      maxLines: 2,
+                                    ),
+                                    OverlayText(
+                                      text: (_vpValue.floor() *
+                                                  (widget.downvote ? -1 : 1))
+                                              .toString() +
+                                          '%',
+                                      bold: true,
+                                      sizeMultiply: 1,
+                                    ),
+                                    RotatedBox(
+                                      quarterTurns: 1,
+                                      child: Slider(
+                                        min: 1,
+                                        max: 100.0,
+                                        value: _vpValue,
 
-                                              if (_tipValue > 0) {
-                                                _txType = 19;
-                                                txdata = TxData(
-                                                    author: widget.author,
-                                                    link: widget.link,
-                                                    tag: _tagController
-                                                        .value.text,
-                                                    vt: voteValue *
-                                                        (widget.downvote
-                                                            ? -1
-                                                            : 1),
-                                                    tip: _tipValue.floor());
-                                              }
-                                              Transaction newTx = Transaction(
-                                                  type: _txType, data: txdata);
-
-                                              _txBloc.add(
-                                                  SignAndSendTransactionEvent(
-                                                      newTx));
-                                              setState(() {
-                                                _sendButtonPressed = true;
-                                              });
-                                            },
-                                            child: Text("send"));
-                                      } else {
-                                        return SizedBox(
-                                          width: 0,
-                                        );
-                                      }
-                                    })
+                                        label: (widget.downvote ? "-" : "") +
+                                            _vpValue.floor().toString() +
+                                            "%",
+                                        //divisions: 40,
+                                        inactiveColor: globalBlue,
+                                        activeColor: globalRed,
+                                        onChanged: (dynamic value) {
+                                          setState(() {
+                                            _vpValue = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
                                   ],
                                 ),
+                                widget.downvote
+                                    ? SizedBox(width: 0)
+                                    : Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          OverlayText(
+                                            text: "vote tip: ",
+                                            bold: true,
+                                            sizeMultiply: 1,
+                                          ),
+                                          OverlayText(
+                                            text: _tipValue.floor().toString() +
+                                                '%',
+                                            bold: true,
+                                            sizeMultiply: 1,
+                                          ),
+                                          RotatedBox(
+                                            quarterTurns: 1,
+                                            child: Slider(
+                                              min: 0.0,
+                                              max: 100.0,
+                                              value: _tipValue,
+                                              label:
+                                                  _tipValue.floor().toString() +
+                                                      "%",
+                                              //divisions: 20,
+                                              inactiveColor: globalBlue,
+                                              activeColor: globalRed,
+                                              onChanged: (dynamic value) {
+                                                setState(() {
+                                                  _tipValue = value;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                              ],
+                            ),
+                            Container(
+                              width: 25.w,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  widget.isPost
+                                      ? TextFormField(
+                                          controller: _tagController,
+                                          decoration: new InputDecoration(
+                                            labelText: "curator tag",
+                                          ),
+                                        )
+                                      : SizedBox(width: 0),
+                                  SizedBox(height: 8),
+                                  BlocBuilder<UserBloc, UserState>(
+                                      builder: (context, state) {
+                                    if (state is UserDTCVPLoadedState) {
+                                      _currentVT =
+                                          state.vtBalance["v"]!.toDouble();
+                                      return ElevatedButton(
+                                          onPressed: () {
+                                            var voteValue =
+                                                (_currentVT * (_vpValue / 100))
+                                                    .floor();
+                                            int _txType = 5;
+                                            TxData txdata = TxData(
+                                              author: widget.author,
+                                              link: widget.link,
+                                              tag: _tagController.value.text,
+                                              vt: voteValue *
+                                                  (widget.downvote ? -1 : 1),
+                                            );
+
+                                            if (_tipValue > 0) {
+                                              _txType = 19;
+                                              txdata = TxData(
+                                                  author: widget.author,
+                                                  link: widget.link,
+                                                  tag:
+                                                      _tagController.value.text,
+                                                  vt: voteValue,
+                                                  tip: _tipValue.floor());
+                                            }
+                                            Transaction newTx = Transaction(
+                                                type: _txType, data: txdata);
+
+                                            _txBloc.add(
+                                                SignAndSendTransactionEvent(
+                                                    tx: newTx));
+                                            setState(() {
+                                              _sendButtonPressed = true;
+                                            });
+                                          },
+                                          child: Text("send"));
+                                    } else {
+                                      return SizedBox(
+                                        width: 0,
+                                      );
+                                    }
+                                  })
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      )
-                    : Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: CircularProgressIndicator(),
+                            ),
+                          ],
                         ),
                       ),
-              );
+                    )
+                  : Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
             } else {
               return SizedBox(height: 0);
             }
           });
     } else {
-      return BlocListener<TransactionBloc, TransactionState>(
-        listener: (context, state) {
-          if (state is TransactionSent) {
-            _postBloc.add(FetchPostEvent(widget.author, widget.link));
-          }
-        },
-        child: !_sendButtonPressed
-            ? Column(
-                children: [
-                  Text(widget.downvote ? "Downvote" : "Upvote",
-                      style: Theme.of(context).textTheme.headline6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          width: 60.w,
-                          child: Column(
-                            //crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 20.w,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "voting weight: ",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2,
-                                        ),
-                                        Text(
-                                          (_vpValue.floor() *
-                                                      (widget.downvote
-                                                          ? -1
-                                                          : 1))
-                                                  .toString() +
-                                              '%',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Slider(
-                                    min: 1,
-                                    max: 100.0,
-                                    value: _vpValue,
-
-                                    label: (widget.downvote ? "-" : "") +
-                                        _vpValue.floor().toString() +
-                                        "%",
-                                    //divisions: 40,
-                                    inactiveColor: globalBlue,
-                                    activeColor: globalRed,
-                                    onChanged: (dynamic value) {
-                                      setState(() {
-                                        _vpValue = value;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                              widget.downvote
-                                  ? SizedBox(width: 0)
-                                  : Row(
-                                      children: [
-                                        Container(
-                                          width: 25.w,
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                "vote tip: ",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText2,
-                                              ),
-                                              Text(
-                                                _tipValue.floor().toString() +
-                                                    '%',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline6,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Slider(
-                                          min: 0.0,
-                                          max: 100.0,
-                                          value: _tipValue,
-                                          label: _tipValue.floor().toString() +
-                                              "%",
-                                          //divisions: 20,
-                                          inactiveColor: globalBlue,
-                                          activeColor: globalRed,
-                                          onChanged: (dynamic value) {
-                                            setState(() {
-                                              _tipValue = value;
-                                            });
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                            ],
-                          )),
-                      Container(
-                        width: 25.w,
+      return !_sendButtonPressed
+          ? Column(
+              children: [
+                Text(widget.downvote ? "Downvote" : "Upvote",
+                    style: Theme.of(context).textTheme.headline6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                        width: 60.w,
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          //crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            widget.isPost
-                                ? TextFormField(
-                                    controller: _tagController,
-                                    decoration: new InputDecoration(
-                                      labelText: "curator tag",
-                                    ),
-                                  )
-                                : SizedBox(width: 0),
-                            SizedBox(height: 8),
-                            BlocBuilder<UserBloc, UserState>(
-                                builder: (context, state) {
-                              if (state is UserDTCVPLoadedState) {
-                                _currentVT = state.vtBalance["v"]!.toDouble();
-                                return ElevatedButton(
-                                    onPressed: () {
-                                      var voteValue =
-                                          (_currentVT * (_vpValue / 100))
-                                              .floor();
-                                      int _txType = 5;
-                                      TxData txdata = TxData(
-                                        author: widget.author,
-                                        link: widget.link,
-                                        tag: _tagController.value.text,
-                                        vt: voteValue *
-                                            (widget.downvote ? -1 : 1),
-                                      );
+                            Row(
+                              children: [
+                                Container(
+                                  width: 20.w,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "voting weight: ",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2,
+                                      ),
+                                      Text(
+                                        (_vpValue.floor() *
+                                                    (widget.downvote ? -1 : 1))
+                                                .toString() +
+                                            '%',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Slider(
+                                  min: 1,
+                                  max: 100.0,
+                                  value: _vpValue,
 
-                                      if (_tipValue > 0) {
-                                        _txType = 19;
-                                        txdata = TxData(
-                                            author: widget.author,
-                                            link: widget.link,
-                                            tag: _tagController.value.text,
-                                            vt: voteValue *
-                                                (widget.downvote ? -1 : 1),
-                                            tip: _tipValue.floor());
-                                      }
-                                      Transaction newTx = Transaction(
-                                          type: _txType, data: txdata);
-
-                                      _txBloc.add(
-                                          SignAndSendTransactionEvent(newTx));
-                                      widget
-                                          .verticalModeCallbackVotingButtonsPressed;
-                                      setState(() {
-                                        _sendButtonPressed = true;
-                                      });
-                                    },
-                                    child: Text("send"));
-                              } else {
-                                return SizedBox(
-                                  width: 0,
-                                );
-                              }
-                            })
+                                  label: (widget.downvote ? "-" : "") +
+                                      _vpValue.floor().toString() +
+                                      "%",
+                                  //divisions: 40,
+                                  inactiveColor: globalBlue,
+                                  activeColor: globalRed,
+                                  onChanged: (dynamic value) {
+                                    setState(() {
+                                      _vpValue = value;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                            widget.downvote
+                                ? SizedBox(width: 0)
+                                : Row(
+                                    children: [
+                                      Container(
+                                        width: 25.w,
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              "vote tip: ",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2,
+                                            ),
+                                            Text(
+                                              _tipValue.floor().toString() +
+                                                  '%',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Slider(
+                                        min: 0.0,
+                                        max: 100.0,
+                                        value: _tipValue,
+                                        label:
+                                            _tipValue.floor().toString() + "%",
+                                        //divisions: 20,
+                                        inactiveColor: globalBlue,
+                                        activeColor: globalRed,
+                                        onChanged: (dynamic value) {
+                                          setState(() {
+                                            _tipValue = value;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
                           ],
-                        ),
+                        )),
+                    Container(
+                      width: 25.w,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          widget.isPost
+                              ? TextFormField(
+                                  controller: _tagController,
+                                  decoration: new InputDecoration(
+                                    labelText: "curator tag",
+                                  ),
+                                )
+                              : SizedBox(width: 0),
+                          SizedBox(height: 8),
+                          BlocBuilder<UserBloc, UserState>(
+                              builder: (context, state) {
+                            if (state is UserDTCVPLoadedState) {
+                              _currentVT = state.vtBalance["v"]!.toDouble();
+                              return ElevatedButton(
+                                  onPressed: () {
+                                    var voteValue =
+                                        (_currentVT * (_vpValue / 100)).floor();
+                                    int _txType = 5;
+                                    TxData txdata = TxData(
+                                      author: widget.author,
+                                      link: widget.link,
+                                      tag: _tagController.value.text,
+                                      vt: voteValue *
+                                          (widget.downvote ? -1 : 1),
+                                    );
+
+                                    if (_tipValue > 0) {
+                                      _txType = 19;
+                                      txdata = TxData(
+                                          author: widget.author,
+                                          link: widget.link,
+                                          tag: _tagController.value.text,
+                                          vt: voteValue,
+                                          tip: _tipValue.floor());
+                                    }
+                                    Transaction newTx = Transaction(
+                                        type: _txType, data: txdata);
+
+                                    _txBloc.add(
+                                        SignAndSendTransactionEvent(tx: newTx));
+                                    widget
+                                        .verticalModeCallbackVotingButtonsPressed;
+                                    setState(() {
+                                      _sendButtonPressed = true;
+                                    });
+                                  },
+                                  child: Text("send"));
+                            } else {
+                              return SizedBox(
+                                width: 0,
+                              );
+                            }
+                          })
+                        ],
                       ),
-                    ],
-                  ),
-                ],
-              )
-            : Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: CircularProgressIndicator(),
+                    ),
+                  ],
                 ),
+              ],
+            )
+          : Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: CircularProgressIndicator(),
               ),
-      );
+            );
     }
   }
 }
 
 class VotingSliderStandalone extends StatefulWidget {
-  VotingSliderStandalone(
-      {Key? key,
-      required this.author,
-      required this.link,
-      required this.downvote,
-      required this.defaultVote,
-      required this.defaultTip,
-      required this.currentVT,
-      required this.isPost,
-      this.sendCallback,
-      this.cancelCallback})
-      : super(key: key);
+  VotingSliderStandalone({
+    Key? key,
+    required this.author,
+    required this.link,
+    required this.downvote,
+    required this.defaultVote,
+    required this.defaultTip,
+    required this.currentVT,
+    required this.isPost,
+    this.sendCallback,
+    this.cancelCallback,
+  }) : super(key: key);
 
   String author;
   String link;
@@ -928,7 +946,7 @@ class _VotingSliderStandaloneState extends State<VotingSliderStandalone> {
                               SizedBox(height: 8),
                               ElevatedButton(
                                 child: Text("send"),
-                                onPressed: () {
+                                onPressed: () async {
                                   var voteValue =
                                       (widget.currentVT * (_vpValue / 100))
                                           .floor();
@@ -946,18 +964,18 @@ class _VotingSliderStandaloneState extends State<VotingSliderStandalone> {
                                         author: widget.author,
                                         link: widget.link,
                                         tag: _tagController.value.text,
-                                        vt: voteValue *
-                                            (widget.downvote ? -1 : 1),
+                                        vt: voteValue,
                                         tip: _tipValue.floor());
                                   }
                                   Transaction newTx =
                                       Transaction(type: _txType, data: txdata);
 
-                                  _txBloc
-                                      .add(SignAndSendTransactionEvent(newTx));
+                                  _txBloc.add(
+                                      SignAndSendTransactionEvent(tx: newTx));
                                   setState(() {
                                     _sendButtonPressed = true;
                                   });
+
                                   if (widget.sendCallback != null) {
                                     widget.sendCallback!();
                                   }

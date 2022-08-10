@@ -1,14 +1,14 @@
+import 'package:dtube_go/bloc/config/txTypes.dart';
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
 import 'package:dtube_go/bloc/auth/auth_response_model.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/utils/crypto_convert.dart';
 import 'package:hex/hex.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-// TODO: refactor and put in the right place ;)
 
 import 'dart:typed_data';
 
@@ -18,7 +18,10 @@ import 'package:bs58check/bs58check.dart' as bs58check;
 
 abstract class AuthRepository {
   Future<bool> signOut();
+  Future<bool> browseOnlyPermissions();
   Future<bool> signInWithCredentials(
+      String apiNode, String username, String privateKey);
+  Future<List<int>> getTxTypesForCredentials(
       String apiNode, String username, String privateKey);
   void fetchAndStoreVerifiedUsers();
 }
@@ -33,6 +36,11 @@ class AuthRepositoryImpl implements AuthRepository {
     } else {
       throw Exception();
     }
+  }
+
+  Future<bool> browseOnlyPermissions() async {
+    globals.keyPermissions.clear();
+    return true;
   }
 
   @override
@@ -51,10 +59,10 @@ class AuthRepositoryImpl implements AuthRepository {
             AppConfig.accountDataUrl.replaceAll("##USERNAME", username)),
       )
           .catchError((e) {
-        throw Exception();
+        throw e;
       });
     } catch (e) {
-      throw Exception();
+      throw e;
     }
     if (response.statusCode == 404) {
       // username unknown
@@ -65,11 +73,16 @@ class AuthRepositoryImpl implements AuthRepository {
         Auth authInformation = ApiResultModel.fromJson(data).auth;
         if (pub.toString() == authInformation.pub) {
           _keyIsValid = true;
+          for (var txType in txTypes.keys) {
+            globals.keyPermissions.add(txType);
+          }
+          print(globals.keyPermissions);
         } else {
           for (Keys key in authInformation.keys) {
             if (key.pub == pub.toString()) {
-              // availableTxTypes = key.types;
               _keyIsValid = true;
+              globals.keyPermissions = key.types;
+              print(globals.keyPermissions);
               break;
             }
           }
@@ -84,14 +97,50 @@ class AuthRepositoryImpl implements AuthRepository {
     return _keyIsValid;
   }
 
-  String privToPub(String privateKey) {
-    PrivateKey _pk = PrivateKey.fromHex(
-        getSecp256k1(), HEX.encode(bs58check.base58.decode(privateKey)));
+  Future<List<int>> getTxTypesForCredentials(
+      String apiNode, String username, String privateKey) async {
+    bool _keyIsValid = false;
 
-    var pub = base58.encode(
-        Uint8List.fromList(HEX.decode(_pk.publicKey.toCompressedHex())));
+    var pub = privToPub(privateKey);
 
-    return pub;
+//load user
+    var response;
+    try {
+      response = await http
+          .get(
+        Uri.parse(apiNode +
+            AppConfig.accountDataUrl.replaceAll("##USERNAME", username)),
+      )
+          .catchError((e) {
+        return [];
+      });
+    } catch (e) {
+      return [];
+    }
+    if (response.statusCode == 404) {
+      // username unknown
+      return [];
+    } else {
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        Auth authInformation = ApiResultModel.fromJson(data).auth;
+        List<int> _txTypes = [];
+        if (pub.toString() == authInformation.pub) {
+          for (var txType in txTypes.keys) {
+            _txTypes.add(txType);
+          }
+        } else {
+          for (Keys key in authInformation.keys) {
+            if (key.pub == pub.toString()) {
+              return key.types;
+            }
+          }
+        }
+        return _txTypes;
+      } else {
+        return [];
+      }
+    }
   }
 
   void fetchAndStoreVerifiedUsers() async {

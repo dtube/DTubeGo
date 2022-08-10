@@ -1,24 +1,17 @@
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:ui';
-
-import 'package:dtube_go/style/ThemeDataOldDynamics.dart';
-import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 PageViewModel welcomePage(PageDecoration pageDecoration, BuildContext context) {
   return PageViewModel(
-    // title: "Welcome to DTube!",
-    // body:
-    //     "DTube is an advertisment free social media platform based on the Avalon blockchain. On DTube you can share your videos, make friends with other creators and earn crypto at the same time.",
-
     titleWidget:
         Text("Welcome to DTube!", style: Theme.of(context).textTheme.headline1),
     bodyWidget: Text(
         "DTube is an add-free social media platform based on the Avalon blockchain. On DTube you can share your videos, make friends with other creators and earn crypto at the same time.",
         style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20),
-        textAlign: TextAlign.center),
-
+        textAlign: TextAlign.justify),
     image: BackdropFilter(
       filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
       child: FadeInUpBig(
@@ -46,7 +39,7 @@ PageViewModel meaningOfDTubePage(
     bodyWidget: Text(
         "The name DTube comes from D(ecentralized) Tube. The underlaying Avalon blockchain is a decentralized system which is managed, maintained and developed by various different persons around the globe.",
         style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20),
-        textAlign: TextAlign.center),
+        textAlign: TextAlign.justify),
     image: FadeInDownBig(
       preferences: AnimationPreferences(
           offset: Duration(milliseconds: 120),
@@ -65,12 +58,12 @@ PageViewModel meaningOfDTubePage(
 PageViewModel dTubeCoinsPage(
     PageDecoration pageDecoration, BuildContext context) {
   return PageViewModel(
-    titleWidget: Text("DTube Coins and Voting Power",
-        style: Theme.of(context).textTheme.headline1),
+    titleWidget:
+        Text("DTC and VP", style: Theme.of(context).textTheme.headline1),
     bodyWidget: Text(
-        "For every upload, comment and vote on DTube you'll need Voting Power. This power is generated the cryptocurrency called DTC aka DTube Coins. You can earn DTC from other peoples upvotes on your content but also from upvotes made by you on others content.",
+        "For every upload, comment and vote on DTube you'll need Voting Power (VP). This power is generated the cryptocurrency called DTC aka DTube Coins. You can earn DTC from other peoples upvotes on your content but also from upvotes made by you on others content.",
         style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20),
-        textAlign: TextAlign.center),
+        textAlign: TextAlign.justify),
     image: FadeInUpBig(
       preferences: AnimationPreferences(
           offset: Duration(milliseconds: 120),
@@ -94,7 +87,7 @@ PageViewModel engagementPage(
     bodyWidget: Text(
         "Engagement is very important on any social media platform. Build a name, gain followers and find new friends by interacting with other peoples content. Commenting is only one of the many ways to engage on DTube.",
         style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20),
-        textAlign: TextAlign.center),
+        textAlign: TextAlign.justify),
     image: Image.asset(
       "assets/gifs/hovering_messages.gif",
       fit: BoxFit.fill,
@@ -113,7 +106,7 @@ PageViewModel globalCommunityPage(
     bodyWidget: Text(
         "Our community consists of people from all around the globe. You'll probably find someone from your country but also people and stories from the other side of the world.",
         style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20),
-        textAlign: TextAlign.center),
+        textAlign: TextAlign.justify),
     image: ZoomIn(
       preferences: AnimationPreferences(
           offset: Duration(milliseconds: 120),
@@ -137,7 +130,7 @@ PageViewModel exchangesPage(
     bodyWidget: Text(
         "Like mentioned before you can earn DTC by upvotes or from a tip by a viewer of your content. A faster way is to buy or swap DTC on the market. Make sure to check the FAQ section inside the app for more details and the supported exchanges.",
         style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20),
-        textAlign: TextAlign.center),
+        textAlign: TextAlign.justify),
     image: JackInTheBox(
       preferences: AnimationPreferences(
           offset: Duration(milliseconds: 120),
@@ -161,7 +154,7 @@ PageViewModel freeAccessPage(
     bodyWidget: Text(
         "DTube is a completely free platform and of course we do not sell any of your data because wefully respect your privacy!",
         style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20),
-        textAlign: TextAlign.center),
+        textAlign: TextAlign.justify),
     image: Pulse(
       preferences: AnimationPreferences(
           magnitude: 0.2,
@@ -187,7 +180,7 @@ PageViewModel finishedPage(
     bodyWidget: Text(
         "Now that you know all the basics of DTube and the Avalon blockchain, you are ready to signup, login and try DTube Go on your own!",
         style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20),
-        textAlign: TextAlign.center),
+        textAlign: TextAlign.justify),
     image: Pulse(
       preferences: AnimationPreferences(
           magnitude: 0.7,
@@ -198,10 +191,18 @@ PageViewModel finishedPage(
         preferences: AnimationPreferences(
             offset: Duration(milliseconds: 120),
             duration: Duration(milliseconds: 1500)),
-        child: Image.asset(
-          "assets/gifs/hovering_startup.gif",
-          fit: BoxFit.fill,
-          filterQuality: FilterQuality.high,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.only(top: 20.h),
+            child: Container(
+              width: 90.w,
+              child: Image.asset(
+                "assets/images/D_RocketOLC.png",
+                fit: BoxFit.contain,
+                filterQuality: FilterQuality.high,
+              ),
+            ),
+          ),
         ),
       ),
     ),

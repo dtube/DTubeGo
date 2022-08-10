@@ -34,6 +34,7 @@ class Post {
   //List<Votes>? votes;
   List<Votes>? upvotes;
   List<Votes>? downvotes;
+  bool isFlaggedByUser = false;
   late int ts;
   // Tags? tags;
   late double dist;
@@ -61,7 +62,8 @@ class Post {
       //required this.tags,
       required this.dist,
       this.comments,
-      required this.tags});
+      required this.tags,
+      required this.isFlaggedByUser});
 
   Post.fromJson(Map<String, dynamic> json, String currentUser) {
     sId = json['_id'];
@@ -122,6 +124,7 @@ class Post {
         } else {
           downvotes!.add(_v);
           if (_v.u == currentUser) {
+            isFlaggedByUser = true;
             alreadyVoted = true;
             alreadyVotedDirection = false;
           }
@@ -161,14 +164,16 @@ class Post {
     }
 
     if (jsonString?.files?.youtube != null) {
-      thumbUrl = "https://img.youtube.com/vi/" +
+      thumbUrl = "https://i.ytimg.com/vi/" +
           jsonString!.files!.youtube! +
           "/mqdefault.jpg";
     } else if (jsonString?.files?.sia != null) {
       thumbUrl = jsonString!.thumbnailUrl;
     } else {
       String _gateway = AppConfig.ipfsVideoUrl;
-      if (jsonString?.files?.ipfs!.gw != null) {
+
+      if (jsonString?.files?.ipfs != null &&
+          jsonString?.files?.ipfs!.gw != null) {
         _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
       }
 
@@ -211,6 +216,7 @@ class Post {
     }
     data['comments'] = this.comments!.map((v) => v.toJson()).toList();
     data['alreadyVoted'] = alreadyVoted;
+    data['isFlaggedByUser'] = isFlaggedByUser;
     data['ts'] = this.ts;
     // if (this.tags != null) {
     //   data['tags'] = this.tags?.toJson();
@@ -522,7 +528,7 @@ class Comment {
       required this.alreadyVotedDirection});
 
   Comment.fromJson(Map<String, dynamic> json, String currentUser) {
-    id = json['id'];
+    id = json['id'] != null ? json['id'] : "";
     author = json['author'];
     link = json['link'];
     pa = json['pa'];

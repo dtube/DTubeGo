@@ -120,7 +120,7 @@ class _HistoryState extends State<History> {
   Widget buildLoading() {
     return DtubeLogoPulseWithSubtitle(
       subtitle: "loading history..",
-      size: 10.w,
+      size: 40.w,
     );
   }
 
@@ -167,11 +167,10 @@ class _HistoryState extends State<History> {
         }),
       itemBuilder: (ctx, pos) {
         return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
+          padding: const EdgeInsets.all(8.0),
           child: InkWell(
             child: Container(
-              height: 48.0 * history[pos].txs.length + 1,
-              //width: 30.0,
+              height: 8.h,
               child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 physics: NeverScrollableScrollPhysics(),
@@ -221,9 +220,6 @@ class ActivityItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
-
     String _receiver = txData.data.receiver != null
         ? txData.data.receiver!
         : txData.data.pa != null
@@ -245,26 +241,31 @@ class ActivityItem extends StatelessWidget {
     if (txData.type == 4 && _receiver == "") {
       friendlyDescription = "posted a video";
     }
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+    return Container(
+      width: 95.w,
       child: Column(
         children: [
           txData.sender != ""
               ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
                       child: Row(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                            child: AccountAvatarBase(
-                                username: txData.sender,
-                                avatarSize: 20.w,
-                                showVerified: true,
-                                showName: true,
-                                width: 30.w,
-                                height: 10.h),
+                          AccountIconBase(
+                            username: txData.sender,
+                            avatarSize: 10.w,
+                            showVerified: true,
+                            // showName: true,
+                            // width: 30.w,
+                            // height: 10.h
                           ),
+                          AccountNameBase(
+                              username: txData.sender,
+                              width: 30.w,
+                              height: 10.h,
+                              mainStyle: Theme.of(context).textTheme.headline5!,
+                              subStyle: Theme.of(context).textTheme.bodyText1!)
                         ],
                       ),
                       onTap: () {
@@ -272,7 +273,7 @@ class ActivityItem extends StatelessWidget {
                       },
                     ),
                     Container(
-                      width: deviceWidth - 200,
+                      width: 50.w,
                       child: Text(
                         friendlyDescription,
                         style: Theme.of(context).textTheme.bodyText1,

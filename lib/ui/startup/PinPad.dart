@@ -1,84 +1,122 @@
-import 'dart:math';
+import 'package:dtube_go/bloc/web3storage/web3storage_bloc_full.dart';
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
+import 'package:dtube_go/ui/startup/eula/EulaScreen.dart';
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+
+import 'dart:math';
 import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/utils/ResponsiveLayout.dart';
+import 'package:flutter/foundation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
 import 'package:dtube_go/ui/widgets/PinPadWidget.dart';
 import 'package:dtube_go/utils/secureStorage.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
 class PinPadScreen extends StatefulWidget {
-  PinPadScreen({Key? key}) : super(key: key);
+  PinPadScreen({Key? key, required this.currentTermsAccepted})
+      : super(key: key);
+  bool currentTermsAccepted;
 
   @override
   _PinPadScreenState createState() => _PinPadScreenState();
 }
 
 class _PinPadScreenState extends State<PinPadScreen> {
+  late bool _termsAccepted;
+  late String apiNode;
+
   @override
   void initState() {
     super.initState();
+    _termsAccepted = widget.currentTermsAccepted;
+  }
+
+  void eulaAcceptedCallback() async {
+    await sec.persistCurrentTermsAccepted();
+
+    setState(() {
+      _termsAccepted = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SettingsBloc, SettingsState>(builder: (context, state) {
-      if (state is SettingsLoadedState) {
-        if (state.settings[settingKey_pincode] != "") {
-          // if the pin is set -> show PinPad
-          return PinPad(
-            storedPin: state.settings[settingKey_pincode],
-          );
-        } else {
-          // if there is no pin set to secure the app -> forward directly to the main navigation container
-          // with providing all necessary blocs
-          return MultiBlocProvider(providers: [
-            BlocProvider<UserBloc>(
-                create: (context) =>
-                    UserBloc(repository: UserRepositoryImpl())),
-            BlocProvider<AuthBloc>(
-              create: (BuildContext context) =>
-                  AuthBloc(repository: AuthRepositoryImpl()),
-            ),
-            // TODO: delete?
-            BlocProvider(
-              create: (context) =>
-                  IPFSUploadBloc(repository: IPFSUploadRepositoryImpl()),
-            ),
-            BlocProvider(
-              create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
-            ),
-            BlocProvider(
-              create: (context) => AppStateBloc(),
-            ),
-          ], child: NavigationContainer());
-        }
-      }
-
-      // as long as the settings are not loaded show a loading screen
+    if (!_termsAccepted) {
+      // if terms have changed or never have been accepted on this device
       return Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: globalBlue,
-          body: Center(
-            child: DtubeLogoPulseWithSubtitle(
-              subtitle: "loading your settings..",
-              size: 40.w,
-            ),
-          ));
-    });
+        resizeToAvoidBottomInset: false,
+        backgroundColor: globalBlue,
+        body: Center(
+          child: EULAScreen(
+            eulaAcceptedCallback: eulaAcceptedCallback,
+          ),
+        ),
+      );
+    } else {
+      // if terms have been accepted and did not change since last version
+      return BlocBuilder<SettingsBloc, SettingsState>(
+          builder: (context, state) {
+        if (state is SettingsLoadedState) {
+          if (state.settings[settingKey_pincode] != "") {
+            // if the pin is set -> show PinPad
+            return PinPad(
+              storedPin: state.settings[settingKey_pincode],
+            );
+          } else {
+            // if there is no pin set to secure the app -> forward directly to the main navigation container
+            // with providing all necessary blocs
+            return MultiBlocProvider(providers: [
+              BlocProvider<UserBloc>(
+                  create: (context) =>
+                      UserBloc(repository: UserRepositoryImpl())),
+              BlocProvider<AuthBloc>(
+                create: (BuildContext context) =>
+                    AuthBloc(repository: AuthRepositoryImpl()),
+              ),
+              // TODO: delete?
+              // BlocProvider(
+              //   create: (context) =>
+              //       IPFSUploadBloc(repository: IPFSUploadRepositoryImpl()),
+              // ),
+              BlocProvider(
+                create: (context) =>
+                    Web3StorageBloc(repository: Web3StorageRepositoryImpl()),
+              ),
+              BlocProvider(
+                create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
+              ),
+              BlocProvider(
+                create: (context) => AppStateBloc(),
+              ),
+            ], child: NavigationContainer());
+          }
+        }
+
+        // as long as the settings are not loaded show a loading screen
+        return Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: globalBlue,
+            body: Center(
+              child: DtubeLogoPulseWithSubtitle(
+                subtitle: "we are using:\n" +
+                    globals.currentApiNode +
+                    "\n\nloading your settings..",
+                size: kIsWeb ? 10.w : 40.w,
+              ),
+            ));
+      });
+    }
   }
 }
 

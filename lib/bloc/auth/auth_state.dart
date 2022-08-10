@@ -15,7 +15,8 @@ class SignInLoadingState extends AuthState {
 
 class SignedInState extends AuthState {
   bool firstSignIn;
-  SignedInState({required this.firstSignIn});
+  bool termsAccepted;
+  SignedInState({required this.firstSignIn, required this.termsAccepted});
 
   @override
   List<Object> get props => [];
@@ -24,6 +25,7 @@ class SignedInState extends AuthState {
 class SignInFailedState extends AuthState {
   String message;
   String username;
+
   SignInFailedState({required this.message, required this.username});
 
   @override
@@ -65,6 +67,22 @@ class AuthErrorState extends AuthState {
 
 class NeverUsedTheAppBeforeState extends AuthState {
   NeverUsedTheAppBeforeState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class CheckCredentialsValidState extends AuthState {
+  CheckCredentialsValidState({required this.publicKey, required this.txTypes});
+  String publicKey;
+  List<int> txTypes;
+
+  @override
+  List<Object> get props => [publicKey, txTypes];
+}
+
+class CheckCredentialsInValidState extends AuthState {
+  CheckCredentialsInValidState();
 
   @override
   List<Object> get props => [];

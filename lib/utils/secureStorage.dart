@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const authKey_usernameKey = 'USERNAME';
@@ -19,12 +22,17 @@ const settingKey_hiveSignerAccessToken = 'HSAT';
 const settingKey_hiveSignerAccessTokenExpiresIn = 'HSEI';
 const settingKey_hiveSignerAccessTokenRequestedOn = 'HSRO';
 
+const settingKey_hiveSignerDefaultCommunity = 'HSCOMMUNITY';
+const settingKey_hiveSignerDefaultTags = 'HSTAGS';
+
 const settingKey_OpenedOnce = 'OPENEDONCE';
 const settingKey_FirstLogin = 'FIRSTLOGIN';
 
 const settingKey_templateTitle = 'TEMPLATETITLE';
 const settingKey_templateBody = 'TEMPLATEBODY';
 const settingKey_templateTag = 'TEMPLATETAG';
+
+const settingKey_additionalTemplates = "ADDITIONALTEMPLATES";
 
 const settingKey_momentTitle = 'MOMENTTITLE';
 const settingKey_momentBody = 'MOMENTBODY';
@@ -35,6 +43,9 @@ const settingKey_DefaultUploadUnlist = "DFUNLIST";
 const settingKey_DefaultUploadCrosspost = "DFUCP";
 const settingKey_DefaultUploadVotingWeigth = "DFUVW";
 
+const settingKey_FixedDownvoteActivated = "FIXEDDVACTIVE";
+const settingKey_FixedDownvoteWeight = "FIXEDDVWEIGHT";
+
 const settingKey_DefaultMomentNSFW = "DFMNSFW";
 const settingKey_DefaultMomentOC = "DFMOC";
 const settingKey_DefaultMomentUnlist = "DFMNLIST";
@@ -44,6 +55,8 @@ const settingKey_DefaultMomentVotingWeigth = "DFMVW";
 const settingKey_tsLastNotificationSeen = 'LASTNOT';
 
 const settingKey_pincode = "PINC";
+const settingKey_videoAutoPause = "VAPAUSE";
+const settingKey_disableAnimations = "NOANIMS";
 
 const settingKey_imageUploadService = "IMGUS";
 
@@ -52,6 +65,22 @@ const settingKey_GenreTags = "GENRETAGS";
 
 const settingKey_LastHivePost = "LASTHIVEPOST";
 const settingKey_HiveStillInCooldown = "LASTHIVEPOSTCOOLDOWN";
+
+const settingKey_BlockedUsers = "BLOCKEDUSERS";
+
+const settingKey_suAcc = "SUACC";
+const settingKey_suLogin = "SULOGIN";
+const settingKey_twaKey = "TWAKEY";
+const settingKey_twaSec = "TWASEC";
+const settingKey_ghaCl = "GHACL";
+const settingKey_ghaSec = "GHASEC";
+const settingKey_ghaRU = "GHARU";
+const settingKey_currentHF = "CURHF";
+
+const settingKey_seenMoments = "SEENMOMENTS";
+
+const settingKey_TermsAcceptedVersion = "TERMS1.1"; // versioning because:
+//if we would update the terms we want to view the updated version also for existing users
 
 // const _txsKey = 'TXS';
 const _storage = FlutterSecureStorage();
@@ -71,6 +100,10 @@ Future<void> persistExploreTags(String tags) async {
   await _storage.write(key: settingKey_ExploreTags, value: tags);
 }
 
+Future<void> persistBlockedUsers(String blocked) async {
+  await _storage.write(key: settingKey_BlockedUsers, value: blocked);
+}
+
 Future<void> persistGenreTags(String tags) async {
   await _storage.write(key: settingKey_GenreTags, value: tags);
 }
@@ -83,6 +116,15 @@ Future<void> persistPinCode(String pin) async {
   await _storage.write(key: settingKey_pincode, value: pin);
 }
 
+Future<void> persistVideoAutoPause(String autoPause) async {
+  await _storage.write(key: settingKey_videoAutoPause, value: autoPause);
+}
+
+Future<void> persistDisableAnimations(String disableAnimations) async {
+  await _storage.write(
+      key: settingKey_disableAnimations, value: disableAnimations);
+}
+
 Future<void> persistLastHivePost() async {
   await _storage.write(
       key: settingKey_LastHivePost, value: DateTime.now().toString());
@@ -93,12 +135,16 @@ Future<void> persistNotificationSeen(int tsLast) async {
       key: settingKey_tsLastNotificationSeen, value: tsLast.toString());
 }
 
-Future<void> persistOpenedOnce() async {
+Future<void> persistOnbordingJourneyDone() async {
   await _storage.write(key: settingKey_OpenedOnce, value: "true");
 }
 
 Future<void> persistFirstLogin() async {
   await _storage.write(key: settingKey_FirstLogin, value: "false");
+}
+
+Future<void> persistCurrentTermsAccepted() async {
+  await _storage.write(key: settingKey_TermsAcceptedVersion, value: "true");
 }
 
 Future<void> persistHiveSignerData(String accessToken, String expiresIn,
@@ -110,6 +156,13 @@ Future<void> persistHiveSignerData(String accessToken, String expiresIn,
   await _storage.write(
       key: settingKey_hiveSignerAccessTokenRequestedOn, value: requestedOn);
   await _storage.write(key: settingKey_hiveSignerUsername, value: username);
+}
+
+Future<void> persistHiveSignerAdditionalData(
+    String community, String tags) async {
+  await _storage.write(
+      key: settingKey_hiveSignerDefaultCommunity, value: community);
+  await _storage.write(key: settingKey_hiveSignerDefaultTags, value: tags);
 }
 
 // app settings
@@ -127,6 +180,8 @@ Future<void> persistAvalonSettings(
   String defaultVotingWeightComments,
   String defaultVotingTip,
   String defaultVotingTipComments,
+  String fixedDownvoteActive,
+  String fixedDownvoteWeight,
 ) async {
   await _storage.write(
       key: settingKey_defaultVotingWeight, value: defaultVotingWeight);
@@ -138,6 +193,10 @@ Future<void> persistAvalonSettings(
   await _storage.write(
       key: settingKey_defaultVotingTipComments,
       value: defaultVotingTipComments);
+  await _storage.write(
+      key: settingKey_FixedDownvoteActivated, value: fixedDownvoteActive);
+  await _storage.write(
+      key: settingKey_FixedDownvoteWeight, value: fixedDownvoteWeight);
 }
 
 Future<void> persistTemplateSettings(
@@ -148,6 +207,13 @@ Future<void> persistTemplateSettings(
   await _storage.write(key: settingKey_templateTitle, value: templateTitle);
   await _storage.write(key: settingKey_templateBody, value: templateBody);
   await _storage.write(key: settingKey_templateTag, value: templateTag);
+}
+
+Future<void> persistAdditionalTemplates(
+  String templatesJSON,
+) async {
+  await _storage.write(
+      key: settingKey_additionalTemplates, value: templatesJSON);
 }
 
 Future<void> persistMomentTemplateSettings(
@@ -190,9 +256,108 @@ Future<void> persistDefaultUploadAndMomentSettings(
       key: settingKey_DefaultMomentVotingWeigth, value: momentVotingWeight);
 }
 
+Future<void> addSeenMoments(
+  String seenMomentpostIdentity,
+  String seenMomentTS,
+) async {
+  String? _seenMoments = "";
+  int visibilityDuration = ((DateTime.now()
+              .add(Duration(days: AppConfig.momentsPastXDays))
+              .millisecondsSinceEpoch /
+          1000))
+      .round(); // duration until we hide moments from the moments page
+  try {
+    _seenMoments = await _storage.read(key: settingKey_seenMoments);
+  } catch (e) {
+    _seenMoments = "[]";
+  }
+  if (_seenMoments == null) {
+    _seenMoments = "[]";
+  }
+  SeenMomentsList _seenMomentsList = new SeenMomentsList(seenMoments: []);
+  // read previous seen Moments
+  if (_seenMoments != "[]") {
+    var _seenMomentsJSON = jsonDecode(_seenMoments);
+    _seenMomentsList = SeenMomentsList.fromJson(_seenMomentsJSON);
+  }
+  // add new Moment
+  _seenMomentsList.seenMoments.add(SeenMoment(
+      ts: int.parse(seenMomentTS), postIdentity: seenMomentpostIdentity));
+
+  // remove old moments outside of the duration we show
+  for (var m in _seenMomentsList.seenMoments) {
+    if (m.ts < visibilityDuration) {
+      _seenMomentsList.seenMoments.remove(m);
+    }
+  }
+  // convert new list
+  var _seenMomentsJSONResult = _seenMomentsList.toJson();
+  //store new list
+  await _storage.write(
+      key: settingKey_seenMoments, value: jsonEncode(_seenMomentsJSONResult));
+}
+
+// PODO Object class for the JSON mapping
+class SeenMomentsList {
+  late List<SeenMoment> seenMoments;
+
+  SeenMomentsList({required this.seenMoments});
+
+  SeenMomentsList.fromJson(Map<String, dynamic> json) {
+    if (json['seenMoments'] != null) {
+      seenMoments = [];
+      json['seenMoments'].forEach((v) {
+        seenMoments.add(new SeenMoment.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.seenMoments != null) {
+      data['seenMoments'] = this.seenMoments.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class SeenMoment {
+  late int ts;
+  late String postIdentity; // author/link;
+
+  SeenMoment({required this.ts, required this.postIdentity});
+
+  SeenMoment.fromJson(Map<String, dynamic> json) {
+    ts = json['ts'];
+    postIdentity = json['postIdentity'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ts'] = this.ts;
+    data['postIdentity'] = this.postIdentity;
+
+    return data;
+  }
+}
+
 // GET
 
-Future<bool> getOpenedOnce() async {
+Future<bool> getSeenMomentAlready(String postIdentity) async {
+  String? _seenMoments = "";
+  try {
+    _seenMoments = await _storage.read(key: settingKey_seenMoments);
+    if (_seenMoments!.contains(postIdentity)) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    return false; // fallback: never opened that app before
+  }
+}
+
+Future<bool> getOnbordingJourneyDone() async {
   String? _setting = "";
   try {
     _setting = await _storage.read(key: settingKey_OpenedOnce);
@@ -220,24 +385,42 @@ Future<bool> getFirstLogin() async {
   }
 }
 
-Future<String> getLastHivePostWithin5MinCooldown() async {
-  DateTime _curTime = new DateTime.now(); //Current local time
-  DateTime _before5Min = _curTime.subtract(Duration(minutes: 5));
-
+Future<bool> getTermsAccepted() async {
+  String? _accepted = "";
   try {
-    // read DateTime of recent hive post
+    _accepted = await _storage.read(key: settingKey_TermsAcceptedVersion);
+  } catch (e) {
+    _accepted = "false"; // fallback: not accepted current terms
+  }
+  if (_accepted == null || _accepted != "true") {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+Future<int> getSecondsUntilHiveCooldownEnds() async {
+  DateTime _curTime = new DateTime.now(); //Current local time
+  try {
+    // read DateTime of last hive post
     String? _lastPostString = await _storage.read(key: settingKey_LastHivePost);
-    DateTime _lastPost = DateTime.parse(_lastPostString!);
-    // if the recent post is within the last 5 minute cooldown
-    if (_lastPost.isAfter(_before5Min)) {
-      return "true";
+    if (_lastPostString != null) {
+      DateTime _lastPost = DateTime.parse(_lastPostString);
+      int _timeUntilCooldownEnds =
+          _lastPost.add(Duration(seconds: 300)).difference(_curTime).inSeconds;
+      if (_timeUntilCooldownEnds > 0) {
+        return _timeUntilCooldownEnds;
+      } else {
+        return 0;
+      }
     } else {
-      return "false";
+      return 0;
     }
+
     // if no DateTime found or it is not parsable
     // it was never set before
   } catch (e) {
-    return "false";
+    return 0;
   }
 }
 
@@ -245,6 +428,20 @@ Future<String> getUsername() async {
   String? _setting = "";
   try {
     _setting = await _storage.read(key: authKey_usernameKey);
+  } catch (e) {
+    _setting = "";
+  }
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getBlockedUsers() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_BlockedUsers);
   } catch (e) {
     _setting = "";
   }
@@ -282,6 +479,34 @@ Future<String> getPinCode() async {
     return _setting;
   } else {
     return "";
+  }
+}
+
+Future<String> getVideoAutoPause() async {
+  String? _setting = "false";
+  try {
+    _setting = await _storage.read(key: settingKey_videoAutoPause);
+  } catch (e) {
+    _setting = "false";
+  }
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "false";
+  }
+}
+
+Future<String> getDisableAnimations() async {
+  String? _setting = "false";
+  try {
+    _setting = await _storage.read(key: settingKey_disableAnimations);
+  } catch (e) {
+    _setting = "false";
+  }
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "false";
   }
 }
 
@@ -349,6 +574,20 @@ Future<String> getTemplateBody() async {
   String? _setting = "";
   try {
     _setting = await _storage.read(key: settingKey_templateBody);
+  } catch (e) {
+    _setting = "";
+  }
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
+Future<String> getAdditionalTemplates() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_additionalTemplates);
   } catch (e) {
     _setting = "";
   }
@@ -572,6 +811,36 @@ Future<String> getHiveSignerAccessToken() async {
   }
 }
 
+Future<String> getHiveSignerDefaultCommunity() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_hiveSignerDefaultCommunity);
+  } catch (e) {
+    _setting = "hive-196037";
+  }
+
+  if (_setting != null && _setting.startsWith("hive-")) {
+    return _setting;
+  } else {
+    return 'hive-196037';
+  }
+}
+
+Future<String> getHiveSignerDefaultTags() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_hiveSignerDefaultTags);
+  } catch (e) {
+    _setting = "";
+  }
+
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
 Future<String> getHiveSignerAccessTokenExpiresIn() async {
   String? _setting = "";
   try {
@@ -708,6 +977,36 @@ Future<String> getDefaultVoteTipComments() async {
   }
 }
 
+Future<String> getFixedDownvoteActivated() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_FixedDownvoteActivated);
+  } catch (e) {
+    _setting = "true";
+  }
+
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return 'true';
+  }
+}
+
+Future<String> getFixedDownvoteWeight() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_FixedDownvoteWeight);
+  } catch (e) {
+    _setting = "1";
+  }
+
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return '1';
+  }
+}
+
 Future<String> getShowHidden() async {
   String? _setting = "";
   try {
@@ -737,6 +1036,21 @@ Future<String> getNSFW() async {
     return 'Hide';
   }
 }
+
+Future<String> getLocalConfigString(String configKey) async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: configKey);
+  } catch (e) {
+    _setting = "";
+  }
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return "";
+  }
+}
+
 // DELETE
 
 Future<bool> deleteUsernameKey() async {

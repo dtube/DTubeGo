@@ -1,3 +1,5 @@
+import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
+import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/ui/widgets/Suggestions/OtherUsersAvatar.dart';
@@ -8,11 +10,13 @@ class UserList extends StatefulWidget {
       {Key? key,
       required this.userlist,
       required this.title,
-      required this.showCount})
+      required this.showCount,
+      required this.avatarSize})
       : super(key: key);
   List<String> userlist;
   String title;
   bool showCount;
+  double avatarSize;
 
   @override
   State<UserList> createState() => _UserListState();
@@ -37,16 +41,44 @@ class _UserListState extends State<UserList> {
                   ? " (" + widget.userlist.length.toString() + ")"
                   : ""),
           style: Theme.of(context).textTheme.headline5),
-      Container(
-        height: 15.h,
-        width: double.infinity,
-        child: ListView.builder(
-          // controller: _scrollController,
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: widget.userlist.length,
-          itemBuilder: (ctx, index) =>
-              OtherUsersAvatar(username: widget.userlist[index]),
+      Padding(
+        padding: EdgeInsets.only(top: 2.h, bottom: 2.h),
+        child: Container(
+          height: widget.avatarSize + 3.h,
+          width: double.infinity,
+          child: ListView.builder(
+              // controller: _scrollController,
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.userlist.length,
+              itemBuilder: (ctx, index) => Padding(
+                    padding: EdgeInsets.only(left: 2.w),
+                    child: GestureDetector(
+                      onTap: (() {
+                        navigateToUserDetailPage(
+                            context, widget.userlist[index], () {});
+                      }),
+                      child: Column(
+                        children: [
+                          AccountIconBase(
+                            avatarSize: widget.avatarSize,
+                            showVerified: true,
+                            username: widget.userlist[index],
+                            showBorder: true,
+                          ),
+                          Container(
+                            height: 2.h,
+                            width: widget.avatarSize,
+                            child: Center(
+                              child: Text(widget.userlist[index],
+                                  style: Theme.of(context).textTheme.bodyText2,
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )),
         ),
       ),
     ]);

@@ -8,7 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OtherUsersAvatar extends StatelessWidget {
   String username;
-  OtherUsersAvatar({Key? key, required this.username}) : super(key: key);
+  double avatarSize;
+  OtherUsersAvatar({Key? key, required this.username, required this.avatarSize})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,21 +23,15 @@ class OtherUsersAvatar extends StatelessWidget {
               navigateToUserDetailPage(context, username, () {});
             },
             child: Container(
-              width: 20.w,
-              height: 15.h,
+              width: avatarSize * 1.5,
+              height: avatarSize * 1.5,
               child: Column(
                 children: [
-                  AccountAvatar(
-                      username: username,
-                      avatarSize: 20.w,
-                      showVerified: true,
-                      showName: false,
-                      nameFontSizeMultiply: 1,
-                      showNameLeft: false,
-                      showFullUserInfo: false,
-                      width: 20.w,
-                      height: 20.w,
-                      showAvatar: true),
+                  AccountIconBase(
+                    avatarSize: avatarSize,
+                    showVerified: true,
+                    username: username,
+                  ),
                   Text(
                     username,
                     maxLines: 1,

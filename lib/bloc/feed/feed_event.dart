@@ -67,6 +67,7 @@ class FetchSuggestedUsersForUserHistory extends FeedEvent {
 class FetchSuggestedUsersForPost extends FeedEvent {
   late List<String> tags;
   late String currentUsername;
+
   FetchSuggestedUsersForPost(
       {required this.currentUsername, required this.tags});
   @override

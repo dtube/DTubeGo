@@ -1,22 +1,17 @@
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-
 import 'package:dtube_go/ui/pages/feeds/cards/PostListCardLarge.dart';
 import 'package:dtube_go/ui/pages/feeds/cards/PostListCardNarrow.dart';
-
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/utils/friendlyTimestamp.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
-// import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
 typedef Bool2VoidFunc = void Function(bool);
 typedef ListOfString2VoidFunc = void Function(List<String>);
@@ -67,6 +62,11 @@ class FeedList extends StatelessWidget {
   String? _defaultPostVotingWeight;
   String? _defaultPostVotingTip;
 
+  String? _fixedDownvoteActivated;
+  String? _fixedDownvoteWeight;
+
+  bool? _autoauseVideoOnPopup;
+
   Future<bool> getSettings() async {
     _hiddenMode = await sec.getShowHidden();
     _nsfwMode = await sec.getNSFW();
@@ -74,6 +74,10 @@ class FeedList extends StatelessWidget {
     _defaultCommentVotingWeight = await sec.getDefaultVoteComments();
     _defaultPostVotingWeight = await sec.getDefaultVote();
     _defaultPostVotingTip = await sec.getDefaultVoteTip();
+
+    _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
+    _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
+    _autoauseVideoOnPopup = await sec.getVideoAutoPause() == "true";
 
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
@@ -101,79 +105,84 @@ class FeedList extends StatelessWidget {
       heightPerEntry = 10.h;
     }
 
-    return FutureBuilder<bool>(
-        future: getSettings(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return buildLoading(context);
-          } else {
-            return Container(
-              height: 80.h + topPaddingForFirstEntry!,
-              width: width,
-              child: BlocBuilder<FeedBloc, FeedState>(
-                builder: (context, state) {
-                  if (state is FeedInitialState ||
-                      state is FeedLoadingState && _feedItems.isEmpty) {
-                    return buildLoading(context);
-                  } else if (state is FeedLoadedState) {
-                    if (state.feedType == feedType) {
-                      if (state.feedType == "tagSearch") {
-                        _feedItems.clear();
-                      }
-                      if (_feedItems.isNotEmpty) {
-                        if (_feedItems.first.link == state.feed.first.link) {
-                          _feedItems.clear();
-                        } else {
-                          _feedItems.removeLast();
-                        }
-                      }
-                      _feedItems.addAll(state.feed);
+    return Center(
+      child: Container(
+        height: 110.h,
+        width: width,
+        child: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                  left: sidepadding != null ? sidepadding! : 0.0,
+                  right: sidepadding != null ? sidepadding! : 0.0,
+                  top: topPadding!),
+              child: FutureBuilder<bool>(
+                  future: getSettings(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return buildLoading(context);
+                    } else {
+                      return Container(
+                        height: 90.h + topPaddingForFirstEntry!,
+                        width: width,
+                        child: BlocBuilder<FeedBloc, FeedState>(
+                          builder: (context, state) {
+                            if (state is FeedInitialState ||
+                                state is FeedLoadingState &&
+                                    _feedItems.isEmpty) {
+                              return buildLoading(context);
+                            } else if (state is FeedLoadedState) {
+                              if (state.feedType == feedType) {
+                                if (state.feedType == "tagSearch") {
+                                  _feedItems.clear();
+                                }
+                                if (_feedItems.isNotEmpty) {
+                                  if (_feedItems.first.link ==
+                                      state.feed.first.link) {
+                                    _feedItems.clear();
+                                  } else {
+                                    _feedItems.removeLast();
+                                  }
+                                }
+                                _feedItems.addAll(state.feed);
+                              }
+                              BlocProvider.of<FeedBloc>(context).isFetching =
+                                  false;
+                            } else if (state is FeedErrorState) {
+                              return buildErrorUi(state.message);
+                            }
+                            return buildPostList(_feedItems, largeFormat, true,
+                                context, feedType);
+                          },
+                        ),
+                      );
                     }
-                    BlocProvider.of<FeedBloc>(context).isFetching = false;
-                  } else if (state is FeedErrorState) {
-                    return buildErrorUi(state.message);
-                  }
-                  return Container(
-                    height: 100.h,
-                    width: width,
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: sidepadding != null ? sidepadding! : 0.0,
-                              right: sidepadding != null ? sidepadding! : 0.0,
-                              top: topPadding!),
-                          child: buildPostList(
-                              _feedItems, largeFormat, true, context, feedType),
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Container(
-                            height: feedType == "UserFeed" ? 0.h : 15.h,
-                            width: 200.w,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                gradient: LinearGradient(
-                                    begin: FractionalOffset.topCenter,
-                                    end: FractionalOffset.bottomCenter,
-                                    colors: [
-                                      Colors.black,
-                                      Colors.black.withOpacity(0.0),
-                                    ],
-                                    stops: [
-                                      0.0,
-                                      1.0
-                                    ])),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                  }),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                height: feedType == "UserFeed" ? 0.h : 15.h,
+                width: 200.w,
+                decoration: BoxDecoration(
+                    color: globalAlmostWhite,
+                    gradient: LinearGradient(
+                        begin: FractionalOffset.topCenter,
+                        end: FractionalOffset.bottomCenter,
+                        colors: [
+                          Colors.black,
+                          Colors.black.withOpacity(0.0),
+                        ],
+                        stops: [
+                          0.0,
+                          1.0
+                        ])),
               ),
-            );
-          }
-        });
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget buildLoading(BuildContext context) {
@@ -182,7 +191,7 @@ class FeedList extends StatelessWidget {
         : Center(
             child: DtubeLogoPulseWithSubtitle(
               subtitle: "loading feed..",
-              size: 40.w,
+              size: kIsWeb ? 10.w : 40.w,
             ),
           );
   }
@@ -302,6 +311,10 @@ class FeedList extends StatelessWidget {
                   defaultCommentVotingWeight: _defaultCommentVotingWeight,
                   defaultPostVotingWeight: _defaultPostVotingWeight,
                   defaultPostVotingTip: _defaultPostVotingTip,
+                  fixedDownvoteActivated: _fixedDownvoteActivated,
+                  fixedDownvoteWeight: _fixedDownvoteWeight,
+                  parentContext: context,
+                  autoPauseVideoOnPopup: _autoauseVideoOnPopup,
                 ),
                 //Text(pos.toString())
               ),
@@ -351,37 +364,47 @@ class PostListCard extends StatefulWidget {
   final String? defaultPostVotingWeight;
   final String? defaultPostVotingTip;
 
-  PostListCard(
-      {Key? key,
-      required this.showAuthor,
-      required this.largeFormat,
-      required this.blur,
-      required this.thumbnailUrl,
-      required this.title,
-      required this.description,
-      required this.author,
-      required this.link,
-      required this.publishDate,
-      required this.duration,
-      required this.dtcValue,
-      required this.videoUrl,
-      required this.videoSource,
-      required this.alreadyVoted,
-      required this.alreadyVotedDirection,
-      required this.upvotesCount,
-      required this.downvotesCount,
-      required this.indexOfList,
-      required this.mainTag,
-      required this.oc,
-      required this.width,
-      required this.heightPerEntry,
-      required this.enableNavigation,
-      this.itemSelectedCallback,
-      required this.feedType,
-      this.defaultCommentVotingWeight,
-      this.defaultPostVotingWeight,
-      this.defaultPostVotingTip})
-      : super(key: key);
+  final String? fixedDownvoteActivated;
+  final String? fixedDownvoteWeight;
+  final bool? autoPauseVideoOnPopup;
+
+  final BuildContext parentContext;
+
+  PostListCard({
+    Key? key,
+    required this.showAuthor,
+    required this.largeFormat,
+    required this.blur,
+    required this.thumbnailUrl,
+    required this.title,
+    required this.description,
+    required this.author,
+    required this.link,
+    required this.publishDate,
+    required this.duration,
+    required this.dtcValue,
+    required this.videoUrl,
+    required this.videoSource,
+    required this.alreadyVoted,
+    required this.alreadyVotedDirection,
+    required this.upvotesCount,
+    required this.downvotesCount,
+    required this.indexOfList,
+    required this.mainTag,
+    required this.oc,
+    required this.width,
+    required this.heightPerEntry,
+    required this.enableNavigation,
+    this.itemSelectedCallback,
+    required this.feedType,
+    this.defaultCommentVotingWeight,
+    this.defaultPostVotingWeight,
+    this.defaultPostVotingTip,
+    required this.fixedDownvoteActivated,
+    required this.fixedDownvoteWeight,
+    required this.parentContext,
+    required this.autoPauseVideoOnPopup,
+  }) : super(key: key);
 
   @override
   State<PostListCard> createState() => _PostListCardState();
@@ -390,39 +413,38 @@ class PostListCard extends StatefulWidget {
 class _PostListCardState extends State<PostListCard>
     with AutomaticKeepAliveClientMixin {
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
     if (widget.largeFormat) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: BlocProvider<UserBloc>(
-          create: (BuildContext context) =>
-              UserBloc(repository: UserRepositoryImpl()),
-          child: PostListCardLarge(
-            blur: widget.blur,
-            thumbnailUrl: widget.thumbnailUrl,
-            title: widget.title,
-            description: widget.description,
-            author: widget.author,
-            link: widget.link,
-            publishDate: widget.publishDate,
-            duration: widget.duration,
-            dtcValue: widget.dtcValue,
-            videoUrl: widget.videoUrl,
-            videoSource: widget.videoSource,
-            alreadyVoted: widget.alreadyVoted,
-            alreadyVotedDirection: widget.alreadyVotedDirection,
-            upvotesCount: widget.upvotesCount,
-            downvotesCount: widget.downvotesCount,
-            indexOfList: widget.indexOfList,
-            mainTag: widget.mainTag,
-            oc: widget.oc,
-            defaultCommentVotingWeight: widget.defaultCommentVotingWeight!,
-            defaultPostVotingWeight: widget.defaultPostVotingWeight!,
-            defaultPostVotingTip: widget.defaultPostVotingTip!,
-          ),
+      return BlocProvider<UserBloc>(
+        create: (BuildContext context) =>
+            UserBloc(repository: UserRepositoryImpl()),
+        child: PostListCardLarge(
+          blur: widget.blur,
+          thumbnailUrl: widget.thumbnailUrl,
+          title: widget.title,
+          description: widget.description,
+          author: widget.author,
+          link: widget.link,
+          publishDate: widget.publishDate,
+          duration: widget.duration,
+          dtcValue: widget.dtcValue,
+          videoUrl: widget.videoUrl,
+          videoSource: widget.videoSource,
+          alreadyVoted: widget.alreadyVoted,
+          alreadyVotedDirection: widget.alreadyVotedDirection,
+          upvotesCount: widget.upvotesCount,
+          downvotesCount: widget.downvotesCount,
+          indexOfList: widget.indexOfList,
+          mainTag: widget.mainTag,
+          oc: widget.oc,
+          defaultCommentVotingWeight: widget.defaultCommentVotingWeight!,
+          defaultPostVotingWeight: widget.defaultPostVotingWeight!,
+          defaultPostVotingTip: widget.defaultPostVotingTip!,
+          fixedDownvoteActivated: widget.fixedDownvoteActivated!,
+          fixedDownvoteWeight: widget.fixedDownvoteWeight!,
+          autoPauseVideoOnPopup: widget.autoPauseVideoOnPopup!,
         ),
       );
     } else {

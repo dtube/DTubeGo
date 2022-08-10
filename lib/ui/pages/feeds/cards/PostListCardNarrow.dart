@@ -1,12 +1,7 @@
 import 'dart:ui';
-
-import 'package:cached_network_image/cached_network_image.dart';
-
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
-
 import 'package:dtube_go/utils/navigationShortcuts.dart';
-
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -73,6 +68,7 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
         }
       },
       child: Card(
+        semanticContainer: true,
         color: globalBlueShades[2],
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16.0))),
@@ -82,110 +78,79 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
-                    alignment: Alignment.topCenter,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.vertical(
-                            top: new Radius.circular(16.0)),
-                        image: DecorationImage(
-                            image: NetworkImage(widget.thumbnailUrl),
-                            fit: BoxFit.fitWidth)),
-                    width: double.infinity,
-                    height: 30.h
-                    // child: Center(
-                    //   child: AspectRatio(
-                    //     aspectRatio: 16 / 9,
-                    //     child: widget.blur
-                    //         ? ClipRect(
-                    //             child: ImageFiltered(
-                    //               imageFilter: ImageFilter.blur(
-                    //                 sigmaY: 5,
-                    //                 sigmaX: 5,
-                    //               ),
-                    //               child: CachedNetworkImage(
-                    //                 imageUrl: widget.thumbnailUrl,
-                    //               ),
-                    //             ),
-                    //           )
-                    //         : CachedNetworkImage(
-                    //             imageUrl: widget.thumbnailUrl,
-                    //             fit: BoxFit.fitWidth,
-                    //           ),
-                    //   ),
-                    // ),
-                    ),
-                SizedBox(width: 4),
+                AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: widget.thumbnailUrl != ""
+                        ? Container(
+                            alignment: Alignment.topCenter,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.vertical(
+                                    top: new Radius.circular(16.0)),
+                                image: DecorationImage(
+                                    image: NetworkImage(widget.thumbnailUrl),
+                                    fit: BoxFit.cover)),
+                          )
+                        : Container(
+                            color: globalBGColor,
+                            child: DTubeLogo(
+                              size: 20.w,
+                            ),
+                          )),
+                SizedBox(height: 1.h),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Container(
-                      width: widget.userPage
-                          ? widget.width * 0.7
-                          : widget.width * 0.5,
-                      height: 10.h,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
+                  child: Container(
+                    height: 5.h,
+                    child: Text(
+                      widget.title,
+                      style: widget.userPage
+                          ? Theme.of(context).textTheme.headline6
+                          : Theme.of(context).textTheme.bodyText2,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+                !widget.userPage
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          widget.author,
+                          style: Theme.of(context).textTheme.subtitle2,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                    : SizedBox(height: 0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${widget.publishDate} - ' +
+                            (widget.duration.inHours == 0
+                                ? widget.duration.toString().substring(2, 7)
+                                : widget.duration.toString().substring(0, 7)),
+                        style: !widget.userPage
+                            ? Theme.of(context).textTheme.subtitle2
+                            : Theme.of(context).textTheme.bodyText2,
+                      ),
+                      Row(
                         children: [
                           Text(
-                            widget.title,
-                            style: widget.userPage
-                                ? Theme.of(context).textTheme.headline5
+                            '${widget.dtcValue}',
+                            style: !widget.userPage
+                                ? Theme.of(context).textTheme.bodyText2
                                 : Theme.of(context).textTheme.bodyText2,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                          !widget.userPage
-                              ? Text(
-                                  widget.author,
-                                  style: Theme.of(context).textTheme.subtitle2,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                )
-                              : SizedBox(height: 0),
-                          Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '${widget.publishDate} - ' +
-                                      (widget.duration.inHours == 0
-                                          ? widget.duration
-                                              .toString()
-                                              .substring(2, 7)
-                                          : widget.duration
-                                              .toString()
-                                              .substring(0, 7)),
-                                  style: !widget.userPage
-                                      ? Theme.of(context).textTheme.subtitle2
-                                      : Theme.of(context).textTheme.bodyText2,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '${widget.dtcValue}',
-                                      style: !widget.userPage
-                                          ? Theme.of(context)
-                                              .textTheme
-                                              .bodyText2
-                                          : Theme.of(context)
-                                              .textTheme
-                                              .bodyText2,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 0.5.w),
-                                      child: DTubeLogoShadowed(size: 4.w),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 0.5.w),
+                            child: DTubeLogoShadowed(size: 4.w),
                           ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ]),

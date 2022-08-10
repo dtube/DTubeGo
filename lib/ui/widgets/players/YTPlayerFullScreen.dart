@@ -1,14 +1,12 @@
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-
 import 'package:auto_orientation/auto_orientation.dart';
 import 'package:overlay_dialog/overlay_dialog.dart';
-
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+
+import 'dart:io' show Platform;
 
 class YoutubePlayerFullScreenPage extends StatefulWidget {
   final String link;
@@ -37,7 +35,7 @@ class _YoutubePlayerFullScreenPageState
       params: YoutubePlayerParams(
           showControls: false,
           showFullscreenButton: false,
-          desktopMode: true,
+          desktopMode: !Platform.isIOS,
           privacyEnhanced: true,
           useHybridComposition: true,
           autoPlay: true),

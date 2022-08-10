@@ -1,24 +1,25 @@
+import 'package:dtube_go/bloc/web3storage/web3storage_bloc.dart';
+import 'package:dtube_go/bloc/web3storage/web3storage_bloc_full.dart';
+import 'package:dtube_go/ui/pages/upload/dialogs/HivePostCooldownDialog.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
+import 'package:dtube_go/utils/CountDownTimer.dart';
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:gallery_saver/gallery_saver.dart';
 import 'dart:io';
-
 import 'package:disk_space/disk_space.dart';
-import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc.dart';
-import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
-import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
+import 'package:dtube_go/ui/widgets/DialogTemplates/UploadStartedDialog.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
-import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc.dart';
-import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
-import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_event.dart';
+// import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc.dart';
+// import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
+// import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_event.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
-
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +40,8 @@ class MomentsUploadButton extends StatefulWidget {
   String momentsUploadCrosspost;
   String customMomentTitle;
   String customMomentBody;
+  double size;
+  String text;
 
   MomentsUploadButton(
       {Key? key,
@@ -53,7 +56,9 @@ class MomentsUploadButton extends StatefulWidget {
       required this.momentsUploadUnlist,
       required this.momentsUploadCrosspost,
       required this.customMomentTitle,
-      required this.customMomentBody})
+      required this.customMomentBody,
+      required this.text,
+      required this.size})
       : super(key: key);
 
   @override
@@ -61,7 +66,8 @@ class MomentsUploadButton extends StatefulWidget {
 }
 
 class _MomentsUploadButtontate extends State<MomentsUploadButton> {
-  late IPFSUploadBloc _uploadBloc;
+  // late IPFSUploadBloc _uploadBloc;
+  late Web3StorageBloc _uploadBloc;
 
   File? _image;
   File? _video;
@@ -99,7 +105,7 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
       uploaded: false,
       crossPostToHive: false);
 
-  void uploadMoment(
+  void saveAndUploadMoment(
       String videoPath,
       int vpBalance,
       double vpPercent,
@@ -115,25 +121,35 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
     _uploadData.unlistVideo = momentsUploadUnlist == "true";
     _uploadData.crossPostToHive = momentsUploadCrosspost == "true";
 
+// copy file to gallery
+
+    GallerySaver.saveVideo(videoPath, albumName: "DTube");
+    // upload moment
     final info = await VideoCompress.getMediaInfo(videoPath);
 
     _uploadData.duration = (info.duration! / 1000).floor().toString();
     // // this will turn the global "+" icon to a rotating DTube Logo and deactivate further uploas until current is finished
     // BlocProvider.of<AppStateBloc>(context)
     //     .add(UploadStateChangedEvent(uploadState: UploadStartedState()));
+    // _uploadBloc.add(UploadVideo(
+    //     videoPath: _uploadData.videoLocation,
+    //     thumbnailPath: "",
+    //     uploadData: _uploadData,
+    //     context: context));
     _uploadBloc.add(UploadVideo(
         videoPath: _uploadData.videoLocation,
         thumbnailPath: "",
         uploadData: _uploadData,
         context: context));
 
-    // widget.leaveDialogWithUploadCallback();
+    widget.leaveDialogWithUploadCallback();
   }
 
   @override
   void initState() {
     super.initState();
-    _uploadBloc = BlocProvider.of<IPFSUploadBloc>(context);
+    // _uploadBloc = BlocProvider.of<IPFSUploadBloc>(context);
+    _uploadBloc = BlocProvider.of<Web3StorageBloc>(context);
     if (widget.customMomentTitle != "") {
       _uploadData.title = widget.customMomentTitle;
     }
@@ -149,184 +165,65 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
     _uploadData.crossPostToHive = _accessToken != '';
   }
 
-  Future getFile(
-      bool video, bool camera, int vpBalance, double vpPercent) async {
+  Future getFile(int vpBalance, double vpPercent) async {
     XFile? _pickedFile;
 
-    if (video) {
-      if (camera) {
-        double? _freeSpace = await DiskSpace.getFreeDiskSpace;
-        if (_freeSpace! > AppConfig.minFreeSpaceRecordVideoInMB) {
-          String _stillInHiveCooldown =
-              await sec.getLastHivePostWithin5MinCooldown();
-          if (_uploadData.crossPostToHive && _stillInHiveCooldown == "true") {
-            showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => PopUpDialogWithTitleLogo(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Please wait a bit!",
-                            style: Theme.of(context).textTheme.headline4,
-                            textAlign: TextAlign.center),
-                        SizedBox(height: 2.h),
-                        Text(
-                            "You want to cross post to hive but you already have posted something within the last 5 minutes.",
-                            style: Theme.of(context).textTheme.bodyText1,
-                            textAlign: TextAlign.center),
-                        Text(
-                            "Please wait for the 5 min hive cooldown to expire and try it again.",
-                            style: Theme.of(context).textTheme.bodyText1,
-                            textAlign: TextAlign.center),
-                        SizedBox(height: 3.h),
-                        Text(
-                            "This cooldown is a property coming from the hive blockchain. We just want to avoid upload errors when you crosspost.",
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline6!
-                                .copyWith(color: globalRed),
-                            textAlign: TextAlign.center),
-                        SizedBox(height: 2.h),
-                        InkWell(
-                            child: Container(
-                              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                              decoration: BoxDecoration(
-                                color: globalRed,
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20.0),
-                                    bottomRight: Radius.circular(20.0)),
-                              ),
-                              child: Text(
-                                "Okay thanks!",
-                                style: Theme.of(context).textTheme.headline4,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              FocusScope.of(context).unfocus();
-                            }),
-                      ],
-                    ),
-                  ),
-                  titleWidget: Center(
-                    child: FaIcon(
-                      FontAwesomeIcons.cloudUploadAlt,
-                      size: 8.h,
-                    ),
-                  ),
-                  callbackOK: () {},
-                  titleWidgetPadding: 10.w,
-                  titleWidgetSize: 10.w),
-            );
-          } else {
-            _pickedFile = await _picker.pickVideo(
-                source: ImageSource.camera, maxDuration: Duration(seconds: 60));
-          }
-          if (_pickedFile != null) {
-            showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => PopUpDialogWithTitleLogo(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Amazing!",
-                            style: Theme.of(context).textTheme.headline4,
-                            textAlign: TextAlign.center),
-                        SizedBox(height: 2.h),
-                        Text(
-                            "Your moment is uploading right now and this could take some time...",
-                            style: Theme.of(context).textTheme.bodyText1,
-                            textAlign: TextAlign.center),
-                        Text(
-                            "It is safe to browse DTube Go in the meantime. Go share some feedback and votes on other videos of the community.",
-                            style: Theme.of(context).textTheme.bodyText1,
-                            textAlign: TextAlign.center),
-                        SizedBox(height: 3.h),
-                        Text(
-                            "Make sure to not close the app or lock your screen until the upload is finished!",
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline6!
-                                .copyWith(color: globalRed),
-                            textAlign: TextAlign.center),
-                        SizedBox(height: 2.h),
-                        InkWell(
-                            child: Container(
-                              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                              decoration: BoxDecoration(
-                                color: globalRed,
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20.0),
-                                    bottomRight: Radius.circular(20.0)),
-                              ),
-                              child: Text(
-                                "Allright!",
-                                style: Theme.of(context).textTheme.headline4,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            }),
-                      ],
-                    ),
-                  ),
-                  titleWidget: Center(
-                    child: FaIcon(
-                      FontAwesomeIcons.cloudUploadAlt,
-                      size: 8.h,
-                    ),
-                  ),
-                  callbackOK: () {},
-                  titleWidgetPadding: 10.w,
-                  titleWidgetSize: 10.w),
-            );
-          }
-        } else {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: Text('not enough free storage',
-                  style: Theme.of(context).textTheme.headline1),
-              content: Container(
-                height: MediaQuery.of(context).size.height / 5,
-                child: Column(
-                  children: [
-                    Text(
-                        "In order to record a video with the app please make sure to have enough free internal storage on your device.",
-                        style: Theme.of(context).textTheme.bodyText1),
-                    SizedBox(
-                      height: 18,
-                    ),
-                    Text(
-                        "We have set the minimum required free space to ${AppConfig.minFreeSpaceRecordVideoInMB / 1000} GB internal storage.",
-                        style: Theme.of(context).textTheme.bodyText1)
-                  ],
+    double? _freeSpace = await DiskSpace.getFreeDiskSpace;
+    if (_freeSpace! > AppConfig.minFreeSpaceRecordVideoInMB) {
+      int _hiveCooldown = await sec.getSecondsUntilHiveCooldownEnds();
+      if (_uploadData.crossPostToHive && _hiveCooldown > 0) {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => HivePostCooldownDetectedDialog(
+            cooldown: _hiveCooldown,
+          ),
+        );
+      } else {
+        _pickedFile = await _picker.pickVideo(
+            source: ImageSource.camera, maxDuration: Duration(seconds: 60));
+      }
+      if (_pickedFile != null) {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => UploadStartedDialog(),
+        );
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('not enough free storage',
+              style: Theme.of(context).textTheme.headline1),
+          content: Container(
+            height: MediaQuery.of(context).size.height / 5,
+            child: Column(
+              children: [
+                Text(
+                    "In order to record a video with the app please make sure to have enough free internal storage on your device.",
+                    style: Theme.of(context).textTheme.bodyText1),
+                SizedBox(
+                  height: 18,
                 ),
-              ),
-              actions: [
-                new ElevatedButton(
-                  child: Text("Ok"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+                Text(
+                    "We have set the minimum required free space to ${AppConfig.minFreeSpaceRecordVideoInMB / 1000} GB internal storage.",
+                    style: Theme.of(context).textTheme.bodyText1)
               ],
             ),
-          );
-        }
-      }
+          ),
+          actions: [
+            new ElevatedButton(
+              child: Text("Ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
     }
 
     if (_pickedFile != null) {
-      uploadMoment(
+      saveAndUploadMoment(
           _pickedFile.path,
           widget.currentVT.floor(),
           double.parse(widget.momentsVotingWeight),
@@ -356,27 +253,48 @@ class _MomentsUploadButtontate extends State<MomentsUploadButton> {
           );
         }
 
-        return GestureDetector(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ShadowedIcon(
-                  size: 10.w,
-                  icon: FontAwesomeIcons.eye,
-                  color: Colors.white,
-                  shadowColor: Colors.black),
-              ShadowedIcon(
-                  size: 5.w,
-                  icon: FontAwesomeIcons.plus,
-                  color: Colors.white,
-                  shadowColor: Colors.black)
-            ],
+        return Visibility(
+          visible: globals.keyPermissions.contains(4),
+          child: GestureDetector(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: widget.size * 0.9,
+                  height: widget.size,
+                  child: Stack(
+                    children: [
+                      ShadowedIcon(
+                          size: widget.size,
+                          icon: FontAwesomeIcons.podcast,
+                          color: globalAlmostWhite,
+                          shadowColor: Colors.black),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: ShadowedIcon(
+                            size: widget.size / 2,
+                            icon: FontAwesomeIcons.circlePlus,
+                            color: globalAlmostWhite,
+                            shadowColor: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 2.w),
+                  child: OverlayText(
+                    text: widget.text,
+                    sizeMultiply: 1.5,
+                  ),
+                )
+              ],
+            ),
+            onTap: () async {
+              widget.clickedCallback();
+              getFile(widget.currentVT.floor(), widget.defaultVotingWeight);
+            },
           ),
-          onTap: () async {
-            widget.clickedCallback();
-            getFile(true, true, widget.currentVT.floor(),
-                widget.defaultVotingWeight);
-          },
         );
       },
     );

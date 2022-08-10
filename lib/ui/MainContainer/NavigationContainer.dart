@@ -1,5 +1,13 @@
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
+import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
+import 'package:dtube_go/ui/pages/settings/HiveSignerForm.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
+import 'package:dtube_go/ui/pages/Explore/GenreBase.dart';
+import 'package:dtube_go/ui/pages/upload/UploadPresetSelection.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -7,28 +15,21 @@ import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsTabContainer.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
-
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-import 'package:dtube_go/ui/MainContainer/BalanceOverview.dart';
-import 'package:dtube_go/ui/MainContainer/MenuButton.dart';
-import 'package:dtube_go/ui/pages/Explore/ExploreTabContainer.dart';
+import 'package:dtube_go/ui/MainContainer/Widgets/BalanceOverview.dart';
+import 'package:dtube_go/ui/MainContainer/Widgets/MenuButton.dart';
 
 import 'package:dtube_go/ui/pages/feeds/FeedTabContainer.dart';
 import 'package:dtube_go/ui/pages/notifications/NotificationButton.dart';
-
-import 'package:dtube_go/ui/pages/upload/uploaderTabContainer.dart';
+import 'package:dtube_go/ui/pages/upload/UploaderMainPage.dart';
 import 'package:dtube_go/ui/pages/user/User.dart';
-
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/widgets/system/customSnackbar.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -50,61 +51,65 @@ class _NavigationContainerState extends State<NavigationContainer> {
   // list of navigation buttons
   List<BottomNavigationBarItem> navBarItems = [
     BottomNavigationBarItem(
-      label: '',
+      label: 'Feeds',
       icon: Center(
-        child: new ShadowedIcon(
+        child: new BorderedIcon(
           icon: FontAwesomeIcons.alignJustify,
-          color: Colors.white,
-          shadowColor: Colors.black,
-          size: globalIconSizeMedium,
+          color: globalAlmostWhite,
+          borderColor: Colors.black,
+          size: globalIconSizeBig,
         ),
       ),
     ),
     BottomNavigationBarItem(
-      label: '',
+      label: 'Explore',
       icon: Center(
-        child: new ShadowedIcon(
+        child: new BorderedIcon(
           icon: FontAwesomeIcons.globeAfrica,
-          color: Colors.white,
-          shadowColor: Colors.black,
-          size: globalIconSizeMedium,
+          color: globalAlmostWhite,
+          borderColor: Colors.black,
+          size: globalIconSizeBig,
         ),
       ),
     ),
     BottomNavigationBarItem(
-      label: '',
+      label: 'Create',
       icon: Center(
         child: BlocBuilder<AppStateBloc, AppState>(builder: (context, state) {
           if (state is UploadStartedState) {
-            return DTubeLogoPulseWave(size: 10.w, progressPercent: 10);
+            return DTubeLogoPulseWave(
+                size: globalIconSizeBig, progressPercent: 10);
           } else if (state is UploadProcessingState) {
             return DTubeLogoPulseWave(
-                size: 10.w, progressPercent: state.progressPercent);
+                size: globalIconSizeBig,
+                progressPercent: state.progressPercent);
           } else if (state is UploadFinishedState) {
             return Center(
-              child: new ShadowedIcon(
+              child: new BorderedIcon(
                 icon: FontAwesomeIcons.check,
                 color: Colors.green,
-                shadowColor: Colors.black,
-                size: globalIconSizeMedium,
+                borderColor: Colors.black,
+                size: globalIconSizeBig,
               ),
             );
           } else if (state is UploadFailedState) {
             return Center(
-              child: new ShadowedIcon(
+              child: new BorderedIcon(
                 icon: FontAwesomeIcons.times,
                 color: globalRed,
-                shadowColor: Colors.black,
-                size: globalIconSizeMedium,
+                borderColor: Colors.black,
+                size: globalIconSizeBig,
               ),
             );
           } else {
             return Center(
-              child: new ShadowedIcon(
+              child: new BorderedIcon(
                 icon: FontAwesomeIcons.plus,
-                color: Colors.white,
-                shadowColor: Colors.black,
-                size: globalIconSizeMedium,
+                color: globals.keyPermissions.contains(4)
+                    ? globalAlmostWhite
+                    : Colors.grey,
+                borderColor: Colors.black,
+                size: globalIconSizeBig,
               ),
             );
           }
@@ -112,29 +117,26 @@ class _NavigationContainerState extends State<NavigationContainer> {
       ),
     ),
     BottomNavigationBarItem(
-      label: '',
+      label: 'Moments',
       icon: Center(
-        child: new ShadowedIcon(
-          icon: FontAwesomeIcons.eye,
-          color: Colors.white,
-          shadowColor: Colors.black,
-          size: globalIconSizeMedium,
+        child: new BorderedIcon(
+          icon: FontAwesomeIcons.podcast,
+          color: globalAlmostWhite,
+          borderColor: Colors.black,
+          size: globalIconSizeBig,
         ),
       ),
     ),
     BottomNavigationBarItem(
-      label: '',
-      icon: CircleAvatar(
-        backgroundColor: Colors.white,
-        radius: globalIconSizeMedium * 0.6,
-        child: AccountAvatarBase(
-            username: "you",
-            avatarSize: globalIconSizeMedium,
-            showVerified: false,
-            showName: false,
-            width: globalIconSizeMedium,
-            height: globalIconSizeMedium),
-      ),
+      label: 'Profile',
+      icon: globals.keyPermissions.isEmpty
+          ? FaIcon(FontAwesomeIcons.userSecret)
+          : AccountIconBase(
+              avatarSize: globalIconSizeBig + 2.w,
+              showVerified: false,
+              username: "you",
+              showBorder: true,
+            ),
     ),
   ];
 
@@ -155,6 +157,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           //the return value will be from "Yes" or "No" options
           context: context,
           builder: (context) => PopUpDialogWithTitleLogo(
+            showTitleWidget: true,
             callbackOK: () {},
             child: SingleChildScrollView(
                 child: Column(
@@ -210,6 +213,72 @@ class _NavigationContainerState extends State<NavigationContainer> {
     _firstTimeLogin = await sec.getFirstLogin();
   }
 
+  void revalidateHiveSigner() async {
+    String _hivesignerUsername = await sec.getHiveSignerUsername();
+    String _hivesignerAccessToken = await sec.getHiveSignerAccessToken();
+    String _hivesignerAccessTokenExpiresIn =
+        await sec.getHiveSignerAccessTokenExpiresIn();
+    String _hivesignerAccessTokenRequestedOn =
+        await sec.getHiveSignerAccessTokenRequestedOn();
+    // uncomment to invalidate hivesigner connection
+    // await sec.persistHiveSignerData(
+    //     _hivesignerAccessToken,
+    //     _hivesignerAccessTokenExpiresIn,
+    //     "2022-01-26 00:02:37.965113",
+    //     _hivesignerUsername);
+    // check if set
+    if (_hivesignerAccessToken != '') {
+      DateTime requestDate = DateTime.parse(_hivesignerAccessTokenRequestedOn);
+      if (DateTime.now().isAfter(requestDate.add(
+          Duration(seconds: int.parse(_hivesignerAccessTokenExpiresIn))))) {
+        showDialog(
+            context: context,
+            builder: (context) => PopUpDialogWithTitleLogo(
+                  showTitleWidget: true,
+                  titleWidget: Center(
+                      child: FaIcon(
+                    FontAwesomeIcons.hive,
+                    size: 18.w,
+                    color: globalRed,
+                  )),
+                  titleWidgetPadding: 10.h,
+                  titleWidgetSize: 20.w,
+                  callbackOK: () {},
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text("Hivesigner outdated",
+                              style: Theme.of(context).textTheme.headline4),
+                          Padding(
+                            padding: EdgeInsets.only(top: 1.h),
+                            child: Text(
+                                "The authorization for your hive account is not valid anymore. This happens automatically after 7 days for security reasons. Please renew the authorization by clicking on the button below.",
+                                style: Theme.of(context).textTheme.bodyText1),
+                          ),
+                          BlocProvider<HivesignerBloc>(
+                            create: (BuildContext context) => HivesignerBloc(
+                                repository: HivesignerRepositoryImpl()),
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 2.h),
+                              child: HiveSignerForm(
+                                username: _hivesignerUsername,
+                                validCallback: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ));
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -221,10 +290,12 @@ class _NavigationContainerState extends State<NavigationContainer> {
       ),
       BlocProvider(
         create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
-        child: ExploreMainPage(),
+        child: GenreBase(),
       ),
-      UploaderMainPage(
-        callback: uploaderCallback,
+      // UploaderMainPage(
+      UploadPresetSelection(
+        //callback: uploaderCallback,
+        uploaderCallback: uploaderCallback,
         key: UniqueKey(),
       ),
       MultiBlocProvider(
@@ -247,6 +318,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
       ),
     ];
     isFirstLogin();
+    revalidateHiveSigner();
   }
 
   @override
@@ -265,28 +337,44 @@ class _NavigationContainerState extends State<NavigationContainer> {
           titleSpacing: 0,
           title: Align(
             alignment: Alignment.topRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                GestureDetector(
-                    child: BalanceOverviewBase(),
-                    onTap: () {
-                      BlocProvider.of<UserBloc>(context).add(FetchDTCVPEvent());
-                    }),
-                BlocProvider<NotificationBloc>(
-                  create: (context) => NotificationBloc(
-                      repository: NotificationRepositoryImpl()),
-                  child: NotificationButton(iconSize: globalIconSizeMedium),
-                ),
-                buildMainMenuSpeedDial(context)
-              ],
-            ),
+            child: globals.keyPermissions.isEmpty
+                ? Padding(
+                    padding: EdgeInsets.only(right: 2.w),
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          BlocProvider.of<AuthBloc>(context)
+                              .add(SignOutEvent(context: context));
+                          //do stuff
+                        },
+                        child: Text(
+                          "Join / Login",
+                          style: Theme.of(context).textTheme.headline6,
+                        )),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                          child: BalanceOverviewBase(),
+                          onTap: () {
+                            BlocProvider.of<UserBloc>(context)
+                                .add(FetchDTCVPEvent());
+                          }),
+                      BlocProvider<NotificationBloc>(
+                        create: (context) => NotificationBloc(
+                            repository: NotificationRepositoryImpl()),
+                        child:
+                            NotificationButton(iconSize: globalIconSizeMedium),
+                      ),
+                      buildMainMenuSpeedDial(context)
+                    ],
+                  ),
           ),
         ),
         bottomNavigationBar: Container(
-          height: globalIconSizeMedium * 2.5,
+          height: globalIconSizeBig * 2.4,
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: globalAlmostWhite,
               gradient: LinearGradient(
                   begin: FractionalOffset.topCenter,
                   end: FractionalOffset.bottomCenter,
@@ -298,90 +386,140 @@ class _NavigationContainerState extends State<NavigationContainer> {
                     0.0,
                     1.0
                   ])),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            items: navBarItems,
-            currentIndex: _currentIndex,
-            onTap: (index) {
-              setState(() {
-                if (index == 2) {
-                  // if the user navigated to the uploader screen
-                  // reset uploader page
-                  _screens.removeAt(2);
-                  _screens.insert(
-                      2,
-                      new UploaderMainPage(
-                        callback: uploaderCallback,
-                        key: UniqueKey(),
-                      ));
-                }
-                // if the user navigated to the moments page
-                if (index == 3) {
-                  // reset moments page and set play = true
+          child: Center(
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              showUnselectedLabels: false,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              items: navBarItems,
+              selectedItemColor: globalAlmostWhite,
 
-                  _screens.removeAt(3);
+              // iconSize: globalIconSizeBig,
+              currentIndex: _currentIndex,
+              onTap: (index) {
+                setState(() {
+                  // if the user navigated to the moments page
+                  if (index == 3) {
+                    // reset moments page and set play = true
 
-                  _screens.insert(
-                    3,
-                    new MultiBlocProvider(
-                        providers: [
-                          BlocProvider(
-                              create: (context) =>
-                                  FeedBloc(repository: FeedRepositoryImpl())),
-                        ],
-                        child: MomentsPage(
-                          key: UniqueKey(),
-                          play: true,
-                        )),
-                    //  index = index;
-                  );
-                } else {
-                  // if the user navigated to any other screen than the moments page
-                  // reset moments page and set play = false
-                  _screens.removeAt(3);
+                    _screens.removeAt(3);
 
-                  _screens.insert(
+                    _screens.insert(
                       3,
-                      MomentsPage(
-                        key: UniqueKey(),
-                        play: false,
-                      ));
-                }
-                // if pressed menu button is at the upload button position
-                if (index == 2) {
-                  // if there is a current background upload running
-                  //  show snackbar and do not navigate to the upload screen
-                  if (BlocProvider.of<AppStateBloc>(context).state
-                          is UploadStartedState ||
-                      BlocProvider.of<AppStateBloc>(context).state
-                          is UploadProcessingState) {
-                    showCustomFlushbarOnError(
-                        "please wait until upload is finished", context);
+                      new MultiBlocProvider(
+                          providers: [
+                            BlocProvider(
+                                create: (context) =>
+                                    FeedBloc(repository: FeedRepositoryImpl())),
+                          ],
+                          child: MomentsPage(
+                            key: UniqueKey(),
+                            play: true,
+                          )),
+                      //  index = index;
+                    );
+                  } else {
+                    // if the key allows to upload OR it is not the posting screen
+                    if (globals.keyPermissions.contains(4) || index != 2) {
+                      // if the user navigated to any other screen than the moments page
+                      // reset moments page and set play = false
+                      _screens.removeAt(3);
+
+                      _screens.insert(
+                          3,
+                          MomentsPage(
+                            key: UniqueKey(),
+                            play: false,
+                          ));
+                    }
                   }
-                  // if the most recent background upload task is finished
-                  // reset UploadState and navigate to the upload screen
-                  if (BlocProvider.of<AppStateBloc>(context).state
-                          is UploadFinishedState ||
-                      BlocProvider.of<AppStateBloc>(context).state
-                          is UploadFailedState) {
-                    BlocProvider.of<AppStateBloc>(context).add(
-                        UploadStateChangedEvent(
-                            uploadState: UploadInitialState()));
-                    _currentIndex = index;
+                  // if pressed menu button is at the upload button position
+                  if (index == 2) {
+                    if (globals.keyPermissions.contains(4)) {
+                      // if there is a current background upload running
+                      //  show snackbar and do not navigate to the upload screen
+                      if (BlocProvider.of<AppStateBloc>(context).state
+                              is UploadStartedState ||
+                          BlocProvider.of<AppStateBloc>(context).state
+                              is UploadProcessingState) {
+                        showCustomFlushbarOnError(
+                            "please wait until upload is finished", context);
+                      }
+                      // if the most recent background upload task is finished
+                      // reset UploadState and navigate to the upload screen
+                      if (BlocProvider.of<AppStateBloc>(context).state
+                              is UploadFinishedState ||
+                          BlocProvider.of<AppStateBloc>(context).state
+                              is UploadFailedState) {
+                        BlocProvider.of<AppStateBloc>(context).add(
+                            UploadStateChangedEvent(
+                                uploadState: UploadInitialState()));
+                        _screens.removeAt(2);
+                        _screens.insert(
+                            2,
+                            new
+                            //UploaderMainPage(
+                            //callback: uploaderCallback,
+                            UploadPresetSelection(
+                              uploaderCallback: uploaderCallback,
+                              key: UniqueKey(),
+                            ));
+                        _currentIndex = index;
+                      }
+                      // if there is no background upload task running or recently finished
+                      if (BlocProvider.of<AppStateBloc>(context).state
+                          is UploadInitialState) {
+                        // navigate to the uploader screen
+                        // if the user navigated to the uploader screen
+                        // reset uploader page
+                        _screens.removeAt(2);
+                        _screens.insert(
+                            2,
+                            new
+                            //UploaderMainPage(
+                            //callback: uploaderCallback,
+                            UploadPresetSelection(
+                              uploaderCallback: uploaderCallback,
+                              key: UniqueKey(),
+                            ));
+
+                        _currentIndex = index;
+                      }
+                    } else {
+                      showCustomFlushbarOnError(
+                          "you need to be signed in to upload content",
+                          context);
+                    }
+                  } else {
+                    if (index == 4) {
+                      // if the selected page is the profile page
+                      if (globals.keyPermissions.isEmpty) {
+                        showCustomFlushbarOnError(
+                            "you need to be signed in to access your profile",
+                            context);
+                      } else {
+                        _screens.removeAt(4);
+                        _screens.insert(
+                          4,
+                          BlocProvider(
+                            create: (context) =>
+                                UserBloc(repository: UserRepositoryImpl()),
+                            child: UserPage(
+                              ownUserpage: true,
+                              //key: UniqueKey(),
+                            ),
+                          ),
+                        );
+                        _currentIndex = index;
+                      }
+                    } else {
+                      _currentIndex = index;
+                    }
                   }
-                  // if there is no background upload task running or recently finished
-                  if (BlocProvider.of<AppStateBloc>(context).state
-                      is UploadInitialState) {
-                    // navigate to the uploader screen
-                    _currentIndex = index;
-                  }
-                } else {
-                  _currentIndex = index;
-                }
-              });
-            },
+                });
+              },
+            ),
           ),
         ),
         body:

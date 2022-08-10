@@ -1,4 +1,7 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:flutter_animator/flutter_animator.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
@@ -6,12 +9,20 @@ import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 
 class CollapsedDescription extends StatefulWidget {
-  const CollapsedDescription({
-    Key? key,
-    required this.description,
-  }) : super(key: key);
+  CollapsedDescription(
+      {Key? key,
+      required this.description,
+      required this.startCollapsed,
+      this.showOpenLink,
+      this.postAuthor,
+      this.postLink})
+      : super(key: key);
 
   final String description;
+  bool startCollapsed;
+  bool? showOpenLink;
+  String? postAuthor;
+  String? postLink;
 
   @override
   _CollapsedDescriptionState createState() => _CollapsedDescriptionState();
@@ -21,6 +32,7 @@ class _CollapsedDescriptionState extends State<CollapsedDescription> {
   @override
   Widget build(BuildContext context) {
     return ExpandableNotifier(
+      initialExpanded: !widget.startCollapsed,
       child: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
         child: ScrollOnExpand(
@@ -56,25 +68,53 @@ class _CollapsedDescriptionState extends State<CollapsedDescription> {
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
+                  widget.showOpenLink != null &&
+                          widget.showOpenLink! &&
+                          widget.postAuthor != null &&
+                          widget.postLink != null
+                      ? InputChip(
+                          label: Text(
+                            "open proposal video",
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          avatar:
+                              FaIcon(FontAwesomeIcons.arrowRightFromBracket),
+                          onSelected: (value) {
+                            navigateToPostDetailPage(
+                                context,
+                                widget.postAuthor!,
+                                widget.postLink!,
+                                "none",
+                                false,
+                                () {});
+                          },
+                        )
+                      : SizedBox(width: 0),
                   Builder(
                     builder: (context) {
                       var controller =
                           ExpandableController.of(context, required: true)!;
-                      return FadeIn(
-                        preferences:
-                            AnimationPreferences(offset: Duration(seconds: 1)),
-                        child: InputChip(
-                          label: Text(
-                            controller.expanded ? "collapse" : "read more",
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                          onPressed: () {
-                            controller.toggle();
-                          },
-                        ),
-                      );
+                      return globals.disableAnimations
+                          ? InputChip(
+                              label: Text(
+                                controller.expanded ? "collapse" : "read more",
+                                style: Theme.of(context).textTheme.bodyText2,
+                              ),
+                              onPressed: () {
+                                controller.toggle();
+                              },
+                            )
+                          : InputChip(
+                              label: Text(
+                                controller.expanded ? "collapse" : "read more",
+                                style: Theme.of(context).textTheme.bodyText2,
+                              ),
+                              onPressed: () {
+                                controller.toggle();
+                              },
+                            );
                     },
                   ),
                 ],

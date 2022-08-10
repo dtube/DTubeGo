@@ -1,3 +1,4 @@
+import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/MomentsItem.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/controller/MomentsController.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -226,7 +227,7 @@ class MomentsViewState extends State<MomentsView>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: globalAlmostWhite,
       child: Stack(
         children: <Widget>[
           _currentView,
@@ -236,16 +237,20 @@ class MomentsViewState extends State<MomentsView>
               bottom: widget.inline ? false : true,
               // we use SafeArea here for notched and bezeles phones
               child: Container(
+                height: 100.h,
                 padding: EdgeInsets.symmetric(
                   horizontal: 5.w,
                   vertical: 1,
                 ),
-                child: PageBar(
-                  widget.momentsItems
-                      .map((it) => PageData(it!.duration, it.shown))
-                      .toList(),
-                  this._currentAnimation,
-                  key: UniqueKey(),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: PageBar(
+                    widget.momentsItems
+                        .map((it) => PageData(it!.duration, it.shown))
+                        .toList(),
+                    this._currentAnimation,
+                    key: UniqueKey(),
+                  ),
                 ),
               ),
             ),
@@ -341,11 +346,11 @@ class StoryProgressIndicator extends StatelessWidget {
         this.indicatorHeight,
       ),
       foregroundPainter: IndicatorOval(
-        Colors.white.withOpacity(0.8),
+        globalAlmostWhite.withOpacity(0.8),
         this.value,
       ),
       painter: IndicatorOval(
-        Colors.white.withOpacity(0.4),
+        globalAlmostWhite.withOpacity(0.4),
         1.0,
       ),
     );

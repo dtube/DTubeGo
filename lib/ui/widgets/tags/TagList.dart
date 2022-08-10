@@ -1,21 +1,11 @@
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/pages/feeds/cards/PostListCardLarge.dart';
 import 'package:dtube_go/utils/friendlyTimestamp.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'dart:async';
-
 import 'package:dtube_go/bloc/search/search_bloc_full.dart';
-
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-
-import 'package:dtube_go/ui/pages/Explore/ResultCards/PostResultCard.dart';
-import 'package:dtube_go/ui/pages/Explore/ResultCards/UserResultCard.dart';
-
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
@@ -38,6 +28,11 @@ class TagListState extends State<TagList> {
   String? _defaultPostVotingWeight;
   String? _defaultPostVotingTip;
 
+  String? _fixedDownvoteActivated;
+  String? _fixedDownvoteWeight;
+  bool? _autoPauseVideoOnPopup;
+  bool? _disableAnimations;
+
   Future<bool> getSettings() async {
     _hiddenMode = await sec.getShowHidden();
     _nsfwMode = await sec.getNSFW();
@@ -45,6 +40,10 @@ class TagListState extends State<TagList> {
     _defaultCommentVotingWeight = await sec.getDefaultVoteComments();
     _defaultPostVotingWeight = await sec.getDefaultVote();
     _defaultPostVotingTip = await sec.getDefaultVoteTip();
+    _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
+    _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
+    _autoPauseVideoOnPopup = await sec.getVideoAutoPause() == "true";
+    _disableAnimations = await sec.getDisableAnimations() == "true";
 
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
@@ -80,6 +79,8 @@ class TagListState extends State<TagList> {
             return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: true,
+                backgroundColor: globalBGColor,
+                elevation: 0,
               ),
               body: Padding(
                 padding: EdgeInsets.only(top: 2.h),
@@ -92,23 +93,26 @@ class TagListState extends State<TagList> {
                           "videos with the tag \"${widget.tagName}\" of the last 90 days: ",
                           style: Theme.of(context).textTheme.headline5,
                         ),
-                        BlocBuilder<FeedBloc, FeedState>(
-                            builder: (context, state) {
-                          if (state is FeedInitialState ||
-                              state is FeedLoadingState) {
-                            return buildLoading();
-                          } else if (state is FeedLoadedState) {
-                            hashtagResults = state.feed;
-                            BlocProvider.of<FeedBloc>(context).isFetching =
-                                false;
-                            return buildResultsListForTagResults(
-                                hashtagResults);
-                          } else if (state is FeedErrorState) {
-                            return buildErrorUi(state.message);
-                          } else {
-                            return buildErrorUi('');
-                          }
-                        })
+                        Padding(
+                          padding: EdgeInsets.only(top: 2.h),
+                          child: BlocBuilder<FeedBloc, FeedState>(
+                              builder: (context, state) {
+                            if (state is FeedInitialState ||
+                                state is FeedLoadingState) {
+                              return buildLoading();
+                            } else if (state is FeedLoadedState) {
+                              hashtagResults = state.feed;
+                              BlocProvider.of<FeedBloc>(context).isFetching =
+                                  false;
+                              return buildResultsListForTagResults(
+                                  hashtagResults);
+                            } else if (state is FeedErrorState) {
+                              return buildErrorUi(state.message);
+                            } else {
+                              return buildErrorUi('');
+                            }
+                          }),
+                        )
                       ],
                     ),
                   ),
@@ -121,17 +125,17 @@ class TagListState extends State<TagList> {
 
   Widget buildLoading() {
     return Container(
-      height: 400,
+      height: 80.h,
       child: DtubeLogoPulseWithSubtitle(
         subtitle: "loading posts..",
-        size: 30.w,
+        size: 20.w,
       ),
     );
   }
 
   Widget buildBlank() {
     return Container(
-      height: 400,
+      height: 80.h,
       child: SizedBox(height: 0),
     );
   }
@@ -183,6 +187,9 @@ class TagListState extends State<TagList> {
               upvotesCount: searchResults[pos].upvotes!.length,
               videoSource: searchResults[pos].videoSource,
               videoUrl: searchResults[pos].videoUrl,
+              fixedDownvoteActivated: _fixedDownvoteActivated!,
+              fixedDownvoteWeight: _fixedDownvoteWeight!,
+              autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
             );
           }),
     );

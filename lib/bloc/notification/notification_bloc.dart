@@ -9,27 +9,23 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   NotificationRepository repository;
 
   NotificationBloc({required this.repository})
-      : super(NotificationInitialState());
-
-  // @override
-
-  // NotificationState get initialState => NotificationInitialState();
-
-  @override
-  Stream<NotificationState> mapEventToState(NotificationEvent event) async* {
-    String? _applicationUser = await sec.getUsername();
-    String _avalonApiNode = await sec.getNode();
-    String _tsLastNotificationSeen = await sec.getLastNotification();
-    if (event is UpdateLastNotificationSeen) {
+      : super(NotificationInitialState()) {
+    on<UpdateLastNotificationSeen>((event, emit) async {
+      String? _applicationUser = await sec.getUsername();
+      String _avalonApiNode = await sec.getNode();
+      String _tsLastNotificationSeen = await sec.getLastNotification();
       List<AvalonNotification> notifications = await repository
           .getNotifications(_avalonApiNode, [], _applicationUser);
 
       sec.persistNotificationSeen(notifications.first.ts);
-      yield LastSeenUpdated();
-    }
+      emit(LastSeenUpdated());
+    });
 
-    if (event is FetchNotificationsEvent) {
-      yield NotificationLoadingState();
+    on<FetchNotificationsEvent>((event, emit) async {
+      String? _applicationUser = await sec.getUsername();
+      String _avalonApiNode = await sec.getNode();
+      String _tsLastNotificationSeen = await sec.getLastNotification();
+      emit(NotificationLoadingState());
       try {
         List<AvalonNotification> notifications =
             await repository.getNotifications(
@@ -42,15 +38,14 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
             }
           }
         }
-
-        yield NotificationLoadedState(
+        emit(NotificationLoadedState(
             notifications: notifications,
-            username: "you",
+            username: _applicationUser,
             tsLastNotificationSeen: int.parse(_tsLastNotificationSeen),
-            newNotificationsCount: _newNotifications);
+            newNotificationsCount: _newNotifications));
       } catch (e) {
-        yield NotificationErrorState(message: e.toString());
+        emit(NotificationErrorState(message: e.toString()));
       }
-    }
+    });
   }
 }

@@ -22,7 +22,6 @@ abstract class HivesignerRepository {
       String dtubeuser);
 }
 
-// TODO: error handling
 class HivesignerRepositoryImpl implements HivesignerRepository {
   @override
   Future<bool> requestNewAccessToken(String username) async {
@@ -65,6 +64,7 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
   @override
   Future<bool> broadcastPostToHive(String transactionBody) async {
     String _accessToken = await sec.getHiveSignerAccessToken();
+
     final headers = {
       'Authorization': _accessToken,
       'Content-Type': 'application/json',
@@ -110,6 +110,20 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
       String tag,
       String dtubeuser) async {
     String _hiveUsername = await sec.getHiveSignerUsername();
+    String _hiveCommunity = await sec.getHiveSignerDefaultCommunity();
+    String _defaultHiveTags = await sec.getHiveSignerDefaultTags();
+    List<String> _hiveTags = ["dtube", tag];
+    if (_defaultHiveTags != "") {
+      // _hiveTags = ",\"" + _hiveTags.replaceAll(",", "\",\"") + "\"";
+      for (var t in _defaultHiveTags.split(",")) {
+        {
+          if (!_hiveTags.contains(t)) {
+            _hiveTags.add(t);
+          }
+        }
+      }
+    }
+    String _hiveTagsString = "\"" + _hiveTags.join("\",\"") + "\"";
     String _hiveBody = genHiveBody(_hiveUsername, permlink, body, thumbnailUrl,
         videoUrl, storageType, dtubeuser);
 
@@ -119,15 +133,15 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
           "comment",
           {
             "parent_author": "",
-            "parent_permlink": 'hive-196037',
+            "parent_permlink": _hiveCommunity,
 
             "author": _hiveUsername.replaceAll(' ', ''),
-            "category": 'hive-196037', // dtube community
+            "category": _hiveCommunity, // dtube community
             "permlink": permlink,
             "title": title,
             "body": _hiveBody,
             "json_metadata":
-                "{\"tags\":[\"dtube\",\"${tag}\"],\"app\":\"dtubemobile\/1.0\"}"
+                "{\"tags\":[${_hiveTagsString}],\"app\":\"dtubemobile\/1.0\"}"
           }
         ],
         [

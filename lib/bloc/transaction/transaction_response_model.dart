@@ -47,6 +47,10 @@ class TxData {
   Map<String, dynamic>? jsonmetadata;
   String? pa;
   String? pp;
+  String? id;
+  String? pub;
+  List<int>? types;
+  String? name;
 
   TxData(
       {this.author,
@@ -61,7 +65,11 @@ class TxData {
       this.jsonmetadata,
       this.pp,
       this.pa,
-      this.burn});
+      this.burn,
+      this.id,
+      this.pub,
+      this.types,
+      this.name});
 
   TxData.fromJson(Map<String, dynamic> json) {
     author = json['author'];
@@ -77,6 +85,10 @@ class TxData {
     pa = json['pa'];
     pp = json['pp'];
     burn = int.parse(json['burn']);
+    id = json['id'];
+    pub = json['pub'];
+    types = json['types'];
+    name = json['name'];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -122,6 +134,21 @@ class TxData {
       data['burn'] = this.burn;
     }
 
+    if (this.id != null) {
+      data['id'] = this.id;
+    }
+
+    if (this.pub != null) {
+      data['pub'] = this.pub;
+    }
+
+    if (this.types != null) {
+      data['types'] = this.types;
+    }
+    if (this.name != null) {
+      data['name'] = this.name;
+    }
+
     return data;
   }
 }
@@ -157,6 +184,8 @@ class UploadData {
   bool uploaded;
   bool crossPostToHive;
 
+  String? ipfsGateway;
+
   UploadData(
       {required this.link,
       required this.parentAuthor,
@@ -185,5 +214,61 @@ class UploadData {
       required this.thumbnail640Hash,
       required this.thumbnail210Hash,
       required this.uploaded,
-      required this.crossPostToHive});
+      required this.crossPostToHive,
+      this.ipfsGateway});
+}
+
+class DAOTransaction {
+  String? sender;
+  int? ts;
+  String? signature;
+  String? hash;
+  int type;
+  DAOTxData data;
+
+  DAOTransaction({required this.type, required this.data});
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> txdata = new Map<String, dynamic>();
+    txdata['type'] = this.type;
+    txdata['data'] = this.data.toJson();
+
+    if (this.sender != null) {
+      txdata['sender'] = this.sender;
+    }
+
+    if (this.ts != null) {
+      txdata['ts'] = this.ts;
+    }
+
+    if (this.signature != null) {
+      txdata['signature'] = this.signature;
+    }
+
+    if (this.hash != null) {
+      txdata['hash'] = this.hash;
+    }
+
+    return txdata;
+  }
+}
+
+class DAOTxData {
+  int? id;
+  int? amount;
+
+  DAOTxData({this.id, this.amount});
+
+  DAOTxData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    amount = json['amount'];
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['id'] = this.id;
+    data['amount'] = this.amount;
+
+    return data;
+  }
 }

@@ -139,10 +139,16 @@ class FeedItem {
       videoUrl = "";
     }
     if (jsonString?.thumbnailUrl != "" && jsonString?.thumbnailUrl != null) {
-      thumbUrl = jsonString!.thumbnailUrl!;
+      if (jsonString!.thumbnailUrl!.contains("imgur") &&
+          (jsonString!.thumbnailUrl!.contains("jpg") ||
+              jsonString!.thumbnailUrl!.contains("png"))) {
+        thumbUrl = jsonString!.thumbnailUrl!;
+      } else {
+        thumbUrl = "";
+      }
     } else {
       if (jsonString?.files?.youtube != null) {
-        thumbUrl = "https://img.youtube.com/vi/" +
+        thumbUrl = "https://i.ytimg.com/vi/" +
             jsonString!.files!.youtube! +
             "/mqdefault.jpg";
       } else {

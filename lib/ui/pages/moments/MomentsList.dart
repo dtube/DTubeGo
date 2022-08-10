@@ -1,26 +1,27 @@
+// import 'dart:ffi';
+
+import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
+import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
+
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/MomentsItem.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/MomentsView.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/controller/MomentsController.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/widgets/MomentsUpload.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/widgets/VideoPlayerMoments.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
-
 typedef Bool2VoidFunc = void Function(bool);
-typedef ListOfString2VoidFunc = void Function(List<String>);
 
 class MomentsList extends StatefulWidget {
   String feedType;
@@ -62,6 +63,10 @@ class _MomentsListState extends State<MomentsList> {
   String? _momentsUploadCrosspost;
   String? _momentsCustomTitle;
   String? _momentsCustomBody;
+  String? _fixedDownvoteActivated;
+  String? _fixedDownvoteWeight;
+  bool volumeMute = false;
+  late List<FeedItem> feedItems = [];
 
   late UserBloc _userBloc;
   double _currentVp = 0.0;
@@ -80,6 +85,8 @@ class _MomentsListState extends State<MomentsList> {
     _momentsUploadCrosspost = await sec.getMomentCrosspost();
     _momentsCustomTitle = await sec.getMomentTitle();
     _momentsCustomBody = await sec.getMomentBody();
+    _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
+    _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
 
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
@@ -115,18 +122,6 @@ class _MomentsListState extends State<MomentsList> {
             return BlocBuilder<UserBloc, UserState>(
                 bloc: _userBloc,
                 builder: (context, state) {
-                  // TODO error handling
-
-                  // if (state is UserDTCVPLoadingState) {
-                  //   return Container(
-                  //     width: 40.w,
-                  //     height: 40.h,
-                  //     child: DTubeLogoPulse(
-                  //       size: 40.w,
-                  //     ),
-                  //   );
-                  //   // return CircularProgressIndicator();
-                  // }
                   if (state is UserDTCVPLoadedState) {
                     _currentVp = state.vtBalance["v"]! + 0.0;
                   }
@@ -138,38 +133,53 @@ class _MomentsListState extends State<MomentsList> {
                         return buildLoading(context);
                       } else if (state is FeedLoadedState) {
                         if (state.feedType == widget.feedType) {
+                          feedItems = state.feed;
                           if (moments.isEmpty) {
                             for (var f in state.feed) {
-                              moments.add(MomentsItem(
-                                  VideoPlayerMoments(
-                                    momentsController: momentsController,
-                                    defaultCommentsVotingWeight:
-                                        _defaultCommentsVotingWeight!,
-                                    defaultPostsVotingWeight:
-                                        _defaultPostVotingWeight!,
-                                    defaultPostsVotingTip:
-                                        _defaultPostVotingTip!,
-                                    key: UniqueKey(),
-                                    goingInBackgroundCallback:
-                                        widget.goingInBackgroundCallback,
-                                    goingInForegroundCallback:
-                                        widget.goingInForegroundCallback,
-                                    feedItem: f,
-                                    momentsVotingWeight:
-                                        _defaultMomentsVotingWeight!,
-                                    momentsUploadNSFW: _momentsUploadNSFW!,
-                                    momentsUploadOC: _momentsUploadOC!,
-                                    momentsUploadUnlist: _momentsUploadUnlist!,
-                                    momentsUploadCrosspost:
-                                        _momentsUploadCrosspost!,
-                                    currentVP: _currentVp,
-                                    userBloc:
-                                        BlocProvider.of<UserBloc>(context),
-                                  ),
-                                  duration: Duration(
-                                      seconds: f.jsonString!.dur != ""
-                                          ? int.parse(f.jsonString!.dur) + 1
-                                          : 5)));
+                              // if moment is <= 60 seconds
+                              if (f.jsonString != null &&
+                                  f.jsonString!.dur != "" &&
+                                  int.parse(f.jsonString!.dur) <= 60 &&
+                                  // AND if no negative video
+                                  f.summaryOfVotes >= 0 &&
+                                  // AND if no nsfw video
+                                  f.jsonString!.nsfw == 0) {
+                                moments.add(MomentsItem(
+                                    VideoPlayerMoments(
+                                      momentsController: momentsController,
+                                      defaultCommentsVotingWeight:
+                                          _defaultCommentsVotingWeight!,
+                                      defaultPostsVotingWeight:
+                                          _defaultPostVotingWeight!,
+                                      defaultPostsVotingTip:
+                                          _defaultPostVotingTip!,
+                                      key: UniqueKey(),
+                                      goingInBackgroundCallback:
+                                          widget.goingInBackgroundCallback,
+                                      goingInForegroundCallback:
+                                          widget.goingInForegroundCallback,
+                                      feedItem: f,
+                                      momentsVotingWeight:
+                                          _defaultMomentsVotingWeight!,
+                                      momentsUploadNSFW: _momentsUploadNSFW!,
+                                      momentsUploadOC: _momentsUploadOC!,
+                                      momentsUploadUnlist:
+                                          _momentsUploadUnlist!,
+                                      momentsUploadCrosspost:
+                                          _momentsUploadCrosspost!,
+                                      currentVP: _currentVp,
+                                      userBloc:
+                                          BlocProvider.of<UserBloc>(context),
+                                      fixedDownvoteActivated:
+                                          _fixedDownvoteActivated == "true",
+                                      fixedDownvoteWeight:
+                                          double.parse(_fixedDownvoteWeight!),
+                                    ),
+                                    duration: Duration(
+                                        seconds: f.jsonString!.dur != ""
+                                            ? int.parse(f.jsonString!.dur) + 1
+                                            : 5)));
+                              }
                             }
                           }
                         }
@@ -270,6 +280,13 @@ class _MomentsContainerState extends State<MomentsContainer> {
   String author = "";
   String title = "";
   int pos = 0;
+  bool _volumeMute = false;
+
+  void changeVolume() {
+    setState(() {
+      _volumeMute = !_volumeMute;
+    });
+  }
 
   @override
   void initState() {
@@ -299,95 +316,174 @@ class _MomentsContainerState extends State<MomentsContainer> {
           BlocBuilder<UserBloc, UserState>(builder: (context, state) {
             if (state is UserDTCVPLoadedState) {
               return MomentsOverlay(
-                  alignment: Alignment.topLeft,
-                  padding: EdgeInsets.only(left: 5.w, top: 15.h),
-                  width: 25.w,
-                  height: 25.h,
-                  child: MomentsUploadButton(
-                      currentVT: state.vtBalance['v']! + 0.0,
-                      defaultVotingWeight: double.parse(widget
-                          .defaultMomentsVotingWeight), // todo make this dynamic
-                      clickedCallback: () {
-                        // setState(() {
-                        //   widget.momentsController.pause();
-                        //   _videoController.pause();
-                        // });
-                      },
-                      leaveDialogWithUploadCallback: () {
-                        // setState(() {
-                        //   widget.momentsController.pause();
-                        //   _videoController.pause();
-                        //   _momentUploading = true;
-                        // });
-                      },
-                      leaveDialogWithoutUploadCallback: () {
-                        //   widget.momentsController.play();
-                        //   _videoController.play();
-                        //   _momentUploading = false;
-                      },
-                      momentsVotingWeight: widget.defaultMomentsVotingWeight,
-                      momentsUploadNSFW: widget.momentsUploadNSFW,
-                      momentsUploadOC: widget.momentsUploadOC,
-                      momentsUploadUnlist: widget.momentsUploadUnlist,
-                      momentsUploadCrosspost: widget.momentsUploadCrosspost,
-                      customMomentTitle: widget.momentsCustomTitle,
-                      customMomentBody: widget.momentsCustomBody));
+                alignment: Alignment.topLeft,
+                padding: EdgeInsets.only(left: 2.w),
+                width: 100.w,
+                height: 25.h,
+                child: Row(
+                  children: [
+                    MomentsUploadButton(
+                        text: "Create",
+                        size: globalIconSizeMedium,
+                        currentVT: state.vtBalance['v']! + 0.0,
+                        defaultVotingWeight: double.parse(widget
+                            .defaultMomentsVotingWeight), // todo make this dynamic
+                        clickedCallback: () {
+                          // setState(() {
+                          //   widget.momentsController.pause();
+                          //   _videoController.pause();
+                          // });
+                        },
+                        leaveDialogWithUploadCallback: () {
+                          // setState(() {
+                          //   widget.momentsController.pause();
+                          //   _videoController.pause();
+                          //   _momentUploading = true;
+                          // });
+                        },
+                        leaveDialogWithoutUploadCallback: () {
+                          //   widget.momentsController.play();
+                          //   _videoController.play();
+                          //   _momentUploading = false;
+                        },
+                        momentsVotingWeight: widget.defaultMomentsVotingWeight,
+                        momentsUploadNSFW: widget.momentsUploadNSFW,
+                        momentsUploadOC: widget.momentsUploadOC,
+                        momentsUploadUnlist: widget.momentsUploadUnlist,
+                        momentsUploadCrosspost: widget.momentsUploadCrosspost,
+                        customMomentTitle: widget.momentsCustomTitle,
+                        customMomentBody: widget.momentsCustomBody),
+                  ],
+                ),
+              );
             }
             return SizedBox(height: 0, width: 0);
-          })
+          }),
         ],
       );
     } else {
       return Stack(
         children: [
           Center(
-            child: Text(
-              "no moments found",
-              style: Theme.of(context).textTheme.headline3,
-            ),
+            child: AllMomentsSeenWidget(widget: widget),
           ),
-          BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-            if (state is UserDTCVPLoadedState) {
-              return MomentsOverlay(
-                  alignment: Alignment.topLeft,
-                  padding: EdgeInsets.only(left: 5.w, top: 15.h),
-                  width: 25.w,
-                  height: 25.h,
-                  child: MomentsUploadButton(
-                      currentVT: state.vtBalance['v']! + 0.0,
-                      defaultVotingWeight: double.parse(widget
-                          .defaultPostsVotingWeight), // todo make this dynamic
-                      clickedCallback: () {
-                        // setState(() {
-                        //   widget.momentsController.pause();
-                        //   _videoController.pause();
-                        // });
-                      },
-                      leaveDialogWithUploadCallback: () {
-                        // setState(() {
-                        //   widget.momentsController.pause();
-                        //   _videoController.pause();
-                        //   _momentUploading = true;
-                        // });
-                      },
-                      leaveDialogWithoutUploadCallback: () {
-                        //   widget.momentsController.play();
-                        //   _videoController.play();
-                        //   _momentUploading = false;
-                      },
-                      momentsVotingWeight: widget.defaultMomentsVotingWeight,
-                      momentsUploadNSFW: widget.momentsUploadNSFW,
-                      momentsUploadOC: widget.momentsUploadOC,
-                      momentsUploadUnlist: widget.momentsUploadUnlist,
-                      momentsUploadCrosspost: widget.momentsUploadCrosspost,
-                      customMomentTitle: widget.momentsCustomTitle,
-                      customMomentBody: widget.momentsCustomBody));
-            }
-            return SizedBox(height: 0, width: 0);
-          })
+          MomentsOverlay(
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.only(left: 2.w),
+              width: 100.w,
+              height: 25.h,
+              child: Row(
+                children: [
+                  MomentsUpload(
+                    widget: widget,
+                    size: globalIconSizeBig,
+                    withText: true,
+                  ),
+                ],
+              ))
         ],
       );
     }
+  }
+}
+
+class AllMomentsSeenWidget extends StatelessWidget {
+  const AllMomentsSeenWidget({
+    Key? key,
+    required this.widget,
+  }) : super(key: key);
+
+  final MomentsContainer widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50.h,
+      width: 100.w,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "Oops! You have seen all recent moments!",
+            style: Theme.of(context).textTheme.headline5,
+          ),
+
+          // FaIcon(FontAwesomeIcons.search, size: 20.w,),
+          Container(
+            width: 80.w,
+            child: Padding(
+              padding: EdgeInsets.only(top: 2.h),
+              child: Text(
+                "Feel free to share a moment of your life by tapping on the following icon:",
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 2.h),
+            child: MomentsUpload(
+              widget: widget,
+              size: globalIconSizeBig * 2,
+              withText: false,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MomentsUpload extends StatelessWidget {
+  const MomentsUpload(
+      {Key? key,
+      required this.widget,
+      required this.size,
+      required this.withText})
+      : super(key: key);
+
+  final MomentsContainer widget;
+  final double size;
+  final bool withText;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+      if (state is UserDTCVPLoadedState) {
+        return MomentsUploadButton(
+            size: size,
+            text: withText ? "Create" : "",
+            currentVT: state.vtBalance['v']! + 0.0,
+            defaultVotingWeight: double.parse(
+                widget.defaultPostsVotingWeight), // todo make this dynamic
+            clickedCallback: () {
+              // setState(() {
+              //   widget.momentsController.pause();
+              //   _videoController.pause();
+              // });
+            },
+            leaveDialogWithUploadCallback: () {
+              // setState(() {
+              //   widget.momentsController.pause();
+              //   _videoController.pause();
+              //   _momentUploading = true;
+              // });
+            },
+            leaveDialogWithoutUploadCallback: () {
+              //   widget.momentsController.play();
+              //   _videoController.play();
+              //   _momentUploading = false;
+            },
+            momentsVotingWeight: widget.defaultMomentsVotingWeight,
+            momentsUploadNSFW: widget.momentsUploadNSFW,
+            momentsUploadOC: widget.momentsUploadOC,
+            momentsUploadUnlist: widget.momentsUploadUnlist,
+            momentsUploadCrosspost: widget.momentsUploadCrosspost,
+            customMomentTitle: widget.momentsCustomTitle,
+            customMomentBody: widget.momentsCustomBody);
+      }
+      return SizedBox(height: 0, width: 0);
+    });
   }
 }
 
