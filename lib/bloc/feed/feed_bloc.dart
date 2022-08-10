@@ -215,6 +215,16 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
                   _blockedUsers);
             }
             break;
+          case 'NewsFeed':
+            {
+              String? _TSFrom = await sec.getUsername();
+              String? _TSTo = await sec.getUsername();
+              feed = await repository.getNewsFeed(
+                _avalonApiNode,
+                _applicationUser,
+              );
+            }
+            break;
         }
 
         emit(FeedLoadedState(feed: feed, feedType: event.feedType));

@@ -16,6 +16,7 @@ class AppConfig {
   static String trendingFeedUrlFirst = "/trending";
   static String trendingFeedUrlMore = "/trending/##AUTHOR/##LINK";
   static String accountFeedUrlFirst = "/blog/##USERNAME";
+  static String accountFeedWithTSFilterUrlFirst = "/blog/##USERNAME";
   static String accountFeedUrlMore = "/blog/##USERNAME/##AUTHORNAME/##LINK";
   static String notificationFeedUrl = "/notifications/##USERNAME";
 

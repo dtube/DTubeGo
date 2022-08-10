@@ -3,6 +3,7 @@ import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 abstract class FeedRepository {
   Future<List<FeedItem>> getMyFeed(String apiNode, String applicationUser,
@@ -22,6 +23,7 @@ abstract class FeedRepository {
     String? fromLink,
     String applicationUser,
   );
+  Future<List<FeedItem>> getNewsFeed(String apiNode, String applicationUser);
   Future<List<FeedItem>> getNewFeedFiltered(String apiNode, String filterString,
       String tsRangeFilter, String applicationUsers);
   Future<List<FeedItem>> getMyFeedFiltered(String apiNode, String filterString,
@@ -365,6 +367,28 @@ class FeedRepositoryImpl implements FeedRepository {
       var data = json.decode(response.body);
 
       List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+      return feed;
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future<List<FeedItem>> getNewsFeed(
+    String apiNode,
+    String applicationUser,
+  ) async {
+    String tsFrom = await sec.getNewsTS();
+    String tsTo = (DateTime.now().millisecondsSinceEpoch / 1000).toString();
+
+    String _url = apiNode +
+        AppConfig.newFeedUrlFiltered.replaceAll("##FILTERSTRING",
+            "&author=dtube,dtube-onboarding&ts=" + tsFrom + "-" + tsTo);
+
+    var responseDTube = await http.get(Uri.parse(_url));
+    if (responseDTube.statusCode == 200) {
+      var data = json.decode(responseDTube.body);
+      List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
+      await sec.persistNotificationSeen(int.tryParse(tsTo)!);
       return feed;
     } else {
       throw Exception();

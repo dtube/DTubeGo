@@ -79,6 +79,8 @@ const settingKey_currentHF = "CURHF";
 
 const settingKey_seenMoments = "SEENMOMENTS";
 
+const settingKey_newsTS = "NEWSTS";
+
 const settingKey_TermsAcceptedVersion = "TERMS1.1"; // versioning because:
 //if we would update the terms we want to view the updated version also for existing users
 
@@ -214,6 +216,10 @@ Future<void> persistAdditionalTemplates(
 ) async {
   await _storage.write(
       key: settingKey_additionalTemplates, value: templatesJSON);
+}
+
+Future<void> persistCurrenNewsTS(int tsLast) async {
+  await _storage.write(key: settingKey_newsTS, value: tsLast.toString());
 }
 
 Future<void> persistMomentTemplateSettings(
@@ -914,6 +920,21 @@ Future<String> getLastNotification() async {
     return _setting;
   } else {
     return '0';
+  }
+}
+
+Future<String> getNewsTS() async {
+  String? _setting = "";
+  try {
+    _setting = await _storage.read(key: settingKey_newsTS);
+  } catch (e) {
+    _setting = (DateTime.now().millisecondsSinceEpoch / 1000).toString();
+  }
+
+  if (_setting != null) {
+    return _setting;
+  } else {
+    return (DateTime.now().millisecondsSinceEpoch / 1000).toString();
   }
 }
 
