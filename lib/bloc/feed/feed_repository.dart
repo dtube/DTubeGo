@@ -1,3 +1,4 @@
+import 'package:dtube_go/utils/globalVariables.dart' as globals;
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;
@@ -6,6 +7,8 @@ import 'dart:convert';
 abstract class FeedRepository {
   Future<List<FeedItem>> getMyFeed(String apiNode, String applicationUser,
       String? fromAuthor, String? fromLink, String blockedUsers);
+  Future<List<FeedItem>> getODFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers);
   Future<List<FeedItem>> getHotFeed(String apiNode, String? fromAuthor,
       String? fromLink, String applicationUser, String blockedUsers);
   Future<List<FeedItem>> getTrendingFeed(String apiNode, String? fromAuthor,
@@ -247,6 +250,53 @@ class FeedRepositoryImpl implements FeedRepository {
           }
         }
       }
+      return feed;
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future<List<FeedItem>> getODFeed(String apiNode, String? fromAuthor,
+      String? fromLink, String applicationUser, String blockedUsers) async {
+    String _url = apiNode + AppConfig.newFeedUrlFirst;
+    if (fromAuthor != null && fromLink != null) {
+      _url = apiNode +
+          AppConfig.newFeedUrlMore
+              .replaceAll("##AUTHOR", fromAuthor)
+              .replaceAll("##LINK", fromLink);
+    }
+    var response = await http.get(Uri.parse(_url));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+
+      List<String> _blockedUsers = blockedUsers.split(",");
+      List<FeedItem> _preFilterFeed =
+          ApiResultModel.fromJson(data, applicationUser).feed;
+      List<FeedItem> feed = [];
+
+      for (var f in _preFilterFeed) {
+        // check if creator is blocked from applicationUser
+        if (!_blockedUsers.contains(f.author) &&
+            globals.verifiedUsers.contains(f.author)) {
+          // go through downvotes and check if one is from the applicationuser
+          if (f.downvotes != null && f.downvotes!.length > 0) {
+            bool downvotedByAppUser = false;
+
+            for (var v in f.downvotes!) {
+              if (v.u == applicationUser) {
+                downvotedByAppUser = true;
+                break;
+              }
+            }
+            if (!downvotedByAppUser) {
+              feed.add(f);
+            }
+          } else {
+            feed.add(f);
+          }
+        }
+      }
+
       return feed;
     } else {
       throw Exception();

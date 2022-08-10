@@ -205,6 +205,16 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
                   _blockedUsers);
             }
             break;
+          case 'ODFeed':
+            {
+              feed = await repository.getODFeed(
+                  _avalonApiNode,
+                  event.fromAuthor,
+                  event.fromLink,
+                  _applicationUser,
+                  _blockedUsers);
+            }
+            break;
         }
 
         emit(FeedLoadedState(feed: feed, feedType: event.feedType));
