@@ -23,10 +23,10 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
   List<SpeedDialChild> mainMenuButtonOptions = [
     SpeedDialChild(
         child: ShadowedIcon(
-            icon: FontAwesomeIcons.search,
+            icon: FontAwesomeIcons.magnifyingGlass,
             color: globalAlmostWhite,
             shadowColor: Colors.black,
-            size: globalIconSizeMedium),
+            size: globalIconSizeBig),
         foregroundColor: globalAlmostWhite,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -47,7 +47,7 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
             icon: FontAwesomeIcons.hotel,
             color: globalAlmostWhite,
             shadowColor: Colors.black,
-            size: globalIconSizeMedium),
+            size: globalIconSizeBig),
         foregroundColor: globalAlmostWhite,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -61,7 +61,7 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
             icon: FontAwesomeIcons.question,
             color: globalAlmostWhite,
             shadowColor: Colors.black,
-            size: globalIconSizeMedium),
+            size: globalIconSizeBig),
         foregroundColor: globalAlmostWhite,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -74,10 +74,10 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
         }),
     SpeedDialChild(
         child: ShadowedIcon(
-            icon: FontAwesomeIcons.cog,
+            icon: FontAwesomeIcons.gear,
             color: globalAlmostWhite,
             shadowColor: Colors.black,
-            size: globalIconSizeMedium),
+            size: globalIconSizeBig),
         foregroundColor: globalAlmostWhite,
         elevation: 0,
         backgroundColor: Colors.transparent,

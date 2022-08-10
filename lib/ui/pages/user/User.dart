@@ -275,44 +275,13 @@ class _UserState extends State<UserPage> {
             ),
           ),
 
-          Padding(
-            padding: EdgeInsets.only(top: 5.h, left: 40.w),
-            child: globals.disableAnimations
-                ? NameDisplayNameContainer(
-                    context: context,
-                    ownUserpage: widget.ownUserpage,
-                    user: user,
-                  )
-                : FadeIn(
-                    preferences: AnimationPreferences(
-                        offset: Duration(milliseconds: 1100)),
-                    child: NameDisplayNameContainer(
-                      context: context,
-                      ownUserpage: widget.ownUserpage,
-                      user: user,
-                    ),
-                  ),
-          ),
-
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
-              padding: EdgeInsets.only(top: 7.h, left: 4.w),
-              child: globals.disableAnimations
-                  ? Container(
-                      height: 31.w,
-                      width: 31.w,
-                      child: AccountIconBase(
-                        avatarSize: 30.w,
-                        showVerified: true,
-                        username: user.name,
-                        showBorder: true,
-                      ),
-                    )
-                  : FadeIn(
-                      preferences: AnimationPreferences(
-                          offset: Duration(milliseconds: 500)),
-                      child: Container(
+                padding: EdgeInsets.only(top: 7.h, left: 4.w),
+                child: Row(children: [
+                  globals.disableAnimations
+                      ? Container(
                           height: 31.w,
                           width: 31.w,
                           child: AccountIconBase(
@@ -320,8 +289,48 @@ class _UserState extends State<UserPage> {
                             showVerified: true,
                             username: user.name,
                             showBorder: true,
-                          ))),
-            ),
+                          ),
+                        )
+                      : FadeIn(
+                          preferences: AnimationPreferences(
+                              offset: Duration(milliseconds: 500)),
+                          child: Container(
+                              height: 31.w,
+                              width: 31.w,
+                              child: AccountIconBase(
+                                avatarSize: 30.w,
+                                showVerified: true,
+                                username: user.name,
+                                showBorder: true,
+                              ))),
+                  Padding(
+                    padding: EdgeInsets.only(left: 2.w),
+                    child: globals.disableAnimations
+                        ? AccountNameBase(
+                            username: user.name,
+                            width: 40.w,
+                            height: 20.w,
+                            mainStyle: Theme.of(context)
+                                .textTheme
+                                .headline1!
+                                .copyWith(fontSize: 30),
+                            subStyle: Theme.of(context).textTheme.bodyText1!,
+                          )
+                        : FadeIn(
+                            preferences: AnimationPreferences(
+                                offset: Duration(milliseconds: 1100)),
+                            child: AccountNameBase(
+                              username: user.name,
+                              width: 40.w,
+                              height: 20.w,
+                              mainStyle: Theme.of(context)
+                                  .textTheme
+                                  .headline1!
+                                  .copyWith(fontSize: 30),
+                              subStyle: Theme.of(context).textTheme.bodyText1!,
+                            )),
+                  ),
+                ])),
           ),
         ])),
         Positioned(

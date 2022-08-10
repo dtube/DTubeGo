@@ -51,6 +51,7 @@ app.*.map.json
 # secret config values like encryption keys and such
 lib/res/secretConfigValues.dart
 lib/res/loadRemoteConf.dart
+lib/res/setupConfig.dart
 
 # eula files
 lib/res/mds/androidEULA.md

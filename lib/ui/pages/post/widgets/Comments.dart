@@ -313,7 +313,7 @@ class CommentItem extends StatelessWidget {
                       isPost: false,
                       iconColor: globalAlmostWhite,
                       focusVote: "",
-                      fadeInFromLeft: true,
+                      fadeInFromLeft: false,
                       fixedDownvoteActivated: fixedDownvoteActivated,
                       fixedDownvoteWeight: fixedDownvoteWeight,
                     ),

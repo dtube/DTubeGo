@@ -69,9 +69,11 @@ class _UserListState extends State<UserList> {
                           Container(
                             height: 2.h,
                             width: widget.avatarSize,
-                            child: Text(widget.userlist[index],
-                                style: Theme.of(context).textTheme.bodyText2,
-                                overflow: TextOverflow.ellipsis),
+                            child: Center(
+                              child: Text(widget.userlist[index],
+                                  style: Theme.of(context).textTheme.bodyText2,
+                                  overflow: TextOverflow.ellipsis),
+                            ),
                           )
                         ],
                       ),

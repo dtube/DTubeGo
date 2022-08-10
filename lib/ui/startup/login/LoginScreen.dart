@@ -63,7 +63,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void journeyDoneCallback() async {
-    await sec.persistOnbordingJourneyDone();
+    // await sec.persistOnbordingJourneyDone();
     setState(() {
       _journeyDone = true;
     });

@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
+import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc.dart';
@@ -74,7 +74,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    //sec.deleteAllSettings(); // uncomment of you need to reset the secure storage
+    // sec.deleteAllSettings(); // uncomment of you need to reset the secure storage
     super.initState();
   }
 

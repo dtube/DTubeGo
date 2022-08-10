@@ -1,6 +1,7 @@
 import 'package:dtube_go/utils/globalVariables.dart' as globals;
 
-import 'package:dtube_go/res/loadRemoteConf.dart' as remoteConfig;
+//import 'package:dtube_go/res/loadRemoteConf.dart' as remoteConfig;
+import 'package:dtube_go/res/setupConfig.dart' as config;
 
 import 'package:dtube_go/utils/crypto_convert.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -20,7 +21,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc({required this.repository}) : super(AuthInitialState()) {
     on<AppStartedEvent>((event, emit) async {
-      await remoteConfig.initConf();
+      // await remoteConfig.initConf(); // not needed anymore but let's keep it in the code for some more time
+      await config.initConf();
       String _avalonApiNode = await sec.getNode();
       String? _applicationUser = await sec.getUsername();
       String? _privKey = await sec.getPrivateKey();
@@ -134,6 +136,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<StartBrowseOnlyMode>((event, emit) async {
       bool _termsAccepted = await sec.getTermsAccepted();
+      await sec.persistOnbordingJourneyDone();
       emit(SignInLoadingState());
       try {
         sec.persistUsernameKey("na", "na");

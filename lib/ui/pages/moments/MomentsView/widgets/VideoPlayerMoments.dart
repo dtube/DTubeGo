@@ -310,7 +310,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                           ? globalRed
                           : globalAlmostWhite,
                       shadowColor: Colors.black,
-                      size: globalIconSizeMedium,
+                      size: globalIconSizeBig,
                     ),
                   ),
                 ),
@@ -386,7 +386,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                                 ? globalRed
                                 : globalAlmostWhite,
                             shadowColor: Colors.black,
-                            size: globalIconSizeMedium,
+                            size: globalIconSizeBig,
                           ),
                         ),
                         GestureDetector(
@@ -429,7 +429,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             icon: FontAwesomeIcons.comment,
                             color: globalAlmostWhite,
                             shadowColor: Colors.black,
-                            size: globalIconSizeMedium,
+                            size: globalIconSizeBig,
                           ),
                         ),
                         GestureDetector(
@@ -447,7 +447,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             icon: FontAwesomeIcons.share,
                             color: globalAlmostWhite,
                             shadowColor: Colors.black,
-                            size: globalIconSizeMedium,
+                            size: globalIconSizeBig,
                           ),
                         ),
                         GestureDetector(
@@ -456,7 +456,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                             icon: FontAwesomeIcons.externalLinkAlt,
                             color: globalAlmostWhite,
                             shadowColor: Colors.black,
-                            size: globalIconSizeMedium,
+                            size: globalIconSizeBig,
                           ),
                           onTap: () {
                             // widget.parentStoryController.pause();
@@ -481,7 +481,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                   padding: EdgeInsets.only(top: 18.h, right: 2.w),
                   child: GestureDetector(
                     child: ShadowedIcon(
-                      size: globalIconSizeMedium,
+                      size: globalIconSizeBig,
                       icon: _volumeMute
                           ? FontAwesomeIcons.volumeUp
                           : FontAwesomeIcons.volumeMute,

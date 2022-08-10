@@ -17,13 +17,10 @@ class OnboardingJourney extends StatefulWidget {
 }
 
 class _OnboardingJourneyState extends State<OnboardingJourney> {
-  late AuthBloc _loginBloc;
-
   final introKey = GlobalKey<IntroductionScreenState>();
 
   @override
   void initState() {
-    _loginBloc = BlocProvider.of<AuthBloc>(context);
     super.initState();
   }
 
@@ -36,7 +33,8 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
       pageColor: globalBlue,
       imagePadding: EdgeInsets.only(top: 20.h),
       imageFlex: 3,
-      bodyFlex: 2,
+      bodyFlex: 1,
+
       imageAlignment: Alignment.bottomCenter,
       titlePadding: EdgeInsets.only(bottom: 0, top: 0),
       bodyAlignment: Alignment.bottomCenter,
@@ -72,6 +70,7 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
       showSkipButton: true,
       // skipFlex: 0,
       nextFlex: 0,
+      dotsFlex: 0,
       //rtl: true, // Display as right-to-left
       skip: Text(
         'Skip',
@@ -85,9 +84,11 @@ class _OnboardingJourneyState extends State<OnboardingJourney> {
         'Done',
         style: Theme.of(context).textTheme.bodyText1,
       ),
+
       curve: Curves.fastLinearToSlowEaseIn,
-      controlsMargin: const EdgeInsets.all(16),
-      controlsPadding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
+      controlsMargin: EdgeInsets.only(bottom: 2.h, right: 15.w),
+      //controlsPadding: const EdgeInsets.fromLTRB(8.0, 4.0, 20.0, 4.0),
+      controlsPadding: const EdgeInsets.symmetric(horizontal: 0.0),
       dotsDecorator: DotsDecorator(
         size: Size(2.w, 2.w),
         color: globalAlmostWhite,
