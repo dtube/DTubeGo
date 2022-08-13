@@ -1013,9 +1013,11 @@ class PostInfoBaseRow extends StatelessWidget {
         Container(
           width: 28.w,
           child: Stack(
+            alignment: Alignment.center,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   widget.oc
                       ? globals.disableAnimations
@@ -1067,10 +1069,10 @@ class PostInfoBaseRow extends StatelessWidget {
                                 icon: FontAwesomeIcons.sortDown,
                                 color: globalAlmostWhite,
                                 shadowColor: Colors.black,
-                                size: globalIconSizeSmall),
+                                size: globalIconSizeMedium),
                           ),
-                          buttonSize: Size(
-                              globalIconSizeSmall * 2, globalIconSizeSmall * 2),
+                          // buttonSize:
+                          //     Size(globalIconSizeMedium, globalIconSizeMedium),
                           useRotationAnimation: false,
                           direction: SpeedDialDirection.up,
                           visible: true,
@@ -1391,7 +1393,7 @@ class OriginalContentIcon extends StatelessWidget {
       padding: EdgeInsets.only(right: 2.w),
       child: FaIcon(
         FontAwesomeIcons.award,
-        size: globalIconSizeSmall * 0.6,
+        size: globalIconSizeMedium,
       ),
     );
   }

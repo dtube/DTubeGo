@@ -319,13 +319,10 @@ class PostInfoDetailsRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          width: 40.w,
-          child: Text(
-            '@${widget.author}',
-            style: Theme.of(context).textTheme.bodyText2,
-            overflow: TextOverflow.ellipsis,
-          ),
+        Text(
+          '@${widget.author}',
+          style: Theme.of(context).textTheme.bodyText2,
+          overflow: TextOverflow.ellipsis,
         ),
         Row(
           children: [
@@ -414,13 +411,11 @@ class BaseRowContainer extends StatelessWidget {
       onTap: () {
         navigateToUserDetailPage(context, widget.author, () {});
       },
-      child: SizedBox(
-          width: 10.w,
-          child: AccountIconBase(
-            avatarSize: _avatarSize,
-            showVerified: true,
-            username: widget.author,
-          )),
+      child: AccountIconBase(
+        avatarSize: _avatarSize,
+        showVerified: true,
+        username: widget.author,
+      ),
     );
   }
 }

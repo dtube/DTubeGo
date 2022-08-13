@@ -81,40 +81,41 @@ class TagListState extends State<TagList> {
                 automaticallyImplyLeading: true,
                 backgroundColor: globalBGColor,
                 elevation: 0,
+                title: Text(
+                  "#" + widget.tagName,
+                  style: Theme.of(context).textTheme.headline1,
+                ),
               ),
               body: Padding(
                 padding: EdgeInsets.only(top: 2.h),
                 child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          "videos with the tag \"${widget.tagName}\" of the last 90 days: ",
-                          style: Theme.of(context).textTheme.headline5,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 2.h),
-                          child: BlocBuilder<FeedBloc, FeedState>(
-                              builder: (context, state) {
-                            if (state is FeedInitialState ||
-                                state is FeedLoadingState) {
-                              return buildLoading();
-                            } else if (state is FeedLoadedState) {
-                              hashtagResults = state.feed;
-                              BlocProvider.of<FeedBloc>(context).isFetching =
-                                  false;
-                              return buildResultsListForTagResults(
-                                  hashtagResults);
-                            } else if (state is FeedErrorState) {
-                              return buildErrorUi(state.message);
-                            } else {
-                              return buildErrorUi('');
-                            }
-                          }),
-                        )
-                      ],
-                    ),
+                  child: Column(
+                    children: [
+                      Text(
+                        "videos with the tag #${widget.tagName} of the last 90 days: ",
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 2.h),
+                        child: BlocBuilder<FeedBloc, FeedState>(
+                            builder: (context, state) {
+                          if (state is FeedInitialState ||
+                              state is FeedLoadingState) {
+                            return buildLoading();
+                          } else if (state is FeedLoadedState) {
+                            hashtagResults = state.feed;
+                            BlocProvider.of<FeedBloc>(context).isFetching =
+                                false;
+                            return buildResultsListForTagResults(
+                                hashtagResults);
+                          } else if (state is FeedErrorState) {
+                            return buildErrorUi(state.message);
+                          } else {
+                            return buildErrorUi('');
+                          }
+                        }),
+                      )
+                    ],
                   ),
                 ),
               ),

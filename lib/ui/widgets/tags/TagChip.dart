@@ -64,6 +64,7 @@ class TagChipWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InputChip(
       padding: EdgeInsets.zero,
+      visualDensity: VisualDensity(horizontal: 0.0, vertical: -4),
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return MultiBlocProvider(
