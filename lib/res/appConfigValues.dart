@@ -47,6 +47,7 @@ class AppConfig {
   static String sendTransactionUrl = "/transactWaitConfirm";
   static String avalonConfig = "/config";
   static String accountPriceUrl = "/accountPrice/##USERNAME";
+  static String defaultWebsiteURL = "https://d.tube";
 
 // storage providers and upload endpoints
   static String ipfsVideoUrl = "https://ipfs.d.tube/ipfs/";
@@ -84,7 +85,7 @@ class AppConfig {
 // node discovery & api node configs
 
   static bool useDevNodes =
-      false; //activate for new features which has not been integrated
+      true; //activate for new features which has not been integrated
 
   static List<String> apiNodesDev = [
     // development nodes for new features
