@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/style/ThemeData.dart';
@@ -237,15 +238,34 @@ class _UserState extends State<UserPage> {
                       alignment: Alignment.center,
                       // heightFactor: 5,
                       // // widthFactor: 0.5,
-                      child: Container(
-                        height: 25.h,
-                        width: double.infinity,
-                        child: FittedBox(
-                          fit: BoxFit.fill,
-                          child: Image.network(
-                            user.jsonString!.profile!.coverImage!,
-                            //  fit: BoxFit.fitWidth,
-                            // fit: BoxFit.fitHeight,
+                      child: CachedNetworkImage(
+                        imageUrl: user.jsonString!.profile!.coverImage!
+                            .replaceAll("http:", "https:"),
+                        imageBuilder: (context, imageProvider) => Container(
+                          height: 25.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
+                          ),
+                        ),
+                        placeholder: (context, url) => Container(
+                          height: 25.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/appicon.png'),
+                                fit: BoxFit.cover),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          height: 25.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/appicon.png'),
+                                fit: BoxFit.cover),
                           ),
                         ),
                       )),
@@ -312,10 +332,15 @@ class _UserState extends State<UserPage> {
                                 username: user.name,
                                 width: 40.w,
                                 height: 20.w,
-                                mainStyle: Theme.of(context)
-                                    .textTheme
-                                    .headline1!
-                                    .copyWith(fontSize: 30),
+                                mainStyle: user.name.length > 10
+                                    ? Theme.of(context)
+                                        .textTheme
+                                        .headline1!
+                                        .copyWith(fontSize: 20)
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .headline1!
+                                        .copyWith(fontSize: 30),
                                 subStyle:
                                     Theme.of(context).textTheme.bodyText1!,
                               )
@@ -486,15 +511,34 @@ class _UserState extends State<UserPage> {
                       alignment: Alignment.center,
                       // heightFactor: 5,
                       // // widthFactor: 0.5,
-                      child: Container(
-                        height: 25.h,
-                        width: double.infinity,
-                        child: FittedBox(
-                          fit: BoxFit.fill,
-                          child: Image.network(
-                            user.jsonString!.profile!.coverImage!,
-                            //  fit: BoxFit.fitWidth,
-                            // fit: BoxFit.fitHeight,
+                      child: CachedNetworkImage(
+                        imageUrl: user.jsonString!.profile!.coverImage!
+                            .replaceAll("http:", "https:"),
+                        imageBuilder: (context, imageProvider) => Container(
+                          height: 25.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
+                          ),
+                        ),
+                        placeholder: (context, url) => Container(
+                          height: 25.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/appicon.png'),
+                                fit: BoxFit.cover),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          height: 25.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/appicon.png'),
+                                fit: BoxFit.cover),
                           ),
                         ),
                       )),

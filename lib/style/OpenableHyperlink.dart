@@ -15,10 +15,12 @@ class OpenableHyperlink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        child: Text(alt != null ? alt! : url,
-            overflow: TextOverflow.ellipsis,
-            style:
-                style != null ? style : Theme.of(context).textTheme.overline),
+        child: Text(
+          alt != null ? alt! : url,
+          overflow: TextOverflow.ellipsis,
+          style: style != null ? style : Theme.of(context).textTheme.overline,
+          maxLines: 3,
+        ),
         onTap: () async {
           await canLaunchUrl(Uri.parse(url))
               ? await launchUrl(Uri.parse(url))

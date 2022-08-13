@@ -40,7 +40,7 @@ class UserMoreInfoButton extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -103,7 +103,7 @@ class UserMoreInfoButton extends StatelessWidget {
                                             .textTheme
                                             .bodyText1,
                                         textAlign: TextAlign.start,
-                                        maxLines: 3,
+                                        maxLines: 5,
                                       ),
                                     ),
                                   ],
@@ -124,9 +124,10 @@ class UserMoreInfoButton extends StatelessWidget {
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6,
-                                        textAlign: TextAlign.start),
+                                        textAlign: TextAlign.start,
+                                        maxLines: 1),
                                     Container(
-                                      width: 55.w,
+                                      width: 50.w,
                                       child: OpenableHyperlink(
                                         url: user.jsonString!.profile!.website!,
                                       ),
@@ -158,7 +159,8 @@ class UserMoreInfoButton extends StatelessWidget {
                                             .textTheme
                                             .bodyText1,
                                         textAlign: TextAlign.start,
-                                        maxLines: 5,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 10,
                                       ),
                                     ),
                                   ],
