@@ -1,6 +1,6 @@
 import 'package:dtube_go/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/res/secretConfigValues.dart' as secretConfig;
+import 'package:dtube_go/res/Config/secretConfigValues.dart' as secretConfig;
 import 'package:flutter/services.dart';
 
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';

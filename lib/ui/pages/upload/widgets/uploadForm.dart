@@ -4,32 +4,23 @@ import 'package:dtube_go/ui/pages/upload/dialogs/HivePostCooldownDialog.dart';
 import 'package:dtube_go/ui/pages/upload/dialogs/UploadTermsDialog.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/UploadStartedDialog.dart';
 import 'package:flutter/services.dart';
-
 import 'package:dtube_go/ui/pages/upload/widgets/PresetCards.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
-
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-
 import 'dart:io';
 import 'package:disk_space/disk_space.dart';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer.dart';
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
-
-import 'package:dtube_go/utils/Global/secureStorage.dart';
 import 'package:dtube_go/utils/System/imageCropper.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -226,40 +217,42 @@ class _UploadFormState extends State<UploadForm> {
           if (stateSettings is SettingsLoadedState) {
             setState(() {
               stateUploadData.vpPercent = double.parse(stateSettings
-                  .settings[settingKey_DefaultUploadVotingWeigth]!);
+                  .settings[sec.settingKey_DefaultUploadVotingWeigth]!);
 
               stateUploadData.nSFWContent =
-                  stateSettings.settings[settingKey_DefaultUploadNSFW]! ==
+                  stateSettings.settings[sec.settingKey_DefaultUploadNSFW]! ==
                       "true";
 
               stateUploadData.originalContent =
-                  stateSettings.settings[settingKey_DefaultUploadOC]! == "true";
+                  stateSettings.settings[sec.settingKey_DefaultUploadOC]! ==
+                      "true";
 
               stateUploadData.unlistVideo =
-                  stateSettings.settings[settingKey_DefaultUploadUnlist]! ==
+                  stateSettings.settings[sec.settingKey_DefaultUploadUnlist]! ==
                       "true";
 
-              stateUploadData.crossPostToHive =
-                  stateSettings.settings[settingKey_DefaultUploadCrosspost]! ==
-                      "true";
+              stateUploadData.crossPostToHive = stateSettings
+                      .settings[sec.settingKey_DefaultUploadCrosspost]! ==
+                  "true";
 
-              if (stateSettings.settings[settingKey_hiveSignerUsername] !=
+              if (stateSettings.settings[sec.settingKey_hiveSignerUsername] !=
                       null &&
-                  stateSettings.settings[settingKey_hiveSignerUsername] != "") {
-                DateTime requestedOn = DateTime.parse(stateSettings
-                    .settings[settingKey_hiveSignerAccessTokenRequestedOn]!);
+                  stateSettings.settings[sec.settingKey_hiveSignerUsername] !=
+                      "") {
+                DateTime requestedOn = DateTime.parse(stateSettings.settings[
+                    sec.settingKey_hiveSignerAccessTokenRequestedOn]!);
                 DateTime invalidOn = requestedOn.add(Duration(
                     seconds: int.parse(stateSettings.settings[
-                        settingKey_hiveSignerAccessTokenExpiresIn]!)));
+                        sec.settingKey_hiveSignerAccessTokenExpiresIn]!)));
                 if (invalidOn.isAfter(DateTime.now())) {
                   stateUploadData.crossPostToHive = true;
                   hiveSignerValid = true;
-                  hiveSignerUsername =
-                      stateSettings.settings[settingKey_hiveSignerUsername]!;
+                  hiveSignerUsername = stateSettings
+                      .settings[sec.settingKey_hiveSignerUsername]!;
                 }
               }
               lastPostWithinCooldown =
-                  stateSettings.settings[settingKey_HiveStillInCooldown] ==
+                  stateSettings.settings[sec.settingKey_HiveStillInCooldown] ==
                       "true";
             });
           }

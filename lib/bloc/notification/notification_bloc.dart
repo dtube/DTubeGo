@@ -3,7 +3,7 @@ import 'package:dtube_go/bloc/notification/notification_event.dart';
 import 'package:dtube_go/bloc/notification/notification_state.dart';
 import 'package:dtube_go/bloc/notification/notification_response_model.dart';
 import 'package:dtube_go/bloc/notification/notification_repository.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   NotificationRepository repository;

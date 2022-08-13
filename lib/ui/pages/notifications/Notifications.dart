@@ -1,4 +1,3 @@
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/notifications/NotificationItem.dart';

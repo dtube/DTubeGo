@@ -1,4 +1,4 @@
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
 class ApiResultModel {
   late User user;

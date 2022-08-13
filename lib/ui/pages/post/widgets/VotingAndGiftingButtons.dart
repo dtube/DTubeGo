@@ -5,7 +5,7 @@ import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
 import 'package:dtube_go/ui/widgets/gifts/GiftBoxWidget.dart';
-import 'package:dtube_go/utils/Global/secureStorage.dart';
+import 'package:dtube_go/utils/GlobalStorage/secureStorage.dart' as sec;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,16 +49,16 @@ class _VotingAndGiftBButtonsState extends State<VotingAndGiftBButtons> {
       children: [
         BlocBuilder<SettingsBloc, SettingsState>(builder: (context, state) {
           if (state is SettingsLoadedState) {
-            _defaultVoteWeightPosts =
-                double.parse(state.settings[settingKey_defaultVotingWeight]!);
-            _defaultVoteTipPosts =
-                double.parse(state.settings[settingKey_defaultVotingWeight]!);
+            _defaultVoteWeightPosts = double.parse(
+                state.settings[sec.settingKey_defaultVotingWeight]!);
+            _defaultVoteTipPosts = double.parse(
+                state.settings[sec.settingKey_defaultVotingWeight]!);
             _defaultVoteWeightComments = double.parse(
-                state.settings[settingKey_defaultVotingWeightComments]!);
+                state.settings[sec.settingKey_defaultVotingWeightComments]!);
             _fixedDownvoteActivated =
-                state.settings[settingKey_FixedDownvoteActivated] == "true";
-            _fixedDownvoteWeight =
-                double.parse(state.settings[settingKey_FixedDownvoteWeight]!);
+                state.settings[sec.settingKey_FixedDownvoteActivated] == "true";
+            _fixedDownvoteWeight = double.parse(
+                state.settings[sec.settingKey_FixedDownvoteWeight]!);
             return MultiBlocProvider(
               providers: [
                 BlocProvider<TransactionBloc>.value(

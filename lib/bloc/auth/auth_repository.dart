@@ -3,7 +3,7 @@ import 'package:dtube_go/res/Config/APIUrlSchema.dart';
 import 'package:dtube_go/res/Config/appConfigValues.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/bloc/auth/auth_response_model.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/utils/Crypto/crypto_convert.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

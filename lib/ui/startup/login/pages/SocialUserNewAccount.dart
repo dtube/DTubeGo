@@ -1,5 +1,5 @@
 import 'package:dtube_go/res/Config/appConfigValues.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/bloc/avalonConfig/avalonConfig_bloc_full.dart';
@@ -13,7 +13,6 @@ import 'package:dtube_go/ui/widgets/Inputs/NextBackButtons.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
 import 'package:dtube_go/utils/Random/randomGenerator.dart';
-import 'package:dtube_go/utils/Global/secureStorage.dart';
 import 'package:dtube_go/utils/Strings/stringCheckers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1360,9 +1359,10 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
   }
 
   createUserAccount() async {
-    String _signUpAccount = await sec.getLocalConfigString(settingKey_suAcc);
+    String _signUpAccount =
+        await sec.getLocalConfigString(sec.settingKey_suAcc);
 
-    String _signUpKey = await sec.getLocalConfigString(settingKey_suLogin);
+    String _signUpKey = await sec.getLocalConfigString(sec.settingKey_suLogin);
 
     TxData txdata = TxData(
         name: usernameController.value.text,

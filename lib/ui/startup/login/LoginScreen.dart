@@ -1,5 +1,5 @@
 import 'package:dtube_go/res/Config/appConfigValues.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/avalonConfig/avalonConfig_bloc_full.dart';
 import 'package:dtube_go/bloc/thirdPartyLogin/thirdPartyLogin_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
@@ -9,7 +9,7 @@ import 'package:dtube_go/ui/startup/login/pages/LoginWithCredentials.dart';
 import 'package:dtube_go/ui/startup/login/pages/SocialUserActionPopup.dart';
 import 'package:dtube_go/ui/startup/login/services/ressources.dart';
 import 'package:dtube_go/ui/startup/login/widgets/sign_in_button.dart';
-import 'package:dtube_go/utils/Global/secureStorage.dart';
+
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
@@ -44,7 +44,7 @@ class _LoginFormState extends State<LoginForm> {
   late String _currentHF = "0";
 
   void getCurrentHF() async {
-    String _hardfork = await sec.getLocalConfigString(settingKey_currentHF);
+    String _hardfork = await sec.getLocalConfigString(sec.settingKey_currentHF);
     setState(() {
       // override this to simulate another hardfork
       _currentHF = _hardfork;

@@ -1,24 +1,17 @@
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
-import 'package:dtube_go/ui/pages/News/NewsFeedList.dart';
 import 'package:dtube_go/ui/pages/News/NewsPage.dart';
-import 'package:dtube_go/ui/pages/feeds/lists/FeedList.dart';
 import 'package:dtube_go/ui/pages/settings/HiveSignerForm.dart';
-import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
-
 import 'package:dtube_go/ui/pages/Explore/GenreBase.dart';
 import 'package:dtube_go/ui/pages/upload/UploadPresetSelection.dart';
-import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsTabContainer.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
@@ -26,10 +19,8 @@ import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/MainContainer/Widgets/BalanceOverview.dart';
 import 'package:dtube_go/ui/MainContainer/Widgets/MenuButton.dart';
-
 import 'package:dtube_go/ui/pages/feeds/FeedTabContainer.dart';
 import 'package:dtube_go/ui/pages/notifications/NotificationButton.dart';
-import 'package:dtube_go/ui/pages/upload/UploaderMainPage.dart';
 import 'package:dtube_go/ui/pages/user/User.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/widgets/system/customSnackbar.dart';

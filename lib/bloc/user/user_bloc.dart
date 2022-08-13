@@ -1,4 +1,4 @@
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:bloc/bloc.dart';
 import 'package:dtube_go/bloc/user/user_event.dart';
 import 'package:dtube_go/bloc/user/user_state.dart';

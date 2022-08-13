@@ -4,7 +4,7 @@ import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_state.dart';
 
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
 class ThirdPartyUploaderBloc
     extends Bloc<ThirdPartyUploaderEvent, ThirdPartyUploaderState> {

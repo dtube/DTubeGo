@@ -1,6 +1,5 @@
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
-import 'package:dtube_go/utils/Global/secureStorage.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -46,9 +45,10 @@ class FirebaseService {
   }
 
   Future<Resource?> signInWithTwitterMobile() async {
-    String _twitterApiKey = await sec.getLocalConfigString(settingKey_twaKey);
+    String _twitterApiKey =
+        await sec.getLocalConfigString(sec.settingKey_twaKey);
     String _twitterApiSecret =
-        await sec.getLocalConfigString(settingKey_twaSec);
+        await sec.getLocalConfigString(sec.settingKey_twaSec);
 
     final twitterLogin = TwitterLogin(
       apiKey: _twitterApiKey,
@@ -115,11 +115,12 @@ class FirebaseService {
 
   Future<UserCredential> signInWithGitHubMobile(BuildContext context) async {
     // Create a GitHubSignIn instance
-    String _githubClientId = await sec.getLocalConfigString(settingKey_ghaCl);
+    String _githubClientId =
+        await sec.getLocalConfigString(sec.settingKey_ghaCl);
     String _githubClientSecret =
-        await sec.getLocalConfigString(settingKey_ghaSec);
+        await sec.getLocalConfigString(sec.settingKey_ghaSec);
     String _githubRedirectUrl =
-        await sec.getLocalConfigString(settingKey_ghaRU);
+        await sec.getLocalConfigString(sec.settingKey_ghaRU);
 
     final GitHubSignIn gitHubSignIn = GitHubSignIn(
         clientId: _githubClientId,

@@ -1,6 +1,6 @@
 import 'package:dtube_go/res/Config/HiveConfigValues.dart';
 import 'package:dtube_go/res/Config/UploadConfigValues.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

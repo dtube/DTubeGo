@@ -1,6 +1,6 @@
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -16,7 +16,6 @@ import 'package:dtube_go/ui/pages/post/widgets/CollapsedDescription.dart';
 import 'package:dtube_go/ui/pages/post/widgets/Comments.dart';
 import 'package:dtube_go/ui/pages/post/widgets/ReplyButton.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
-import 'package:dtube_go/utils/Global/secureStorage.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
@@ -276,18 +275,19 @@ class _PostDetailsState extends State<PostDetails> {
                     BlocBuilder<SettingsBloc, SettingsState>(
                         builder: (context, state) {
                       if (state is SettingsLoadedState) {
-                        _defaultVoteWeightPosts = double.parse(
-                            state.settings[settingKey_defaultVotingWeight]!);
-                        _defaultVoteTipPosts = double.parse(
-                            state.settings[settingKey_defaultVotingWeight]!);
-                        _defaultVoteWeightComments = double.parse(state
-                            .settings[settingKey_defaultVotingWeightComments]!);
+                        _defaultVoteWeightPosts = double.parse(state
+                            .settings[sec.settingKey_defaultVotingWeight]!);
+                        _defaultVoteTipPosts = double.parse(state
+                            .settings[sec.settingKey_defaultVotingWeight]!);
+                        _defaultVoteWeightComments = double.parse(
+                            state.settings[
+                                sec.settingKey_defaultVotingWeightComments]!);
 
-                        _fixedDownvoteActivated =
-                            state.settings[settingKey_FixedDownvoteActivated] ==
-                                "true";
-                        _fixedDownvoteWeight = double.parse(
-                            state.settings[settingKey_FixedDownvoteWeight]!);
+                        _fixedDownvoteActivated = state.settings[
+                                sec.settingKey_FixedDownvoteActivated] ==
+                            "true";
+                        _fixedDownvoteWeight = double.parse(state
+                            .settings[sec.settingKey_FixedDownvoteWeight]!);
                         return MultiBlocProvider(
                           providers: [
                             BlocProvider<TransactionBloc>(

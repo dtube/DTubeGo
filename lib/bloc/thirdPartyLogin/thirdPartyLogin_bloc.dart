@@ -1,8 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dtube_go/bloc/thirdPartyLogin/thirdPartyLogin_bloc_full.dart';
 
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
 class ThirdPartyLoginBloc
     extends Bloc<ThirdPartyLoginEvent, ThirdPartyLoginState> {

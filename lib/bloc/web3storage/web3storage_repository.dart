@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:dio/dio.dart';
 
-import 'package:dtube_go/res/secretConfigValues.dart' as secret;
+import 'package:dtube_go/res/Config/secretConfigValues.dart' as secret;
 
 abstract class Web3StorageRepository {
   Future<File> compressVideo(String localFilePath);
