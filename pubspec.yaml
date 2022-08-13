@@ -86,6 +86,7 @@ dependencies:
   #material_floating_search_bar: ^0.3.4
   flutter_barcode_scanner: ^2.0.0 #qr scan
   qr_flutter: ^4.0.0 #qr generator
+  pretty_qr_code: ^2.0.2 # another qr generator 
   decorated_icon: ^1.2.1 # shadows for icons
   simple_shadow: ^0.3.0 #shadows for png files (dtube icon)
   flutter_staggered_grid_view: ^0.4.1 # explore page <=== UPGRADE NEXT

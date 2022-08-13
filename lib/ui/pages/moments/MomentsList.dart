@@ -415,17 +415,9 @@ class AllMomentsSeenWidget extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(top: 2.h),
               child: Text(
-                "Feel free to share a moment of your life by tapping on the following icon:",
+                "Feel free to share a moment of your life with the community by tapping the \"create\" icon above!",
                 style: Theme.of(context).textTheme.bodyText1,
               ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 2.h),
-            child: MomentsUpload(
-              widget: widget,
-              size: globalIconSizeBig * 2,
-              withText: false,
             ),
           ),
         ],
@@ -482,7 +474,7 @@ class MomentsUpload extends StatelessWidget {
             customMomentTitle: widget.momentsCustomTitle,
             customMomentBody: widget.momentsCustomBody);
       }
-      return SizedBox(height: 0, width: 0);
+      return CircularProgressIndicator();
     });
   }
 }

@@ -109,9 +109,12 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
                     Container(
                       color: globalBGColor,
                       width: 100.w,
-                      child: Center(
-                        child: Text("Your presets",
-                            style: Theme.of(context).textTheme.headline5),
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 2.h),
+                        child: Center(
+                          child: Text("Your presets",
+                              style: Theme.of(context).textTheme.headline5),
+                        ),
                       ),
                     ),
                     FutureBuilder(
