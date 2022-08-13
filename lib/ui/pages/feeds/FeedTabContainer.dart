@@ -26,14 +26,16 @@ class FeedMainPage extends StatefulWidget {
 class _FeedMainPageState extends State<FeedMainPage>
     with SingleTickerProviderStateMixin {
   List<String> _tabNames = [
+    "Original DTubers",
     "Fresh Videos",
     "Follow Feed",
     "Hot Videos",
     "Trending Videos"
   ];
   List<IconData> _tabIcons = [
+    FontAwesomeIcons.circleCheck,
     FontAwesomeIcons.rss,
-    FontAwesomeIcons.userFriends,
+    FontAwesomeIcons.userGroup,
     FontAwesomeIcons.fire,
     FontAwesomeIcons.chartLine,
   ];
@@ -45,6 +47,11 @@ class _FeedMainPageState extends State<FeedMainPage>
   bool showTagFilter = false;
   FocusNode tagSearch = new FocusNode();
   late List<FeedViewBase> tabBarFeedItemList = [
+    FeedViewBase(
+        feedType: 'ODFeed',
+        largeFormat: true,
+        showAuthor: false,
+        scrollCallback: (bool) {}),
     FeedViewBase(
         feedType: 'NewFeed',
         largeFormat: true,
@@ -69,8 +76,8 @@ class _FeedMainPageState extends State<FeedMainPage>
   @override
   void initState() {
     if (globals.keyPermissions.isEmpty) {
-      tabBarFeedItemList.removeAt(1); // remove MyFeed (followings) from tabs
-      _tabNames.removeAt(1);
+      tabBarFeedItemList.removeAt(2); // remove MyFeed (followings) from tabs
+      _tabNames.removeAt(2);
     }
 
     _tabController =
@@ -85,10 +92,15 @@ class _FeedMainPageState extends State<FeedMainPage>
           case 0:
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
+              ..add(FetchFeedEvent(feedType: "ODFeed"));
+            break;
+          case 1:
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
               ..add(FetchFeedEvent(feedType: "NewFeed"));
             break;
 
-          case 1:
+          case 2:
             if (globals.keyPermissions.isEmpty) {
               BlocProvider.of<FeedBloc>(context)
                 ..isFetching = true
@@ -100,7 +112,7 @@ class _FeedMainPageState extends State<FeedMainPage>
             }
             break;
 
-          case 2:
+          case 3:
             if (globals.keyPermissions.isEmpty) {
               BlocProvider.of<FeedBloc>(context)
                 ..isFetching = true
@@ -112,7 +124,7 @@ class _FeedMainPageState extends State<FeedMainPage>
             }
             break;
 
-          case 3:
+          case 4:
             if (!globals.keyPermissions.isEmpty) {
               BlocProvider.of<FeedBloc>(context)
                 ..isFetching = true
@@ -126,7 +138,7 @@ class _FeedMainPageState extends State<FeedMainPage>
     });
     BlocProvider.of<FeedBloc>(context)
       ..isFetching = true
-      ..add(FetchFeedEvent(feedType: "NewFeed"));
+      ..add(FetchFeedEvent(feedType: "ODFeed"));
 
     getMainTagsFromStorage();
     super.initState();
@@ -170,7 +182,7 @@ class _FeedMainPageState extends State<FeedMainPage>
             rotation: 0,
             menuSize: globals.keyPermissions.isEmpty
                 ? globalIconSizeMedium * 4
-                : globalIconSizeMedium * 6,
+                : globalIconSizeMedium * 8,
           ),
           Align(
             alignment: Alignment.topLeft,
@@ -260,9 +272,19 @@ class _TabBarWithPositionState extends State<TabBarWithPosition> {
               size: widget.iconSize),
         ),
       ),
+      Tab(
+        child: RotatedBox(
+          quarterTurns: widget.rotation == 3 ? 1 : 0,
+          child: ShadowedIcon(
+              icon: widget.tabIcons[4],
+              color: globalAlmostWhite,
+              shadowColor: Colors.black,
+              size: widget.iconSize),
+        ),
+      ),
     ];
     if (globals.keyPermissions.isEmpty) {
-      tabs.removeAt(1);
+      tabs.removeAt(2);
     }
     super.initState();
   }

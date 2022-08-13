@@ -29,18 +29,19 @@ abstract class Web3StorageRepository {
 class Web3StorageRepositoryImpl implements Web3StorageRepository {
   @override
   Future<File> compressVideo(String localFilePath) async {
-    // try {
-    await VideoCompress.setLogLevel(4);
-    MediaInfo? mediaInfo = await VideoCompress.compressVideo(localFilePath,
-        //all qualities: https://github.com/jonataslaw/VideoCompress/blob/e6c936b9e78dcb5ece649d4960bfc739642a65a6/lib/src/video_compress/video_quality.dart
-        quality: VideoQuality.MediumQuality,
-        includeAudio: true);
-    print("test");
-    return File(mediaInfo!.path!);
-    // } catch (e) {
-    //   print(e.toString());
-    //   throw Exception();
-    // }
+    try {
+      // await VideoCompress.setLogLevel(4);
+      // MediaInfo? mediaInfo = await VideoCompress.compressVideo(localFilePath,
+      //     //all qualities: https://github.com/jonataslaw/VideoCompress/blob/e6c936b9e78dcb5ece649d4960bfc739642a65a6/lib/src/video_compress/video_quality.dart
+      //     quality: VideoQuality.DefaultQuality,
+      //     includeAudio: true);
+
+      // return File(mediaInfo!.path!);
+      return File(localFilePath);
+    } catch (e) {
+      print(e.toString());
+      throw Exception();
+    }
   }
 
   Future<String> createThumbnailFromVideo(String localFilePath) async {
@@ -77,21 +78,45 @@ class Web3StorageRepositoryImpl implements Web3StorageRepository {
   }
 
   Future<String> uploadVideo(String localFilePath, String endpoint) async {
-    String _url = endpoint + '/upload';
-
+    String _url = endpoint + 'uploadVideo';
+    String cid = "";
     var formData = FormData.fromMap({
-      'file': await MultipartFile.fromFile(localFilePath,
-          // filename: 'video.mp4',
-          contentType: new MediaType('video', 'mp4'))
+      'video': await MultipartFile.fromFile(
+        localFilePath,
+        filename: 'video.mp4',
+        contentType: new MediaType('video', 'mp4'),
+      )
     });
-    String authHeader = "Bearer " + secret.Web3StorageAPIToken;
+    //String authHeader = "Bearer " + secret.Web3StorageAPIToken;
+    String apiKeyHeader = secret.web3ApiKey;
+
     var dio = Dio();
-    dio.options.headers["Authorization"] = authHeader;
+    //dio.options.headers["Authorization"] = authHeader;
+    dio.options.headers["apikey"] = apiKeyHeader;
     dio.options.headers["Content-Type"] = "multipart/form-data";
+    //var response = await dio.post(_url, data: formData);
     var response = await dio.post(_url, data: formData);
+
     if (response.statusCode == 200) {
+      print("source file uploaded");
       var data = response.data;
-      String cid = data["cid"];
+
+      String token = data["token"];
+      String _tokenUrl = endpoint + "progress/" + token;
+      var dioToken = Dio();
+      dioToken.options.headers["apikey"] = apiKeyHeader;
+      do {
+        await Future.delayed(Duration(seconds: 5));
+        var responseTokenQuery = await dioToken.get(_tokenUrl);
+        if (responseTokenQuery.statusCode == 200) {
+          print("progress checked");
+          var progressData = responseTokenQuery.data;
+          if (progressData["progress"] == "complete") {
+            cid = progressData["cid"];
+            return cid;
+          }
+        }
+      } while (cid == "");
       return cid;
     } else {
       throw Exception();

@@ -154,7 +154,7 @@ class _UploadFormState extends State<UploadForm> {
                         "In order to record a video with the app please make sure to have enough free internal storage on your device.",
                         style: Theme.of(context).textTheme.bodyText1),
                     SizedBox(
-                      height: 18,
+                      height: 2.h,
                     ),
                     Text(
                         "We have set the minimum required free space to ${AppConfig.minFreeSpaceRecordVideoInMB / 1000} GB internal storage.",
@@ -278,115 +278,112 @@ class _UploadFormState extends State<UploadForm> {
                           avoidAnimation: true,
                           waitBeforeFadeIn: Duration(seconds: 0),
                           childs: [
-                            SizedBox(height: 8),
-                            stateUploadData.videoLocation != ""
-                                ? basicData()
-                                : SizedBox(height: 50),
-                            SizedBox(height: 8),
-                            _formIsFilled
-                                ? imagePreview()
-                                : SizedBox(height: 50),
-                            _formIsFilled
-                                ? Column(
-                                    children: [
-                                      moreSettings(),
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 1.h),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Checkbox(
-                                                value: _termsAccepted,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _termsAccepted =
-                                                        !_termsAccepted;
-                                                  });
-                                                }),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                    "I have read & agree to the "),
-                                                GestureDetector(
-                                                  child: Text(
-                                                    "Terms for UGC of DTube Go",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyText1!
-                                                        .copyWith(
-                                                            color: globalRed),
-                                                  ),
-                                                  onTap: () {
-                                                    showDialog<String>(
-                                                      context: context,
-                                                      builder: (BuildContext
-                                                              context) =>
-                                                          UploadTermsDialog(
-                                                        agreeToTermsCallback:
-                                                            () {
-                                                          setState(() {
-                                                            _termsAccepted =
-                                                                !_termsAccepted;
-                                                          });
-                                                        },
-                                                      ),
-                                                    );
-                                                  },
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(height: 8),
-                                      InputChip(
-                                        backgroundColor: globalRed,
-                                        label: Text("upload",
-                                            style: TextStyle(fontSize: 24)),
-                                        onPressed: _formIsFilled &&
-                                                _termsAccepted
-                                            ? () async {
-                                                int _hiveCooldown = await sec
-                                                    .getSecondsUntilHiveCooldownEnds();
-                                                if (stateUploadData
-                                                        .crossPostToHive &&
-                                                    _hiveCooldown > 0) {
-                                                  showDialog<String>(
-                                                    context: context,
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        HivePostCooldownDetectedDialog(
-                                                      cooldown: _hiveCooldown,
-                                                    ),
-                                                  );
-                                                } else {
-                                                  widget.callback(
-                                                      stateUploadData);
-
-                                                  showDialog<String>(
-                                                    context: context,
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        UploadStartedDialog(),
-                                                  );
-                                                }
-                                              }
-                                            : null,
-                                      ),
-                                      SizedBox(
-                                        height: 100,
-                                      )
-                                    ],
-                                  )
-                                : SizedBox(height: 50),
-                            SizedBox(height: 50)
-                          ],
-                        )
+                              SizedBox(height: 1.h),
+                              stateUploadData.videoLocation != ""
+                                  ? basicData()
+                                  : SizedBox(height: 5.h),
+                              SizedBox(height: 1.h),
+                            ])
                       : Container(),
                 ),
+                _formIsFilled
+                    ? DTubeFormCard(
+                        avoidAnimation: true,
+                        waitBeforeFadeIn: Duration(seconds: 0),
+                        childs: [
+                            imagePreview(),
+                            Column(
+                              children: [
+                                moreSettings(),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 1.h),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                          value: _termsAccepted,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _termsAccepted = !_termsAccepted;
+                                            });
+                                          }),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("I have read & agree to the "),
+                                          GestureDetector(
+                                            child: Text(
+                                              "Terms for UGC of DTube Go",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1!
+                                                  .copyWith(color: globalRed),
+                                            ),
+                                            onTap: () {
+                                              showDialog<String>(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        UploadTermsDialog(
+                                                  agreeToTermsCallback: () {
+                                                    setState(() {
+                                                      _termsAccepted =
+                                                          !_termsAccepted;
+                                                    });
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 2.h),
+                                Text(
+                                    "Info: direct uploads could take some time to get pinned on the ipfs network. That means they need a few minutes to be playable after the initial upload.",
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1),
+                                InputChip(
+                                  backgroundColor: globalRed,
+                                  label: Text("upload",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline4),
+                                  onPressed: _formIsFilled && _termsAccepted
+                                      ? () async {
+                                          int _hiveCooldown = await sec
+                                              .getSecondsUntilHiveCooldownEnds();
+                                          if (stateUploadData.crossPostToHive &&
+                                              _hiveCooldown > 0) {
+                                            showDialog<String>(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  HivePostCooldownDetectedDialog(
+                                                cooldown: _hiveCooldown,
+                                              ),
+                                            );
+                                          } else {
+                                            widget.callback(stateUploadData);
+
+                                            showDialog<String>(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  UploadStartedDialog(),
+                                            );
+                                          }
+                                        }
+                                      : null,
+                                ),
+                              ],
+                            )
+                          ])
+                    : Container(),
+                SizedBox(
+                  height: 10.h,
+                )
               ],
             ),
           ),

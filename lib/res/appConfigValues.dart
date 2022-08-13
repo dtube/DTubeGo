@@ -16,6 +16,7 @@ class AppConfig {
   static String trendingFeedUrlFirst = "/trending";
   static String trendingFeedUrlMore = "/trending/##AUTHOR/##LINK";
   static String accountFeedUrlFirst = "/blog/##USERNAME";
+  static String accountFeedWithTSFilterUrlFirst = "/blog/##USERNAME";
   static String accountFeedUrlMore = "/blog/##USERNAME/##AUTHORNAME/##LINK";
   static String notificationFeedUrl = "/notifications/##USERNAME";
 
@@ -46,6 +47,7 @@ class AppConfig {
   static String sendTransactionUrl = "/transactWaitConfirm";
   static String avalonConfig = "/config";
   static String accountPriceUrl = "/accountPrice/##USERNAME";
+  static String defaultWebsiteURL = "https://d.tube";
 
 // storage providers and upload endpoints
   static String ipfsVideoUrl = "https://ipfs.d.tube/ipfs/";
@@ -58,9 +60,9 @@ class AppConfig {
     "https://4.btfsu.d.tube"
   ];
 
-  static List<String> web3StorageEndpoints = ["https://api.web3.storage"];
+  static List<String> web3StorageEndpoints = ["https://dtube.fso.ovh:5082/"];
   static String web3StorageGateway = "https://ipfs.io";
-  static int maxUploadRetries = 7;
+  static int maxUploadRetries = 2;
 
   static String ipfsSnapUrl = 'https://snap1.d.tube/ipfs/';
   static String ipfsSnapUploadUrl = 'https://snap1.d.tube';
@@ -124,7 +126,7 @@ class AppConfig {
   static List<String> genericCurationTags = ["vdc", "onelovedtube"];
 
 // only show moments of the last x days
-  static int momentsPastXDays = -7;
+  static int momentsPastXDays = -30;
 
   // global settings -> tags: those are the possible tags
   static List<String> possibleExploreTags = [

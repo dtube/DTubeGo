@@ -47,6 +47,8 @@ class Web3StorageBloc extends Bloc<Web3StorageEvent, Web3StorageState> {
       _newFile = await repository.compressVideo(event.videoPath);
       MediaInfo _metadata = await VideoCompress.getMediaInfo(event.videoPath);
       _uploadData.duration = (_metadata.duration! / 1000).floor().toString();
+      appStateBloc.add(UploadStateChangedEvent(
+          uploadState: UploadProcessingState(progressPercent: 10)));
 
       _newThumbnail =
           await repository.createThumbnailFromVideo(event.videoPath);
@@ -54,10 +56,10 @@ class Web3StorageBloc extends Bloc<Web3StorageEvent, Web3StorageState> {
         _newThumbnail = event.thumbnailPath;
       }
       // notify AppStateBloc about finishing transcoding and thumbnail creation
-      appStateBloc.add(UploadStateChangedEvent(
-          uploadState: UploadProcessingState(progressPercent: 10)));
-      emit(Web3StorageVideoPreProcessedState(compressedFile: _newFile));
 
+      emit(Web3StorageVideoPreProcessedState(compressedFile: _newFile));
+      appStateBloc.add(UploadStateChangedEvent(
+          uploadState: UploadProcessingState(progressPercent: 30)));
       // some upload endpoints throw errors
       // we try to upload max 5 times until we show an error
       do {
@@ -73,32 +75,8 @@ class Web3StorageBloc extends Bloc<Web3StorageEvent, Web3StorageState> {
             _cid = await repository.uploadVideo(_newFile.path, _uploadEndpoint);
             print("CID: " + _cid);
             emit(Web3StorageVideoUploadedState(uploadToken: _cid));
-
-            // // monitor the upload status
-            // do {
-            //   _uploadStatusResponse = await repository.monitorVideoUploadStatus(
-            //       _videoUploadToken, _uploadEndpoint);
-            //   UploadStatusResponse resp =
-            //       new UploadStatusResponse.fromJson(_uploadStatusResponse);
-            //   if (resp.sprite.spriteCreation.progress < 100) {
-            //     appStateBloc.add(UploadStateChangedEvent(
-            //         uploadState: UploadProcessingState(progressPercent: 20)));
-            //   }
-            //   if (resp.sprite.spriteCreation.progress == 100 &&
-            //       resp.encodedVideos[0].encode.progress < 100) {
-            //     appStateBloc.add(UploadStateChangedEvent(
-            //         uploadState: UploadProcessingState(progressPercent: 40)));
-            //   }
-            //   if (resp.sprite.spriteCreation.progress == 100 &&
-            //       resp.encodedVideos[0].encode.progress == 100 &&
-            //       resp.encodedVideos[1].encode.progress < 100) {
-            //     appStateBloc.add(UploadStateChangedEvent(
-            //         uploadState: UploadProcessingState(progressPercent: 80)));
-            //   }
-
-            //   emit(Web3StorageVideoPostProcessingState(
-            //       processingResponse: _uploadStatusResponse));
-            // } while (_uploadStatusResponse["finished"] == false);
+            appStateBloc.add(UploadStateChangedEvent(
+                uploadState: UploadProcessingState(progressPercent: 70)));
 
             // video is uploaded
             emit(Web3StorageVideoPostProcessedState(processingResponse: _cid));
@@ -107,16 +85,14 @@ class Web3StorageBloc extends Bloc<Web3StorageEvent, Web3StorageState> {
             // add ipfs info to the uploadData
             _uploadData.videoSourceHash = _cid;
             _uploadData.ipfsGateway = AppConfig.web3StorageGateway;
-            // _uploadData.video240pHash =
-            //     statusInfo["encodedVideos"][0]["ipfsAddEncodeVideo"]["hash"];
-            // _uploadData.video480pHash =
-            //     statusInfo["encodedVideos"][1]["ipfsAddEncodeVideo"]["hash"];
-            // _uploadData.videoSpriteHash =
-            //     statusInfo["ipfsAddSourceVideo"]["hash"];
+
             uploadErrorCount = 0;
           }
         } catch (e) {
           // ipfs upload failed
+          print(
+              "Video upload failed!\n\nPlease report this error to the dtube team with a screenshot!\n\n" +
+                  e.toString());
           uploadErrorMessage =
               "Video upload failed!\n\nPlease report this error to the dtube team with a screenshot!\n\n" +
                   e.toString();
@@ -126,6 +102,8 @@ class Web3StorageBloc extends Bloc<Web3StorageEvent, Web3StorageState> {
         try {
           _thumbnailOnlineLocation =
               await repository.uploadThumbnail(_newThumbnail);
+          appStateBloc.add(UploadStateChangedEvent(
+              uploadState: UploadProcessingState(progressPercent: 90)));
 
           emit(Web3StorageThumbnailUploadedState());
           // add thumbnail url to the uploadData

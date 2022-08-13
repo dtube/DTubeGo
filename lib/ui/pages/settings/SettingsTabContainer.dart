@@ -136,7 +136,7 @@ class _SettingsTabContainerState extends State<SettingsTabContainer>
                     offset: Duration(seconds: 3),
                     duration: Duration(seconds: 1)),
                 child: GestureDetector(
-                  child: FaIcon(FontAwesomeIcons.save),
+                  child: FaIcon(FontAwesomeIcons.floppyDisk),
                   onTap: () async {
                     Map<String, String> newSettings = {
                       sec.settingKey_defaultVotingWeight:
