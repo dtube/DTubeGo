@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
@@ -265,7 +266,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                               builder: (context, state) {
                                             if (state
                                                 is ThirdPartyUploaderUploadingState) {
-                                              return CircularProgressIndicator();
+                                              return ColorChangeCircularProgressIndicator();
                                             }
                                             if (state
                                                 is ThirdPartyUploaderUploadedState) {
@@ -325,7 +326,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                               builder: (context, state) {
                                             if (state
                                                 is ThirdPartyUploaderUploadingState) {
-                                              return CircularProgressIndicator();
+                                              return ColorChangeCircularProgressIndicator();
                                             }
                                             if (state
                                                 is ThirdPartyUploaderUploadedState) {

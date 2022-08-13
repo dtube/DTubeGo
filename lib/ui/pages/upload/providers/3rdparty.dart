@@ -9,6 +9,7 @@ import 'package:dtube_go/ui/pages/upload/widgets/PresetCards.dart';
 import 'package:dtube_go/ui/pages/upload/widgets/uploadForm.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
@@ -167,7 +168,7 @@ class _Wizard3rdPartyState extends State<Wizard3rdParty> {
                                           print(state.message);
                                           return Text("error data");
                                         } else {
-                                          return CircularProgressIndicator();
+                                          return ColorChangeCircularProgressIndicator();
                                         }
                                       }),
                                   onPressed: () async {

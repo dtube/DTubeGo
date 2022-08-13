@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/notifications/NotificationItem.dart';
@@ -52,7 +53,7 @@ class _NotificationsState extends State<Notifications> {
 
   Widget buildLoading() {
     return Center(
-      child: CircularProgressIndicator(),
+      child: ColorChangeCircularProgressIndicator(),
     );
   }
 

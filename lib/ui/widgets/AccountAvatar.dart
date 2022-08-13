@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
@@ -135,7 +136,7 @@ class _AccountIconState extends State<AccountIcon> {
           return Container(
               width: widget.avatarSize,
               height: widget.avatarSize,
-              child: Center(child: CircularProgressIndicator()));
+              child: Center(child: ColorChangeCircularProgressIndicator()));
         } else if (state is UserLoadedState) {
           try {
             return Container(
@@ -286,7 +287,7 @@ class _AccountNameState extends State<AccountName> {
           return Container(
               width: widget.width,
               height: widget.height,
-              child: Center(child: CircularProgressIndicator()));
+              child: Center(child: ColorChangeCircularProgressIndicator()));
         } else if (state is UserLoadedState) {
           return Container(
               width: widget.width,
@@ -319,7 +320,7 @@ class _AccountNameState extends State<AccountName> {
                       ),
                     ));
         }
-        return CircularProgressIndicator();
+        return ColorChangeCircularProgressIndicator();
       },
     );
   }

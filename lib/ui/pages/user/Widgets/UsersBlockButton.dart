@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
@@ -41,7 +42,7 @@ class _UserBlockButtonState extends State<UserBlockButton> {
         bloc: _userBloc,
         builder: (context, state) {
           if (state is UserLoadingState || state is UserInitialState) {
-            return Container();
+            return ColorChangeCircularProgressIndicator();
           } else if (state is UserLoadedState) {
             return IconButton(
                 onPressed: !globals.keyPermissions.contains(6)

@@ -48,6 +48,7 @@ final ThemeData dtubeDarkTheme = ThemeData(
   primaryColorDark: Color(0xff000000),
   canvasColor: globalBGColor,
   scaffoldBackgroundColor: globalBGColor,
+
   cardColor: Color(0xff424242),
   dividerColor: Color(0x1fffffff),
   highlightColor: Color(0x40cccccc),
@@ -91,7 +92,7 @@ final ThemeData dtubeDarkTheme = ThemeData(
     highlightColor: Color(0x29ffffff),
     splashColor: Color(0x1fffffff),
     colorScheme: ColorScheme(
-      primary: Color(0xff212140),
+      primary: globalBlue,
       secondary: Color(0xff64ffda),
       surface: Color(0xff424242),
       background: Color(0xff616161),

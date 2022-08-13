@@ -108,7 +108,6 @@ class _UserState extends State<UserPage> {
 
   Widget buildLoading() {
     return Center(
-      //child: CircularProgressIndicator(),
       child: SizedBox(height: 0, width: 0),
     );
   }

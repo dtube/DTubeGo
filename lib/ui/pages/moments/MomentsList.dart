@@ -8,6 +8,7 @@ import 'package:dtube_go/ui/pages/moments/MomentsView/MomentsView.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/controller/MomentsController.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/widgets/MomentsUpload.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/widgets/VideoPlayerMoments.dart';
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
@@ -467,7 +468,7 @@ class MomentsUpload extends StatelessWidget {
             customMomentTitle: widget.momentsCustomTitle,
             customMomentBody: widget.momentsCustomBody);
       }
-      return CircularProgressIndicator();
+      return ColorChangeCircularProgressIndicator();
     });
   }
 }

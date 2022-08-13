@@ -2,6 +2,7 @@ import 'package:dtube_go/bloc/rewards/rewards_bloc_full.dart';
 import 'package:dtube_go/ui/pages/post/postDetailPageV2.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:dtube_go/utils/Strings/friendlyTimestamp.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
@@ -286,7 +287,7 @@ class _ClaimRewardButtonState extends State<ClaimRewardButton> {
         );
       } else {
         if (state is TransactionSinging || state is TransactionSigned) {
-          return CircularProgressIndicator();
+          return ColorChangeCircularProgressIndicator();
         } else {
           return ElevatedButton(
             onPressed: !globals.keyPermissions.contains(17)

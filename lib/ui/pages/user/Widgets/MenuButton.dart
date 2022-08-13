@@ -24,7 +24,7 @@ Widget buildUserMenuSpeedDial(
               icon: FontAwesomeIcons.gears,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
-              size: globalIconSizeMedium),
+              size: globalIconSizeBig),
           elevation: 0,
           backgroundColor: Colors.transparent,
           onTap: () {
@@ -44,7 +44,7 @@ Widget buildUserMenuSpeedDial(
               icon: FontAwesomeIcons.clockRotateLeft,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
-              size: globalIconSizeMedium),
+              size: globalIconSizeBig),
           elevation: 0,
           backgroundColor: Colors.transparent,
           onTap: () {
@@ -62,7 +62,7 @@ Widget buildUserMenuSpeedDial(
               icon: FontAwesomeIcons.rightFromBracket,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
-              size: globalIconSizeMedium),
+              size: globalIconSizeBig),
           elevation: 0,
           backgroundColor: Colors.transparent,
           onTap: () {
@@ -77,7 +77,7 @@ Widget buildUserMenuSpeedDial(
               icon: FontAwesomeIcons.clockRotateLeft,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
-              size: globalIconSizeMedium),
+              size: globalIconSizeBig),
           elevation: 0,
           backgroundColor: Colors.transparent,
           onTap: () {
@@ -95,7 +95,7 @@ Widget buildUserMenuSpeedDial(
               icon: FontAwesomeIcons.rightLeft,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
-              size: globalIconSizeMedium),
+              size: globalIconSizeBig),
           elevation: 0,
           backgroundColor: Colors.transparent,
           visible: globals.keyPermissions.contains(3),
@@ -114,7 +114,7 @@ Widget buildUserMenuSpeedDial(
                   : FontAwesomeIcons.userGroup,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
-              size: globalIconSizeMedium),
+              size: globalIconSizeBig),
           elevation: 0,
           visible: user.alreadyFollowing
               ? globals.keyPermissions.contains(8)
@@ -137,7 +137,7 @@ Widget buildUserMenuSpeedDial(
           icon: FontAwesomeIcons.bars,
           color: globalAlmostWhite,
           shadowColor: Colors.transparent,
-          size: globalIconSizeMedium),
+          size: globalIconSizeBig),
       activeIcon: FontAwesomeIcons.chevronLeft,
       direction: SpeedDialDirection.up,
       visible: true,

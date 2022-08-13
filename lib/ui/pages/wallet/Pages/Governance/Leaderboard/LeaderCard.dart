@@ -12,6 +12,7 @@ import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/ui/widgets/players/VideoPlayerFromURL.dart';
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
@@ -153,12 +154,12 @@ class _VoteButtonState extends State<VoteButton> {
     }, child: BlocBuilder<TransactionBloc, TransactionState>(
             builder: (context, state) {
       if (state is TransactionSinging) {
-        return CircularProgressIndicator();
+        return ColorChangeCircularProgressIndicator();
       }
 
       return BlocBuilder<UserBloc, UserState>(builder: (context, userState) {
         if (userState is UserLoadingState) {
-          return CircularProgressIndicator();
+          return ColorChangeCircularProgressIndicator();
         }
         if (userState is UserLoadedState) {
           return InputChip(
@@ -189,7 +190,7 @@ class _VoteButtonState extends State<VoteButton> {
           );
         }
 
-        return CircularProgressIndicator();
+        return ColorChangeCircularProgressIndicator();
       });
     }));
   }

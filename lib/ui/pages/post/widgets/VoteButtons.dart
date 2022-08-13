@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
@@ -221,7 +222,7 @@ class _VotingButtonsState extends State<VotingButtons> {
           }
         }
       } else {
-        return CircularProgressIndicator();
+        return ColorChangeCircularProgressIndicator();
       }
     });
   }
@@ -602,7 +603,7 @@ class _VotingSliderState extends State<VotingSlider> {
                   : Center(
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: CircularProgressIndicator(),
+                        child: ColorChangeCircularProgressIndicator(),
                       ),
                     );
             } else {
@@ -779,7 +780,7 @@ class _VotingSliderState extends State<VotingSlider> {
           : Center(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(),
+                child: ColorChangeCircularProgressIndicator(),
               ),
             );
     }

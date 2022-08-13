@@ -1,4 +1,5 @@
 import 'package:dtube_go/res/Config/appConfigValues.dart';
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
@@ -655,7 +656,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                                 )
                                                               : Center(
                                                                   child:
-                                                                      CircularProgressIndicator()),
+                                                                      ColorChangeCircularProgressIndicator()),
                                                     ),
                                                   );
                                                 }),
@@ -1338,7 +1339,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                             )
                                                           : Center(
                                                               child:
-                                                                  CircularProgressIndicator()),
+                                                                  ColorChangeCircularProgressIndicator()),
                                                     ),
                                                   );
                                                 }),
