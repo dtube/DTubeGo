@@ -1,3 +1,5 @@
+import 'package:dtube_go/res/Config/UploadConfigValues.dart';
+import 'package:dtube_go/res/Config/appConfigValues.dart';
 import 'package:dtube_go/ui/pages/upload/dialogs/HivePostCooldownDialog.dart';
 import 'package:dtube_go/ui/pages/upload/dialogs/UploadTermsDialog.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/UploadStartedDialog.dart';
@@ -13,7 +15,6 @@ import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 
 import 'dart:io';
@@ -25,8 +26,8 @@ import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer.dart';
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
 
-import 'package:dtube_go/utils/secureStorage.dart';
-import 'package:dtube_go/utils/imageCropper.dart';
+import 'package:dtube_go/utils/Global/secureStorage.dart';
+import 'package:dtube_go/utils/System/imageCropper.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -420,8 +421,8 @@ class _UploadFormState extends State<UploadForm> {
       String _videoUrl =
           ["IPFS", "Skynet"].contains(stateUploadData.videoLocation)
               ? (stateUploadData.videoLocation == "IPFS"
-                      ? AppConfig.ipfsVideoUrl
-                      : AppConfig.siaVideoUrl) +
+                      ? UploadConfig.ipfsVideoUrl
+                      : UploadConfig.siaVideoUrl) +
                   (stateUploadData.video240pHash != ""
                       ? stateUploadData.video240pHash
                       : stateUploadData.video480pHash != ""
@@ -509,10 +510,10 @@ class _UploadFormState extends State<UploadForm> {
                             ? ChewiePlayer(
                                 videoUrl: stateUploadData.videoLocation ==
                                         "IPFS"
-                                    ? AppConfig.ipfsVideoUrl +
+                                    ? UploadConfig.ipfsVideoUrl +
                                         stateUploadData.videoSourceHash
                                     : stateUploadData.videoLocation == "Skynet"
-                                        ? AppConfig.siaVideoUrl +
+                                        ? UploadConfig.siaVideoUrl +
                                             stateUploadData.videoSourceHash
                                         : _video!.path,
                                 looping: false,

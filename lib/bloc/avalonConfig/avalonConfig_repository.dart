@@ -1,6 +1,5 @@
 import 'package:dtube_go/bloc/avalonConfig/avalonConfig_bloc_full.dart';
-
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/APIUrlSchema.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -17,7 +16,8 @@ abstract class AvalonConfigRepository {
 class AvalonConfigRepositoryImpl implements AvalonConfigRepository {
   @override
   Future<AvalonConfig> getAvalonConfig(String apiNode) async {
-    var response = await http.get(Uri.parse(apiNode + AppConfig.avalonConfig));
+    var response =
+        await http.get(Uri.parse(apiNode + APIUrlSchema.avalonConfig));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
@@ -30,7 +30,7 @@ class AvalonConfigRepositoryImpl implements AvalonConfigRepository {
 
   Future<int> getAvalonAccountPrice(String apiNode, String accountName) async {
     var response = await http.get(Uri.parse(apiNode +
-        AppConfig.accountPriceUrl.replaceAll("##USERNAME", accountName)));
+        APIUrlSchema.accountPriceUrl.replaceAll("##USERNAME", accountName)));
     if (response.statusCode == 200) {
       var data = response.body;
       if (int.tryParse(data) != null) {

@@ -1,5 +1,5 @@
 import 'package:dtube_go/bloc/leaderboard/leaderboard_response_model.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/APIUrlSchema.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -13,7 +13,7 @@ class LeaderboardRepositoryImpl implements LeaderboardRepository {
     String apiNode,
   ) async {
     var response =
-        await http.get(Uri.parse(apiNode + AppConfig.leaderboardUrl));
+        await http.get(Uri.parse(apiNode + APIUrlSchema.leaderboardUrl));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 

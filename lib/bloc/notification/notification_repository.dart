@@ -1,5 +1,5 @@
 import 'package:dtube_go/bloc/notification/notification_response_model.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/APIUrlSchema.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -14,7 +14,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
       List<int> notificationTypes, String applicationUser) async {
     // handling notification types
     var response = await http.get(Uri.parse(apiNode +
-        AppConfig.notificationFeedUrl
+        APIUrlSchema.notificationFeedUrl
             .replaceAll("##USERNAME", applicationUser)));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);

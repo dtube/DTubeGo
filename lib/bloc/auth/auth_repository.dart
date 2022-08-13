@@ -1,20 +1,12 @@
 import 'package:dtube_go/bloc/config/txTypes.dart';
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
-
+import 'package:dtube_go/res/Config/APIUrlSchema.dart';
+import 'package:dtube_go/res/Config/appConfigValues.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/bloc/auth/auth_response_model.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-
-import 'package:dtube_go/res/appConfigValues.dart';
-import 'package:dtube_go/utils/crypto_convert.dart';
-import 'package:hex/hex.dart';
+import 'package:dtube_go/utils/Crypto/crypto_convert.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'dart:typed_data';
-
-import 'package:bs58/bs58.dart';
-import 'package:elliptic/elliptic.dart';
-import 'package:bs58check/bs58check.dart' as bs58check;
 
 abstract class AuthRepository {
   Future<bool> signOut();
@@ -56,7 +48,7 @@ class AuthRepositoryImpl implements AuthRepository {
       response = await http
           .get(
         Uri.parse(apiNode +
-            AppConfig.accountDataUrl.replaceAll("##USERNAME", username)),
+            APIUrlSchema.accountDataUrl.replaceAll("##USERNAME", username)),
       )
           .catchError((e) {
         throw e;
@@ -109,7 +101,7 @@ class AuthRepositoryImpl implements AuthRepository {
       response = await http
           .get(
         Uri.parse(apiNode +
-            AppConfig.accountDataUrl.replaceAll("##USERNAME", username)),
+            APIUrlSchema.accountDataUrl.replaceAll("##USERNAME", username)),
       )
           .catchError((e) {
         return [];

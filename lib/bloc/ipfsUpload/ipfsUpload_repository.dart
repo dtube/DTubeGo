@@ -3,8 +3,7 @@
 // - https://github.com/ngngardner/dart_ipfs_client
 
 import 'dart:io';
-
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/UploadConfigValues.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:http/http.dart' as http;
 
@@ -55,7 +54,7 @@ class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
 
   Future<String> getUploadEndpoint() async {
     List<String> validBTFSUploadEndpoints = [];
-    for (var url in AppConfig.btfsUploadEndpoints) {
+    for (var url in UploadConfig.btfsUploadEndpoints) {
       var response = await http.get(Uri.parse(url + '/getStatus'));
       if (response.statusCode == 200) {
         validBTFSUploadEndpoints.add(url);
@@ -125,7 +124,8 @@ class IPFSUploadRepositoryImpl implements IPFSUploadRepository {
   Future<Map> monitorThumbnailUploadStatus(String token) async {
     var dio = Dio();
 
-    String url = AppConfig.ipfsSnapUploadUrl + '/getProgressByToken/' + token;
+    String url =
+        UploadConfig.ipfsSnapUploadUrl + '/getProgressByToken/' + token;
 
     var response = await dio.get(url);
     print(response.statusCode);

@@ -1,11 +1,11 @@
 import 'dart:collection';
-
 import 'package:bloc/bloc.dart';
 import 'package:dtube_go/bloc/feed/feed_state.dart';
 import 'package:dtube_go/bloc/feed/feed_event.dart';
 import 'package:dtube_go/bloc/feed/feed_response_model.dart';
 import 'package:dtube_go/bloc/feed/feed_repository.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/ExploreConfigValues.dart';
+import 'package:dtube_go/res/Config/appConfigValues.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
@@ -86,7 +86,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       String _tsRangeFilter = '&tsrange=' +
           (DateTime.now()
                       .add(Duration(
-                          days: AppConfig.maxDaysInPastForSuggestions * -1))
+                          days: ExploreConfig.maxDaysInPastForSuggestions * -1))
                       .millisecondsSinceEpoch /
                   1000)
               .toString() +
@@ -125,7 +125,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       String _tsRangeFilter = '&tsrange=' +
           (DateTime.now()
                       .add(Duration(
-                          days: AppConfig.maxDaysInPastForSuggestions * -1))
+                          days: ExploreConfig.maxDaysInPastForSuggestions * -1))
                       .millisecondsSinceEpoch /
                   1000)
               .toString() +
@@ -278,7 +278,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         String _tsRangeFilterUser = '&tsrange=' +
             (DateTime.now()
                         .add(Duration(
-                            days: AppConfig.maxDaysInPastForSuggestions * -1))
+                            days:
+                                ExploreConfig.maxDaysInPastForSuggestions * -1))
                         .millisecondsSinceEpoch /
                     1000)
                 .toString() +
@@ -298,7 +299,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           for (var tag in post.tags) {
             if (!_tags.contains(tag) &&
                 // Exclude generic curation tags from suggested search
-                !AppConfig.genericCurationTags.contains(tag)) {
+                !ExploreConfig.genericCurationTags.contains(tag)) {
               _tags.add(tag);
             }
           }
@@ -312,7 +313,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           String _tsRangeFilterOtherUsers = '&tsrange=' +
               (DateTime.now()
                           .add(Duration(
-                              days: AppConfig.maxDaysInPastForSuggestions * -1))
+                              days: ExploreConfig.maxDaysInPastForSuggestions *
+                                  -1))
                           .millisecondsSinceEpoch /
                       1000)
                   .toString() +
@@ -356,8 +358,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         }
 
         emit(SuggestedUsersLoadedState(
-            users:
-                _suggestedUsers.take(AppConfig.maxUserSuggestions).toList()));
+            users: _suggestedUsers
+                .take(ExploreConfig.maxUserSuggestions)
+                .toList()));
       } catch (e) {
         print(e.toString());
         emit(FeedErrorState(message: e.toString()));
@@ -387,7 +390,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           String _tsRangeFilterOtherUsers = '&tsrange=' +
               (DateTime.now()
                           .add(Duration(
-                              days: AppConfig.maxDaysInPastForSuggestions * -1))
+                              days: ExploreConfig.maxDaysInPastForSuggestions *
+                                  -1))
                           .millisecondsSinceEpoch /
                       1000)
                   .toString() +
@@ -432,8 +436,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         }
 
         emit(SuggestedUsersLoadedState(
-            users:
-                _suggestedUsers.take(AppConfig.maxUserSuggestions).toList()));
+            users: _suggestedUsers
+                .take(ExploreConfig.maxUserSuggestions)
+                .toList()));
       } catch (e) {
         print(e.toString());
         emit(FeedErrorState(message: e.toString()));
@@ -460,7 +465,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         String _tsRangeFilterOtherUsers = '&tsrange=' +
             (DateTime.now()
                         .add(Duration(
-                            days: AppConfig.maxDaysInPastForSuggestions * -1))
+                            days:
+                                ExploreConfig.maxDaysInPastForSuggestions * -1))
                         .millisecondsSinceEpoch /
                     1000)
                 .toString() +
@@ -478,7 +484,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             _tsRangeFilterOtherUsers, // only last x days
             _applicationUser);
         emit(FeedLoadedState(
-            feed: _otherUsersFeed.take(AppConfig.maxUserSuggestions).toList(),
+            feed:
+                _otherUsersFeed.take(ExploreConfig.maxUserSuggestions).toList(),
             feedType: "SuggestedPosts"));
       } catch (e) {
         print(e.toString());

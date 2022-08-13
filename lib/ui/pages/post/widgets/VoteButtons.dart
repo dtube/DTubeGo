@@ -1,4 +1,4 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/Inputs/OverlayInputs.dart';

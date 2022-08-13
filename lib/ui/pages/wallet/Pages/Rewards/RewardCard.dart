@@ -2,8 +2,8 @@ import 'package:dtube_go/bloc/rewards/rewards_bloc_full.dart';
 import 'package:dtube_go/ui/pages/post/postDetailPageV2.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
-import 'package:dtube_go/utils/friendlyTimestamp.dart';
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/Strings/friendlyTimestamp.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_response_model.dart';

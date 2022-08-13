@@ -1,7 +1,7 @@
 import 'package:dtube_go/bloc/web3storage/web3storage_bloc.dart';
 import 'package:dtube_go/bloc/web3storage/web3storage_bloc_full.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:share_plus/share_plus.dart';
 
@@ -16,7 +16,7 @@ import 'package:dtube_go/ui/widgets/Comments/CommentDialog.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsView/controller/MomentsController.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
-import 'package:dtube_go/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:flutter/cupertino.dart';

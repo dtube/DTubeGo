@@ -1,5 +1,5 @@
 import 'package:dtube_go/bloc/accountHistory/accountHistory_response_model.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/APIUrlSchema.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -14,7 +14,7 @@ class AccountHistoryRepositoryImpl implements AccountHistoryRepository {
       List<int> accountHistoryTypes, String applicationUser, fromBloc) async {
     // handling accountHistory types
     var response = await http.get(Uri.parse(apiNode +
-        AppConfig.accountHistoryFeedUrl
+        APIUrlSchema.accountHistoryFeedUrl
             .replaceAll("##USERNAME", applicationUser)
             .replaceAll("##FROMBLOC", fromBloc.toString())));
     if (response.statusCode == 200) {

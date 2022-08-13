@@ -1,5 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dtube_go/utils/randomGenerator.dart';
+import 'package:dtube_go/utils/Random/randomGenerator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
@@ -7,7 +7,7 @@ import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/pages/feeds/cards/PostListCardNarrow.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_go/utils/friendlyTimestamp.dart';
+import 'package:dtube_go/utils/Strings/friendlyTimestamp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

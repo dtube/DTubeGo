@@ -1,6 +1,4 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
-
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';

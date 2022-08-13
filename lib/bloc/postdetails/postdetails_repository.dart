@@ -1,6 +1,5 @@
 import 'package:dtube_go/bloc/postdetails/postdetails_response_model.dart';
-
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/APIUrlSchema.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -25,7 +24,7 @@ class PostRepositoryImpl implements PostRepository {
     if (!topLevel) {
       // load exactly this post / comment
       var response = await http.get(Uri.parse(apiNode +
-          AppConfig.postDataUrl
+          APIUrlSchema.postDataUrl
               .replaceAll("##AUTHOR", author)
               .replaceAll("##LINK", link)));
       if (response.statusCode == 200) {
@@ -42,7 +41,7 @@ class PostRepositoryImpl implements PostRepository {
       String _tag = "";
       while (_tag == "") {
         var response = await http.get(Uri.parse(apiNode +
-            AppConfig.postDataUrl
+            APIUrlSchema.postDataUrl
                 .replaceAll("##AUTHOR", author)
                 .replaceAll("##LINK", link)));
         if (response.statusCode == 200) {

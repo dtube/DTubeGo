@@ -1,15 +1,10 @@
 import 'dart:io';
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
-import 'package:dtube_go/bloc/web3storage/web3storage_response_model.dart';
-import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
-import 'package:dtube_go/utils/randomPermlink.dart';
-
-import 'package:bloc/bloc.dart';
+import 'package:dtube_go/res/Config/UploadConfigValues.dart';
+import 'package:dtube_go/utils/Random/randomPermlink.dart';
 import 'package:dtube_go/bloc/web3storage/web3storage_event.dart';
 import 'package:dtube_go/bloc/web3storage/web3storage_state.dart';
-
 import 'package:dtube_go/bloc/web3storage/web3storage_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_compress/video_compress.dart';
@@ -84,7 +79,7 @@ class Web3StorageBloc extends Bloc<Web3StorageEvent, Web3StorageState> {
 
             // add ipfs info to the uploadData
             _uploadData.videoSourceHash = _cid;
-            _uploadData.ipfsGateway = AppConfig.web3StorageGateway;
+            _uploadData.ipfsGateway = UploadConfig.web3StorageGateway;
 
             uploadErrorCount = 0;
           }
@@ -125,8 +120,8 @@ class Web3StorageBloc extends Bloc<Web3StorageEvent, Web3StorageState> {
           uploadErrorCount++;
         }
       } while (uploadErrorCount != 0 &&
-          uploadErrorCount < AppConfig.maxUploadRetries);
-      if (uploadErrorCount == AppConfig.maxUploadRetries) {
+          uploadErrorCount < UploadConfig.maxUploadRetries);
+      if (uploadErrorCount == UploadConfig.maxUploadRetries) {
         // notify AppStateBloc about failed ipfs upload
         appStateBloc
             .add(UploadStateChangedEvent(uploadState: UploadFailedState()));

@@ -1,6 +1,6 @@
 import 'package:dtube_go/bloc/avalonConfig/avalonConfig_bloc_full.dart';
 import 'package:dtube_go/bloc/search/search_response_model.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/APIUrlSchema.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -15,7 +15,7 @@ class SearchRepositoryImpl implements SearchRepository {
       String searchEntity, String apiNode, String currentUser) async {
     int vpGrowth = 0;
     var configResponse =
-        await http.get(Uri.parse(apiNode + AppConfig.avalonConfig));
+        await http.get(Uri.parse(apiNode + APIUrlSchema.avalonConfig));
     if (configResponse.statusCode == 200) {
       var configData = json.decode(configResponse.body);
       AvalonConfig conf = ApiResultModelAvalonConfig.fromJson(configData).conf;
@@ -27,12 +27,12 @@ class SearchRepositoryImpl implements SearchRepository {
     String _searchURL = "";
     switch (searchEntity) {
       case "Users":
-        _searchURL = AppConfig.searchAccountsUrl
+        _searchURL = APIUrlSchema.searchAccountsUrl
             .replaceAll('##SEARCHSTRING', searchQuery);
         break;
       case "Posts":
-        _searchURL =
-            AppConfig.searchPostsUrl.replaceAll('##SEARCHSTRING', searchQuery);
+        _searchURL = APIUrlSchema.searchPostsUrl
+            .replaceAll('##SEARCHSTRING', searchQuery);
         break;
       default:
     }

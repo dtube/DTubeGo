@@ -1,4 +1,4 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/bloc/settings/settings_event.dart';
 import 'package:dtube_go/bloc/settings/settings_state.dart';

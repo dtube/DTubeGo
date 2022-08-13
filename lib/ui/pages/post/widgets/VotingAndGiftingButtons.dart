@@ -5,7 +5,7 @@ import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
 import 'package:dtube_go/ui/widgets/gifts/GiftBoxWidget.dart';
-import 'package:dtube_go/utils/secureStorage.dart';
+import 'package:dtube_go/utils/Global/secureStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,3 +1,4 @@
+import 'package:dtube_go/res/Config/UploadConfigValues.dart';
 import 'package:http_parser/http_parser.dart';
 
 //TODO: connect to local ipfs deamon:
@@ -5,8 +6,6 @@ import 'package:http_parser/http_parser.dart';
 // - https://github.com/ngngardner/dart_ipfs_client
 
 import 'dart:io';
-
-import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:http/http.dart' as http;
 
@@ -60,7 +59,7 @@ class Web3StorageRepositoryImpl implements Web3StorageRepository {
 
   Future<String> getUploadEndpoint() async {
     List<String> validWeb3StorageUploadEndpoints = [];
-    for (var url in AppConfig.web3StorageEndpoints) {
+    for (var url in UploadConfig.web3StorageEndpoints) {
       //   var response = await http.get(Uri.parse(url + '/getStatus'));
       //   if (response.statusCode == 200) {
       //     validWeb3StorageUploadEndpoints.add(url);

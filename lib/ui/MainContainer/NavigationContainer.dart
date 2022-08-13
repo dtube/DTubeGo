@@ -5,7 +5,7 @@ import 'package:dtube_go/ui/pages/News/NewsPage.dart';
 import 'package:dtube_go/ui/pages/feeds/lists/FeedList.dart';
 import 'package:dtube_go/ui/pages/settings/HiveSignerForm.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/pages/Explore/GenreBase.dart';
 import 'package:dtube_go/ui/pages/upload/UploadPresetSelection.dart';

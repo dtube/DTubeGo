@@ -1,6 +1,6 @@
 import 'package:dtube_go/ui/pages/feeds/lists/FeedList.dart';
 import 'package:dtube_go/ui/pages/feeds/PostDetailPageInlineView.dart';
-import 'package:dtube_go/utils/ResponsiveLayout.dart';
+import 'package:dtube_go/utils/WIdgets/ResponsiveLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

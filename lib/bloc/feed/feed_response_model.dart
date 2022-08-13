@@ -1,4 +1,4 @@
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/UploadConfigValues.dart';
 
 class ApiResultModel {
   late String status;
@@ -116,7 +116,7 @@ class FeedItem {
         videoSource = "youtube";
       } else if (jsonString?.files?.ipfs?.vid != null) {
         videoSource = "ipfs";
-        String _gateway = AppConfig.ipfsVideoUrl;
+        String _gateway = UploadConfig.ipfsVideoUrl;
         if (jsonString?.files?.ipfs!.gw != null) {
           _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
         }
@@ -131,7 +131,7 @@ class FeedItem {
         }
       } else if (jsonString!.files!.sia?.vid?.src != null) {
         videoSource = "sia";
-        videoUrl = AppConfig.siaVideoUrl + jsonString!.files!.sia!.vid!.src!;
+        videoUrl = UploadConfig.siaVideoUrl + jsonString!.files!.sia!.vid!.src!;
       } else {
         videoUrl = "";
       }
@@ -152,7 +152,7 @@ class FeedItem {
             jsonString!.files!.youtube! +
             "/mqdefault.jpg";
       } else {
-        String _gateway = AppConfig.ipfsSnapUrl;
+        String _gateway = UploadConfig.ipfsSnapUrl;
 
         if (jsonString?.files?.ipfs?.img?.s360 != null) {
           thumbUrl = _gateway + jsonString!.files!.ipfs!.img!.s360!;

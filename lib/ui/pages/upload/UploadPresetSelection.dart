@@ -1,6 +1,5 @@
+import 'package:dtube_go/res/Config/InitiativePresets.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-
-import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/upload/widgets/PresetCards.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +51,7 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
   @override
   void initState() {
     // load initiative preset
-    AppConfig.initiativePresets.forEach((g) {
+    initiativePresets.forEach((g) {
       _initiativePresets.add(new Preset.fromJson(g));
     });
     // load custom preset

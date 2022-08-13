@@ -12,7 +12,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dtube_go/bloc/transaction/transaction_event.dart';
 import 'package:dtube_go/bloc/transaction/transaction_repository.dart';
 import 'package:dtube_go/bloc/transaction/transaction_state.dart';
-import 'package:dtube_go/utils/randomPermlink.dart';
+import 'package:dtube_go/utils/Random/randomPermlink.dart';
 
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   TransactionRepository repository;

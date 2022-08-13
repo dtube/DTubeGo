@@ -1,6 +1,6 @@
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
-import 'package:dtube_go/utils/secureStorage.dart';
+import 'package:dtube_go/utils/Global/secureStorage.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 import 'package:flutter/cupertino.dart';

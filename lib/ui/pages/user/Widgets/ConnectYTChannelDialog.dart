@@ -4,7 +4,7 @@ import 'package:dtube_go/res/secretConfigValues.dart' as secretConfig;
 import 'package:flutter/services.dart';
 
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
-import 'package:dtube_go/utils/randomGenerator.dart';
+import 'package:dtube_go/utils/Random/randomGenerator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

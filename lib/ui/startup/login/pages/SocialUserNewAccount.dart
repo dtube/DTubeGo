@@ -1,32 +1,25 @@
+import 'package:dtube_go/res/Config/appConfigValues.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-
-import 'package:dtube_go/res/loadRemoteConf.dart' as remoteConfig;
 
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/bloc/avalonConfig/avalonConfig_bloc_full.dart';
 import 'package:dtube_go/bloc/config/txTypes.dart';
 import 'package:dtube_go/bloc/thirdPartyLogin/thirdPartyLogin_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
-import 'package:dtube_go/res/secretConfigValues.dart' as secretConfig;
-import 'package:dtube_go/style/OpenableHyperlink.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/Inputs/CustomChoiceCard.dart';
 import 'package:dtube_go/ui/widgets/Inputs/NextBackButtons.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
-import 'package:dtube_go/utils/randomGenerator.dart';
-import 'package:dtube_go/utils/secureStorage.dart';
-import 'package:dtube_go/utils/stringCheckers.dart';
+import 'package:dtube_go/utils/Random/randomGenerator.dart';
+import 'package:dtube_go/utils/Global/secureStorage.dart';
+import 'package:dtube_go/utils/Strings/stringCheckers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pointycastle/asn1/primitives/asn1_null.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SocialUserNewAccount extends StatefulWidget {
   SocialUserNewAccount({

@@ -1,15 +1,10 @@
-import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
-import 'package:dtube_go/style/OpenableHyperlink.dart';
+import 'package:dtube_go/res/Config/appConfigValues.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/utils/randomGenerator.dart';
+import 'package:dtube_go/utils/Random/randomGenerator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class RegisterNewAccount extends StatefulWidget {
   RegisterNewAccount({Key? key}) : super(key: key);

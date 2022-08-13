@@ -1,5 +1,5 @@
-import 'package:dtube_go/res/appConfigValues.dart';
-import 'package:dtube_go/utils/growInt.dart';
+import 'package:dtube_go/res/Config/UploadConfigValues.dart';
+import 'package:dtube_go/utils/Avalon/growInt.dart';
 
 class SearchResults {
   late int took;
@@ -243,7 +243,7 @@ class Source {
         videoSource = "youtube";
       } else if (jsonstring?.files?.ipfs?.vid != null) {
         videoSource = "ipfs";
-        String _gateway = AppConfig.ipfsVideoUrl;
+        String _gateway = UploadConfig.ipfsVideoUrl;
         if (jsonstring?.files?.ipfs!.gw != null) {
           _gateway = jsonstring!.files!.ipfs!.gw! + '/ipfs/';
         }
@@ -258,7 +258,7 @@ class Source {
         }
       } else if (jsonstring!.files!.sia?.vid?.src != null) {
         videoSource = "sia";
-        videoUrl = AppConfig.siaVideoUrl + jsonstring!.files!.sia!.vid!.src!;
+        videoUrl = UploadConfig.siaVideoUrl + jsonstring!.files!.sia!.vid!.src!;
       } else {
         videoUrl = "";
       }
@@ -273,7 +273,7 @@ class Source {
             jsonstring!.files!.youtube! +
             "/mqdefault.jpg";
       } else {
-        String _gateway = AppConfig.ipfsSnapUrl;
+        String _gateway = UploadConfig.ipfsSnapUrl;
 
         if (jsonstring?.files?.ipfs?.img?.s360 != null) {
           thumbUrl = _gateway + jsonstring!.files!.ipfs!.img!.s360!;

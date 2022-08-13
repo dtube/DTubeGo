@@ -9,7 +9,7 @@ import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/pages/post/postDetailPageV2.dart';
-import 'package:dtube_go/utils/friendlyTimestamp.dart';
+import 'package:dtube_go/utils/Strings/friendlyTimestamp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

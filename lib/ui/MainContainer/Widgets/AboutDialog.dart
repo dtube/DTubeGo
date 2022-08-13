@@ -1,5 +1,6 @@
 // dialog to show current app version and build
-import 'package:dtube_go/res/appConfigValues.dart';
+
+import 'package:dtube_go/res/Config/appConfigValues.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
@@ -101,7 +102,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
                       Padding(
                         padding: EdgeInsets.only(top: 1.h),
                         child: Text(
-                          "iOS Developer: no-do-not-track-me",
+                          "iOS Developer: @no-do-not-track-me",
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -120,7 +121,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
                       EdgeInsets.only(bottom: 1.h, left: 17.w, right: 17.w),
                   child: ElevatedButton(
                       onPressed: () {
-                        launch(AppConfig.gitDTubeGoUrl);
+                        launchUrl(Uri.parse(AppConfig.gitDTubeGoUrl));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,

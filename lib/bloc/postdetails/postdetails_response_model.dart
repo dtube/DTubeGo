@@ -1,4 +1,4 @@
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/UploadConfigValues.dart';
 import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 
 class ApiResultModel {
@@ -142,7 +142,7 @@ class Post {
       videoSource = "youtube";
     } else if (jsonString?.files?.ipfs?.vid != null) {
       videoSource = "ipfs";
-      String _gateway = AppConfig.ipfsVideoUrl;
+      String _gateway = UploadConfig.ipfsVideoUrl;
       if (jsonString?.files?.ipfs!.gw != null) {
         _gateway = jsonString!.files!.ipfs!.gw! + '/ipfs/';
       }
@@ -157,7 +157,7 @@ class Post {
       }
     } else if (jsonString!.files?.sia?.vid?.src != null) {
       videoSource = "sia";
-      videoUrl = AppConfig.siaVideoUrl + jsonString!.files!.sia!.vid!.src!;
+      videoUrl = UploadConfig.siaVideoUrl + jsonString!.files!.sia!.vid!.src!;
       print(videoUrl);
     } else {
       videoUrl = "";
@@ -170,7 +170,7 @@ class Post {
     } else if (jsonString?.files?.sia != null) {
       thumbUrl = jsonString!.thumbnailUrl;
     } else {
-      String _gateway = AppConfig.ipfsVideoUrl;
+      String _gateway = UploadConfig.ipfsVideoUrl;
 
       if (jsonString?.files?.ipfs != null &&
           jsonString?.files?.ipfs!.gw != null) {
