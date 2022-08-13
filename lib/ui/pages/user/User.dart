@@ -245,7 +245,6 @@ class _UserState extends State<UserPage> {
                           height: 25.h,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,
                             image: DecorationImage(
                                 image: imageProvider, fit: BoxFit.cover),
                           ),
@@ -518,7 +517,6 @@ class _UserState extends State<UserPage> {
                           height: 25.h,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,
                             image: DecorationImage(
                                 image: imageProvider, fit: BoxFit.cover),
                           ),
