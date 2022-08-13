@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TagChip extends StatelessWidget {
-  String tagName;
-  bool fadeInFromLeft;
-  double width;
-  Duration waitBeforeFadeIn;
-  TextStyle? fontStyle;
+  final String tagName;
+  final bool fadeInFromLeft;
+  final double width;
+  final Duration waitBeforeFadeIn;
+  final TextStyle? fontStyle;
   TagChip(
       {Key? key,
       required this.tagName,
@@ -58,7 +58,7 @@ class TagChipWidget extends StatelessWidget {
 
   final String tagName;
   final double width;
-  TextStyle? fontStyle;
+  final TextStyle? fontStyle;
 
   @override
   Widget build(BuildContext context) {

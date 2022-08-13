@@ -555,7 +555,7 @@ class VotesOverview extends StatefulWidget {
     Key? key,
     required this.post,
   }) : super(key: key);
-  Post post;
+  final Post post;
 
   @override
   _VotesOverviewState createState() => _VotesOverviewState();

@@ -31,8 +31,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ProposalDetailPage extends StatefulWidget {
-  int proposalId;
-  int daoThreshold;
+  final int proposalId;
+  final int daoThreshold;
 
   ProposalDetailPage({required this.daoThreshold, required this.proposalId});
 
@@ -409,7 +409,7 @@ class VotesOverview extends StatefulWidget {
     Key? key,
     required this.post,
   }) : super(key: key);
-  Post post;
+  final Post post;
 
   @override
   _VotesOverviewState createState() => _VotesOverviewState();

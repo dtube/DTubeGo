@@ -18,8 +18,8 @@ class ProposalCard extends StatefulWidget {
   ProposalCard({Key? key, required this.daoItem, required this.daoThreshold})
       : super(key: key);
 
-  late DAOItem daoItem;
-  late int daoThreshold;
+  final DAOItem daoItem;
+  final int daoThreshold;
   String postUrlAuthor = "";
   String postUrlLink = "";
 

@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OtherUsersAvatar extends StatelessWidget {
-  String username;
-  double avatarSize;
+  final String username;
+  final double avatarSize;
   OtherUsersAvatar({Key? key, required this.username, required this.avatarSize})
       : super(key: key);
 

@@ -21,7 +21,7 @@ var initiativePresets = [
   },
   {
     "name": "diyhub",
-    "icon": FontAwesomeIcons.tools,
+    "icon": FontAwesomeIcons.screwdriverWrench,
     "tag": "diyhub",
     "subject": "DIYHub: ",
     "description": "",

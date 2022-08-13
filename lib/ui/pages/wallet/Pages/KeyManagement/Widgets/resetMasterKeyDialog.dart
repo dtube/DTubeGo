@@ -18,7 +18,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ResetMasterKeyDialog extends StatefulWidget {
   ResetMasterKeyDialog({Key? key, required this.txBloc}) : super(key: key);
-  TransactionBloc txBloc;
+  final TransactionBloc txBloc;
 
   @override
   _ResetMasterKeyDialogState createState() => _ResetMasterKeyDialogState();

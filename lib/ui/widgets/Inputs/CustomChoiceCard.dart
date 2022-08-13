@@ -15,15 +15,15 @@ class CustomChoiceCard extends StatelessWidget {
       required this.width})
       : super(key: key);
 
-  VoidCallback onTapped;
-  double width;
-  double height;
-  Color backgroundColor;
-  IconData icon;
-  Color iconColor;
-  double iconSize;
-  String label;
-  TextStyle textStyle;
+  final VoidCallback onTapped;
+  final double width;
+  final double height;
+  final Color backgroundColor;
+  final IconData icon;
+  final Color iconColor;
+  final double iconSize;
+  final String label;
+  final TextStyle textStyle;
 
   @override
   Widget build(BuildContext context) {

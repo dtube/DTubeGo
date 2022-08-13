@@ -18,7 +18,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NewKeyDialog extends StatefulWidget {
   NewKeyDialog({Key? key, required this.txBloc}) : super(key: key);
-  TransactionBloc txBloc;
+  final TransactionBloc txBloc;
 
   @override
   _NewKeyDialogState createState() => _NewKeyDialogState();

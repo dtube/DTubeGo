@@ -448,7 +448,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                         GestureDetector(
                           child: ShadowedIcon(
                             visible: globals.keyPermissions.contains(5),
-                            icon: FontAwesomeIcons.externalLinkAlt,
+                            icon: FontAwesomeIcons.upRightFromSquare,
                             color: globalAlmostWhite,
                             shadowColor: Colors.black,
                             size: globalIconSizeBig,
@@ -478,8 +478,8 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                     child: ShadowedIcon(
                       size: globalIconSizeBig,
                       icon: _volumeMute
-                          ? FontAwesomeIcons.volumeUp
-                          : FontAwesomeIcons.volumeMute,
+                          ? FontAwesomeIcons.volumeHigh
+                          : FontAwesomeIcons.volumeXmark,
                       color: globalAlmostWhite,
                       shadowColor: Colors.black,
                     ),

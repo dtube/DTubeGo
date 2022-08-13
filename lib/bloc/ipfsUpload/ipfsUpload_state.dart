@@ -6,89 +6,85 @@ abstract class IPFSUploadState extends Equatable {}
 
 // general user states
 class IPFSUploadInitialState extends IPFSUploadState {
-  @override
   List<Object> get props => [];
 }
 
 // general user states
 class IPFSUploadVideoPreProcessingState extends IPFSUploadState {
-  @override
   List<Object> get props => [];
 }
 
 // general user states
 class IPFSUploadVideoPreProcessedState extends IPFSUploadState {
-  File compressedFile;
+  final File compressedFile;
   IPFSUploadVideoPreProcessedState({required this.compressedFile});
-  @override
+
   List<Object> get props => [compressedFile];
 }
 
 // general user states
 class IPFSUploadVideoUploadingState extends IPFSUploadState {
-  @override
   List<Object> get props => [];
 }
 
 // general user states
 class IPFSUploadVideoUploadedState extends IPFSUploadState {
-  String uploadToken;
+  final String uploadToken;
   IPFSUploadVideoUploadedState({required this.uploadToken});
-  @override
+
   List<Object> get props => [uploadToken];
 }
 
 // general user states
 class IPFSUploadVideoPostProcessingState extends IPFSUploadState {
-  Map processingResponse;
+  final Map processingResponse;
   IPFSUploadVideoPostProcessingState({required this.processingResponse});
-  @override
+
   List<Object> get props => [processingResponse];
 }
 
 // general user states
 class IPFSUploadVideoPostProcessedState extends IPFSUploadState {
-  Map processingResponse;
+  final Map processingResponse;
   IPFSUploadVideoPostProcessedState({required this.processingResponse});
-  @override
+
   List<Object> get props => [processingResponse];
 }
 
 // general user states
 class IPFSUploadThumbnailUploadingState extends IPFSUploadState {
-  Map uploadingResponse;
+  final Map uploadingResponse;
   IPFSUploadThumbnailUploadingState({required this.uploadingResponse});
-  @override
+
   List<Object> get props => [uploadingResponse];
   //List<Object> get props => [];
 }
 
 class IPFSUploadThumbnailUploadedState extends IPFSUploadState {
   IPFSUploadThumbnailUploadedState();
-  @override
+
   List<Object> get props => [];
 }
 
 // general user states
 class OtherProviderThumbnailUploadingState extends IPFSUploadState {
   OtherProviderThumbnailUploadingState();
-  @override
+
   List<Object> get props => [];
   //List<Object> get props => [];
 }
 
 class OtherProviderThumbnailUploadedState extends IPFSUploadState {
-  String resultMessage;
+  final String resultMessage;
   OtherProviderThumbnailUploadedState({required this.resultMessage});
-  @override
+
   List<Object> get props => [resultMessage];
 }
 
 class IPFSUploadErrorState extends IPFSUploadState {
-  String message;
+  final String message;
 
   IPFSUploadErrorState({required this.message});
 
-  @override
   List<Object> get props => [message];
 }

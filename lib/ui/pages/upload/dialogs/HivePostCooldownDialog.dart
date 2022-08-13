@@ -9,7 +9,7 @@ class HivePostCooldownDetectedDialog extends StatefulWidget {
   HivePostCooldownDetectedDialog({Key? key, required this.cooldown})
       : super(key: key);
 
-  int cooldown;
+  final int cooldown;
 
   @override
   State<HivePostCooldownDetectedDialog> createState() =>
@@ -98,7 +98,7 @@ class _HivePostCooldownDetectedDialogState
         ),
         titleWidget: Center(
           child: FaIcon(
-            FontAwesomeIcons.cloudUploadAlt,
+            FontAwesomeIcons.cloudArrowUp,
             size: 8.h,
           ),
         ),

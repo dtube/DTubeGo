@@ -12,7 +12,7 @@ import 'UploaderMainPage.dart';
 class UploadPresetSelection extends StatefulWidget {
   UploadPresetSelection({Key? key, required this.uploaderCallback})
       : super(key: key);
-  VoidCallback uploaderCallback;
+  final VoidCallback uploaderCallback;
 
   @override
   _UploadPresetSelectionState createState() => _UploadPresetSelectionState();
@@ -33,7 +33,7 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
     String _customPresetTag = await sec.getTemplateTag();
     var customPreset = {
       "name": "Default",
-      "icon": FontAwesomeIcons.edit,
+      "icon": FontAwesomeIcons.penToSquare,
       "tag": _customPresetTag,
       "subject": _customPresetSubject,
       "description": _customPresetBody,

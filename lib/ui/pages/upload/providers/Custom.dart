@@ -16,8 +16,8 @@ class CustomWizard extends StatefulWidget {
   CustomWizard({Key? key, required this.uploaderCallback, required this.preset})
       : super(key: key);
 
-  VoidCallback uploaderCallback;
-  Preset preset;
+  final VoidCallback uploaderCallback;
+  final Preset preset;
 
   @override
   _CustomWizardState createState() => _CustomWizardState();

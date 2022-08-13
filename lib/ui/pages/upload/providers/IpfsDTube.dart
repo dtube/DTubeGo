@@ -12,8 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class WizardIPFS extends StatefulWidget {
   WizardIPFS({Key? key, required this.uploaderCallback, required this.preset})
       : super(key: key);
-  VoidCallback uploaderCallback;
-  Preset preset;
+  final VoidCallback uploaderCallback;
+  final Preset preset;
 
   @override
   _WizardIPFSState createState() => _WizardIPFSState();

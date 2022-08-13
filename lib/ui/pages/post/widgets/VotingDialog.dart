@@ -32,23 +32,23 @@ class VotingDialog extends StatefulWidget {
       required this.fixedDownvoteWeight})
       : super(key: key);
 
-  String author;
-  String link;
-  double defaultVote;
-  double defaultTip;
-  double fixedDownvoteWeight;
-  bool fixedDownvoteActivated;
+  final String author;
+  final String link;
+  final double defaultVote;
+  final double defaultTip;
+  final double fixedDownvoteWeight;
+  final bool fixedDownvoteActivated;
   // double currentVT;
-  bool isPost;
-  bool? vertical; // only used in moments for now
+  final bool isPost;
+  final bool? vertical; // only used in moments for now
 
-  bool downvote;
-  VoidCallback? verticalModeCallbackVotingButtonsPressed;
+  final bool downvote;
+  final VoidCallback? verticalModeCallbackVotingButtonsPressed;
 
-  VoidCallback? okCallback;
-  VoidCallback? cancelCallback;
-  PostBloc postBloc;
-  TransactionBloc txBloc;
+  final VoidCallback? okCallback;
+  final VoidCallback? cancelCallback;
+  final PostBloc postBloc;
+  final TransactionBloc txBloc;
 
   @override
   _VotingDialogState createState() => _VotingDialogState();

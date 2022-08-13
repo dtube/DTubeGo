@@ -61,7 +61,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
       label: 'Explore',
       icon: Center(
         child: new BorderedIcon(
-          icon: FontAwesomeIcons.globeAfrica,
+          icon: FontAwesomeIcons.earthAfrica,
           color: globalAlmostWhite,
           borderColor: Colors.black,
           size: globalIconSizeBig,
@@ -91,7 +91,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
           } else if (state is UploadFailedState) {
             return Center(
               child: new BorderedIcon(
-                icon: FontAwesomeIcons.times,
+                icon: FontAwesomeIcons.xmark,
                 color: globalRed,
                 borderColor: Colors.black,
                 size: globalIconSizeBig,

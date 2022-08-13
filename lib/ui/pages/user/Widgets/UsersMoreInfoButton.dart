@@ -15,7 +15,7 @@ class UserMoreInfoButton extends StatelessWidget {
       : super(key: key);
 
   final BuildContext context;
-  User user;
+  final User user;
 
   @override
   Widget build(BuildContext context) {

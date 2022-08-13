@@ -78,7 +78,7 @@ class _HiveSignerFormState extends State<HiveSignerForm> {
             _status == "valid"
                 ? FontAwesomeIcons.hive
                 : _status == "invalid"
-                    ? FontAwesomeIcons.undo
+                    ? FontAwesomeIcons.arrowRotateLeft
                     : FontAwesomeIcons.hive,
             size: 15,
           ),
@@ -103,7 +103,7 @@ class _HiveSignerFormState extends State<HiveSignerForm> {
                       InputChip(
                         label: Text("remove"),
                         avatar: FaIcon(
-                          FontAwesomeIcons.removeFormat,
+                          FontAwesomeIcons.textSlash,
                           size: 15,
                         ),
                         elevation: 2,

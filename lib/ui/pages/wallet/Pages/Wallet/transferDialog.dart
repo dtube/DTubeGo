@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 class TransferDialog extends StatefulWidget {
   TransferDialog({Key? key, this.receiver, required this.txBloc})
       : super(key: key);
-  TransactionBloc txBloc;
-  String? receiver;
+  final TransactionBloc txBloc;
+  final String? receiver;
 
   @override
   _TransferDialogState createState() => _TransferDialogState();

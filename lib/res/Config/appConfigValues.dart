@@ -1,7 +1,4 @@
 // list of global static application configurations
-
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 class AppConfig {
   static String defaultWebsiteURL =
       "https://d.tube"; // used for generating links for sharing

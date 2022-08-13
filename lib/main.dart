@@ -39,13 +39,13 @@ void main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: FirebaseOptions(
-          apiKey: secretConfig.fbWeb_apiKey,
-          authDomain: secretConfig.fbWeb_authDomain,
-          projectId: secretConfig.fbWeb_projectId,
-          storageBucket: secretConfig.fbWeb_storageBucket,
-          messagingSenderId: secretConfig.fbWeb_messagingSenderId,
-          appId: secretConfig.fbWeb_appId,
-          measurementId: secretConfig.fbWeb_measurementId),
+          apiKey: secretConfig.fbWebApiKey,
+          authDomain: secretConfig.fbWebAuthDomain,
+          projectId: secretConfig.fbWebProjectId,
+          storageBucket: secretConfig.fbWebStorageBucket,
+          messagingSenderId: secretConfig.fbWebMessagingSenderId,
+          appId: secretConfig.fbWebAppId,
+          measurementId: secretConfig.fbWebMeasurementId),
     );
   } else {
     if (Platform.isAndroid || Platform.isIOS) {

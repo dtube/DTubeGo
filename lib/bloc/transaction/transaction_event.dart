@@ -10,9 +10,9 @@ class SignAndSendTransactionEvent extends TransactionEvent {
       {required this.tx,
       this.administrativeUsername,
       this.administrativePrivateKey});
-  Transaction tx;
-  String? administrativePrivateKey;
-  String? administrativeUsername;
+  final Transaction tx;
+  final String? administrativePrivateKey;
+  final String? administrativeUsername;
 
   @override
   List<Object> get props => List.empty();
@@ -22,7 +22,7 @@ class SendCommentEvent extends TransactionEvent {
   SendCommentEvent(
     this.uploadData,
   );
-  UploadData uploadData;
+  final UploadData uploadData;
 
   @override
   List<Object> get props => List.empty();
@@ -30,8 +30,8 @@ class SendCommentEvent extends TransactionEvent {
 
 class ChangeProfileData extends TransactionEvent {
   ChangeProfileData(this.userData, this.context);
-  User userData;
-  BuildContext context;
+  final User userData;
+  final BuildContext context;
 
   @override
   List<Object> get props => List.empty();
@@ -54,7 +54,7 @@ class TransactionPreprocessing extends TransactionEvent {
 
 // used only for uploading videos
 class TransactionPreprocessingFailed extends TransactionEvent {
-  String errorMessage;
+  final String errorMessage;
   final int txType;
   TransactionPreprocessingFailed(
       {required this.errorMessage, required this.txType});
@@ -67,9 +67,9 @@ class SignAndSendDAOTransactionEvent extends TransactionEvent {
       {required this.tx,
       this.administrativeUsername,
       this.administrativePrivateKey});
-  DAOTransaction tx;
-  String? administrativePrivateKey;
-  String? administrativeUsername;
+  final DAOTransaction tx;
+  final String? administrativePrivateKey;
+  final String? administrativeUsername;
 
   @override
   List<Object> get props => List.empty();

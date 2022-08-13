@@ -14,7 +14,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 class UserBlockButton extends StatefulWidget {
   UserBlockButton({Key? key, required this.user}) : super(key: key);
 
-  User user;
+  final User user;
 
   @override
   State<UserBlockButton> createState() => _UserBlockButtonState();

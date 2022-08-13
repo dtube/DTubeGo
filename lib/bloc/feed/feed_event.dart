@@ -3,9 +3,9 @@ import 'package:equatable/equatable.dart';
 abstract class FeedEvent extends Equatable {}
 
 class FetchFeedEvent extends FeedEvent {
-  late String feedType;
-  String? fromAuthor;
-  String? fromLink;
+  final String feedType;
+  final String? fromAuthor;
+  final String? fromLink;
   FetchFeedEvent({required this.feedType, this.fromAuthor, this.fromLink});
 
   @override
@@ -13,7 +13,7 @@ class FetchFeedEvent extends FeedEvent {
 }
 
 class FetchMomentsEvent extends FeedEvent {
-  String feedType; // NewFeed or MyFeed
+  final String feedType; // NewFeed or MyFeed
   FetchMomentsEvent({required this.feedType});
 
   @override
@@ -21,7 +21,7 @@ class FetchMomentsEvent extends FeedEvent {
 }
 
 class FetchTagSearchResults extends FeedEvent {
-  String tags; // NewFeed or MyFeed
+  final String tags; // NewFeed or MyFeed
   FetchTagSearchResults({required this.tags});
 
   @override
@@ -29,9 +29,9 @@ class FetchTagSearchResults extends FeedEvent {
 }
 
 class FetchUserFeedEvent extends FeedEvent {
-  late String username;
-  String? fromAuthor;
-  String? fromLink;
+  final String username;
+  final String? fromAuthor;
+  final String? fromLink;
   FetchUserFeedEvent({required this.username, this.fromAuthor, this.fromLink});
 
   @override
@@ -39,8 +39,8 @@ class FetchUserFeedEvent extends FeedEvent {
 }
 
 class FetchMomentsOfUserEvent extends FeedEvent {
-  String feedType; // NewFeed or MyFeed
-  String username;
+  final String feedType; // NewFeed or MyFeed
+  final String username;
   FetchMomentsOfUserEvent({required this.feedType, required this.username});
 
   @override
@@ -58,15 +58,15 @@ class InitFeedEvent extends FeedEvent {
 // that's why they are listed here
 
 class FetchSuggestedUsersForUserHistory extends FeedEvent {
-  late String username;
+  final String username;
   FetchSuggestedUsersForUserHistory({required this.username});
   @override
   List<Object> get props => List.empty();
 }
 
 class FetchSuggestedUsersForPost extends FeedEvent {
-  late List<String> tags;
-  late String currentUsername;
+  final List<String> tags;
+  final String currentUsername;
 
   FetchSuggestedUsersForPost(
       {required this.currentUsername, required this.tags});
@@ -75,8 +75,8 @@ class FetchSuggestedUsersForPost extends FeedEvent {
 }
 
 class FetchSuggestedPostsForPost extends FeedEvent {
-  late List<String> tags;
-  late String currentUsername;
+  final List<String> tags;
+  final String currentUsername;
   FetchSuggestedPostsForPost(
       {required this.currentUsername, required this.tags});
   @override

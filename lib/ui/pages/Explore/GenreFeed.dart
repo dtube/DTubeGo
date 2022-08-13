@@ -30,12 +30,10 @@ class _GenreFeedState extends State<GenreFeed> {
 
   String? _nsfwMode;
   String? _hiddenMode;
-  String? _applicationUser;
 
   Future<bool> getDisplayModes() async {
     _hiddenMode = await sec.getShowHidden();
     _nsfwMode = await sec.getNSFW();
-    _applicationUser = await sec.getUsername();
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
     }

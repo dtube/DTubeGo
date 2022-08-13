@@ -108,7 +108,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
   late bool _showGiftInput;
 
   late UserBloc _userBloc;
-  int _currentVp = 0;
+
   late VideoPlayerController _bpController;
   late YoutubePlayerController _ytController;
 
@@ -296,14 +296,14 @@ class MobilePostData extends StatefulWidget {
   final TextEditingController _giftDTCController;
   final TextEditingController _giftMemoController;
   final double _avatarSize;
-  VoidCallback thumbnailTappedCallback;
-  VoidCallback votingOpenCallback;
-  VoidCallback commentOpenCallback;
-  VoidCallback giftOpenCallback;
-  String videoSource;
-  String videoUrl;
-  bool blur;
-  String thumbUrl;
+  final VoidCallback thumbnailTappedCallback;
+  final VoidCallback votingOpenCallback;
+  final VoidCallback commentOpenCallback;
+  final VoidCallback giftOpenCallback;
+  final String videoSource;
+  final String videoUrl;
+  final bool blur;
+  final String thumbUrl;
 
   @override
   State<MobilePostData> createState() => _MobilePostDataState();
@@ -444,10 +444,10 @@ class WebPostData extends StatelessWidget {
   final TextEditingController _giftDTCController;
   final TextEditingController _giftMemoController;
   final double _avatarSize;
-  VoidCallback thumbnailTappedCallback;
-  VoidCallback votingCancelCallback;
-  VoidCallback commentCancelCallback;
-  VoidCallback giftCancelCallback;
+  final VoidCallback thumbnailTappedCallback;
+  final VoidCallback votingCancelCallback;
+  final VoidCallback commentCancelCallback;
+  final VoidCallback giftCancelCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -609,7 +609,7 @@ class GiftDialogWidget extends StatelessWidget {
   final TextEditingController _giftMemoController;
   final PostListCardLarge widget;
 
-  VoidCallback cancelCallback;
+  final VoidCallback cancelCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -753,8 +753,8 @@ class CommentDialogWidget extends StatelessWidget {
   final TextEditingController _replyController;
   final UserBloc _userBloc;
   final PostListCardLarge widget;
-  int _currentVp = 0;
-  VoidCallback cancelCallback;
+  final int _currentVp = 0;
+  final VoidCallback cancelCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -897,8 +897,8 @@ class VotingDialogWidget extends StatelessWidget {
   final UserBloc _userBloc;
   final PostListCardLarge widget;
   final bool _votingDirection;
-  int _currentVp = 0;
-  VoidCallback cancelCallback;
+  final int _currentVp = 0;
+  final VoidCallback cancelCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -971,14 +971,14 @@ class PostInfoBaseRow extends StatelessWidget {
   final PostListCardLarge widget;
 
   final double _avatarSize;
-  YoutubePlayerController ytController;
-  VideoPlayerController videoController;
-  VoidCallback votingOpenCallback;
-  VoidCallback commentOpenCallback;
-  VoidCallback giftOpenCallback;
-  VoidCallback votingCloseCallback;
-  VoidCallback commentCloseCallback;
-  VoidCallback giftCloseCallback;
+  final YoutubePlayerController ytController;
+  final VideoPlayerController videoController;
+  final VoidCallback votingOpenCallback;
+  final VoidCallback commentOpenCallback;
+  final VoidCallback giftOpenCallback;
+  final VoidCallback votingCloseCallback;
+  final VoidCallback commentCloseCallback;
+  final VoidCallback giftCloseCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -1878,12 +1878,12 @@ class PlayerWidget extends StatelessWidget {
         super(key: key);
 
   final bool _thumbnailTapped;
-  String videoSource;
-  String videoUrl;
+  final String videoSource;
+  final String videoUrl;
   final VideoPlayerController _bpController;
   final YoutubePlayerController _ytController;
-  double placeholderWidth;
-  double placeholderSize;
+  final double placeholderWidth;
+  final double placeholderSize;
 
   @override
   Widget build(BuildContext context) {

@@ -16,16 +16,16 @@ class ProposalStateChart extends StatefulWidget {
     this.raisedLabel,
     required this.onTap,
   }) : super(key: key);
-  DAOItem daoItem;
+  final DAOItem daoItem;
   final int votingThreshold;
   final double height;
   final double width;
   final double centerRadius;
   final double outerRadius;
   final double startFromDegree;
-  bool? showLabels;
-  String? raisedLabel;
-  VoidCallback onTap;
+  final bool? showLabels;
+  final String? raisedLabel;
+  final VoidCallback onTap;
 
   @override
   State<ProposalStateChart> createState() => _ProposalStateChartState();

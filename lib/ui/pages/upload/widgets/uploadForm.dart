@@ -35,9 +35,9 @@ class UploadForm extends StatefulWidget {
       required this.preset})
       : super(key: key);
 
-  late UploadData uploadData;
+  final UploadData uploadData;
   final Function(UploadData) callback;
-  Preset preset;
+  final Preset preset;
 
   @override
   _UploadFormState createState() => _UploadFormState(uploadData);
@@ -480,7 +480,7 @@ class _UploadFormState extends State<UploadForm> {
                         children: [
                           Icon(_video == null
                               ? FontAwesomeIcons.video
-                              : FontAwesomeIcons.undo),
+                              : FontAwesomeIcons.arrowRotateLeft),
                           SizedBox(width: 8),
                           Text(
                             _video == null ? "record" : "re-record",
@@ -530,7 +530,7 @@ class _UploadFormState extends State<UploadForm> {
                               style: Theme.of(context).textTheme.bodyText1,
                             ),
                             avatar: FaIcon(showVideoPreview
-                                ? FontAwesomeIcons.checkSquare
+                                ? FontAwesomeIcons.squareCheck
                                 : FontAwesomeIcons.square),
                             onSelected: (bool) {
                               setState(() {

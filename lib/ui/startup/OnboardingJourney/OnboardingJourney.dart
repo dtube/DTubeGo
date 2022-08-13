@@ -11,7 +11,7 @@ class OnboardingJourney extends StatefulWidget {
   OnboardingJourney({Key? key, required this.journeyDoneCallback})
       : super(key: key);
 
-  VoidCallback journeyDoneCallback;
+  final VoidCallback journeyDoneCallback;
   @override
   _OnboardingJourneyState createState() => _OnboardingJourneyState();
 }

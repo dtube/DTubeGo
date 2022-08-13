@@ -12,7 +12,7 @@ class PinPadWidget extends StatelessWidget {
 
   final _pinPutFocusNode = FocusNode();
   final TextEditingController _pinPutController;
-  bool requestFocus = false;
+  final bool requestFocus;
 
   final BoxDecoration pinPutDecoration = BoxDecoration(
     color: const Color.fromRGBO(43, 46, 66, 1),

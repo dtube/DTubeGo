@@ -5,29 +5,25 @@ import 'package:equatable/equatable.dart';
 abstract class RewardsState extends Equatable {}
 
 class RewardsInitialState extends RewardsState {
-  @override
   List<Object> get props => [];
 }
 
 class RewardsLoadingState extends RewardsState {
-  @override
   List<Object> get props => [];
 }
 
 class RewardsLoadedState extends RewardsState {
-  List<Reward> rewardList;
+  final List<Reward> rewardList;
 
   RewardsLoadedState({required this.rewardList});
 
-  @override
   List<Object> get props => [rewardList];
 }
 
 class RewardsErrorState extends RewardsState {
-  String message;
+  final String message;
 
   RewardsErrorState({required this.message});
 
-  @override
   List<Object> get props => [message];
 }

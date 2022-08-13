@@ -26,7 +26,7 @@ import 'package:flutter/material.dart';
 class PinPadScreen extends StatefulWidget {
   PinPadScreen({Key? key, required this.currentTermsAccepted})
       : super(key: key);
-  bool currentTermsAccepted;
+  final bool currentTermsAccepted;
 
   @override
   _PinPadScreenState createState() => _PinPadScreenState();
@@ -121,7 +121,7 @@ class _PinPadScreenState extends State<PinPadScreen> {
 }
 
 class PinPad extends StatefulWidget {
-  String? storedPin;
+  final String? storedPin;
   PinPad({Key? key, this.storedPin}) : super(key: key);
 
   @override

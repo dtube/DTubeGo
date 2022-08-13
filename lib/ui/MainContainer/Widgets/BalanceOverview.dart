@@ -71,12 +71,12 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                 ? WebBalanceOverview(iconSize: _iconSize, state: state)
                 : MobileBalanceOverview(iconSize: _iconSize, state: state);
           } catch (e) {
-            return FaIcon(FontAwesomeIcons.times);
+            return FaIcon(FontAwesomeIcons.xmark);
           }
         } else if (state is UserErrorState) {
-          return FaIcon(FontAwesomeIcons.times);
+          return FaIcon(FontAwesomeIcons.xmark);
         } else {
-          return FaIcon(FontAwesomeIcons.times);
+          return FaIcon(FontAwesomeIcons.xmark);
         }
       },
     );

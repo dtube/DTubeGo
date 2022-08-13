@@ -13,8 +13,8 @@ class LoginWithCredentials extends StatefulWidget {
   LoginWithCredentials(
       {Key? key, required this.username, required this.message})
       : super(key: key);
-  String? username;
-  String? message;
+  final String? username;
+  final String? message;
 
   @override
   State<LoginWithCredentials> createState() => _LoginWithCredentialsState();
@@ -136,7 +136,7 @@ class _LoginWithCredentialsState extends State<LoginWithCredentials> {
                                   direction: Axis.horizontal,
                                   children: [
                                     FaIcon(
-                                      FontAwesomeIcons.exclamationTriangle,
+                                      FontAwesomeIcons.triangleExclamation,
                                       color: globalRed,
                                     ),
                                     SizedBox(width: 8),

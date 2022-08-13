@@ -81,7 +81,6 @@ class ThirdPartyLoginRepositoryImpl implements ThirdPartyLoginRepository {
     //final String _uidHash = getSHA256String(data.socialLoginUid);
     String _encryptionKey = getSHA256String(password + socialUId);
 
-    Encrypted encrypted;
     final key = Key.fromUtf8(getMD5String(_encryptionKey));
     final iv = IV.fromLength(16);
 

@@ -25,15 +25,15 @@ class FundingDialog extends StatefulWidget {
     this.okCallback,
     this.cancelCallback,
   }) : super(key: key);
-  TransactionBloc txBloc;
+  final TransactionBloc txBloc;
 
-  DAOItem daoItem;
+  final DAOItem daoItem;
 
-  bool? vertical; // only used in moments for now
-  VoidCallback? verticalModeCallbackVotingButtonsPressed;
+  final bool? vertical; // only used in moments for now
+  final VoidCallback? verticalModeCallbackVotingButtonsPressed;
 
-  VoidCallback? okCallback;
-  VoidCallback? cancelCallback;
+  final VoidCallback? okCallback;
+  final VoidCallback? cancelCallback;
 
   @override
   _FundingDialogState createState() => _FundingDialogState();

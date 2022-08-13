@@ -42,11 +42,11 @@ class ShadowedIcon extends StatelessWidget {
 }
 
 class HighlightedIcon extends StatelessWidget {
-  double size;
-  IconData icon;
-  Color color;
-  Color highlightColor;
-  double highlightBlur;
+  final double size;
+  final IconData icon;
+  final Color color;
+  final Color highlightColor;
+  final double highlightBlur;
   HighlightedIcon({
     Key? key,
     required this.size,
@@ -74,10 +74,10 @@ class HighlightedIcon extends StatelessWidget {
 }
 
 class BorderedIcon extends StatelessWidget {
-  double size;
-  IconData icon;
-  Color color;
-  Color borderColor;
+  final double size;
+  final IconData icon;
+  final Color color;
+  final Color borderColor;
   bool? visible;
   BorderedIcon(
       {Key? key,

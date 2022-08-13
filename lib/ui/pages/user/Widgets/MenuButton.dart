@@ -21,7 +21,7 @@ Widget buildUserMenuSpeedDial(
     mainMenuButtonOptions = [
       SpeedDialChild(
           child: ShadowedIcon(
-              icon: FontAwesomeIcons.cogs,
+              icon: FontAwesomeIcons.gears,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: globalIconSizeMedium),
@@ -41,7 +41,7 @@ Widget buildUserMenuSpeedDial(
           }),
       SpeedDialChild(
           child: ShadowedIcon(
-              icon: FontAwesomeIcons.history,
+              icon: FontAwesomeIcons.clockRotateLeft,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: globalIconSizeMedium),
@@ -59,7 +59,7 @@ Widget buildUserMenuSpeedDial(
           }),
       SpeedDialChild(
           child: ShadowedIcon(
-              icon: FontAwesomeIcons.signOutAlt,
+              icon: FontAwesomeIcons.rightFromBracket,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: globalIconSizeMedium),
@@ -74,7 +74,7 @@ Widget buildUserMenuSpeedDial(
     mainMenuButtonOptions = [
       SpeedDialChild(
           child: ShadowedIcon(
-              icon: FontAwesomeIcons.history,
+              icon: FontAwesomeIcons.clockRotateLeft,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: globalIconSizeMedium),
@@ -92,7 +92,7 @@ Widget buildUserMenuSpeedDial(
           }),
       SpeedDialChild(
           child: ShadowedIcon(
-              icon: FontAwesomeIcons.exchangeAlt,
+              icon: FontAwesomeIcons.rightLeft,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: globalIconSizeMedium),
@@ -111,7 +111,7 @@ Widget buildUserMenuSpeedDial(
           child: ShadowedIcon(
               icon: user.alreadyFollowing
                   ? FontAwesomeIcons.usersSlash
-                  : FontAwesomeIcons.userFriends,
+                  : FontAwesomeIcons.userGroup,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: globalIconSizeMedium),

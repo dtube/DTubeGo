@@ -99,7 +99,7 @@ class _RegisterNewAccountState extends State<RegisterNewAccount> {
                             child: Row(
                               children: [
                                 _keysGenerated
-                                    ? FaIcon(FontAwesomeIcons.undo)
+                                    ? FaIcon(FontAwesomeIcons.arrowRotateLeft)
                                     : Container(),
                                 Text((_keysGenerated ? "" : "get") + " keys"),
                               ],

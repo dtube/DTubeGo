@@ -14,7 +14,7 @@ import 'package:flutter/services.dart' show rootBundle;
 class EULAScreen extends StatefulWidget {
   EULAScreen({Key? key, required this.eulaAcceptedCallback}) : super(key: key);
 
-  VoidCallback eulaAcceptedCallback;
+  final VoidCallback eulaAcceptedCallback;
   @override
   _EULAScreenState createState() => _EULAScreenState();
 }

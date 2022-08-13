@@ -385,16 +385,16 @@ class VotingSlider extends StatefulWidget {
       this.verticalModeCallbackVotingButtonsPressed})
       : super(key: key);
 
-  String author;
-  String link;
-  double defaultVote;
-  double defaultTip;
+  final String author;
+  final String link;
+  final double defaultVote;
+  final double defaultTip;
   //double currentVT;
-  bool isPost;
-  bool? vertical; // only used in moments for now
+  final bool isPost;
+  final bool? vertical; // only used in moments for now
 
-  bool downvote;
-  VoidCallback?
+  final bool downvote;
+  final VoidCallback?
       verticalModeCallbackVotingButtonsPressed; // only used in moments for now
 
   @override
@@ -800,16 +800,16 @@ class VotingSliderStandalone extends StatefulWidget {
     this.cancelCallback,
   }) : super(key: key);
 
-  String author;
-  String link;
-  double defaultVote;
-  double defaultTip;
-  double currentVT;
-  bool isPost;
+  final String author;
+  final String link;
+  final double defaultVote;
+  final double defaultTip;
+  final double currentVT;
+  final bool isPost;
 
-  bool downvote;
-  VoidCallback? sendCallback;
-  VoidCallback? cancelCallback;
+  final bool downvote;
+  final VoidCallback? sendCallback;
+  final VoidCallback? cancelCallback;
 
   @override
   _VotingSliderStandaloneState createState() => _VotingSliderStandaloneState();

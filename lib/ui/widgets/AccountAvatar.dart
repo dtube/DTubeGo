@@ -34,7 +34,7 @@ class AvatarErrorPlaceholder extends StatelessWidget {
 
 class AvatarLoadingPlaceholder extends StatelessWidget {
   AvatarLoadingPlaceholder({Key? key, required this.size}) : super(key: key);
-  double size;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +63,8 @@ class AccountNameBase extends StatelessWidget {
   final String username;
   final double width;
   final double height;
-  TextStyle mainStyle;
-  TextStyle subStyle;
+  final TextStyle mainStyle;
+  final TextStyle subStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -269,10 +269,10 @@ class AccountName extends StatefulWidget {
       required this.subStyle})
       : super(key: key);
 
-  double width;
-  double height;
-  TextStyle mainStyle;
-  TextStyle subStyle;
+  final double width;
+  final double height;
+  final TextStyle mainStyle;
+  final TextStyle subStyle;
   @override
   State<AccountName> createState() => _AccountNameState();
 }

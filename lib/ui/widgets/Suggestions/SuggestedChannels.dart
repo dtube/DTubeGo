@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SuggestedChannels extends StatefulWidget {
   SuggestedChannels({Key? key, required this.avatarSize}) : super(key: key);
 
-  double avatarSize;
+  final double avatarSize;
   @override
   State<SuggestedChannels> createState() => _SuggestedChannelsState();
 }

@@ -12,13 +12,13 @@ class PopUpDialogWithTitleLogo extends StatefulWidget {
       required this.titleWidgetSize,
       required this.showTitleWidget})
       : super(key: key);
-  Widget child;
-  Widget titleWidget;
-  VoidCallback callbackOK;
-  VoidCallback? callbackCancel;
-  double titleWidgetSize;
-  double titleWidgetPadding;
-  bool showTitleWidget;
+  final Widget child;
+  final Widget titleWidget;
+  final VoidCallback callbackOK;
+  final VoidCallback? callbackCancel;
+  final double titleWidgetSize;
+  final double titleWidgetPadding;
+  final bool showTitleWidget;
 
   @override
   _PopUpDialogWithTitleLogoState createState() =>

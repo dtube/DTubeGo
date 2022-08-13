@@ -16,10 +16,10 @@ class ChewiePlayer extends StatefulWidget {
   final bool usedAsPreview;
   final bool allowFullscreen;
   final double portraitVideoPadding;
-  bool? openInFullscreen;
-  VideoPlayerController videocontroller;
-  double placeholderWidth;
-  double placeholderSize;
+  final bool? openInFullscreen;
+  final VideoPlayerController videocontroller;
+  final double placeholderWidth;
+  final double placeholderSize;
 
   ChewiePlayer({
     required this.videoUrl,

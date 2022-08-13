@@ -20,8 +20,8 @@ class ConnectYTChannelDialog extends StatefulWidget {
   ConnectYTChannelDialog(
       {Key? key, required this.user, required this.connectCallback})
       : super(key: key);
-  User user;
-  ListOfString2VoidFunc connectCallback;
+  final User user;
+  final ListOfString2VoidFunc connectCallback;
   @override
   _ConnectYTChannelDialogState createState() => _ConnectYTChannelDialogState();
 }
@@ -108,8 +108,8 @@ class _ConnectYTChannelDialogState extends State<ConnectYTChannelDialog> {
                                 .bodyText1!
                                 .copyWith(color: Colors.blue)),
                         onTap: () {
-                          launch(
-                              "https://support.google.com/youtube/answer/3250431");
+                          launchUrl(Uri.parse(
+                              "https://support.google.com/youtube/answer/3250431"));
                         },
                       ),
                     )),

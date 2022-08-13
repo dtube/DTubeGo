@@ -11,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
 class TagList extends StatefulWidget {
-  String tagName;
+  final String tagName;
   @override
   TagListState createState() => TagListState();
 

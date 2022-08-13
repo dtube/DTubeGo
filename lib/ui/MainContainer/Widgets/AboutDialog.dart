@@ -157,7 +157,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                launch(AppConfig.gitDtubeUrl);
+                                launchUrl(Uri.parse(AppConfig.gitDtubeUrl));
                               },
                               child: Row(
                                 children: [
@@ -171,7 +171,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                launch(AppConfig.gitAvalonUrl);
+                                launchUrl(Uri.parse(AppConfig.gitAvalonUrl));
                               },
                               child: Row(
                                 children: [
@@ -191,7 +191,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
                             bottom: 1.h, left: 22.w, right: 22.w),
                         child: ElevatedButton(
                             onPressed: () {
-                              launch(AppConfig.faqUrl);
+                              launchUrl(Uri.parse(AppConfig.faqUrl));
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,

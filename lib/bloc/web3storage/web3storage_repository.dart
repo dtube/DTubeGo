@@ -7,11 +7,7 @@ import 'package:http_parser/http_parser.dart';
 
 import 'dart:io';
 import 'package:video_compress/video_compress.dart';
-import 'package:http/http.dart' as http;
-
-import 'dart:convert';
 import 'package:dio/dio.dart';
-
 import 'package:dtube_go/res/Config/secretConfigValues.dart' as secret;
 
 abstract class Web3StorageRepository {
@@ -127,7 +123,7 @@ class Web3StorageRepositoryImpl implements Web3StorageRepository {
     //String _url = endpoint;
     String _url = "https://api.imgur.com/3/image";
 
-    String authHeader = "Client-ID " + secret.ImgurClientID;
+    String authHeader = "Client-ID " + secret.imgurClientID;
 
     var dio = Dio();
     dio.options.headers["Authorization"] = authHeader;

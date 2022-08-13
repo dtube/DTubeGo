@@ -60,7 +60,7 @@ class _CollapsedDescriptionState extends State<CollapsedDescription> {
                               .copyWith(
                                   p: Theme.of(context).textTheme.bodyText1!),
                       onTapLink: (text, url, title) {
-                        launch(url!);
+                        launchUrl(Uri.parse(url!));
                       },
                     ),
                   ),

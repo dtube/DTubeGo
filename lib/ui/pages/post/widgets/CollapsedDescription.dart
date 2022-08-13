@@ -19,10 +19,10 @@ class CollapsedDescription extends StatefulWidget {
       : super(key: key);
 
   final String description;
-  bool startCollapsed;
-  bool? showOpenLink;
-  String? postAuthor;
-  String? postLink;
+  final bool startCollapsed;
+  final bool? showOpenLink;
+  final String? postAuthor;
+  final String? postLink;
 
   @override
   _CollapsedDescriptionState createState() => _CollapsedDescriptionState();
@@ -63,7 +63,7 @@ class _CollapsedDescriptionState extends State<CollapsedDescription> {
                   styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
                       .copyWith(p: Theme.of(context).textTheme.bodyText1!),
                   onTapLink: (text, url, title) {
-                    launch(url!);
+                    launchUrl(Uri.parse(url!));
                   },
                 ),
               ),

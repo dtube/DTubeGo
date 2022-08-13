@@ -142,7 +142,7 @@ class ExploreConfig {
     },
     {
       "mainTag": "art",
-      "icon": FontAwesomeIcons.paintBrush,
+      "icon": FontAwesomeIcons.paintbrush,
       "subtags": ["drawing", "painting", "art", "dance", "dancing"],
     },
     {

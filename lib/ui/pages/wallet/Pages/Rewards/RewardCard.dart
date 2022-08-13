@@ -15,8 +15,8 @@ class RewardsCard extends StatefulWidget {
   RewardsCard({Key? key, required this.reward, required this.parentWidget})
       : super(key: key);
 
-  late Reward reward;
-  late Widget parentWidget;
+  final Reward reward;
+  final Widget parentWidget;
 
   @override
   _RewardsCardState createState() => _RewardsCardState();
@@ -242,7 +242,7 @@ class ClaimRewardButton extends StatefulWidget {
   final String author;
   final String link;
   final double claimable;
-  late Widget topLevelWidget;
+  final Widget topLevelWidget;
 
   @override
   _ClaimRewardButtonState createState() => _ClaimRewardButtonState();

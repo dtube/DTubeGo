@@ -29,9 +29,9 @@ class DTubeFormCard extends StatelessWidget {
       required this.waitBeforeFadeIn,
       required this.avoidAnimation})
       : super(key: key);
-  List<Widget> childs;
-  Duration waitBeforeFadeIn;
-  bool avoidAnimation;
+  final List<Widget> childs;
+  final Duration waitBeforeFadeIn;
+  final bool avoidAnimation;
 
   @override
   Widget build(BuildContext context) {

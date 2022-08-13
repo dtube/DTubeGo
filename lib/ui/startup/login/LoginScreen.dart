@@ -19,9 +19,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoginForm extends StatefulWidget {
-  String? message;
-  String? username;
-  bool showOnboardingJourney;
+  final String? message;
+  final String? username;
+  final bool showOnboardingJourney;
 
   LoginForm(
       {Key? key,
@@ -202,7 +202,7 @@ class _LoginFormState extends State<LoginForm> {
                               InputChip(
                                   backgroundColor: globalAlmostWhite,
                                   onPressed: () {
-                                    launch(AppConfig.readmoreUrl);
+                                    launchUrl(Uri.parse(AppConfig.readmoreUrl));
                                   },
                                   label: Text(
                                     "read the Whitepaper",

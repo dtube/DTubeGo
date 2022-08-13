@@ -18,8 +18,8 @@ class UploaderMainPage extends StatefulWidget {
   UploaderMainPage({Key? key, required this.callback, required this.preset})
       : super(key: key);
 
-  VoidCallback callback;
-  Preset preset;
+  final VoidCallback callback;
+  final Preset preset;
 
   @override
   _UploaderMainPageState createState() => _UploaderMainPageState();

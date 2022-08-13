@@ -133,7 +133,7 @@ class VoteButton extends StatefulWidget {
     required this.leader,
   }) : super(key: key);
 
-  String leader;
+  final String leader;
 
   @override
   State<VoteButton> createState() => _VoteButtonState();

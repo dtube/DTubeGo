@@ -23,7 +23,7 @@ import 'package:image_picker/image_picker.dart';
 class ProfileSettingsContainer extends StatefulWidget {
   ProfileSettingsContainer({Key? key, required this.userBloc})
       : super(key: key);
-  UserBloc userBloc;
+  final UserBloc userBloc;
 
   @override
   _ProfileSettingsContainerState createState() =>
@@ -565,7 +565,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                               offset: Duration(seconds: 3),
                               duration: Duration(seconds: 1)),
                           child: DecoratedIcon(
-                            FontAwesomeIcons.save,
+                            FontAwesomeIcons.floppyDisk,
                             color: globals.keyPermissions.contains(6)
                                 ? globalAlmostWhite
                                 : Colors.grey,

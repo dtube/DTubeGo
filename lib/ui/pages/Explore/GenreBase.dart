@@ -22,14 +22,10 @@ class GenreBase extends StatefulWidget {
 class _GenreBaseState extends State<GenreBase> {
   late FeedBloc postBloc;
   bool _showResults = false;
-  late Future<bool> _genresLoaded;
-
-  final ScrollController _scrollController = ScrollController();
 
   late Future<String> _mainTagsFuture;
   List<FontAwesomeIcons> genreIcons = [];
   List<String> genreSubTagStrings = [];
-  List<FeedItem> _feedItems = [];
   List<GenreTag> genreList = [];
   List<int> _activatedGenres = [];
 

@@ -3,8 +3,8 @@ import 'package:equatable/equatable.dart';
 abstract class DaoEvent extends Equatable {}
 
 class FetchDaoEvent extends DaoEvent {
-  late String daoState;
-  late String daoType;
+  final String daoState;
+  final String daoType;
   FetchDaoEvent({required this.daoState, required this.daoType});
 
   @override
@@ -12,7 +12,7 @@ class FetchDaoEvent extends DaoEvent {
 }
 
 class FetchProsposalEvent extends DaoEvent {
-  late int id;
+  final int id;
   FetchProsposalEvent({required this.id});
 
   @override

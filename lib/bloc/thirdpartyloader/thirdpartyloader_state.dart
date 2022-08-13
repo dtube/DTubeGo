@@ -5,36 +5,33 @@ abstract class ThirdPartyMetadataState extends Equatable {}
 
 // general user states
 class ThirdPartyMetadataInitialState extends ThirdPartyMetadataState {
-  @override
   List<Object> get props => [];
 }
 
 class ThirdPartyMetadataLoadingState extends ThirdPartyMetadataState {
-  @override
   List<Object> get props => [];
 }
 
 class ThirdPartyMetadataLoadedState extends ThirdPartyMetadataState {
-  ThirdPartyMetadata metadata;
-  @override
+  final ThirdPartyMetadata metadata;
+
   ThirdPartyMetadataLoadedState({required this.metadata});
 
   List<Object> get props => [metadata];
 }
 
 class ThirdPartyMetadataErrorState extends ThirdPartyMetadataState {
-  String message;
+  final String message;
 
   ThirdPartyMetadataErrorState({required this.message});
 
-  @override
   List<Object> get props => [message];
 }
 
 class ThirdPartyMetadataBioContainsCodeLoadedState
     extends ThirdPartyMetadataState {
-  bool value;
-  @override
+  final bool value;
+
   ThirdPartyMetadataBioContainsCodeLoadedState({required this.value});
 
   List<Object> get props => [value];

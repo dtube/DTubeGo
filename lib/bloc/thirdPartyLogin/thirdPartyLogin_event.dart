@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 abstract class ThirdPartyLoginEvent extends Equatable {}
 
 class TryThirdPartyLoginEvent extends ThirdPartyLoginEvent {
-  String socialProvider;
-  String socialUId;
+  final String socialProvider;
+  final String socialUId;
   TryThirdPartyLoginEvent(
       {required this.socialProvider, required this.socialUId});
 
@@ -15,9 +15,9 @@ class TryThirdPartyLoginEvent extends ThirdPartyLoginEvent {
 }
 
 class DecryptThirdPartyLoginEvent extends ThirdPartyLoginEvent {
-  ThirdPartyLoginEncrypted data;
-  String password;
-  String socialUId;
+  final ThirdPartyLoginEncrypted data;
+  final String password;
+  final String socialUId;
 
   DecryptThirdPartyLoginEvent(
       {required this.data, required this.password, required this.socialUId});
@@ -27,9 +27,9 @@ class DecryptThirdPartyLoginEvent extends ThirdPartyLoginEvent {
 }
 
 class EncryptThirdPartyLoginEvent extends ThirdPartyLoginEvent {
-  ThirdPartyLoginDecrypted data;
-  String password;
-  String socialUId;
+  final ThirdPartyLoginDecrypted data;
+  final String password;
+  final String socialUId;
 
   EncryptThirdPartyLoginEvent(
       {required this.data, required this.password, required this.socialUId});
@@ -39,10 +39,10 @@ class EncryptThirdPartyLoginEvent extends ThirdPartyLoginEvent {
 }
 
 class StoreThirdPartyLoginEvent extends ThirdPartyLoginEvent {
-  ThirdPartyLoginDecrypted data;
+  final ThirdPartyLoginDecrypted data;
 
-  String password;
-  String socialUId;
+  final String password;
+  final String socialUId;
   StoreThirdPartyLoginEvent(
       {required this.data, required this.password, required this.socialUId});
 

@@ -14,7 +14,7 @@ class InitiativeDialog extends StatefulWidget {
     required this.initiative,
   }) : super(key: key);
 
-  Preset initiative;
+  final Preset initiative;
 
   @override
   State<InitiativeDialog> createState() => _InitiativeDialogState();
@@ -61,7 +61,7 @@ class _InitiativeDialogState extends State<InitiativeDialog> {
                   label: Text("read more"),
                   backgroundColor: globalRed,
                   onPressed: () {
-                    launch(widget.initiative.moreInfoURL);
+                    launchUrl(Uri.parse(widget.initiative.moreInfoURL));
                   },
                 ),
                 InkWell(

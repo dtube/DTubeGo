@@ -100,7 +100,7 @@ class QRCodeDialog extends StatefulWidget {
     required this.link,
   }) : super(key: key);
 
-  String link;
+  final String link;
 
   @override
   State<QRCodeDialog> createState() => _QRCodeDialogState();

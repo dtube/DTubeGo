@@ -1883,8 +1883,8 @@ class ShowHintIcon extends StatelessWidget {
   ShowHintIcon({Key? key, required this.onPressed, required this.alignment})
       : super(key: key);
 
-  VoidCallback onPressed;
-  Alignment alignment;
+  final VoidCallback onPressed;
+  final Alignment alignment;
 
   @override
   Widget build(BuildContext context) {

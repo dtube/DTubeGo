@@ -8,7 +8,7 @@ import 'package:wave/wave.dart';
 
 class DTubeLogoPulse extends StatefulWidget {
   DTubeLogoPulse({Key? key, required this.size}) : super(key: key);
-  double size;
+  final double size;
   @override
   _DTubeLogoPulseState createState() => _DTubeLogoPulseState();
 }
@@ -64,7 +64,7 @@ class _DTubeLogoPulseState extends State<DTubeLogoPulse>
 
 class DTubeLogoPulseRotating extends StatefulWidget {
   DTubeLogoPulseRotating({Key? key, required this.size}) : super(key: key);
-  double size;
+  final double size;
   @override
   _DTubeLogoPulseRotatingState createState() => _DTubeLogoPulseRotatingState();
 }
@@ -111,10 +111,10 @@ class DtubeLogoPulseWithSubtitle extends StatelessWidget {
       this.width,
       this.height})
       : super(key: key);
-  String subtitle;
-  double size;
-  double? width;
-  double? height;
+  final String subtitle;
+  final double size;
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
@@ -148,8 +148,8 @@ class DTubeLogoPulseWave extends StatefulWidget {
   DTubeLogoPulseWave(
       {Key? key, required this.size, required this.progressPercent})
       : super(key: key);
-  double size;
-  double progressPercent;
+  final double size;
+  final double progressPercent;
   @override
   _DTubeLogoPulseWaveState createState() => _DTubeLogoPulseWaveState();
 }

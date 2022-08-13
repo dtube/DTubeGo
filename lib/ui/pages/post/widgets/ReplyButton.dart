@@ -23,8 +23,8 @@ class ReplyButton extends StatefulWidget {
   final String parentLink;
   final double votingWeight;
   final double scale;
-  bool focusOnNewComment;
-  bool isMainPost;
+  final bool focusOnNewComment;
+  final bool isMainPost;
   final PostBloc postBloc;
   final TransactionBloc txBloc;
 

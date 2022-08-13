@@ -26,7 +26,7 @@ Flushbar showCustomFlushbarOnError(String message, BuildContext context) {
     icon: Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: FaIcon(
-        FontAwesomeIcons.times,
+        FontAwesomeIcons.xmark,
         color: globalRed,
       ),
     ),

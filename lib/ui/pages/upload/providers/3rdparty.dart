@@ -20,8 +20,8 @@ class Wizard3rdParty extends StatefulWidget {
       {Key? key, required this.uploaderCallback, required this.preset})
       : super(key: key);
 
-  VoidCallback uploaderCallback;
-  Preset preset;
+  final VoidCallback uploaderCallback;
+  final Preset preset;
 
   @override
   _Wizard3rdPartyState createState() => _Wizard3rdPartyState();

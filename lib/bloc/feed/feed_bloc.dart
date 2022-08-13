@@ -217,8 +217,6 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             break;
           case 'NewsFeed':
             {
-              String? _TSFrom = await sec.getUsername();
-              String? _TSTo = await sec.getUsername();
               feed = await repository.getNewsFeed(
                 _avalonApiNode,
                 _applicationUser,
@@ -460,8 +458,6 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       emit(FeedLoadingState());
 
       try {
-        List<FeedItem> _suggestedPosts = [];
-
         String _tsRangeFilterOtherUsers = '&tsrange=' +
             (DateTime.now()
                         .add(Duration(

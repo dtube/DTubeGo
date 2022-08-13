@@ -16,21 +16,21 @@ typedef Bool2VoidFunc = void Function(bool);
 typedef ListOfString2VoidFunc = void Function(List<String>);
 
 class FeedList extends StatelessWidget {
-  String feedType;
-  String? username;
-  bool largeFormat;
-  bool showAuthor;
+  final String feedType;
+  final String? username;
+  final bool largeFormat;
+  final bool showAuthor;
   double? topPaddingForFirstEntry;
   double? sidepadding;
   double? bottompadding;
   double? width;
   double? heightPerEntry;
-  bool enableNavigation;
-  ListOfString2VoidFunc?
+  final bool enableNavigation;
+  final ListOfString2VoidFunc?
       itemSelectedCallback; // only used in landscape mode for now
   double? topPadding;
 
-  Bool2VoidFunc scrollCallback;
+  final Bool2VoidFunc scrollCallback;
   late YoutubePlayerController _youtubePlayerController;
 
   FeedList({
@@ -357,7 +357,7 @@ class PostListCard extends StatefulWidget {
   final double width;
   final double heightPerEntry;
   final bool enableNavigation;
-  ListOfString2VoidFunc? itemSelectedCallback;
+  final ListOfString2VoidFunc? itemSelectedCallback;
   final String feedType;
   final String? defaultCommentVotingWeight;
   final String? defaultPostVotingWeight;

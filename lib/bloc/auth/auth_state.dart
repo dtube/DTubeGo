@@ -4,86 +4,74 @@ abstract class AuthState extends Equatable {}
 
 // general user states
 class AuthInitialState extends AuthState {
-  @override
   List<Object> get props => [];
 }
 
 class SignInLoadingState extends AuthState {
-  @override
   List<Object> get props => [];
 }
 
 class SignedInState extends AuthState {
-  bool firstSignIn;
-  bool termsAccepted;
+  final bool firstSignIn;
+  final bool termsAccepted;
   SignedInState({required this.firstSignIn, required this.termsAccepted});
 
-  @override
   List<Object> get props => [];
 }
 
 class SignInFailedState extends AuthState {
-  String message;
-  String username;
+  final String message;
+  final String username;
 
   SignInFailedState({required this.message, required this.username});
 
-  @override
   List<Object> get props => [message];
 }
 
 class ApiNodeOfflineState extends AuthState {
   ApiNodeOfflineState();
 
-  @override
   List<Object> get props => [];
 }
 
 class NoSignInInformationFoundState extends AuthState {
   NoSignInInformationFoundState();
 
-  @override
   List<Object> get props => [];
 }
 
 class SignOutInitiatedState extends AuthState {
-  @override
   List<Object> get props => [];
 }
 
 class SignOutCompleteState extends AuthState {
-  @override
   List<Object> get props => [];
 }
 
 class AuthErrorState extends AuthState {
-  String message;
+  final String message;
 
   AuthErrorState({required this.message});
 
-  @override
   List<Object> get props => [message];
 }
 
 class NeverUsedTheAppBeforeState extends AuthState {
   NeverUsedTheAppBeforeState();
 
-  @override
   List<Object> get props => [];
 }
 
 class CheckCredentialsValidState extends AuthState {
   CheckCredentialsValidState({required this.publicKey, required this.txTypes});
-  String publicKey;
-  List<int> txTypes;
+  final String publicKey;
+  final List<int> txTypes;
 
-  @override
   List<Object> get props => [publicKey, txTypes];
 }
 
 class CheckCredentialsInValidState extends AuthState {
   CheckCredentialsInValidState();
 
-  @override
   List<Object> get props => [];
 }

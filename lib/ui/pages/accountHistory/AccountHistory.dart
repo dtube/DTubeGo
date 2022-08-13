@@ -13,7 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountHistoryScreen extends StatefulWidget {
   AccountHistoryScreen({Key? key, required this.username}) : super(key: key);
-  String? username;
+  final String? username;
 
   @override
   _AccountHistoryScreenState createState() => _AccountHistoryScreenState();

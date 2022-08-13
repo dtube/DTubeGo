@@ -186,7 +186,7 @@ class _KeyManagementPageState extends State<KeyManagementPage>
                                   );
                                 },
                                 icon: FaIcon(
-                                  FontAwesomeIcons.times,
+                                  FontAwesomeIcons.xmark,
                                 )))
                         : Container(),
                   ],

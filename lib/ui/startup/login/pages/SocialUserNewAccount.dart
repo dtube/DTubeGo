@@ -29,7 +29,7 @@ class SocialUserNewAccount extends StatefulWidget {
 
   final String socialUId;
 
-  ThirdPartyLoginEncrypted socialLoginBaseData;
+  final ThirdPartyLoginEncrypted socialLoginBaseData;
 
   @override
   State<SocialUserNewAccount> createState() => _SocialUserNewAccountState();
@@ -133,7 +133,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                             CustomChoiceCard(
                                               backgroundColor: globalRed,
                                               height: 15.h,
-                                              icon: FontAwesomeIcons.plusCircle,
+                                              icon: FontAwesomeIcons.circlePlus,
                                               iconColor: globalAlmostWhite,
                                               iconSize: 10.w,
                                               label: "Join DTube",

@@ -23,10 +23,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserPage extends StatefulWidget {
-  String? username;
-  bool ownUserpage;
+  final String? username;
+  final bool ownUserpage;
   bool? alreadyFollowing;
-  VoidCallback? onPop;
+  final VoidCallback? onPop;
   @override
   _UserState createState() => _UserState();
 
