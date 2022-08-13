@@ -249,7 +249,7 @@ class _UserBlockButtonState extends State<UserBlockButton> {
                             });
                       },
                 icon: ShadowedIcon(
-                    size: globalIconSizeSmall,
+                    size: globalIconSizeMedium,
                     icon: FontAwesomeIcons.flag,
                     color: globals.keyPermissions.contains(6)
                         ? globalRed
