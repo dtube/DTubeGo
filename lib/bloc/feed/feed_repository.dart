@@ -378,17 +378,17 @@ class FeedRepositoryImpl implements FeedRepository {
     String applicationUser,
   ) async {
     String tsFrom = await sec.getNewsTS();
-    String tsTo = (DateTime.now().millisecondsSinceEpoch / 1000).toString();
+    String tsTo = (DateTime.now().millisecondsSinceEpoch).toString();
 
     String _url = apiNode +
         AppConfig.newFeedUrlFiltered.replaceAll("##FILTERSTRING",
-            "&author=dtube,dtube-onboarding&ts=" + tsFrom + "-" + tsTo);
+            "&authors=dtube,dtube-onboarding&tsrange=" + tsFrom + "," + tsTo);
 
     var responseDTube = await http.get(Uri.parse(_url));
     if (responseDTube.statusCode == 200) {
       var data = json.decode(responseDTube.body);
       List<FeedItem> feed = ApiResultModel.fromJson(data, applicationUser).feed;
-      await sec.persistNotificationSeen(int.tryParse(tsTo)!);
+      //await sec.persistCurrenNewsTS(int.tryParse(tsTo)!);
       return feed;
     } else {
       throw Exception();

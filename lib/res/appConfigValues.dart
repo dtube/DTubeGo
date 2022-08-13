@@ -59,9 +59,9 @@ class AppConfig {
     "https://4.btfsu.d.tube"
   ];
 
-  static List<String> web3StorageEndpoints = ["https://api.web3.storage"];
+  static List<String> web3StorageEndpoints = ["https://dtube.fso.ovh:5082/"];
   static String web3StorageGateway = "https://ipfs.io";
-  static int maxUploadRetries = 7;
+  static int maxUploadRetries = 2;
 
   static String ipfsSnapUrl = 'https://snap1.d.tube/ipfs/';
   static String ipfsSnapUploadUrl = 'https://snap1.d.tube';
@@ -84,7 +84,7 @@ class AppConfig {
 // node discovery & api node configs
 
   static bool useDevNodes =
-      true; //activate for new features which has not been integrated
+      false; //activate for new features which has not been integrated
 
   static List<String> apiNodesDev = [
     // development nodes for new features
@@ -125,7 +125,7 @@ class AppConfig {
   static List<String> genericCurationTags = ["vdc", "onelovedtube"];
 
 // only show moments of the last x days
-  static int momentsPastXDays = -7;
+  static int momentsPastXDays = -30;
 
   // global settings -> tags: those are the possible tags
   static List<String> possibleExploreTags = [
