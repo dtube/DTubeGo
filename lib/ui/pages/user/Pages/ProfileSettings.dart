@@ -1,7 +1,8 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
-import 'package:dtube_go/res/secretConfigValues.dart' as secretConfig;
+import 'package:dtube_go/res/Config/secretConfigValues.dart' as secretConfig;
 import 'package:dtube_go/ui/pages/user/Widgets/ConnectYTChannelDialog.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -23,7 +24,7 @@ import 'package:image_picker/image_picker.dart';
 class ProfileSettingsContainer extends StatefulWidget {
   ProfileSettingsContainer({Key? key, required this.userBloc})
       : super(key: key);
-  UserBloc userBloc;
+  final UserBloc userBloc;
 
   @override
   _ProfileSettingsContainerState createState() =>
@@ -265,7 +266,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                               builder: (context, state) {
                                             if (state
                                                 is ThirdPartyUploaderUploadingState) {
-                                              return CircularProgressIndicator();
+                                              return ColorChangeCircularProgressIndicator();
                                             }
                                             if (state
                                                 is ThirdPartyUploaderUploadedState) {
@@ -325,7 +326,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                                               builder: (context, state) {
                                             if (state
                                                 is ThirdPartyUploaderUploadingState) {
-                                              return CircularProgressIndicator();
+                                              return ColorChangeCircularProgressIndicator();
                                             }
                                             if (state
                                                 is ThirdPartyUploaderUploadedState) {
@@ -565,7 +566,7 @@ class _ProfileSettingsContainerState extends State<ProfileSettingsContainer>
                               offset: Duration(seconds: 3),
                               duration: Duration(seconds: 1)),
                           child: DecoratedIcon(
-                            FontAwesomeIcons.save,
+                            FontAwesomeIcons.floppyDisk,
                             color: globals.keyPermissions.contains(6)
                                 ? globalAlmostWhite
                                 : Colors.grey,

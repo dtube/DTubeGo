@@ -44,11 +44,11 @@ final ThemeData dtubeDarkTheme = ThemeData(
   }),
   brightness: Brightness.dark,
   primaryColor: Color(0xff212121),
-  primaryColorBrightness: Brightness.dark,
   primaryColorLight: Color(0xff9e9e9e),
   primaryColorDark: Color(0xff000000),
   canvasColor: globalBGColor,
   scaffoldBackgroundColor: globalBGColor,
+
   cardColor: Color(0xff424242),
   dividerColor: Color(0x1fffffff),
   highlightColor: Color(0x40cccccc),
@@ -92,10 +92,8 @@ final ThemeData dtubeDarkTheme = ThemeData(
     highlightColor: Color(0x29ffffff),
     splashColor: Color(0x1fffffff),
     colorScheme: ColorScheme(
-      primary: Color(0xff212140),
-      primaryVariant: Color(0xff000000),
+      primary: globalBlue,
       secondary: Color(0xff64ffda),
-      secondaryVariant: Color(0xff00bfa5),
       surface: Color(0xff424242),
       background: Color(0xff616161),
       error: Color(0xffd32f2f),
@@ -298,11 +296,7 @@ final ThemeData dtubeDarkTheme = ThemeData(
     opacity: 1.0,
     size: 24.0,
   ),
-  accentIconTheme: IconThemeData(
-    color: Color(0xff000000),
-    opacity: 1.0,
-    size: 24.0,
-  ),
+
   sliderTheme: SliderThemeData(
     activeTrackColor: globalTextColor,
     inactiveTrackColor: Color(0x3d212121),

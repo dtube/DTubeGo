@@ -1,14 +1,10 @@
 // dialog to show current app version and build
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/upload/widgets/PresetCards.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
-import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -18,7 +14,7 @@ class InitiativeDialog extends StatefulWidget {
     required this.initiative,
   }) : super(key: key);
 
-  Preset initiative;
+  final Preset initiative;
 
   @override
   State<InitiativeDialog> createState() => _InitiativeDialogState();
@@ -65,7 +61,7 @@ class _InitiativeDialogState extends State<InitiativeDialog> {
                   label: Text("read more"),
                   backgroundColor: globalRed,
                   onPressed: () {
-                    launch(widget.initiative.moreInfoURL);
+                    launchUrl(Uri.parse(widget.initiative.moreInfoURL));
                   },
                 ),
                 InkWell(

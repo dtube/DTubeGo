@@ -7,9 +7,9 @@ import 'package:dtube_go/ui/pages/wallet/Pages/Governance/DAO/Widgets/VoteOvervi
 
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/widgets/players/VideoPlayerFromURL.dart';
-import 'package:dtube_go/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -18,8 +18,8 @@ class ProposalCard extends StatefulWidget {
   ProposalCard({Key? key, required this.daoItem, required this.daoThreshold})
       : super(key: key);
 
-  late DAOItem daoItem;
-  late int daoThreshold;
+  final DAOItem daoItem;
+  final int daoThreshold;
   String postUrlAuthor = "";
   String postUrlLink = "";
 

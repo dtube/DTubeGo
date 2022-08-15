@@ -5,7 +5,8 @@ import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/Inputs/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-import 'package:dtube_go/utils/shortBalanceStrings.dart';
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
+import 'package:dtube_go/utils/Strings/shortBalanceStrings.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -25,15 +26,15 @@ class VotingDialog extends StatefulWidget {
     this.okCallback,
     this.cancelCallback,
   }) : super(key: key);
-  TransactionBloc txBloc;
+  final TransactionBloc txBloc;
 
-  DAOItem daoItem;
+  final DAOItem daoItem;
 
-  bool? vertical; // only used in moments for now
-  VoidCallback? verticalModeCallbackVotingButtonsPressed;
+  final bool? vertical; // only used in moments for now
+  final VoidCallback? verticalModeCallbackVotingButtonsPressed;
 
-  VoidCallback? okCallback;
-  VoidCallback? cancelCallback;
+  final VoidCallback? okCallback;
+  final VoidCallback? cancelCallback;
 
   @override
   _VotingDialogState createState() => _VotingDialogState();
@@ -249,7 +250,7 @@ class _VotingDialogState extends State<VotingDialog> {
                     : Center(
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: CircularProgressIndicator(),
+                          child: ColorChangeCircularProgressIndicator(),
                         ),
                       ),
               );

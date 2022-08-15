@@ -1,6 +1,6 @@
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
-import 'package:dtube_go/utils/CountDownTimer.dart';
+import 'package:dtube_go/utils/Widgets/CountDownTimer.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -9,7 +9,7 @@ class HivePostCooldownDetectedDialog extends StatefulWidget {
   HivePostCooldownDetectedDialog({Key? key, required this.cooldown})
       : super(key: key);
 
-  int cooldown;
+  final int cooldown;
 
   @override
   State<HivePostCooldownDetectedDialog> createState() =>
@@ -98,7 +98,7 @@ class _HivePostCooldownDetectedDialogState
         ),
         titleWidget: Center(
           child: FaIcon(
-            FontAwesomeIcons.cloudUploadAlt,
+            FontAwesomeIcons.cloudArrowUp,
             size: 8.h,
           ),
         ),

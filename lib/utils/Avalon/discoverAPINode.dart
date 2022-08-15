@@ -1,15 +1,15 @@
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/APINodesConfigValues.dart';
 import 'package:http/http.dart' as http;
 
 import 'dart:collection';
 
 // Automatic node descovery based on their response time to request /count
 Future<String> discoverAPINode() async {
-  var _nodes = AppConfig.apiNodes;
+  var _nodes = APINodeConfig.apiNodes;
   int _retries = 0;
   //if we are using experimental features aka not merged PRs then this will get executed
-  if (AppConfig.useDevNodes) {
-    _nodes = AppConfig.apiNodesDev;
+  if (APINodeConfig.useDevNodes) {
+    _nodes = APINodeConfig.apiNodesDev;
   }
 
   Map<String, int> _nodeResponses = {};
@@ -26,8 +26,9 @@ Future<String> discoverAPINode() async {
         var _beforeRequestMicroSeconds = DateTime.now().microsecondsSinceEpoch;
         var response = await http.get(Uri.parse(node + '/count')).timeout(
             Duration(
-                milliseconds: AppConfig.nodeDescoveryTimeout.inMilliseconds *
-                    _retries), onTimeout: () {
+                milliseconds:
+                    APINodeConfig.nodeDescoveryTimeout.inMilliseconds *
+                        _retries), onTimeout: () {
           // timeout occured
           return http.Response('Error', 500);
         });

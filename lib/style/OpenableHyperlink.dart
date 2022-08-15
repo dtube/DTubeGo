@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OpenableHyperlink extends StatelessWidget {
-  String url;
-  String? alt;
-  TextStyle? style;
+  final String url;
+  final String? alt;
+  final TextStyle? style;
   OpenableHyperlink({
     required this.url,
     this.style,
@@ -15,10 +15,12 @@ class OpenableHyperlink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        child: Text(alt != null ? alt! : url,
-            overflow: TextOverflow.ellipsis,
-            style:
-                style != null ? style : Theme.of(context).textTheme.overline),
+        child: Text(
+          alt != null ? alt! : url,
+          overflow: TextOverflow.ellipsis,
+          style: style != null ? style : Theme.of(context).textTheme.overline,
+          maxLines: 3,
+        ),
         onTap: () async {
           await canLaunchUrl(Uri.parse(url))
               ? await launchUrl(Uri.parse(url))

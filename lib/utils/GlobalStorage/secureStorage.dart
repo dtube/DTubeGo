@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/appConfigValues.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const authKey_usernameKey = 'USERNAME';
@@ -930,13 +929,13 @@ Future<String> getNewsTS() async {
   try {
     _setting = await _storage.read(key: settingKey_newsTS);
   } catch (e) {
-    _setting = "0";
+    _setting = (DateTime.now().millisecondsSinceEpoch / 1000).toString();
   }
 
   if (_setting != null) {
     return _setting;
   } else {
-    return "0";
+    return (DateTime.now().millisecondsSinceEpoch / 1000).toString();
   }
 }
 

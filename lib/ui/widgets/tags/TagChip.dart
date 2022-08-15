@@ -1,4 +1,4 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/tags/TagList.dart';
@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TagChip extends StatelessWidget {
-  String tagName;
-  bool fadeInFromLeft;
-  double width;
-  Duration waitBeforeFadeIn;
-  TextStyle? fontStyle;
+  final String tagName;
+  final bool fadeInFromLeft;
+  final double width;
+  final Duration waitBeforeFadeIn;
+  final TextStyle? fontStyle;
   TagChip(
       {Key? key,
       required this.tagName,
@@ -58,12 +58,13 @@ class TagChipWidget extends StatelessWidget {
 
   final String tagName;
   final double width;
-  TextStyle? fontStyle;
+  final TextStyle? fontStyle;
 
   @override
   Widget build(BuildContext context) {
     return InputChip(
       padding: EdgeInsets.zero,
+      visualDensity: VisualDensity(horizontal: 0.0, vertical: -4),
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return MultiBlocProvider(

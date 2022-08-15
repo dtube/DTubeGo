@@ -1,9 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dtube_go/bloc/leaderboard/leaderboard_bloc_full.dart';
-import 'package:dtube_go/bloc/leaderboard/leaderboard_event.dart';
-import 'package:dtube_go/bloc/leaderboard/leaderboard_repository.dart';
-import 'package:dtube_go/bloc/leaderboard/leaderboard_state.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
 class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
   LeaderboardRepository repository;

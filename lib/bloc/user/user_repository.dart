@@ -1,10 +1,10 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/res/Config/APIUrlSchema.dart';
+import 'package:dtube_go/res/Config/appConfigValues.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/bloc/avalonConfig/avalonConfig_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_response_model.dart';
-
-import 'package:dtube_go/res/appConfigValues.dart';
-import 'package:dtube_go/utils/growInt.dart';
+import 'package:dtube_go/utils/Avalon/growInt.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 // import 'package:base58check/base58.dart';
@@ -29,8 +29,8 @@ class UserRepositoryImpl implements UserRepository {
     if (username == "na") {
       username = "null";
     }
-    var response = await http.get(Uri.parse(
-        apiNode + AppConfig.accountDataUrl.replaceAll("##USERNAME", username)));
+    var response = await http.get(Uri.parse(apiNode +
+        APIUrlSchema.accountDataUrl.replaceAll("##USERNAME", username)));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
@@ -64,8 +64,8 @@ class UserRepositoryImpl implements UserRepository {
     };
 
     int dtcBalance = 0;
-    var response = await http.get(Uri.parse(
-        apiNode + AppConfig.accountDataUrl.replaceAll("##USERNAME", username)));
+    var response = await http.get(Uri.parse(apiNode +
+        APIUrlSchema.accountDataUrl.replaceAll("##USERNAME", username)));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
@@ -74,7 +74,7 @@ class UserRepositoryImpl implements UserRepository {
       int vp = user.vt!.v;
       int vpTS = user.vt!.t;
       var configResponse =
-          await http.get(Uri.parse(apiNode + AppConfig.avalonConfig));
+          await http.get(Uri.parse(apiNode + APIUrlSchema.avalonConfig));
       if (configResponse.statusCode == 200) {
         var configData = json.decode(configResponse.body);
         AvalonConfig conf =
@@ -91,8 +91,8 @@ class UserRepositoryImpl implements UserRepository {
 
   Future<int> getDTC(String apiNode, String username, applicationUser) async {
     int dtcBalance = 0;
-    var response = await http.get(Uri.parse(
-        apiNode + AppConfig.accountDataUrl.replaceAll("##USERNAME", username)));
+    var response = await http.get(Uri.parse(apiNode +
+        APIUrlSchema.accountDataUrl.replaceAll("##USERNAME", username)));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 

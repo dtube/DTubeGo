@@ -1,5 +1,5 @@
 import 'package:dtube_go/ui/pages/wallet/Pages/Wallet/transferDialog.dart';
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
@@ -21,10 +21,10 @@ Widget buildUserMenuSpeedDial(
     mainMenuButtonOptions = [
       SpeedDialChild(
           child: ShadowedIcon(
-              icon: FontAwesomeIcons.cogs,
+              icon: FontAwesomeIcons.gears,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
-              size: globalIconSizeMedium),
+              size: globalIconSizeBig),
           elevation: 0,
           backgroundColor: Colors.transparent,
           onTap: () {
@@ -41,10 +41,10 @@ Widget buildUserMenuSpeedDial(
           }),
       SpeedDialChild(
           child: ShadowedIcon(
-              icon: FontAwesomeIcons.history,
+              icon: FontAwesomeIcons.clockRotateLeft,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
-              size: globalIconSizeMedium),
+              size: globalIconSizeBig),
           elevation: 0,
           backgroundColor: Colors.transparent,
           onTap: () {
@@ -59,10 +59,10 @@ Widget buildUserMenuSpeedDial(
           }),
       SpeedDialChild(
           child: ShadowedIcon(
-              icon: FontAwesomeIcons.signOutAlt,
+              icon: FontAwesomeIcons.rightFromBracket,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
-              size: globalIconSizeMedium),
+              size: globalIconSizeBig),
           elevation: 0,
           backgroundColor: Colors.transparent,
           onTap: () {
@@ -74,10 +74,10 @@ Widget buildUserMenuSpeedDial(
     mainMenuButtonOptions = [
       SpeedDialChild(
           child: ShadowedIcon(
-              icon: FontAwesomeIcons.history,
+              icon: FontAwesomeIcons.clockRotateLeft,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
-              size: globalIconSizeMedium),
+              size: globalIconSizeBig),
           elevation: 0,
           backgroundColor: Colors.transparent,
           onTap: () {
@@ -92,10 +92,10 @@ Widget buildUserMenuSpeedDial(
           }),
       SpeedDialChild(
           child: ShadowedIcon(
-              icon: FontAwesomeIcons.exchangeAlt,
+              icon: FontAwesomeIcons.rightLeft,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
-              size: globalIconSizeMedium),
+              size: globalIconSizeBig),
           elevation: 0,
           backgroundColor: Colors.transparent,
           visible: globals.keyPermissions.contains(3),
@@ -111,10 +111,10 @@ Widget buildUserMenuSpeedDial(
           child: ShadowedIcon(
               icon: user.alreadyFollowing
                   ? FontAwesomeIcons.usersSlash
-                  : FontAwesomeIcons.userFriends,
+                  : FontAwesomeIcons.userGroup,
               color: globalAlmostWhite,
               shadowColor: Colors.black,
-              size: globalIconSizeMedium),
+              size: globalIconSizeBig),
           elevation: 0,
           visible: user.alreadyFollowing
               ? globals.keyPermissions.contains(8)
@@ -137,7 +137,7 @@ Widget buildUserMenuSpeedDial(
           icon: FontAwesomeIcons.bars,
           color: globalAlmostWhite,
           shadowColor: Colors.transparent,
-          size: globalIconSizeMedium),
+          size: globalIconSizeBig),
       activeIcon: FontAwesomeIcons.chevronLeft,
       direction: SpeedDialDirection.up,
       visible: true,

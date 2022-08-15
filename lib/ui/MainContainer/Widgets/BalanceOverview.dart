@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:async';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/utils/shortBalanceStrings.dart';
+import 'package:dtube_go/utils/Strings/shortBalanceStrings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -71,12 +71,12 @@ class _BalanceOverviewState extends State<BalanceOverview> {
                 ? WebBalanceOverview(iconSize: _iconSize, state: state)
                 : MobileBalanceOverview(iconSize: _iconSize, state: state);
           } catch (e) {
-            return FaIcon(FontAwesomeIcons.times);
+            return FaIcon(FontAwesomeIcons.xmark);
           }
         } else if (state is UserErrorState) {
-          return FaIcon(FontAwesomeIcons.times);
+          return FaIcon(FontAwesomeIcons.xmark);
         } else {
-          return FaIcon(FontAwesomeIcons.times);
+          return FaIcon(FontAwesomeIcons.xmark);
         }
       },
     );

@@ -3,7 +3,7 @@ import 'package:dtube_go/bloc/accountHistory/accountHistory_event.dart';
 import 'package:dtube_go/bloc/accountHistory/accountHistory_state.dart';
 import 'package:dtube_go/bloc/accountHistory/accountHistory_response_model.dart';
 import 'package:dtube_go/bloc/accountHistory/accountHistory_repository.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
 class AccountHistoryBloc
     extends Bloc<AccountHistoryEvent, AccountHistoryState> {

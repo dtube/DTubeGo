@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 // https://github.com/davefaliskie/travel_treasury/blob/eecbff3444d5c8d9abf18cfea9932fcefe686ff3/lib/models/Trip.dart
 
 class ThirdPartyLoginEncrypted {

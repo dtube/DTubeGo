@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class PinCodeDialog extends StatefulWidget {
   PinCodeDialog({Key? key, required this.currentPin}) : super(key: key);
 
-  String? currentPin;
+  final String? currentPin;
 
   @override
   _PinCodeDialogState createState() => _PinCodeDialogState();

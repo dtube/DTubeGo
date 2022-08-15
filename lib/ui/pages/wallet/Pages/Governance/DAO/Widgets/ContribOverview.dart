@@ -13,7 +13,7 @@ class ProposalContribOverview extends StatefulWidget {
     required this.daoItem,
   }) : super(key: key);
 
-  DAOItem daoItem;
+  final DAOItem daoItem;
 
   @override
   _ProposalContribOverviewState createState() =>

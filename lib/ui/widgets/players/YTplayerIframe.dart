@@ -14,7 +14,7 @@ class YTPlayerIFrame extends StatefulWidget {
   final String videoUrl;
   final bool autoplay;
   final bool allowFullscreen;
-  YoutubePlayerController controller;
+  final YoutubePlayerController controller;
 
   @override
   _YTPlayerIFrameState createState() => _YTPlayerIFrameState();

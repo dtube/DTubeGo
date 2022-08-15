@@ -15,11 +15,11 @@ class GiftDialog extends StatefulWidget {
       this.okCallback,
       this.cancelCallback})
       : super(key: key);
-  TransactionBloc txBloc;
-  String receiver;
-  String? originLink;
-  VoidCallback? okCallback;
-  VoidCallback? cancelCallback;
+  final TransactionBloc txBloc;
+  final String receiver;
+  final String? originLink;
+  final VoidCallback? okCallback;
+  final VoidCallback? cancelCallback;
 
   @override
   _GiftDialogState createState() => _GiftDialogState();

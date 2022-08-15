@@ -1,4 +1,5 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/Inputs/OverlayInputs.dart';
@@ -221,7 +222,7 @@ class _VotingButtonsState extends State<VotingButtons> {
           }
         }
       } else {
-        return CircularProgressIndicator();
+        return ColorChangeCircularProgressIndicator();
       }
     });
   }
@@ -385,16 +386,16 @@ class VotingSlider extends StatefulWidget {
       this.verticalModeCallbackVotingButtonsPressed})
       : super(key: key);
 
-  String author;
-  String link;
-  double defaultVote;
-  double defaultTip;
+  final String author;
+  final String link;
+  final double defaultVote;
+  final double defaultTip;
   //double currentVT;
-  bool isPost;
-  bool? vertical; // only used in moments for now
+  final bool isPost;
+  final bool? vertical; // only used in moments for now
 
-  bool downvote;
-  VoidCallback?
+  final bool downvote;
+  final VoidCallback?
       verticalModeCallbackVotingButtonsPressed; // only used in moments for now
 
   @override
@@ -602,7 +603,7 @@ class _VotingSliderState extends State<VotingSlider> {
                   : Center(
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: CircularProgressIndicator(),
+                        child: ColorChangeCircularProgressIndicator(),
                       ),
                     );
             } else {
@@ -779,7 +780,7 @@ class _VotingSliderState extends State<VotingSlider> {
           : Center(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(),
+                child: ColorChangeCircularProgressIndicator(),
               ),
             );
     }
@@ -800,16 +801,16 @@ class VotingSliderStandalone extends StatefulWidget {
     this.cancelCallback,
   }) : super(key: key);
 
-  String author;
-  String link;
-  double defaultVote;
-  double defaultTip;
-  double currentVT;
-  bool isPost;
+  final String author;
+  final String link;
+  final double defaultVote;
+  final double defaultTip;
+  final double currentVT;
+  final bool isPost;
 
-  bool downvote;
-  VoidCallback? sendCallback;
-  VoidCallback? cancelCallback;
+  final bool downvote;
+  final VoidCallback? sendCallback;
+  final VoidCallback? cancelCallback;
 
   @override
   _VotingSliderStandaloneState createState() => _VotingSliderStandaloneState();

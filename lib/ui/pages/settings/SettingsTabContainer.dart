@@ -1,6 +1,4 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
-
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -15,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:textfield_tags/textfield_tags.dart';
 
 class SettingsTabContainer extends StatefulWidget {
@@ -1885,8 +1883,8 @@ class ShowHintIcon extends StatelessWidget {
   ShowHintIcon({Key? key, required this.onPressed, required this.alignment})
       : super(key: key);
 
-  VoidCallback onPressed;
-  Alignment alignment;
+  final VoidCallback onPressed;
+  final Alignment alignment;
 
   @override
   Widget build(BuildContext context) {

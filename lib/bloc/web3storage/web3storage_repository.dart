@@ -1,3 +1,4 @@
+import 'package:dtube_go/res/Config/UploadConfigValues.dart';
 import 'package:http_parser/http_parser.dart';
 
 //TODO: connect to local ipfs deamon:
@@ -5,15 +6,9 @@ import 'package:http_parser/http_parser.dart';
 // - https://github.com/ngngardner/dart_ipfs_client
 
 import 'dart:io';
-
-import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:video_compress/video_compress.dart';
-import 'package:http/http.dart' as http;
-
-import 'dart:convert';
 import 'package:dio/dio.dart';
-
-import 'package:dtube_go/res/secretConfigValues.dart' as secret;
+import 'package:dtube_go/res/Config/secretConfigValues.dart' as secret;
 
 abstract class Web3StorageRepository {
   Future<File> compressVideo(String localFilePath);
@@ -60,7 +55,7 @@ class Web3StorageRepositoryImpl implements Web3StorageRepository {
 
   Future<String> getUploadEndpoint() async {
     List<String> validWeb3StorageUploadEndpoints = [];
-    for (var url in AppConfig.web3StorageEndpoints) {
+    for (var url in UploadConfig.web3StorageEndpoints) {
       //   var response = await http.get(Uri.parse(url + '/getStatus'));
       //   if (response.statusCode == 200) {
       //     validWeb3StorageUploadEndpoints.add(url);
@@ -128,7 +123,7 @@ class Web3StorageRepositoryImpl implements Web3StorageRepository {
     //String _url = endpoint;
     String _url = "https://api.imgur.com/3/image";
 
-    String authHeader = "Client-ID " + secret.ImgurClientID;
+    String authHeader = "Client-ID " + secret.imgurClientID;
 
     var dio = Dio();
     dio.options.headers["Authorization"] = authHeader;

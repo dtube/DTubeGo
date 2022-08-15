@@ -1,19 +1,19 @@
 import 'package:dtube_go/ui/pages/feeds/lists/FeedList.dart';
 import 'package:dtube_go/ui/pages/feeds/PostDetailPageInlineView.dart';
-import 'package:dtube_go/utils/ResponsiveLayout.dart';
+import 'package:dtube_go/utils/WIdgets/ResponsiveLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 typedef Bool2VoidFunc = void Function(bool);
 
 class FeedViewBase extends StatefulWidget {
-  String feedType;
+  final String feedType;
 
-  bool largeFormat;
-  bool showAuthor;
-  double? topPadding;
+  final bool largeFormat;
+  final bool showAuthor;
+  final double? topPadding;
 
-  Bool2VoidFunc scrollCallback;
+  final Bool2VoidFunc scrollCallback;
 
   FeedViewBase(
       {Key? key,
@@ -63,8 +63,8 @@ class _FeedViewBaseState extends State<FeedViewBase>
 }
 
 class PostView extends StatefulWidget {
-  String? postAuthor;
-  String? postLink;
+  final String? postAuthor;
+  final String? postLink;
   PostView({Key? key, required this.postAuthor, required this.postLink})
       : super(key: key);
 

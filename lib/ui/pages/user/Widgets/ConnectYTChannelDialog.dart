@@ -1,10 +1,10 @@
 import 'package:dtube_go/bloc/thirdpartyloader/thirdpartyloader_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/res/secretConfigValues.dart' as secretConfig;
+import 'package:dtube_go/res/Config/secretConfigValues.dart' as secretConfig;
 import 'package:flutter/services.dart';
 
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
-import 'package:dtube_go/utils/randomGenerator.dart';
+import 'package:dtube_go/utils/Random/randomGenerator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -20,8 +20,8 @@ class ConnectYTChannelDialog extends StatefulWidget {
   ConnectYTChannelDialog(
       {Key? key, required this.user, required this.connectCallback})
       : super(key: key);
-  User user;
-  ListOfString2VoidFunc connectCallback;
+  final User user;
+  final ListOfString2VoidFunc connectCallback;
   @override
   _ConnectYTChannelDialogState createState() => _ConnectYTChannelDialogState();
 }
@@ -108,8 +108,8 @@ class _ConnectYTChannelDialogState extends State<ConnectYTChannelDialog> {
                                 .bodyText1!
                                 .copyWith(color: Colors.blue)),
                         onTap: () {
-                          launch(
-                              "https://support.google.com/youtube/answer/3250431");
+                          launchUrl(Uri.parse(
+                              "https://support.google.com/youtube/answer/3250431"));
                         },
                       ),
                     )),

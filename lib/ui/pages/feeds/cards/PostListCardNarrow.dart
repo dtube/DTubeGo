@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
-import 'package:dtube_go/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

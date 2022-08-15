@@ -4,23 +4,22 @@ import 'package:equatable/equatable.dart';
 abstract class TransactionState extends Equatable {}
 
 class TransactionInitialState extends TransactionState {
-  @override
   List<Object> get props => [];
 }
 
 class TransactionSinging extends TransactionState {
-  Transaction tx;
+  final Transaction tx;
 
   TransactionSinging({required this.tx});
-  @override
+
   List<Object> get props => [tx];
 }
 
 class DAOTransactionSinging extends TransactionState {
-  DAOTransaction tx;
+  final DAOTransaction tx;
 
   DAOTransactionSinging({required this.tx});
-  @override
+
   List<Object> get props => [tx];
 }
 
@@ -28,26 +27,25 @@ class DAOTransactionSinging extends TransactionState {
 class TransactionPreprocessingState extends TransactionState {
   TransactionPreprocessingState({required this.txType});
   final int txType;
-  @override
+
   List<Object> get props => [];
 }
 
 class TransactionSigned extends TransactionState {
-  Transaction tx;
+  final Transaction tx;
 
   TransactionSigned({required this.tx});
 
-  @override
   List<Object> get props => [tx];
 }
 
 class TransactionSent extends TransactionState {
-  int block;
-  String successMessage;
-  int txType;
-  bool isParentContent;
-  String? authorPerm;
-  bool? isDownvote;
+  final int block;
+  final String successMessage;
+  final int txType;
+  final bool isParentContent;
+  final String? authorPerm;
+  final bool? isDownvote;
 
   TransactionSent(
       {required this.block,
@@ -57,20 +55,18 @@ class TransactionSent extends TransactionState {
       this.authorPerm,
       this.isDownvote});
 
-  @override
   List<Object> get props => [block];
 }
 
 class TransactionError extends TransactionState {
-  String message;
-  int txType;
-  bool isParentContent;
+  final String message;
+  final int txType;
+  final bool isParentContent;
 
   TransactionError(
       {required this.message,
       required this.txType,
       required this.isParentContent});
 
-  @override
   List<Object> get props => [message];
 }

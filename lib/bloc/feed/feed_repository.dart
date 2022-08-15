@@ -1,9 +1,9 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/res/Config/APIUrlSchema.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
 abstract class FeedRepository {
   Future<List<FeedItem>> getMyFeed(String apiNode, String applicationUser,
@@ -38,7 +38,7 @@ class FeedRepositoryImpl implements FeedRepository {
   Future<List<FeedItem>> getNewFeedFiltered(String apiNode, String filterString,
       String tsRangeFilter, String applicationUser) async {
     String _url = apiNode +
-        AppConfig.newFeedUrlFiltered.replaceAll(
+        APIUrlSchema.newFeedUrlFiltered.replaceAll(
             "##FILTERSTRING",
             filterString.replaceAll(
                     '#', '') // somehow "#" in the taglist breaks the api
@@ -83,7 +83,7 @@ class FeedRepositoryImpl implements FeedRepository {
   Future<List<FeedItem>> getMyFeedFiltered(String apiNode, String filterString,
       String tsRangeFilter, String applicationUser) async {
     String _url = apiNode +
-        AppConfig.myFeedUrlFiltered
+        APIUrlSchema.myFeedUrlFiltered
             .replaceAll("##USERNAME", applicationUser)
             .replaceAll("##FILTERSTRING", filterString + tsRangeFilter);
 
@@ -125,10 +125,10 @@ class FeedRepositoryImpl implements FeedRepository {
   Future<List<FeedItem>> getMyFeed(String apiNode, String applicationUser,
       String? fromAuthor, String? fromLink, String blockedUsers) async {
     String _url = apiNode +
-        AppConfig.myFeedUrlFirst.replaceAll("##USERNAME", applicationUser);
+        APIUrlSchema.myFeedUrlFirst.replaceAll("##USERNAME", applicationUser);
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
-          AppConfig.myFeedUrlMore
+          APIUrlSchema.myFeedUrlMore
               .replaceAll("##USERNAME", applicationUser)
               .replaceAll("##AUTHOR", fromAuthor)
               .replaceAll("##LINK", fromLink);
@@ -171,11 +171,11 @@ class FeedRepositoryImpl implements FeedRepository {
 
   Future<List<FeedItem>> getHotFeed(String apiNode, String? fromAuthor,
       String? fromLink, String applicationUser, String blockedUsers) async {
-    String _url = apiNode + AppConfig.hotFeedUrlFirst;
+    String _url = apiNode + APIUrlSchema.hotFeedUrlFirst;
 
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
-          AppConfig.hotFeedUrlMore
+          APIUrlSchema.hotFeedUrlMore
               .replaceAll("##AUTHOR", fromAuthor)
               .replaceAll("##LINK", fromLink);
     }
@@ -216,10 +216,10 @@ class FeedRepositoryImpl implements FeedRepository {
 
   Future<List<FeedItem>> getTrendingFeed(String apiNode, String? fromAuthor,
       String? fromLink, String applicationUser, String blockedUsers) async {
-    String _url = apiNode + AppConfig.trendingFeedUrlFirst;
+    String _url = apiNode + APIUrlSchema.trendingFeedUrlFirst;
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
-          AppConfig.trendingFeedUrlMore
+          APIUrlSchema.trendingFeedUrlMore
               .replaceAll("##AUTHOR", fromAuthor)
               .replaceAll("##LINK", fromLink);
     }
@@ -260,10 +260,10 @@ class FeedRepositoryImpl implements FeedRepository {
 
   Future<List<FeedItem>> getODFeed(String apiNode, String? fromAuthor,
       String? fromLink, String applicationUser, String blockedUsers) async {
-    String _url = apiNode + AppConfig.newFeedUrlFirst;
+    String _url = apiNode + APIUrlSchema.newFeedUrlFirst;
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
-          AppConfig.newFeedUrlMore
+          APIUrlSchema.newFeedUrlMore
               .replaceAll("##AUTHOR", fromAuthor)
               .replaceAll("##LINK", fromLink);
     }
@@ -307,10 +307,10 @@ class FeedRepositoryImpl implements FeedRepository {
 
   Future<List<FeedItem>> getNewFeed(String apiNode, String? fromAuthor,
       String? fromLink, String applicationUser, String blockedUsers) async {
-    String _url = apiNode + AppConfig.newFeedUrlFirst;
+    String _url = apiNode + APIUrlSchema.newFeedUrlFirst;
     if (fromAuthor != null && fromLink != null) {
       _url = apiNode +
-          AppConfig.newFeedUrlMore
+          APIUrlSchema.newFeedUrlMore
               .replaceAll("##AUTHOR", fromAuthor)
               .replaceAll("##LINK", fromLink);
     }
@@ -354,10 +354,10 @@ class FeedRepositoryImpl implements FeedRepository {
   Future<List<FeedItem>> getUserFeed(String apiNode, String username,
       String? fromAuthor, String? fromLink, String applicationUser) async {
     String _url = apiNode +
-        AppConfig.accountFeedUrlFirst.replaceAll("##USERNAME", username);
+        APIUrlSchema.accountFeedUrlFirst.replaceAll("##USERNAME", username);
     if (fromLink != null) {
       _url = apiNode +
-          AppConfig.accountFeedUrlMore
+          APIUrlSchema.accountFeedUrlMore
               .replaceAll("##USERNAME", username)
               .replaceAll("##AUTHORNAME", username)
               .replaceAll("##LINK", fromLink);
@@ -381,7 +381,7 @@ class FeedRepositoryImpl implements FeedRepository {
     String tsTo = (DateTime.now().millisecondsSinceEpoch).toString();
 
     String _url = apiNode +
-        AppConfig.newFeedUrlFiltered.replaceAll("##FILTERSTRING",
+        APIUrlSchema.newFeedUrlFiltered.replaceAll("##FILTERSTRING",
             "&authors=dtube,dtube-onboarding&tsrange=" + tsFrom + "," + tsTo);
 
     var responseDTube = await http.get(Uri.parse(_url));

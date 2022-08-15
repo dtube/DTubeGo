@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc.dart';
@@ -16,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/auth/auth_event.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:dtube_go/res/secretConfigValues.dart' as secretConfig;
+import 'package:dtube_go/res/Config/secretConfigValues.dart' as secretConfig;
 
 const MaterialColor kPrimaryColor = const MaterialColor(
   0xFF223154,
@@ -40,13 +39,13 @@ void main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: FirebaseOptions(
-          apiKey: secretConfig.fbWeb_apiKey,
-          authDomain: secretConfig.fbWeb_authDomain,
-          projectId: secretConfig.fbWeb_projectId,
-          storageBucket: secretConfig.fbWeb_storageBucket,
-          messagingSenderId: secretConfig.fbWeb_messagingSenderId,
-          appId: secretConfig.fbWeb_appId,
-          measurementId: secretConfig.fbWeb_measurementId),
+          apiKey: secretConfig.fbWebApiKey,
+          authDomain: secretConfig.fbWebAuthDomain,
+          projectId: secretConfig.fbWebProjectId,
+          storageBucket: secretConfig.fbWebStorageBucket,
+          messagingSenderId: secretConfig.fbWebMessagingSenderId,
+          appId: secretConfig.fbWebAppId,
+          measurementId: secretConfig.fbWebMeasurementId),
     );
   } else {
     if (Platform.isAndroid || Platform.isIOS) {

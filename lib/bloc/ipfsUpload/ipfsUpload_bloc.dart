@@ -1,12 +1,9 @@
 import 'dart:io';
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_response_model.dart';
-import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
-import 'package:dtube_go/utils/randomPermlink.dart';
-
-import 'package:bloc/bloc.dart';
+import 'package:dtube_go/res/Config/UploadConfigValues.dart';
+import 'package:dtube_go/utils/Random/randomPermlink.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_event.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_state.dart';
 
@@ -146,8 +143,8 @@ class IPFSUploadBloc extends Bloc<IPFSUploadEvent, IPFSUploadState> {
           uploadErrorCount++;
         }
       } while (uploadErrorCount != 0 &&
-          uploadErrorCount < AppConfig.maxUploadRetries);
-      if (uploadErrorCount == AppConfig.maxUploadRetries) {
+          uploadErrorCount < UploadConfig.maxUploadRetries);
+      if (uploadErrorCount == UploadConfig.maxUploadRetries) {
         // notify AppStateBloc about failed ipfs upload
         appStateBloc
             .add(UploadStateChangedEvent(uploadState: UploadFailedState()));

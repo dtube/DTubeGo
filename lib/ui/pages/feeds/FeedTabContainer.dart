@@ -1,15 +1,9 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
-
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-
-import 'package:dtube_go/res/appConfigValues.dart';
-import 'package:chips_input/chips_input.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/feeds/FeedViewBase.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
-import 'package:dtube_go/utils/ResponsiveLayout.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';

@@ -1,15 +1,15 @@
 import 'package:dtube_go/ui/pages/wallet/Pages/KeyManagement/Widgets/newKeyDialog.dart';
 import 'package:dtube_go/ui/pages/wallet/Pages/KeyManagement/Widgets/removeKeyDialog.dart';
 import 'package:dtube_go/ui/pages/wallet/Pages/KeyManagement/Widgets/resetMasterKeyDialog.dart';
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 export 'package:dtube_go/bloc/auth/auth_repository.dart';
 
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
 import 'package:dtube_go/bloc/config/txTypes.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
-import 'package:dtube_go/utils/crypto_convert.dart';
+import 'package:dtube_go/utils/Crypto/crypto_convert.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -186,7 +186,7 @@ class _KeyManagementPageState extends State<KeyManagementPage>
                                   );
                                 },
                                 icon: FaIcon(
-                                  FontAwesomeIcons.times,
+                                  FontAwesomeIcons.xmark,
                                 )))
                         : Container(),
                   ],

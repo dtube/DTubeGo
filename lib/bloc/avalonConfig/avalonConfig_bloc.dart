@@ -3,7 +3,7 @@ import 'package:dtube_go/bloc/avalonConfig/avalonConfig_event.dart';
 import 'package:dtube_go/bloc/avalonConfig/avalonConfig_repository.dart';
 import 'package:dtube_go/bloc/avalonConfig/avalonConfig_response_model.dart';
 import 'package:dtube_go/bloc/avalonConfig/avalonConfig_state.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:flutter/material.dart';
 
 class AvalonConfigBloc extends Bloc<AvalonConfigEvent, AvalonConfigState> {

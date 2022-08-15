@@ -1,6 +1,5 @@
 import 'dart:typed_data';
-
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/APIUrlSchema.dart';
 import 'package:http/http.dart' as http;
 import 'package:dtube_go/bloc/transaction/transaction_response_model.dart';
 
@@ -97,7 +96,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   Future<String> send(String apiNode, Transaction tx) async {
     var response =
-        await http.post(Uri.parse(apiNode + AppConfig.sendTransactionUrl),
+        await http.post(Uri.parse(apiNode + APIUrlSchema.sendTransactionUrl),
             headers: {
               'Accept': 'application/json, text/plain, */*',
               'Content-Type': 'application/json'
@@ -114,7 +113,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   Future<String> sendDAO(String apiNode, DAOTransaction tx) async {
     var response =
-        await http.post(Uri.parse(apiNode + AppConfig.sendTransactionUrl),
+        await http.post(Uri.parse(apiNode + APIUrlSchema.sendTransactionUrl),
             headers: {
               'Accept': 'application/json, text/plain, */*',
               'Content-Type': 'application/json'

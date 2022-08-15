@@ -9,8 +9,8 @@ class ProposalStateChip extends StatefulWidget {
     required this.daoThreshold,
   }) : super(key: key);
 
-  DAOItem daoItem;
-  int daoThreshold;
+  final DAOItem daoItem;
+  final int daoThreshold;
 
   @override
   State<ProposalStateChip> createState() => _ProposalStateChipState();

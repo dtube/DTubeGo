@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/ui/pages/post/widgets/DTubeCoinsChip.dart';
 import 'package:dtube_go/ui/pages/post/widgets/ShareAndCommentChiips.dart';
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/feed/feed_bloc.dart';
 import 'package:dtube_go/bloc/feed/feed_event.dart';
 import 'package:dtube_go/bloc/feed/feed_repository.dart';
@@ -15,12 +15,12 @@ import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/ui/widgets/gifts/GiftBoxWidget.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
-import 'package:dtube_go/utils/friendlyTimestamp.dart';
-import 'package:dtube_go/utils/shortBalanceStrings.dart';
+import 'package:dtube_go/utils/Strings/friendlyTimestamp.dart';
+import 'package:dtube_go/utils/Strings/shortBalanceStrings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:dtube_go/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
@@ -31,7 +31,7 @@ import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/pages/post/widgets/CollapsedDescription.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VoteButtons.dart';
-import 'package:dtube_go/utils/secureStorage.dart';
+import 'package:dtube_go/utils/GlobalStorage/secureStorage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -555,7 +555,7 @@ class VotesOverview extends StatefulWidget {
     Key? key,
     required this.post,
   }) : super(key: key);
-  Post post;
+  final Post post;
 
   @override
   _VotesOverviewState createState() => _VotesOverviewState();

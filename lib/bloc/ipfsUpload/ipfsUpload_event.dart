@@ -12,8 +12,8 @@ class UploadVideo extends IPFSUploadEvent {
       required this.context});
   final String videoPath;
   final String thumbnailPath;
-  UploadData uploadData;
-  BuildContext context;
+  final UploadData uploadData;
+  final BuildContext context;
   @override
   List<Object> get props => List.empty();
 }

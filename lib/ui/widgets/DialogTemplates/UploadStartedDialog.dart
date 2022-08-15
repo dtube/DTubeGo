@@ -67,7 +67,7 @@ class UploadStartedDialog extends StatelessWidget {
         ),
         titleWidget: Center(
           child: FaIcon(
-            FontAwesomeIcons.cloudUploadAlt,
+            FontAwesomeIcons.cloudArrowUp,
             size: 8.h,
           ),
         ),

@@ -19,12 +19,12 @@ class CommentDialog extends StatefulWidget {
       this.okCallback,
       this.cancelCallback})
       : super(key: key);
-  TransactionBloc txBloc;
-  String originAuthor;
-  String originLink;
-  double defaultCommentVote;
-  VoidCallback? okCallback;
-  VoidCallback? cancelCallback;
+  final TransactionBloc txBloc;
+  final String originAuthor;
+  final String originLink;
+  final double defaultCommentVote;
+  final VoidCallback? okCallback;
+  final VoidCallback? cancelCallback;
 
   @override
   _CommentDialogState createState() => _CommentDialogState();

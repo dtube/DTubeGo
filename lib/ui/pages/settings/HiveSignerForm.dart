@@ -1,7 +1,7 @@
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -78,7 +78,7 @@ class _HiveSignerFormState extends State<HiveSignerForm> {
             _status == "valid"
                 ? FontAwesomeIcons.hive
                 : _status == "invalid"
-                    ? FontAwesomeIcons.undo
+                    ? FontAwesomeIcons.arrowRotateLeft
                     : FontAwesomeIcons.hive,
             size: 15,
           ),
@@ -103,7 +103,7 @@ class _HiveSignerFormState extends State<HiveSignerForm> {
                       InputChip(
                         label: Text("remove"),
                         avatar: FaIcon(
-                          FontAwesomeIcons.removeFormat,
+                          FontAwesomeIcons.textSlash,
                           size: 15,
                         ),
                         elevation: 2,

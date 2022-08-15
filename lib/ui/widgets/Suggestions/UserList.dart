@@ -1,5 +1,5 @@
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
-import 'package:dtube_go/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/ui/widgets/Suggestions/OtherUsersAvatar.dart';
@@ -13,10 +13,10 @@ class UserList extends StatefulWidget {
       required this.showCount,
       required this.avatarSize})
       : super(key: key);
-  List<String> userlist;
-  String title;
-  bool showCount;
-  double avatarSize;
+  final List<String> userlist;
+  final String title;
+  final bool showCount;
+  final double avatarSize;
 
   @override
   State<UserList> createState() => _UserListState();

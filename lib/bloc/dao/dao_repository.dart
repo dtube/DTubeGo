@@ -1,5 +1,5 @@
 import 'package:dtube_go/bloc/dao/dao_response_model.dart';
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/APIUrlSchema.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -13,7 +13,7 @@ class DaoRepositoryImpl implements DaoRepository {
   Future<List<DAOItem>> getDao(
       String apiNode, String daoStatus, String daoType) async {
     var response = await http.get(Uri.parse(apiNode +
-        AppConfig.daoUrl
+        APIUrlSchema.daoUrl
             .replaceAll("##STATUS", daoStatus)
             .replaceAll("##TYPE", daoType)));
     if (response.statusCode == 200) {
@@ -23,7 +23,7 @@ class DaoRepositoryImpl implements DaoRepository {
       int daoListId = 0;
       for (var daoItem in daoList) {
         var votesResponse = await http.get(Uri.parse(apiNode +
-            AppConfig.daoVotesUrl
+            APIUrlSchema.daoVotesUrl
                 .replaceAll("##DAOID", daoItem.iId.toString())));
 
         if (votesResponse.statusCode == 200) {
@@ -52,13 +52,14 @@ class DaoRepositoryImpl implements DaoRepository {
 
   Future<DAOItem> getProposal(String apiNode, int id) async {
     var response = await http.get(Uri.parse(apiNode +
-        AppConfig.daoProposalUrl.replaceAll("##DAOID", id.toString())));
+        APIUrlSchema.daoProposalUrl.replaceAll("##DAOID", id.toString())));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
       DAOItem daoItem = DAOItem.fromJson(data);
       var votesResponse = await http.get(Uri.parse(apiNode +
-          AppConfig.daoVotesUrl.replaceAll("##DAOID", daoItem.iId.toString())));
+          APIUrlSchema.daoVotesUrl
+              .replaceAll("##DAOID", daoItem.iId.toString())));
 
       if (votesResponse.statusCode == 200) {
         var voteData = json.decode(votesResponse.body);

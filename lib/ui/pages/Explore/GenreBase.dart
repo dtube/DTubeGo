@@ -1,18 +1,13 @@
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/ExploreConfigValues.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/Explore/GenreFeed.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
-import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dtube_go/utils/navigationShortcuts.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 typedef Bool2VoidFunc = void Function(bool);
@@ -27,20 +22,16 @@ class GenreBase extends StatefulWidget {
 class _GenreBaseState extends State<GenreBase> {
   late FeedBloc postBloc;
   bool _showResults = false;
-  late Future<bool> _genresLoaded;
-
-  final ScrollController _scrollController = ScrollController();
 
   late Future<String> _mainTagsFuture;
   List<FontAwesomeIcons> genreIcons = [];
   List<String> genreSubTagStrings = [];
-  List<FeedItem> _feedItems = [];
   List<GenreTag> genreList = [];
   List<int> _activatedGenres = [];
 
   @override
   void initState() {
-    AppConfig.genreTags.forEach((g) {
+    ExploreConfig.genreTags.forEach((g) {
       genreList.add(new GenreTag.fromJson(g));
     });
     _mainTagsFuture = getSelectedMainTags();

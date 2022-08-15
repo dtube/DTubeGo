@@ -13,11 +13,11 @@ class OverlayText extends StatelessWidget {
       : super(key: key);
 
   final String text;
-  double? sizeMultiply;
-  int? maxLines;
-  TextOverflow? overflow;
-  bool? bold;
-  Color? color;
+  final double? sizeMultiply;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final bool? bold;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {

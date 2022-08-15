@@ -49,7 +49,7 @@ class NewsScreen extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 2.h),
+                padding: EdgeInsets.only(bottom: 1.h),
                 child: InputChip(
                     avatar: FaIcon(FontAwesomeIcons.check),
                     label: Text(

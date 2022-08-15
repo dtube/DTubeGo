@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 abstract class HivesignerEvent extends Equatable {}
 
 class CheckAccessToken extends HivesignerEvent {
-  String hiveSignerUsername;
+  final String hiveSignerUsername;
   CheckAccessToken({required this.hiveSignerUsername});
   @override
   List<Object> get props => List.empty();

@@ -9,8 +9,8 @@ class FetchSettingsEvent extends SettingsEvent {
 }
 
 class PushSettingsEvent extends SettingsEvent {
-  Map<String, String> newSettings;
-  BuildContext context;
+  final Map<String, String> newSettings;
+  final BuildContext context;
   PushSettingsEvent({required this.newSettings, required this.context});
 
   @override
@@ -18,7 +18,7 @@ class PushSettingsEvent extends SettingsEvent {
 }
 
 class PushNewPinEvent extends SettingsEvent {
-  String newPin;
+  final String newPin;
   PushNewPinEvent(this.newPin);
 
   @override

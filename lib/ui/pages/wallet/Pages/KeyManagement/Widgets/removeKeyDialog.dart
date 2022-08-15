@@ -17,8 +17,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class RemoveKeyDialog extends StatefulWidget {
   RemoveKeyDialog({Key? key, required this.txBloc, required this.keyId})
       : super(key: key);
-  TransactionBloc txBloc;
-  String keyId;
+  final TransactionBloc txBloc;
+  final String keyId;
 
   @override
   _RemoveKeyDialogState createState() => _RemoveKeyDialogState();
@@ -40,7 +40,7 @@ class _RemoveKeyDialogState extends State<RemoveKeyDialog> {
       titleWidgetSize: 20.w,
       callbackOK: () {},
       titleWidget: FaIcon(
-        FontAwesomeIcons.times,
+        FontAwesomeIcons.xmark,
         size: 20.w,
         color: globalBGColor,
       ),

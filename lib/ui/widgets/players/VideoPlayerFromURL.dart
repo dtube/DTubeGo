@@ -13,7 +13,7 @@ import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class VideoPlayerFromURL extends StatefulWidget {
   VideoPlayerFromURL({Key? key, required this.url}) : super(key: key);
-  String url;
+  final String url;
 
   @override
   State<VideoPlayerFromURL> createState() => _VideoPlayerFromURLState();

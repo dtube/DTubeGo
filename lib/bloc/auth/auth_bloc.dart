@@ -1,18 +1,18 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 //import 'package:dtube_go/res/loadRemoteConf.dart' as remoteConfig;
-import 'package:dtube_go/res/setupConfig.dart' as config;
+import 'package:dtube_go/res/Config/setupConfig.dart' as config;
 
-import 'package:dtube_go/utils/crypto_convert.dart';
+import 'package:dtube_go/utils/Crypto/crypto_convert.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'package:dtube_go/bloc/auth/auth_event.dart';
 import 'package:dtube_go/bloc/auth/auth_state.dart';
 import 'package:dtube_go/bloc/auth/auth_repository.dart';
 
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:bloc/bloc.dart';
-import 'package:dtube_go/utils/discoverAPINode.dart';
+import 'package:dtube_go/utils/Avalon/discoverAPINode.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 

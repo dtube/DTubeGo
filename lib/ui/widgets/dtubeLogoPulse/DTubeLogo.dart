@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
 class DTubeLogo extends StatelessWidget {
-  double size;
+  final double size;
   DTubeLogo({Key? key, required this.size}) : super(key: key);
 
   @override
@@ -16,7 +16,7 @@ class DTubeLogo extends StatelessWidget {
 }
 
 class DTubeLogoShadowed extends StatelessWidget {
-  double size;
+  final double size;
   DTubeLogoShadowed({Key? key, required this.size}) : super(key: key);
 
   @override

@@ -1,5 +1,6 @@
 // dialog to show current app version and build
-import 'package:dtube_go/res/appConfigValues.dart';
+
+import 'package:dtube_go/res/Config/appConfigValues.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
@@ -101,7 +102,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
                       Padding(
                         padding: EdgeInsets.only(top: 1.h),
                         child: Text(
-                          "iOS Developer: no-do-not-track-me",
+                          "iOS Developer: @no-do-not-track-me",
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -120,7 +121,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
                       EdgeInsets.only(bottom: 1.h, left: 17.w, right: 17.w),
                   child: ElevatedButton(
                       onPressed: () {
-                        launch(AppConfig.gitDTubeGoUrl);
+                        launchUrl(Uri.parse(AppConfig.gitDTubeGoUrl));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -156,7 +157,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                launch(AppConfig.gitDtubeUrl);
+                                launchUrl(Uri.parse(AppConfig.gitDtubeUrl));
                               },
                               child: Row(
                                 children: [
@@ -170,7 +171,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                launch(AppConfig.gitAvalonUrl);
+                                launchUrl(Uri.parse(AppConfig.gitAvalonUrl));
                               },
                               child: Row(
                                 children: [
@@ -190,7 +191,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
                             bottom: 1.h, left: 22.w, right: 22.w),
                         child: ElevatedButton(
                             onPressed: () {
-                              launch(AppConfig.faqUrl);
+                              launchUrl(Uri.parse(AppConfig.faqUrl));
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,

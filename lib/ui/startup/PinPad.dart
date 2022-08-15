@@ -1,14 +1,14 @@
 import 'package:dtube_go/bloc/web3storage/web3storage_bloc_full.dart';
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/startup/eula/EulaScreen.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
 import 'dart:math';
 import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
-import 'package:dtube_go/utils/ResponsiveLayout.dart';
+import 'package:dtube_go/utils/Widgets/ResponsiveLayout.dart';
 import 'package:flutter/foundation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -17,7 +17,7 @@ import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
 import 'package:dtube_go/ui/widgets/PinPadWidget.dart';
-import 'package:dtube_go/utils/secureStorage.dart';
+import 'package:dtube_go/utils/GlobalStorage/secureStorage.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +26,7 @@ import 'package:flutter/material.dart';
 class PinPadScreen extends StatefulWidget {
   PinPadScreen({Key? key, required this.currentTermsAccepted})
       : super(key: key);
-  bool currentTermsAccepted;
+  final bool currentTermsAccepted;
 
   @override
   _PinPadScreenState createState() => _PinPadScreenState();
@@ -121,7 +121,7 @@ class _PinPadScreenState extends State<PinPadScreen> {
 }
 
 class PinPad extends StatefulWidget {
-  String? storedPin;
+  final String? storedPin;
   PinPad({Key? key, this.storedPin}) : super(key: key);
 
   @override

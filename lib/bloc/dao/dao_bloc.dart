@@ -1,9 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dtube_go/bloc/dao/dao_bloc_full.dart';
-import 'package:dtube_go/bloc/dao/dao_event.dart';
-import 'package:dtube_go/bloc/dao/dao_repository.dart';
-import 'package:dtube_go/bloc/dao/dao_state.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
 class DaoBloc extends Bloc<DaoEvent, DaoState> {
   DaoRepository repository;

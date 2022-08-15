@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -52,7 +53,7 @@ class _SignInButtonState extends State<SignInButton> {
         : ElevatedButton(
             child: Container(
               width: 10.w,
-              child: Center(child: CircularProgressIndicator()),
+              child: Center(child: ColorChangeCircularProgressIndicator()),
             ),
             onPressed: null,
           );

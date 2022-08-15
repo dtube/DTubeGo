@@ -1,8 +1,7 @@
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
-
-import 'package:dtube_go/res/appConfigValues.dart';
+import 'package:dtube_go/res/Config/HiveConfigValues.dart';
+import 'package:dtube_go/res/Config/UploadConfigValues.dart';
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:flutter_web_auth/flutter_web_auth.dart';
-
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -26,8 +25,8 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
   @override
   Future<bool> requestNewAccessToken(String username) async {
     final result = await FlutterWebAuth.authenticate(
-        url: AppConfig.hiveSignerAccessTokenUrl,
-        callbackUrlScheme: AppConfig.hiveSignerCallbackUrlScheme);
+        url: HiveConfig.hiveSignerAccessTokenUrl,
+        callbackUrlScheme: HiveConfig.hiveSignerCallbackUrlScheme);
 
     Uri _uri = Uri.parse(result);
     String _accessToken = _uri.queryParameters['access_token'].toString();
@@ -75,7 +74,7 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
     try {
       response = await http
           .post(
-        Uri.parse(AppConfig.hiveSignerBroadcastAddress),
+        Uri.parse(HiveConfig.hiveSignerBroadcastAddress),
         headers: headers,
         body: transactionBody,
       )
@@ -187,7 +186,7 @@ class HivesignerRepositoryImpl implements HivesignerRepository {
         '\'>';
     if (storageType == "ipfs") {
       body += '<img src=\'' +
-          AppConfig.ipfsSnapUrl +
+          UploadConfig.ipfsSnapUrl +
           thumbnailUrl +
           '\' ></a></center><hr>';
     }

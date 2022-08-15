@@ -1,5 +1,6 @@
 import 'package:dtube_go/ui/pages/feeds/cards/widets/CollapsedDescription.dart';
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'dart:io';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
@@ -15,7 +16,7 @@ import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/gifts/GiftDialog.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
-import 'package:dtube_go/utils/randomGenerator.dart';
+import 'package:dtube_go/utils/Random/randomGenerator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +27,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
-import 'package:dtube_go/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
@@ -108,7 +109,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
   late bool _showGiftInput;
 
   late UserBloc _userBloc;
-  int _currentVp = 0;
+
   late VideoPlayerController _bpController;
   late YoutubePlayerController _ytController;
 
@@ -296,14 +297,14 @@ class MobilePostData extends StatefulWidget {
   final TextEditingController _giftDTCController;
   final TextEditingController _giftMemoController;
   final double _avatarSize;
-  VoidCallback thumbnailTappedCallback;
-  VoidCallback votingOpenCallback;
-  VoidCallback commentOpenCallback;
-  VoidCallback giftOpenCallback;
-  String videoSource;
-  String videoUrl;
-  bool blur;
-  String thumbUrl;
+  final VoidCallback thumbnailTappedCallback;
+  final VoidCallback votingOpenCallback;
+  final VoidCallback commentOpenCallback;
+  final VoidCallback giftOpenCallback;
+  final String videoSource;
+  final String videoUrl;
+  final bool blur;
+  final String thumbUrl;
 
   @override
   State<MobilePostData> createState() => _MobilePostDataState();
@@ -444,10 +445,10 @@ class WebPostData extends StatelessWidget {
   final TextEditingController _giftDTCController;
   final TextEditingController _giftMemoController;
   final double _avatarSize;
-  VoidCallback thumbnailTappedCallback;
-  VoidCallback votingCancelCallback;
-  VoidCallback commentCancelCallback;
-  VoidCallback giftCancelCallback;
+  final VoidCallback thumbnailTappedCallback;
+  final VoidCallback votingCancelCallback;
+  final VoidCallback commentCancelCallback;
+  final VoidCallback giftCancelCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -609,7 +610,7 @@ class GiftDialogWidget extends StatelessWidget {
   final TextEditingController _giftMemoController;
   final PostListCardLarge widget;
 
-  VoidCallback cancelCallback;
+  final VoidCallback cancelCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -753,8 +754,8 @@ class CommentDialogWidget extends StatelessWidget {
   final TextEditingController _replyController;
   final UserBloc _userBloc;
   final PostListCardLarge widget;
-  int _currentVp = 0;
-  VoidCallback cancelCallback;
+  final int _currentVp = 0;
+  final VoidCallback cancelCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -800,7 +801,7 @@ class CommentDialogWidget extends StatelessWidget {
                       bloc: _userBloc,
                       builder: (context, state) {
                         if (state is UserDTCVPLoadingState) {
-                          return CircularProgressIndicator();
+                          return ColorChangeCircularProgressIndicator();
                         }
                         if (state is UserDTCVPLoadedState) {
                           //_currentVp = state.vtBalance["v"]!;
@@ -897,8 +898,8 @@ class VotingDialogWidget extends StatelessWidget {
   final UserBloc _userBloc;
   final PostListCardLarge widget;
   final bool _votingDirection;
-  int _currentVp = 0;
-  VoidCallback cancelCallback;
+  final int _currentVp = 0;
+  final VoidCallback cancelCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -971,14 +972,14 @@ class PostInfoBaseRow extends StatelessWidget {
   final PostListCardLarge widget;
 
   final double _avatarSize;
-  YoutubePlayerController ytController;
-  VideoPlayerController videoController;
-  VoidCallback votingOpenCallback;
-  VoidCallback commentOpenCallback;
-  VoidCallback giftOpenCallback;
-  VoidCallback votingCloseCallback;
-  VoidCallback commentCloseCallback;
-  VoidCallback giftCloseCallback;
+  final YoutubePlayerController ytController;
+  final VideoPlayerController videoController;
+  final VoidCallback votingOpenCallback;
+  final VoidCallback commentOpenCallback;
+  final VoidCallback giftOpenCallback;
+  final VoidCallback votingCloseCallback;
+  final VoidCallback commentCloseCallback;
+  final VoidCallback giftCloseCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -1013,9 +1014,11 @@ class PostInfoBaseRow extends StatelessWidget {
         Container(
           width: 28.w,
           child: Stack(
+            alignment: Alignment.center,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   widget.oc
                       ? globals.disableAnimations
@@ -1067,10 +1070,10 @@ class PostInfoBaseRow extends StatelessWidget {
                                 icon: FontAwesomeIcons.sortDown,
                                 color: globalAlmostWhite,
                                 shadowColor: Colors.black,
-                                size: globalIconSizeSmall),
+                                size: globalIconSizeMedium),
                           ),
-                          buttonSize: Size(
-                              globalIconSizeSmall * 2, globalIconSizeSmall * 2),
+                          // buttonSize:
+                          //     Size(globalIconSizeMedium, globalIconSizeMedium),
                           useRotationAnimation: false,
                           direction: SpeedDialDirection.up,
                           visible: true,
@@ -1391,7 +1394,7 @@ class OriginalContentIcon extends StatelessWidget {
       padding: EdgeInsets.only(right: 2.w),
       child: FaIcon(
         FontAwesomeIcons.award,
-        size: globalIconSizeSmall * 0.6,
+        size: globalIconSizeMedium,
       ),
     );
   }
@@ -1878,12 +1881,12 @@ class PlayerWidget extends StatelessWidget {
         super(key: key);
 
   final bool _thumbnailTapped;
-  String videoSource;
-  String videoUrl;
+  final String videoSource;
+  final String videoUrl;
   final VideoPlayerController _bpController;
   final YoutubePlayerController _ytController;
-  double placeholderWidth;
-  double placeholderSize;
+  final double placeholderWidth;
+  final double placeholderSize;
 
   @override
   Widget build(BuildContext context) {

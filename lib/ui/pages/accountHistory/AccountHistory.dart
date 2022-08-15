@@ -5,7 +5,7 @@ import 'package:dtube_go/bloc/config/txTypes.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
-import 'package:dtube_go/utils/navigationShortCuts.dart';
+import 'package:dtube_go/utils/Navigation/navigationShortCuts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountHistoryScreen extends StatefulWidget {
   AccountHistoryScreen({Key? key, required this.username}) : super(key: key);
-  String? username;
+  final String? username;
 
   @override
   _AccountHistoryScreenState createState() => _AccountHistoryScreenState();

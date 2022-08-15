@@ -9,16 +9,16 @@ import 'package:dtube_go/ui/pages/wallet/Pages/Governance/DAO/Widgets/VotingDial
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/players/VideoPlayerFromURL.dart';
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
-import 'package:dtube_go/utils/friendlyTimestamp.dart';
-import 'package:dtube_go/utils/shortBalanceStrings.dart';
+import 'package:dtube_go/utils/Strings/friendlyTimestamp.dart';
+import 'package:dtube_go/utils/Strings/shortBalanceStrings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:dtube_go/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
@@ -31,8 +31,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ProposalDetailPage extends StatefulWidget {
-  int proposalId;
-  int daoThreshold;
+  final int proposalId;
+  final int daoThreshold;
 
   ProposalDetailPage({required this.daoThreshold, required this.proposalId});
 
@@ -409,7 +409,7 @@ class VotesOverview extends StatefulWidget {
     Key? key,
     required this.post,
   }) : super(key: key);
-  Post post;
+  final Post post;
 
   @override
   _VotesOverviewState createState() => _VotesOverviewState();

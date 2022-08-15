@@ -1,6 +1,6 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
-
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
@@ -15,7 +15,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 class UserBlockButton extends StatefulWidget {
   UserBlockButton({Key? key, required this.user}) : super(key: key);
 
-  User user;
+  final User user;
 
   @override
   State<UserBlockButton> createState() => _UserBlockButtonState();
@@ -42,7 +42,7 @@ class _UserBlockButtonState extends State<UserBlockButton> {
         bloc: _userBloc,
         builder: (context, state) {
           if (state is UserLoadingState || state is UserInitialState) {
-            return Container();
+            return ColorChangeCircularProgressIndicator();
           } else if (state is UserLoadedState) {
             return IconButton(
                 onPressed: !globals.keyPermissions.contains(6)
@@ -250,7 +250,7 @@ class _UserBlockButtonState extends State<UserBlockButton> {
                             });
                       },
                 icon: ShadowedIcon(
-                    size: globalIconSizeSmall,
+                    size: globalIconSizeMedium,
                     icon: FontAwesomeIcons.flag,
                     color: globals.keyPermissions.contains(6)
                         ? globalRed

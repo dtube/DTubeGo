@@ -5,45 +5,39 @@ abstract class UserState extends Equatable {}
 
 // general user states
 class UserInitialState extends UserState {
-  @override
   List<Object> get props => [];
 }
 
 class UserLoadingState extends UserState {
-  @override
   List<Object> get props => [];
 }
 
 class UserLoadedState extends UserState {
-  User user;
-  bool verified;
+  final User user;
+  final bool verified;
 
   UserLoadedState({required this.user, required this.verified});
 
-  @override
   List<Object> get props => [user];
 }
 
 class UserDTCVPLoadingState extends UserState {
-  @override
   List<Object> get props => [];
 }
 
 class UserDTCVPLoadedState extends UserState {
-  Map<String, int> vtBalance;
-  int dtcBalance;
+  final Map<String, int> vtBalance;
+  final int dtcBalance;
 
   UserDTCVPLoadedState({required this.vtBalance, required this.dtcBalance});
 
-  @override
   List<Object> get props => [vtBalance, dtcBalance];
 }
 
 class UserErrorState extends UserState {
-  String message;
+  final String message;
 
   UserErrorState({required this.message});
 
-  @override
   List<Object> get props => [message];
 }

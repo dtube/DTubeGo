@@ -1,5 +1,6 @@
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -23,8 +24,8 @@ class ReplyButton extends StatefulWidget {
   final String parentLink;
   final double votingWeight;
   final double scale;
-  bool focusOnNewComment;
-  bool isMainPost;
+  final bool focusOnNewComment;
+  final bool isMainPost;
   final PostBloc postBloc;
   final TransactionBloc txBloc;
 
@@ -142,7 +143,7 @@ class _ReplyButtonState extends State<ReplyButton> {
                     bloc: _userBloc,
                     builder: (context, state) {
                       if (state is UserDTCVPLoadingState) {
-                        return CircularProgressIndicator();
+                        return ColorChangeCircularProgressIndicator();
                       }
                       if (state is UserDTCVPLoadedState) {
                         _currentVp = state.vtBalance["v"]!;

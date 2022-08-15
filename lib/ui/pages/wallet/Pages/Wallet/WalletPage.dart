@@ -1,5 +1,5 @@
 import 'package:dtube_go/ui/pages/wallet/Pages/Wallet/transferDialog.dart';
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';

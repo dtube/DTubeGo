@@ -12,7 +12,7 @@ class UploadTermsDialog extends StatefulWidget {
   UploadTermsDialog({Key? key, required this.agreeToTermsCallback})
       : super(key: key);
 
-  VoidCallback agreeToTermsCallback;
+  final VoidCallback agreeToTermsCallback;
 
   @override
   State<UploadTermsDialog> createState() => _UploadTermsDialogState();

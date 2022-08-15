@@ -1,4 +1,5 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/feeds/lists/FeedList.dart';
@@ -23,10 +24,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserPage extends StatefulWidget {
-  String? username;
-  bool ownUserpage;
+  final String? username;
+  final bool ownUserpage;
   bool? alreadyFollowing;
-  VoidCallback? onPop;
+  final VoidCallback? onPop;
   @override
   _UserState createState() => _UserState();
 
@@ -108,7 +109,6 @@ class _UserState extends State<UserPage> {
 
   Widget buildLoading() {
     return Center(
-      //child: CircularProgressIndicator(),
       child: SizedBox(height: 0, width: 0),
     );
   }
@@ -238,15 +238,33 @@ class _UserState extends State<UserPage> {
                       alignment: Alignment.center,
                       // heightFactor: 5,
                       // // widthFactor: 0.5,
-                      child: Container(
-                        height: 25.h,
-                        width: double.infinity,
-                        child: FittedBox(
-                          fit: BoxFit.fill,
-                          child: Image.network(
-                            user.jsonString!.profile!.coverImage!,
-                            //  fit: BoxFit.fitWidth,
-                            // fit: BoxFit.fitHeight,
+                      child: CachedNetworkImage(
+                        imageUrl: user.jsonString!.profile!.coverImage!
+                            .replaceAll("http:", "https:"),
+                        imageBuilder: (context, imageProvider) => Container(
+                          height: 25.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
+                          ),
+                        ),
+                        placeholder: (context, url) => Container(
+                          height: 25.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/appicon.png'),
+                                fit: BoxFit.cover),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          height: 25.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/appicon.png'),
+                                fit: BoxFit.cover),
                           ),
                         ),
                       )),
@@ -279,22 +297,12 @@ class _UserState extends State<UserPage> {
             alignment: Alignment.topLeft,
             child: Padding(
                 padding: EdgeInsets.only(top: 7.h, left: 4.w),
-                child: Row(children: [
-                  globals.disableAnimations
-                      ? Container(
-                          height: 31.w,
-                          width: 31.w,
-                          child: AccountIconBase(
-                            avatarSize: 30.w,
-                            showVerified: true,
-                            username: user.name,
-                            showBorder: true,
-                          ),
-                        )
-                      : FadeIn(
-                          preferences: AnimationPreferences(
-                              offset: Duration(milliseconds: 500)),
-                          child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(children: [
+                      globals.disableAnimations
+                          ? Container(
                               height: 31.w,
                               width: 31.w,
                               child: AccountIconBase(
@@ -302,35 +310,75 @@ class _UserState extends State<UserPage> {
                                 showVerified: true,
                                 username: user.name,
                                 showBorder: true,
-                              ))),
-                  Padding(
-                    padding: EdgeInsets.only(left: 2.w),
-                    child: globals.disableAnimations
-                        ? AccountNameBase(
-                            username: user.name,
-                            width: 40.w,
-                            height: 20.w,
-                            mainStyle: Theme.of(context)
-                                .textTheme
-                                .headline1!
-                                .copyWith(fontSize: 30),
-                            subStyle: Theme.of(context).textTheme.bodyText1!,
-                          )
-                        : FadeIn(
-                            preferences: AnimationPreferences(
-                                offset: Duration(milliseconds: 1100)),
-                            child: AccountNameBase(
-                              username: user.name,
-                              width: 40.w,
-                              height: 20.w,
-                              mainStyle: Theme.of(context)
-                                  .textTheme
-                                  .headline1!
-                                  .copyWith(fontSize: 30),
-                              subStyle: Theme.of(context).textTheme.bodyText1!,
-                            )),
-                  ),
-                ])),
+                              ),
+                            )
+                          : FadeIn(
+                              preferences: AnimationPreferences(
+                                  offset: Duration(milliseconds: 500)),
+                              child: Container(
+                                  height: 31.w,
+                                  width: 31.w,
+                                  child: AccountIconBase(
+                                    avatarSize: 30.w,
+                                    showVerified: true,
+                                    username: user.name,
+                                    showBorder: true,
+                                  ))),
+                      Padding(
+                        padding: EdgeInsets.only(left: 2.w),
+                        child: globals.disableAnimations
+                            ? AccountNameBase(
+                                username: user.name,
+                                width: 40.w,
+                                height: 20.w,
+                                mainStyle: user.name.length > 10
+                                    ? Theme.of(context)
+                                        .textTheme
+                                        .headline1!
+                                        .copyWith(fontSize: 20)
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .headline1!
+                                        .copyWith(fontSize: 30),
+                                subStyle:
+                                    Theme.of(context).textTheme.bodyText1!,
+                              )
+                            : FadeIn(
+                                preferences: AnimationPreferences(
+                                    offset: Duration(milliseconds: 1100)),
+                                child: AccountNameBase(
+                                  username: user.name,
+                                  width: 40.w,
+                                  height: 20.w,
+                                  mainStyle: Theme.of(context)
+                                      .textTheme
+                                      .headline1!
+                                      .copyWith(fontSize: 30),
+                                  subStyle:
+                                      Theme.of(context).textTheme.bodyText1!,
+                                )),
+                      ),
+                    ]),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        !widget.ownUserpage
+                            ? BlocProvider(
+                                create: (context) =>
+                                    UserBloc(repository: UserRepositoryImpl()),
+                                child: UserBlockButton(
+                                  user: user,
+                                ),
+                              )
+                            : Container(),
+                        UserMoreInfoButton(
+                          context: context,
+                          user: user,
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
           ),
         ])),
         Positioned(
@@ -462,15 +510,33 @@ class _UserState extends State<UserPage> {
                       alignment: Alignment.center,
                       // heightFactor: 5,
                       // // widthFactor: 0.5,
-                      child: Container(
-                        height: 25.h,
-                        width: double.infinity,
-                        child: FittedBox(
-                          fit: BoxFit.fill,
-                          child: Image.network(
-                            user.jsonString!.profile!.coverImage!,
-                            //  fit: BoxFit.fitWidth,
-                            // fit: BoxFit.fitHeight,
+                      child: CachedNetworkImage(
+                        imageUrl: user.jsonString!.profile!.coverImage!
+                            .replaceAll("http:", "https:"),
+                        imageBuilder: (context, imageProvider) => Container(
+                          height: 25.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
+                          ),
+                        ),
+                        placeholder: (context, url) => Container(
+                          height: 25.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/appicon.png'),
+                                fit: BoxFit.cover),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          height: 25.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/appicon.png'),
+                                fit: BoxFit.cover),
                           ),
                         ),
                       )),

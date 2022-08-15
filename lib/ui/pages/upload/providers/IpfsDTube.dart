@@ -1,23 +1,19 @@
 import 'package:dtube_go/bloc/web3storage/web3storage_bloc_full.dart';
 import 'package:gallery_saver/gallery_saver.dart';
-
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
-import 'package:dtube_go/bloc/transaction/transaction_bloc.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/ui/pages/upload/widgets/PresetCards.dart';
 import 'package:dtube_go/ui/pages/upload/widgets/uploadForm.dart';
-import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
-import 'package:dtube_go/utils/SecureStorage.dart' as sec;
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 class WizardIPFS extends StatefulWidget {
   WizardIPFS({Key? key, required this.uploaderCallback, required this.preset})
       : super(key: key);
-  VoidCallback uploaderCallback;
-  Preset preset;
+  final VoidCallback uploaderCallback;
+  final Preset preset;
 
   @override
   _WizardIPFSState createState() => _WizardIPFSState();

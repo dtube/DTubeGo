@@ -4,31 +4,27 @@ import 'package:equatable/equatable.dart';
 abstract class AccountHistoryState extends Equatable {}
 
 class AccountHistoryInitialState extends AccountHistoryState {
-  @override
   List<Object> get props => [];
 }
 
 class AccountHistoryLoadingState extends AccountHistoryState {
-  @override
   List<Object> get props => [];
 }
 
 class AccountHistoryLoadedState extends AccountHistoryState {
-  List<AvalonAccountHistoryItem> historyItems;
-  String username;
+  final List<AvalonAccountHistoryItem> historyItems;
+  final String username;
 
   AccountHistoryLoadedState(
       {required this.historyItems, required this.username});
 
-  @override
   List<Object> get props => [historyItems];
 }
 
 class AccountHistoryErrorState extends AccountHistoryState {
-  String message;
+  final String message;
 
   AccountHistoryErrorState({required this.message});
 
-  @override
   List<Object> get props => [message];
 }

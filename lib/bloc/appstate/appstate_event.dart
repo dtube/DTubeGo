@@ -5,7 +5,7 @@ abstract class AppStateEvent extends Equatable {}
 
 // Upload States
 class UploadStateChangedEvent extends AppStateEvent {
-  AppState uploadState;
+  final AppState uploadState;
   UploadStateChangedEvent({required this.uploadState});
 
   @override

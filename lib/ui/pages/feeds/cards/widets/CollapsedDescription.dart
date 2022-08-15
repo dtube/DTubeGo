@@ -1,4 +1,4 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -60,7 +60,7 @@ class _CollapsedDescriptionState extends State<CollapsedDescription> {
                               .copyWith(
                                   p: Theme.of(context).textTheme.bodyText1!),
                       onTapLink: (text, url, title) {
-                        launch(url!);
+                        launchUrl(Uri.parse(url!));
                       },
                     ),
                   ),

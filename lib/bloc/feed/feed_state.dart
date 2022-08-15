@@ -5,31 +5,27 @@ import 'package:equatable/equatable.dart';
 abstract class FeedState extends Equatable {}
 
 class FeedInitialState extends FeedState {
-  @override
   List<Object> get props => [];
 }
 
 class FeedLoadingState extends FeedState {
-  @override
   List<Object> get props => [];
 }
 
 class FeedLoadedState extends FeedState {
-  List<FeedItem> feed;
-  String feedType;
+  final List<FeedItem> feed;
+  final String feedType;
 
   FeedLoadedState({required this.feed, required this.feedType});
 
-  @override
   List<Object> get props => [feed];
 }
 
 class FeedErrorState extends FeedState {
-  String message;
+  final String message;
 
   FeedErrorState({required this.message});
 
-  @override
   List<Object> get props => [message];
 }
 
@@ -39,35 +35,31 @@ class FeedErrorState extends FeedState {
 class SuggestedUsersLoadingState extends FeedState {
   SuggestedUsersLoadingState();
 
-  @override
   List<Object> get props => [];
 }
 
 class SuggestedUsersLoadedState extends FeedState {
-  List<String> users;
+  final List<String> users;
 
   SuggestedUsersLoadedState({
     required this.users,
   });
 
-  @override
   List<Object> get props => [users];
 }
 
 class SuggestedPostsLoadingState extends FeedState {
   SuggestedPostsLoadingState();
 
-  @override
   List<Object> get props => [];
 }
 
 class SuggestedPostsLoadedState extends FeedState {
-  List<FeedItem> suggestedPosts;
+  final List<FeedItem> suggestedPosts;
 
   SuggestedPostsLoadedState({
     required this.suggestedPosts,
   });
 
-  @override
   List<Object> get props => [suggestedPosts];
 }

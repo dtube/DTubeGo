@@ -1,14 +1,8 @@
-import 'package:dtube_go/utils/crypto_convert.dart';
+import 'package:dtube_go/utils/Crypto/crypto_convert.dart';
 import 'package:encrypt/encrypt.dart';
-import 'package:crypto/crypto.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dtube_go/bloc/thirdPartyLogin/thirdPartyLogin_bloc_full.dart';
-
-import 'package:dtube_go/res/appConfigValues.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 // https://medium.com/codechai/when-firebase-meets-bloc-pattern-fb5c405597e0
 
@@ -87,7 +81,6 @@ class ThirdPartyLoginRepositoryImpl implements ThirdPartyLoginRepository {
     //final String _uidHash = getSHA256String(data.socialLoginUid);
     String _encryptionKey = getSHA256String(password + socialUId);
 
-    Encrypted encrypted;
     final key = Key.fromUtf8(getMD5String(_encryptionKey));
     final iv = IV.fromLength(16);
 

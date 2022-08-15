@@ -1,7 +1,8 @@
-import 'package:dtube_go/utils/globalVariables.dart' as globals;
+import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
-import 'package:dtube_go/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -34,7 +35,7 @@ class AvatarErrorPlaceholder extends StatelessWidget {
 
 class AvatarLoadingPlaceholder extends StatelessWidget {
   AvatarLoadingPlaceholder({Key? key, required this.size}) : super(key: key);
-  double size;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +64,8 @@ class AccountNameBase extends StatelessWidget {
   final String username;
   final double width;
   final double height;
-  TextStyle mainStyle;
-  TextStyle subStyle;
+  final TextStyle mainStyle;
+  final TextStyle subStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +136,7 @@ class _AccountIconState extends State<AccountIcon> {
           return Container(
               width: widget.avatarSize,
               height: widget.avatarSize,
-              child: Center(child: CircularProgressIndicator()));
+              child: Center(child: ColorChangeCircularProgressIndicator()));
         } else if (state is UserLoadedState) {
           try {
             return Container(
@@ -269,10 +270,10 @@ class AccountName extends StatefulWidget {
       required this.subStyle})
       : super(key: key);
 
-  double width;
-  double height;
-  TextStyle mainStyle;
-  TextStyle subStyle;
+  final double width;
+  final double height;
+  final TextStyle mainStyle;
+  final TextStyle subStyle;
   @override
   State<AccountName> createState() => _AccountNameState();
 }
@@ -286,7 +287,7 @@ class _AccountNameState extends State<AccountName> {
           return Container(
               width: widget.width,
               height: widget.height,
-              child: Center(child: CircularProgressIndicator()));
+              child: Center(child: ColorChangeCircularProgressIndicator()));
         } else if (state is UserLoadedState) {
           return Container(
               width: widget.width,
@@ -319,7 +320,7 @@ class _AccountNameState extends State<AccountName> {
                       ),
                     ));
         }
-        return CircularProgressIndicator();
+        return ColorChangeCircularProgressIndicator();
       },
     );
   }

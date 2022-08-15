@@ -1,7 +1,7 @@
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:another_flushbar/flushbar.dart';
-import 'package:dtube_go/utils/navigationShortcuts.dart';
+import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -26,7 +26,7 @@ Flushbar showCustomFlushbarOnError(String message, BuildContext context) {
     icon: Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: FaIcon(
-        FontAwesomeIcons.times,
+        FontAwesomeIcons.xmark,
         color: globalRed,
       ),
     ),
