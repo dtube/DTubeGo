@@ -15,9 +15,9 @@ class _ColorChangeCircularProgressIndicatorState
   late AnimationController animationController;
   @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
     animationController.dispose();
+
+    super.dispose();
   }
 
   @override

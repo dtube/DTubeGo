@@ -44,7 +44,7 @@ class NotificationItem extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      width: 30.w,
+                      width: 25.w,
                       child: Column(
                         children: [
                           BlocProvider<UserBloc>(
