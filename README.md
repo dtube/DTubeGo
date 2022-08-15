@@ -13,9 +13,9 @@ DTubeGo is a mobile client to interact with the Avalon blockchain created in dar
 
 ## General Information
 
-The [Avalon Blockchain](https://github.com/dtube/avalon/) is a social media blockchain focusing on video sharing. The usual client for this blockchain is called [DTube](https://d.tube) which is a javascirpt based website.
+The [Avalon Blockchain](https://github.com/dtube/avalon/) is a social media blockchain focusing on video sharing. The usual client for this blockchain is [DTube](https://d.tube) which is a javascript based website ([DTube repo here on github](https://github.com/dtube/dtube))
 
-![](https://d.tube/DTube_files/images/DTube_Black.svg =250x)
+![](https://d.tube/DTube_files/images/DTube_Black.svg)
 
 This is a flutter based DTube client to interact with the Avalon blockchain. It includes most of the functionalities a user can do on the website but on a mobile device. 
 
@@ -23,10 +23,10 @@ This is a flutter based DTube client to interact with the Avalon blockchain. It 
 Below a list of a few features to give you an idea about how DTubeGo looks:
 | **Feature** | **Example** | **Additional Information** |
 |-------------|-------------|----------------------------|
-| **5 different feeds**        |   ![](https://i.imgur.com/AZdMcqL.png)          |             DTubeGo currently offers 5 different feeds aiming for different target audiences. **Original Dtubers** (Only content posted by verified accounts) **New Feed** (all of the recently posted content) **Following** (Only content of accounts the user follows) **Hot** (Content ranked by the [Avalon built in "Hot-Algorithm"](https://github.com/dtube/avalon/blob/012713ca0729d2fe452b978fa2b51016402da324/src/rankings.js#L11)) **Trending** (Content ranked by the [Avalon built in "Trending-Algorithm"](https://github.com/dtube/avalon/blob/012713ca0729d2fe452b978fa2b51016402da324/src/rankings.js#L15))
-| **Genre explorer**        |      ![](https://i.imgur.com/HP4CAI2.png)       |     As alternative to the basic feeds the user can filter by several main tags to explore the Avalon Blockchain based on the users interests. This list will continue to grow over time.                       |
+| **5 different feeds**        |   ![](https://i.imgur.com/AZdMcqL.png)          |             DTubeGo currently offers 5 different feeds aiming for different target audiences. **Original Dtubers** (Only content posted by verified accounts) **New Feed** (all the recently posted content) **Following** (Only content of accounts the user follows) **Hot** (Content ranked by the [Avalon built in "Hot-Algorithm"](https://github.com/dtube/avalon/blob/012713ca0729d2fe452b978fa2b51016402da324/src/rankings.js#L11)) **Trending** (Content ranked by the [Avalon built in "Trending-Algorithm"](https://github.com/dtube/avalon/blob/012713ca0729d2fe452b978fa2b51016402da324/src/rankings.js#L15))
+| **Genre explorer**        |      ![](https://i.imgur.com/HP4CAI2.png)       |     As alternative to the basic feeds, the user can filter by several main tags to explore the Avalon Blockchain based on the user's interests. This list will continue to grow over time.                       |
 | **Video details**        |        ![](https://i.imgur.com/bSQBpG9.png)     |            DtubeGo uses 2 different video players ([better_player](https://github.com/jhomlala/betterplayer) for videos stored on ipfs/sia and [youtube_player_iframe](https://github.com/sarbagyastha/youtube_player_flutter) for videos stored on youtube. Of course the user can read the markdown description, comment, vote and tip the content from here as well.                |
-| **User details**        |       ![](https://i.imgur.com/9aQE1YS.png)      |     Here you can see all posts made by the account, follow and tip the creator. Also we have implemented a  list of suggested users which is calculated by several factors. For example tags used in the most recent videos compared with other content using those tags as well.                      |
+| **User details**        |       ![](https://i.imgur.com/9aQE1YS.png)      |     Here you can see all posts made by the account, follow and tip the creator. Additionally, we have implemented a  list of suggested users which is calculated by several factors. For example, tags used in the most recent videos compared with other content using those tags as well.                      |
 | **Leaderboard**        |      ![](https://i.imgur.com/wZ6wpra.png)       |                 The leaderboard defines which node operating users are counting as block producers and earn rewards for their hosting.          |
 | **Rewards**        |       ![](https://i.imgur.com/MJmk1JM.png)       |       The user can claim rewards within the app                     |
 | **The DAO of Avalon**        |     ![](https://i.imgur.com/6E4xY9o.png)         |                    The DAO (decentralized autonomous organization) space of DTubeGo currently only supports voting and funding of proposals. Creating proposals can be done on [https://avalonblocks.com/#/governance](https://avalonblocks.com/#/governance).        |
