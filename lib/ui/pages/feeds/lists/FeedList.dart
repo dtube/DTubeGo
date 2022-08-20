@@ -1,6 +1,7 @@
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -153,13 +154,35 @@ class FeedList extends StatelessWidget {
                             } else if (state is FeedErrorState) {
                               return buildErrorUi(state.message);
                             }
-                            if (globals.mobileMode) {
-                              return buildPostList(_feedItems, largeFormat,
-                                  true, context, feedType);
-                            } else {
-                              return buildPostListWeb(_feedItems, largeFormat,
-                                  true, context, feedType);
-                            }
+                            return ResponsiveLayout(
+                                mobileBody: buildPostListNarrow(
+                                  _feedItems,
+                                  largeFormat,
+                                  true,
+                                  context,
+                                  feedType,
+                                ),
+                                tabletBody: buildPostListWide(
+                                    _feedItems,
+                                    largeFormat,
+                                    true,
+                                    context,
+                                    feedType,
+                                    false),
+                                desktopBody: buildPostListWide(
+                                    _feedItems,
+                                    largeFormat,
+                                    true,
+                                    context,
+                                    feedType,
+                                    true));
+                            // if (globals.mobileMode) {
+                            //   return buildPostList(_feedItems, largeFormat,
+                            //       true, context, feedType);
+                            // } else {
+                            //   return buildPostListWeb(_feedItems, largeFormat,
+                            //       true, context, feedType);
+                            // }
                           },
                         ),
                       );
@@ -215,8 +238,8 @@ class FeedList extends StatelessWidget {
     );
   }
 
-  Widget buildPostList(List<FeedItem> feed, bool bigThumbnail, bool showAuthor,
-      BuildContext context, String gpostType) {
+  Widget buildPostListNarrow(List<FeedItem> feed, bool bigThumbnail,
+      bool showAuthor, BuildContext context, String gpostType) {
     return ListView.builder(
       key: new PageStorageKey(gpostType + 'listview'),
       addAutomaticKeepAlives: true,
@@ -340,8 +363,8 @@ class FeedList extends StatelessWidget {
     );
   }
 
-  Widget buildPostListWeb(List<FeedItem> feed, bool bigThumbnail,
-      bool showAuthor, BuildContext context, String gpostType) {
+  Widget buildPostListWide(List<FeedItem> feed, bool bigThumbnail,
+      bool showAuthor, BuildContext context, String gpostType, bool desktop) {
     if (feed.length < 20) {
       BlocProvider.of<FeedBloc>(context)
         ..isFetching = true
@@ -351,11 +374,11 @@ class FeedList extends StatelessWidget {
             fromAuthor: feed[feed.length - 1].author,
             fromLink: feed[feed.length - 1].link));
     }
-    return StaggeredGridView.countBuilder(
+    return MasonryGridView.count(
       padding: EdgeInsets.only(top: 19.h),
       key: new PageStorageKey(gpostType + 'listview'),
       addAutomaticKeepAlives: true,
-      crossAxisCount: 1.w.round(),
+      crossAxisCount: desktop ? 9 : 4,
       itemCount: feed.length,
       controller: _scrollController
         ..addListener(() {
@@ -427,7 +450,7 @@ class FeedList extends StatelessWidget {
         parentContext: context,
         autoPauseVideoOnPopup: _autoauseVideoOnPopup,
       ),
-      staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+      //staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
       mainAxisSpacing: 4.0,
       crossAxisSpacing: 4.0,
     );

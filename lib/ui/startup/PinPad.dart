@@ -144,30 +144,25 @@ class _PinPadState extends State<PinPad> {
         Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(builder: (BuildContext context) {
-            return MultiBlocProvider(
-                providers: [
-                  BlocProvider<UserBloc>(
-                      create: (context) =>
-                          UserBloc(repository: UserRepositoryImpl())),
-                  BlocProvider<AuthBloc>(
-                    create: (BuildContext context) =>
-                        AuthBloc(repository: AuthRepositoryImpl()),
-                  ),
-                  BlocProvider(
-                    create: (context) =>
-                        IPFSUploadBloc(repository: IPFSUploadRepositoryImpl()),
-                  ),
-                  BlocProvider(
-                    create: (context) =>
-                        FeedBloc(repository: FeedRepositoryImpl()),
-                  ),
-                  BlocProvider(
-                    create: (context) => AppStateBloc(),
-                  ),
-                ],
-                child: globals.mobileMode
-                    ? NavigationContainer()
-                    : NavigationContainerWeb());
+            return MultiBlocProvider(providers: [
+              BlocProvider<UserBloc>(
+                  create: (context) =>
+                      UserBloc(repository: UserRepositoryImpl())),
+              BlocProvider<AuthBloc>(
+                create: (BuildContext context) =>
+                    AuthBloc(repository: AuthRepositoryImpl()),
+              ),
+              BlocProvider(
+                create: (context) =>
+                    IPFSUploadBloc(repository: IPFSUploadRepositoryImpl()),
+              ),
+              BlocProvider(
+                create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
+              ),
+              BlocProvider(
+                create: (context) => AppStateBloc(),
+              ),
+            ], child: NavigationContainer());
           }),
         );
       } else {

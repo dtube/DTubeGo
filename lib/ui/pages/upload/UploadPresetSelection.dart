@@ -78,7 +78,7 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
                       height: 30.h,
                       width: 100.w,
                       color: globalBGColor,
-                      child: StaggeredGridView.countBuilder(
+                      child: MasonryGridView.count(
                         padding: EdgeInsets.only(
                           // bottom: 16.h,
                           top: 1.h,
@@ -99,8 +99,8 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
                                 });
                               });
                         },
-                        staggeredTileBuilder: (int index) =>
-                            new StaggeredTile.fit(2),
+                        // staggeredTileBuilder: (int index) =>
+                        //     new StaggeredTile.fit(2),
                         mainAxisSpacing: 8.0,
                         crossAxisSpacing: 8.0,
                       ),
@@ -129,7 +129,7 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
                             height: 30.h,
                             width: 100.w,
                             color: globalBGColor,
-                            child: StaggeredGridView.countBuilder(
+                            child: MasonryGridView.count(
                               padding: EdgeInsets.only(
                                 bottom: 5.h,
                                 top: 1.h,
@@ -153,8 +153,8 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
                                       });
                                     });
                               },
-                              staggeredTileBuilder: (int index) =>
-                                  new StaggeredTile.fit(2),
+                              // staggeredTileBuilder: (int index) =>
+                              //     new StaggeredTile.fit(2),
                               mainAxisSpacing: 8.0,
                               crossAxisSpacing: 8.0,
                             ),
