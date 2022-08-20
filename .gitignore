@@ -1,3 +1,6 @@
+lib/res/Config/secretConfigValues.dart
+lib/res/Config/setupConfig.dart
+lib/res/Config/loadRemoteConf.dart
 # Miscellaneous
 *.class
 *.log
