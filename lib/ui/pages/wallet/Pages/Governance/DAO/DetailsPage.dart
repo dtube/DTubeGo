@@ -263,7 +263,7 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
             // child: Text(widget.daoItem.description!),
             child: CollapsedDescription(
               description: widget.daoItem.description!,
-              startCollapsed: true,
+              startCollapsed: false,
               showOpenLink: true,
               postAuthor: postUrlAuthor,
               postLink: postUrlLink,

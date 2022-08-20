@@ -1,5 +1,8 @@
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
+
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
@@ -150,8 +153,13 @@ class FeedList extends StatelessWidget {
                             } else if (state is FeedErrorState) {
                               return buildErrorUi(state.message);
                             }
-                            return buildPostList(_feedItems, largeFormat, true,
-                                context, feedType);
+                            if (globals.mobileMode) {
+                              return buildPostList(_feedItems, largeFormat,
+                                  true, context, feedType);
+                            } else {
+                              return buildPostListWeb(_feedItems, largeFormat,
+                                  true, context, feedType);
+                            }
                           },
                         ),
                       );
@@ -330,6 +338,101 @@ class FeedList extends StatelessWidget {
         }
       },
     );
+  }
+
+  Widget buildPostListWeb(List<FeedItem> feed, bool bigThumbnail,
+      bool showAuthor, BuildContext context, String gpostType) {
+    if (feed.length < 20) {
+      BlocProvider.of<FeedBloc>(context)
+        ..isFetching = true
+        ..add(FetchFeedEvent(
+            //feedType: widget.feedType,
+            feedType: feedType,
+            fromAuthor: feed[feed.length - 1].author,
+            fromLink: feed[feed.length - 1].link));
+    }
+    return StaggeredGridView.countBuilder(
+      padding: EdgeInsets.only(top: 19.h),
+      key: new PageStorageKey(gpostType + 'listview'),
+      addAutomaticKeepAlives: true,
+      crossAxisCount: 1.w.round(),
+      itemCount: feed.length,
+      controller: _scrollController
+        ..addListener(() {
+          if (_scrollController.offset >=
+                  _scrollController.position.maxScrollExtent &&
+              !BlocProvider.of<FeedBloc>(context).isFetching &&
+              feedType != "UserFeed" &&
+              feedType != "tagSearch") {
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
+              ..add(FetchFeedEvent(
+                  //feedType: widget.feedType,
+                  feedType: feedType,
+                  fromAuthor: feed[feed.length - 1].author,
+                  fromLink: feed[feed.length - 1].link));
+          }
+          if (_scrollController.offset <=
+                  _scrollController.position.minScrollExtent &&
+              !BlocProvider.of<FeedBloc>(context).isFetching &&
+              feedType != "UserFeed" &&
+              feedType != "tagSearch") {
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
+              ..add(FetchFeedEvent(
+                //feedType: widget.feedType,
+                feedType: feedType,
+              ));
+          }
+        }),
+      itemBuilder: (BuildContext context, int pos) => PostListCard(
+        width: width!,
+        heightPerEntry: heightPerEntry!,
+        largeFormat: largeFormat,
+        showAuthor: showAuthor,
+        blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
+                (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
+            ? true
+            : false,
+        title: feed[pos].jsonString!.title,
+        description: feed[pos].jsonString!.desc != null
+            ? feed[pos].jsonString!.desc!
+            : "",
+        author: feed[pos].author,
+        link: feed[pos].link,
+        publishDate: TimeAgo.timeInAgoTSShort(feed[pos].ts),
+        dtcValue: (feed[pos].dist / 100).round().toString(),
+        duration: new Duration(
+            seconds: int.tryParse(feed[pos].jsonString!.dur) != null
+                ? int.parse(feed[pos].jsonString!.dur)
+                : 0),
+        thumbnailUrl: feed[pos].thumbUrl,
+        videoUrl: feed[pos].videoUrl,
+        videoSource: feed[pos].videoSource,
+        alreadyVoted: feed[pos].alreadyVoted!,
+        alreadyVotedDirection: feed[pos].alreadyVotedDirection!,
+        upvotesCount: feed[pos].upvotes!.length,
+        downvotesCount: feed[pos].downvotes!.length,
+        indexOfList: pos,
+        mainTag: feed[pos].jsonString!.tag,
+        oc: feed[pos].jsonString!.oc == 1 ? true : false,
+        enableNavigation: enableNavigation,
+        itemSelectedCallback: itemSelectedCallback,
+        feedType: feedType,
+        defaultCommentVotingWeight: _defaultCommentVotingWeight,
+        defaultPostVotingWeight: _defaultPostVotingWeight,
+        defaultPostVotingTip: _defaultPostVotingTip,
+        fixedDownvoteActivated: _fixedDownvoteActivated,
+        fixedDownvoteWeight: _fixedDownvoteWeight,
+        parentContext: context,
+        autoPauseVideoOnPopup: _autoauseVideoOnPopup,
+      ),
+      staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+      mainAxisSpacing: 4.0,
+      crossAxisSpacing: 4.0,
+    );
+
+    //Text(pos.toString())
   }
 }
 

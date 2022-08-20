@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
+
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/ui/startup/PinPad.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
@@ -25,7 +29,8 @@ class _StartUpState extends State<StartUp> {
   void initState() {
     super.initState();
     print(Device.width);
-    if (kIsWeb) {
+    if (kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) {
+      globals.mobileMode = false;
       _logoSize = 10.w;
     }
 

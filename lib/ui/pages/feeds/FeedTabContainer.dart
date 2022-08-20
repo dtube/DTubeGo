@@ -175,7 +175,7 @@ class _FeedMainPageState extends State<FeedMainPage>
             padding: EdgeInsets.only(top: 11.h, right: 4.w),
             rotation: 0,
             menuSize: globals.keyPermissions.isEmpty
-                ? globalIconSizeMedium * 4
+                ? globalIconSizeMedium * 6
                 : globalIconSizeMedium * 8,
           ),
           Align(
