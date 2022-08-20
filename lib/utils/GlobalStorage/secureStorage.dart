@@ -929,13 +929,13 @@ Future<String> getNewsTS() async {
   try {
     _setting = await _storage.read(key: settingKey_newsTS);
   } catch (e) {
-    _setting = (DateTime.now().millisecondsSinceEpoch / 1000).toString();
+    _setting = "0";
   }
 
   if (_setting != null) {
     return _setting;
   } else {
-    return (DateTime.now().millisecondsSinceEpoch / 1000).toString();
+    return "0";
   }
 }
 

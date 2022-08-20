@@ -141,13 +141,6 @@ flutter_icons:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/dtube_logo_white.png
-    - assets/images/dtube_logo_white_shadowed2.png
-    - assets/images/Flag_of_None.svg.png
-    - assets/images/Image_of_none.svg.png
-    - assets/images/appicon.png
-    - assets/images/appicon_noalpha.png
-    - assets/images/D_RocketOLC.png
     - assets/gifs/hovering_guy.gif
     - assets/gifs/hovering_girl1.gif
     - assets/gifs/hovering_girl2.gif
@@ -162,3 +155,4 @@ flutter:
     - lib/res/mds/androidEULA.md
     - lib/res/mds/iOSEULA.md
     - lib/res/mds/uploadTerms.md
+    - assets/images/

@@ -1,4 +1,5 @@
 import 'package:dtube_go/bloc/web3storage/web3storage_bloc_full.dart';
+import 'package:dtube_go/ui/MainContainer/NavigationContainerWeb.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/startup/eula/EulaScreen.dart';
@@ -143,25 +144,30 @@ class _PinPadState extends State<PinPad> {
         Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(builder: (BuildContext context) {
-            return MultiBlocProvider(providers: [
-              BlocProvider<UserBloc>(
-                  create: (context) =>
-                      UserBloc(repository: UserRepositoryImpl())),
-              BlocProvider<AuthBloc>(
-                create: (BuildContext context) =>
-                    AuthBloc(repository: AuthRepositoryImpl()),
-              ),
-              BlocProvider(
-                create: (context) =>
-                    IPFSUploadBloc(repository: IPFSUploadRepositoryImpl()),
-              ),
-              BlocProvider(
-                create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
-              ),
-              BlocProvider(
-                create: (context) => AppStateBloc(),
-              ),
-            ], child: NavigationContainer());
+            return MultiBlocProvider(
+                providers: [
+                  BlocProvider<UserBloc>(
+                      create: (context) =>
+                          UserBloc(repository: UserRepositoryImpl())),
+                  BlocProvider<AuthBloc>(
+                    create: (BuildContext context) =>
+                        AuthBloc(repository: AuthRepositoryImpl()),
+                  ),
+                  BlocProvider(
+                    create: (context) =>
+                        IPFSUploadBloc(repository: IPFSUploadRepositoryImpl()),
+                  ),
+                  BlocProvider(
+                    create: (context) =>
+                        FeedBloc(repository: FeedRepositoryImpl()),
+                  ),
+                  BlocProvider(
+                    create: (context) => AppStateBloc(),
+                  ),
+                ],
+                child: globals.mobileMode
+                    ? NavigationContainer()
+                    : NavigationContainerWeb());
           }),
         );
       } else {
