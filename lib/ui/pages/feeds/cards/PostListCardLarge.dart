@@ -658,8 +658,6 @@ class PostInfoBaseRow extends StatelessWidget {
                                               widget.defaultPostVotingWeight),
                                           defaultTip: double.parse(
                                               widget.defaultPostVotingTip),
-                                          postBloc: BlocProvider.of<PostBloc>(
-                                              context),
                                           txBloc:
                                               BlocProvider.of<TransactionBloc>(
                                                   context),
@@ -737,8 +735,7 @@ class PostInfoBaseRow extends StatelessWidget {
                                               widget.defaultPostVotingWeight),
                                           defaultTip: double.parse(
                                               widget.defaultPostVotingTip),
-                                          postBloc: BlocProvider.of<PostBloc>(
-                                              context),
+
                                           txBloc:
                                               BlocProvider.of<TransactionBloc>(
                                                   context),
