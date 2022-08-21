@@ -1,9 +1,12 @@
+import 'package:dtube_go/ui/pages/feeds/FeedTabs.dart';
+import 'package:dtube_go/ui/pages/feeds/FeedTabsDesktop.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/feeds/FeedViewBase.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
+import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -71,7 +74,7 @@ class _FeedMainPageState extends State<FeedMainPage>
   void initState() {
     if (globals.keyPermissions.isEmpty) {
       tabBarFeedItemList.removeAt(2); // remove MyFeed (followings) from tabs
-      _tabNames.removeAt(2);
+      //_tabNames.removeAt(2);
     }
 
     _tabController =
@@ -151,48 +154,29 @@ class _FeedMainPageState extends State<FeedMainPage>
 
   @override
   Widget build(BuildContext context) {
-    EdgeInsets _paddingTabBarView =
-        EdgeInsets.zero; // only used in landscape for now
-
     return Scaffold(
-      //appBar: dtubeSubAppBar(true, "", context, null),
-      resizeToAvoidBottomInset: true,
-
-      body: Stack(
-        children: [
-          Padding(
-            padding: _paddingTabBarView,
-            child: TabBarView(
-              children: tabBarFeedItemList,
-              controller: _tabController,
-            ),
-          ),
-          TabBarWithPosition(
-            tabIcons: _tabIcons,
-            iconSize: globalIconSizeMedium,
-            tabController: _tabController,
-            alignment: Alignment.topRight,
-            padding: EdgeInsets.only(top: 11.h, right: 4.w),
-            rotation: 0,
-            menuSize: globals.keyPermissions.isEmpty
-                ? globalIconSizeMedium * 6
-                : globalIconSizeMedium * 8,
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: EdgeInsets.only(top: 6.h, left: 4.w),
-              //padding: EdgeInsets.only(top: 5.h),
-              child: OverlayText(
-                text: _tabNames[_selectedIndex],
-                sizeMultiply: 1.4,
-                bold: true,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+        //appBar: dtubeSubAppBar(true, "", context, null),
+        resizeToAvoidBottomInset: true,
+        body: ResponsiveLayout(
+          mobileBody: FeedTabs(
+              tabBarFeedItemList: tabBarFeedItemList,
+              tabController: _tabController,
+              tabIcons: _tabIcons,
+              tabNames: _tabNames,
+              selectedIndex: _selectedIndex),
+          tabletBody: FeedTabsDesktop(
+              tabBarFeedItemList: tabBarFeedItemList,
+              tabController: _tabController,
+              tabIcons: _tabIcons,
+              tabNames: _tabNames,
+              selectedIndex: _selectedIndex),
+          desktopBody: FeedTabsDesktop(
+              tabBarFeedItemList: tabBarFeedItemList,
+              tabController: _tabController,
+              tabIcons: _tabIcons,
+              tabNames: _tabNames,
+              selectedIndex: _selectedIndex),
+        ));
   }
 }
 
@@ -204,8 +188,9 @@ class TabBarWithPosition extends StatefulWidget {
       required this.tabController,
       required this.alignment,
       required this.padding,
-      required this.rotation,
-      required this.menuSize})
+      required this.menuSize,
+      required this.showLabels,
+      required this.tabNames})
       : super(key: key);
 
   final List<IconData> tabIcons;
@@ -213,8 +198,9 @@ class TabBarWithPosition extends StatefulWidget {
   final TabController tabController;
   final Alignment alignment;
   final EdgeInsets padding;
-  final int rotation;
   final double menuSize;
+  final bool showLabels;
+  final List<String> tabNames;
 
   @override
   State<TabBarWithPosition> createState() => _TabBarWithPositionState();
@@ -227,56 +213,84 @@ class _TabBarWithPositionState extends State<TabBarWithPosition> {
   void initState() {
     tabs = [
       Tab(
-        child: RotatedBox(
-          quarterTurns: widget.rotation == 3 ? 1 : 0,
-          child: ShadowedIcon(
+        child: ShadowedIcon(
+            icon: widget.tabIcons[0],
+            color: globalAlmostWhite,
+            shadowColor: Colors.black,
+            size: widget.iconSize),
+      ),
+      Tab(
+        child: ShadowedIcon(
+            icon: widget.tabIcons[1],
+            color: globalAlmostWhite,
+            shadowColor: Colors.black,
+            size: widget.iconSize),
+      ),
+      Tab(
+        child: ShadowedIcon(
+            icon: widget.tabIcons[2],
+            color: globalAlmostWhite,
+            shadowColor: Colors.black,
+            size: widget.iconSize),
+      ),
+      Tab(
+        child: ShadowedIcon(
+            icon: widget.tabIcons[3],
+            color: globalAlmostWhite,
+            shadowColor: Colors.black,
+            size: widget.iconSize),
+      ),
+      Tab(
+        child: ShadowedIcon(
+            icon: widget.tabIcons[4],
+            color: globalAlmostWhite,
+            shadowColor: Colors.black,
+            size: widget.iconSize),
+      ),
+    ];
+    if (widget.showLabels) {
+      tabs = [
+        Tab(
+          text: widget.tabNames[0],
+          icon: ShadowedIcon(
               icon: widget.tabIcons[0],
               color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: widget.iconSize),
         ),
-      ),
-      Tab(
-        child: RotatedBox(
-          quarterTurns: widget.rotation == 3 ? 1 : 0,
-          child: ShadowedIcon(
+        Tab(
+          text: widget.tabNames[1],
+          icon: ShadowedIcon(
               icon: widget.tabIcons[1],
               color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: widget.iconSize),
         ),
-      ),
-      Tab(
-        child: RotatedBox(
-          quarterTurns: widget.rotation == 3 ? 1 : 0,
-          child: ShadowedIcon(
-              icon: widget.tabIcons[2],
+        Tab(
+          text: widget.tabNames[2],
+          icon: FaIcon(widget.tabIcons[2],
               color: globalAlmostWhite,
-              shadowColor: Colors.black,
+              // shadowColor: Colors.black,
               size: widget.iconSize),
         ),
-      ),
-      Tab(
-        child: RotatedBox(
-          quarterTurns: widget.rotation == 3 ? 1 : 0,
-          child: ShadowedIcon(
+        Tab(
+          text: widget.tabNames[3],
+          icon: ShadowedIcon(
               icon: widget.tabIcons[3],
               color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: widget.iconSize),
         ),
-      ),
-      Tab(
-        child: RotatedBox(
-          quarterTurns: widget.rotation == 3 ? 1 : 0,
-          child: ShadowedIcon(
+        Tab(
+          text: widget.tabNames[4],
+          icon: ShadowedIcon(
               icon: widget.tabIcons[4],
               color: globalAlmostWhite,
               shadowColor: Colors.black,
               size: widget.iconSize),
         ),
-      ),
-    ];
+      ];
+    }
     if (globals.keyPermissions.isEmpty) {
       tabs.removeAt(2);
     }
@@ -289,21 +303,36 @@ class _TabBarWithPositionState extends State<TabBarWithPosition> {
       alignment: widget.alignment,
       child: Padding(
         padding: widget.padding,
-        child: RotatedBox(
-          quarterTurns: widget.rotation,
-          child: Container(
-            width: widget.menuSize,
-            child: TabBar(
-              unselectedLabelColor: globalAlmostWhite,
-              labelColor: globalAlmostWhite,
-              indicatorColor: globalAlmostWhite,
-              tabs: tabs,
-              controller: widget.tabController,
-              indicatorSize: TabBarIndicatorSize.label,
-              labelPadding: EdgeInsets.zero,
-            ),
-          ),
-        ),
+        child: !widget.showLabels
+            ? Container(
+                width: widget.menuSize,
+                child: TabBar(
+                  unselectedLabelColor: globalAlmostWhite,
+                  labelColor: globalAlmostWhite,
+                  indicatorColor: globalAlmostWhite,
+                  tabs: tabs,
+                  controller: widget.tabController,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  labelPadding: EdgeInsets.zero,
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(top: 50.0),
+                child: Container(
+                  child: TabBar(
+                    // unselectedLabelColor: globalAlmostWhite,
+                    labelColor: globalAlmostWhite,
+                    indicatorColor: globalAlmostWhite,
+                    isScrollable: true,
+                    tabs: tabs,
+                    controller: widget.tabController,
+
+                    labelStyle: Theme.of(context).textTheme.bodyText1!,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    labelPadding: EdgeInsets.only(right: 10),
+                  ),
+                ),
+              ),
       ),
     );
   }

@@ -353,195 +353,190 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                       automaticallyImplyLeading: false,
                       elevation: 0,
                       titleSpacing: 0,
-                      title: Align(
-                        alignment: Alignment.topRight,
-                        child: globals.keyPermissions.isEmpty
-                            ? Padding(
-                                padding: EdgeInsets.only(right: 2.w),
-                                child: ElevatedButton(
-                                    onPressed: () async {
-                                      BlocProvider.of<AuthBloc>(context)
-                                          .add(SignOutEvent(context: context));
-                                      //do stuff
-                                    },
-                                    child: Text(
-                                      "Join / Login",
-                                      style:
-                                          Theme.of(context).textTheme.headline6,
-                                    )),
-                              )
-                            : Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  GestureDetector(
-                                      child: BalanceOverviewBase(),
-                                      onTap: () {
-                                        BlocProvider.of<UserBloc>(context)
-                                            .add(FetchDTCVPEvent());
-                                      }),
-                                  BlocProvider<NotificationBloc>(
-                                    create: (context) => NotificationBloc(
-                                        repository:
-                                            NotificationRepositoryImpl()),
-                                    child: NotificationButton(
-                                        iconSize: globalIconSizeMedium),
-                                  ),
-                                  buildMainMenuSpeedDial(context)
-                                ],
-                              ),
-                      ),
-                    ),
-                    bottomNavigationBar: Container(
-                      height: globalIconSizeBig * 2.4,
-                      decoration: BoxDecoration(
-                          color: globalAlmostWhite,
-                          gradient: LinearGradient(
-                              begin: FractionalOffset.topCenter,
-                              end: FractionalOffset.bottomCenter,
-                              colors: [
-                                Colors.black.withOpacity(0.0),
-                                Colors.black,
-                              ],
-                              stops: [
-                                0.0,
-                                1.0
-                              ])),
-                      child: Center(
-                        child: BottomNavigationBar(
-                          type: BottomNavigationBarType.fixed,
-                          showUnselectedLabels: false,
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                          items: navBarItems,
-                          selectedItemColor: globalAlmostWhite,
+                      flexibleSpace: Container(
+                        width: 100.w,
+                        color: Colors.red,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("test"),
+                            BottomNavigationBar(
+                              type: BottomNavigationBarType.fixed,
+                              showUnselectedLabels: false,
+                              backgroundColor: Colors.transparent,
+                              elevation: 0,
+                              items: navBarItems,
+                              selectedItemColor: globalAlmostWhite,
 
-                          // iconSize: globalIconSizeBig,
-                          currentIndex: _currentIndex,
-                          onTap: (index) {
-                            setState(() {
-                              // if the user navigated to the moments page
-                              if (index == 3) {
-                                // reset moments page and set play = true
+                              // iconSize: globalIconSizeBig,
+                              currentIndex: _currentIndex,
+                              onTap: (index) {
+                                setState(() {
+                                  // if the user navigated to the moments page
+                                  if (index == 3) {
+                                    // reset moments page and set play = true
 
-                                _screens.removeAt(3);
+                                    _screens.removeAt(3);
 
-                                _screens.insert(
-                                  3,
-                                  new MultiBlocProvider(
-                                      providers: [
-                                        BlocProvider(
-                                            create: (context) => FeedBloc(
-                                                repository:
-                                                    FeedRepositoryImpl())),
-                                      ],
-                                      child: MomentsPage(
-                                        key: UniqueKey(),
-                                        play: true,
-                                      )),
-                                  //  index = index;
-                                );
-                              } else {
-                                // if the key allows to upload OR it is not the posting screen
-                                if (globals.keyPermissions.contains(4) ||
-                                    index != 2) {
-                                  // if the user navigated to any other screen than the moments page
-                                  // reset moments page and set play = false
-                                  _screens.removeAt(3);
-
-                                  _screens.insert(
+                                    _screens.insert(
                                       3,
-                                      MomentsPage(
-                                        key: UniqueKey(),
-                                        play: false,
-                                      ));
-                                }
-                              }
-                              // if pressed menu button is at the upload button position
-                              if (index == 2) {
-                                if (globals.keyPermissions.contains(4)) {
-                                  // if there is a current background upload running
-                                  //  show snackbar and do not navigate to the upload screen
-                                  if (BlocProvider.of<AppStateBloc>(context)
-                                          .state is UploadStartedState ||
-                                      BlocProvider.of<AppStateBloc>(context)
-                                          .state is UploadProcessingState) {
-                                    showCustomFlushbarOnError(
-                                        "please wait until upload is finished",
-                                        context);
-                                  }
-                                  // if the most recent background upload task is finished
-                                  // reset UploadState and navigate to the upload screen
-                                  if (BlocProvider.of<AppStateBloc>(context)
-                                          .state is UploadFinishedState ||
-                                      BlocProvider.of<AppStateBloc>(context)
-                                          .state is UploadFailedState) {
-                                    BlocProvider.of<AppStateBloc>(context).add(
-                                        UploadStateChangedEvent(
-                                            uploadState: UploadInitialState()));
-                                    _screens.removeAt(2);
-                                    _screens.insert(
-                                        2,
-                                        new
-                                        //UploaderMainPage(
-                                        //callback: uploaderCallback,
-                                        UploadPresetSelection(
-                                          uploaderCallback: uploaderCallback,
-                                          key: UniqueKey(),
-                                        ));
-                                    _currentIndex = index;
-                                  }
-                                  // if there is no background upload task running or recently finished
-                                  if (BlocProvider.of<AppStateBloc>(context)
-                                      .state is UploadInitialState) {
-                                    // navigate to the uploader screen
-                                    // if the user navigated to the uploader screen
-                                    // reset uploader page
-                                    _screens.removeAt(2);
-                                    _screens.insert(
-                                        2,
-                                        new
-                                        //UploaderMainPage(
-                                        //callback: uploaderCallback,
-                                        UploadPresetSelection(
-                                          uploaderCallback: uploaderCallback,
-                                          key: UniqueKey(),
-                                        ));
-
-                                    _currentIndex = index;
-                                  }
-                                } else {
-                                  showCustomFlushbarOnError(
-                                      "you need to be signed in to upload content",
-                                      context);
-                                }
-                              } else {
-                                if (index == 4) {
-                                  // if the selected page is the profile page
-                                  if (globals.keyPermissions.isEmpty) {
-                                    showCustomFlushbarOnError(
-                                        "you need to be signed in to access your profile",
-                                        context);
-                                  } else {
-                                    _screens.removeAt(4);
-                                    _screens.insert(
-                                      4,
-                                      BlocProvider(
-                                        create: (context) => UserBloc(
-                                            repository: UserRepositoryImpl()),
-                                        child: UserPage(
-                                          ownUserpage: true,
-                                          //key: UniqueKey(),
-                                        ),
-                                      ),
+                                      new MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider(
+                                                create: (context) => FeedBloc(
+                                                    repository:
+                                                        FeedRepositoryImpl())),
+                                          ],
+                                          child: MomentsPage(
+                                            key: UniqueKey(),
+                                            play: true,
+                                          )),
+                                      //  index = index;
                                     );
-                                    _currentIndex = index;
+                                  } else {
+                                    // if the key allows to upload OR it is not the posting screen
+                                    if (globals.keyPermissions.contains(4) ||
+                                        index != 2) {
+                                      // if the user navigated to any other screen than the moments page
+                                      // reset moments page and set play = false
+                                      _screens.removeAt(3);
+
+                                      _screens.insert(
+                                          3,
+                                          MomentsPage(
+                                            key: UniqueKey(),
+                                            play: false,
+                                          ));
+                                    }
                                   }
-                                } else {
-                                  _currentIndex = index;
-                                }
-                              }
-                            });
-                          },
+                                  // if pressed menu button is at the upload button position
+                                  if (index == 2) {
+                                    if (globals.keyPermissions.contains(4)) {
+                                      // if there is a current background upload running
+                                      //  show snackbar and do not navigate to the upload screen
+                                      if (BlocProvider.of<AppStateBloc>(context)
+                                              .state is UploadStartedState ||
+                                          BlocProvider.of<AppStateBloc>(context)
+                                              .state is UploadProcessingState) {
+                                        showCustomFlushbarOnError(
+                                            "please wait until upload is finished",
+                                            context);
+                                      }
+                                      // if the most recent background upload task is finished
+                                      // reset UploadState and navigate to the upload screen
+                                      if (BlocProvider.of<AppStateBloc>(context)
+                                              .state is UploadFinishedState ||
+                                          BlocProvider.of<AppStateBloc>(context)
+                                              .state is UploadFailedState) {
+                                        BlocProvider.of<AppStateBloc>(context)
+                                            .add(UploadStateChangedEvent(
+                                                uploadState:
+                                                    UploadInitialState()));
+                                        _screens.removeAt(2);
+                                        _screens.insert(
+                                            2,
+                                            new
+                                            //UploaderMainPage(
+                                            //callback: uploaderCallback,
+                                            UploadPresetSelection(
+                                              uploaderCallback:
+                                                  uploaderCallback,
+                                              key: UniqueKey(),
+                                            ));
+                                        _currentIndex = index;
+                                      }
+                                      // if there is no background upload task running or recently finished
+                                      if (BlocProvider.of<AppStateBloc>(context)
+                                          .state is UploadInitialState) {
+                                        // navigate to the uploader screen
+                                        // if the user navigated to the uploader screen
+                                        // reset uploader page
+                                        _screens.removeAt(2);
+                                        _screens.insert(
+                                            2,
+                                            new
+                                            //UploaderMainPage(
+                                            //callback: uploaderCallback,
+                                            UploadPresetSelection(
+                                              uploaderCallback:
+                                                  uploaderCallback,
+                                              key: UniqueKey(),
+                                            ));
+
+                                        _currentIndex = index;
+                                      }
+                                    } else {
+                                      showCustomFlushbarOnError(
+                                          "you need to be signed in to upload content",
+                                          context);
+                                    }
+                                  } else {
+                                    if (index == 4) {
+                                      // if the selected page is the profile page
+                                      if (globals.keyPermissions.isEmpty) {
+                                        showCustomFlushbarOnError(
+                                            "you need to be signed in to access your profile",
+                                            context);
+                                      } else {
+                                        _screens.removeAt(4);
+                                        _screens.insert(
+                                          4,
+                                          BlocProvider(
+                                            create: (context) => UserBloc(
+                                                repository:
+                                                    UserRepositoryImpl()),
+                                            child: UserPage(
+                                              ownUserpage: true,
+                                              //key: UniqueKey(),
+                                            ),
+                                          ),
+                                        );
+                                        _currentIndex = index;
+                                      }
+                                    } else {
+                                      _currentIndex = index;
+                                    }
+                                  }
+                                });
+                              },
+                            ),
+                            globals.keyPermissions.isEmpty
+                                ? Padding(
+                                    padding: EdgeInsets.only(right: 2.w),
+                                    child: ElevatedButton(
+                                        onPressed: () async {
+                                          BlocProvider.of<AuthBloc>(context)
+                                              .add(SignOutEvent(
+                                                  context: context));
+                                          //do stuff
+                                        },
+                                        child: Text(
+                                          "Join / Login",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6,
+                                        )),
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      GestureDetector(
+                                          child: BalanceOverviewBase(),
+                                          onTap: () {
+                                            BlocProvider.of<UserBloc>(context)
+                                                .add(FetchDTCVPEvent());
+                                          }),
+                                      BlocProvider<NotificationBloc>(
+                                        create: (context) => NotificationBloc(
+                                            repository:
+                                                NotificationRepositoryImpl()),
+                                        child: NotificationButton(
+                                            iconSize: globalIconSizeMedium),
+                                      ),
+                                      buildMainMenuSpeedDial(context)
+                                    ],
+                                  ),
+                          ],
                         ),
                       ),
                     ),
