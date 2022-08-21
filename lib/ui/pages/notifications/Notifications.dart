@@ -216,13 +216,15 @@ class _NotificationTabContainerState extends State<NotificationTabContainer>
           return Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: InkWell(
-              child: NotificationItem(
-                  sender: notifications[pos].tx.sender,
-                  tx: notifications[pos].tx,
-                  username: widget.username,
-                  userNavigation: _userNavigationPossible,
-                  postNavigation: _postNavigationPossible,
-                  notificationType: notificationType),
+              child: Center(
+                child: NotificationItem(
+                    sender: notifications[pos].tx.sender,
+                    tx: notifications[pos].tx,
+                    username: widget.username,
+                    userNavigation: _userNavigationPossible,
+                    postNavigation: _postNavigationPossible,
+                    notificationType: notificationType),
+              ),
               onTap: () {
                 if (_userNavigationPossible) {
                   navigateToUserDetailPage(

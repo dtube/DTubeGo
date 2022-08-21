@@ -488,7 +488,7 @@ class PostInfoBaseRow extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   widget.oc
@@ -501,12 +501,15 @@ class PostInfoBaseRow extends StatelessWidget {
                               child: OriginalContentIcon(),
                             )
                       : SizedBox(width: globalIconSizeSmall),
-                  TagChip(
-                      waitBeforeFadeIn: Duration(milliseconds: 600),
-                      fadeInFromLeft: false,
-                      tagName: widget.mainTag,
-                      width: globals.mobileMode ? 14.w : 50,
-                      fontStyle: Theme.of(context).textTheme.caption),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: TagChip(
+                        waitBeforeFadeIn: Duration(milliseconds: 600),
+                        fadeInFromLeft: false,
+                        tagName: widget.mainTag,
+                        width: globals.mobileMode ? 14.w : 50,
+                        fontStyle: Theme.of(context).textTheme.caption),
+                  ),
                 ],
               ),
               globals.keyPermissions.isEmpty
@@ -658,8 +661,6 @@ class PostInfoBaseRow extends StatelessWidget {
                                               widget.defaultPostVotingWeight),
                                           defaultTip: double.parse(
                                               widget.defaultPostVotingTip),
-                                          postBloc: BlocProvider.of<PostBloc>(
-                                              context),
                                           txBloc:
                                               BlocProvider.of<TransactionBloc>(
                                                   context),
@@ -737,8 +738,7 @@ class PostInfoBaseRow extends StatelessWidget {
                                               widget.defaultPostVotingWeight),
                                           defaultTip: double.parse(
                                               widget.defaultPostVotingTip),
-                                          postBloc: BlocProvider.of<PostBloc>(
-                                              context),
+
                                           txBloc:
                                               BlocProvider.of<TransactionBloc>(
                                                   context),
