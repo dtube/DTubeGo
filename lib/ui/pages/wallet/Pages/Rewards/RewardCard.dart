@@ -12,18 +12,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class RewardsCard extends StatefulWidget {
-  RewardsCard({Key? key, required this.reward, required this.parentWidget})
+class RewardCard extends StatefulWidget {
+  RewardCard({Key? key, required this.reward, required this.parentWidget})
       : super(key: key);
 
   final Reward reward;
   final Widget parentWidget;
 
   @override
-  _RewardsCardState createState() => _RewardsCardState();
+  _RewardCardState createState() => _RewardCardState();
 }
 
-class _RewardsCardState extends State<RewardsCard>
+class _RewardCardState extends State<RewardCard>
     with AutomaticKeepAliveClientMixin {
   double widthLabel = 25.w;
   @override
