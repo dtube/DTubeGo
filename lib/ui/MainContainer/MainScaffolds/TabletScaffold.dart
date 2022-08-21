@@ -326,7 +326,9 @@ class _TabletScaffoldState extends State<TabletScaffold> {
             bloc: _newsFeedBloc,
             builder: (context, state) {
               if (state is FeedLoadingState) {
-                return NewsScreenLoading();
+                return NewsScreenLoading(
+                  crossAxisCount: 2,
+                );
               }
 
               if (state is FeedLoadedState) {
@@ -568,7 +570,9 @@ class _TabletScaffoldState extends State<TabletScaffold> {
                 }
               }
 
-              return NewsScreenLoading();
+              return NewsScreenLoading(
+                crossAxisCount: 2,
+              );
             }));
   }
 }

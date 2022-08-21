@@ -326,7 +326,9 @@ class _NavigationContainerWebState extends State<NavigationContainerWeb> {
             bloc: _newsFeedBloc,
             builder: (context, state) {
               if (state is FeedLoadingState) {
-                return NewsScreenLoading();
+                return NewsScreenLoading(
+                  crossAxisCount: 4,
+                );
               }
 
               if (state is FeedLoadedState) {
@@ -555,7 +557,9 @@ class _NavigationContainerWebState extends State<NavigationContainerWeb> {
                 }
               }
 
-              return NewsScreenLoading();
+              return NewsScreenLoading(
+                crossAxisCount: 4,
+              );
             }));
   }
 }

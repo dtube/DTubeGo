@@ -327,39 +327,39 @@ class _AccountNameState extends State<AccountName> {
 }
 
 class AccountNavigationChip extends StatelessWidget {
-  const AccountNavigationChip({
-    Key? key,
-    required this.author,
-  }) : super(key: key);
+  const AccountNavigationChip(
+      {Key? key, required this.author, required this.size})
+      : super(key: key);
 
   final String author;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
-    return InputChip(
-      label: Container(
-        width: 40.w,
-        child: Row(
+    return Container(
+      width: size,
+      child: InputChip(
+        label: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             AccountIconBase(
               username: author,
-              avatarSize: 12.w,
+              avatarSize: size * 0.20,
               showVerified: true,
             ),
             AccountNameBase(
               username: author,
-              width: 25.w,
+              width: size * 0.65,
               height: 5.h,
               mainStyle: Theme.of(context).textTheme.headline6!,
               subStyle: Theme.of(context).textTheme.bodyText1!,
             ),
           ],
         ),
+        onPressed: () {
+          navigateToUserDetailPage(context, author, () {});
+        },
       ),
-      onPressed: () {
-        navigateToUserDetailPage(context, author, () {});
-      },
     );
   }
 }

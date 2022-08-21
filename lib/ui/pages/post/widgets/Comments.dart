@@ -26,7 +26,10 @@ class CommentContainer extends StatelessWidget {
       required this.fixedDownvoteActivated,
       required this.fixedDownvoteWeight,
       required this.postBloc,
-      required this.txBloc})
+      required this.txBloc,
+      required this.height,
+      required this.avatarSize,
+      required this.shrinkButtons})
       : super(key: key);
 
   final double defaultVoteWeightComments;
@@ -37,6 +40,9 @@ class CommentContainer extends StatelessWidget {
   final double fixedDownvoteWeight;
   final PostBloc postBloc;
   final TransactionBloc txBloc;
+  final double height;
+  final double avatarSize;
+  final bool shrinkButtons;
 
   @override
   Widget build(BuildContext context) {
@@ -67,16 +73,7 @@ class CommentContainer extends StatelessWidget {
                         ")"),
                     Container(
                       // height will be max 50.h
-                      height: (14.h *
-                                  (state.post.comments == null
-                                      ? 1
-                                      : state.post.comments!.length)) >
-                              42.h
-                          ? 42.h
-                          : 14.h *
-                              (state.post.comments == null
-                                  ? 1
-                                  : state.post.comments!.length),
+                      height: height,
                       child: Scrollbar(
                         thumbVisibility: true,
                         child: ListView.builder(
@@ -86,6 +83,7 @@ class CommentContainer extends StatelessWidget {
                               Column(
                             children: [
                               CommentDisplay(
+                                avatarSize: avatarSize,
                                 entry: state.post.comments![index],
                                 defaultVoteWeight: defaultVoteWeightComments,
                                 // currentVT: currentVT,
@@ -99,6 +97,7 @@ class CommentContainer extends StatelessWidget {
                                 postBloc: new PostBloc(
                                     repository: PostRepositoryImpl()),
                                 txBloc: txBloc,
+                                shrinkButtons: shrinkButtons,
                               ),
                             ],
                           ),
@@ -132,12 +131,15 @@ class CommentDisplay extends StatelessWidget {
       required this.fixedDownvoteActivated,
       required this.fixedDownvoteWeight,
       required this.postBloc,
-      required this.txBloc});
+      required this.txBloc,
+      required this.avatarSize,
+      required this.shrinkButtons});
   final Comment entry;
   final double defaultVoteWeight;
   final double defaultVoteTip;
   final bool fixedDownvoteActivated;
   final double fixedDownvoteWeight;
+  final double avatarSize;
 
   final String parentAuthor;
   final String parentLink;
@@ -146,6 +148,7 @@ class CommentDisplay extends StatelessWidget {
   final List<String> blockedUsers;
   final PostBloc postBloc;
   final TransactionBloc txBloc;
+  final bool shrinkButtons;
 
   // This function recursively creates the multi-level list rows.
   Widget _buildTiles(Comment root) {
@@ -168,7 +171,9 @@ class CommentDisplay extends StatelessWidget {
               defaultVoteTip: defaultVoteTip,
               fixedDownvoteActivated: fixedDownvoteActivated,
               fixedDownvoteWeight: fixedDownvoteWeight,
-              comment: root),
+              comment: root,
+              avatarSize: avatarSize,
+              shrinkButtons: shrinkButtons),
           Stack(
             children: [
               Align(
@@ -182,7 +187,7 @@ class CommentDisplay extends StatelessWidget {
                       parentAuthor: parentAuthor,
                       parentLink: parentLink,
                       votingWeight: defaultVoteWeight,
-                      scale: 0.8,
+                      scale: shrinkButtons ? 0.8 : 1,
                       focusOnNewComment: false,
                       isMainPost: false,
                       postBloc: subPostBloc,
@@ -199,15 +204,18 @@ class CommentDisplay extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             CommentItem(
-                blockedUsers: blockedUsers,
-                parentContext: parentContext,
-                txBloc: txBloc,
-                subPostBloc: subPostBloc,
-                defaultVoteWeight: defaultVoteWeight,
-                defaultVoteTip: defaultVoteTip,
-                fixedDownvoteActivated: fixedDownvoteActivated,
-                fixedDownvoteWeight: fixedDownvoteWeight,
-                comment: root),
+              blockedUsers: blockedUsers,
+              parentContext: parentContext,
+              txBloc: txBloc,
+              subPostBloc: subPostBloc,
+              defaultVoteWeight: defaultVoteWeight,
+              defaultVoteTip: defaultVoteTip,
+              fixedDownvoteActivated: fixedDownvoteActivated,
+              fixedDownvoteWeight: fixedDownvoteWeight,
+              comment: root,
+              avatarSize: avatarSize,
+              shrinkButtons: shrinkButtons,
+            ),
             Align(
               alignment: Alignment.topRight,
               child: BlocProvider.value(
@@ -253,7 +261,9 @@ class CommentItem extends StatelessWidget {
       required this.defaultVoteTip,
       required this.fixedDownvoteActivated,
       required this.fixedDownvoteWeight,
-      required this.comment})
+      required this.comment,
+      required this.avatarSize,
+      required this.shrinkButtons})
       : super(key: key);
 
   final List<String> blockedUsers;
@@ -265,6 +275,8 @@ class CommentItem extends StatelessWidget {
   final bool fixedDownvoteActivated;
   final double fixedDownvoteWeight;
   final Comment comment;
+  final double avatarSize;
+  final bool shrinkButtons;
 
   @override
   Widget build(BuildContext context) {
@@ -279,7 +291,7 @@ class CommentItem extends StatelessWidget {
                 },
                 child: AccountIconBase(
                   username: comment.author,
-                  avatarSize: 12.w,
+                  avatarSize: avatarSize,
                   showVerified: true,
                   // showName: true,
                   // width: 65.w,
@@ -309,7 +321,7 @@ class CommentItem extends StatelessWidget {
                     child: VotingButtons(
                       defaultVotingWeight: defaultVoteWeight,
                       defaultVotingTip: defaultVoteTip,
-                      scale: 0.8,
+                      scale: shrinkButtons ? 0.8 : 1,
                       isPost: false,
                       iconColor: globalAlmostWhite,
                       focusVote: "",

@@ -326,7 +326,9 @@ class _MobileScaffoldState extends State<MobileScaffold> {
             bloc: _newsFeedBloc,
             builder: (context, state) {
               if (state is FeedLoadingState) {
-                return NewsScreenLoading();
+                return NewsScreenLoading(
+                  crossAxisCount: 1,
+                );
               }
 
               if (state is FeedLoadedState) {
@@ -568,7 +570,9 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                 }
               }
 
-              return NewsScreenLoading();
+              return NewsScreenLoading(
+                crossAxisCount: 1,
+              );
             }));
   }
 }

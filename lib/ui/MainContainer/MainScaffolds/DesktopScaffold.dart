@@ -326,7 +326,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
             bloc: _newsFeedBloc,
             builder: (context, state) {
               if (state is FeedLoadingState) {
-                return NewsScreenLoading();
+                return NewsScreenLoading(crossAxisCount: 4);
               }
 
               if (state is FeedLoadedState) {
@@ -563,7 +563,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                 }
               }
 
-              return NewsScreenLoading();
+              return NewsScreenLoading(crossAxisCount: 4);
             }));
   }
 }

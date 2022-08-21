@@ -224,7 +224,8 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
                                   style: Theme.of(context).textTheme.headline6,
                                 ),
                                 AccountNavigationChip(
-                                    author: widget.daoItem.creator!),
+                                    author: widget.daoItem.creator!,
+                                    size: 40.w),
                               ],
                             ),
                             SizedBox(
@@ -241,7 +242,8 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
                                               .textTheme
                                               .headline6),
                                       AccountNavigationChip(
-                                          author: widget.daoItem.receiver!),
+                                          author: widget.daoItem.receiver!,
+                                          size: 40.w),
                                     ],
                                   )
                                 : SizedBox(
@@ -253,7 +255,7 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             AccountNavigationChip(
-                                author: widget.daoItem.creator!),
+                                size: 40.w, author: widget.daoItem.creator!),
                           ],
                         ),
                 ],
