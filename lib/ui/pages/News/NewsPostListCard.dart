@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/pages/feeds/cards/widets/ThumbPlayerWidgets.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
@@ -23,30 +24,23 @@ import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class NewsPostListCard extends StatefulWidget {
-  const NewsPostListCard({
-    Key? key,
-    required this.blur,
-    required this.thumbnailUrl,
-    required this.title,
-    required this.description,
-    required this.author,
-    required this.link,
-    required this.publishDate,
-    required this.duration,
-    required this.dtcValue,
-    required this.videoUrl,
-    required this.videoSource,
-    required this.alreadyVoted,
-    required this.alreadyVotedDirection,
-    required this.upvotesCount,
-    required this.downvotesCount,
-    required this.indexOfList,
-    required this.mainTag,
-    required this.oc,
-    required this.autoPauseVideoOnPopup,
-  }) : super(key: key);
+  const NewsPostListCard(
+      {Key? key,
+      required this.thumbnailUrl,
+      required this.title,
+      required this.description,
+      required this.author,
+      required this.link,
+      required this.publishDate,
+      required this.videoUrl,
+      required this.videoSource,
+      required this.indexOfList,
+      required this.mainTag,
+      required this.oc,
+      required this.autoPauseVideoOnPopup,
+      required this.crossAxisCount})
+      : super(key: key);
 
-  final bool blur;
   final bool autoPauseVideoOnPopup;
   final String thumbnailUrl;
   final String title;
@@ -54,24 +48,20 @@ class NewsPostListCard extends StatefulWidget {
   final String author;
   final String link;
   final String publishDate;
-  final Duration duration;
-  final String dtcValue;
+
   final String videoUrl;
   final String videoSource;
-  final bool alreadyVoted;
-  final bool alreadyVotedDirection;
-  final int upvotesCount;
-  final int downvotesCount;
+
   final int indexOfList;
   final String mainTag;
   final bool oc;
+  final int crossAxisCount;
 
   @override
   _NewsPostListCardState createState() => _NewsPostListCardState();
 }
 
 class _NewsPostListCardState extends State<NewsPostListCard> {
-  double _avatarSize = 10.w;
   bool _thumbnailTapped = false;
   TextEditingController _replyController = new TextEditingController();
   TextEditingController _giftMemoController = new TextEditingController();
@@ -141,41 +131,20 @@ class _NewsPostListCardState extends State<NewsPostListCard> {
         padding: const EdgeInsets.all(8.0),
         child: MobilePostData(
           thumbnailTapped: _thumbnailTapped,
-          widget: widget,
+          author: widget.author,
+          link: widget.link,
+          publishDate: widget.publishDate,
+          title: widget.title,
           bpController: _bpController,
           ytController: _ytController,
-          showVotingBars: _showVotingBars,
           userBloc: _userBloc,
-          votingDirection: _votingDirection,
-          showCommentInput: _showCommentInput,
-          replyController: _replyController,
-          showGiftInput: _showGiftInput,
-          giftDTCController: _giftDTCController,
-          giftMemoController: _giftMemoController,
-          avatarSize: _avatarSize,
-          blur: widget.blur,
           thumbUrl: widget.thumbnailUrl,
           videoSource: widget.videoSource,
           videoUrl: widget.videoUrl,
+          crossAxisCount: widget.crossAxisCount,
           thumbnailTappedCallback: () {
             setState(() {
               _thumbnailTapped = true;
-            });
-          },
-          votingOpenCallback: () {
-            setState(() {
-              _showVotingBars = false;
-            });
-          },
-          commentOpenCallback: () {
-            setState(() {
-              _showCommentInput = false;
-              _replyController.text = '';
-            });
-          },
-          giftOpenCallback: () {
-            setState(() {
-              _showGiftInput = false;
             });
           },
         ),
@@ -188,62 +157,40 @@ class MobilePostData extends StatefulWidget {
   MobilePostData(
       {Key? key,
       required bool thumbnailTapped,
-      required this.widget,
       required VideoPlayerController bpController,
       required YoutubePlayerController ytController,
-      required bool showVotingBars,
       required UserBloc userBloc,
-      required bool votingDirection,
-      required bool showCommentInput,
-      required TextEditingController replyController,
-      required bool showGiftInput,
-      required TextEditingController giftDTCController,
-      required TextEditingController giftMemoController,
-      required double avatarSize,
       required this.thumbnailTappedCallback,
-      required this.votingOpenCallback,
-      required this.commentOpenCallback,
-      required this.giftOpenCallback,
+      required this.author,
+      required this.link,
+      required this.title,
+      required this.publishDate,
       required this.videoSource,
       required this.videoUrl,
       required this.thumbUrl,
-      required this.blur})
+      required this.crossAxisCount})
       : _thumbnailTapped = thumbnailTapped,
         _bpController = bpController,
         _ytController = ytController,
-        _showVotingBars = showVotingBars,
-        _userBloc = userBloc,
-        _votingDirection = votingDirection,
-        _showCommentInput = showCommentInput,
-        _replyController = replyController,
-        _showGiftInput = showGiftInput,
-        _giftDTCController = giftDTCController,
-        _giftMemoController = giftMemoController,
-        _avatarSize = avatarSize,
         super(key: key);
 
   final bool _thumbnailTapped;
-  final NewsPostListCard widget;
   final VideoPlayerController _bpController;
 
   final YoutubePlayerController _ytController;
-  bool _showVotingBars;
-  final UserBloc _userBloc;
-  final bool _votingDirection;
-  bool _showCommentInput;
-  final TextEditingController _replyController;
-  bool _showGiftInput;
-  final TextEditingController _giftDTCController;
-  final TextEditingController _giftMemoController;
-  final double _avatarSize;
-  VoidCallback thumbnailTappedCallback;
-  VoidCallback votingOpenCallback;
-  VoidCallback commentOpenCallback;
-  VoidCallback giftOpenCallback;
-  String videoSource;
-  String videoUrl;
-  bool blur;
-  String thumbUrl;
+
+  final String author;
+  final String link;
+  final String publishDate;
+  final String title;
+
+  final VoidCallback thumbnailTappedCallback;
+
+  final String videoSource;
+  final String videoUrl;
+
+  final String thumbUrl;
+  final int crossAxisCount;
 
   @override
   State<MobilePostData> createState() => _MobilePostDataState();
@@ -258,14 +205,16 @@ class _MobilePostDataState extends State<MobilePostData> {
       childs: [
         InkWell(
           onTap: () {
-            widget.thumbnailTappedCallback();
+            if (widget.videoSource != "") {
+              widget.thumbnailTappedCallback();
+            }
           },
           child: Stack(
             alignment: Alignment.topCenter,
             children: [
               ThumbnailWidget(
                   thumbnailTapped: widget._thumbnailTapped,
-                  blur: widget.blur,
+                  blur: false,
                   thumbUrl: widget.thumbUrl),
               PlayerWidget(
                 thumbnailTapped: widget._thumbnailTapped,
@@ -280,23 +229,24 @@ class _MobilePostDataState extends State<MobilePostData> {
           ),
         ),
         PostInfoBaseRow(
-          avatarSize: widget._avatarSize,
-          widget: widget.widget,
           videoController: widget._bpController,
           ytController: widget._ytController,
+          author: widget.author,
+          link: widget.link,
+          title: widget.title,
+          crossAxisCount: widget.crossAxisCount,
         ),
         globals.disableAnimations
             ? PostInfoDetailsRow(
-                widget: widget.widget,
+                author: widget.author,
+                publishDate: widget.publishDate,
               )
             : FadeInDown(
                 preferences:
                     AnimationPreferences(offset: Duration(milliseconds: 500)),
-                child: Padding(
-                  padding: EdgeInsets.only(left: 12.w),
-                  child: PostInfoDetailsRow(
-                    widget: widget.widget,
-                  ),
+                child: PostInfoDetailsRow(
+                  author: widget.author,
+                  publishDate: widget.publishDate,
                 ),
               ),
         SizedBox(height: 1.h),
@@ -306,12 +256,12 @@ class _MobilePostDataState extends State<MobilePostData> {
 }
 
 class PostInfoDetailsRow extends StatelessWidget {
-  const PostInfoDetailsRow({
-    Key? key,
-    required this.widget,
-  }) : super(key: key);
+  const PostInfoDetailsRow(
+      {Key? key, required this.author, required this.publishDate})
+      : super(key: key);
 
-  final NewsPostListCard widget;
+  final String author;
+  final String publishDate;
 
   @override
   Widget build(BuildContext context) {
@@ -320,21 +270,14 @@ class PostInfoDetailsRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          '@${widget.author}',
+          '@${author}',
           style: Theme.of(context).textTheme.bodyText2,
           overflow: TextOverflow.ellipsis,
         ),
         Row(
           children: [
             Text(
-              '${widget.publishDate}',
-              style: Theme.of(context).textTheme.bodyText2,
-            ),
-            Text(
-              ' - ' +
-                  (widget.duration.inHours == 0
-                      ? widget.duration.toString().substring(2, 7) + ' min'
-                      : widget.duration.toString().substring(0, 7) + ' h'),
+              publishDate,
               style: Theme.of(context).textTheme.bodyText2,
             ),
           ],
@@ -345,48 +288,64 @@ class PostInfoDetailsRow extends StatelessWidget {
 }
 
 class PostInfoBaseRow extends StatelessWidget {
-  PostInfoBaseRow({
-    Key? key,
-    required this.widget,
-    required double avatarSize,
-    required this.ytController,
-    required this.videoController,
-  })  : _avatarSize = avatarSize,
-        super(key: key);
+  PostInfoBaseRow(
+      {Key? key,
+      required this.ytController,
+      required this.videoController,
+      required this.author,
+      required this.link,
+      required this.title,
+      required this.crossAxisCount})
+      : super(key: key);
 
-  final NewsPostListCard widget;
-
-  final double _avatarSize;
   YoutubePlayerController ytController;
   VideoPlayerController videoController;
+  final String author;
+  final String link;
+  final String title;
+  final int crossAxisCount;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             globals.disableAnimations
-                ? BaseRowContainer(widget: widget, avatarSize: _avatarSize)
+                ? AuthorContainer(
+                    author: author,
+                    avatarSize: crossAxisCount == 1 ? 10.w : 3.w,
+                  )
                 : FadeIn(
                     preferences: AnimationPreferences(
                         offset: Duration(milliseconds: 500),
                         duration: Duration(seconds: 1)),
-                    child: BaseRowContainer(
-                        widget: widget, avatarSize: _avatarSize),
-                  ),
-            SizedBox(width: 2.w),
+                    child: AuthorContainer(
+                      author: author,
+                      avatarSize: crossAxisCount == 1 ? 10.w : 3.w,
+                    )),
+            // SizedBox(width: 1.w),
             globals.disableAnimations
-                ? TitleWidgetForRow(widget: widget)
+                ? TitleContainer(
+                    author: author,
+                    link: link,
+                    title: title,
+                    crossAxisCount: crossAxisCount,
+                  )
                 : FadeInLeftBig(
                     preferences: AnimationPreferences(
                       offset: Duration(milliseconds: 100),
                       duration: Duration(milliseconds: 350),
                     ),
-                    child: TitleWidgetForRow(widget: widget),
-                  ),
+                    child: TitleContainer(
+                      author: author,
+                      link: link,
+                      title: title,
+                      crossAxisCount: crossAxisCount,
+                    )),
           ],
         ),
       ],
@@ -394,183 +353,64 @@ class PostInfoBaseRow extends StatelessWidget {
   }
 }
 
-class BaseRowContainer extends StatelessWidget {
-  const BaseRowContainer({
+class AuthorContainer extends StatelessWidget {
+  const AuthorContainer({
     Key? key,
-    required this.widget,
+    required this.author,
     required double avatarSize,
   })  : _avatarSize = avatarSize,
         super(key: key);
 
-  final NewsPostListCard widget;
   final double _avatarSize;
+  final String author;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        navigateToUserDetailPage(context, widget.author, () {});
+        navigateToUserDetailPage(context, author, () {});
       },
       child: AccountIconBase(
         avatarSize: _avatarSize,
         showVerified: true,
-        username: widget.author,
+        username: author,
       ),
     );
   }
 }
 
-class TitleWidgetForRow extends StatelessWidget {
-  const TitleWidgetForRow({
+class TitleContainer extends StatelessWidget {
+  const TitleContainer({
     Key? key,
-    required this.widget,
+    required this.author,
+    required this.link,
+    required this.title,
+    required this.crossAxisCount,
   }) : super(key: key);
 
-  final NewsPostListCard widget;
+  final String author;
+  final String link;
+  final String title;
+  final int crossAxisCount;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 70.w,
+      width: crossAxisCount == 1
+          ? 70.w
+          : crossAxisCount == 2
+              ? 35.w
+              : 18.w,
       child: InkWell(
         onTap: () {
-          navigateToPostDetailPage(
-              context, widget.author, widget.link, "none", false, () {});
+          navigateToPostDetailPage(context, author, link, "none", false, () {});
         },
         child: Text(
-          widget.title,
+          title,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.headline6,
         ),
-      ),
-    );
-  }
-}
-
-class PlayerWidget extends StatelessWidget {
-  PlayerWidget(
-      {Key? key,
-      required bool thumbnailTapped,
-      required this.videoSource,
-      required this.videoUrl,
-      required VideoPlayerController bpController,
-      required YoutubePlayerController ytController,
-      required this.placeholderSize,
-      required this.placeholderWidth})
-      : _thumbnailTapped = thumbnailTapped,
-        _bpController = bpController,
-        _ytController = ytController,
-        super(key: key);
-
-  final bool _thumbnailTapped;
-  String videoSource;
-  String videoUrl;
-  final VideoPlayerController _bpController;
-  final YoutubePlayerController _ytController;
-  double placeholderWidth;
-  double placeholderSize;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Visibility(
-        visible: _thumbnailTapped,
-        child: (["sia", "ipfs"].contains(videoSource) && videoUrl != "")
-            ?
-            // AspectRatio(
-            //     aspectRatio: 16 / 9,
-            // child:
-            ChewiePlayer(
-                videoUrl: videoUrl,
-                autoplay: true,
-                looping: false,
-                localFile: false,
-                controls: true,
-                usedAsPreview: false,
-                allowFullscreen: true,
-                portraitVideoPadding: 33.w,
-                videocontroller: _bpController,
-                placeholderWidth: placeholderWidth,
-                placeholderSize: placeholderSize,
-                // ),
-              )
-            : (videoSource == 'youtube' && videoUrl != "")
-                ? YTPlayerIFrame(
-                    videoUrl: videoUrl,
-                    autoplay: true,
-                    allowFullscreen: false,
-                    controller: _ytController,
-                  )
-                : Text("no player detected"),
-      ),
-    );
-  }
-}
-
-class ThumbnailWidget extends StatelessWidget {
-  const ThumbnailWidget({
-    Key? key,
-    required bool thumbnailTapped,
-    required this.blur,
-    required this.thumbUrl,
-  })  : _thumbnailTapped = thumbnailTapped,
-        super(key: key);
-
-  final bool _thumbnailTapped;
-  final bool blur;
-  final String thumbUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-      visible: !_thumbnailTapped,
-      child: AspectRatio(
-        aspectRatio: 16 / 9,
-        child: blur
-            ? ClipRect(
-                child: ImageFiltered(
-                  imageFilter: ImageFilter.blur(
-                    sigmaY: 5,
-                    sigmaX: 5,
-                  ),
-                  child: CachedNetworkImage(
-                    fit: BoxFit.fitWidth,
-                    imageUrl: thumbUrl,
-                    errorWidget: (context, url, error) => DTubeLogo(
-                      size: 50,
-                    ),
-                  ),
-                ),
-              )
-            : globals.disableAnimations
-                ? ThumbnailContainer(thumbUrl: thumbUrl)
-                : Shimmer(
-                    duration: Duration(seconds: 5),
-                    interval: Duration(seconds: generateRandom(3, 15)),
-                    color: globalAlmostWhite,
-                    colorOpacity: 0.1,
-                    child: ThumbnailContainer(thumbUrl: thumbUrl)),
-      ),
-    );
-  }
-}
-
-class ThumbnailContainer extends StatelessWidget {
-  const ThumbnailContainer({
-    Key? key,
-    required this.thumbUrl,
-  }) : super(key: key);
-
-  final String thumbUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageUrl: thumbUrl,
-      fit: BoxFit.fitWidth,
-      errorWidget: (context, url, error) => DTubeLogo(
-        size: 50,
       ),
     );
   }
