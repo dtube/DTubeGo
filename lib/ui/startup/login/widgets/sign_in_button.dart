@@ -16,13 +16,15 @@ class SignInButton extends StatefulWidget {
   final LoginType loginType;
   final bool activated;
   final Function loggedInCallback;
+  final double width;
 
   SignInButton(
       {Key? key,
       required this.faIcon,
       required this.loginType,
       required this.activated,
-      required this.loggedInCallback})
+      required this.loggedInCallback,
+      required this.width})
       : super(key: key);
 
   @override
@@ -37,7 +39,7 @@ class _SignInButtonState extends State<SignInButton> {
     return !isLoading
         ? ElevatedButton(
             child: Container(
-                width: 10.w, child: Center(child: this.widget.faIcon)),
+                width: widget.width, child: Center(child: this.widget.faIcon)),
             onPressed: !widget.activated
                 ? null
                 : () async {

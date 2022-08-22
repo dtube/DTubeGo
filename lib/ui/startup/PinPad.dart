@@ -1,5 +1,4 @@
 import 'package:dtube_go/bloc/web3storage/web3storage_bloc_full.dart';
-import 'package:dtube_go/ui/MainContainer/NavigationContainerWeb.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/startup/eula/EulaScreen.dart';

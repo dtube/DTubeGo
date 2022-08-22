@@ -48,7 +48,8 @@ class PostListCardDesktop extends StatefulWidget {
       required this.fixedDownvoteActivated,
       required this.fixedDownvoteWeight,
       required this.autoPauseVideoOnPopup,
-      required this.feedItem})
+      required this.feedItem,
+      required this.crossAxisCount})
       : super(key: key);
 
   final bool blur;
@@ -60,6 +61,7 @@ class PostListCardDesktop extends StatefulWidget {
 
   final String fixedDownvoteActivated;
   final String fixedDownvoteWeight;
+  final int crossAxisCount;
 
   @override
   _PostListCardDesktopState createState() => _PostListCardDesktopState();

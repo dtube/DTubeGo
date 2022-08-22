@@ -1,14 +1,18 @@
 import 'package:dtube_go/res/Config/appConfigValues.dart';
+import 'package:dtube_go/ui/startup/login/Layouts/LoginScreenDesktop.dart';
+import 'package:dtube_go/ui/startup/login/Layouts/LoginScreenMobile.dart';
+import 'package:dtube_go/ui/startup/login/Layouts/LoginScreenTablet.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/avalonConfig/avalonConfig_bloc_full.dart';
 import 'package:dtube_go/bloc/thirdPartyLogin/thirdPartyLogin_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 
 import 'package:dtube_go/ui/startup/OnboardingJourney/OnboardingJourney.dart';
-import 'package:dtube_go/ui/startup/login/pages/LoginWithCredentials.dart';
+import 'package:dtube_go/ui/startup/login/widgets/LoginWithCredentials.dart';
 import 'package:dtube_go/ui/startup/login/pages/SocialUserActionPopup.dart';
 import 'package:dtube_go/ui/startup/login/services/ressources.dart';
 import 'package:dtube_go/ui/startup/login/widgets/sign_in_button.dart';
+import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
@@ -72,189 +76,13 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: globalBlue,
-      body: Stack(
-        children: [
-          Center(
-            child: SingleChildScrollView(
-              child: Container(
-                height: 95.h,
-                width: 95.w,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 2.h),
-                      child: Image.asset('assets/images/dtube_logo_white.png',
-                          width: 30.w),
-                    ),
-                    Column(
-                      children: [
-                        Text("Login / Sign Up",
-                            style: Theme.of(context).textTheme.headline4),
-                        // DTube Credentials
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              _loginWithCredentialsVisible =
-                                  !_loginWithCredentialsVisible;
-                            });
-                          },
-                          child: Container(
-                            width: 45.w,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                  visible: _loginWithCredentialsVisible,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(right: 2.w),
-                                    child: FaIcon(FontAwesomeIcons.arrowLeft),
-                                  ),
-                                ),
-                                Image.asset(
-                                    'assets/images/dtube_logo_white.png',
-                                    width: 7.w),
-                                Text("Credentials")
-                              ],
-                            ),
-                          ),
-                        ),
-                        // Social Providers
-                        Visibility(
-                          visible: !_loginWithCredentialsVisible,
-                          child: Container(
-                            width: 80.w,
-                            child: Column(
-                              children: [
-                                int.parse(_currentHF) >= 6
-                                    ? Wrap(
-                                        alignment: WrapAlignment.center,
-                                        spacing: 2.w,
-                                        children: [
-                                          SignInButton(
-                                            faIcon:
-                                                FaIcon(FontAwesomeIcons.google),
-                                            loginType: LoginType.Google,
-                                            activated: true,
-                                            loggedInCallback: loggedInCallback,
-                                          ),
-                                          SignInButton(
-                                            faIcon: FaIcon(
-                                                FontAwesomeIcons.facebook),
-                                            loginType: LoginType.Facebook,
-                                            activated: true,
-                                            loggedInCallback: loggedInCallback,
-                                          ),
-                                          SignInButton(
-                                            faIcon:
-                                                FaIcon(FontAwesomeIcons.github),
-                                            loginType: LoginType.Github,
-                                            activated: true,
-                                            loggedInCallback: loggedInCallback,
-                                          ),
-                                          SignInButton(
-                                            faIcon: FaIcon(
-                                                FontAwesomeIcons.twitter),
-                                            loginType: LoginType.Twitter,
-                                            activated: true,
-                                            loggedInCallback: loggedInCallback,
-                                          ),
-                                        ],
-                                      )
-                                    : Container(),
-                                InputChip(
-                                    backgroundColor: Colors.green.shade700,
-                                    onPressed: () {
-                                      _loginBloc.add(StartBrowseOnlyMode());
-                                    },
-                                    label: Text(
-                                      "continue without login",
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    )),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: _loginWithCredentialsVisible,
-                          child: LoginWithCredentials(
-                            username: widget.username,
-                            message: widget.message,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Visibility(
-                      visible: !_loginWithCredentialsVisible,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 2.h),
-                            child: Text("You want to know more about DTube?",
-                                style: Theme.of(context).textTheme.bodyText1),
-                          ),
-                          Column(
-                            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              InputChip(
-                                  backgroundColor: globalAlmostWhite,
-                                  onPressed: () {
-                                    launchUrl(Uri.parse(AppConfig.readmoreUrl));
-                                  },
-                                  label: Text(
-                                    "read the Whitepaper",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1!
-                                        .copyWith(color: globalBlue),
-                                  )),
-                              InputChip(
-                                  backgroundColor: globalAlmostWhite,
-                                  onPressed: () {
-                                    launchUrl(Uri.parse(AppConfig.discordUrl));
-                                  },
-                                  label: Container(
-                                    width: 60.w,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(
-                                          "Join the DTube Discord",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1!
-                                              .copyWith(color: globalBlue),
-                                        ),
-                                        FaIcon(
-                                          FontAwesomeIcons.discord,
-                                          color: globalBGColor,
-                                        )
-                                      ],
-                                    ),
-                                  )),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          // onboarding Journey
-          Visibility(
-            child: OnboardingJourney(
-              journeyDoneCallback: journeyDoneCallback,
-            ),
-            visible: !_journeyDone,
-          ),
-        ],
-      ),
+    return ResponsiveLayout(
+      mobileBody:
+          LoginFormMobile(showOnboardingJourney: widget.showOnboardingJourney),
+      tabletBody:
+          LoginFormTablet(showOnboardingJourney: widget.showOnboardingJourney),
+      desktopBody:
+          LoginFormDesktop(showOnboardingJourney: widget.showOnboardingJourney),
     );
   }
 

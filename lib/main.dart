@@ -27,7 +27,7 @@ const MaterialColor kPrimaryColor = const MaterialColor(
 );
 
 void main() async {
-  sec.deleteAllSettings();
+  // sec.deleteAllSettings(); // delete all settings
 
   // deactivate landscape mode
   WidgetsFlutterBinding.ensureInitialized();

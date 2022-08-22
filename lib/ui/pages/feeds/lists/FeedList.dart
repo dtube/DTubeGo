@@ -37,6 +37,8 @@ class FeedList extends StatelessWidget {
 
   final Bool2VoidFunc scrollCallback;
   late YoutubePlayerController _youtubePlayerController;
+  final int tabletCrossAxisCount;
+  final int desktopCrossAxisCount;
 
   FeedList({
     required this.feedType,
@@ -52,6 +54,8 @@ class FeedList extends StatelessWidget {
     required this.enableNavigation,
     this.itemSelectedCallback,
     this.topPadding,
+    required this.tabletCrossAxisCount,
+    required this.desktopCrossAxisCount,
     Key? key,
   }) : super(key: key);
 
@@ -111,81 +115,75 @@ class FeedList extends StatelessWidget {
         width: 100.w,
         child: Stack(
           children: [
-            Padding(
-              padding: EdgeInsets.only(
-                  left: sidepadding != null ? sidepadding! : 0.0,
-                  right: sidepadding != null ? sidepadding! : 0.0,
-                  top: topPadding!),
-              child: FutureBuilder<bool>(
-                  future: getSettings(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState != ConnectionState.done) {
-                      return buildLoading(context);
-                    } else {
-                      return Container(
-                        height: 90.h + topPaddingForFirstEntry!,
-                        width: 100.w,
-                        child: BlocBuilder<FeedBloc, FeedState>(
-                          builder: (context, state) {
-                            if (state is FeedInitialState ||
-                                state is FeedLoadingState &&
-                                    _feedItems.isEmpty) {
-                              return buildLoading(context);
-                            } else if (state is FeedLoadedState) {
-                              if (state.feedType == feedType) {
-                                if (state.feedType == "tagSearch") {
-                                  _feedItems.clear();
-                                }
-                                if (_feedItems.isNotEmpty) {
-                                  if (_feedItems.first.link ==
-                                      state.feed.first.link) {
-                                    _feedItems.clear();
-                                  } else {
-                                    _feedItems.removeLast();
-                                  }
-                                }
-                                _feedItems.addAll(state.feed);
+            FutureBuilder<bool>(
+                future: getSettings(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return buildLoading(context);
+                  } else {
+                    return Container(
+                      height: 90.h + topPaddingForFirstEntry!,
+                      width: 100.w,
+                      child: BlocBuilder<FeedBloc, FeedState>(
+                        builder: (context, state) {
+                          if (state is FeedInitialState ||
+                              state is FeedLoadingState && _feedItems.isEmpty) {
+                            return buildLoading(context);
+                          } else if (state is FeedLoadedState) {
+                            if (state.feedType == feedType) {
+                              if (state.feedType == "tagSearch") {
+                                _feedItems.clear();
                               }
-                              BlocProvider.of<FeedBloc>(context).isFetching =
-                                  false;
-                            } else if (state is FeedErrorState) {
-                              return buildErrorUi(state.message);
+                              if (_feedItems.isNotEmpty) {
+                                if (_feedItems.first.link ==
+                                    state.feed.first.link) {
+                                  _feedItems.clear();
+                                } else {
+                                  _feedItems.removeLast();
+                                }
+                              }
+                              _feedItems.addAll(state.feed);
                             }
-                            return ResponsiveLayout(
-                                mobileBody: buildPostListNarrow(
+                            BlocProvider.of<FeedBloc>(context).isFetching =
+                                false;
+                          } else if (state is FeedErrorState) {
+                            return buildErrorUi(state.message);
+                          }
+                          return ResponsiveLayout(
+                              mobileBody: buildPostListNarrow(
+                                _feedItems,
+                                largeFormat,
+                                true,
+                                context,
+                                feedType,
+                              ),
+                              tabletBody: buildPostListTablet(
+                                _feedItems,
+                                largeFormat,
+                                true,
+                                context,
+                                feedType,
+                                tabletCrossAxisCount,
+                              ),
+                              desktopBody: buildPostListDesktop(
                                   _feedItems,
                                   largeFormat,
                                   true,
                                   context,
                                   feedType,
-                                ),
-                                tabletBody: buildPostListWide(
-                                    _feedItems,
-                                    largeFormat,
-                                    true,
-                                    context,
-                                    feedType,
-                                    false),
-                                desktopBody: buildPostListWide(
-                                    _feedItems,
-                                    largeFormat,
-                                    true,
-                                    context,
-                                    feedType,
-                                    true));
-                            // if (globals.mobileMode) {
-                            //   return buildPostList(_feedItems, largeFormat,
-                            //       true, context, feedType);
-                            // } else {
-                            //   return buildPostListWeb(_feedItems, largeFormat,
-                            //       true, context, feedType);
-                            // }
-                          },
-                        ),
-                      );
-                    }
-                  }),
-            ),
+                                  desktopCrossAxisCount));
+                          // if (globals.mobileMode) {
+                          //   return buildPostList(_feedItems, largeFormat,
+                          //       true, context, feedType);
+                          // } else {
+                          //   return buildPostListWeb(_feedItems, largeFormat,
+                          //       true, context, feedType);
+                          // }
+                        },
+                      ),
+                    );
+                  }
+                }),
             ResponsiveLayout(
                 mobileBody: TopGradient(feedType: feedType),
                 tabletBody: Container(),
@@ -344,8 +342,14 @@ class FeedList extends StatelessWidget {
     );
   }
 
-  Widget buildPostListWide(List<FeedItem> feed, bool bigThumbnail,
-      bool showAuthor, BuildContext context, String gpostType, bool desktop) {
+  Widget buildPostListDesktop(
+    List<FeedItem> feed,
+    bool bigThumbnail,
+    bool showAuthor,
+    BuildContext context,
+    String gpostType,
+    int desktopCrossAxisCount,
+  ) {
     if (feed.length < 20) {
       BlocProvider.of<FeedBloc>(context)
         ..isFetching = true
@@ -355,59 +359,132 @@ class FeedList extends StatelessWidget {
             fromAuthor: feed[feed.length - 1].author,
             fromLink: feed[feed.length - 1].link));
     }
-    return Padding(
-      padding: const EdgeInsets.only(top: 30.0),
-      child: MasonryGridView.count(
-        // padding: EdgeInsets.only(top: 19.h),
-        key: new PageStorageKey(gpostType + 'listview'),
-        addAutomaticKeepAlives: true,
-        crossAxisCount: desktop ? 4 : 2,
-        itemCount: feed.length,
-        controller: _scrollController
-          ..addListener(() {
-            if (_scrollController.offset >=
-                    _scrollController.position.maxScrollExtent &&
-                !BlocProvider.of<FeedBloc>(context).isFetching &&
-                feedType != "UserFeed" &&
-                feedType != "tagSearch") {
-              BlocProvider.of<FeedBloc>(context)
-                ..isFetching = true
-                ..add(FetchFeedEvent(
-                    //feedType: widget.feedType,
-                    feedType: feedType,
-                    fromAuthor: feed[feed.length - 1].author,
-                    fromLink: feed[feed.length - 1].link));
-            }
-            if (_scrollController.offset <=
-                    _scrollController.position.minScrollExtent &&
-                !BlocProvider.of<FeedBloc>(context).isFetching &&
-                feedType != "UserFeed" &&
-                feedType != "tagSearch") {
-              BlocProvider.of<FeedBloc>(context)
-                ..isFetching = true
-                ..add(FetchFeedEvent(
+    return MasonryGridView.count(
+      // padding: EdgeInsets.only(top: 19.h),
+      key: new PageStorageKey(gpostType + 'listview'),
+      addAutomaticKeepAlives: true,
+      crossAxisCount: desktopCrossAxisCount,
+      itemCount: feed.length,
+      controller: _scrollController
+        ..addListener(() {
+          if (_scrollController.offset >=
+                  _scrollController.position.maxScrollExtent &&
+              !BlocProvider.of<FeedBloc>(context).isFetching &&
+              feedType != "UserFeed" &&
+              feedType != "tagSearch") {
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
+              ..add(FetchFeedEvent(
                   //feedType: widget.feedType,
                   feedType: feedType,
-                ));
-            }
-          }),
-        itemBuilder: (BuildContext context, int pos) => PostListCardDesktop(
-            blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
-                    (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
-                ? true
-                : false,
-            defaultCommentVotingWeight: _defaultCommentVotingWeight!,
-            defaultPostVotingWeight: _defaultPostVotingWeight!,
-            defaultPostVotingTip: _defaultPostVotingTip!,
-            fixedDownvoteActivated: _fixedDownvoteActivated!,
-            fixedDownvoteWeight: _fixedDownvoteWeight!,
-            autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
-            feedItem: feed[pos]),
-
-        //staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
+                  fromAuthor: feed[feed.length - 1].author,
+                  fromLink: feed[feed.length - 1].link));
+          }
+          if (_scrollController.offset <=
+                  _scrollController.position.minScrollExtent &&
+              !BlocProvider.of<FeedBloc>(context).isFetching &&
+              feedType != "UserFeed" &&
+              feedType != "tagSearch") {
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
+              ..add(FetchFeedEvent(
+                //feedType: widget.feedType,
+                feedType: feedType,
+              ));
+          }
+        }),
+      itemBuilder: (BuildContext context, int pos) => PostListCardDesktop(
+        blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
+                (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
+            ? true
+            : false,
+        defaultCommentVotingWeight: _defaultCommentVotingWeight!,
+        defaultPostVotingWeight: _defaultPostVotingWeight!,
+        defaultPostVotingTip: _defaultPostVotingTip!,
+        fixedDownvoteActivated: _fixedDownvoteActivated!,
+        fixedDownvoteWeight: _fixedDownvoteWeight!,
+        autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
+        feedItem: feed[pos],
+        crossAxisCount: desktopCrossAxisCount,
       ),
+
+      //staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+      mainAxisSpacing: 4.0,
+      crossAxisSpacing: 4.0,
+    );
+
+    //Text(pos.toString())
+  }
+
+  Widget buildPostListTablet(
+    List<FeedItem> feed,
+    bool bigThumbnail,
+    bool showAuthor,
+    BuildContext context,
+    String gpostType,
+    int tabletCrossAxisCount,
+  ) {
+    if (feed.length < 20) {
+      BlocProvider.of<FeedBloc>(context)
+        ..isFetching = true
+        ..add(FetchFeedEvent(
+            //feedType: widget.feedType,
+            feedType: feedType,
+            fromAuthor: feed[feed.length - 1].author,
+            fromLink: feed[feed.length - 1].link));
+    }
+    return MasonryGridView.count(
+      // padding: EdgeInsets.only(top: 19.h),
+      key: new PageStorageKey(gpostType + 'listview'),
+      addAutomaticKeepAlives: true,
+      crossAxisCount: tabletCrossAxisCount,
+      itemCount: feed.length,
+      controller: _scrollController
+        ..addListener(() {
+          if (_scrollController.offset >=
+                  _scrollController.position.maxScrollExtent &&
+              !BlocProvider.of<FeedBloc>(context).isFetching &&
+              feedType != "UserFeed" &&
+              feedType != "tagSearch") {
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
+              ..add(FetchFeedEvent(
+                  //feedType: widget.feedType,
+                  feedType: feedType,
+                  fromAuthor: feed[feed.length - 1].author,
+                  fromLink: feed[feed.length - 1].link));
+          }
+          if (_scrollController.offset <=
+                  _scrollController.position.minScrollExtent &&
+              !BlocProvider.of<FeedBloc>(context).isFetching &&
+              feedType != "UserFeed" &&
+              feedType != "tagSearch") {
+            BlocProvider.of<FeedBloc>(context)
+              ..isFetching = true
+              ..add(FetchFeedEvent(
+                //feedType: widget.feedType,
+                feedType: feedType,
+              ));
+          }
+        }),
+      itemBuilder: (BuildContext context, int pos) => PostListCardDesktop(
+        blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
+                (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
+            ? true
+            : false,
+        defaultCommentVotingWeight: _defaultCommentVotingWeight!,
+        defaultPostVotingWeight: _defaultPostVotingWeight!,
+        defaultPostVotingTip: _defaultPostVotingTip!,
+        fixedDownvoteActivated: _fixedDownvoteActivated!,
+        fixedDownvoteWeight: _fixedDownvoteWeight!,
+        autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
+        feedItem: feed[pos],
+        crossAxisCount: tabletCrossAxisCount,
+      ),
+
+      //staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+      mainAxisSpacing: 4.0,
+      crossAxisSpacing: 4.0,
     );
 
     //Text(pos.toString())

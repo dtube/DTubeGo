@@ -1,5 +1,5 @@
-import 'package:dtube_go/ui/pages/feeds/FeedTabs.dart';
-import 'package:dtube_go/ui/pages/feeds/FeedTabsDesktop.dart';
+import 'package:dtube_go/ui/pages/feeds/Layouts/FeedTabsMobile.dart';
+import 'package:dtube_go/ui/pages/feeds/Layouts/FeedTabsDesktop.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/style/ThemeData.dart';
@@ -74,7 +74,7 @@ class _FeedMainPageState extends State<FeedMainPage>
   void initState() {
     if (globals.keyPermissions.isEmpty) {
       tabBarFeedItemList.removeAt(2); // remove MyFeed (followings) from tabs
-      //_tabNames.removeAt(2);
+      _tabNames.removeAt(2);
     }
 
     _tabController =
@@ -154,186 +154,25 @@ class _FeedMainPageState extends State<FeedMainPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        //appBar: dtubeSubAppBar(true, "", context, null),
-        resizeToAvoidBottomInset: true,
-        body: ResponsiveLayout(
-          mobileBody: FeedTabs(
-              tabBarFeedItemList: tabBarFeedItemList,
-              tabController: _tabController,
-              tabIcons: _tabIcons,
-              tabNames: _tabNames,
-              selectedIndex: _selectedIndex),
-          tabletBody: FeedTabsDesktop(
-              tabBarFeedItemList: tabBarFeedItemList,
-              tabController: _tabController,
-              tabIcons: _tabIcons,
-              tabNames: _tabNames,
-              selectedIndex: _selectedIndex),
-          desktopBody: FeedTabsDesktop(
-              tabBarFeedItemList: tabBarFeedItemList,
-              tabController: _tabController,
-              tabIcons: _tabIcons,
-              tabNames: _tabNames,
-              selectedIndex: _selectedIndex),
-        ));
-  }
-}
-
-class TabBarWithPosition extends StatefulWidget {
-  const TabBarWithPosition(
-      {Key? key,
-      required this.tabIcons,
-      required this.iconSize,
-      required this.tabController,
-      required this.alignment,
-      required this.padding,
-      required this.menuSize,
-      required this.showLabels,
-      required this.tabNames})
-      : super(key: key);
-
-  final List<IconData> tabIcons;
-  final double iconSize;
-  final TabController tabController;
-  final Alignment alignment;
-  final EdgeInsets padding;
-  final double menuSize;
-  final bool showLabels;
-  final List<String> tabNames;
-
-  @override
-  State<TabBarWithPosition> createState() => _TabBarWithPositionState();
-}
-
-class _TabBarWithPositionState extends State<TabBarWithPosition> {
-  late List<Tab> tabs;
-
-  @override
-  void initState() {
-    tabs = [
-      Tab(
-        child: ShadowedIcon(
-            icon: widget.tabIcons[0],
-            color: globalAlmostWhite,
-            shadowColor: Colors.black,
-            size: widget.iconSize),
-      ),
-      Tab(
-        child: ShadowedIcon(
-            icon: widget.tabIcons[1],
-            color: globalAlmostWhite,
-            shadowColor: Colors.black,
-            size: widget.iconSize),
-      ),
-      Tab(
-        child: ShadowedIcon(
-            icon: widget.tabIcons[2],
-            color: globalAlmostWhite,
-            shadowColor: Colors.black,
-            size: widget.iconSize),
-      ),
-      Tab(
-        child: ShadowedIcon(
-            icon: widget.tabIcons[3],
-            color: globalAlmostWhite,
-            shadowColor: Colors.black,
-            size: widget.iconSize),
-      ),
-      Tab(
-        child: ShadowedIcon(
-            icon: widget.tabIcons[4],
-            color: globalAlmostWhite,
-            shadowColor: Colors.black,
-            size: widget.iconSize),
-      ),
-    ];
-    if (widget.showLabels) {
-      tabs = [
-        Tab(
-          text: widget.tabNames[0],
-          icon: ShadowedIcon(
-              icon: widget.tabIcons[0],
-              color: globalAlmostWhite,
-              shadowColor: Colors.black,
-              size: widget.iconSize),
-        ),
-        Tab(
-          text: widget.tabNames[1],
-          icon: ShadowedIcon(
-              icon: widget.tabIcons[1],
-              color: globalAlmostWhite,
-              shadowColor: Colors.black,
-              size: widget.iconSize),
-        ),
-        Tab(
-          text: widget.tabNames[2],
-          icon: FaIcon(widget.tabIcons[2],
-              color: globalAlmostWhite,
-              // shadowColor: Colors.black,
-              size: widget.iconSize),
-        ),
-        Tab(
-          text: widget.tabNames[3],
-          icon: ShadowedIcon(
-              icon: widget.tabIcons[3],
-              color: globalAlmostWhite,
-              shadowColor: Colors.black,
-              size: widget.iconSize),
-        ),
-        Tab(
-          text: widget.tabNames[4],
-          icon: ShadowedIcon(
-              icon: widget.tabIcons[4],
-              color: globalAlmostWhite,
-              shadowColor: Colors.black,
-              size: widget.iconSize),
-        ),
-      ];
-    }
-    if (globals.keyPermissions.isEmpty) {
-      tabs.removeAt(2);
-    }
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: widget.alignment,
-      child: Padding(
-        padding: widget.padding,
-        child: !widget.showLabels
-            ? Container(
-                width: widget.menuSize,
-                child: TabBar(
-                  unselectedLabelColor: globalAlmostWhite,
-                  labelColor: globalAlmostWhite,
-                  indicatorColor: globalAlmostWhite,
-                  tabs: tabs,
-                  controller: widget.tabController,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  labelPadding: EdgeInsets.zero,
-                ),
-              )
-            : Padding(
-                padding: const EdgeInsets.only(top: 50.0),
-                child: Container(
-                  child: TabBar(
-                    // unselectedLabelColor: globalAlmostWhite,
-                    labelColor: globalAlmostWhite,
-                    indicatorColor: globalAlmostWhite,
-                    isScrollable: true,
-                    tabs: tabs,
-                    controller: widget.tabController,
-
-                    labelStyle: Theme.of(context).textTheme.bodyText1!,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    labelPadding: EdgeInsets.only(right: 10),
-                  ),
-                ),
-              ),
-      ),
+    return ResponsiveLayout(
+      mobileBody: FeedTabs(
+          tabBarFeedItemList: tabBarFeedItemList,
+          tabController: _tabController,
+          tabIcons: _tabIcons,
+          tabNames: _tabNames,
+          selectedIndex: _selectedIndex),
+      tabletBody: FeedTabsDesktop(
+          tabBarFeedItemList: tabBarFeedItemList,
+          tabController: _tabController,
+          tabIcons: _tabIcons,
+          tabNames: _tabNames,
+          selectedIndex: _selectedIndex),
+      desktopBody: FeedTabsDesktop(
+          tabBarFeedItemList: tabBarFeedItemList,
+          tabController: _tabController,
+          tabIcons: _tabIcons,
+          tabNames: _tabNames,
+          selectedIndex: _selectedIndex),
     );
   }
 }

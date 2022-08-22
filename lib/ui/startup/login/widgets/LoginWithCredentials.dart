@@ -11,10 +11,14 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 class LoginWithCredentials extends StatefulWidget {
   LoginWithCredentials(
-      {Key? key, required this.username, required this.message})
+      {Key? key,
+      required this.username,
+      required this.message,
+      required this.width})
       : super(key: key);
   final String? username;
   final String? message;
+  final double width;
 
   @override
   State<LoginWithCredentials> createState() => _LoginWithCredentialsState();
@@ -70,7 +74,7 @@ class _LoginWithCredentialsState extends State<LoginWithCredentials> {
             visible: !_registerAccountScreen,
             child: Form(
               child: Container(
-                width: 80.w,
+                width: widget.width,
                 child: Column(
                   children: [
                     Padding(
@@ -82,7 +86,7 @@ class _LoginWithCredentialsState extends State<LoginWithCredentials> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: 80.w,
+                          width: widget.width,
                           child: TextField(
                             style: Theme.of(context).textTheme.bodyText1,
                             controller: usernameController,
@@ -100,7 +104,7 @@ class _LoginWithCredentialsState extends State<LoginWithCredentials> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: 80.w,
+                          width: widget.width,
                           child: TextField(
                             style: Theme.of(context).textTheme.bodyText1,
                             obscureText: true,
@@ -148,7 +152,7 @@ class _LoginWithCredentialsState extends State<LoginWithCredentials> {
                                 ),
                                 widget.message == 'login failed'
                                     ? Container(
-                                        width: 90.w,
+                                        width: widget.width,
                                         child: Column(
                                           children: [
                                             SizedBox(height: 8),

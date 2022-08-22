@@ -1,6 +1,6 @@
 import 'package:dtube_go/ui/pages/News/Layouts/NewsListDesktop.dart';
 import 'package:dtube_go/ui/pages/News/Layouts/NewsListMobile.dart';
-import 'package:dtube_go/ui/pages/News/NewsPostListCard.dart';
+import 'package:dtube_go/ui/pages/News/Widgets/NewsPostListCard.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:dtube_go/utils/Strings/friendlyTimestamp.dart';

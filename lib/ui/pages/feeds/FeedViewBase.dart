@@ -53,51 +53,14 @@ class _FeedViewBaseState extends State<FeedViewBase>
   @override
   Widget build(BuildContext context) {
     return FeedList(
-        feedType: widget.feedType,
-        largeFormat: widget.largeFormat,
-        showAuthor: widget.showAuthor,
-        scrollCallback: widget.scrollCallback,
-        enableNavigation: true,
-        topPadding: widget.topPadding != null ? widget.topPadding : 0);
-  }
-}
-
-class PostView extends StatefulWidget {
-  final String? postAuthor;
-  final String? postLink;
-  PostView({Key? key, required this.postAuthor, required this.postLink})
-      : super(key: key);
-
-  @override
-  State<PostView> createState() => _PostViewState();
-}
-
-class _PostViewState extends State<PostView> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.postAuthor != null && widget.postAuthor != ""
-        ? Container(
-            width: 53.w,
-            height: 300.h,
-            decoration: BoxDecoration(border: Border()),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: PostDetailPageInlineView(
-                author: widget.postAuthor!,
-                link: widget.postLink!,
-                directFocus: "none",
-                recentlyUploaded: false,
-              ),
-            ),
-          )
-        : Container(
-            width: 50.w,
-            height: 100.h,
-            child: Center(child: Text("no post selected")));
+      feedType: widget.feedType,
+      largeFormat: widget.largeFormat,
+      showAuthor: widget.showAuthor,
+      scrollCallback: widget.scrollCallback,
+      enableNavigation: true,
+      topPadding: widget.topPadding != null ? widget.topPadding : 0,
+      tabletCrossAxisCount: 2,
+      desktopCrossAxisCount: 4,
+    );
   }
 }
