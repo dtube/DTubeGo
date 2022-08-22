@@ -31,7 +31,7 @@ class _StartUpState extends State<StartUp> {
     print(Device.width);
     if (kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) {
       globals.mobileMode = false;
-      _logoSize = 10.w;
+      _logoSize = 20.w;
     }
 
     // sec.deleteAllSettings(); // flush ALL app settings including logindata, hivesigner and so on

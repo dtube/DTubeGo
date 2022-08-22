@@ -12,7 +12,7 @@ class NavigationContainer extends StatelessWidget {
     return ResponsiveLayout(
       desktopBody: DesktopScaffold(),
       mobileBody: MobileScaffold(),
-      tabletBody: DesktopScaffold(),
+      tabletBody: TabletScaffold(),
     );
   }
 }
