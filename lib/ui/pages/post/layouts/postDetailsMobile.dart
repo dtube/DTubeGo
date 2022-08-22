@@ -277,13 +277,13 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
                               margin: EdgeInsets.all(5.0),
                               child: globals.disableAnimations
                                   ? AccountNavigationChip(
-                                      author: widget.post.author, size: 40.w)
+                                      author: widget.post.author, size: 230)
                                   : SlideInDown(
                                       preferences: AnimationPreferences(
                                           offset: Duration(milliseconds: 500)),
                                       child: AccountNavigationChip(
                                           author: widget.post.author,
-                                          size: 40.w),
+                                          size: 230),
                                     ),
                             ),
                             globals.disableAnimations

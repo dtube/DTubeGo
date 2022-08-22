@@ -1,6 +1,6 @@
-import 'package:dtube_go/ui/pages/post/postDetailsDesktop.dart';
-import 'package:dtube_go/ui/pages/post/postDetailsMobile.dart';
-import 'package:dtube_go/ui/pages/post/postDetailsTablet.dart';
+import 'package:dtube_go/ui/pages/post/Layouts/postDetailsDesktop.dart';
+import 'package:dtube_go/ui/pages/post/Layouts/postDetailsMobile.dart';
+import 'package:dtube_go/ui/pages/post/Layouts/postDetailsTablet.dart';
 
 import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
 
