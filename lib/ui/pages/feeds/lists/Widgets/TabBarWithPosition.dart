@@ -36,89 +36,26 @@ class _TabBarWithPositionState extends State<TabBarWithPosition> {
 
   @override
   void initState() {
-    tabs = [
-      Tab(
-        child: ShadowedIcon(
-            icon: widget.tabIcons[0],
-            color: globalAlmostWhite,
-            shadowColor: Colors.black,
-            size: widget.iconSize),
-      ),
-      Tab(
-        child: ShadowedIcon(
-            icon: widget.tabIcons[1],
-            color: globalAlmostWhite,
-            shadowColor: Colors.black,
-            size: widget.iconSize),
-      ),
-      Tab(
-        child: ShadowedIcon(
-            icon: widget.tabIcons[2],
-            color: globalAlmostWhite,
-            shadowColor: Colors.black,
-            size: widget.iconSize),
-      ),
-      Tab(
-        child: ShadowedIcon(
-            icon: widget.tabIcons[3],
-            color: globalAlmostWhite,
-            shadowColor: Colors.black,
-            size: widget.iconSize),
-      ),
-      Tab(
-        child: ShadowedIcon(
-            icon: widget.tabIcons[4],
-            color: globalAlmostWhite,
-            shadowColor: Colors.black,
-            size: widget.iconSize),
-      ),
-    ];
-    if (widget.showLabels) {
-      tabs = [
-        Tab(
-          text: widget.tabNames[0],
-          icon: ShadowedIcon(
-              icon: widget.tabIcons[0],
-              color: globalAlmostWhite,
-              shadowColor: Colors.black,
-              size: widget.iconSize),
-        ),
-        Tab(
-          text: widget.tabNames[1],
-          icon: ShadowedIcon(
-              icon: widget.tabIcons[1],
-              color: globalAlmostWhite,
-              shadowColor: Colors.black,
-              size: widget.iconSize),
-        ),
-        Tab(
-          text: widget.tabNames[2],
-          icon: FaIcon(widget.tabIcons[2],
-              color: globalAlmostWhite,
-              // shadowColor: Colors.black,
-              size: widget.iconSize),
-        ),
-        Tab(
-          text: widget.tabNames[3],
-          icon: ShadowedIcon(
-              icon: widget.tabIcons[3],
-              color: globalAlmostWhite,
-              shadowColor: Colors.black,
-              size: widget.iconSize),
-        ),
-        Tab(
-          text: widget.tabNames[4],
-          icon: ShadowedIcon(
-              icon: widget.tabIcons[4],
-              color: globalAlmostWhite,
-              shadowColor: Colors.black,
-              size: widget.iconSize),
-        ),
-      ];
-    }
-    if (globals.keyPermissions.isEmpty) {
-      tabs.removeAt(2);
-    }
+    tabs = List<Tab>.generate(
+      widget.tabIcons.length,
+      (int index) => !widget.showLabels
+          ? Tab(
+              child: ShadowedIcon(
+                  icon: widget.tabIcons[index],
+                  color: globalAlmostWhite,
+                  shadowColor: Colors.black,
+                  size: widget.iconSize),
+            )
+          : Tab(
+              text: widget.tabNames[index],
+              icon: ShadowedIcon(
+                  icon: widget.tabIcons[index],
+                  color: globalAlmostWhite,
+                  shadowColor: Colors.black,
+                  size: widget.iconSize),
+            ),
+    );
+
     super.initState();
   }
 

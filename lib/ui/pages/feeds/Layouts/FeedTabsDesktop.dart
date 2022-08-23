@@ -12,16 +12,22 @@ class FeedTabsDesktop extends StatelessWidget {
   const FeedTabsDesktop({
     Key? key,
     required this.tabBarFeedItemList,
+    required this.tabBarFeedItemListUnsignedLogin,
     required this.tabController,
     required this.tabIcons,
     required this.tabNames,
+    required this.tabIconsUnsignedLogin,
+    required this.tabNamesUnsignedLogin,
     required this.selectedIndex,
   }) : super(key: key);
 
   final List<FeedViewBase> tabBarFeedItemList;
+  final List<FeedViewBase> tabBarFeedItemListUnsignedLogin;
   final TabController tabController;
   final List<IconData> tabIcons;
   final List<String> tabNames;
+  final List<IconData> tabIconsUnsignedLogin;
+  final List<String> tabNamesUnsignedLogin;
   final int selectedIndex;
 
   @override
@@ -31,17 +37,21 @@ class FeedTabsDesktop extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: 80),
           child: TabBarView(
-            children: tabBarFeedItemList,
+            children: globals.keyPermissions.isEmpty
+                ? tabBarFeedItemListUnsignedLogin
+                : tabBarFeedItemList,
             controller: tabController,
           ),
         ),
         TabBarWithPosition(
-          tabIcons: tabIcons,
+          tabIcons:
+              globals.keyPermissions.isEmpty ? tabIconsUnsignedLogin : tabIcons,
           iconSize: globalIconSizeMedium,
           tabController: tabController,
           alignment: Alignment.topCenter,
           padding: EdgeInsets.only(top: 0),
-          tabNames: tabNames,
+          tabNames:
+              globals.keyPermissions.isEmpty ? tabNamesUnsignedLogin : tabNames,
           showLabels: true,
           menuSize: globals.keyPermissions.isEmpty ? 200 : 250,
         ),

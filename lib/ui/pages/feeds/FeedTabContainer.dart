@@ -29,6 +29,13 @@ class _FeedMainPageState extends State<FeedMainPage>
     "Hot Videos",
     "Trending Videos"
   ];
+  List<String> _tabNamesUnsignedLogin = [
+    "Original DTubers",
+    "Fresh Videos",
+    // "Follow Feed",
+    "Hot Videos",
+    "Trending Videos"
+  ];
   List<IconData> _tabIcons = [
     FontAwesomeIcons.circleCheck,
     FontAwesomeIcons.rss,
@@ -36,6 +43,15 @@ class _FeedMainPageState extends State<FeedMainPage>
     FontAwesomeIcons.fire,
     FontAwesomeIcons.chartLine,
   ];
+
+  List<IconData> _tabIconsUnsignedLogin = [
+    FontAwesomeIcons.circleCheck,
+    FontAwesomeIcons.rss,
+    // FontAwesomeIcons.userGroup,
+    FontAwesomeIcons.fire,
+    FontAwesomeIcons.chartLine,
+  ];
+
   late TabController _tabController;
   int _selectedIndex = 0;
   List<FilterTag> mockResults = [];
@@ -43,6 +59,7 @@ class _FeedMainPageState extends State<FeedMainPage>
   List<FilterTag> selectedMainTags = [];
   bool showTagFilter = false;
   FocusNode tagSearch = new FocusNode();
+
   late List<FeedViewBase> tabBarFeedItemList = [
     FeedViewBase(
         feedType: 'ODFeed',
@@ -70,66 +87,106 @@ class _FeedMainPageState extends State<FeedMainPage>
         showAuthor: false,
         scrollCallback: (bool) {}),
   ];
+
+  late List<FeedViewBase> tabBarFeedItemListUnsignedLogin = [
+    FeedViewBase(
+        feedType: 'ODFeed',
+        largeFormat: true,
+        showAuthor: false,
+        scrollCallback: (bool) {}),
+    FeedViewBase(
+        feedType: 'NewFeed',
+        largeFormat: true,
+        showAuthor: false,
+        scrollCallback: (bool) {}),
+    // FeedViewBase(
+    //     feedType: 'MyFeed',
+    //     largeFormat: true,
+    //     showAuthor: false,
+    //     scrollCallback: (bool) {}),
+    FeedViewBase(
+        feedType: 'HotFeed',
+        largeFormat: true,
+        showAuthor: false,
+        scrollCallback: (bool) {}),
+    FeedViewBase(
+        feedType: 'TrendingFeed',
+        largeFormat: true,
+        showAuthor: false,
+        scrollCallback: (bool) {}),
+  ];
+
   @override
   void initState() {
-    if (globals.keyPermissions.isEmpty) {
-      tabBarFeedItemList.removeAt(2); // remove MyFeed (followings) from tabs
-      _tabNames.removeAt(2);
-    }
+    // if (globals.keyPermissions.isEmpty) {
+    //   tabBarFeedItemList.removeAt(2); // remove MyFeed (followings) from tabs
+    //   _tabNames.removeAt(2);
+    // }
 
-    _tabController =
-        new TabController(length: tabBarFeedItemList.length, vsync: this);
+    _tabController = new TabController(
+        length: globals.keyPermissions.isEmpty
+            ? tabBarFeedItemListUnsignedLogin.length
+            : tabBarFeedItemList.length,
+        vsync: this);
     _tabController.addListener(() {
       if (_tabController.index != _selectedIndex) {
         setState(() {
           _selectedIndex = _tabController.index;
         });
         print("Selected Index: " + _tabController.index.toString());
-        switch (_selectedIndex) {
-          case 0:
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(feedType: "ODFeed"));
-            break;
-          case 1:
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(feedType: "NewFeed"));
-            break;
-
-          case 2:
-            if (globals.keyPermissions.isEmpty) {
+        if (globals.keyPermissions.isEmpty) {
+          switch (_selectedIndex) {
+            case 0:
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "ODFeed"));
+              break;
+            case 1:
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "NewFeed"));
+              break;
+            case 2:
               BlocProvider.of<FeedBloc>(context)
                 ..isFetching = true
                 ..add(FetchFeedEvent(feedType: "HotFeed"));
-            } else {
+              break;
+            case 3:
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "TrendingFeed"));
+              break;
+            default:
+          }
+        } else {
+          switch (_selectedIndex) {
+            case 0:
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "ODFeed"));
+              break;
+            case 1:
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(feedType: "NewFeed"));
+              break;
+            case 2:
               BlocProvider.of<FeedBloc>(context)
                 ..isFetching = true
                 ..add(FetchFeedEvent(feedType: "MyFeed"));
-            }
-            break;
-
-          case 3:
-            if (globals.keyPermissions.isEmpty) {
-              BlocProvider.of<FeedBloc>(context)
-                ..isFetching = true
-                ..add(FetchFeedEvent(feedType: "TrendingFeed"));
-            } else {
+              break;
+            case 3:
               BlocProvider.of<FeedBloc>(context)
                 ..isFetching = true
                 ..add(FetchFeedEvent(feedType: "HotFeed"));
-            }
-            break;
-
-          case 4:
-            if (!globals.keyPermissions.isEmpty) {
+              break;
+            case 4:
               BlocProvider.of<FeedBloc>(context)
                 ..isFetching = true
                 ..add(FetchFeedEvent(feedType: "TrendingFeed"));
-            }
-            break;
-
-          default:
+              break;
+            default:
+          }
         }
       }
     });
@@ -163,15 +220,21 @@ class _FeedMainPageState extends State<FeedMainPage>
           selectedIndex: _selectedIndex),
       tabletBody: FeedTabsDesktop(
           tabBarFeedItemList: tabBarFeedItemList,
+          tabBarFeedItemListUnsignedLogin: tabBarFeedItemListUnsignedLogin,
           tabController: _tabController,
           tabIcons: _tabIcons,
+          tabIconsUnsignedLogin: _tabIconsUnsignedLogin,
           tabNames: _tabNames,
+          tabNamesUnsignedLogin: _tabNamesUnsignedLogin,
           selectedIndex: _selectedIndex),
       desktopBody: FeedTabsDesktop(
           tabBarFeedItemList: tabBarFeedItemList,
+          tabBarFeedItemListUnsignedLogin: tabBarFeedItemListUnsignedLogin,
           tabController: _tabController,
           tabIcons: _tabIcons,
+          tabIconsUnsignedLogin: _tabIconsUnsignedLogin,
           tabNames: _tabNames,
+          tabNamesUnsignedLogin: _tabNamesUnsignedLogin,
           selectedIndex: _selectedIndex),
     );
   }

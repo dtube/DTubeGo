@@ -659,6 +659,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                       //automaticallyImplyLeading: false,
                       elevation: 1,
                       titleSpacing: 0,
+
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -721,7 +722,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                             child:
                                 // show all pages as indexedStack to keep the state of every screen
                                 Padding(
-                              padding: EdgeInsets.only(top: 40),
+                              padding: EdgeInsets.only(top: 60),
                               child: IndexedStack(
                                 children: _screens,
                                 index: _currentIndex,

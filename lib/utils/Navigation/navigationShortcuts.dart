@@ -59,6 +59,7 @@ void navigateToUserDetailPage(
         ),
       ],
       child: UserPage(
+        alreadyFollowing: null,
         username: username,
         ownUserpage: false,
         onPop: onPop,

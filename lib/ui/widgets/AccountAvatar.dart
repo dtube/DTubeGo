@@ -3,6 +3,7 @@ import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
+import 'package:dtube_go/utils/Widgets/ShadowedText.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -59,13 +60,15 @@ class AccountNameBase extends StatelessWidget {
       required this.width,
       required this.height,
       required this.mainStyle,
-      required this.subStyle})
+      required this.subStyle,
+      this.withShadow})
       : super(key: key);
   final String username;
   final double width;
   final double height;
   final TextStyle mainStyle;
   final TextStyle subStyle;
+  bool? withShadow;
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +78,95 @@ class AccountNameBase extends StatelessWidget {
               ? FetchMyAccountDataEvent()
               : FetchAccountDataEvent(username: username)),
         child: AccountName(
-          width: width,
-          height: height,
-          mainStyle: mainStyle,
-          subStyle: subStyle,
-        ));
+            width: width,
+            height: height,
+            mainStyle: mainStyle,
+            subStyle: subStyle,
+            withShadow: withShadow != null ? withShadow! : false));
+  }
+}
+
+class AccountName extends StatefulWidget {
+  AccountName(
+      {Key? key,
+      required this.width,
+      required this.height,
+      required this.mainStyle,
+      required this.subStyle,
+      required this.withShadow})
+      : super(key: key);
+
+  final double width;
+  final double height;
+  final TextStyle mainStyle;
+  final TextStyle subStyle;
+  final bool withShadow;
+  @override
+  State<AccountName> createState() => _AccountNameState();
+}
+
+class _AccountNameState extends State<AccountName> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) {
+        if (state is UserLoadingState) {
+          return Container(
+              width: widget.width,
+              height: widget.height,
+              child: Center(child: ColorChangeCircularProgressIndicator()));
+        } else if (state is UserLoadedState) {
+          return Container(
+              width: widget.width,
+              height: widget.height,
+              child: state.user.jsonString != null &&
+                      state.user.jsonString!.additionals != null &&
+                      state.user.jsonString!.additionals!.displayName != null
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        widget.withShadow
+                            ? ShadowedText(
+                                data: state
+                                    .user.jsonString!.additionals!.displayName!,
+                                style: widget.mainStyle,
+                              )
+                            : Text(
+                                state
+                                    .user.jsonString!.additionals!.displayName!,
+                                overflow: TextOverflow.ellipsis,
+                                style: widget.mainStyle,
+                              ),
+                        widget.withShadow
+                            ? ShadowedText(
+                                data: "@" + state.user.name,
+                                style: widget.subStyle,
+                              )
+                            : Text(
+                                "@" + state.user.name,
+                                overflow: TextOverflow.ellipsis,
+                                style: widget.subStyle,
+                              )
+                      ],
+                    )
+                  : Align(
+                      alignment: Alignment.centerLeft,
+                      child: widget.withShadow
+                          ? ShadowedText(
+                              data: state.user.name,
+                              style: widget.mainStyle,
+                            )
+                          : Text(
+                              state.user.name,
+                              overflow: TextOverflow.ellipsis,
+                              style: widget.mainStyle,
+                            ),
+                    ));
+        }
+        return ColorChangeCircularProgressIndicator();
+      },
+    );
   }
 }
 
@@ -256,71 +343,6 @@ class _AccountIconState extends State<AccountIcon> {
           print(state.toString() + " happened");
           return AvatarLoadingPlaceholder(size: widget.avatarSize);
         }
-      },
-    );
-  }
-}
-
-class AccountName extends StatefulWidget {
-  AccountName(
-      {Key? key,
-      required this.width,
-      required this.height,
-      required this.mainStyle,
-      required this.subStyle})
-      : super(key: key);
-
-  final double width;
-  final double height;
-  final TextStyle mainStyle;
-  final TextStyle subStyle;
-  @override
-  State<AccountName> createState() => _AccountNameState();
-}
-
-class _AccountNameState extends State<AccountName> {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<UserBloc, UserState>(
-      builder: (context, state) {
-        if (state is UserLoadingState) {
-          return Container(
-              width: widget.width,
-              height: widget.height,
-              child: Center(child: ColorChangeCircularProgressIndicator()));
-        } else if (state is UserLoadedState) {
-          return Container(
-              width: widget.width,
-              height: widget.height,
-              child: state.user.jsonString != null &&
-                      state.user.jsonString!.additionals != null &&
-                      state.user.jsonString!.additionals!.displayName != null
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          state.user.jsonString!.additionals!.displayName!,
-                          overflow: TextOverflow.ellipsis,
-                          style: widget.mainStyle,
-                        ),
-                        Text(
-                          "@" + state.user.name,
-                          overflow: TextOverflow.ellipsis,
-                          style: widget.subStyle,
-                        )
-                      ],
-                    )
-                  : Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        state.user.name,
-                        overflow: TextOverflow.ellipsis,
-                        style: widget.mainStyle,
-                      ),
-                    ));
-        }
-        return ColorChangeCircularProgressIndicator();
       },
     );
   }

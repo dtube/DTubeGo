@@ -114,6 +114,7 @@ class FeedList extends StatelessWidget {
         height: 110.h,
         width: 100.w,
         child: Stack(
+          alignment: Alignment.topCenter,
           children: [
             FutureBuilder<bool>(
                 future: getSettings(),
@@ -350,7 +351,7 @@ class FeedList extends StatelessWidget {
     String gpostType,
     int desktopCrossAxisCount,
   ) {
-    if (feed.length < 20) {
+    if (feed.length > 0 && feed.length < 20) {
       BlocProvider.of<FeedBloc>(context)
         ..isFetching = true
         ..add(FetchFeedEvent(
@@ -424,7 +425,7 @@ class FeedList extends StatelessWidget {
     String gpostType,
     int tabletCrossAxisCount,
   ) {
-    if (feed.length < 20) {
+    if (feed.length > 0 && feed.length < 20) {
       BlocProvider.of<FeedBloc>(context)
         ..isFetching = true
         ..add(FetchFeedEvent(

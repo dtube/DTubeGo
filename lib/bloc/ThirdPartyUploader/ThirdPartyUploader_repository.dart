@@ -1,5 +1,26 @@
 import 'package:dio/dio.dart';
 
+// onTap: () async {
+// InputElement uploadInput = FileUploadInputElement();
+// uploadInput.click();
+
+// uploadInput.onChange.listen((e) {
+// final files = uploadInput.files;
+// if (files.length == 1) {
+// final file = files[0];
+// final reader = new FileReader();
+// reader.onLoadEnd.listen((e) {
+// print("loaded: ${file.name}");
+// print("type: ${reader.result.runtimeType}");
+// });
+// reader.onError.listen((e) {
+// print(e);
+// });
+// reader.readAsArrayBuffer(file);
+// }
+// });
+// },
+
 abstract class ThirdPartyUploaderRepository {
   Future<String> getUploadServiceEndpoint(String provider);
 
