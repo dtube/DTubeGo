@@ -49,7 +49,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
       callbackOK: () {},
       titleWidget: FaIcon(
         FontAwesomeIcons.question,
-        size: 20.w,
+        size: 50,
         color: globalBGColor,
       ),
       showTitleWidget: true,

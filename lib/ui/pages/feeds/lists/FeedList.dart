@@ -56,6 +56,7 @@ class FeedList extends StatelessWidget {
     this.topPadding,
     required this.tabletCrossAxisCount,
     required this.desktopCrossAxisCount,
+    this.showBorder,
     Key? key,
   }) : super(key: key);
 
@@ -74,6 +75,7 @@ class FeedList extends StatelessWidget {
   String? _fixedDownvoteWeight;
 
   bool? _autoPauseVideoOnPopup;
+  bool? showBorder;
 
   Future<bool> getSettings() async {
     _hiddenMode = await sec.getShowHidden();
@@ -112,19 +114,27 @@ class FeedList extends StatelessWidget {
     return Center(
       child: Container(
         height: 110.h,
-        width: 100.w,
+        width: width,
+        color: showBorder != null && showBorder!
+            ? globalBlue.withOpacity(0.5)
+            : Colors.transparent,
+        // decoration: BoxDecoration(
+        //     border: Border.all(
+        //         color: showBorder != null && showBorder!
+        //             ? globalBlue
+        //             : Colors.transparent)),
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
             FutureBuilder<bool>(
                 future: getSettings(),
-                builder: (context, snapshot) {
+                builder: (_, snapshot) {
                   if (snapshot.connectionState != ConnectionState.done) {
                     return buildLoading(context);
                   } else {
                     return Container(
                       height: 90.h + topPaddingForFirstEntry!,
-                      width: 100.w,
+                      width: MediaQuery.of(context).size.width,
                       child: BlocBuilder<FeedBloc, FeedState>(
                         builder: (context, state) {
                           if (state is FeedInitialState ||
@@ -361,11 +371,11 @@ class FeedList extends StatelessWidget {
             fromLink: feed[feed.length - 1].link));
     }
     return MasonryGridView.count(
-      // padding: EdgeInsets.only(top: 19.h),
       key: new PageStorageKey(gpostType + 'listview'),
       addAutomaticKeepAlives: true,
       crossAxisCount: desktopCrossAxisCount,
       itemCount: feed.length,
+      padding: EdgeInsets.zero,
       controller: _scrollController
         ..addListener(() {
           if (_scrollController.offset >=
@@ -394,20 +404,20 @@ class FeedList extends StatelessWidget {
               ));
           }
         }),
-      itemBuilder: (BuildContext context, int pos) => PostListCardDesktop(
-        blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
-                (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
-            ? true
-            : false,
-        defaultCommentVotingWeight: _defaultCommentVotingWeight!,
-        defaultPostVotingWeight: _defaultPostVotingWeight!,
-        defaultPostVotingTip: _defaultPostVotingTip!,
-        fixedDownvoteActivated: _fixedDownvoteActivated!,
-        fixedDownvoteWeight: _fixedDownvoteWeight!,
-        autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
-        feedItem: feed[pos],
-        crossAxisCount: desktopCrossAxisCount,
-      ),
+      itemBuilder: (BuildContext _, int pos) => PostListCardDesktop(
+          blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
+                  (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
+              ? true
+              : false,
+          defaultCommentVotingWeight: _defaultCommentVotingWeight!,
+          defaultPostVotingWeight: _defaultPostVotingWeight!,
+          defaultPostVotingTip: _defaultPostVotingTip!,
+          fixedDownvoteActivated: _fixedDownvoteActivated!,
+          fixedDownvoteWeight: _fixedDownvoteWeight!,
+          autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
+          feedItem: feed[pos],
+          crossAxisCount: desktopCrossAxisCount,
+          width: MediaQuery.of(context).size.width * 0.2),
 
       //staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
       mainAxisSpacing: 4.0,
@@ -434,58 +444,62 @@ class FeedList extends StatelessWidget {
             fromAuthor: feed[feed.length - 1].author,
             fromLink: feed[feed.length - 1].link));
     }
-    return MasonryGridView.count(
-      // padding: EdgeInsets.only(top: 19.h),
-      key: new PageStorageKey(gpostType + 'listview'),
-      addAutomaticKeepAlives: true,
-      crossAxisCount: tabletCrossAxisCount,
-      itemCount: feed.length,
-      controller: _scrollController
-        ..addListener(() {
-          if (_scrollController.offset >=
-                  _scrollController.position.maxScrollExtent &&
-              !BlocProvider.of<FeedBloc>(context).isFetching &&
-              feedType != "UserFeed" &&
-              feedType != "tagSearch") {
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(
+    return Scrollbar(
+      thumbVisibility: true,
+      controller: _scrollController,
+      child: MasonryGridView.count(
+        // padding: EdgeInsets.only(top: 19.h),
+        key: new PageStorageKey(gpostType + 'listview'),
+        addAutomaticKeepAlives: true,
+        crossAxisCount: tabletCrossAxisCount,
+        itemCount: feed.length,
+        controller: _scrollController
+          ..addListener(() {
+            if (_scrollController.offset >=
+                    _scrollController.position.maxScrollExtent &&
+                !BlocProvider.of<FeedBloc>(context).isFetching &&
+                feedType != "UserFeed" &&
+                feedType != "tagSearch") {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(
+                    //feedType: widget.feedType,
+                    feedType: feedType,
+                    fromAuthor: feed[feed.length - 1].author,
+                    fromLink: feed[feed.length - 1].link));
+            }
+            if (_scrollController.offset <=
+                    _scrollController.position.minScrollExtent &&
+                !BlocProvider.of<FeedBloc>(context).isFetching &&
+                feedType != "UserFeed" &&
+                feedType != "tagSearch") {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(
                   //feedType: widget.feedType,
                   feedType: feedType,
-                  fromAuthor: feed[feed.length - 1].author,
-                  fromLink: feed[feed.length - 1].link));
-          }
-          if (_scrollController.offset <=
-                  _scrollController.position.minScrollExtent &&
-              !BlocProvider.of<FeedBloc>(context).isFetching &&
-              feedType != "UserFeed" &&
-              feedType != "tagSearch") {
-            BlocProvider.of<FeedBloc>(context)
-              ..isFetching = true
-              ..add(FetchFeedEvent(
-                //feedType: widget.feedType,
-                feedType: feedType,
-              ));
-          }
-        }),
-      itemBuilder: (BuildContext context, int pos) => PostListCardDesktop(
-        blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
-                (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
-            ? true
-            : false,
-        defaultCommentVotingWeight: _defaultCommentVotingWeight!,
-        defaultPostVotingWeight: _defaultPostVotingWeight!,
-        defaultPostVotingTip: _defaultPostVotingTip!,
-        fixedDownvoteActivated: _fixedDownvoteActivated!,
-        fixedDownvoteWeight: _fixedDownvoteWeight!,
-        autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
-        feedItem: feed[pos],
-        crossAxisCount: tabletCrossAxisCount,
-      ),
+                ));
+            }
+          }),
+        itemBuilder: (BuildContext context, int pos) => PostListCardDesktop(
+            blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
+                    (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
+                ? true
+                : false,
+            defaultCommentVotingWeight: _defaultCommentVotingWeight!,
+            defaultPostVotingWeight: _defaultPostVotingWeight!,
+            defaultPostVotingTip: _defaultPostVotingTip!,
+            fixedDownvoteActivated: _fixedDownvoteActivated!,
+            fixedDownvoteWeight: _fixedDownvoteWeight!,
+            autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
+            feedItem: feed[pos],
+            crossAxisCount: tabletCrossAxisCount,
+            width: MediaQuery.of(context).size.width * 0.2),
 
-      //staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
-      mainAxisSpacing: 4.0,
-      crossAxisSpacing: 4.0,
+        //staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+      ),
     );
 
     //Text(pos.toString())

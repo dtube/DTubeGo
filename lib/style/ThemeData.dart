@@ -297,6 +297,13 @@ final ThemeData dtubeDarkTheme = ThemeData(
     size: 24.0,
   ),
 
+  scrollbarTheme: ScrollbarThemeData(
+      thumbVisibility: MaterialStateProperty.all(true),
+      thickness: MaterialStateProperty.all(10),
+      thumbColor: MaterialStateProperty.all(Color.fromARGB(255, 118, 137, 182)),
+      radius: const Radius.circular(10),
+      minThumbLength: 100),
+
   sliderTheme: SliderThemeData(
     activeTrackColor: globalTextColor,
     inactiveTrackColor: Color(0x3d212121),

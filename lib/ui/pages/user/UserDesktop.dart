@@ -140,105 +140,123 @@ class _UserPageDesktopState extends State<UserPageDesktop> {
             alignment: Alignment.topCenter,
             child: Padding(
               padding: EdgeInsets.only(top: 200),
-              child: Scrollbar(
-                thumbVisibility: true,
-                controller: _scrollControllerPosts,
-                child: SingleChildScrollView(
-                    controller: _scrollControllerPosts,
-                    child: Column(
-                      children: [
-                        Text("Uploads",
-                            style: Theme.of(context).textTheme.headline1),
-                        BlocProvider<FeedBloc>(
-                          create: (context) =>
-                              FeedBloc(repository: FeedRepositoryImpl())
-                                ..add(FetchUserFeedEvent(username: user.name)),
-                          child: Container(
-                            height: 50.h,
+              child: SingleChildScrollView(
+                  child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Uploads",
+                        style: Theme.of(context).textTheme.headline1),
+                  ),
+                  BlocProvider<FeedBloc>(
+                    create: (context) =>
+                        FeedBloc(repository: FeedRepositoryImpl())
+                          ..add(FetchUserFeedEvent(username: user.name)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 50.h,
+                        child: FeedList(
+                            desktopCrossAxisCount: 4,
+                            tabletCrossAxisCount: 2,
+                            feedType: 'UserFeed',
+                            username: user.name,
+                            showAuthor: false,
+                            largeFormat: false,
+                            heightPerEntry: 30.h,
                             width: 80.w,
+                            topPaddingForFirstEntry: 0,
+                            sidepadding: 5.w,
+                            bottompadding: 0.h,
+                            scrollCallback: (bool) {},
+                            enableNavigation: true,
+                            showBorder: true
+                            // header: "Regular Uploads"
+                            ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Moments",
+                        style: Theme.of(context).textTheme.headline1),
+                  ),
+                  BlocProvider<FeedBloc>(
+                    create: (context) =>
+                        FeedBloc(repository: FeedRepositoryImpl())
+                          ..add(FetchMomentsOfUserEvent(
+                              feedType: "NewUserMoments", username: user.name)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 50.h,
+                        child: FeedList(
+                            desktopCrossAxisCount: 4,
+                            tabletCrossAxisCount: 2,
+                            feedType: 'NewUserMoments',
+                            username: user.name,
+                            showAuthor: false,
+                            largeFormat: false,
+                            heightPerEntry: 30.h,
+                            width: 80.w,
+                            topPaddingForFirstEntry: 0,
+                            sidepadding: 5.w,
+                            bottompadding: 0.h,
+                            scrollCallback: (bool) {},
+                            enableNavigation: true,
+                            showBorder: true
+                            //header: "Moments"
+                            ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: BlocProvider<FeedBloc>(
+                      create: (context) =>
+                          FeedBloc(repository: FeedRepositoryImpl())
+                            ..add(FetchSuggestedUsersForUserHistory(
+                                username: user.name)),
+                      child: SuggestedChannels(avatarSize: 100),
+                    ),
+                  ),
+                  user.followers != null
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Container(
+                            width: 50.w,
+                            height: 30.h,
                             child: SingleChildScrollView(
-                              child: FeedList(
-                                desktopCrossAxisCount: 4,
-                                tabletCrossAxisCount: 2,
-                                feedType: 'UserFeed',
-                                username: user.name,
-                                showAuthor: false,
-                                largeFormat: false,
-                                heightPerEntry: 30.h,
-                                width: 150.w,
-                                topPaddingForFirstEntry: 0,
-                                sidepadding: 5.w,
-                                bottompadding: 0.h,
-                                scrollCallback: (bool) {},
-                                enableNavigation: true,
-                                // header: "Regular Uploads"
-                              ),
-                            ),
-                          ),
-                        ),
-                        Text("Moments",
-                            style: Theme.of(context).textTheme.headline1),
-                        BlocProvider<FeedBloc>(
-                          create: (context) =>
-                              FeedBloc(repository: FeedRepositoryImpl())
-                                ..add(FetchMomentsOfUserEvent(
-                                    feedType: "NewUserMoments",
-                                    username: user.name)),
-                          child: Container(
-                            height: 50.h,
-                            width: 80.w,
-                            child: Scrollbar(
-                              controller: _scrollControllerMoments,
-                              thumbVisibility: true,
-                              child: SingleChildScrollView(
-                                controller: _scrollControllerMoments,
-                                child: FeedList(
-                                  desktopCrossAxisCount: 4,
-                                  tabletCrossAxisCount: 2,
-                                  feedType: 'NewUserMoments',
-                                  username: user.name,
-                                  showAuthor: false,
-                                  largeFormat: false,
-                                  heightPerEntry: 30.h,
-                                  width: 150.w,
-                                  topPaddingForFirstEntry: 0,
-                                  sidepadding: 5.w,
-                                  bottompadding: 0.h,
-                                  scrollCallback: (bool) {},
-                                  enableNavigation: true,
-                                  //header: "Moments"
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        BlocProvider<FeedBloc>(
-                          create: (context) =>
-                              FeedBloc(repository: FeedRepositoryImpl())
-                                ..add(FetchSuggestedUsersForUserHistory(
-                                    username: user.name)),
-                          child: SuggestedChannels(avatarSize: 100),
-                        ),
-                        user.followers != null
-                            ? UserList(
+                              child: UserList(
                                 userlist: user.followers!,
                                 title: "Followers",
                                 avatarSize: 100,
                                 showCount: true,
-                              )
-                            : SizedBox(height: 0),
-                        user.follows != null
-                            ? UserList(
+                              ),
+                            ),
+                          ),
+                        )
+                      : SizedBox(height: 0),
+                  user.follows != null
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Container(
+                            width: 50.w,
+                            height: 30.h,
+                            child: SingleChildScrollView(
+                              child: UserList(
                                 userlist: user.follows!,
                                 title: "Following",
                                 avatarSize: 100,
                                 showCount: true,
-                              )
-                            : SizedBox(height: 0),
-                        SizedBox(height: 10.h)
-                      ],
-                    )),
-              ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : SizedBox(height: 0),
+                  SizedBox(height: 10.h)
+                ],
+              )),
             ),
           ),
           user.jsonString != null &&

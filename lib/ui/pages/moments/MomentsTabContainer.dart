@@ -4,7 +4,7 @@ import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/moments/MomentsList.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
-import 'package:dtube_go/utils/Widgets/ResponsiveLayout.dart';
+import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -127,7 +127,7 @@ class _MomentsPageState extends State<MomentsPage>
                   controller: _tabController,
                 ),
                 ResponsiveLayout(
-                  portrait: TabBarWithPosition(
+                  mobileBody: TabBarWithPosition(
                     tabIcons: _tabIcons,
                     iconSize: globalIconSizeMedium,
                     tabController: _tabController,
@@ -138,7 +138,16 @@ class _MomentsPageState extends State<MomentsPage>
                         ? globalIconSizeSmall * 2
                         : globalIconSizeSmall * 4,
                   ),
-                  landscape: TabBarWithPosition(
+                  desktopBody: TabBarWithPosition(
+                    tabIcons: _tabIcons,
+                    iconSize: globalIconSizeMedium,
+                    tabController: _tabController,
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.zero,
+                    rotation: 3,
+                    menuSize: 80.h,
+                  ),
+                  tabletBody: TabBarWithPosition(
                     tabIcons: _tabIcons,
                     iconSize: globalIconSizeMedium,
                     tabController: _tabController,

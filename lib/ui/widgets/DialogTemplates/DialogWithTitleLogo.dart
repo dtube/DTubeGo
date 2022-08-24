@@ -1,7 +1,10 @@
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogoDesktop.dart';
+import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogoMobile.dart';
+import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:flutter/material.dart';
 
-class PopUpDialogWithTitleLogo extends StatefulWidget {
+class PopUpDialogWithTitleLogo extends StatelessWidget {
   PopUpDialogWithTitleLogo(
       {Key? key,
       required this.child,
@@ -21,54 +24,29 @@ class PopUpDialogWithTitleLogo extends StatefulWidget {
   final bool showTitleWidget;
 
   @override
-  _PopUpDialogWithTitleLogoState createState() =>
-      _PopUpDialogWithTitleLogoState();
-}
-
-class _PopUpDialogWithTitleLogoState extends State<PopUpDialogWithTitleLogo> {
-  @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      child: contentBox(context),
-    );
-  }
-
-  contentBox(context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-            padding: EdgeInsets.only(top: widget.titleWidgetSize),
-            margin: EdgeInsets.only(top: widget.titleWidgetSize / 2),
-            decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                color: globalBGColor,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black,
-                      offset: Offset(0, 10),
-                      blurRadius: 10),
-                ]),
-            child: widget.child),
-        widget.showTitleWidget
-            ? Positioned(
-                left: 20,
-                right: 20,
-                child: CircleAvatar(
-                  backgroundColor: globalAlmostWhite,
-                  radius: 50,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(50)),
-                      child: widget.titleWidget),
-                ),
-              )
-            : Container(),
-      ],
+    return ResponsiveLayout(
+      desktopBody: PopUpDialogWithTitleLogoDesktop(
+          child: child,
+          titleWidget: titleWidget,
+          callbackOK: callbackOK,
+          titleWidgetPadding: titleWidgetPadding,
+          titleWidgetSize: titleWidgetSize,
+          showTitleWidget: showTitleWidget),
+      mobileBody: PopUpDialogWithTitleLogoMobile(
+          child: child,
+          titleWidget: titleWidget,
+          callbackOK: callbackOK,
+          titleWidgetPadding: titleWidgetPadding,
+          titleWidgetSize: titleWidgetSize,
+          showTitleWidget: showTitleWidget),
+      tabletBody: PopUpDialogWithTitleLogoDesktop(
+          child: child,
+          titleWidget: titleWidget,
+          callbackOK: callbackOK,
+          titleWidgetPadding: titleWidgetPadding,
+          titleWidgetSize: titleWidgetSize,
+          showTitleWidget: showTitleWidget),
     );
   }
 }
