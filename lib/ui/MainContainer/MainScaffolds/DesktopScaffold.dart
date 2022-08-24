@@ -11,7 +11,7 @@ import 'package:dtube_go/ui/pages/wallet/WalletTabContainer.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/ui/pages/Explore/GenreBase.dart';
-import 'package:dtube_go/ui/pages/upload/UploadPresetSelection.dart';
+import 'package:dtube_go/ui/pages/upload/PresetSelection/UploadPresetSelection.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -369,49 +369,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  BlocBuilder<AppStateBloc, AppState>(
-                                      builder: (context, state) {
-                                    if (state is UploadStartedState) {
-                                      return DTubeLogoPulseWave(
-                                          size: globalIconSizeBig,
-                                          progressPercent: 10);
-                                    } else if (state is UploadProcessingState) {
-                                      return DTubeLogoPulseWave(
-                                          size: globalIconSizeBig,
-                                          progressPercent:
-                                              state.progressPercent);
-                                    } else if (state is UploadFinishedState) {
-                                      return Center(
-                                        child: new BorderedIcon(
-                                          icon: FontAwesomeIcons.check,
-                                          color: Colors.green,
-                                          borderColor: Colors.black,
-                                          size: globalIconSizeBig,
-                                        ),
-                                      );
-                                    } else if (state is UploadFailedState) {
-                                      return Center(
-                                        child: new BorderedIcon(
-                                          icon: FontAwesomeIcons.xmark,
-                                          color: globalRed,
-                                          borderColor: Colors.black,
-                                          size: globalIconSizeBig,
-                                        ),
-                                      );
-                                    } else {
-                                      return Center(
-                                        child: new BorderedIcon(
-                                          icon: FontAwesomeIcons.plus,
-                                          color:
-                                              globals.keyPermissions.contains(4)
-                                                  ? globalAlmostWhite
-                                                  : Colors.grey,
-                                          borderColor: Colors.black,
-                                          size: globalIconSizeBig,
-                                        ),
-                                      );
-                                    }
-                                  }),
+                                  UploadButton(iconSize: globalIconSizeBig),
                                   Text('Upload'),
                                 ]),
                             onTap: () {
@@ -663,46 +621,127 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(
-                            width: 1,
+                          Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: InkWell(
+                              child: UploadButton(iconSize: 24),
+                              onTap: () {
+                                _screens.removeAt(3);
+
+                                _screens.insert(
+                                    3,
+                                    MomentsPage(
+                                      key: UniqueKey(),
+                                      play: false,
+                                    ));
+                                if (globals.keyPermissions.contains(4)) {
+                                  // if there is a current background upload running
+                                  //  show snackbar and do not navigate to the upload screen
+                                  if (BlocProvider.of<AppStateBloc>(context)
+                                          .state is UploadStartedState ||
+                                      BlocProvider.of<AppStateBloc>(context)
+                                          .state is UploadProcessingState) {
+                                    showCustomFlushbarOnError(
+                                        "please wait until upload is finished",
+                                        context);
+                                  }
+                                  // if the most recent background upload task is finished
+                                  // reset UploadState and navigate to the upload screen
+                                  if (BlocProvider.of<AppStateBloc>(context)
+                                          .state is UploadFinishedState ||
+                                      BlocProvider.of<AppStateBloc>(context)
+                                          .state is UploadFailedState) {
+                                    BlocProvider.of<AppStateBloc>(context).add(
+                                        UploadStateChangedEvent(
+                                            uploadState: UploadInitialState()));
+                                    _screens.removeAt(2);
+                                    _screens.insert(
+                                        2,
+                                        new
+                                        //UploaderMainPage(
+                                        //callback: uploaderCallback,
+                                        UploadPresetSelection(
+                                          uploaderCallback: uploaderCallback,
+                                          key: UniqueKey(),
+                                        ));
+                                  }
+                                  // if there is no background upload task running or recently finished
+                                  if (BlocProvider.of<AppStateBloc>(context)
+                                      .state is UploadInitialState) {
+                                    // navigate to the uploader screen
+                                    // if the user navigated to the uploader screen
+                                    // reset uploader page
+                                    _screens.removeAt(2);
+                                    _screens.insert(
+                                        2,
+                                        new
+                                        //UploaderMainPage(
+                                        //callback: uploaderCallback,
+                                        UploadPresetSelection(
+                                          uploaderCallback: uploaderCallback,
+                                          key: UniqueKey(),
+                                        ));
+                                  }
+                                } else {
+                                  showCustomFlushbarOnError(
+                                      "you need to be signed in to upload content",
+                                      context);
+                                }
+                                setState(() {
+                                  _currentIndex = 2;
+                                });
+                              },
+                            ),
                           ),
-                          globals.keyPermissions.isEmpty
-                              ? Padding(
-                                  padding: EdgeInsets.only(right: 20),
-                                  child: ElevatedButton(
-                                      onPressed: () async {
-                                        BlocProvider.of<AuthBloc>(context).add(
-                                            SignOutEvent(context: context));
-                                        //do stuff
-                                      },
-                                      child: Text(
-                                        "Join / Login",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6,
-                                      )),
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    GestureDetector(
-                                        child: BalanceOverviewBase(),
-                                        onTap: () {
-                                          BlocProvider.of<UserBloc>(context)
-                                              .add(FetchDTCVPEvent());
-                                        }),
-                                    BlocProvider<NotificationBloc>(
-                                      create: (context) => NotificationBloc(
-                                          repository:
-                                              NotificationRepositoryImpl()),
-                                      child: NotificationButton(
-                                          iconSize: globalIconSizeMedium),
-                                    ),
-                                    SizedBox(
-                                      width: 20,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              globals.keyPermissions.isEmpty
+                                  ? Padding(
+                                      padding: EdgeInsets.only(right: 20),
+                                      child: ElevatedButton(
+                                          onPressed: () async {
+                                            BlocProvider.of<AuthBloc>(context)
+                                                .add(SignOutEvent(
+                                                    context: context));
+                                            //do stuff
+                                          },
+                                          child: Text(
+                                            "Join / Login",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6,
+                                          )),
                                     )
-                                  ],
+                                  : Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        GestureDetector(
+                                            child: BalanceOverviewBase(),
+                                            onTap: () {
+                                              BlocProvider.of<UserBloc>(context)
+                                                  .add(FetchDTCVPEvent());
+                                            }),
+                                        BlocProvider<NotificationBloc>(
+                                          create: (context) => NotificationBloc(
+                                              repository:
+                                                  NotificationRepositoryImpl()),
+                                          child:
+                                              NotificationButton(iconSize: 24),
+                                        ),
+                                      ],
+                                    ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 10, right: 20),
+                                child: IconButton(
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.magnifyingGlass,
+                                  ),
+                                  onPressed: () {},
                                 ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -734,5 +773,51 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
 
               return NewsScreenLoading(crossAxisCount: 4);
             }));
+  }
+}
+
+class UploadButton extends StatelessWidget {
+  UploadButton({Key? key, required this.iconSize}) : super(key: key);
+
+  double iconSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AppStateBloc, AppState>(builder: (context, state) {
+      if (state is UploadStartedState) {
+        return DTubeLogoPulseWave(size: globalIconSizeBig, progressPercent: 10);
+      } else if (state is UploadProcessingState) {
+        return DTubeLogoPulseWave(
+            size: globalIconSizeBig, progressPercent: state.progressPercent);
+      } else if (state is UploadFinishedState) {
+        return Center(
+          child: new BorderedIcon(
+              icon: FontAwesomeIcons.check,
+              color: Colors.green,
+              borderColor: Colors.black,
+              size: iconSize),
+        );
+      } else if (state is UploadFailedState) {
+        return Center(
+          child: new BorderedIcon(
+            icon: FontAwesomeIcons.xmark,
+            color: globalRed,
+            borderColor: Colors.black,
+            size: iconSize,
+          ),
+        );
+      } else {
+        return Center(
+          child: new BorderedIcon(
+            icon: FontAwesomeIcons.arrowUpFromBracket,
+            color: globals.keyPermissions.contains(4)
+                ? globalAlmostWhite
+                : Colors.grey,
+            borderColor: Colors.black,
+            size: iconSize,
+          ),
+        );
+      }
+    });
   }
 }

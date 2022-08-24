@@ -4,7 +4,7 @@ import 'package:dtube_go/ui/pages/News/NewsPage.dart';
 import 'package:dtube_go/ui/pages/settings/HiveSignerForm.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/ui/pages/Explore/GenreBase.dart';
-import 'package:dtube_go/ui/pages/upload/UploadPresetSelection.dart';
+import 'package:dtube_go/ui/pages/upload/PresetSelection/UploadPresetSelection.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';

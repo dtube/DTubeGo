@@ -352,7 +352,9 @@ class _PostDataState extends State<PostData> {
                 width: widget.width,
                 author: widget.feedItem.author,
                 dist: widget.feedItem.dist,
-                dur: int.parse(widget.feedItem.jsonString!.dur),
+                dur: int.tryParse(widget.feedItem.jsonString!.dur) != null
+                    ? int.tryParse(widget.feedItem.jsonString!.dur)!
+                    : 0,
                 oc: widget.feedItem.jsonString!.oc == 1,
                 tag: widget.feedItem.jsonString!.tag,
                 ts: widget.feedItem.ts,
@@ -364,7 +366,9 @@ class _PostDataState extends State<PostData> {
                   width: widget.width,
                   author: widget.feedItem.author,
                   dist: widget.feedItem.dist,
-                  dur: int.parse(widget.feedItem.jsonString!.dur),
+                  dur: int.tryParse(widget.feedItem.jsonString!.dur) != null
+                      ? int.tryParse(widget.feedItem.jsonString!.dur)!
+                      : 0,
                   oc: widget.feedItem.jsonString!.oc == 1,
                   tag: widget.feedItem.jsonString!.tag,
                   ts: widget.feedItem.ts,
@@ -462,15 +466,21 @@ class PostInfoDetailsRow extends StatelessWidget {
                   TimeAgo.timeInAgoTSShort(ts),
                   style: Theme.of(context).textTheme.bodyText2,
                 ),
-                Text(
-                  ' - ' +
-                      (new Duration(seconds: dur).inHours == 0
-                          ? (new Duration(seconds: dur).inMinutes).toString() +
-                              ' min'
-                          : (new Duration(seconds: dur).inHours).toString() +
-                              ' h'),
-                  style: Theme.of(context).textTheme.bodyText2,
-                ),
+                dur > 0
+                    ? Text(
+                        ' - ' +
+                            (new Duration(seconds: dur).inHours == 0
+                                ? (new Duration(seconds: dur).inMinutes)
+                                        .toString() +
+                                    ' min'
+                                : (new Duration(seconds: dur).inHours)
+                                        .toString() +
+                                    ' h'),
+                        style: Theme.of(context).textTheme.bodyText2,
+                      )
+                    : SizedBox(
+                        width: 0,
+                      ),
               ],
             ),
             Row(
