@@ -737,7 +737,29 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                   icon: FaIcon(
                                     FontAwesomeIcons.magnifyingGlass,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    _screens.removeAt(3);
+
+                                    _screens.insert(
+                                        3,
+                                        MomentsPage(
+                                          key: UniqueKey(),
+                                          play: false,
+                                        ));
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return MultiBlocProvider(providers: [
+                                        BlocProvider<SearchBloc>(
+                                            create: (context) => SearchBloc(
+                                                repository:
+                                                    SearchRepositoryImpl())),
+                                        BlocProvider(
+                                            create: (context) => FeedBloc(
+                                                repository:
+                                                    FeedRepositoryImpl())),
+                                      ], child: SearchScreen());
+                                    }));
+                                  },
                                 ),
                               ),
                             ],

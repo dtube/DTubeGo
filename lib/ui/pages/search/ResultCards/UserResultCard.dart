@@ -12,6 +12,9 @@ import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:dtube_go/utils/Strings/shortBalanceStrings.dart';
 import 'package:flutter/material.dart';
 
+// TODO: continue here with responsive layout for Result User Card
+// and make also a responsive tablet layout for SearchScreenDesktop (to increase crossAxiscount in search results)
+
 class UserResultCard extends StatefulWidget {
   const UserResultCard({
     Key? key,
