@@ -879,7 +879,7 @@ class TitleWidgetForRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: globals.mobileMode ? 55.w : 10.w,
+      width: 55.w,
       child: InkWell(
         onTap: () {
           navigateToPostDetailPage(

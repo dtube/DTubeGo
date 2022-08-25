@@ -213,11 +213,15 @@ class _FeedMainPageState extends State<FeedMainPage>
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobileBody: FeedTabs(
-          tabBarFeedItemList: tabBarFeedItemList,
-          tabController: _tabController,
-          tabIcons: _tabIcons,
-          tabNames: _tabNames,
-          selectedIndex: _selectedIndex),
+        tabBarFeedItemList: tabBarFeedItemList,
+        tabBarFeedItemListUnsignedLogin: tabBarFeedItemListUnsignedLogin,
+        tabController: _tabController,
+        tabIcons: _tabIcons,
+        tabIconsUnsignedLogin: _tabIconsUnsignedLogin,
+        tabNames: _tabNames,
+        tabNamesUnsignedLogin: _tabNamesUnsignedLogin,
+        selectedIndex: _selectedIndex,
+      ),
       tabletBody: FeedTabsDesktop(
         tabBarFeedItemList: tabBarFeedItemList,
         tabBarFeedItemListUnsignedLogin: tabBarFeedItemListUnsignedLogin,

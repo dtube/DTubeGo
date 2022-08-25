@@ -1,9 +1,12 @@
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/ui/pages/search/ResultCards/PostResultCardDesktop.dart';
+import 'package:dtube_go/ui/pages/search/ResultCards/UserResultCardTablet.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:dtube_go/ui/pages/feeds/cards/PostListCardLarge.dart';
 import 'package:dtube_go/utils/Strings/friendlyTimestamp.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:async';
 import 'package:dtube_go/bloc/search/search_bloc_full.dart';
@@ -14,16 +17,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SearchScreenMobile extends StatefulWidget {
+class SearchScreenTablet extends StatefulWidget {
   @override
-  SearchScreenMobileState createState() => SearchScreenMobileState();
+  SearchScreenTabletState createState() => SearchScreenTabletState();
 
-  SearchScreenMobile({
+  SearchScreenTablet({
     Key? key,
   }) : super(key: key);
 }
 
-class SearchScreenMobileState extends State<SearchScreenMobile> {
+class SearchScreenTabletState extends State<SearchScreenTablet> {
   late List<String> blockedUsers;
   late SearchBloc searchBloc;
   late TextEditingController searchTextController;
@@ -183,7 +186,7 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                     alignment: Alignment.topCenter,
                     child: Center(
                         child: DtubeLogoPulseWithSubtitle(
-                            subtitle: "loading results", size: 20.w))));
+                            subtitle: "loading results", size: 10.w))));
           } else {
             if (snapshot.hasError)
               return Scaffold(
@@ -193,7 +196,7 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                       alignment: Alignment.topCenter,
                       child: Center(
                           child: DtubeLogoPulseWithSubtitle(
-                              subtitle: "an error happened... ", size: 20.w))));
+                              subtitle: "an error happened... ", size: 10.w))));
             else
               return Scaffold(
                 appBar: dtubeSubAppBar(true, "", context, null),
@@ -206,7 +209,7 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                       child: Column(
                         children: [
                           Container(
-                            width: 95.w,
+                            width: 75.w,
                             child: DTubeFormCard(
                               avoidAnimation: true,
                               waitBeforeFadeIn: Duration(seconds: 0),
@@ -217,7 +220,7 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     SizedBox(
-                                      width: 60.w,
+                                      width: 35.w,
                                       child: TextField(
                                         autofocus: true,
                                         controller: searchTextController,
@@ -283,20 +286,14 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
   }
 
   Widget buildLoading() {
-    return Container(
-      height: 400,
-      child: DtubeLogoPulseWithSubtitle(
-        subtitle: "searching..",
-        size: 30.w,
-      ),
+    return DtubeLogoPulseWithSubtitle(
+      subtitle: "searching..",
+      size: 20.w,
     );
   }
 
   Widget buildBlank() {
-    return Container(
-      height: 400,
-      child: SizedBox(height: 0),
-    );
+    return SizedBox(height: 0);
   }
 
   Widget buildErrorUi(String message) {
@@ -313,17 +310,20 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
 
   Widget buildResultsListForSearchResults(SearchResults searchResults) {
     return Container(
-      height: 90.h,
+      height: 80.h,
       alignment: Alignment.topLeft,
-      child: ListView.builder(
+      child: MasonryGridView.count(
+        crossAxisCount:
+            2, // TODO: make the main widget also for tablet and increase this to 6
         padding: EdgeInsets.zero,
+        crossAxisSpacing: 10,
         itemCount: searchResults.hits!.hits!.length,
         itemBuilder: (ctx, pos) {
           switch (_searchEntity) {
             case "Users":
               if (!blockedUsers
                   .contains(searchResults.hits!.hits![pos].sSource!.name!)) {
-                return UserResultCard(
+                return UserResultCardTablet(
                   id: searchResults.hits!.hits![pos].sId,
                   name: searchResults.hits!.hits![pos].sSource!.name!,
                   dtcValue:
@@ -350,11 +350,9 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                 return BlocProvider<UserBloc>(
                   create: (context) =>
                       UserBloc(repository: UserRepositoryImpl()),
-                  child: PostListCardLarge(
+                  child: PostResultCardDesktop(
                     alreadyVoted:
                         searchResults.hits!.hits![pos].sSource!.alreadyVoted!,
-                    alreadyVotedDirection: searchResults
-                        .hits!.hits![pos].sSource!.alreadyVotedDirection!,
                     author: searchResults.hits!.hits![pos].sSource!.author!,
                     blur: (_nsfwMode == 'Blur' &&
                                 searchResults.hits!.hits![pos].sSource!
@@ -371,48 +369,39 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                     defaultPostVotingWeight: _defaultPostVotingWeight!,
                     fixedDownvoteActivated: _fixedDownvoteActivated!,
                     fixedDownvoteWeight: _fixedDownvoteWeight!,
-                    description: searchResults
-                        .hits!.hits![pos].sSource!.jsonstring!.desc!,
-                    downvotesCount: searchResults
-                        .hits!.hits![pos].sSource!.downvotes!.length,
-                    dtcValue:
-                        (searchResults.hits!.hits![pos].sSource!.dist! / 100)
-                                .round()
-                                .toString() +
-                            " DTC",
-                    duration: new Duration(
-                        seconds: int.tryParse(searchResults.hits!.hits![pos]
-                                    .sSource!.jsonstring!.dur!) !=
-                                null
-                            ? int.parse(searchResults
-                                .hits!.hits![pos].sSource!.jsonstring!.dur!)
-                            : 0),
-                    indexOfList: pos,
+                    dist: searchResults.hits!.hits![pos].sSource!.dist != null
+                        ? searchResults.hits!.hits![pos].sSource!.dist!
+                        : 0,
+                    dur: searchResults
+                                .hits!.hits![pos].sSource!.jsonstring!.dur !=
+                            null
+                        ? searchResults
+                            .hits!.hits![pos].sSource!.jsonstring!.dur!
+                        : "",
                     link: searchResults.hits!.hits![pos].sSource!.link!,
-                    mainTag: searchResults
+                    tag: searchResults
                         .hits!.hits![pos].sSource!.jsonstring!.tag!,
                     oc: searchResults
-                                .hits!.hits![pos].sSource!.jsonstring!.oc ==
-                            1
-                        ? true
-                        : false,
-                    publishDate: TimeAgo.timeInAgoTSShort(
-                        searchResults.hits!.hits![pos].sSource!.ts!),
-                    thumbnailUrl:
-                        searchResults.hits!.hits![pos].sSource!.thumbUrl,
+                                .hits!.hits![pos].sSource!.jsonstring!.oc !=
+                            null
+                        ? searchResults
+                            .hits!.hits![pos].sSource!.jsonstring!.oc!
+                        : 0,
+                    ts: searchResults.hits!.hits![pos].sSource!.ts!,
+                    thumbUrl: searchResults.hits!.hits![pos].sSource!.thumbUrl,
                     title: searchResults
                         .hits!.hits![pos].sSource!.jsonstring!.title!,
-                    upvotesCount:
-                        searchResults.hits!.hits![pos].sSource!.upvotes!.length,
                     videoSource:
                         searchResults.hits!.hits![pos].sSource!.videoSource,
                     videoUrl: searchResults.hits!.hits![pos].sSource!.videoUrl,
                     autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
+                    crossAxisCount: 3,
+                    width: 30.w,
                   ),
                 );
               }
             default:
-              return UserResultCard(
+              return UserResultCardTablet(
                 id: searchResults.hits!.hits![pos].sId,
                 name: searchResults.hits!.hits![pos].sSource!.name!,
                 dtcValue:
@@ -429,8 +418,10 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
     return Container(
       height: 800,
       alignment: Alignment.topLeft,
-      child: ListView.builder(
+      child: MasonryGridView.count(
+          crossAxisCount: 2,
           padding: EdgeInsets.zero,
+          crossAxisSpacing: 10,
           itemCount: searchResults.length,
           itemBuilder: (ctx, pos) {
             if (searchResults[pos].alreadyVoted! &&
@@ -442,13 +433,11 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
             } else {
               return BlocProvider<UserBloc>(
                 create: (context) => UserBloc(repository: UserRepositoryImpl()),
-                child: PostListCardLarge(
+                child: PostResultCardDesktop(
                   alreadyVoted: searchResults[pos].alreadyVoted!,
-                  alreadyVotedDirection:
-                      searchResults[pos].alreadyVotedDirection!,
-                  author: searchResults[pos].author,
+                  author: searchResults[pos].author!,
                   blur: (_nsfwMode == 'Blur' &&
-                              searchResults[pos].jsonString?.nsfw == 1) ||
+                              searchResults[pos].jsonString!.nsfw == 1) ||
                           (_hiddenMode == 'Blur' &&
                               searchResults[pos].summaryOfVotes < 0)
                       ? true
@@ -458,29 +447,25 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                   defaultPostVotingWeight: _defaultPostVotingWeight!,
                   fixedDownvoteActivated: _fixedDownvoteActivated!,
                   fixedDownvoteWeight: _fixedDownvoteWeight!,
-                  description: searchResults[pos].jsonString!.desc!,
-                  downvotesCount: searchResults[pos].downvotes != null
-                      ? searchResults[pos].downvotes!.length
+                  dist: searchResults[pos].dist != null
+                      ? searchResults[pos].dist
                       : 0,
-                  dtcValue: (searchResults[pos].dist / 100).round().toString() +
-                      " DTC",
-                  duration: new Duration(
-                      seconds:
-                          int.tryParse(searchResults[pos].jsonString!.dur) !=
-                                  null
-                              ? int.parse(searchResults[pos].jsonString!.dur)
-                              : 0),
-                  indexOfList: pos,
+                  dur: searchResults[pos].jsonString!.dur != null
+                      ? searchResults[pos].jsonString!.dur!
+                      : "",
                   link: searchResults[pos].link,
-                  mainTag: searchResults[pos].jsonString!.tag,
-                  oc: searchResults[pos].jsonString!.oc == 1 ? true : false,
-                  publishDate: TimeAgo.timeInAgoTSShort(searchResults[pos].ts),
-                  thumbnailUrl: searchResults[pos].thumbUrl,
+                  tag: searchResults[pos].jsonString!.tag,
+                  oc: searchResults[pos].jsonString!.oc != null
+                      ? searchResults[pos].jsonString!.oc
+                      : 0,
+                  ts: searchResults[pos].ts,
+                  thumbUrl: searchResults[pos].thumbUrl,
                   title: searchResults[pos].jsonString!.title,
-                  upvotesCount: searchResults[pos].upvotes!.length,
                   videoSource: searchResults[pos].videoSource,
                   videoUrl: searchResults[pos].videoUrl,
                   autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
+                  crossAxisCount: 3,
+                  width: 30.w,
                 ),
               );
             }

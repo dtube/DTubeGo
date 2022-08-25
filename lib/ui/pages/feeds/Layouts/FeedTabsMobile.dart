@@ -12,16 +12,22 @@ class FeedTabs extends StatelessWidget {
   const FeedTabs({
     Key? key,
     required this.tabBarFeedItemList,
+    required this.tabBarFeedItemListUnsignedLogin,
     required this.tabController,
     required this.tabIcons,
     required this.tabNames,
+    required this.tabIconsUnsignedLogin,
+    required this.tabNamesUnsignedLogin,
     required this.selectedIndex,
   }) : super(key: key);
 
   final List<FeedViewBase> tabBarFeedItemList;
+  final List<FeedViewBase> tabBarFeedItemListUnsignedLogin;
   final TabController tabController;
   final List<IconData> tabIcons;
   final List<String> tabNames;
+  final List<IconData> tabIconsUnsignedLogin;
+  final List<String> tabNamesUnsignedLogin;
   final int selectedIndex;
 
   @override
@@ -29,16 +35,20 @@ class FeedTabs extends StatelessWidget {
     return Stack(
       children: [
         TabBarView(
-          children: tabBarFeedItemList,
+          children: globals.keyPermissions.isEmpty
+              ? tabBarFeedItemListUnsignedLogin
+              : tabBarFeedItemList,
           controller: tabController,
         ),
         TabBarWithPosition(
-          tabIcons: tabIcons,
+          tabIcons:
+              globals.keyPermissions.isEmpty ? tabIconsUnsignedLogin : tabIcons,
           iconSize: globalIconSizeMedium,
           tabController: tabController,
           alignment: Alignment.topRight,
           padding: EdgeInsets.only(top: 11.h, right: 4.w),
-          tabNames: tabNames,
+          tabNames:
+              globals.keyPermissions.isEmpty ? tabNamesUnsignedLogin : tabNames,
           showLabels: false,
           menuSize: globals.keyPermissions.isEmpty
               ? globalIconSizeMedium * 6
