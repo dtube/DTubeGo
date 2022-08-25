@@ -11,7 +11,9 @@ class PopUpDialogWithTitleLogoDesktop extends StatefulWidget {
       this.callbackCancel,
       required this.titleWidgetPadding,
       required this.titleWidgetSize,
-      required this.showTitleWidget})
+      required this.showTitleWidget,
+      required this.width,
+      required this.height})
       : super(key: key);
   final Widget child;
   final Widget titleWidget;
@@ -20,6 +22,8 @@ class PopUpDialogWithTitleLogoDesktop extends StatefulWidget {
   final double titleWidgetSize;
   final double titleWidgetPadding;
   final bool showTitleWidget;
+  final double height;
+  final double width;
 
   @override
   _PopUpDialogWithTitleLogoDesktopState createState() =>
@@ -44,10 +48,10 @@ class _PopUpDialogWithTitleLogoDesktopState
     return Stack(
       children: <Widget>[
         Container(
-            padding: EdgeInsets.only(top: widget.titleWidgetSize),
-            margin: EdgeInsets.only(top: widget.titleWidgetSize / 2),
+            padding: EdgeInsets.only(top: 50),
+            margin: EdgeInsets.only(top: 50),
             width: 30.w,
-            height: 7.h,
+            height: 70.h,
             decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 color: globalBGColor,

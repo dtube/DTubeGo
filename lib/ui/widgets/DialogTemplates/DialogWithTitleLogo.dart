@@ -3,6 +3,7 @@ import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogoDesktop.d
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogoMobile.dart';
 import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class PopUpDialogWithTitleLogo extends StatelessWidget {
   PopUpDialogWithTitleLogo(
@@ -13,7 +14,9 @@ class PopUpDialogWithTitleLogo extends StatelessWidget {
       this.callbackCancel,
       required this.titleWidgetPadding,
       required this.titleWidgetSize,
-      required this.showTitleWidget})
+      required this.showTitleWidget,
+      this.height,
+      this.width})
       : super(key: key);
   final Widget child;
   final Widget titleWidget;
@@ -22,17 +25,22 @@ class PopUpDialogWithTitleLogo extends StatelessWidget {
   final double titleWidgetSize;
   final double titleWidgetPadding;
   final bool showTitleWidget;
+  double? height;
+  double? width;
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       desktopBody: PopUpDialogWithTitleLogoDesktop(
-          child: child,
-          titleWidget: titleWidget,
-          callbackOK: callbackOK,
-          titleWidgetPadding: titleWidgetPadding,
-          titleWidgetSize: titleWidgetSize,
-          showTitleWidget: showTitleWidget),
+        child: child,
+        titleWidget: titleWidget,
+        callbackOK: callbackOK,
+        titleWidgetPadding: titleWidgetPadding,
+        titleWidgetSize: titleWidgetSize,
+        showTitleWidget: showTitleWidget,
+        height: height != null ? height! : 70.h,
+        width: width != null ? width! : 30.w,
+      ),
       mobileBody: PopUpDialogWithTitleLogoMobile(
           child: child,
           titleWidget: titleWidget,
@@ -41,12 +49,15 @@ class PopUpDialogWithTitleLogo extends StatelessWidget {
           titleWidgetSize: titleWidgetSize,
           showTitleWidget: showTitleWidget),
       tabletBody: PopUpDialogWithTitleLogoDesktop(
-          child: child,
-          titleWidget: titleWidget,
-          callbackOK: callbackOK,
-          titleWidgetPadding: titleWidgetPadding,
-          titleWidgetSize: titleWidgetSize,
-          showTitleWidget: showTitleWidget),
+        child: child,
+        titleWidget: titleWidget,
+        callbackOK: callbackOK,
+        titleWidgetPadding: titleWidgetPadding,
+        titleWidgetSize: titleWidgetSize,
+        showTitleWidget: showTitleWidget,
+        height: height != null ? height! : 70.h,
+        width: width != null ? width! : 30.w,
+      ),
     );
   }
 }
