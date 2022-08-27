@@ -63,7 +63,7 @@ class _ProposalStateChipState extends State<ProposalStateChip> {
       }
     }
     if ([3, 5, 6, 8].contains(widget.daoItem.status)) {
-      if ([3, 5, 8].contains(widget.daoItem.status)) {
+      if ([3, 8].contains(widget.daoItem.status)) {
         return InputChip(
             avatar: FaIcon(FontAwesomeIcons.hammer),
             backgroundColor: Colors.purple[600],
@@ -73,14 +73,25 @@ class _ProposalStateChipState extends State<ProposalStateChip> {
               style: Theme.of(context).textTheme.caption,
             ));
       } else {
-        return InputChip(
-            avatar: FaIcon(FontAwesomeIcons.check),
-            backgroundColor: Colors.purple[600],
-            onSelected: (bool) {},
-            label: Text(
-              'completed',
-              style: Theme.of(context).textTheme.caption,
-            ));
+        if (widget.daoItem.status == 5) {
+          return InputChip(
+              avatar: FaIcon(FontAwesomeIcons.starHalfStroke),
+              backgroundColor: Colors.purple[600],
+              onSelected: (bool) {},
+              label: Text(
+                'in review',
+                style: Theme.of(context).textTheme.caption,
+              ));
+        } else {
+          return InputChip(
+              avatar: FaIcon(FontAwesomeIcons.check),
+              backgroundColor: Colors.purple[600],
+              onSelected: (bool) {},
+              label: Text(
+                'completed',
+                style: Theme.of(context).textTheme.caption,
+              ));
+        }
       }
     }
     if (widget.daoItem.status == 7) {
