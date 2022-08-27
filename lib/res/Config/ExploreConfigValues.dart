@@ -4,53 +4,6 @@ class ExploreConfig {
   // generic curation tags to exclude from suggested channels/videos
   static List<String> genericCurationTags = ["vdc", "onelovedtube"];
 
-  // global settings -> tags: those are the possible tags
-  static List<String> possibleExploreTags = [
-    "dtube",
-    "dtubeGo",
-    // outside
-
-    "travel",
-    "gardening",
-    "nature",
-    "animals",
-
-    // knowhow
-    "howto",
-    "tutorial",
-    "DIY",
-    "cooking",
-    // tech
-    "tech",
-    "blockchain",
-    "crypto",
-    // news
-    "news",
-    "politics",
-    // entertainment
-    "entertainment",
-    "funny",
-    "gaming",
-    "dailyvlog",
-    "vlog",
-    // art
-    "art",
-    "painting",
-    "music",
-    "dance",
-    // lifestyle
-    "fashion",
-    "lifestyle",
-    "health",
-    "sports",
-    "skate",
-    // others
-    "psychology",
-    "horology",
-    // communities
-    "skatehive",
-    "cleanplanet"
-  ];
   static var genreTags = [
     {
       "mainTag": "music",
@@ -62,7 +15,20 @@ class ExploreConfig {
         "songs",
         "guitar",
         "piano",
-        "acapella"
+        "acapella",
+        "livemusic",
+        "electromusic",
+        "rock",
+        "hiphop",
+        "musictheory",
+        "drums",
+        "beat",
+        "beats",
+        "lofi",
+        "punk",
+        "metal",
+        "classical",
+        "musictutorial"
       ]
     },
     {
@@ -76,23 +42,57 @@ class ExploreConfig {
         "running",
         "marathon",
         "gym",
-        "workout"
+        "workout",
+        "gymnastics",
+        "voleyball",
+        "socker",
+        "basketball",
+        "jogging",
+        "pushups",
+        "situps",
+        "muscles"
       ],
     },
     {
       "mainTag": "gaming",
       "icon": FontAwesomeIcons.gamepad,
-      "subtags": ["ps4", "ps5", "gaming"],
+      "subtags": [
+        "ps4",
+        "ps5",
+        "gaming",
+        "simulation",
+        "shooter",
+        "sports",
+        "retro",
+        "cardgame",
+        "adventure",
+        "games",
+        "game",
+        "metaverse",
+        "vr"
+      ],
     },
     {
       "mainTag": "health",
       "icon": FontAwesomeIcons.heartPulse,
-      "subtags": ["yoga", "health"],
+      "subtags": [
+        "yoga",
+        "health",
+        "healthtips",
+        "meditation",
+      ],
     },
     {
       "mainTag": "science",
       "icon": FontAwesomeIcons.userAstronaut,
-      "subtags": ["physics", "chemistry", "math"],
+      "subtags": [
+        "physics",
+        "chemistry",
+        "math",
+        "science",
+        "languages",
+        "learning"
+      ],
     },
     {
       "mainTag": "diy",
@@ -103,13 +103,28 @@ class ExploreConfig {
         "crafting",
         "3dprinting",
         "cooking",
-        "tutorial"
+        "tutorial",
+        "repair",
+        "coding",
+        "techtutorial",
+        "musictutorial",
+        "howto",
       ],
     },
     {
       "mainTag": "tech",
       "icon": FontAwesomeIcons.laptop,
-      "subtags": ["coding", "tech", "software"],
+      "subtags": [
+        "coding",
+        "tech",
+        "software",
+        "hardware",
+        "server",
+        "api",
+        "node",
+        "avalon",
+        "programming"
+      ],
     },
     {
       "mainTag": "blockchains",
@@ -118,7 +133,7 @@ class ExploreConfig {
         "nft",
         "crypto",
         "cryptocurrency",
-        "bitcoing",
+        "bitcoin",
         "etherium",
         "opensea",
         "objkt",
@@ -126,73 +141,142 @@ class ExploreConfig {
         "litecoin",
         "binance",
         "hex",
-        // asd
-        "nft",
-        "crypto",
-        "cryptocurrency",
-        "bitcoing",
-        "etherium",
-        "opensea",
-        "objkt",
-        "tezos",
-        "litecoin",
-        "binance",
-        "hex"
+        "eth",
+        "ltc",
+        "bnc",
+        "btc",
+        "bnb",
+        "smartcontract",
+        "avalon",
+        "dtc",
+        "proposal",
+        "fundrequest",
+        "dao",
+        "decentralized",
+        "decentralization",
+        "hive",
+        "blurt",
+        "steem"
       ],
     },
     {
       "mainTag": "art",
       "icon": FontAwesomeIcons.paintbrush,
-      "subtags": ["drawing", "painting", "art", "dance", "dancing"],
+      "subtags": [
+        "drawing",
+        "painting",
+        "art",
+        "dance",
+        "dancing",
+        "videoart",
+        "sculpting",
+        "digitalart"
+      ],
     },
     {
       "mainTag": "vlogs",
       "icon": FontAwesomeIcons.video,
-      "subtags": ["vlog", "dailyvlog", "vlogs"],
+      "subtags": [
+        "vlog",
+        "dailyvlog",
+        "vlogs",
+        "travel",
+        "roadtrip",
+      ],
     },
     {
       "mainTag": "communities",
       "icon": FontAwesomeIcons.cubes,
-      "subtags": ["cleanplanet", "skatehive"],
+      "subtags": [
+        "cleanplanet",
+        "skatehive",
+        "dtube",
+        "hive",
+        "blurt",
+        "steem",
+      ],
     },
     {
       "mainTag": "lifestyle",
       "icon": FontAwesomeIcons.vestPatches,
-      "subtags": ["lifestyle", "fashion", "makeup", "travel"],
+      "subtags": [
+        "lifestyle",
+        "fashion",
+        "makeup",
+        "travel",
+        "haul",
+      ],
     },
     {
       "mainTag": "fun",
       "icon": FontAwesomeIcons.tv,
-      "subtags": ["funny", "entertainment", "skit", "comedy"],
+      "subtags": [
+        "funny",
+        "entertainment",
+        "skit",
+        "comedy",
+        "challenge",
+      ],
     },
     {
       "mainTag": "news",
       "icon": FontAwesomeIcons.newspaper,
-      "subtags": ["news", "politics"],
+      "subtags": [
+        "news",
+        "politics",
+        "crypto",
+        "tech",
+      ],
     },
     {
       "mainTag": "talks",
       "icon": FontAwesomeIcons.microphoneLines,
-      "subtags": ["talks", "podcasts"],
+      "subtags": [
+        "talks",
+        "podcasts",
+        "chatting",
+        "justchatting",
+        "zoom",
+      ],
     },
     {
       "mainTag": "nature",
       "icon": FontAwesomeIcons.leaf,
-      "subtags": ["nature", "animals", "gardening", "forrest"],
+      "subtags": [
+        "nature",
+        "animals",
+        "animal",
+        "gardening",
+        "harvest",
+        "forrest",
+        "cleanplanet",
+        "trees",
+        "beach",
+        "field"
+      ],
     },
     {
       "mainTag": "food",
       "icon": FontAwesomeIcons.utensils,
-      "subtags": ["cooking", "restaurant", "dinner", "lunch", "food"]
+      "subtags": [
+        "cooking",
+        "restaurant",
+        "dinner",
+        "lunch",
+        "food",
+        "eating",
+        "meal",
+        "breakfast",
+      ]
     },
   ];
   // suggestion params
   static int maxUserSuggestions =
-      50; // max count of users shown in the suggestions
+      30; // max count of users shown in the suggestions
   static int maxPostSuggestions =
-      50; // max count of posts shown in the suggestions
+      30; // max count of posts shown in the suggestions
 
   static int maxDaysInPastForSuggestions =
-      75; // max count of days the suggestion algorythm should check the past
+      150; // max count of days the suggestion algorythm should check the past
 
 }
