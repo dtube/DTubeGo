@@ -105,6 +105,12 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
 
         setState(() {});
       });
+    _videoController.addListener(() {
+      if (_videoController.value.duration > Duration(milliseconds: 0) &&
+          _videoController.value.position == _videoController.value.duration) {
+        setMomentSeen();
+      }
+    });
     // BlocProvider.of<IPFSUploadBloc>(context).add(IPFSUploaderInitState());
     BlocProvider.of<Web3StorageBloc>(context).add(Web3StorageInitState());
   }
@@ -129,7 +135,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
         if (visiblePercentage > 90) {
           _videoController.play();
           widget.momentsController.play();
-          setMomentSeen();
+          // setMomentSeen();
         }
       },
       child: Container(
@@ -160,6 +166,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                   } else if (details.primaryVelocity != null &&
                       details.primaryVelocity! < 0) {
                     widget.momentsController.next();
+                    setMomentSeen();
                   }
                 },
                 child: _videoController.value.isInitialized
@@ -198,6 +205,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                 child: Container(
                   child: GestureDetector(onTap: () {
                     widget.momentsController.next();
+                    setMomentSeen();
                   }),
                   width: 30,
                 ),
