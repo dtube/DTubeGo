@@ -77,7 +77,7 @@ class _NotificationButtonState extends State<NotificationButton> {
       ),
       badgeContent: Text(
           // newNotificationsCount.toString(),
-          "10",
+          newNotificationsCount.toString(),
           style: Theme.of(context).textTheme.bodyText2),
       animationType: BadgeAnimationType.scale,
       showBadge: newNotificationsCount > 0,
