@@ -135,7 +135,8 @@ class FeedList extends StatelessWidget {
                               return buildLoading(context);
                             } else if (state is FeedLoadedState) {
                               if (state.feedType == feedType) {
-                                if (state.feedType == "tagSearch") {
+                                if (state.feedType == "tagSearch" ||
+                                    state.fetchedWholeFeed) {
                                   _feedItems.clear();
                                 }
                                 if (_feedItems.isNotEmpty) {
