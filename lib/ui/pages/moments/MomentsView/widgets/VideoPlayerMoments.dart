@@ -132,11 +132,11 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
           _videoController.pause();
           widget.momentsController.pause();
         }
-        if (visiblePercentage > 90) {
-          _videoController.play();
-          widget.momentsController.play();
-          // setMomentSeen();
-        }
+        // if (visiblePercentage > 90) {
+        //   _videoController.play();
+        //   widget.momentsController.play();
+        //   // setMomentSeen();
+        // }
       },
       child: Container(
         color: Colors.black,
