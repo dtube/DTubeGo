@@ -15,8 +15,12 @@ class FeedLoadingState extends FeedState {
 class FeedLoadedState extends FeedState {
   final List<FeedItem> feed;
   final String feedType;
+  final bool fetchedWholeFeed;
 
-  FeedLoadedState({required this.feed, required this.feedType});
+  FeedLoadedState(
+      {required this.feed,
+      required this.feedType,
+      required this.fetchedWholeFeed});
 
   List<Object> get props => [feed];
 }

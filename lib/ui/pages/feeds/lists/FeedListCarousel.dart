@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dtube_go/ui/pages/feeds/cards/PostListCardLarge.dart';
 import 'package:dtube_go/utils/Random/randomGenerator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -204,9 +205,24 @@ class FeedListCarousel extends StatelessWidget {
                     return BlocProvider<UserBloc>(
                       create: (context) =>
                           UserBloc(repository: UserRepositoryImpl()),
-                      child: PostListCardNarrow(
-                        width: width!,
-                        height: heightPerEntry!,
+                      child: PostListCardLarge(
+                        width: 80.w,
+                        alreadyVoted: false,
+                        alreadyVotedDirection: false,
+                        autoPauseVideoOnPopup: false,
+                        defaultCommentVotingWeight: "0",
+                        defaultPostVotingTip: "0",
+                        defaultPostVotingWeight: "0",
+                        downvotesCount: 0,
+                        fixedDownvoteActivated: "0", fixedDownvoteWeight: "0",
+
+                        hideSpeedDial: true,
+                        disableVideoPlayback: true,
+
+                        mainTag: feed[index].jsonString!.tag,
+                        oc: feed[index].jsonString!.oc == 1,
+                        upvotesCount: 0, videoSource: feed[index].videoSource,
+                        videoUrl: feed[index].videoUrl,
                         blur: (_nsfwMode == 'Blur' &&
                                     feed[index].jsonString?.nsfw == 1) ||
                                 (_hiddenMode == 'Blur' &&
@@ -229,9 +245,7 @@ class FeedListCarousel extends StatelessWidget {
                                     : 0),
                         dtcValue: (feed[index].dist / 100).round().toString(),
                         indexOfList: index,
-                        enableNavigation: enableNavigation,
-                        itemSelectedCallback: itemSelectedCallback,
-                        userPage: true,
+                        // userPage: true,
                       ),
                     );
                   }

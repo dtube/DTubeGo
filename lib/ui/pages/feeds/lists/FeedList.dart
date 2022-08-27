@@ -135,7 +135,8 @@ class FeedList extends StatelessWidget {
                               return buildLoading(context);
                             } else if (state is FeedLoadedState) {
                               if (state.feedType == feedType) {
-                                if (state.feedType == "tagSearch") {
+                                if (state.feedType == "tagSearch" ||
+                                    state.fetchedWholeFeed) {
                                   _feedItems.clear();
                                 }
                                 if (_feedItems.isNotEmpty) {
@@ -523,6 +524,7 @@ class _PostListCardState extends State<PostListCard>
         create: (BuildContext context) =>
             UserBloc(repository: UserRepositoryImpl()),
         child: PostListCardLarge(
+          width: 90.w,
           blur: widget.blur,
           thumbnailUrl: widget.thumbnailUrl,
           title: widget.title,

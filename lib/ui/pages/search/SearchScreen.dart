@@ -300,6 +300,7 @@ class SearchScreenState extends State<SearchScreen> {
                   create: (context) =>
                       UserBloc(repository: UserRepositoryImpl()),
                   child: PostListCardLarge(
+                    width: 90.w,
                     alreadyVoted:
                         searchResults.hits!.hits![pos].sSource!.alreadyVoted!,
                     alreadyVotedDirection: searchResults
@@ -392,6 +393,7 @@ class SearchScreenState extends State<SearchScreen> {
               return BlocProvider<UserBloc>(
                 create: (context) => UserBloc(repository: UserRepositoryImpl()),
                 child: PostListCardLarge(
+                  width: 90.w,
                   alreadyVoted: searchResults[pos].alreadyVoted!,
                   alreadyVotedDirection:
                       searchResults[pos].alreadyVotedDirection!,
