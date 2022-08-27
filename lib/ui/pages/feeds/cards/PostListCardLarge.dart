@@ -37,33 +37,36 @@ import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class PostListCardLarge extends StatefulWidget {
-  const PostListCardLarge({
-    Key? key,
-    required this.blur,
-    required this.thumbnailUrl,
-    required this.title,
-    required this.description,
-    required this.author,
-    required this.link,
-    required this.publishDate,
-    required this.duration,
-    required this.dtcValue,
-    required this.videoUrl,
-    required this.videoSource,
-    required this.alreadyVoted,
-    required this.alreadyVotedDirection,
-    required this.upvotesCount,
-    required this.downvotesCount,
-    required this.indexOfList,
-    required this.mainTag,
-    required this.oc,
-    required this.defaultCommentVotingWeight,
-    required this.defaultPostVotingWeight,
-    required this.defaultPostVotingTip,
-    required this.fixedDownvoteActivated,
-    required this.fixedDownvoteWeight,
-    required this.autoPauseVideoOnPopup,
-  }) : super(key: key);
+  PostListCardLarge(
+      {Key? key,
+      required this.blur,
+      required this.thumbnailUrl,
+      required this.title,
+      required this.description,
+      required this.author,
+      required this.link,
+      required this.publishDate,
+      required this.duration,
+      required this.dtcValue,
+      required this.videoUrl,
+      required this.videoSource,
+      required this.alreadyVoted,
+      required this.alreadyVotedDirection,
+      required this.upvotesCount,
+      required this.downvotesCount,
+      required this.indexOfList,
+      required this.mainTag,
+      required this.oc,
+      required this.defaultCommentVotingWeight,
+      required this.defaultPostVotingWeight,
+      required this.defaultPostVotingTip,
+      required this.fixedDownvoteActivated,
+      required this.fixedDownvoteWeight,
+      required this.autoPauseVideoOnPopup,
+      this.hideSpeedDial,
+      this.disableVideoPlayback,
+      required this.width})
+      : super(key: key);
 
   final bool blur;
   final bool autoPauseVideoOnPopup;
@@ -90,13 +93,16 @@ class PostListCardLarge extends StatefulWidget {
 
   final String fixedDownvoteActivated;
   final String fixedDownvoteWeight;
+  bool? hideSpeedDial;
+  bool? disableVideoPlayback;
+  final double width;
 
   @override
   _PostListCardLargeState createState() => _PostListCardLargeState();
 }
 
 class _PostListCardLargeState extends State<PostListCardLarge> {
-  double _avatarSize = globals.mobileMode ? 10.w : 2.w;
+  double _avatarSize = 10.w;
   bool _thumbnailTapped = false;
   TextEditingController _replyController = new TextEditingController();
   TextEditingController _giftMemoController = new TextEditingController();
@@ -117,6 +123,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
   @override
   void initState() {
     super.initState();
+    _avatarSize = widget.width * 0.1;
     _showVotingBars = false;
     _votingDirection = true;
     _showCommentInput = false;
@@ -165,6 +172,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: PostData(
+          width: widget.width,
           thumbnailTapped: _thumbnailTapped,
           widget: widget,
           bpController: _bpController,
@@ -184,7 +192,10 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
           videoUrl: widget.videoUrl,
           thumbnailTappedCallback: () {
             setState(() {
-              _thumbnailTapped = true;
+              if (widget.disableVideoPlayback == null ||
+                  !widget.disableVideoPlayback!) {
+                _thumbnailTapped = true;
+              }
             });
           },
           votingOpenCallback: () {
@@ -232,7 +243,8 @@ class PostData extends StatefulWidget {
       required this.videoSource,
       required this.videoUrl,
       required this.thumbUrl,
-      required this.blur})
+      required this.blur,
+      required this.width})
       : _thumbnailTapped = thumbnailTapped,
         _bpController = bpController,
         _ytController = ytController,
@@ -269,6 +281,7 @@ class PostData extends StatefulWidget {
   final String videoUrl;
   final bool blur;
   final String thumbUrl;
+  final double width;
 
   @override
   State<PostData> createState() => _PostDataState();
@@ -298,8 +311,8 @@ class _PostDataState extends State<PostData> {
                 videoSource: widget.videoSource,
                 videoUrl: widget.videoUrl,
                 ytController: widget._ytController,
-                placeholderWidth: globals.mobileMode ? 100.w : 15.w,
-                placeholderSize: globals.mobileMode ? 40.w : 15.w,
+                placeholderWidth: widget.width,
+                placeholderSize: widget.width * 0.4,
               ),
             ],
           ),
@@ -347,11 +360,8 @@ class _PostDataState extends State<PostData> {
             : FadeInDown(
                 preferences:
                     AnimationPreferences(offset: Duration(milliseconds: 500)),
-                child: Padding(
-                  padding: EdgeInsets.only(left: globals.mobileMode ? 12.w : 0),
-                  child: PostInfoDetailsRow(
-                    widget: widget.widget,
-                  ),
+                child: PostInfoDetailsRow(
+                  widget: widget.widget,
                 ),
               ),
         SizedBox(height: 1.h),
@@ -378,7 +388,7 @@ class PostInfoDetailsRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: globals.mobileMode ? 50.w : 200,
+              width: widget.width * 0.5,
               child: Text(
                 '@${widget.author}',
                 style: Theme.of(context).textTheme.bodyText2,
@@ -413,8 +423,8 @@ class PostInfoDetailsRow extends StatelessWidget {
                 style: Theme.of(context).textTheme.headline5,
               ),
               Padding(
-                padding: EdgeInsets.only(left: globals.mobileMode ? 1.w : 5),
-                child: DTubeLogoShadowed(size: globals.mobileMode ? 5.w : 20),
+                padding: EdgeInsets.only(left: widget.width * 0.01),
+                child: DTubeLogoShadowed(size: widget.width * 0.05),
               ),
             ],
           ),
@@ -469,7 +479,7 @@ class PostInfoBaseRow extends StatelessWidget {
                     child: AccountIconContainer(
                         widget: widget, avatarSize: _avatarSize),
                   ),
-            SizedBox(width: globals.mobileMode ? 2.w : 10),
+            SizedBox(width: widget.width * 0.02),
             globals.disableAnimations
                 ? TitleWidgetForRow(widget: widget)
                 : FadeInLeftBig(
@@ -483,7 +493,7 @@ class PostInfoBaseRow extends StatelessWidget {
         ),
         SizedBox(height: 2.h),
         Container(
-          width: globals.mobileMode ? 28.w : 100,
+          width: widget.width * 0.28,
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -507,18 +517,19 @@ class PostInfoBaseRow extends StatelessWidget {
                         waitBeforeFadeIn: Duration(milliseconds: 600),
                         fadeInFromLeft: false,
                         tagName: widget.mainTag,
-                        width: globals.mobileMode ? 14.w : 50,
+                        width: widget.width * 0.14,
                         fontStyle: Theme.of(context).textTheme.caption),
                   ),
                 ],
               ),
-              globals.keyPermissions.isEmpty
+              globals.keyPermissions.isEmpty ||
+                      (widget.hideSpeedDial != null && widget.hideSpeedDial!)
                   ? Container()
                   : Align(
                       alignment: Alignment.centerRight,
                       child: SpeedDial(
                           child: Padding(
-                            padding: EdgeInsets.only(left: 12.w),
+                            padding: EdgeInsets.only(left: widget.width * 0.12),
                             child: globals.disableAnimations
                                 ? ShadowedIcon(
                                     icon: FontAwesomeIcons.ellipsisVertical,
@@ -539,7 +550,7 @@ class PostInfoBaseRow extends StatelessWidget {
                             // ),
                           ),
                           activeChild: Padding(
-                            padding: EdgeInsets.only(left: 12.w),
+                            padding: EdgeInsets.only(left: widget.width * 0.12),
                             child: ShadowedIcon(
                                 icon: FontAwesomeIcons.sortDown,
                                 color: globalAlmostWhite,
@@ -567,7 +578,8 @@ class PostInfoBaseRow extends StatelessWidget {
                             // COMMENT BUTTON
                             SpeedDialChild(
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 7.w),
+                                  padding: EdgeInsets.only(
+                                      left: widget.width * 0.07),
                                   child: ShadowedIcon(
                                       visible:
                                           globals.keyPermissions.contains(4),
@@ -621,7 +633,8 @@ class PostInfoBaseRow extends StatelessWidget {
                             // DOWNVOTE BUTTON
                             SpeedDialChild(
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 7.w),
+                                  padding: EdgeInsets.only(
+                                      left: widget.width * 0.07),
                                   child: ShadowedIcon(
                                       visible:
                                           globals.keyPermissions.contains(5),
@@ -697,7 +710,8 @@ class PostInfoBaseRow extends StatelessWidget {
 
                             SpeedDialChild(
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 7.w),
+                                  padding: EdgeInsets.only(
+                                      left: widget.width * 0.07),
                                   child: ShadowedIcon(
                                       visible:
                                           globals.keyPermissions.contains(5),
@@ -774,7 +788,8 @@ class PostInfoBaseRow extends StatelessWidget {
                             // GIFT BUTTON
                             SpeedDialChild(
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 7.w),
+                                  padding: EdgeInsets.only(
+                                      left: widget.width * 0.07),
                                   child: ShadowedIcon(
                                       visible:
                                           globals.keyPermissions.contains(3),
@@ -844,7 +859,7 @@ class AccountIconContainer extends StatelessWidget {
         navigateToUserDetailPage(context, widget.author, () {});
       },
       child: SizedBox(
-          width: globals.mobileMode ? 10.w : _avatarSize,
+          width: widget.width * 0.10,
           child: AccountIconBase(
             avatarSize: _avatarSize,
             showVerified: true,
@@ -879,7 +894,7 @@ class TitleWidgetForRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: globals.mobileMode ? 55.w : 10.w,
+      width: widget.width * 0.55,
       child: InkWell(
         onTap: () {
           navigateToPostDetailPage(

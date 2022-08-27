@@ -370,6 +370,7 @@ class _PostListCardState extends State<PostListCard>
           create: (BuildContext context) =>
               UserBloc(repository: UserRepositoryImpl()),
           child: PostListCardLarge(
+            width: 80.w,
             blur: widget.blur,
             thumbnailUrl: widget.thumbnailUrl,
             title: widget.title,
