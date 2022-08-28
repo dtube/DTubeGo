@@ -4,7 +4,7 @@ import 'package:dtube_go/ui/pages/News/NewsPage.dart';
 import 'package:dtube_go/ui/pages/settings/HiveSignerForm.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/ui/pages/Explore/GenreBase.dart';
-import 'package:dtube_go/ui/pages/upload/UploadPresetSelection.dart';
+import 'package:dtube_go/ui/pages/upload/PresetSelection/UploadPresetSelection.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -28,14 +28,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class NavigationContainerWeb extends StatefulWidget {
-  NavigationContainerWeb({Key? key}) : super(key: key);
+class MobileScaffold extends StatefulWidget {
+  MobileScaffold({Key? key}) : super(key: key);
 
   @override
-  _NavigationContainerWebState createState() => _NavigationContainerWebState();
+  _MobileScaffoldState createState() => _MobileScaffoldState();
 }
 
-class _NavigationContainerWebState extends State<NavigationContainerWeb> {
+class _MobileScaffoldState extends State<MobileScaffold> {
   late List<Widget> _screens;
   late FeedBloc _newsFeedBloc = new FeedBloc(repository: FeedRepositoryImpl());
   bool exitNewsScreen = false;
@@ -326,7 +326,9 @@ class _NavigationContainerWebState extends State<NavigationContainerWeb> {
             bloc: _newsFeedBloc,
             builder: (context, state) {
               if (state is FeedLoadingState) {
-                return NewsScreenLoading();
+                return NewsScreenLoading(
+                  crossAxisCount: 1,
+                );
               }
 
               if (state is FeedLoadedState) {
@@ -568,7 +570,9 @@ class _NavigationContainerWebState extends State<NavigationContainerWeb> {
                 }
               }
 
-              return NewsScreenLoading();
+              return NewsScreenLoading(
+                crossAxisCount: 1,
+              );
             }));
   }
 }

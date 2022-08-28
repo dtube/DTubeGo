@@ -277,6 +277,8 @@ class ExploreConfig {
       30; // max count of posts shown in the suggestions
 
   static int maxDaysInPastForSuggestions =
-      150; // max count of days the suggestion algorythm should check the past
+
+      365; // max count of days the suggestion algorythm should check the past
+
 
 }

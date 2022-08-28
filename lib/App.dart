@@ -5,19 +5,9 @@ import 'package:dtube_go/ui/startup/Startup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
-class App extends StatefulWidget {
-  @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  @override
-  void initState() {
-    // sec.deleteAllSettings(); // uncomment of you need to reset the secure storage
-    super.initState();
-  }
+class App extends StatelessWidget {
+  App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

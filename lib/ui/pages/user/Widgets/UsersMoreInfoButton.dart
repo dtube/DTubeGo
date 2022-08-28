@@ -11,15 +11,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class UserMoreInfoButton extends StatelessWidget {
-  UserMoreInfoButton({Key? key, required this.context, required this.user})
+  UserMoreInfoButton(
+      {Key? key, required this.context, required this.user, this.size})
       : super(key: key);
 
   final BuildContext context;
   final User user;
+  double? size;
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
+        iconSize: size != null ? size! : 24,
         onPressed: () {
           showDialog(
               context: context,
@@ -193,7 +196,7 @@ class UserMoreInfoButton extends StatelessWidget {
               });
         },
         icon: ShadowedIcon(
-            size: globalIconSizeMedium,
+            size: size != null ? size! : globalIconSizeMedium,
             icon: FontAwesomeIcons.info,
             color: globalAlmostWhite,
             shadowColor: Colors.black));

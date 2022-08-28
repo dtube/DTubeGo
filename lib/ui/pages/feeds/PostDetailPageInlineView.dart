@@ -365,6 +365,8 @@ class _PostDetailsState extends State<PostDetails> {
                           padding: EdgeInsets.zero,
                           itemBuilder: (BuildContext context, int index) =>
                               CommentDisplay(
+                            shrinkButtons: true,
+                            avatarSize: 3.w,
                             entry: widget.post.comments![index],
                             defaultVoteWeight: _defaultVoteWeightComments,
                             parentAuthor: widget.post.author,

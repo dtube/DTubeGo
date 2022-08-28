@@ -1,5 +1,4 @@
 import 'package:dtube_go/bloc/web3storage/web3storage_bloc_full.dart';
-import 'package:dtube_go/ui/MainContainer/NavigationContainerWeb.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/ui/startup/eula/EulaScreen.dart';
@@ -9,7 +8,7 @@ import 'dart:math';
 import 'package:dtube_go/bloc/appstate/appstate_bloc.dart';
 import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
-import 'package:dtube_go/utils/Widgets/ResponsiveLayout.dart';
+import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:flutter/foundation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -144,30 +143,25 @@ class _PinPadState extends State<PinPad> {
         Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(builder: (BuildContext context) {
-            return MultiBlocProvider(
-                providers: [
-                  BlocProvider<UserBloc>(
-                      create: (context) =>
-                          UserBloc(repository: UserRepositoryImpl())),
-                  BlocProvider<AuthBloc>(
-                    create: (BuildContext context) =>
-                        AuthBloc(repository: AuthRepositoryImpl()),
-                  ),
-                  BlocProvider(
-                    create: (context) =>
-                        IPFSUploadBloc(repository: IPFSUploadRepositoryImpl()),
-                  ),
-                  BlocProvider(
-                    create: (context) =>
-                        FeedBloc(repository: FeedRepositoryImpl()),
-                  ),
-                  BlocProvider(
-                    create: (context) => AppStateBloc(),
-                  ),
-                ],
-                child: globals.mobileMode
-                    ? NavigationContainer()
-                    : NavigationContainerWeb());
+            return MultiBlocProvider(providers: [
+              BlocProvider<UserBloc>(
+                  create: (context) =>
+                      UserBloc(repository: UserRepositoryImpl())),
+              BlocProvider<AuthBloc>(
+                create: (BuildContext context) =>
+                    AuthBloc(repository: AuthRepositoryImpl()),
+              ),
+              BlocProvider(
+                create: (context) =>
+                    IPFSUploadBloc(repository: IPFSUploadRepositoryImpl()),
+              ),
+              BlocProvider(
+                create: (context) => FeedBloc(repository: FeedRepositoryImpl()),
+              ),
+              BlocProvider(
+                create: (context) => AppStateBloc(),
+              ),
+            ], child: NavigationContainer());
           }),
         );
       } else {
@@ -193,64 +187,107 @@ class _PinPadState extends State<PinPad> {
         resizeToAvoidBottomInset: false,
         backgroundColor: globalBlue,
         body: ResponsiveLayout(
-          portrait: Align(
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  DTubeLogo(size: 50.w),
-                  SizedBox(height: 10.h),
-                  Container(
-                    width: 60.w,
-                    child: PinPadWidget(
-                      pinPutController: _pinPutController,
-                      requestFocus: true,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("enter your pin",
-                        style: Theme.of(context).textTheme.headline5),
-                  ),
-                ],
-              )),
-          landscape: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+          mobileBody: PinPadMobile(pinPutController: _pinPutController),
+          tabletBody: PinPadDesktop(
+              pinPutController: _pinPutController,
+              shakeKey: _shakeKey,
+              pinMessage: _pinMessage),
+          desktopBody: PinPadDesktop(
+              pinPutController: _pinPutController,
+              shakeKey: _shakeKey,
+              pinMessage: _pinMessage),
+        ));
+  }
+}
+
+class PinPadMobile extends StatelessWidget {
+  const PinPadMobile({
+    Key? key,
+    required TextEditingController pinPutController,
+  })  : _pinPutController = pinPutController,
+        super(key: key);
+
+  final TextEditingController _pinPutController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            DTubeLogo(size: 50.w),
+            SizedBox(height: 10.h),
+            Container(
+              width: 60.w,
+              child: PinPadWidget(
+                pinPutController: _pinPutController,
+                requestFocus: true,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("enter your pin",
+                  style: Theme.of(context).textTheme.headline5),
+            ),
+          ],
+        ));
+  }
+}
+
+class PinPadDesktop extends StatelessWidget {
+  const PinPadDesktop({
+    Key? key,
+    required TextEditingController pinPutController,
+    required GlobalKey<ShakeWidgetState> shakeKey,
+    required String pinMessage,
+  })  : _pinPutController = pinPutController,
+        _shakeKey = shakeKey,
+        _pinMessage = pinMessage,
+        super(key: key);
+
+  final TextEditingController _pinPutController;
+  final GlobalKey<ShakeWidgetState> _shakeKey;
+  final String _pinMessage;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        DTubeLogo(size: 20.w),
+        Container(
+          width: 60.w,
+          height: 20.w,
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              DTubeLogo(size: 20.w),
               Container(
-                width: 60.w,
-                height: 20.w,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 40.w,
-                      child: PinPadWidget(
-                        pinPutController: _pinPutController,
-                        key: ValueKey(0),
-                        requestFocus: true,
-                      ),
-                    ),
-                    SizedBox(height: 5.h),
-                    ShakeWidget(
-                      shakeOffset: 10,
-                      key: _shakeKey,
-                      shakeCount: 4,
-                      shakeDuration: Duration(milliseconds: 500),
-                      child: Text(
-                        _pinMessage,
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                    ),
-                  ],
+                width: 40.w,
+                child: PinPadWidget(
+                  pinPutController: _pinPutController,
+                  key: ValueKey(0),
+                  requestFocus: true,
+                ),
+              ),
+              SizedBox(height: 5.h),
+              ShakeWidget(
+                shakeOffset: 10,
+                key: _shakeKey,
+                shakeCount: 4,
+                shakeDuration: Duration(milliseconds: 500),
+                child: Text(
+                  _pinMessage,
+                  style: Theme.of(context).textTheme.headline5,
                 ),
               ),
             ],
           ),
-        ));
+        ),
+      ],
+    );
   }
 }
 

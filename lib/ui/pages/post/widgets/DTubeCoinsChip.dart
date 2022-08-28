@@ -12,26 +12,26 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../../../bloc/postdetails/postdetails_bloc_full.dart';
 
 class DtubeCoinsChip extends StatelessWidget {
-  const DtubeCoinsChip({
-    Key? key,
-    required this.dist,
-    required this.post,
-  }) : super(key: key);
+  const DtubeCoinsChip(
+      {Key? key, required this.dist, required this.post, required this.width})
+      : super(key: key);
 
   final double dist;
   final Post post;
+  final double width;
   @override
   Widget build(BuildContext context) {
     return InputChip(
       label: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(
             (dist / 100).round().toString(),
             style: Theme.of(context).textTheme.headline5,
           ),
           Padding(
-            padding: EdgeInsets.only(left: 2.w),
-            child: DTubeLogoShadowed(size: 5.w),
+            padding: EdgeInsets.only(left: 10),
+            child: DTubeLogoShadowed(size: width),
           ),
         ],
       ),

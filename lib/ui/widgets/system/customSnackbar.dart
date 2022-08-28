@@ -1,15 +1,18 @@
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:another_flushbar/flushbar.dart';
+import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 Flushbar showCustomFlushbarOnError(String message, BuildContext context) {
   return Flushbar(
-    margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+    margin: EdgeInsets.fromLTRB(
+        100.w < 600 ? 0 : 30.w, 0.0, 100.w < 600 ? 0 : 30.w, 8.0),
     borderRadius: BorderRadius.circular(8),
     message: message,
     flushbarPosition: FlushbarPosition.TOP,
@@ -22,7 +25,7 @@ Flushbar showCustomFlushbarOnError(String message, BuildContext context) {
     ],
     //backgroundGradient: LinearGradient(colors: [globalBlue, globalAlmostBlack]),
     isDismissible: true,
-    duration: Duration(seconds: 10),
+    duration: Duration(seconds: 4),
     icon: Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: FaIcon(
@@ -40,7 +43,8 @@ Flushbar showCustomFlushbarOnSuccess(
   }
 
   return Flushbar(
-    margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+    margin: EdgeInsets.fromLTRB(
+        100.w < 600 ? 0 : 30.w, 0.0, 100.w < 600 ? 0 : 30.w, 8.0),
     borderRadius: BorderRadius.circular(8),
     message:
         state.isParentContent ? "new video is published" : state.successMessage,

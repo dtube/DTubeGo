@@ -50,11 +50,13 @@ class _TransferDialogState extends State<TransferDialog> {
                           decoration:
                               new InputDecoration(labelText: "Receiver"),
                           controller: _receiverController,
+                          cursorColor: globalRed,
                         )
                       : SizedBox(height: 0),
                   TextField(
                     decoration: new InputDecoration(labelText: "Amount"),
                     controller: _amountController,
+                    cursorColor: globalRed,
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
@@ -65,6 +67,7 @@ class _TransferDialogState extends State<TransferDialog> {
                   TextField(
                     decoration: new InputDecoration(labelText: "Memo"),
                     controller: _memoController,
+                    cursorColor: globalRed,
                   )
                 ],
               ),

@@ -1,24 +1,25 @@
 import 'package:dtube_go/res/Config/InitiativePresets.dart';
+import 'package:dtube_go/ui/pages/upload/UploaderMainPage.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/ui/pages/upload/widgets/PresetCards.dart';
+import 'package:dtube_go/ui/pages/upload/PresetSelection/Widgets/PresetCards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'UploaderMainPage.dart';
-
-class UploadPresetSelection extends StatefulWidget {
-  UploadPresetSelection({Key? key, required this.uploaderCallback})
+class UploadPresetSelectionDesktop extends StatefulWidget {
+  UploadPresetSelectionDesktop({Key? key, required this.uploaderCallback})
       : super(key: key);
   final VoidCallback uploaderCallback;
 
   @override
-  _UploadPresetSelectionState createState() => _UploadPresetSelectionState();
+  _UploadPresetSelectionDesktopState createState() =>
+      _UploadPresetSelectionDesktopState();
 }
 
-class _UploadPresetSelectionState extends State<UploadPresetSelection> {
+class _UploadPresetSelectionDesktopState
+    extends State<UploadPresetSelectionDesktop> {
   List<int> _ativeCustomPresets = [0];
   List<Preset> _initiativePresets = [];
   List<Preset> _customPresets = [];
@@ -65,7 +66,7 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
       //appBar: dtubeSubAppBar(true, "", context, null),
       resizeToAvoidBottomInset: true,
       body: Padding(
-        padding: const EdgeInsets.only(top: 90.0),
+        padding: const EdgeInsets.only(top: 50.0),
         child: !_presetSelected
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -73,23 +74,21 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text("Initiatives",
-                        style: Theme.of(context).textTheme.headline5),
+                        style: Theme.of(context).textTheme.headline1),
                     Container(
                       height: 30.h,
-                      width: 100.w,
+                      width: 50.w,
                       color: globalBGColor,
-                      child: StaggeredGridView.countBuilder(
-                        padding: EdgeInsets.only(
-                          // bottom: 16.h,
-                          top: 1.h,
-                        ),
+                      child: MasonryGridView.count(
                         shrinkWrap: true,
+                        padding: EdgeInsets.zero,
                         // scrollDirection: Axis.vertical,
                         itemCount: _initiativePresets.length,
-                        crossAxisCount: 4,
+                        crossAxisCount: 3,
                         itemBuilder: (BuildContext context, int index) {
                           return InitiativePresetCard(
                               currentIndex: index,
+                              iconSize: 50,
                               initiative: _initiativePresets[index],
                               // activated: _activatedGenres.contains(index),
                               onTapCallback: () {
@@ -99,22 +98,15 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
                                 });
                               });
                         },
-                        staggeredTileBuilder: (int index) =>
-                            new StaggeredTile.fit(2),
-                        mainAxisSpacing: 8.0,
-                        crossAxisSpacing: 8.0,
+                        // staggeredTileBuilder: (int index) =>
+                        //     new StaggeredTile.fit(2),
+                        mainAxisSpacing: 4.0,
+                        crossAxisSpacing: 4.0,
                       ),
                     ),
-                    Container(
-                      color: globalBGColor,
-                      width: 100.w,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 2.h),
-                        child: Center(
-                          child: Text("Your presets",
-                              style: Theme.of(context).textTheme.headline5),
-                        ),
-                      ),
+                    Center(
+                      child: Text("Your presets",
+                          style: Theme.of(context).textTheme.headline1),
                     ),
                     FutureBuilder(
                         future: _customPresetsLoaded,
@@ -127,16 +119,13 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
                           }
                           return Container(
                             height: 30.h,
-                            width: 100.w,
+                            width: 50.w,
                             color: globalBGColor,
-                            child: StaggeredGridView.countBuilder(
-                              padding: EdgeInsets.only(
-                                bottom: 5.h,
-                                top: 1.h,
-                              ),
+                            child: MasonryGridView.count(
+                              padding: EdgeInsets.zero,
                               itemCount: _ativeCustomPresets.length,
                               crossAxisCount:
-                                  _ativeCustomPresets.length > 3 ? 4 : 1,
+                                  _ativeCustomPresets.length > 1 ? 3 : 1,
                               //shrinkWrap: true,
                               // scrollDirection: Axis.vertical,
                               itemBuilder: (BuildContext context, int index) {
@@ -144,6 +133,7 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
                                     currentIndex: _ativeCustomPresets[index],
                                     preset: _customPresets[
                                         _ativeCustomPresets[index]],
+                                    iconSize: 50,
                                     // activated: _activatedGenres.contains(index),
                                     onTapCallback: () {
                                       setState(() {
@@ -153,10 +143,10 @@ class _UploadPresetSelectionState extends State<UploadPresetSelection> {
                                       });
                                     });
                               },
-                              staggeredTileBuilder: (int index) =>
-                                  new StaggeredTile.fit(2),
-                              mainAxisSpacing: 8.0,
-                              crossAxisSpacing: 8.0,
+                              // staggeredTileBuilder: (int index) =>
+                              //     new StaggeredTile.fit(2),
+                              mainAxisSpacing: 4.0,
+                              crossAxisSpacing: 4.0,
                             ),
                           );
                         })

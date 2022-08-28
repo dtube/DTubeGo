@@ -1,7 +1,7 @@
 // @dart=2.9
 //
 import 'dart:io';
-
+import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/App.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +27,8 @@ const MaterialColor kPrimaryColor = const MaterialColor(
 );
 
 void main() async {
+  // sec.deleteAllSettings(); // delete all settings
+
   // deactivate landscape mode
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {

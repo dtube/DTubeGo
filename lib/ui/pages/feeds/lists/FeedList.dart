@@ -1,6 +1,8 @@
+import 'package:dtube_go/ui/pages/feeds/cards/PostListCardDesktop.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -35,6 +37,8 @@ class FeedList extends StatelessWidget {
 
   final Bool2VoidFunc scrollCallback;
   late YoutubePlayerController _youtubePlayerController;
+  final int tabletCrossAxisCount;
+  final int desktopCrossAxisCount;
 
   FeedList({
     required this.feedType,
@@ -50,6 +54,9 @@ class FeedList extends StatelessWidget {
     required this.enableNavigation,
     this.itemSelectedCallback,
     this.topPadding,
+    required this.tabletCrossAxisCount,
+    required this.desktopCrossAxisCount,
+    this.showBorder,
     Key? key,
   }) : super(key: key);
 
@@ -67,7 +74,8 @@ class FeedList extends StatelessWidget {
   String? _fixedDownvoteActivated;
   String? _fixedDownvoteWeight;
 
-  bool? _autoauseVideoOnPopup;
+  bool? _autoPauseVideoOnPopup;
+  bool? showBorder;
 
   Future<bool> getSettings() async {
     _hiddenMode = await sec.getShowHidden();
@@ -79,7 +87,7 @@ class FeedList extends StatelessWidget {
 
     _fixedDownvoteActivated = await sec.getFixedDownvoteActivated();
     _fixedDownvoteWeight = await sec.getFixedDownvoteWeight();
-    _autoauseVideoOnPopup = await sec.getVideoAutoPause() == "true";
+    _autoPauseVideoOnPopup = await sec.getVideoAutoPause() == "true";
 
     if (_nsfwMode == null) {
       _nsfwMode = 'Blur';
@@ -99,10 +107,6 @@ class FeedList extends StatelessWidget {
       topPadding = 0;
     }
 
-    if (width == null) {
-      width = 100.w;
-    }
-
     if (heightPerEntry == null) {
       heightPerEntry = 10.h;
     }
@@ -111,82 +115,91 @@ class FeedList extends StatelessWidget {
       child: Container(
         height: 110.h,
         width: width,
+        color: showBorder != null && showBorder!
+            ? globalBlue.withOpacity(0.5)
+            : Colors.transparent,
+        // decoration: BoxDecoration(
+        //     border: Border.all(
+        //         color: showBorder != null && showBorder!
+        //             ? globalBlue
+        //             : Colors.transparent)),
         child: Stack(
+          alignment: Alignment.topCenter,
           children: [
-            Padding(
-              padding: EdgeInsets.only(
-                  left: sidepadding != null ? sidepadding! : 0.0,
-                  right: sidepadding != null ? sidepadding! : 0.0,
-                  top: topPadding!),
-              child: FutureBuilder<bool>(
-                  future: getSettings(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState != ConnectionState.done) {
-                      return buildLoading(context);
-                    } else {
-                      return Container(
-                        height: 90.h + topPaddingForFirstEntry!,
-                        width: width,
-                        child: BlocBuilder<FeedBloc, FeedState>(
-                          builder: (context, state) {
-                            if (state is FeedInitialState ||
-                                state is FeedLoadingState &&
-                                    _feedItems.isEmpty) {
-                              return buildLoading(context);
-                            } else if (state is FeedLoadedState) {
-                              if (state.feedType == feedType) {
-                                if (state.feedType == "tagSearch" ||
-                                    state.fetchedWholeFeed) {
-                                  _feedItems.clear();
-                                }
-                                if (_feedItems.isNotEmpty) {
-                                  if (_feedItems.first.link ==
-                                      state.feed.first.link) {
-                                    _feedItems.clear();
-                                  } else {
-                                    _feedItems.removeLast();
-                                  }
-                                }
-                                _feedItems.addAll(state.feed);
+            FutureBuilder<bool>(
+                future: getSettings(),
+                builder: (_, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return buildLoading(context);
+                  } else {
+                    return Container(
+                      height: 90.h + topPaddingForFirstEntry!,
+                      width: MediaQuery.of(context).size.width,
+                      child: BlocBuilder<FeedBloc, FeedState>(
+                        builder: (context, state) {
+                          if (state is FeedInitialState ||
+                              state is FeedLoadingState && _feedItems.isEmpty) {
+                            return buildLoading(context);
+                          } else if (state is FeedLoadedState) {
+                            if (state.feedType == feedType) {
+                              if (state.feedType == "tagSearch") {
+                                _feedItems.clear();
                               }
-                              BlocProvider.of<FeedBloc>(context).isFetching =
-                                  false;
-                            } else if (state is FeedErrorState) {
-                              return buildErrorUi(state.message);
+                              if (_feedItems.isNotEmpty) {
+                                if (_feedItems.first.link ==
+                                    state.feed.first.link) {
+
+                                  _feedItems.clear();
+                                } else {
+                                  _feedItems.removeLast();
+                                }
+                              }
+                              _feedItems.addAll(state.feed);
                             }
-                            if (globals.mobileMode) {
-                              return buildPostList(_feedItems, largeFormat,
-                                  true, context, feedType);
-                            } else {
-                              return buildPostListWeb(_feedItems, largeFormat,
-                                  true, context, feedType);
-                            }
-                          },
-                        ),
-                      );
-                    }
-                  }),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                height: feedType == "UserFeed" ? 0.h : 15.h,
-                width: 200.w,
-                decoration: BoxDecoration(
-                    color: globalAlmostWhite,
-                    gradient: LinearGradient(
-                        begin: FractionalOffset.topCenter,
-                        end: FractionalOffset.bottomCenter,
-                        colors: [
-                          Colors.black,
-                          Colors.black.withOpacity(0.0),
-                        ],
-                        stops: [
-                          0.0,
-                          1.0
-                        ])),
-              ),
-            ),
+                            BlocProvider.of<FeedBloc>(context).isFetching =
+                                false;
+                          } else if (state is FeedErrorState) {
+                            return buildErrorUi(state.message);
+                          }
+                          return ResponsiveLayout(
+                              mobileBody: buildPostListNarrow(
+                                _feedItems,
+                                largeFormat,
+                                true,
+                                context,
+                                feedType,
+                              ),
+                              tabletBody: buildPostListTablet(
+                                _feedItems,
+                                largeFormat,
+                                true,
+                                context,
+                                feedType,
+                                tabletCrossAxisCount,
+                              ),
+                              desktopBody: buildPostListDesktop(
+                                  _feedItems,
+                                  largeFormat,
+                                  true,
+                                  context,
+                                  feedType,
+                                  desktopCrossAxisCount));
+                          // if (globals.mobileMode) {
+                          //   return buildPostList(_feedItems, largeFormat,
+                          //       true, context, feedType);
+                          // } else {
+                          //   return buildPostListWeb(_feedItems, largeFormat,
+                          //       true, context, feedType);
+                          // }
+                        },
+                      ),
+                    );
+                  }
+                }),
+            ResponsiveLayout(
+                mobileBody: TopGradient(feedType: feedType),
+                tabletBody: Container(),
+                desktopBody: Container())
           ],
         ),
       ),
@@ -216,8 +229,8 @@ class FeedList extends StatelessWidget {
     );
   }
 
-  Widget buildPostList(List<FeedItem> feed, bool bigThumbnail, bool showAuthor,
-      BuildContext context, String gpostType) {
+  Widget buildPostListNarrow(List<FeedItem> feed, bool bigThumbnail,
+      bool showAuthor, BuildContext context, String gpostType) {
     return ListView.builder(
       key: new PageStorageKey(gpostType + 'listview'),
       addAutomaticKeepAlives: true,
@@ -281,7 +294,7 @@ class FeedList extends StatelessWidget {
                         ? bottompadding!
                         : 2.0),
                 child: PostListCard(
-                  width: width!,
+                  width: 100.w,
                   heightPerEntry: heightPerEntry!,
                   largeFormat: largeFormat,
                   showAuthor: showAuthor,
@@ -322,7 +335,7 @@ class FeedList extends StatelessWidget {
                   fixedDownvoteActivated: _fixedDownvoteActivated,
                   fixedDownvoteWeight: _fixedDownvoteWeight,
                   parentContext: context,
-                  autoPauseVideoOnPopup: _autoauseVideoOnPopup,
+                  autoPauseVideoOnPopup: _autoPauseVideoOnPopup,
                 ),
                 //Text(pos.toString())
               ),
@@ -341,9 +354,15 @@ class FeedList extends StatelessWidget {
     );
   }
 
-  Widget buildPostListWeb(List<FeedItem> feed, bool bigThumbnail,
-      bool showAuthor, BuildContext context, String gpostType) {
-    if (feed.length < 20) {
+  Widget buildPostListDesktop(
+    List<FeedItem> feed,
+    bool bigThumbnail,
+    bool showAuthor,
+    BuildContext context,
+    String gpostType,
+    int desktopCrossAxisCount,
+  ) {
+    if (feed.length > 0 && feed.length < 20) {
       BlocProvider.of<FeedBloc>(context)
         ..isFetching = true
         ..add(FetchFeedEvent(
@@ -352,12 +371,12 @@ class FeedList extends StatelessWidget {
             fromAuthor: feed[feed.length - 1].author,
             fromLink: feed[feed.length - 1].link));
     }
-    return StaggeredGridView.countBuilder(
-      padding: EdgeInsets.only(top: 19.h),
+    return MasonryGridView.count(
       key: new PageStorageKey(gpostType + 'listview'),
       addAutomaticKeepAlives: true,
-      crossAxisCount: 1.w.round(),
+      crossAxisCount: desktopCrossAxisCount,
       itemCount: feed.length,
+      padding: EdgeInsets.zero,
       controller: _scrollController
         ..addListener(() {
           if (_scrollController.offset >=
@@ -386,54 +405,138 @@ class FeedList extends StatelessWidget {
               ));
           }
         }),
-      itemBuilder: (BuildContext context, int pos) => PostListCard(
-        width: width!,
-        heightPerEntry: heightPerEntry!,
-        largeFormat: largeFormat,
-        showAuthor: showAuthor,
-        blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
-                (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
-            ? true
-            : false,
-        title: feed[pos].jsonString!.title,
-        description: feed[pos].jsonString!.desc != null
-            ? feed[pos].jsonString!.desc!
-            : "",
-        author: feed[pos].author,
-        link: feed[pos].link,
-        publishDate: TimeAgo.timeInAgoTSShort(feed[pos].ts),
-        dtcValue: (feed[pos].dist / 100).round().toString(),
-        duration: new Duration(
-            seconds: int.tryParse(feed[pos].jsonString!.dur) != null
-                ? int.parse(feed[pos].jsonString!.dur)
-                : 0),
-        thumbnailUrl: feed[pos].thumbUrl,
-        videoUrl: feed[pos].videoUrl,
-        videoSource: feed[pos].videoSource,
-        alreadyVoted: feed[pos].alreadyVoted!,
-        alreadyVotedDirection: feed[pos].alreadyVotedDirection!,
-        upvotesCount: feed[pos].upvotes!.length,
-        downvotesCount: feed[pos].downvotes!.length,
-        indexOfList: pos,
-        mainTag: feed[pos].jsonString!.tag,
-        oc: feed[pos].jsonString!.oc == 1 ? true : false,
-        enableNavigation: enableNavigation,
-        itemSelectedCallback: itemSelectedCallback,
-        feedType: feedType,
-        defaultCommentVotingWeight: _defaultCommentVotingWeight,
-        defaultPostVotingWeight: _defaultPostVotingWeight,
-        defaultPostVotingTip: _defaultPostVotingTip,
-        fixedDownvoteActivated: _fixedDownvoteActivated,
-        fixedDownvoteWeight: _fixedDownvoteWeight,
-        parentContext: context,
-        autoPauseVideoOnPopup: _autoauseVideoOnPopup,
-      ),
-      staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+      itemBuilder: (BuildContext _, int pos) => PostListCardDesktop(
+          blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
+                  (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
+              ? true
+              : false,
+          defaultCommentVotingWeight: _defaultCommentVotingWeight!,
+          defaultPostVotingWeight: _defaultPostVotingWeight!,
+          defaultPostVotingTip: _defaultPostVotingTip!,
+          fixedDownvoteActivated: _fixedDownvoteActivated!,
+          fixedDownvoteWeight: _fixedDownvoteWeight!,
+          autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
+          feedItem: feed[pos],
+          crossAxisCount: desktopCrossAxisCount,
+          width: MediaQuery.of(context).size.width * 0.2),
+
+      //staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
       mainAxisSpacing: 4.0,
       crossAxisSpacing: 4.0,
     );
 
     //Text(pos.toString())
+  }
+
+  Widget buildPostListTablet(
+    List<FeedItem> feed,
+    bool bigThumbnail,
+    bool showAuthor,
+    BuildContext context,
+    String gpostType,
+    int tabletCrossAxisCount,
+  ) {
+    if (feed.length > 0 && feed.length < 20) {
+      BlocProvider.of<FeedBloc>(context)
+        ..isFetching = true
+        ..add(FetchFeedEvent(
+            //feedType: widget.feedType,
+            feedType: feedType,
+            fromAuthor: feed[feed.length - 1].author,
+            fromLink: feed[feed.length - 1].link));
+    }
+    return Scrollbar(
+      thumbVisibility: true,
+      controller: _scrollController,
+      child: MasonryGridView.count(
+        // padding: EdgeInsets.only(top: 19.h),
+        key: new PageStorageKey(gpostType + 'listview'),
+        addAutomaticKeepAlives: true,
+        crossAxisCount: tabletCrossAxisCount,
+        itemCount: feed.length,
+        controller: _scrollController
+          ..addListener(() {
+            if (_scrollController.offset >=
+                    _scrollController.position.maxScrollExtent &&
+                !BlocProvider.of<FeedBloc>(context).isFetching &&
+                feedType != "UserFeed" &&
+                feedType != "tagSearch") {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(
+                    //feedType: widget.feedType,
+                    feedType: feedType,
+                    fromAuthor: feed[feed.length - 1].author,
+                    fromLink: feed[feed.length - 1].link));
+            }
+            if (_scrollController.offset <=
+                    _scrollController.position.minScrollExtent &&
+                !BlocProvider.of<FeedBloc>(context).isFetching &&
+                feedType != "UserFeed" &&
+                feedType != "tagSearch") {
+              BlocProvider.of<FeedBloc>(context)
+                ..isFetching = true
+                ..add(FetchFeedEvent(
+                  //feedType: widget.feedType,
+                  feedType: feedType,
+                ));
+            }
+          }),
+        itemBuilder: (BuildContext context, int pos) => PostListCardDesktop(
+            blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
+                    (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
+                ? true
+                : false,
+            defaultCommentVotingWeight: _defaultCommentVotingWeight!,
+            defaultPostVotingWeight: _defaultPostVotingWeight!,
+            defaultPostVotingTip: _defaultPostVotingTip!,
+            fixedDownvoteActivated: _fixedDownvoteActivated!,
+            fixedDownvoteWeight: _fixedDownvoteWeight!,
+            autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
+            feedItem: feed[pos],
+            crossAxisCount: tabletCrossAxisCount,
+            width: MediaQuery.of(context).size.width * 0.2),
+
+        //staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+      ),
+    );
+
+    //Text(pos.toString())
+  }
+}
+
+class TopGradient extends StatelessWidget {
+  const TopGradient({
+    Key? key,
+    required this.feedType,
+  }) : super(key: key);
+
+  final String feedType;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Container(
+        height: feedType == "UserFeed" ? 0.h : 15.h,
+        width: 200.w,
+        decoration: BoxDecoration(
+            color: globalAlmostWhite,
+            gradient: LinearGradient(
+                begin: FractionalOffset.topCenter,
+                end: FractionalOffset.bottomCenter,
+                colors: [
+                  Colors.black,
+                  Colors.black.withOpacity(0.0),
+                ],
+                stops: [
+                  0.0,
+                  1.0
+                ])),
+      ),
+    );
   }
 }
 

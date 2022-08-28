@@ -2,6 +2,7 @@ import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
+import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:flutter/foundation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:async';
@@ -54,10 +55,6 @@ class _BalanceOverviewState extends State<BalanceOverview> {
 
   @override
   Widget build(BuildContext context) {
-    double _iconSize = 5.w;
-    if (Device.orientation == Orientation.landscape) {
-      _iconSize = 5.h;
-    }
     return BlocBuilder<UserBloc, UserState>(
       bloc: _userBloc,
       builder: (context, state) {
@@ -67,9 +64,10 @@ class _BalanceOverviewState extends State<BalanceOverview> {
           return SizedBox(width: 0);
         } else if (state is UserDTCVPLoadedState) {
           try {
-            return kIsWeb
-                ? WebBalanceOverview(iconSize: _iconSize, state: state)
-                : MobileBalanceOverview(iconSize: _iconSize, state: state);
+            return ResponsiveLayout(
+                mobileBody: BalanceOverviewMobile(state: state),
+                tabletBody: BalanceOverviewDesktop(state: state),
+                desktopBody: BalanceOverviewDesktop(state: state));
           } catch (e) {
             return FaIcon(FontAwesomeIcons.xmark);
           }
@@ -83,13 +81,10 @@ class _BalanceOverviewState extends State<BalanceOverview> {
   }
 }
 
-class MobileBalanceOverview extends StatelessWidget {
-  const MobileBalanceOverview(
-      {Key? key, required double iconSize, required this.state})
-      : _iconSize = iconSize,
-        super(key: key);
+class BalanceOverviewMobile extends StatelessWidget {
+  BalanceOverviewMobile({Key? key, required this.state}) : super(key: key);
 
-  final double _iconSize;
+  final double _iconSize = 5.w;
   final UserDTCVPLoadedState state;
 
   @override
@@ -141,48 +136,38 @@ class MobileBalanceOverview extends StatelessWidget {
   }
 }
 
-class WebBalanceOverview extends StatelessWidget {
-  const WebBalanceOverview(
-      {Key? key, required double iconSize, required this.state})
-      : _iconSize = iconSize,
-        super(key: key);
+class BalanceOverviewDesktop extends StatelessWidget {
+  const BalanceOverviewDesktop({Key? key, required this.state})
+      : super(key: key);
 
-  final double _iconSize;
   final UserDTCVPLoadedState state;
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 25.w,
+      width: 200,
       child: Align(
         alignment: Alignment.centerRight,
         child: Padding(
-          padding: EdgeInsets.only(right: 2.w),
+          padding: EdgeInsets.only(right: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Container(
-                  width: 1.w,
-                  height: 1.w,
-                  child: DTubeLogoShadowed(size: _iconSize)),
-              OverlayText(
-                text: shortDTC(state.dtcBalance),
-                sizeMultiply: 1,
-                bold: true,
+              DTubeLogo(size: 20),
+              Padding(
+                padding: EdgeInsets.only(left: 10.0),
+                child: Text(shortDTC(state.dtcBalance),
+                    style: Theme.of(context).textTheme.headline5),
               ),
-              Container(
-                width: 1.w,
-                height: 1.w,
-                child: ShadowedIcon(
-                  icon: FontAwesomeIcons.bolt,
-                  shadowColor: Colors.black,
-                  color: globalAlmostWhite,
-                  size: 1.w,
-                ),
+              FaIcon(
+                FontAwesomeIcons.bolt,
+                color: globalAlmostWhite,
+                size: 20,
               ),
-              OverlayText(
-                  text: shortVP(state.vtBalance['v']!),
-                  sizeMultiply: 1,
-                  bold: true),
+              Padding(
+                padding: EdgeInsets.only(left: 10.0),
+                child: Text(shortVP(state.vtBalance['v']!),
+                    style: Theme.of(context).textTheme.headline5),
+              ),
             ],
           ),
         ),

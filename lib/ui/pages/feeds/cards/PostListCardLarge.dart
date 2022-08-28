@@ -894,6 +894,7 @@ class TitleWidgetForRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+
       width: widget.width * 0.55,
       child: InkWell(
         onTap: () {

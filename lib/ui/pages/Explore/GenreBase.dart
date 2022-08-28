@@ -92,7 +92,7 @@ class _GenreBaseState extends State<GenreBase> {
                     Container(
                         height: 100.h,
                         child: !_showResults
-                            ? StaggeredGridView.countBuilder(
+                            ? MasonryGridView.count(
                                 padding: EdgeInsets.only(
                                   bottom: 16.h,
                                   top: 18.h,
@@ -117,8 +117,8 @@ class _GenreBaseState extends State<GenreBase> {
                                         });
                                       });
                                 },
-                                staggeredTileBuilder: (int index) =>
-                                    new StaggeredTile.fit(1),
+                                // staggeredTileBuilder: (int index) =>
+                                //     new StaggeredTile.fit(1),
                                 mainAxisSpacing: 8.0,
                                 crossAxisSpacing: 8.0,
                               )

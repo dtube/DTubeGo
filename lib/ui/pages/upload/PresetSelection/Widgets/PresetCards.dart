@@ -1,22 +1,23 @@
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/ui/pages/upload/widgets/InitiativeDialog.dart';
+import 'package:dtube_go/ui/pages/upload/PresetSelection/Widgets/InitiativeDialog.dart';
 import 'package:dtube_go/ui/widgets/Inputs/CustomChoiceCard.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class PresetCard extends StatelessWidget {
-  const PresetCard({
-    Key? key,
-    required this.currentIndex,
-    required this.preset,
-    required this.onTapCallback,
-  });
+  const PresetCard(
+      {Key? key,
+      required this.currentIndex,
+      required this.preset,
+      required this.onTapCallback,
+      required this.iconSize});
 
   final int currentIndex;
   final Preset preset;
 
   final VoidCallback onTapCallback;
+  final double iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class PresetCard extends StatelessWidget {
                     children: [
                       Center(
                           child: FaIcon(preset.icon,
-                              size: 10.w, color: globalAlmostWhite)),
+                              size: iconSize, color: globalAlmostWhite)),
                       Text(preset.name,
                           style: Theme.of(context).textTheme.caption)
                     ],
@@ -54,12 +55,14 @@ class InitiativePresetCard extends StatelessWidget {
       {Key? key,
       required this.currentIndex,
       required this.initiative,
-      required this.onTapCallback});
+      required this.onTapCallback,
+      required this.iconSize});
 
   final int currentIndex;
   final Preset initiative;
 
   final VoidCallback onTapCallback;
+  final double iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +76,7 @@ class InitiativePresetCard extends StatelessWidget {
               height: 15.h,
               icon: initiative.icon,
               iconColor: globalAlmostWhite,
-              iconSize: 10.w,
+              iconSize: iconSize,
               label: initiative.name,
               onTapped: () {
                 onTapCallback();

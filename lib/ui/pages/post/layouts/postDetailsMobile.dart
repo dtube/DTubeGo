@@ -1,5 +1,5 @@
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_go/ui/pages/post/postDetailsWeb.dart';
+
 import 'package:dtube_go/ui/pages/post/widgets/Comments.dart';
 import 'package:dtube_go/ui/pages/post/widgets/DTubeCoinsChip.dart';
 import 'package:dtube_go/ui/pages/post/widgets/ShareAndCommentChiips.dart';
@@ -35,14 +35,14 @@ import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 import 'dart:io' show Platform;
 
-class PostDetailPage extends StatefulWidget {
+class PostDetailPageMobile extends StatefulWidget {
   String link;
   String author;
   bool recentlyUploaded;
   String directFocus;
   VoidCallback? onPop;
 
-  PostDetailPage(
+  PostDetailPageMobile(
       {required this.link,
       required this.author,
       required this.recentlyUploaded,
@@ -50,10 +50,10 @@ class PostDetailPage extends StatefulWidget {
       this.onPop});
 
   @override
-  _PostDetailPageState createState() => _PostDetailPageState();
+  _PostDetailPageMobileState createState() => _PostDetailPageMobileState();
 }
 
-class _PostDetailPageState extends State<PostDetailPage> {
+class _PostDetailPageMobileState extends State<PostDetailPageMobile> {
   int reloadCount = 0;
   bool flagged = false;
 
@@ -141,18 +141,11 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 if (!state.post.isFlaggedByUser) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: kIsWeb
-                        ? WebPostDetails(
-                            post: state.post,
-                            directFocus:
-                                reloadCount <= 1 ? widget.directFocus : "none",
-                            //),
-                          )
-                        : MobilePostDetails(
-                            post: state.post,
-                            directFocus:
-                                reloadCount <= 1 ? widget.directFocus : "none",
-                          ),
+                    child: MobilePostDetails(
+                      post: state.post,
+                      directFocus:
+                          reloadCount <= 1 ? widget.directFocus : "none",
+                    ),
                   );
                 } else {
                   flagged = true;
@@ -284,12 +277,13 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
                               margin: EdgeInsets.all(5.0),
                               child: globals.disableAnimations
                                   ? AccountNavigationChip(
-                                      author: widget.post.author)
+                                      author: widget.post.author, size: 230)
                                   : SlideInDown(
                                       preferences: AnimationPreferences(
                                           offset: Duration(milliseconds: 500)),
                                       child: AccountNavigationChip(
-                                          author: widget.post.author),
+                                          author: widget.post.author,
+                                          size: 230),
                                     ),
                             ),
                             globals.disableAnimations
@@ -368,6 +362,7 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
                                   ? DtubeCoinsChip(
                                       dist: widget.post.dist,
                                       post: widget.post,
+                                      width: 5.w,
                                     )
                                   : BounceIn(
                                       preferences: AnimationPreferences(
@@ -375,6 +370,7 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
                                       child: DtubeCoinsChip(
                                         dist: widget.post.dist,
                                         post: widget.post,
+                                        width: 5.w,
                                       ),
                                     ),
                             ],
@@ -439,6 +435,20 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
                                     widget.post.comments!.length > 0
                                 ? globals.disableAnimations
                                     ? CommentContainer(
+                                        shrinkButtons: true,
+                                        avatarSize: 3.w,
+                                        height: (14.h *
+                                                    (widget.post.comments == null
+                                                        ? 1
+                                                        : widget.post.comments!
+                                                            .length)) >
+                                                42.h
+                                            ? 42.h
+                                            : 14.h *
+                                                (widget.post.comments == null
+                                                    ? 1
+                                                    : widget
+                                                        .post.comments!.length),
                                         defaultVoteWeightComments:
                                             _defaultVoteWeightComments,
                                         defaultVoteTipComments:
@@ -456,6 +466,24 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
                                         txBloc: txBloc)
                                     : SlideInLeft(
                                         child: CommentContainer(
+                                            shrinkButtons: false,
+                                            avatarSize: 3.w,
+                                            height: (14.h *
+                                                        (widget.post.comments ==
+                                                                null
+                                                            ? 1
+                                                            : widget
+                                                                .post
+                                                                .comments!
+                                                                .length)) >
+                                                    42.h
+                                                ? 42.h
+                                                : 14.h *
+                                                    (widget.post.comments ==
+                                                            null
+                                                        ? 1
+                                                        : widget.post.comments!
+                                                            .length),
                                             defaultVoteWeightComments:
                                                 _defaultVoteWeightComments,
                                             defaultVoteTipComments:

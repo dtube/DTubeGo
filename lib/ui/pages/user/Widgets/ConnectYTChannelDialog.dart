@@ -95,6 +95,7 @@ class _ConnectYTChannelDialogState extends State<ConnectYTChannelDialog> {
                     decoration:
                         new InputDecoration(labelText: "YT Channel ID*"),
                     controller: _channelIdController,
+                    cursorColor: globalRed,
                   ),
                 ),
                 Padding(
