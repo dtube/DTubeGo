@@ -32,71 +32,64 @@ class NotificationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(2.w),
-      child: SizedBox(
+      child: Container(
         height: 15.h,
         width: 100.w,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            DTubeFormCard(
-              childs: [
-                Row(
-                  children: [
-                    Container(
-                      width: 25.w,
-                      child: Column(
-                        children: [
-                          BlocProvider<UserBloc>(
-                            create: (BuildContext context) =>
-                                UserBloc(repository: UserRepositoryImpl()),
-                            child: GestureDetector(
-                                onTap: () {
-                                  navigateToUserDetailPage(
-                                      context, sender, () {});
-                                },
-                                child: AccountIconBase(
-                                  avatarSize: 15.w,
-                                  showVerified: true,
-                                  username: sender,
-                                )),
-                          ),
-                          Text(
-                            sender,
-                            style: Theme.of(context).textTheme.caption,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+        child: DTubeFormCard(
+          childs: [
+            Row(
+              children: [
+                Container(
+                  width: 25.w,
+                  child: Column(
+                    children: [
+                      BlocProvider<UserBloc>(
+                        create: (BuildContext context) =>
+                            UserBloc(repository: UserRepositoryImpl()),
+                        child: GestureDetector(
+                            onTap: () {
+                              navigateToUserDetailPage(context, sender, () {});
+                            },
+                            child: AccountIconBase(
+                              avatarSize: 15.w,
+                              showVerified: true,
+                              username: sender,
+                            )),
                       ),
-                    ),
-                    SizedBox(
-                      width: 3.w,
-                    ),
-                    Container(
-                      width: 47.w,
-                      child: NotificationDetails(
-                        sender: sender,
-                        tx: tx,
-                        username: username,
-                        notificationType: notificationType,
+                      Text(
+                        sender,
+                        style: Theme.of(context).textTheme.caption,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    userNavigation || postNavigation
-                        ? FaIcon(
-                            userNavigation
-                                ? FontAwesomeIcons.user
-                                : FontAwesomeIcons.play,
-                            size: 5.w,
-                          )
-                        : SizedBox(width: 0)
-                  ],
+                    ],
+                  ),
                 ),
+                SizedBox(
+                  width: 3.w,
+                ),
+                Container(
+                  width: 47.w,
+                  child: NotificationDetails(
+                    sender: sender,
+                    tx: tx,
+                    username: username,
+                    notificationType: notificationType,
+                  ),
+                ),
+                userNavigation || postNavigation
+                    ? FaIcon(
+                        userNavigation
+                            ? FontAwesomeIcons.user
+                            : FontAwesomeIcons.play,
+                        size: 5.w,
+                      )
+                    : SizedBox(width: 0)
               ],
-              avoidAnimation: true,
-              waitBeforeFadeIn: Duration(milliseconds: 0),
             ),
           ],
+          avoidAnimation: true,
+          waitBeforeFadeIn: Duration(milliseconds: 0),
         ),
       ),
     );

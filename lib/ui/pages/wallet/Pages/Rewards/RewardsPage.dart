@@ -151,9 +151,11 @@ class _RewardsListState extends State<RewardsList> {
                     'rewards' + widget.rewardsState + 'listview'),
                 itemCount: _rewards.length,
                 itemBuilder: (ctx, pos) {
-                  return RewardsCard(
-                    reward: _rewards[pos],
-                    parentWidget: this.widget,
+                  return Center(
+                    child: RewardCard(
+                      reward: _rewards[pos],
+                      parentWidget: this.widget,
+                    ),
                   );
                 });
           }

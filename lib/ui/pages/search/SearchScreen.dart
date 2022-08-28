@@ -9,10 +9,12 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return ResponsiveLayout(
       desktopBody: SearchScreenDesktop(),
       tabletBody: SearchScreenTablet(),
       mobileBody: SearchScreenMobile(),
     );
   }
+
 }

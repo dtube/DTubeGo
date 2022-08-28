@@ -36,6 +36,7 @@ class UserPage extends StatelessWidget {
         username: username,
         onPop: onPop,
       ),
+
     );
   }
 }

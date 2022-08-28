@@ -64,7 +64,10 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         }
         // reverse feed to have the moments in ascending order
         List<FeedItem> feedReversed = new List.from(feed.reversed);
-        emit(FeedLoadedState(feed: feedReversed, feedType: event.feedType));
+        emit(FeedLoadedState(
+            feed: feedReversed,
+            feedType: event.feedType,
+            fetchedWholeFeed: true));
       } catch (e) {
         print(e.toString());
         emit(FeedErrorState(message: e.toString()));
@@ -103,7 +106,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
                 _applicationUser)
             : await repository.getMyFeedFiltered(_avalonApiNode,
                 "&tags=DTubeGo-Moments", _tsRangeFilter, _applicationUser);
-        emit(FeedLoadedState(feed: feed, feedType: event.feedType));
+        emit(FeedLoadedState(
+            feed: feed, feedType: event.feedType, fetchedWholeFeed: true));
       } catch (e) {
         print(e.toString());
         emit(FeedErrorState(message: e.toString()));
@@ -141,7 +145,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
                 _blockedUsersFilter,
             _tsRangeFilter,
             _applicationUser);
-        emit(FeedLoadedState(feed: feed, feedType: "tagSearch"));
+        emit(FeedLoadedState(
+            feed: feed, feedType: "tagSearch", fetchedWholeFeed: true));
       } catch (e) {
         print(e.toString());
         emit(FeedErrorState(message: e.toString()));
@@ -225,7 +230,10 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             break;
         }
 
-        emit(FeedLoadedState(feed: feed, feedType: event.feedType));
+        emit(FeedLoadedState(
+            feed: feed,
+            feedType: event.feedType,
+            fetchedWholeFeed: event.fromAuthor == null));
       } catch (e) {
         emit(FeedErrorState(message: e.toString()));
       }
@@ -251,7 +259,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             "" // tsrange currently not used here to load all uploads of the user
             ,
             _applicationUser);
-        emit(FeedLoadedState(feed: feed, feedType: "UserFeed"));
+        emit(FeedLoadedState(
+            feed: feed, feedType: "UserFeed", fetchedWholeFeed: true));
       } catch (e) {
         print(e.toString());
         emit(FeedErrorState(message: e.toString()));
@@ -482,7 +491,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         emit(FeedLoadedState(
             feed:
                 _otherUsersFeed.take(ExploreConfig.maxUserSuggestions).toList(),
-            feedType: "SuggestedPosts"));
+            feedType: "SuggestedPosts",
+            fetchedWholeFeed: true));
       } catch (e) {
         print(e.toString());
         emit(FeedErrorState(message: e.toString()));

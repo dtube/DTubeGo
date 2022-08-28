@@ -105,6 +105,12 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
 
         setState(() {});
       });
+    _videoController.addListener(() {
+      if (_videoController.value.duration > Duration(milliseconds: 0) &&
+          _videoController.value.position == _videoController.value.duration) {
+        setMomentSeen();
+      }
+    });
     // BlocProvider.of<IPFSUploadBloc>(context).add(IPFSUploaderInitState());
     BlocProvider.of<Web3StorageBloc>(context).add(Web3StorageInitState());
   }
@@ -126,11 +132,11 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
           _videoController.pause();
           widget.momentsController.pause();
         }
-        if (visiblePercentage > 90) {
-          _videoController.play();
-          widget.momentsController.play();
-          setMomentSeen();
-        }
+        // if (visiblePercentage > 90) {
+        //   _videoController.play();
+        //   widget.momentsController.play();
+        //   // setMomentSeen();
+        // }
       },
       child: Container(
         color: Colors.black,
@@ -160,6 +166,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                   } else if (details.primaryVelocity != null &&
                       details.primaryVelocity! < 0) {
                     widget.momentsController.next();
+                    setMomentSeen();
                   }
                 },
                 child: _videoController.value.isInitialized
@@ -198,6 +205,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                 child: Container(
                   child: GestureDetector(onTap: () {
                     widget.momentsController.next();
+                    setMomentSeen();
                   }),
                   width: 30,
                 ),
@@ -272,7 +280,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                               author: widget.feedItem.author,
                               link: widget.feedItem.link,
                               downvote: true,
-                              postBloc: BlocProvider.of<PostBloc>(context),
+
                               txBloc: BlocProvider.of<TransactionBloc>(context),
 
                               //currentVT: state.vtBalance['v']! + 0.0,
@@ -341,8 +349,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                                   child: VotingDialog(
                                     defaultVote: double.parse(
                                         widget.momentsVotingWeight),
-                                    postBloc:
-                                        BlocProvider.of<PostBloc>(context),
+
                                     txBloc: BlocProvider.of<TransactionBloc>(
                                         context),
                                     defaultTip: double.parse(

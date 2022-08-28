@@ -148,6 +148,7 @@ class FeedList extends StatelessWidget {
                               if (_feedItems.isNotEmpty) {
                                 if (_feedItems.first.link ==
                                     state.feed.first.link) {
+
                                   _feedItems.clear();
                                 } else {
                                   _feedItems.removeLast();
@@ -626,6 +627,7 @@ class _PostListCardState extends State<PostListCard>
         create: (BuildContext context) =>
             UserBloc(repository: UserRepositoryImpl()),
         child: PostListCardLarge(
+          width: 90.w,
           blur: widget.blur,
           thumbnailUrl: widget.thumbnailUrl,
           title: widget.title,

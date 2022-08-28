@@ -162,6 +162,7 @@ class TagListState extends State<TagList> {
           itemCount: searchResults.length,
           itemBuilder: (ctx, pos) {
             return PostListCardLarge(
+              width: 90.w,
               alreadyVoted: searchResults[pos].alreadyVoted!,
               alreadyVotedDirection: searchResults[pos].alreadyVotedDirection!,
               author: searchResults[pos].author,

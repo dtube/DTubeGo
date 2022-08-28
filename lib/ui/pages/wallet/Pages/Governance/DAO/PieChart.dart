@@ -38,20 +38,35 @@ class _DaoStateChartState extends State<PiChart> {
     return Container(
       height: widget.height,
       width: widget.width,
-      child: PieChart(
-        PieChartData(
-            startDegreeOffset: widget.startFromDegree,
-            pieTouchData: PieTouchData(
-                touchCallback: (FlTouchEvent event, pieTouchResponse) {
-              widget.onTapCallback();
-            }),
-            borderData: FlBorderData(
-              show: false,
+      child: Stack(
+        children: [
+          PieChart(
+            PieChartData(
+                startDegreeOffset: widget.startFromDegree,
+                borderData: FlBorderData(
+                  show: false,
+                ),
+                sectionsSpace: 0,
+                centerSpaceRadius: 0,
+                sections: generateSections(
+                    widget.receivedValue,
+                    widget.goalValue,
+                    widget.outerRadius,
+                    widget.showLabels,
+                    widget.raisedLabel)),
+          ),
+          Center(
+            child: InkWell(
+              child: Container(
+                  width: widget.width * 0.6,
+                  height: widget.height * 0.75,
+                  color: Colors.transparent),
+              onTap: () {
+                widget.onTapCallback();
+              },
             ),
-            sectionsSpace: 0,
-            centerSpaceRadius: 0,
-            sections: generateSections(widget.receivedValue, widget.goalValue,
-                widget.outerRadius, widget.showLabels, widget.raisedLabel)),
+          ),
+        ],
       ),
     );
   }

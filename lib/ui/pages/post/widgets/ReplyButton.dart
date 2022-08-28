@@ -134,6 +134,8 @@ class _ReplyButtonState extends State<ReplyButton> {
                 Container(
                   width: 70.w,
                   child: TextField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
                       autofocus: _replyPressed,
                       controller: _replyController,
                       cursorColor: globalRed,

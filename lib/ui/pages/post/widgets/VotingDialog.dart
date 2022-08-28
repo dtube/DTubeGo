@@ -27,7 +27,6 @@ class VotingDialog extends StatefulWidget {
       this.verticalModeCallbackVotingButtonsPressed,
       this.okCallback,
       this.cancelCallback,
-      required this.postBloc,
       required this.txBloc,
       required this.fixedDownvoteActivated,
       required this.fixedDownvoteWeight})
@@ -48,7 +47,6 @@ class VotingDialog extends StatefulWidget {
 
   final VoidCallback? okCallback;
   final VoidCallback? cancelCallback;
-  final PostBloc postBloc;
   final TransactionBloc txBloc;
 
   @override
