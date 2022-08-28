@@ -142,13 +142,9 @@ class _PostDetailPageTabletState extends State<PostDetailPageTablet> {
               } else if (state is PostLoadedState) {
                 reloadCount++;
                 if (!state.post.isFlaggedByUser) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: PostDetails(
-                      post: state.post,
-                      directFocus:
-                          reloadCount <= 1 ? widget.directFocus : "none",
-                    ),
+                  return PostDetails(
+                    post: state.post,
+                    directFocus: reloadCount <= 1 ? widget.directFocus : "none",
                   );
                 } else {
                   flagged = true;
@@ -567,6 +563,10 @@ class _PostDetailsState extends State<PostDetails> {
                               alignment: Alignment.topCenter,
                               child: FeedListSuggestedPosts(
                                 feedType: 'SuggestedPosts',
+                                clickedCallback: () {
+                                  _controller.pause();
+                                  _videocontroller.pause();
+                                },
                                 width: suggestedSize * 0.9,
                                 scrollCallback: (bool) {},
                               ),

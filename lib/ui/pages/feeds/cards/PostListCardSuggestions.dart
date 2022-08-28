@@ -9,20 +9,21 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 typedef ListOfString2VoidFunc = void Function(List<String>);
 
 class PostListCardSuggestions extends StatefulWidget {
-  const PostListCardSuggestions({
-    Key? key,
-    required this.blur,
-    required this.thumbnailUrl,
-    required this.title,
-    required this.description,
-    required this.author,
-    required this.link,
-    required this.publishDate,
-    required this.duration,
-    required this.dtcValue,
-    required this.indexOfList,
-    required this.width,
-  }) : super(key: key);
+  const PostListCardSuggestions(
+      {Key? key,
+      required this.blur,
+      required this.thumbnailUrl,
+      required this.title,
+      required this.description,
+      required this.author,
+      required this.link,
+      required this.publishDate,
+      required this.duration,
+      required this.dtcValue,
+      required this.indexOfList,
+      required this.width,
+      required this.clickedCallback})
+      : super(key: key);
 
   final bool blur;
   final String thumbnailUrl;
@@ -35,6 +36,7 @@ class PostListCardSuggestions extends StatefulWidget {
   final String dtcValue;
   final int indexOfList;
   final double width;
+  final VoidCallback clickedCallback;
 
   @override
   _PostListCardSuggestionsState createState() =>
@@ -51,6 +53,7 @@ class _PostListCardSuggestionsState extends State<PostListCardSuggestions> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        widget.clickedCallback();
         navigateToPostDetailPage(
             context, widget.author, widget.link, "none", false, () {});
       },

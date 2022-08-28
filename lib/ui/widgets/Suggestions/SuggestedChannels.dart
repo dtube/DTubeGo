@@ -9,15 +9,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SuggestedChannels extends StatelessWidget {
-  const SuggestedChannels({Key? key, required this.avatarSize})
+  SuggestedChannels({Key? key, required this.avatarSize, this.crossAxisCount})
       : super(key: key);
   final double avatarSize;
+
+  int? crossAxisCount;
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
-      desktopBody: SuggestedChannelsDesktop(avatarSize: avatarSize),
+      desktopBody: SuggestedChannelsDesktop(
+        avatarSize: avatarSize,
+        crossAxisCount: crossAxisCount!,
+      ),
       mobileBody: SuggestedChannelsMobile(avatarSize: avatarSize),
-      tabletBody: SuggestedChannelsDesktop(avatarSize: avatarSize),
+      tabletBody: SuggestedChannelsDesktop(
+        avatarSize: avatarSize,
+        crossAxisCount: crossAxisCount!,
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'package:dtube_go/style/ThemeData.dart';
@@ -157,104 +158,119 @@ class _UserPageDesktopState extends State<UserPageDesktop> {
                       child: Container(
                         height: 50.h,
                         child: FeedList(
-                            desktopCrossAxisCount: 4,
-                            tabletCrossAxisCount: 2,
-                            feedType: 'UserFeed',
-                            username: user.name,
-                            showAuthor: false,
-                            largeFormat: false,
-                            heightPerEntry: 30.h,
-                            width: 80.w,
-                            topPaddingForFirstEntry: 0,
-                            sidepadding: 5.w,
-                            bottompadding: 0.h,
-                            scrollCallback: (bool) {},
-                            enableNavigation: true,
-                            showBorder: true
-                            // header: "Regular Uploads"
-                            ),
+                          desktopCrossAxisCount: 4,
+                          tabletCrossAxisCount: 2,
+                          feedType: 'UserFeed',
+                          username: user.name,
+                          showAuthor: false,
+                          largeFormat: false,
+                          heightPerEntry: 30.h,
+                          width: 80.w,
+                          topPaddingForFirstEntry: 0,
+                          sidepadding: 5.w,
+                          bottompadding: 0.h,
+                          scrollCallback: (bool) {},
+                          enableNavigation: true,
+                          showBorder: true,
+                          disablePlayback: true,
+                          hideSpeedDial: true,
+                          // header: "Regular Uploads"
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Moments",
-                        style: Theme.of(context).textTheme.headline1),
                   ),
                   BlocProvider<FeedBloc>(
-                    create: (context) =>
-                        FeedBloc(repository: FeedRepositoryImpl())
-                          ..add(FetchMomentsOfUserEvent(
-                              feedType: "NewUserMoments", username: user.name)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 50.h,
-                        child: FeedList(
-                            desktopCrossAxisCount: 4,
-                            tabletCrossAxisCount: 2,
-                            feedType: 'NewUserMoments',
-                            username: user.name,
-                            showAuthor: false,
-                            largeFormat: false,
-                            heightPerEntry: 30.h,
-                            width: 80.w,
-                            topPaddingForFirstEntry: 0,
-                            sidepadding: 5.w,
-                            bottompadding: 0.h,
-                            scrollCallback: (bool) {},
-                            enableNavigation: true,
-                            showBorder: true
-                            //header: "Moments"
-                            ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: BlocProvider<FeedBloc>(
                       create: (context) =>
                           FeedBloc(repository: FeedRepositoryImpl())
-                            ..add(FetchSuggestedUsersForUserHistory(
+                            ..add(FetchMomentsOfUserEvent(
+                                feedType: "NewUserMoments",
                                 username: user.name)),
-                      child: SuggestedChannels(avatarSize: 100),
-                    ),
+                      child: BlocBuilder<FeedBloc, FeedState>(
+                          builder: (context, state) {
+                        if (state is FeedLoadedState) {
+                          if (state.feed.length == 0) {
+                            return Container(
+                              width: 0,
+                              height: 0,
+                            );
+                          } else {
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Moments",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline1),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    height: 50.h,
+                                    child: FeedList(
+                                      desktopCrossAxisCount: 4,
+                                      tabletCrossAxisCount: 2,
+                                      feedType: 'NewUserMoments',
+                                      username: user.name,
+                                      showAuthor: false,
+                                      largeFormat: false,
+                                      heightPerEntry: 30.h,
+                                      width: 80.w,
+                                      topPaddingForFirstEntry: 0,
+                                      sidepadding: 5.w,
+                                      bottompadding: 0.h,
+                                      scrollCallback: (bool) {},
+                                      enableNavigation: true,
+                                      showBorder: true,
+                                      disablePlayback: true,
+                                      hideSpeedDial: true,
+                                      //header: "Moments"
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                        }
+
+                        return DtubeLogoPulseWithSubtitle(
+                            subtitle: "loading moments..", size: 10.w);
+                      })),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      BlocProvider<FeedBloc>(
+                        create: (context) =>
+                            FeedBloc(repository: FeedRepositoryImpl())
+                              ..add(FetchSuggestedUsersForUserHistory(
+                                  username: user.name)),
+                        child: SuggestedChannels(
+                          avatarSize: 80,
+                          crossAxisCount: 4,
+                        ),
+                      ),
+                      user.followers != null
+                          ? UserList(
+                              userlist: user.followers!,
+                              crossAxisCount: 4,
+                              title: "Followers",
+                              avatarSize: 80,
+                              showCount: true,
+                            )
+                          : SizedBox(height: 0),
+                      user.follows != null
+                          ? UserList(
+                              crossAxisCount: 4,
+                              userlist: user.follows!,
+                              title: "Following",
+                              avatarSize: 80,
+                              showCount: true,
+                            )
+                          : SizedBox(height: 0),
+                      SizedBox(height: 10.h)
+                    ],
                   ),
-                  user.followers != null
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Container(
-                            width: 50.w,
-                            height: 30.h,
-                            child: SingleChildScrollView(
-                              child: UserList(
-                                userlist: user.followers!,
-                                title: "Followers",
-                                avatarSize: 100,
-                                showCount: true,
-                              ),
-                            ),
-                          ),
-                        )
-                      : SizedBox(height: 0),
-                  user.follows != null
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Container(
-                            width: 50.w,
-                            height: 30.h,
-                            child: SingleChildScrollView(
-                              child: UserList(
-                                userlist: user.follows!,
-                                title: "Following",
-                                avatarSize: 100,
-                                showCount: true,
-                              ),
-                            ),
-                          ),
-                        )
-                      : SizedBox(height: 0),
-                  SizedBox(height: 10.h)
+                  Container(height: 100)
                 ],
               )),
             ),

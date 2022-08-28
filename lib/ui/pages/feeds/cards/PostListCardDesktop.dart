@@ -39,7 +39,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class PostListCardDesktop extends StatefulWidget {
-  const PostListCardDesktop(
+  PostListCardDesktop(
       {Key? key,
       required this.blur,
       required this.defaultCommentVotingWeight,
@@ -50,7 +50,9 @@ class PostListCardDesktop extends StatefulWidget {
       required this.autoPauseVideoOnPopup,
       required this.feedItem,
       required this.crossAxisCount,
-      required this.width})
+      required this.width,
+      this.deactivatePlayback,
+      this.hideSpeedDial})
       : super(key: key);
 
   final bool blur;
@@ -64,6 +66,8 @@ class PostListCardDesktop extends StatefulWidget {
   final String fixedDownvoteWeight;
   final int crossAxisCount;
   final double width;
+  bool? deactivatePlayback;
+  bool? hideSpeedDial;
 
   @override
   _PostListCardDesktopState createState() => _PostListCardDesktopState();
@@ -139,6 +143,15 @@ class _PostListCardDesktopState extends State<PostListCardDesktop> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: PostData(
+          disablePlayback:
+              widget.deactivatePlayback != null && widget.deactivatePlayback!
+                  ? true
+                  : false,
+          hideSpeedDial: widget.hideSpeedDial != null && widget.hideSpeedDial!
+              ? true
+              : false,
+          author: widget.feedItem.author,
+          link: widget.feedItem.link,
           thumbnailTapped: _thumbnailTapped,
           widget: widget,
           bpController: _bpController,
@@ -222,7 +235,11 @@ class PostData extends StatefulWidget {
       required this.fixedDownvoteWeight,
       required this.parentContext,
       required this.autoPauseVideoOnPopup,
-      required this.width})
+      required this.width,
+      required this.hideSpeedDial,
+      required this.disablePlayback,
+      required this.author,
+      required this.link})
       : _thumbnailTapped = thumbnailTapped,
         _bpController = bpController,
         _ytController = ytController,
@@ -269,6 +286,10 @@ class PostData extends StatefulWidget {
 
   final BuildContext parentContext;
   final double width;
+  bool disablePlayback;
+  bool hideSpeedDial;
+  final String author;
+  final String link;
 
   @override
   State<PostData> createState() => _PostDataState();
@@ -283,7 +304,12 @@ class _PostDataState extends State<PostData> {
       children: [
         InkWell(
           onTap: () {
-            widget.thumbnailTappedCallback();
+            if (!widget.disablePlayback) {
+              widget.thumbnailTappedCallback();
+            } else {
+              navigateToPostDetailPage(
+                  context, widget.author, widget.link, "none", false, () {});
+            }
           },
           child: Stack(
             alignment: Alignment.topCenter,
@@ -305,6 +331,7 @@ class _PostDataState extends State<PostData> {
           ),
         ),
         PostInfoBaseRow(
+          hideSpeedDial: widget.hideSpeedDial,
           autoPauseVideoOnPopup: widget.autoPauseVideoOnPopup,
           defaultCommentVotingWeight: widget.defaultCommentVotingWeight,
           defaultPostVotingTip: widget.defaultPostVotingTip,
@@ -523,7 +550,8 @@ class PostInfoBaseRow extends StatelessWidget {
       required this.fixedDownvoteWeight,
       required this.parentContext,
       required this.autoPauseVideoOnPopup,
-      required this.width})
+      required this.width,
+      required this.hideSpeedDial})
       : super(key: key);
 
   final YoutubePlayerController ytController;
@@ -545,6 +573,7 @@ class PostInfoBaseRow extends StatelessWidget {
 
   final BuildContext parentContext;
   final double width;
+  final bool hideSpeedDial;
 
   @override
   Widget build(BuildContext context) {
@@ -571,7 +600,7 @@ class PostInfoBaseRow extends StatelessWidget {
               ),
         Container(
           width: width * 0.1,
-          child: globals.keyPermissions.isEmpty
+          child: globals.keyPermissions.isEmpty || hideSpeedDial
               ? Container()
               : Align(
                   alignment: Alignment.centerRight,
@@ -707,8 +736,8 @@ class PostInfoBaseRow extends StatelessWidget {
                                           double.parse(defaultPostVotingWeight),
                                       defaultTip:
                                           double.parse(defaultPostVotingTip),
-                                      postBloc:
-                                          BlocProvider.of<PostBloc>(context),
+                                      postBloc: PostBloc(
+                                          repository: PostRepositoryImpl()),
                                       txBloc: BlocProvider.of<TransactionBloc>(
                                           context),
                                       author: feedItem.author,
@@ -780,8 +809,8 @@ class PostInfoBaseRow extends StatelessWidget {
                                           double.parse(defaultPostVotingWeight),
                                       defaultTip:
                                           double.parse(defaultPostVotingTip),
-                                      postBloc:
-                                          BlocProvider.of<PostBloc>(context),
+                                      postBloc: PostBloc(
+                                          repository: PostRepositoryImpl()),
                                       txBloc: BlocProvider.of<TransactionBloc>(
                                           context),
                                       author: feedItem.author,

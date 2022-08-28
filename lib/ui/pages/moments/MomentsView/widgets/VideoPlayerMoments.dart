@@ -280,6 +280,7 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                               author: widget.feedItem.author,
                               link: widget.feedItem.link,
                               downvote: true,
+                              postBloc: BlocProvider.of<PostBloc>(context),
 
                               txBloc: BlocProvider.of<TransactionBloc>(context),
 
@@ -349,7 +350,8 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                                   child: VotingDialog(
                                     defaultVote: double.parse(
                                         widget.momentsVotingWeight),
-
+                                    postBloc:
+                                        BlocProvider.of<PostBloc>(context),
                                     txBloc: BlocProvider.of<TransactionBloc>(
                                         context),
                                     defaultTip: double.parse(

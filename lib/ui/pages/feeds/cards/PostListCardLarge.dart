@@ -677,6 +677,8 @@ class PostInfoBaseRow extends StatelessWidget {
                                           txBloc:
                                               BlocProvider.of<TransactionBloc>(
                                                   context),
+                                          postBloc: BlocProvider.of<PostBloc>(
+                                              context),
                                           author: widget.author,
                                           link: widget.link,
                                           downvote: true,
@@ -752,7 +754,8 @@ class PostInfoBaseRow extends StatelessWidget {
                                               widget.defaultPostVotingWeight),
                                           defaultTip: double.parse(
                                               widget.defaultPostVotingTip),
-
+                                          postBloc: BlocProvider.of<PostBloc>(
+                                              context),
                                           txBloc:
                                               BlocProvider.of<TransactionBloc>(
                                                   context),
@@ -894,7 +897,6 @@ class TitleWidgetForRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
       width: widget.width * 0.55,
       child: InkWell(
         onTap: () {

@@ -57,6 +57,8 @@ class FeedList extends StatelessWidget {
     required this.tabletCrossAxisCount,
     required this.desktopCrossAxisCount,
     this.showBorder,
+    this.disablePlayback,
+    this.hideSpeedDial,
     Key? key,
   }) : super(key: key);
 
@@ -76,6 +78,8 @@ class FeedList extends StatelessWidget {
 
   bool? _autoPauseVideoOnPopup;
   bool? showBorder;
+  bool? disablePlayback;
+  bool? hideSpeedDial;
 
   Future<bool> getSettings() async {
     _hiddenMode = await sec.getShowHidden();
@@ -148,7 +152,6 @@ class FeedList extends StatelessWidget {
                               if (_feedItems.isNotEmpty) {
                                 if (_feedItems.first.link ==
                                     state.feed.first.link) {
-
                                   _feedItems.clear();
                                 } else {
                                   _feedItems.removeLast();
@@ -170,20 +173,31 @@ class FeedList extends StatelessWidget {
                                 feedType,
                               ),
                               tabletBody: buildPostListTablet(
-                                _feedItems,
-                                largeFormat,
-                                true,
-                                context,
-                                feedType,
-                                tabletCrossAxisCount,
-                              ),
+                                  _feedItems,
+                                  largeFormat,
+                                  true,
+                                  context,
+                                  feedType,
+                                  tabletCrossAxisCount,
+                                  disablePlayback != null && disablePlayback!
+                                      ? true
+                                      : false,
+                                  hideSpeedDial != null && hideSpeedDial!
+                                      ? true
+                                      : false),
                               desktopBody: buildPostListDesktop(
                                   _feedItems,
                                   largeFormat,
                                   true,
                                   context,
                                   feedType,
-                                  desktopCrossAxisCount));
+                                  desktopCrossAxisCount,
+                                  disablePlayback != null && disablePlayback!
+                                      ? true
+                                      : false,
+                                  hideSpeedDial != null && hideSpeedDial!
+                                      ? true
+                                      : false));
                           // if (globals.mobileMode) {
                           //   return buildPostList(_feedItems, largeFormat,
                           //       true, context, feedType);
@@ -355,13 +369,14 @@ class FeedList extends StatelessWidget {
   }
 
   Widget buildPostListDesktop(
-    List<FeedItem> feed,
-    bool bigThumbnail,
-    bool showAuthor,
-    BuildContext context,
-    String gpostType,
-    int desktopCrossAxisCount,
-  ) {
+      List<FeedItem> feed,
+      bool bigThumbnail,
+      bool showAuthor,
+      BuildContext context,
+      String gpostType,
+      int desktopCrossAxisCount,
+      bool disablePlayback,
+      bool hideSpeedDial) {
     if (feed.length > 0 && feed.length < 20) {
       BlocProvider.of<FeedBloc>(context)
         ..isFetching = true
@@ -406,19 +421,22 @@ class FeedList extends StatelessWidget {
           }
         }),
       itemBuilder: (BuildContext _, int pos) => PostListCardDesktop(
-          blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
-                  (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
-              ? true
-              : false,
-          defaultCommentVotingWeight: _defaultCommentVotingWeight!,
-          defaultPostVotingWeight: _defaultPostVotingWeight!,
-          defaultPostVotingTip: _defaultPostVotingTip!,
-          fixedDownvoteActivated: _fixedDownvoteActivated!,
-          fixedDownvoteWeight: _fixedDownvoteWeight!,
-          autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
-          feedItem: feed[pos],
-          crossAxisCount: desktopCrossAxisCount,
-          width: MediaQuery.of(context).size.width * 0.2),
+        blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
+                (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
+            ? true
+            : false,
+        defaultCommentVotingWeight: _defaultCommentVotingWeight!,
+        defaultPostVotingWeight: _defaultPostVotingWeight!,
+        defaultPostVotingTip: _defaultPostVotingTip!,
+        fixedDownvoteActivated: _fixedDownvoteActivated!,
+        fixedDownvoteWeight: _fixedDownvoteWeight!,
+        autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
+        feedItem: feed[pos],
+        crossAxisCount: desktopCrossAxisCount,
+        width: MediaQuery.of(context).size.width * 0.2,
+        deactivatePlayback: disablePlayback,
+        hideSpeedDial: hideSpeedDial,
+      ),
 
       //staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
       mainAxisSpacing: 4.0,
@@ -429,13 +447,14 @@ class FeedList extends StatelessWidget {
   }
 
   Widget buildPostListTablet(
-    List<FeedItem> feed,
-    bool bigThumbnail,
-    bool showAuthor,
-    BuildContext context,
-    String gpostType,
-    int tabletCrossAxisCount,
-  ) {
+      List<FeedItem> feed,
+      bool bigThumbnail,
+      bool showAuthor,
+      BuildContext context,
+      String gpostType,
+      int tabletCrossAxisCount,
+      bool disablePlayback,
+      bool hideSpeedDial) {
     if (feed.length > 0 && feed.length < 20) {
       BlocProvider.of<FeedBloc>(context)
         ..isFetching = true
@@ -483,19 +502,22 @@ class FeedList extends StatelessWidget {
             }
           }),
         itemBuilder: (BuildContext context, int pos) => PostListCardDesktop(
-            blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
-                    (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
-                ? true
-                : false,
-            defaultCommentVotingWeight: _defaultCommentVotingWeight!,
-            defaultPostVotingWeight: _defaultPostVotingWeight!,
-            defaultPostVotingTip: _defaultPostVotingTip!,
-            fixedDownvoteActivated: _fixedDownvoteActivated!,
-            fixedDownvoteWeight: _fixedDownvoteWeight!,
-            autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
-            feedItem: feed[pos],
-            crossAxisCount: tabletCrossAxisCount,
-            width: MediaQuery.of(context).size.width * 0.2),
+          blur: (_nsfwMode == 'Blur' && feed[pos].jsonString?.nsfw == 1) ||
+                  (_hiddenMode == 'Blur' && feed[pos].summaryOfVotes < 0)
+              ? true
+              : false,
+          defaultCommentVotingWeight: _defaultCommentVotingWeight!,
+          defaultPostVotingWeight: _defaultPostVotingWeight!,
+          defaultPostVotingTip: _defaultPostVotingTip!,
+          fixedDownvoteActivated: _fixedDownvoteActivated!,
+          fixedDownvoteWeight: _fixedDownvoteWeight!,
+          autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
+          feedItem: feed[pos],
+          crossAxisCount: tabletCrossAxisCount,
+          width: MediaQuery.of(context).size.width * 0.2,
+          deactivatePlayback: disablePlayback,
+          hideSpeedDial: hideSpeedDial,
+        ),
 
         //staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
         mainAxisSpacing: 4.0,

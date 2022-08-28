@@ -136,7 +136,6 @@ class _FeedMainPageState extends State<FeedMainPage>
         print("Selected Index: " + _tabController.index.toString());
 
         loadFeedByIndex(_selectedIndex);
-
       }
     });
     BlocProvider.of<FeedBloc>(context)
@@ -209,9 +208,18 @@ class _FeedMainPageState extends State<FeedMainPage>
 
   @override
   Widget build(BuildContext context) {
-
-      ),
+    return ResponsiveLayout(
       tabletBody: FeedTabsDesktop(
+        tabBarFeedItemList: tabBarFeedItemList,
+        tabBarFeedItemListUnsignedLogin: tabBarFeedItemListUnsignedLogin,
+        tabController: _tabController,
+        tabIcons: _tabIcons,
+        tabIconsUnsignedLogin: _tabIconsUnsignedLogin,
+        tabNames: _tabNames,
+        tabNamesUnsignedLogin: _tabNamesUnsignedLogin,
+        selectedIndex: _selectedIndex,
+      ),
+      mobileBody: FeedTabs(
         tabBarFeedItemList: tabBarFeedItemList,
         tabBarFeedItemListUnsignedLogin: tabBarFeedItemListUnsignedLogin,
         tabController: _tabController,

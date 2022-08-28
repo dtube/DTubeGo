@@ -33,6 +33,7 @@ class FeedListSuggestedPosts extends StatelessWidget {
     required this.feedType,
     required this.scrollCallback,
     required this.width,
+    required this.clickedCallback,
     Key? key,
   }) : super(key: key);
 
@@ -51,6 +52,7 @@ class FeedListSuggestedPosts extends StatelessWidget {
   String? _fixedDownvoteWeight;
 
   bool? _autoPauseVideoOnPopup;
+  VoidCallback clickedCallback;
 
   Future<bool> getSettings() async {
     _hiddenMode = await sec.getShowHidden();
@@ -203,6 +205,7 @@ class FeedListSuggestedPosts extends StatelessWidget {
                   fixedDownvoteWeight: _fixedDownvoteWeight,
                   parentContext: context,
                   autoPauseVideoOnPopup: _autoPauseVideoOnPopup,
+                  clickedCallback: clickedCallback,
                 ),
                 //Text(pos.toString())
               );
@@ -249,37 +252,39 @@ class PostListCard extends StatefulWidget {
   final bool? autoPauseVideoOnPopup;
 
   final BuildContext parentContext;
+  final VoidCallback clickedCallback;
 
-  PostListCard({
-    Key? key,
-    required this.blur,
-    required this.thumbnailUrl,
-    required this.title,
-    required this.description,
-    required this.author,
-    required this.link,
-    required this.publishDate,
-    required this.duration,
-    required this.dtcValue,
-    required this.videoUrl,
-    required this.videoSource,
-    required this.alreadyVoted,
-    required this.alreadyVotedDirection,
-    required this.upvotesCount,
-    required this.downvotesCount,
-    required this.indexOfList,
-    required this.mainTag,
-    required this.oc,
-    required this.width,
-    required this.feedType,
-    this.defaultCommentVotingWeight,
-    this.defaultPostVotingWeight,
-    this.defaultPostVotingTip,
-    required this.fixedDownvoteActivated,
-    required this.fixedDownvoteWeight,
-    required this.parentContext,
-    required this.autoPauseVideoOnPopup,
-  }) : super(key: key);
+  PostListCard(
+      {Key? key,
+      required this.blur,
+      required this.thumbnailUrl,
+      required this.title,
+      required this.description,
+      required this.author,
+      required this.link,
+      required this.publishDate,
+      required this.duration,
+      required this.dtcValue,
+      required this.videoUrl,
+      required this.videoSource,
+      required this.alreadyVoted,
+      required this.alreadyVotedDirection,
+      required this.upvotesCount,
+      required this.downvotesCount,
+      required this.indexOfList,
+      required this.mainTag,
+      required this.oc,
+      required this.width,
+      required this.feedType,
+      this.defaultCommentVotingWeight,
+      this.defaultPostVotingWeight,
+      this.defaultPostVotingTip,
+      required this.fixedDownvoteActivated,
+      required this.fixedDownvoteWeight,
+      required this.parentContext,
+      required this.autoPauseVideoOnPopup,
+      required this.clickedCallback})
+      : super(key: key);
 
   @override
   State<PostListCard> createState() => _PostListCardState();
@@ -303,6 +308,7 @@ class _PostListCardState extends State<PostListCard>
       duration: widget.duration,
       dtcValue: widget.dtcValue,
       indexOfList: widget.indexOfList,
+      clickedCallback: widget.clickedCallback,
 
       //),
     );

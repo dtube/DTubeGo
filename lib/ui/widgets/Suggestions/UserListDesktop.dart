@@ -12,12 +12,15 @@ class UserListDesktop extends StatefulWidget {
       required this.userlist,
       required this.title,
       required this.showCount,
-      required this.avatarSize})
+      required this.avatarSize,
+      required this.crossAxisCount})
       : super(key: key);
   final List<String> userlist;
   final String title;
   final bool showCount;
   final double avatarSize;
+
+  final int crossAxisCount;
 
   @override
   State<UserListDesktop> createState() => _UserListDesktopState();
@@ -43,11 +46,12 @@ class _UserListDesktopState extends State<UserListDesktop> {
                   : ""),
           style: Theme.of(context).textTheme.headline5),
       Container(
-          width: 70.w,
+          height: 40.h,
+          width: 20.w,
           child: MasonryGridView.count(
             padding: EdgeInsets.zero,
             // controller: _scrollController,
-            crossAxisCount: 9,
+            crossAxisCount: widget.crossAxisCount,
             crossAxisSpacing: 10,
             shrinkWrap: true,
 
@@ -66,7 +70,7 @@ class _UserListDesktopState extends State<UserListDesktop> {
                     showBorder: true,
                   ),
                   Container(
-                    height: 2.h,
+                    height: widget.avatarSize,
                     width: widget.avatarSize,
                     child: Center(
                       child: Text(widget.userlist[index],

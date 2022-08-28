@@ -142,13 +142,9 @@ class _PostDetailPageDesktopState extends State<PostDetailPageDesktop> {
               } else if (state is PostLoadedState) {
                 reloadCount++;
                 if (!state.post.isFlaggedByUser) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: PostDetails(
-                      post: state.post,
-                      directFocus:
-                          reloadCount <= 1 ? widget.directFocus : "none",
-                    ),
+                  return PostDetails(
+                    post: state.post,
+                    directFocus: reloadCount <= 1 ? widget.directFocus : "none",
                   );
                 } else {
                   flagged = true;
@@ -204,7 +200,7 @@ class _PostDetailsState extends State<PostDetails> {
   late TransactionBloc txBloc =
       new TransactionBloc(repository: TransactionRepositoryImpl());
 
-  double suggestedSize = 350;
+  double suggestedSize = 450;
 
   void fetchBlockedUsers() async {
     blockedUsers = await sec.getBlockedUsers();
@@ -573,6 +569,10 @@ class _PostDetailsState extends State<PostDetails> {
                               alignment: Alignment.topCenter,
                               child: FeedListSuggestedPosts(
                                 feedType: 'SuggestedPosts',
+                                clickedCallback: () {
+                                  _controller.pause();
+                                  _videocontroller.pause();
+                                },
                                 width: suggestedSize * 0.9,
                                 scrollCallback: (bool) {},
                               ),

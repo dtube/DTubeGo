@@ -6,10 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SuggestedChannelsDesktop extends StatefulWidget {
-  SuggestedChannelsDesktop({Key? key, required this.avatarSize})
+  SuggestedChannelsDesktop(
+      {Key? key, required this.avatarSize, required this.crossAxisCount})
       : super(key: key);
 
   final double avatarSize;
+
+  final int crossAxisCount;
+
   @override
   State<SuggestedChannelsDesktop> createState() =>
       _SuggestedChannelsDesktopState();
@@ -37,17 +41,12 @@ class _SuggestedChannelsDesktopState extends State<SuggestedChannelsDesktop> {
         );
       } else if (state is SuggestedUsersLoadedState) {
         if (state.users.length > 0) {
-          return Container(
-            width: 50.w,
-            height: 30.h,
-            child: SingleChildScrollView(
-              child: UserList(
-                userlist: state.users,
-                title: "Suggested Channels",
-                showCount: true,
-                avatarSize: widget.avatarSize,
-              ),
-            ),
+          return UserList(
+            userlist: state.users,
+            crossAxisCount: widget.crossAxisCount,
+            title: "Suggested Channels",
+            showCount: true,
+            avatarSize: widget.avatarSize,
           );
         } else {
           return SizedBox(height: 0, width: 0);
