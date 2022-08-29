@@ -1,5 +1,5 @@
-import 'package:dtube_go/ui/pages/settings/SettingsTabContainerDesktop.dart';
-import 'package:dtube_go/ui/pages/settings/SettingsTabContainerMobile.dart';
+import 'package:dtube_go/ui/pages/settings/Layouts/SettingsTabContainerDesktop.dart';
+import 'package:dtube_go/ui/pages/settings/Layouts/SettingsTabContainerMobile.dart';
 import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:flutter/material.dart';
 

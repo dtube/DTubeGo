@@ -1,6 +1,6 @@
-import 'package:dtube_go/ui/pages/user/UserDesktop.dart';
-import 'package:dtube_go/ui/pages/user/UserMobile.dart';
-import 'package:dtube_go/ui/pages/user/UserTablet.dart';
+import 'package:dtube_go/ui/pages/user/Layouts/UserDesktop.dart';
+import 'package:dtube_go/ui/pages/user/Layouts/UserMobile.dart';
+import 'package:dtube_go/ui/pages/user/Layouts/UserTablet.dart';
 import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 
 import 'package:flutter/material.dart';
@@ -36,7 +36,6 @@ class UserPage extends StatelessWidget {
         username: username,
         onPop: onPop,
       ),
-
     );
   }
 }

@@ -1,5 +1,5 @@
-import 'package:dtube_go/ui/pages/upload/widgets/uploadFormDesktop.dart';
-import 'package:dtube_go/ui/pages/upload/widgets/uploadFormMobile.dart';
+import 'package:dtube_go/ui/pages/upload/UploadForm/uploadFormDesktop.dart';
+import 'package:dtube_go/ui/pages/upload/UploadForm/uploadFormMobile.dart';
 import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:dtube_go/ui/pages/upload/PresetSelection/Widgets/PresetCards.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';

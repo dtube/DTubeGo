@@ -67,7 +67,10 @@ class _LeaderboardState extends State<Leaderboard>
             });
       }
 
-      return Text("loading");
+      return DtubeLogoPulseWithSubtitle(
+        subtitle: "loading leaderboard..",
+        size: 30.w,
+      );
     }));
   }
 }

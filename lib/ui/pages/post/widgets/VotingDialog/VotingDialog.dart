@@ -1,6 +1,6 @@
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/ui/pages/post/widgets/VotingDialogDesktop.dart';
-import 'package:dtube_go/ui/pages/post/widgets/VotingDialogMobile.dart';
+import 'package:dtube_go/ui/pages/post/widgets/VotingDialog/VotingDialogDesktop.dart';
+import 'package:dtube_go/ui/pages/post/widgets/VotingDialog/VotingDialogMobile.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/Inputs/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';

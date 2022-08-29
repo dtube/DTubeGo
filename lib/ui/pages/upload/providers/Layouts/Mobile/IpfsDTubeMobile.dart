@@ -4,7 +4,7 @@ import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/ui/pages/upload/PresetSelection/Widgets/PresetCards.dart';
-import 'package:dtube_go/ui/pages/upload/widgets/uploadForm.dart';
+import 'package:dtube_go/ui/pages/upload/UploadForm/uploadForm.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

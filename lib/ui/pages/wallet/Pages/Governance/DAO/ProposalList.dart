@@ -39,7 +39,7 @@ class _ProposalListState extends State<ProposalList> {
       builder: (context, state) {
         if (state is DaoLoadingState) {
           return DtubeLogoPulseWithSubtitle(
-            subtitle: "loading dao..",
+            subtitle: "loading decentralized autonomous organization..",
             size: 30.w,
           );
         }
@@ -66,7 +66,10 @@ class _ProposalListState extends State<ProposalList> {
                 });
           }
         }
-        return Text("loading");
+        return DtubeLogoPulseWithSubtitle(
+          subtitle: "loading decentralized autonomous organization..",
+          size: 30.w,
+        );
       },
     );
   }

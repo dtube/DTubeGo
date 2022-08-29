@@ -1,7 +1,7 @@
 import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
-import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
+import 'package:dtube_go/ui/pages/post/widgets/VotingDialog/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/Inputs/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';

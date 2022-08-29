@@ -12,7 +12,7 @@ import 'package:dtube_go/ui/pages/user/Widgets/UsersBlockButton.dart';
 import 'package:dtube_go/ui/widgets/Suggestions/UserList.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/UsersMoreInfoButton.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
-import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannels.dart';
+import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannels/SuggestedChannels.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';

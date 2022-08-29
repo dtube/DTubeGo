@@ -6,7 +6,7 @@ import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/res/Config/secretConfigValues.dart' as secretConfig;
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/upload/PresetSelection/Widgets/PresetCards.dart';
-import 'package:dtube_go/ui/pages/upload/widgets/uploadForm.dart';
+import 'package:dtube_go/ui/pages/upload/UploadForm/uploadForm.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';

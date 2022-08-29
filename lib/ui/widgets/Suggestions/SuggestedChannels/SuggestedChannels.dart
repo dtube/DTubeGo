@@ -1,5 +1,5 @@
-import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannelsDesktop.dart';
-import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannelsMobile.dart';
+import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannels/SuggestedChannelsDesktop.dart';
+import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannels/SuggestedChannelsMobile.dart';
 import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';

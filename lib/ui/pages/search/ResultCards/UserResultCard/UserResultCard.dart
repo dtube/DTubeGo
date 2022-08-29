@@ -1,6 +1,6 @@
-import 'package:dtube_go/ui/pages/search/ResultCards/UserResultCardDesktop.dart';
-import 'package:dtube_go/ui/pages/search/ResultCards/UserResultCardMobile.dart';
-import 'package:dtube_go/ui/pages/search/ResultCards/UserResultCardTablet.dart';
+import 'package:dtube_go/ui/pages/search/ResultCards/UserResultCard/UserResultCardDesktop.dart';
+import 'package:dtube_go/ui/pages/search/ResultCards/UserResultCard/UserResultCardMobile.dart';
+import 'package:dtube_go/ui/pages/search/ResultCards/UserResultCard/UserResultCardTablet.dart';
 import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 
 import 'package:flutter/material.dart';

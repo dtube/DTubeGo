@@ -9,7 +9,7 @@ import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/ui/pages/post/widgets/VotingDialog.dart';
+import 'package:dtube_go/ui/pages/post/widgets/VotingDialog/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/Comments/CommentDialog.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';

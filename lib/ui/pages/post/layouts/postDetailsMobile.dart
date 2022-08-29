@@ -12,7 +12,7 @@ import 'package:dtube_go/bloc/feed/feed_event.dart';
 import 'package:dtube_go/bloc/feed/feed_repository.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/feeds/lists/FeedListCarousel.dart';
-import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannels.dart';
+import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannels/SuggestedChannels.dart';
 import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
 import 'package:flutter/foundation.dart';

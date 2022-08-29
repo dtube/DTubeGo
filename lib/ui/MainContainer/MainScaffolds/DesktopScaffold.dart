@@ -2,7 +2,7 @@ import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
 import 'package:dtube_go/bloc/search/search_bloc_full.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
-import 'package:dtube_go/ui/MainContainer/Widgets/AboutDialog.dart';
+import 'package:dtube_go/ui/MainContainer/Widgets/AboutDialog/AboutDialog.dart';
 import 'package:dtube_go/ui/pages/News/NewsPage.dart';
 import 'package:dtube_go/ui/pages/search/SearchScreen.dart';
 import 'package:dtube_go/ui/pages/settings/HiveSignerForm.dart';

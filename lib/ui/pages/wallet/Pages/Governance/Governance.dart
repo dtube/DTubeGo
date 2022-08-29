@@ -122,7 +122,10 @@ class _GovernancePageState extends State<GovernancePage>
           ),
         );
       }
-      return Text("loading");
+      return DtubeLogoPulseWithSubtitle(
+        subtitle: "loading avalon config values..",
+        size: 30.w,
+      );
     });
   }
 }
