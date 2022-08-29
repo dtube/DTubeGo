@@ -7,7 +7,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-class ChewiePlayer extends StatefulWidget {
+class P2PSourcePlayerMobile extends StatefulWidget {
   final String videoUrl;
   final bool looping;
   final bool autoplay;
@@ -21,7 +21,7 @@ class ChewiePlayer extends StatefulWidget {
   final double placeholderWidth;
   final double placeholderSize;
 
-  ChewiePlayer({
+  P2PSourcePlayerMobile({
     required this.videoUrl,
     required this.looping,
     required this.autoplay,
@@ -38,11 +38,11 @@ class ChewiePlayer extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ChewiePlayerState createState() => _ChewiePlayerState();
+  _P2PSourcePlayerMobileState createState() => _P2PSourcePlayerMobileState();
 }
 
-class _ChewiePlayerState extends State<ChewiePlayer> {
-  late BetterPlayerController _chewiePlayerController;
+class _P2PSourcePlayerMobileState extends State<P2PSourcePlayerMobile> {
+  late BetterPlayerController _P2PSourcePlayerMobileController;
 
   late Future<void> _future;
   late double aspectRatio;
@@ -58,7 +58,7 @@ class _ChewiePlayerState extends State<ChewiePlayer> {
               : BetterPlayerDataSourceType.file,
           widget.videoUrl);
 
-      // _chewiePlayerController = ChewieController(
+      // _P2PSourcePlayerMobileController = ChewieController(
       //     videoPlayerController: widget.videocontroller,
       //     aspectRatio: !(aspectRatio > 0.0) ? 1 : aspectRatio,
       //     autoPlay: widget.autoplay,
@@ -66,7 +66,7 @@ class _ChewiePlayerState extends State<ChewiePlayer> {
       //     allowFullScreen: widget.allowFullscreen,
       //     allowMuting: true,
       //     showControls: widget.controls);
-      _chewiePlayerController = BetterPlayerController(
+      _P2PSourcePlayerMobileController = BetterPlayerController(
           BetterPlayerConfiguration(
               autoDetectFullscreenAspectRatio: true,
               fit: BoxFit.contain,
@@ -88,8 +88,8 @@ class _ChewiePlayerState extends State<ChewiePlayer> {
   @override
   void dispose() {
     widget.videocontroller.dispose();
-    _chewiePlayerController.pause();
-    _chewiePlayerController.dispose();
+    _P2PSourcePlayerMobileController.pause();
+    _P2PSourcePlayerMobileController.dispose();
     super.dispose();
   }
 
@@ -129,17 +129,19 @@ class _ChewiePlayerState extends State<ChewiePlayer> {
                               aspectRatio > 0.0 ? aspectRatio : 16 / 11,
                           child: widget.controls
                               ? BetterPlayer(
-                                  controller: _chewiePlayerController,
+                                  controller: _P2PSourcePlayerMobileController,
                                 )
                               : GestureDetector(
                                   child: BetterPlayer(
-                                    controller: _chewiePlayerController,
+                                    controller:
+                                        _P2PSourcePlayerMobileController,
                                   ),
                                   onTap: () {
-                                    if (_chewiePlayerController.isPlaying()!) {
-                                      _chewiePlayerController.pause();
+                                    if (_P2PSourcePlayerMobileController
+                                        .isPlaying()!) {
+                                      _P2PSourcePlayerMobileController.pause();
                                     } else {
-                                      _chewiePlayerController.play();
+                                      _P2PSourcePlayerMobileController.play();
                                     }
                                   }),
                         )

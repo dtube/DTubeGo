@@ -3,6 +3,7 @@ import 'package:dtube_go/res/Config/appConfigValues.dart';
 import 'package:dtube_go/ui/pages/upload/dialogs/HivePostCooldownDialog.dart';
 import 'package:dtube_go/ui/pages/upload/dialogs/UploadTermsDialog.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/UploadStartedDialog.dart';
+import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer/P2SourcePlayer.dart';
 import 'package:flutter/services.dart';
 import 'package:dtube_go/ui/pages/upload/PresetSelection/Widgets/PresetCards.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
@@ -17,7 +18,6 @@ import 'package:disk_space/disk_space.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer.dart';
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
 import 'package:dtube_go/utils/System/imageCropper.dart';
 import 'package:flutter/material.dart';
@@ -437,7 +437,7 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
             avoidAnimation: true,
             waitBeforeFadeIn: Duration(seconds: 0),
             childs: [
-              ChewiePlayer(
+              P2PSourcePlayer(
                 videoUrl: _videoUrl,
                 looping: false,
                 autoplay: false,
@@ -509,7 +509,7 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
                       // e.g. open issue on https://github.com/jhomlala/betterplayer/issues
                       ? Column(children: [
                           showVideoPreview
-                              ? ChewiePlayer(
+                              ? P2PSourcePlayer(
                                   videoUrl: stateUploadData.videoLocation ==
                                           "IPFS"
                                       ? UploadConfig.ipfsVideoUrl +

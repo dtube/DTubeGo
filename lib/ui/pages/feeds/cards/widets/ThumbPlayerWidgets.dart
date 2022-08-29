@@ -1,4 +1,4 @@
-import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer.dart';
+import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer/P2SourcePlayer.dart';
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'dart:ui';
@@ -14,16 +14,16 @@ import 'package:video_player/video_player.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class PlayerWidget extends StatelessWidget {
-  PlayerWidget(
-      {Key? key,
-      required bool thumbnailTapped,
-      required this.videoSource,
-      required this.videoUrl,
-      required VideoPlayerController bpController,
-      required YoutubePlayerController ytController,
-      required this.placeholderSize,
-      required this.placeholderWidth})
-      : _thumbnailTapped = thumbnailTapped,
+  PlayerWidget({
+    Key? key,
+    required bool thumbnailTapped,
+    required this.videoSource,
+    required this.videoUrl,
+    required VideoPlayerController bpController,
+    required YoutubePlayerController ytController,
+    required this.placeholderSize,
+    required this.placeholderWidth,
+  })  : _thumbnailTapped = thumbnailTapped,
         _bpController = bpController,
         _ytController = ytController,
         super(key: key);
@@ -46,7 +46,7 @@ class PlayerWidget extends StatelessWidget {
             // AspectRatio(
             //     aspectRatio: 16 / 9,
             // child:
-            ChewiePlayer(
+            P2PSourcePlayer(
                 videoUrl: videoUrl,
                 autoplay: true,
                 looping: false,

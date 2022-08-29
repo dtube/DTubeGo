@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer.dart';
+
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dtube_go/ui/widgets/players/YTplayerIframe.dart';

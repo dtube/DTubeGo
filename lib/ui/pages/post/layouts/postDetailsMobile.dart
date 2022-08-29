@@ -4,6 +4,7 @@ import 'package:dtube_go/ui/pages/post/widgets/Comments.dart';
 import 'package:dtube_go/ui/pages/post/widgets/DTubeCoinsChip.dart';
 import 'package:dtube_go/ui/pages/post/widgets/ShareAndCommentChiips.dart';
 import 'package:dtube_go/ui/pages/post/widgets/VotingAndGiftingButtons.dart';
+import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer/P2SourcePlayer.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/feed/feed_bloc.dart';
@@ -25,7 +26,7 @@ import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer.dart';
+
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/ui/pages/post/widgets/CollapsedDescription.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
@@ -301,7 +302,7 @@ class _MobilePostDetailsState extends State<MobilePostDetails> {
                         widget.post.videoSource == "youtube"
                             ? player
                             : ["ipfs", "sia"].contains(widget.post.videoSource)
-                                ? ChewiePlayer(
+                                ? P2PSourcePlayer(
                                     videoUrl: widget.post.videoUrl!,
                                     autoplay: !(widget.directFocus != "none"),
                                     looping: false,
