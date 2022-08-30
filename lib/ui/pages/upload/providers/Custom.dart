@@ -15,9 +15,9 @@ class CustomWizard extends StatelessWidget {
     return ResponsiveLayout(
       desktopBody: CustomWizardDesktop(
           uploaderCallback: uploaderCallback, preset: preset),
-      mobileBody: CustomWizardMobile(
-          uploaderCallback: uploaderCallback, preset: preset),
       tabletBody: CustomWizardDesktop(
+          uploaderCallback: uploaderCallback, preset: preset),
+      mobileBody: CustomWizardMobile(
           uploaderCallback: uploaderCallback, preset: preset),
     );
   }

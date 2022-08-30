@@ -2,7 +2,6 @@ import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/config/txTypes.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
@@ -10,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
-class NotificationItem extends StatelessWidget {
-  const NotificationItem({
+class NotificationItemTablet extends StatelessWidget {
+  const NotificationItemTablet({
     Key? key,
     required this.sender,
     required this.username,
@@ -30,18 +29,16 @@ class NotificationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(2.w),
-      child: Container(
-        height: 15.h,
-        width: 100.w,
-        child: DTubeFormCard(
-          childs: [
-            Row(
-              children: [
-                Container(
-                  width: 25.w,
-                  child: Column(
+    return DTubeFormCard(
+      childs: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: 150,
+              child: Column(
+                children: [
+                  Row(
                     children: [
                       BlocProvider<UserBloc>(
                         create: (BuildContext context) =>
@@ -51,47 +48,50 @@ class NotificationItem extends StatelessWidget {
                               navigateToUserDetailPage(context, sender, () {});
                             },
                             child: AccountIconBase(
-                              avatarSize: 15.w,
+                              avatarSize: 50,
                               showVerified: true,
                               username: sender,
                             )),
                       ),
-                      Text(
-                        sender,
-                        style: Theme.of(context).textTheme.caption,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        width: 80,
+                        child: Text(
+                          sender,
+                          style: Theme.of(context).textTheme.caption,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(
-                  width: 3.w,
-                ),
-                Container(
-                  width: 47.w,
-                  child: NotificationDetails(
-                    sender: sender,
-                    tx: tx,
-                    username: username,
-                    notificationType: notificationType,
+                  Container(
+                    width: 150,
+                    child: NotificationDetails(
+                      sender: sender,
+                      tx: tx,
+                      username: username,
+                      notificationType: notificationType,
+                    ),
                   ),
-                ),
-                userNavigation || postNavigation
-                    ? FaIcon(
-                        userNavigation
-                            ? FontAwesomeIcons.user
-                            : FontAwesomeIcons.play,
-                        size: 5.w,
-                      )
-                    : SizedBox(width: 0)
-              ],
+                ],
+              ),
             ),
+            userNavigation || postNavigation
+                ? FaIcon(
+                    userNavigation
+                        ? FontAwesomeIcons.user
+                        : FontAwesomeIcons.play,
+                    size: 30,
+                  )
+                : SizedBox(width: 0)
           ],
-          avoidAnimation: true,
-          waitBeforeFadeIn: Duration(milliseconds: 0),
         ),
-      ),
+      ],
+      avoidAnimation: true,
+      waitBeforeFadeIn: Duration(milliseconds: 0),
     );
   }
 }
@@ -147,7 +147,7 @@ class NotificationDetails extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyText1),
         Container(
-          width: 45.w,
+          width: 100,
           child: Text(friendlyDescription,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

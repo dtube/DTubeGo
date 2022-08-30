@@ -16,10 +16,10 @@ class WizardIPFS extends StatelessWidget {
     return ResponsiveLayout(
       desktopBody:
           WizardIPFSDesktop(uploaderCallback: uploaderCallback, preset: preset),
-      mobileBody:
-          WizardIPFSMobile(uploaderCallback: uploaderCallback, preset: preset),
       tabletBody:
           WizardIPFSDesktop(uploaderCallback: uploaderCallback, preset: preset),
+      mobileBody:
+          WizardIPFSMobile(uploaderCallback: uploaderCallback, preset: preset),
     );
   }
 }
