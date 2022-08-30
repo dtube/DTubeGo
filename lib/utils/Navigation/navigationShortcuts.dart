@@ -5,7 +5,7 @@ import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/pages/post/postDetailPage.dart';
 
 import 'package:dtube_go/ui/pages/user/User.dart';
-import 'package:dtube_go/ui/pages/wallet/Pages/Governance/DAO/DetailsPage.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/DetailsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,4 +1,4 @@
-import 'package:dtube_go/ui/pages/wallet/Pages/Wallet/transferDialog.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/Wallet/transferDialog.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';

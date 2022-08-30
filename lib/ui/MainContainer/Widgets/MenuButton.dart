@@ -6,7 +6,7 @@ import 'package:dtube_go/bloc/settings/settings_bloc_full.dart';
 
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/settings/SettingsTabContainer.dart';
-import 'package:dtube_go/ui/pages/wallet/WalletTabContainer.dart';
+import 'package:dtube_go/ui/pages/Governance/GovernanceTabContainer.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,7 +47,7 @@ Widget buildMainMenuSpeedDial(BuildContext context) {
         backgroundColor: Colors.transparent,
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return WalletMainPage();
+            return GovernanceMainPage();
           }));
         }),
     SpeedDialChild(

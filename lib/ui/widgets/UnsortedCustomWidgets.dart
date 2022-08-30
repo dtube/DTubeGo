@@ -21,9 +21,12 @@ AppBar dtubeSubAppBar(
                 width: 0,
               ),
         title != ""
-            ? Text(
-                title,
-                style: Theme.of(context).textTheme.headline2,
+            ? Padding(
+                padding: EdgeInsets.only(right: 60),
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.headline2,
+                ),
               )
             : SizedBox(
                 width: 0,

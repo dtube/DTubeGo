@@ -1,4 +1,4 @@
-import 'package:dtube_go/ui/pages/notifications/NotificationItem/NotificationItem.dart';
+import 'package:dtube_go/ui/pages/notifications/NotificationItem/NotificationItemMobile.dart';
 import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/style/ThemeData.dart';
@@ -217,7 +217,7 @@ class _NotificationTabContainerState extends State<NotificationTabContainer>
             padding: const EdgeInsets.only(bottom: 8.0),
             child: InkWell(
               child: Center(
-                child: NotificationItem(
+                child: NotificationItemMobile(
                     sender: notifications[pos].tx.sender,
                     tx: notifications[pos].tx,
                     username: widget.username,
