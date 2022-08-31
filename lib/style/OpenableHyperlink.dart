@@ -5,12 +5,10 @@ class OpenableHyperlink extends StatelessWidget {
   final String url;
   final String? alt;
   final TextStyle? style;
-  OpenableHyperlink({
-    required this.url,
-    this.style,
-    this.alt,
-    Key? key,
-  }) : super(key: key);
+  int? maxLines;
+  OpenableHyperlink(
+      {required this.url, this.style, this.alt, Key? key, this.maxLines})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +17,7 @@ class OpenableHyperlink extends StatelessWidget {
           alt != null ? alt! : url,
           overflow: TextOverflow.ellipsis,
           style: style != null ? style : Theme.of(context).textTheme.overline,
-          maxLines: 3,
+          maxLines: maxLines != null ? maxLines! : 3,
         ),
         onTap: () async {
           await canLaunchUrl(Uri.parse(url))

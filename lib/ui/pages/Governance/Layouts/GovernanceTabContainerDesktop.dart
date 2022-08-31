@@ -6,7 +6,7 @@ import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/Governance.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO.dart';
 
 import 'package:dtube_go/ui/pages/Governance/Pages/KeyManagement/KeyManagement.dart';
 
@@ -126,7 +126,7 @@ class _GovernanceMainPageDesktopState extends State<GovernanceMainPageDesktop>
                               repository: AvalonConfigRepositoryImpl())
                             ..add(FetchAvalonConfigEvent())),
                     ],
-                    child: GovernancePage(),
+                    child: DAO(),
                   ),
                 ],
                 controller: _tabController,

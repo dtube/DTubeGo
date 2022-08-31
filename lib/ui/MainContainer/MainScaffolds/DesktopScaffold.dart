@@ -366,9 +366,10 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                   ));
                             }
                           } else {
-                            showCustomFlushbarOnError(
-                                "you need to be signed in to upload content",
-                                context);
+                            // Flushbar not working when main menu opened
+                            // showCustomFlushbarOnError(
+                            //     "you need to be signed in to upload content",
+                            //     context);
                           }
                           setState(() {
                             _currentIndex = 2;
@@ -423,18 +424,20 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                               Text('Governance'),
                             ]),
                         onTap: () {
-                          _screens.removeAt(3);
+                          if (globals.keyPermissions.isNotEmpty) {
+                            _screens.removeAt(3);
 
-                          _screens.insert(
-                              3,
-                              MomentsPage(
-                                key: UniqueKey(),
-                                play: false,
-                              ));
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return GovernanceMainPage();
-                          }));
+                            _screens.insert(
+                                3,
+                                MomentsPage(
+                                  key: UniqueKey(),
+                                  play: false,
+                                ));
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return GovernanceMainPage();
+                            }));
+                          }
                         },
                       ),
                       ListTile(
@@ -479,20 +482,20 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                               Text('Profile'),
                             ]),
                         onTap: () {
-                          _screens.removeAt(3);
-
-                          _screens.insert(
-                              3,
-                              MomentsPage(
-                                key: UniqueKey(),
-                                play: false,
-                              ));
                           // if the selected page is the profile page
                           if (globals.keyPermissions.isEmpty) {
                             showCustomFlushbarOnError(
                                 "you need to be signed in to access your profile",
                                 context);
                           } else {
+                            _screens.removeAt(3);
+
+                            _screens.insert(
+                                3,
+                                MomentsPage(
+                                  key: UniqueKey(),
+                                  play: false,
+                                ));
                             _screens.removeAt(4);
                             _screens.insert(
                               4,
@@ -613,41 +616,45 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                           uploaderCallback: uploaderCallback,
                                           key: UniqueKey(),
                                         ));
+                                    setState(() {
+                                      _currentIndex = 2;
+                                    });
                                   }
                                 } else {
                                   showCustomFlushbarOnError(
                                       "you need to be signed in to upload content",
                                       context);
                                 }
-                                setState(() {
-                                  _currentIndex = 2;
-                                });
                               },
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 20),
-                            child: InkWell(
-                              child: FaIcon(
-                                FontAwesomeIcons.hotel,
-                                color: globalAlmostWhite,
-                              ),
-                              onTap: () {
-                                _screens.removeAt(3);
+                          globals.keyPermissions.isNotEmpty
+                              ? Padding(
+                                  padding: EdgeInsets.only(left: 20),
+                                  child: InkWell(
+                                    child: FaIcon(
+                                      FontAwesomeIcons.hotel,
+                                      color: globalAlmostWhite,
+                                    ),
+                                    onTap: () {
+                                      _screens.removeAt(3);
 
-                                _screens.insert(
-                                    3,
-                                    MomentsPage(
-                                      key: UniqueKey(),
-                                      play: false,
-                                    ));
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return GovernanceMainPage();
-                                }));
-                              },
-                            ),
-                          )
+                                      _screens.insert(
+                                          3,
+                                          MomentsPage(
+                                            key: UniqueKey(),
+                                            play: false,
+                                          ));
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return GovernanceMainPage();
+                                      }));
+                                    },
+                                  ),
+                                )
+                              : SizedBox(
+                                  width: 0,
+                                )
                         ],
                       ),
                       Row(

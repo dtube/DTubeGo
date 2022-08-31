@@ -7,6 +7,7 @@ import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/StateC
 import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/VoteOverview.dart';
 import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
+import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/players/VideoPlayerFromURL.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
@@ -30,17 +31,19 @@ import 'package:dtube_go/ui/pages/post/widgets/ReplyButton.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
-class ProposalDetailPage extends StatefulWidget {
+class ProposalDetailPageDesktop extends StatefulWidget {
   final int proposalId;
   final int daoThreshold;
 
-  ProposalDetailPage({required this.daoThreshold, required this.proposalId});
+  ProposalDetailPageDesktop(
+      {required this.daoThreshold, required this.proposalId});
 
   @override
-  _ProposalDetailPageState createState() => _ProposalDetailPageState();
+  _ProposalDetailPageDesktopState createState() =>
+      _ProposalDetailPageDesktopState();
 }
 
-class _ProposalDetailPageState extends State<ProposalDetailPage> {
+class _ProposalDetailPageDesktopState extends State<ProposalDetailPageDesktop> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<TransactionBloc, TransactionState>(
@@ -55,13 +58,7 @@ class _ProposalDetailPageState extends State<ProposalDetailPage> {
             // resizeToAvoidBottomInset: true,
             extendBodyBehindAppBar: true,
             // backgroundColor: Colors.transparent,
-            appBar: kIsWeb
-                ? null
-                : AppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    toolbarHeight: 10.h,
-                  ),
+            appBar: dtubeSubAppBar(true, "Proposal Details", context, null),
             body: BlocBuilder<DaoBloc, DaoState>(builder: (context, state) {
               if (state is ProposalLoadedState) {
                 DAOItem _daoItem = state.daoItem;
@@ -75,7 +72,7 @@ class _ProposalDetailPageState extends State<ProposalDetailPage> {
               return Center(
                 child: DtubeLogoPulseWithSubtitle(
                   subtitle: "loading proposal..",
-                  size: 30.w,
+                  size: 10.w,
                 ),
               );
             })));
@@ -130,138 +127,288 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(height: 10.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ProposalStateChip(
-                daoItem: widget.daoItem,
-                daoThreshold: _daoThreshold,
-              ),
-            ],
-          ),
           Padding(
-            padding: EdgeInsets.only(bottom: 2.h),
-            child: Text(
-              widget.daoItem.title!,
-              style: Theme.of(context).textTheme.headline4,
+            padding: EdgeInsets.only(top: 50),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.daoItem.title!,
+                  style: Theme.of(context).textTheme.headline1,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 20),
+                  child: ProposalStateChip(
+                    daoItem: widget.daoItem,
+                    daoThreshold: _daoThreshold,
+                  ),
+                ),
+              ],
             ),
           ),
-          widget.daoItem.url != ""
-              ? BlocProvider<PostBloc>(
-                  create: (BuildContext context) =>
-                      PostBloc(repository: PostRepositoryImpl())
-                        ..add(FetchPostEvent(
-                            postUrlAuthor, postUrlLink, "DAODetailsPage.dart")),
-                  child: VideoPlayerFromURL(url: widget.daoItem.url!))
-              : Text("no video url detected"),
           Padding(
-              padding: EdgeInsets.only(top: 2.h),
+              padding: EdgeInsets.only(top: 50),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("created: " +
-                          TimeAgo.timeInAgoTSShort(widget.daoItem.ts!)),
-                      widget.daoItem.type == 1
-                          ? Row(
-                              children: [
-                                Text(([1, 4, 7].contains(widget.daoItem.status!)
-                                        ? "asked for: "
-                                        : "asks for: ") +
-                                    (widget.daoItem.requested! > 99900
-                                        ? (widget.daoItem.requested! / 100000)
-                                                .toStringAsFixed(2) +
-                                            'K'
-                                        : (widget.daoItem.requested! / 100)
-                                            .round()
-                                            .toString())),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 2.w),
-                                  child: DTubeLogo(size: 4.w),
-                                )
-                              ],
-                            )
-                          : SizedBox(
-                              width: 0,
-                            ),
-                      widget.daoItem.type == 1 && widget.daoItem.status! > 1
-                          ? Row(
-                              children: [
-                                Text(([5, 7].contains(widget.daoItem.status!)
-                                        ? "released: "
-                                        : "received: ") +
-                                    (widget.daoItem.raised! > 99900
-                                        ? (widget.daoItem.raised! / 100000)
-                                                .toStringAsFixed(2) +
-                                            'K'
-                                        : (widget.daoItem.raised! / 100)
-                                            .round()
-                                            .toString())),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 2.w),
-                                  child: DTubeLogo(size: 4.w),
-                                )
-                              ],
-                            )
-                          : SizedBox(width: 0),
-                    ],
-                  ),
-                  widget.daoItem.receiver != null &&
-                          widget.daoItem.creator! != widget.daoItem.receiver!
-                      ? Column(
+                  Container(
+                    width: 25.w,
+                    child: Column(
+                      children: [
+                        Table(
+                          columnWidths: {
+                            0: FixedColumnWidth(120),
+                            1: FlexColumnWidth(),
+                          },
                           children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
+                            TableRow(children: [
+                              TableCell(
+                                verticalAlignment:
+                                    TableCellVerticalAlignment.middle,
+                                child: Text(
                                   "Created by: ",
-                                  style: Theme.of(context).textTheme.headline6,
+                                  style: Theme.of(context).textTheme.headline4,
                                 ),
-                                AccountNavigationChip(
-                                    author: widget.daoItem.creator!,
-                                    size: 40.w),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 2.h,
-                            ),
-                            widget.daoItem.type == 1
-                                ? Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text("Benficiary: ",
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  AccountNavigationChip(
+                                      author: widget.daoItem.creator!,
+                                      size: 250),
+                                  SizedBox(
+                                    width: 0,
+                                  ),
+                                ],
+                              ),
+                            ]),
+                            widget.daoItem.receiver != null &&
+                                    widget.daoItem.creator! !=
+                                        widget.daoItem.receiver!
+                                ? TableRow(children: [
+                                    TableCell(
+                                      verticalAlignment:
+                                          TableCellVerticalAlignment.middle,
+                                      child: Text("Benficiary: ",
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
-                                      AccountNavigationChip(
+                                    ),
+                                    Container(
+                                      width: 250,
+                                      child: AccountNavigationChip(
                                           author: widget.daoItem.receiver!,
-                                          size: 40.w),
-                                    ],
-                                  )
-                                : SizedBox(
-                                    height: 0,
-                                  ),
-                          ],
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            AccountNavigationChip(
-                                size: 40.w, author: widget.daoItem.creator!),
+                                          size: 250),
+                                    ),
+                                  ])
+                                : TableRow(children: [
+                                    SizedBox(
+                                      width: 0,
+                                      height: 0,
+                                    ),
+                                    SizedBox(
+                                      width: 0,
+                                      height: 0,
+                                    )
+                                  ]),
                           ],
                         ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Table(columnWidths: {
+                            0: FixedColumnWidth(120),
+                            1: FlexColumnWidth(),
+                          }, children: [
+                            TableRow(
+                              children: [
+                                Text(
+                                  "created:",
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                                Text(
+                                  TimeAgo.timeInAgoTSShort(widget.daoItem.ts!),
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                              ],
+                            ),
+                            widget.daoItem.type == 1
+                                ? TableRow(
+                                    children: [
+                                      Text(
+                                        ([
+                                          1,
+                                          4,
+                                          7
+                                        ].contains(widget.daoItem.status!)
+                                            ? "asked for:"
+                                            : "asks for:"),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline4,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            (widget.daoItem.requested! > 99900
+                                                ? (widget.daoItem.requested! /
+                                                            100000)
+                                                        .toStringAsFixed(2) +
+                                                    'K'
+                                                : (widget.daoItem.requested! /
+                                                        100)
+                                                    .round()
+                                                    .toString()),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 10),
+                                            child: DTubeLogo(size: 20),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                : TableRow(children: [
+                                    SizedBox(
+                                      width: 0,
+                                      height: 0,
+                                    ),
+                                    SizedBox(
+                                      width: 0,
+                                      height: 0,
+                                    )
+                                  ]),
+                            widget.daoItem.type == 1 &&
+                                    widget.daoItem.status! > 1
+                                ? TableRow(
+                                    children: [
+                                      Text(
+                                        "received:",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline4,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            (widget.daoItem.raised! > 99900
+                                                ? (widget.daoItem.raised! /
+                                                            100000)
+                                                        .toStringAsFixed(2) +
+                                                    'K'
+                                                : (widget.daoItem.raised! / 100)
+                                                    .round()
+                                                    .toString()),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 10),
+                                            child: DTubeLogo(size: 20),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                : TableRow(children: [
+                                    SizedBox(
+                                      width: 0,
+                                      height: 0,
+                                    ),
+                                    SizedBox(
+                                      width: 0,
+                                      height: 0,
+                                    )
+                                  ])
+                          ]),
+                        ),
+                      ],
+                    ),
+                  ),
+                  widget.daoItem.url != ""
+                      ? Container(
+                          width: 50.w,
+                          child: BlocProvider<PostBloc>(
+                              create: (BuildContext context) =>
+                                  PostBloc(repository: PostRepositoryImpl())
+                                    ..add(FetchPostEvent(postUrlAuthor,
+                                        postUrlLink, "DAODetailsPage.dart")),
+                              child:
+                                  VideoPlayerFromURL(url: widget.daoItem.url!)),
+                        )
+                      : Text("no video url detected"),
+                  Container(
+                    width: 20.w,
+                    child: Column(
+                      children: [
+                        Text(
+                          "Voting / Funding Overview",
+                          style: Theme.of(context).textTheme.headline3,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 30),
+                          child: ProposalStateChart(
+                              daoItem: widget.daoItem,
+                              votingThreshold: _daoThreshold,
+                              centerRadius: 0,
+                              height: 150,
+                              outerRadius: 100.0,
+                              startFromDegree: 270,
+                              width: 10.w,
+                              showLabels: true,
+                              raisedLabel: [0, 1]
+                                      .contains(widget.daoItem.status!)
+                                  ? 'approved\n' +
+                                      (widget.daoItem.approvals! / 100 / 1000)
+                                          .toStringAsFixed(2)
+                                          .toString() +
+                                      'k'
+                                  : widget.daoItem.status == 2
+                                      ? 'raised\n' +
+                                          (widget.daoItem.raised! / 100)
+                                              .toStringAsFixed(2)
+                                              .toString() +
+                                          'k'
+                                      : '',
+                              onTap: () {
+                                if ([0, 1].contains(widget.daoItem.status!)) {
+                                  if (widget.daoItem.votes != null &&
+                                      widget.daoItem.votes!.isNotEmpty) {
+                                    showDialog<String>(
+                                        context: context,
+                                        builder: (context) {
+                                          return ProposalVoteOverview(
+                                            daoItem: widget.daoItem,
+                                            //currentVT: state.vtBalance['v']! + 0.0,
+                                          );
+                                        });
+                                  }
+                                } else {
+                                  if (widget.daoItem.contrib != null &&
+                                      widget.daoItem.contrib!.isNotEmpty) {
+                                    showDialog<String>(
+                                        context: context,
+                                        builder: (context) {
+                                          return ProposalContribOverview(
+                                            daoItem: widget.daoItem,
+                                            //currentVT: state.vtBalance['v']! + 0.0,
+                                          );
+                                        });
+                                  }
+                                }
+                              }),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               )),
           Padding(
-            padding: EdgeInsets.only(top: 2.h),
+            padding: EdgeInsets.only(top: 10),
             // child: Text(widget.daoItem.description!),
             child: CollapsedDescription(
               description: widget.daoItem.description!,
@@ -296,7 +443,7 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
                                       1 // if voting open and fund request
                               ? "vote for it"
                               : "help to fund it",
-                          style: Theme.of(context).textTheme.headline3),
+                          style: Theme.of(context).textTheme.headline4),
                       onSelected: ((bool) {
                         showDialog<String>(
                           context: context,
@@ -327,58 +474,9 @@ class _MobileDaoDetailsState extends State<MobileDaoDetails> {
                       }),
                     )
               : SizedBox(
-                  height: 0,
+                  height: 10,
                 ),
-          ProposalStateChart(
-              daoItem: widget.daoItem,
-              votingThreshold: _daoThreshold,
-              centerRadius: 0,
-              height: 30.h,
-              outerRadius: 100.0,
-              startFromDegree: 270,
-              width: 100.w,
-              showLabels: true,
-              raisedLabel: [0, 1].contains(widget.daoItem.status!)
-                  ? 'approved\n' +
-                      (widget.daoItem.approvals! / 100 / 1000)
-                          .toStringAsFixed(2)
-                          .toString() +
-                      'k'
-                  : widget.daoItem.status == 2
-                      ? 'raised\n' +
-                          (widget.daoItem.raised! / 100)
-                              .toStringAsFixed(2)
-                              .toString() +
-                          'k'
-                      : '',
-              onTap: () {
-                if ([0, 1].contains(widget.daoItem.status!)) {
-                  if (widget.daoItem.votes != null &&
-                      widget.daoItem.votes!.isNotEmpty) {
-                    showDialog<String>(
-                        context: context,
-                        builder: (context) {
-                          return ProposalVoteOverview(
-                            daoItem: widget.daoItem,
-                            //currentVT: state.vtBalance['v']! + 0.0,
-                          );
-                        });
-                  }
-                } else {
-                  if (widget.daoItem.contrib != null &&
-                      widget.daoItem.contrib!.isNotEmpty) {
-                    showDialog<String>(
-                        context: context,
-                        builder: (context) {
-                          return ProposalContribOverview(
-                            daoItem: widget.daoItem,
-                            //currentVT: state.vtBalance['v']! + 0.0,
-                          );
-                        });
-                  }
-                }
-              }),
-          SizedBox(height: 10.h)
+          SizedBox(height: 50)
         ],
       ),
     );
@@ -440,13 +538,13 @@ class _VotesOverviewState extends State<VotesOverview> {
         builder: (context) {
           return SingleChildScrollView(
             child: Container(
-              height: 45.h,
-              width: 90.w,
+              height: 200,
+              width: 50.w,
               child: ListView.builder(
                 itemCount: _allVotes.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
-                      height: 10.h,
+                      height: 50,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -458,16 +556,16 @@ class _VotesOverviewState extends State<VotesOverview> {
                             child: Row(
                               children: [
                                 Container(
-                                    height: 10.w,
-                                    width: 10.w,
+                                    height: 50,
+                                    width: 50,
                                     child: AccountIconBase(
-                                      avatarSize: 10.w,
+                                      avatarSize: 50,
                                       showVerified: true,
                                       username: _allVotes[index].u,
                                     )),
-                                SizedBox(width: 2.w),
+                                SizedBox(width: 10),
                                 Container(
-                                  width: 30.w,
+                                  width: 100,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
@@ -496,7 +594,7 @@ class _VotesOverviewState extends State<VotesOverview> {
                               ? FontAwesomeIcons.heart
                               : FontAwesomeIcons.flag),
                           Container(
-                            width: 20.w,
+                            width: 100,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -535,13 +633,13 @@ class _VotesOverviewState extends State<VotesOverview> {
                                               .bodyText1,
                                         ),
                                         Container(
-                                          width: 5.w,
+                                          width: 30,
                                           child: Center(
                                             child: ShadowedIcon(
                                               icon: FontAwesomeIcons.bolt,
                                               shadowColor: Colors.black,
                                               color: globalAlmostWhite,
-                                              size: 5.w,
+                                              size: 30,
                                             ),
                                           ),
                                         ),

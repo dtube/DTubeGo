@@ -46,7 +46,7 @@ class _VideoPlayerFromURLState extends State<VideoPlayerFromURL> {
     return BlocBuilder<PostBloc, PostState>(builder: (context, state) {
       if (state is PostLoadingState) {
         return DtubeLogoPulseWithSubtitle(
-            subtitle: "Loading video..", size: 20.w);
+            subtitle: "Loading video..", size: 10.w);
       } else if (state is PostLoadedState) {
         _ytController = YoutubePlayerController(
           initialVideoId: state.post.videoUrl!,
@@ -77,7 +77,7 @@ class _VideoPlayerFromURLState extends State<VideoPlayerFromURL> {
                 videoSource: state.post.videoSource,
                 videoUrl: state.post.videoUrl!,
                 ytController: _ytController,
-                placeholderWidth: 100.w,
+                placeholderWidth: 40.w,
                 placeholderSize: 40.w,
               ),
             ],

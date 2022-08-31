@@ -1,5 +1,5 @@
 import 'package:dtube_go/bloc/dao/dao_bloc_full.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/PieChart.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/PieChart.dart';
 import 'package:flutter/material.dart';
 
 class ProposalStateChart extends StatefulWidget {

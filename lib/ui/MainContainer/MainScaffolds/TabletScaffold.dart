@@ -533,18 +533,20 @@ class _TabletScaffoldState extends State<TabletScaffold> {
                                   Text('Governance'),
                                 ]),
                             onTap: () {
-                              _screens.removeAt(3);
+                              if (globals.keyPermissions.isNotEmpty) {
+                                _screens.removeAt(3);
 
-                              _screens.insert(
-                                  3,
-                                  MomentsPage(
-                                    key: UniqueKey(),
-                                    play: false,
-                                  ));
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return GovernanceMainPage();
-                              }));
+                                _screens.insert(
+                                    3,
+                                    MomentsPage(
+                                      key: UniqueKey(),
+                                      play: false,
+                                    ));
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return GovernanceMainPage();
+                                }));
+                              }
                             },
                           ),
                           ListTile(
@@ -746,29 +748,34 @@ class _TabletScaffoldState extends State<TabletScaffold> {
                                     },
                                   ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 20),
-                                  child: InkWell(
-                                    child: FaIcon(
-                                      FontAwesomeIcons.hotel,
-                                      color: globalAlmostWhite,
-                                    ),
-                                    onTap: () {
-                                      _screens.removeAt(3);
+                                globals.keyPermissions.isNotEmpty
+                                    ? Padding(
+                                        padding: EdgeInsets.only(left: 20),
+                                        child: InkWell(
+                                          child: FaIcon(
+                                            FontAwesomeIcons.hotel,
+                                            color: globalAlmostWhite,
+                                          ),
+                                          onTap: () {
+                                            _screens.removeAt(3);
 
-                                      _screens.insert(
-                                          3,
-                                          MomentsPage(
-                                            key: UniqueKey(),
-                                            play: false,
-                                          ));
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) {
-                                        return GovernanceMainPage();
-                                      }));
-                                    },
-                                  ),
-                                )
+                                            _screens.insert(
+                                                3,
+                                                MomentsPage(
+                                                  key: UniqueKey(),
+                                                  play: false,
+                                                ));
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return GovernanceMainPage();
+                                            }));
+                                          },
+                                        ),
+                                      )
+                                    : SizedBox(
+                                        width: 0,
+                                      )
                               ],
                             ),
                             Row(

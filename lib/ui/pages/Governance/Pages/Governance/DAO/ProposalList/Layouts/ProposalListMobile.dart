@@ -1,12 +1,12 @@
 import 'package:dtube_go/bloc/dao/dao_bloc_full.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/ProposalCard.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/ProposalCard/ProposalCard.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class ProposalList extends StatefulWidget {
-  const ProposalList(
+class ProposalListMobile extends StatefulWidget {
+  const ProposalListMobile(
       {Key? key,
       required this.daoState,
       required this.daoType,
@@ -19,10 +19,10 @@ class ProposalList extends StatefulWidget {
   final int daoVotingPeriod;
 
   @override
-  _ProposalListState createState() => _ProposalListState();
+  _ProposalListMobileState createState() => _ProposalListMobileState();
 }
 
-class _ProposalListState extends State<ProposalList> {
+class _ProposalListMobileState extends State<ProposalListMobile> {
   late DaoBloc _daoBloc;
 
   @override

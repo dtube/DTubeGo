@@ -3,7 +3,7 @@ import 'package:dtube_go/bloc/dao/dao_bloc_full.dart';
 import 'package:dtube_go/bloc/leaderboard/leaderboard_bloc_full.dart';
 
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/ProposalList.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/ProposalList/ProposalList.dart';
 import 'package:dtube_go/ui/pages/Governance/Pages/Governance/Leaderboard/Leaderboard.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -12,17 +12,16 @@ import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class GovernancePage extends StatefulWidget {
-  const GovernancePage({
+class DAO extends StatefulWidget {
+  const DAO({
     Key? key,
   }) : super(key: key);
 
   @override
-  _GovernancePageState createState() => _GovernancePageState();
+  _DAOState createState() => _DAOState();
 }
 
-class _GovernancePageState extends State<GovernancePage>
-    with TickerProviderStateMixin {
+class _DAOState extends State<DAO> with TickerProviderStateMixin {
   late TabController _tabController;
   late TabController _tabControllerFR;
   late TabController _tabControllerCU;
