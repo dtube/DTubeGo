@@ -1,6 +1,6 @@
 import 'package:dtube_go/bloc/leaderboard/leaderboard_bloc_full.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/Leaderboard/Widgets/LeaderCard.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/Leaderboard/Widgets/LeaderCardDesktop.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/Leaderboard/Widgets/LeaderCard.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/Leaderboard/Widgets/LeaderCardDesktop.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
@@ -11,16 +11,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class LeaderboardDesktop extends StatefulWidget {
-  const LeaderboardDesktop({
+class LeaderboardTablet extends StatefulWidget {
+  const LeaderboardTablet({
     Key? key,
   }) : super(key: key);
 
   @override
-  _LeaderboardDesktopState createState() => _LeaderboardDesktopState();
+  _LeaderboardTabletState createState() => _LeaderboardTabletState();
 }
 
-class _LeaderboardDesktopState extends State<LeaderboardDesktop>
+class _LeaderboardTabletState extends State<LeaderboardTablet>
     with SingleTickerProviderStateMixin {
   late TransactionBloc _transactionBloc;
 
@@ -50,7 +50,7 @@ class _LeaderboardDesktopState extends State<LeaderboardDesktop>
         );
       } else if (LeaderboardState is LeaderboardLoadedState) {
         return MasonryGridView.count(
-            crossAxisCount: 4,
+            crossAxisCount: 2,
             padding: EdgeInsets.zero,
             addAutomaticKeepAlives: true,
             shrinkWrap: true,

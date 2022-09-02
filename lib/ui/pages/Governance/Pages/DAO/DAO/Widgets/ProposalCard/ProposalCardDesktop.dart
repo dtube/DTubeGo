@@ -1,9 +1,9 @@
 import 'package:dtube_go/bloc/dao/dao_bloc_full.dart';
 import 'package:dtube_go/bloc/postdetails/postdetails_bloc_full.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/ContribOverview.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/StateChart.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/StateChip.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/VoteOverview.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/ContribOverview.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/StateChart.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/StateChip.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/VoteOverview.dart';
 
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/widgets/players/VideoPlayerFromURL.dart';

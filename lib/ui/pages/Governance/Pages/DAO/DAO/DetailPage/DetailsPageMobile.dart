@@ -1,11 +1,11 @@
 import 'package:dtube_go/bloc/dao/dao_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/ContribOverview.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/FundingDialog.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/StateChart.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/StateChip.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/VoteOverview.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/VotingDialog.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/ContribOverview.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/FundingDialog.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/StateChart.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/StateChip.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/VoteOverview.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:dtube_go/ui/widgets/players/VideoPlayerFromURL.dart';

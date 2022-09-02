@@ -39,6 +39,7 @@ class _PopUpDialogWithTitleLogoDesktopState
         borderRadius: BorderRadius.circular(20),
       ),
       elevation: 0,
+      alignment: Alignment.center,
       backgroundColor: Colors.transparent,
       child: contentBox(context),
     );
@@ -50,8 +51,8 @@ class _PopUpDialogWithTitleLogoDesktopState
         Container(
             padding: EdgeInsets.only(top: 50),
             margin: EdgeInsets.only(top: 50),
-            width: 30.w,
-            height: 70.h,
+            width: widget.width,
+            height: widget.height,
             decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 color: globalBGColor,

@@ -6,7 +6,7 @@ import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO.dart';
 
 import 'package:dtube_go/ui/pages/Governance/Pages/KeyManagement/KeyManagement.dart';
 
@@ -52,7 +52,7 @@ class _GovernanceMainPageDesktopState extends State<GovernanceMainPageDesktop>
       body: Column(
         children: [
           Container(
-            height: 100,
+            height: 50,
             child: Align(
               alignment: Alignment.topCenter,
               child: TabBar(

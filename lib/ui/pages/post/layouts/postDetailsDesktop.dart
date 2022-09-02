@@ -124,13 +124,11 @@ class _PostDetailPageDesktopState extends State<PostDetailPageDesktop> {
             // resizeToAvoidBottomInset: true,
             extendBodyBehindAppBar: true,
             // backgroundColor: Colors.transparent,
-            appBar: kIsWeb
-                ? null
-                : AppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    toolbarHeight: 28,
-                  ),
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              toolbarHeight: 28,
+            ),
             body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
               if (state is PostLoadingState) {
                 return Center(
@@ -425,14 +423,8 @@ class _PostDetailsState extends State<PostDetails> {
                                             link: widget.post.link,
                                           )),
                                   globals.disableAnimations
-                                      ? CollapsedDescription(
-                                          startCollapsed: false,
-                                          description: widget
-                                                      .post.jsonString!.desc !=
-                                                  null
-                                              ? widget.post.jsonString!.desc!
-                                              : "")
-                                      : FadeInDown(
+                                      ? Padding(
+                                          padding: EdgeInsets.only(top: 10),
                                           child: CollapsedDescription(
                                               startCollapsed: false,
                                               description: widget.post
@@ -441,6 +433,19 @@ class _PostDetailsState extends State<PostDetails> {
                                                   ? widget
                                                       .post.jsonString!.desc!
                                                   : ""),
+                                        )
+                                      : FadeInDown(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(top: 10),
+                                            child: CollapsedDescription(
+                                                startCollapsed: false,
+                                                description: widget.post
+                                                            .jsonString!.desc !=
+                                                        null
+                                                    ? widget
+                                                        .post.jsonString!.desc!
+                                                    : ""),
+                                          ),
                                         ),
                                   globals.disableAnimations
                                       ? ShareAndCommentChips(

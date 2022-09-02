@@ -1,5 +1,5 @@
 import 'package:dtube_go/bloc/dao/dao_bloc_full.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/ProposalCard/ProposalCard.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/ProposalCard/ProposalCard.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

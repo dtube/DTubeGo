@@ -1,6 +1,6 @@
 import 'package:dtube_go/bloc/leaderboard/leaderboard_bloc_full.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/Leaderboard/Widgets/LeaderCard.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/Leaderboard/Widgets/LeaderCardDesktop.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/Leaderboard/Widgets/LeaderCard.dart';
+
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
@@ -8,19 +8,18 @@ import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/ui/widgets/system/customSnackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class LeaderboardTablet extends StatefulWidget {
-  const LeaderboardTablet({
+class LeaderboardMobile extends StatefulWidget {
+  const LeaderboardMobile({
     Key? key,
   }) : super(key: key);
 
   @override
-  _LeaderboardTabletState createState() => _LeaderboardTabletState();
+  _LeaderboardMobileState createState() => _LeaderboardMobileState();
 }
 
-class _LeaderboardTabletState extends State<LeaderboardTablet>
+class _LeaderboardMobileState extends State<LeaderboardMobile>
     with SingleTickerProviderStateMixin {
   late TransactionBloc _transactionBloc;
 
@@ -49,8 +48,7 @@ class _LeaderboardTabletState extends State<LeaderboardTablet>
           size: 30.w,
         );
       } else if (LeaderboardState is LeaderboardLoadedState) {
-        return MasonryGridView.count(
-            crossAxisCount: 2,
+        return ListView.builder(
             padding: EdgeInsets.zero,
             addAutomaticKeepAlives: true,
             shrinkWrap: true,
@@ -59,7 +57,7 @@ class _LeaderboardTabletState extends State<LeaderboardTablet>
             itemCount: LeaderboardState.leaderboardList.length,
             itemBuilder: (ctx, pos) {
               if (LeaderboardState.leaderboardList[pos].pubLeader != null) {
-                return LeaderCardDesktop(
+                return LeaderCard(
                   leaderItem: LeaderboardState.leaderboardList[pos],
                 );
               } else {

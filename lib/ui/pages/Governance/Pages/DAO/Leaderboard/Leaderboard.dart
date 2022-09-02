@@ -1,6 +1,6 @@
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/Leaderboard/Layouts/LeaderboardDesktop.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/Leaderboard/Layouts/LeaderboardMobile.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/Leaderboard/Layouts/LeaderboardTablet.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/Leaderboard/Layouts/LeaderboardDesktop.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/Leaderboard/Layouts/LeaderboardMobile.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/Leaderboard/Layouts/LeaderboardTablet.dart';
 import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:flutter/material.dart';
 

@@ -48,13 +48,46 @@ class _RewardsPageTabletState extends State<RewardsPageTablet>
               isScrollable: true,
               tabs: [
                 Tab(
-                  text: "claimable",
+                  child: Row(
+                    children: [
+                      FaIcon(
+                        FontAwesomeIcons.play,
+                        size: 15,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text("Claimable"),
+                    ],
+                  ),
                 ),
                 Tab(
-                  text: "pending",
+                  child: Row(
+                    children: [
+                      FaIcon(
+                        FontAwesomeIcons.clock,
+                        size: 15,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text("Pending"),
+                    ],
+                  ),
                 ),
                 Tab(
-                  text: "claimed",
+                  child: Row(
+                    children: [
+                      FaIcon(
+                        FontAwesomeIcons.checkDouble,
+                        size: 15,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text("Claimed"),
+                    ],
+                  ),
                 )
               ],
               controller: _tabController,

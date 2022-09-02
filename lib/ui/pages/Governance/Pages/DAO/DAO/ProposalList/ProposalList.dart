@@ -1,6 +1,6 @@
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/ProposalList/Layouts/ProposalListDesktop.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/ProposalList/Layouts/ProposalListMobile.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/ProposalList/Layouts/ProposalListTablet.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/ProposalList/Layouts/ProposalListDesktop.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/ProposalList/Layouts/ProposalListMobile.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/ProposalList/Layouts/ProposalListTablet.dart';
 import 'package:dtube_go/utils/Layout/ResponsiveLayout.dart';
 import 'package:flutter/material.dart';
 

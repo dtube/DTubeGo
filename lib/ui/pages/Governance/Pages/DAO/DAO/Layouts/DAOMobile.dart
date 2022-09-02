@@ -3,8 +3,8 @@ import 'package:dtube_go/bloc/dao/dao_bloc_full.dart';
 import 'package:dtube_go/bloc/leaderboard/leaderboard_bloc_full.dart';
 
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/ProposalList/ProposalList.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/Leaderboard/Leaderboard.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/ProposalList/ProposalList.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/Leaderboard/Leaderboard.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/style/ThemeData.dart';
@@ -12,16 +12,16 @@ import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DAO extends StatefulWidget {
-  const DAO({
+class DAOMobile extends StatefulWidget {
+  const DAOMobile({
     Key? key,
   }) : super(key: key);
 
   @override
-  _DAOState createState() => _DAOState();
+  _DAOMobileState createState() => _DAOMobileState();
 }
 
-class _DAOState extends State<DAO> with TickerProviderStateMixin {
+class _DAOMobileState extends State<DAOMobile> with TickerProviderStateMixin {
   late TabController _tabController;
   late TabController _tabControllerFR;
   late TabController _tabControllerCU;
@@ -64,13 +64,40 @@ class _DAOState extends State<DAO> with TickerProviderStateMixin {
                   isScrollable: true,
                   tabs: [
                     Tab(
-                      text: pageNames[0],
+                      // text: pageNames[0],
+                      child: Row(
+                        children: [
+                          FaIcon(pagesIcons[0], size: 15),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(pageNames[0])
+                        ],
+                      ),
                     ),
                     Tab(
-                      text: pageNames[1],
+                      // text: pageNames[1],
+                      child: Row(
+                        children: [
+                          FaIcon(pagesIcons[1], size: 15),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(pageNames[1])
+                        ],
+                      ),
                     ),
                     Tab(
-                      text: pageNames[2],
+                      // text: pageNames[2],
+                      child: Row(
+                        children: [
+                          FaIcon(pagesIcons[2], size: 15),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(pageNames[2])
+                        ],
+                      ),
                     ),
                   ],
                   controller: _tabController,
@@ -201,13 +228,46 @@ class StateTabBar extends StatelessWidget {
         isScrollable: true,
         tabs: [
           Tab(
-            text: "Open",
+            child: Row(
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.clock,
+                  size: 15,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text("Open"),
+              ],
+            ),
           ),
           Tab(
-            text: "Failed",
+            child: Row(
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.ban,
+                  size: 15,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text("Failed"),
+              ],
+            ),
           ),
           Tab(
-            text: "Executed",
+            child: Row(
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.check,
+                  size: 15,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text("Executed"),
+              ],
+            ),
           )
         ],
       ),

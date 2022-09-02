@@ -2,7 +2,7 @@ import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
 import 'package:dtube_go/bloc/dao/dao_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/DetailPage/DetailsPage.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/DetailPage/DetailsPage.dart';
 import 'package:dtube_go/ui/pages/post/postDetailPage.dart';
 
 import 'package:dtube_go/ui/pages/user/User.dart';

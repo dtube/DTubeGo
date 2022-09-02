@@ -1,14 +1,14 @@
 import 'package:dtube_go/bloc/dao/dao_bloc_full.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/ProposalCard/ProposalCard.dart';
-import 'package:dtube_go/ui/pages/Governance/Pages/Governance/DAO/Widgets/ProposalCard/ProposalCardDesktop.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/ProposalCard/ProposalCard.dart';
+import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/ProposalCard/ProposalCardDesktop.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class ProposalListTablet extends StatefulWidget {
-  const ProposalListTablet(
+class ProposalListDesktop extends StatefulWidget {
+  const ProposalListDesktop(
       {Key? key,
       required this.daoState,
       required this.daoType,
@@ -21,10 +21,10 @@ class ProposalListTablet extends StatefulWidget {
   final int daoVotingPeriod;
 
   @override
-  _ProposalListTabletState createState() => _ProposalListTabletState();
+  _ProposalListDesktopState createState() => _ProposalListDesktopState();
 }
 
-class _ProposalListTabletState extends State<ProposalListTablet> {
+class _ProposalListDesktopState extends State<ProposalListDesktop> {
   late DaoBloc _daoBloc;
 
   @override
@@ -55,7 +55,7 @@ class _ProposalListTabletState extends State<ProposalListTablet> {
             ));
           } else {
             return MasonryGridView.count(
-                crossAxisCount: 2,
+                crossAxisCount: 3,
                 padding: EdgeInsets.zero,
                 addAutomaticKeepAlives: true,
                 shrinkWrap: true,

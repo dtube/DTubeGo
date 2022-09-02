@@ -4,6 +4,7 @@ import 'package:dtube_go/res/Config/appConfigValues.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/post/widgets/ReplyButton.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
+import 'package:dtube_go/utils/Widgets/QRCodeDialog/QRCodeDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -58,9 +59,9 @@ class ShareAndCommentChips extends StatelessWidget {
                     onPressed: () {
                       showDialog(
                           context: context,
-                          builder: (context) {
+                          builder: (context2) {
                             return QRCodeDialog(
-                              link: AppConfig.defaultWebsiteURL +
+                              code: AppConfig.defaultWebsiteURL +
                                   '/#!/v/' +
                                   author +
                                   '/' +
@@ -90,83 +91,6 @@ class ShareAndCommentChips extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-}
-
-class QRCodeDialog extends StatefulWidget {
-  QRCodeDialog({
-    Key? key,
-    required this.link,
-  }) : super(key: key);
-
-  final String link;
-
-  @override
-  State<QRCodeDialog> createState() => _QRCodeDialogState();
-}
-
-class _QRCodeDialogState extends State<QRCodeDialog> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return PopUpDialogWithTitleLogo(
-      titleWidgetPadding: 0,
-      titleWidgetSize: 0,
-      callbackOK: () {},
-      titleWidget: Container(),
-      showTitleWidget: false,
-      child: Builder(
-        builder: (context) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 5.h,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: QrImage(
-                    eyeStyle: const QrEyeStyle(
-                      eyeShape: QrEyeShape.circle,
-                    ),
-                    data: widget.link,
-                    padding: EdgeInsets.zero,
-                    foregroundColor: globalAlmostWhite,
-                    version: QrVersions.auto,
-                    size: 100.w,
-                  ),
-                ),
-              ),
-              InkWell(
-                  child: Container(
-                    padding: EdgeInsets.only(top: 2.h, bottom: 2.h),
-                    decoration: BoxDecoration(
-                      color: globalRed,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20.0),
-                          bottomRight: Radius.circular(20.0)),
-                    ),
-                    child: Text(
-                      "Thanks",
-                      style: Theme.of(context).textTheme.headline4,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  }),
-            ],
-          );
-        },
-      ),
     );
   }
 }
