@@ -10,7 +10,7 @@ import 'package:dtube_go/ui/pages/user/Widgets/TopBarCustomClipper.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/TopBarCustomPainter.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/UsersBlockButton.dart';
 import 'package:dtube_go/ui/widgets/Suggestions/UserList.dart';
-import 'package:dtube_go/ui/pages/user/Widgets/UsersMoreInfoButton.dart';
+import 'package:dtube_go/ui/pages/user/Widgets/MoreInfoButton/UsersMoreInfoButton.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannels/SuggestedChannels.dart';
 import 'package:flutter/foundation.dart';

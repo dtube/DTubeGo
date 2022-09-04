@@ -13,7 +13,7 @@ import 'package:dtube_go/ui/pages/post/widgets/VotingDialog/VotingDialog.dart';
 import 'package:dtube_go/ui/widgets/Comments/CommentDialog.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
-import 'package:dtube_go/ui/widgets/gifts/GiftDialog.dart';
+import 'package:dtube_go/ui/widgets/gifts/GiftDialog/GiftDialog.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
 import 'package:dtube_go/utils/Strings/friendlyTimestamp.dart';
 import 'package:flutter/foundation.dart';
@@ -431,13 +431,20 @@ class PostInfoDetailsRow extends StatelessWidget {
             Row(
               children: [
                 globals.disableAnimations
-                    ? AccountIconContainer(authorName: author, avatarSize: 40)
+                    ? Padding(
+                        padding: EdgeInsets.only(top: 2),
+                        child: AccountIconContainer(
+                            authorName: author, avatarSize: 40),
+                      )
                     : FadeIn(
                         preferences: AnimationPreferences(
                             offset: Duration(milliseconds: 500),
                             duration: Duration(seconds: 1)),
-                        child: AccountIconContainer(
-                            authorName: author, avatarSize: 40),
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: AccountIconContainer(
+                              authorName: author, avatarSize: 40),
+                        ),
                       ),
                 SizedBox(width: width * 0.01),
                 Container(
@@ -949,7 +956,7 @@ class TitleWidgetForRow extends StatelessWidget {
           title,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme.of(context).textTheme.bodyText1,
         ),
       ),
     );

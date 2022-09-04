@@ -11,7 +11,7 @@ import 'package:dtube_go/ui/pages/user/Widgets/TopBarCustomClipper.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/TopBarCustomPainter.dart';
 import 'package:dtube_go/ui/pages/user/Widgets/UsersBlockButton.dart';
 import 'package:dtube_go/ui/widgets/Suggestions/UserList.dart';
-import 'package:dtube_go/ui/pages/user/Widgets/UsersMoreInfoButton.dart';
+import 'package:dtube_go/ui/pages/user/Widgets/MoreInfoButton/UsersMoreInfoButton.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:dtube_go/ui/widgets/Suggestions/SuggestedChannels/SuggestedChannels.dart';
 import 'package:flutter/foundation.dart';
@@ -167,7 +167,7 @@ class _UserPageTabletState extends State<UserPageTablet> {
                           heightPerEntry: 30.h,
                           width: 80.w,
                           topPaddingForFirstEntry: 0,
-                          sidepadding: 5.w,
+                          sidepadding: 5,
                           bottompadding: 0.h,
                           scrollCallback: (bool) {},
                           enableNavigation: true,
@@ -217,7 +217,7 @@ class _UserPageTabletState extends State<UserPageTablet> {
                                       heightPerEntry: 30.h,
                                       width: 80.w,
                                       topPaddingForFirstEntry: 0,
-                                      sidepadding: 5.w,
+                                      sidepadding: 5,
                                       bottompadding: 0.h,
                                       scrollCallback: (bool) {},
                                       enableNavigation: true,
@@ -389,22 +389,25 @@ class _UserPageTabletState extends State<UserPageTablet> {
                     ]),
                     Container(
                       height: _headerHight,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          !widget.ownUserpage
-                              ? BlocProvider(
-                                  create: (context) => UserBloc(
-                                      repository: UserRepositoryImpl()),
-                                  child: UserBlockButton(
-                                    user: user,
-                                  ),
-                                )
-                              : Container(),
-                          UserMoreInfoButton(
-                              context: context, user: user, size: 50),
-                        ],
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            !widget.ownUserpage
+                                ? BlocProvider(
+                                    create: (context) => UserBloc(
+                                        repository: UserRepositoryImpl()),
+                                    child: UserBlockButton(
+                                      user: user,
+                                    ),
+                                  )
+                                : Container(),
+                            UserMoreInfoButton(
+                                context: context, user: user, size: 50),
+                          ],
+                        ),
                       ),
                     ),
                   ],

@@ -149,7 +149,8 @@ class FeedList extends StatelessWidget {
                               if (state.feedType == "tagSearch") {
                                 _feedItems.clear();
                               }
-                              if (_feedItems.isNotEmpty) {
+                              if (_feedItems.isNotEmpty &&
+                                  state.feed.isNotEmpty) {
                                 if (_feedItems.first.link ==
                                     state.feed.first.link) {
                                   _feedItems.clear();
@@ -514,7 +515,7 @@ class FeedList extends StatelessWidget {
           autoPauseVideoOnPopup: _autoPauseVideoOnPopup!,
           feedItem: feed[pos],
           crossAxisCount: tabletCrossAxisCount,
-          width: MediaQuery.of(context).size.width * 0.2,
+          width: MediaQuery.of(context).size.width * 0.5,
           deactivatePlayback: disablePlayback,
           hideSpeedDial: hideSpeedDial,
         ),

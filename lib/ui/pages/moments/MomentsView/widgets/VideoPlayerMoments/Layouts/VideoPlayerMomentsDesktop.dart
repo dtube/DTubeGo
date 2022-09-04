@@ -20,7 +20,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-class VideoPlayerMoments extends StatefulWidget {
+class VideoPlayerMomentsDesktop extends StatefulWidget {
   //final String link;
   final FeedItem feedItem;
   MomentsController momentsController;
@@ -42,7 +42,7 @@ class VideoPlayerMoments extends StatefulWidget {
 
   UserBloc userBloc;
 
-  VideoPlayerMoments({
+  VideoPlayerMomentsDesktop({
     Key? key, //required this.link,
     required this.feedItem,
     required this.momentsController,
@@ -62,10 +62,11 @@ class VideoPlayerMoments extends StatefulWidget {
     required this.fixedDownvoteWeight,
   }) : super(key: key);
   @override
-  _VideoPlayerMomentsState createState() => _VideoPlayerMomentsState();
+  _VideoPlayerMomentsDesktopState createState() =>
+      _VideoPlayerMomentsDesktopState();
 }
 
-class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
+class _VideoPlayerMomentsDesktopState extends State<VideoPlayerMomentsDesktop> {
   late VideoPlayerController _videoController;
 
   late bool _votingDirection;
@@ -193,9 +194,15 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                 alignment: Alignment.centerLeft,
                 heightFactor: 1,
                 child: Container(
-                  child: GestureDetector(onTap: () {
-                    widget.momentsController.previous();
-                  }),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: GestureDetector(
+                      onTap: () {
+                        widget.momentsController.previous();
+                      },
+                      child: FaIcon(FontAwesomeIcons.backwardStep),
+                    ),
+                  ),
                   width: 30,
                 ),
               ),
@@ -203,10 +210,16 @@ class _VideoPlayerMomentsState extends State<VideoPlayerMoments> {
                 alignment: Alignment.centerRight,
                 heightFactor: 1,
                 child: Container(
-                  child: GestureDetector(onTap: () {
-                    widget.momentsController.next();
-                    setMomentSeen();
-                  }),
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: GestureDetector(
+                      onTap: () {
+                        widget.momentsController.next();
+                        setMomentSeen();
+                      },
+                      child: FaIcon(FontAwesomeIcons.forwardStep),
+                    ),
+                  ),
                   width: 30,
                 ),
               ),

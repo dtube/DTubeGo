@@ -177,7 +177,7 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
           // AsyncSnapshot<Your object type>
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
-                appBar: dtubeSubAppBar(true, "", context, null),
+                appBar: dtubeSubAppBar(true, "Global Search", context, null),
                 resizeToAvoidBottomInset: true,
                 body: Align(
                     alignment: Alignment.topCenter,
@@ -187,7 +187,7 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
           } else {
             if (snapshot.hasError)
               return Scaffold(
-                  appBar: dtubeSubAppBar(true, "", context, null),
+                  appBar: dtubeSubAppBar(true, "Global Search", context, null),
                   resizeToAvoidBottomInset: true,
                   body: Align(
                       alignment: Alignment.topCenter,
@@ -196,7 +196,7 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                               subtitle: "an error happened... ", size: 20.w))));
             else
               return Scaffold(
-                appBar: dtubeSubAppBar(true, "", context, null),
+                appBar: dtubeSubAppBar(true, "Global Search", context, null),
                 resizeToAvoidBottomInset: true,
                 body: Align(
                   alignment: Alignment.topCenter,

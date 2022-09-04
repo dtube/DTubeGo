@@ -42,7 +42,7 @@ class OverlayTextInput extends StatelessWidget {
           ),
           labelText: label,
           floatingLabelBehavior: FloatingLabelBehavior.auto,
-          labelStyle: Theme.of(context).textTheme.headline5),
+          labelStyle: Theme.of(context).textTheme.bodyText1),
     );
   }
 }
@@ -81,7 +81,7 @@ class OverlayNumberInput extends StatelessWidget {
             ),
           ),
           labelText: label,
-          labelStyle: Theme.of(context).textTheme.headline5),
+          labelStyle: Theme.of(context).textTheme.bodyText1),
       style: Theme.of(context).textTheme.headline5,
       controller: textEditingController,
       keyboardType: TextInputType.numberWithOptions(decimal: true),

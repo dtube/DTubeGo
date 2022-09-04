@@ -16,7 +16,7 @@ import 'package:dtube_go/ui/widgets/Inputs/OverlayInputs.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-import 'package:dtube_go/ui/widgets/gifts/GiftDialog.dart';
+import 'package:dtube_go/ui/widgets/gifts/GiftDialog/GiftDialog.dart';
 import 'package:dtube_go/ui/widgets/tags/TagChip.dart';
 import 'package:dtube_go/utils/Random/randomGenerator.dart';
 import 'package:dtube_go/utils/Strings/friendlyTimestamp.dart';

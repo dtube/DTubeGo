@@ -504,16 +504,16 @@ Future<String> getVideoAutoPause() async {
 }
 
 Future<String> getDisableAnimations() async {
-  String? _setting = "false";
+  String? _setting = "true";
   try {
     _setting = await _storage.read(key: settingKey_disableAnimations);
   } catch (e) {
-    _setting = "false";
+    _setting = "true";
   }
   if (_setting != null) {
     return _setting;
   } else {
-    return "false";
+    return "true";
   }
 }
 

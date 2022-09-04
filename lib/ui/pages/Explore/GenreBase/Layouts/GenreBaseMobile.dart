@@ -12,14 +12,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 typedef Bool2VoidFunc = void Function(bool);
 
-class GenreBase extends StatefulWidget {
-  GenreBase({Key? key}) : super(key: key);
+class GenreBaseMobile extends StatefulWidget {
+  GenreBaseMobile({Key? key}) : super(key: key);
 
   @override
-  State<GenreBase> createState() => _GenreBaseState();
+  State<GenreBaseMobile> createState() => _GenreBaseMobileState();
 }
 
-class _GenreBaseState extends State<GenreBase> {
+class _GenreBaseMobileState extends State<GenreBaseMobile> {
   late FeedBloc postBloc;
   bool _showResults = false;
 

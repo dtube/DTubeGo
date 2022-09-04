@@ -6,8 +6,8 @@ import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:flutter/material.dart';
 
-class GiftDialog extends StatefulWidget {
-  GiftDialog(
+class GiftDialogMobile extends StatefulWidget {
+  GiftDialogMobile(
       {Key? key,
       required this.receiver,
       required this.txBloc,
@@ -22,10 +22,10 @@ class GiftDialog extends StatefulWidget {
   final VoidCallback? cancelCallback;
 
   @override
-  _GiftDialogState createState() => _GiftDialogState();
+  _GiftDialogMobileState createState() => _GiftDialogMobileState();
 }
 
-class _GiftDialogState extends State<GiftDialog> {
+class _GiftDialogMobileState extends State<GiftDialogMobile> {
   late TextEditingController _amountController;
   late TextEditingController _memoController;
 

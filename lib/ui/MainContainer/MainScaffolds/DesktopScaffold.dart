@@ -10,7 +10,7 @@ import 'package:dtube_go/ui/pages/settings/SettingsTabContainer.dart';
 import 'package:dtube_go/ui/pages/Governance/GovernanceTabContainer.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
-import 'package:dtube_go/ui/pages/Explore/GenreBase.dart';
+import 'package:dtube_go/ui/pages/Explore/GenreBase/GenreBase.dart';
 import 'package:dtube_go/ui/pages/upload/PresetSelection/UploadPresetSelection.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';

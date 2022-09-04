@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class UserMoreInfoButton extends StatelessWidget {
-  UserMoreInfoButton(
+class UserMoreInfoButtonMobile extends StatelessWidget {
+  UserMoreInfoButtonMobile(
       {Key? key, required this.context, required this.user, this.size})
       : super(key: key);
 
