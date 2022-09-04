@@ -25,14 +25,14 @@ class Web3StorageRepositoryImpl implements Web3StorageRepository {
   @override
   Future<File> compressVideo(String localFilePath) async {
     try {
-      // await VideoCompress.setLogLevel(4);
-      // MediaInfo? mediaInfo = await VideoCompress.compressVideo(localFilePath,
-      //     //all qualities: https://github.com/jonataslaw/VideoCompress/blob/e6c936b9e78dcb5ece649d4960bfc739642a65a6/lib/src/video_compress/video_quality.dart
-      //     quality: VideoQuality.DefaultQuality,
-      //     includeAudio: true);
+      await VideoCompress.setLogLevel(4);
+      MediaInfo? mediaInfo = await VideoCompress.compressVideo(localFilePath,
+          //all qualities: https://github.com/jonataslaw/VideoCompress/blob/e6c936b9e78dcb5ece649d4960bfc739642a65a6/lib/src/video_compress/video_quality.dart
+          quality: VideoQuality.DefaultQuality,
+          includeAudio: true);
 
-      // return File(mediaInfo!.path!);
-      return File(localFilePath);
+      return File(mediaInfo!.path!);
+      // return File(localFilePath);
     } catch (e) {
       print(e.toString());
       throw Exception();
