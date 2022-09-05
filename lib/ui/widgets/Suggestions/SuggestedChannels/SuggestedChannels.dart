@@ -19,12 +19,12 @@ class SuggestedChannels extends StatelessWidget {
     return ResponsiveLayout(
       desktopBody: SuggestedChannelsDesktop(
         avatarSize: avatarSize,
-        crossAxisCount: crossAxisCount!,
+        crossAxisCount: crossAxisCount != null ? crossAxisCount! : 1,
       ),
       mobileBody: SuggestedChannelsMobile(avatarSize: avatarSize),
       tabletBody: SuggestedChannelsDesktop(
         avatarSize: avatarSize,
-        crossAxisCount: crossAxisCount!,
+        crossAxisCount: crossAxisCount != null ? crossAxisCount! : 1,
       ),
     );
   }

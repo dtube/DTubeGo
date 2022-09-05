@@ -31,7 +31,7 @@ class UserList extends StatelessWidget {
           userlist: userlist,
           title: title,
           showCount: showCount,
-          crossAxisCount: crossAxisCount!,
+          crossAxisCount: crossAxisCount != null ? crossAxisCount! : 3,
           avatarSize: avatarSize),
       mobileBody: UserListMobile(
           userlist: userlist,
@@ -42,7 +42,7 @@ class UserList extends StatelessWidget {
           userlist: userlist,
           title: title,
           showCount: showCount,
-          crossAxisCount: crossAxisCount!,
+          crossAxisCount: crossAxisCount != null ? crossAxisCount! : 3,
           avatarSize: avatarSize),
     );
   }
