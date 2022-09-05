@@ -225,29 +225,12 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                               FontAwesomeIcons.magnifyingGlass,
                               size: globalIconSizeBig,
                             ),
-                            Text('Search'),
+                            Text('Search',
+                                style: Theme.of(context).textTheme.bodyText1),
                           ],
                         ),
                         onTap: () {
-                          _screens.removeAt(3);
-
-                          _screens.insert(
-                              3,
-                              MomentsPage(
-                                key: UniqueKey(),
-                                play: false,
-                              ));
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return MultiBlocProvider(providers: [
-                              BlocProvider<SearchBloc>(
-                                  create: (context) => SearchBloc(
-                                      repository: SearchRepositoryImpl())),
-                              BlocProvider(
-                                  create: (context) => FeedBloc(
-                                      repository: FeedRepositoryImpl())),
-                            ], child: SearchScreen());
-                          }));
+                          openSearchScreen(context);
                         },
                       ),
                       ListTile(
@@ -258,20 +241,11 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                 FontAwesomeIcons.alignJustify,
                                 size: globalIconSizeBig,
                               ),
-                              Text('Feed'),
+                              Text('Feed',
+                                  style: Theme.of(context).textTheme.bodyText1),
                             ]),
                         onTap: () {
-                          _screens.removeAt(3);
-
-                          _screens.insert(
-                              3,
-                              MomentsPage(
-                                key: UniqueKey(),
-                                play: false,
-                              ));
-                          setState(() {
-                            _currentIndex = 0;
-                          });
+                          openFeedPage();
                           Navigator.pop(context);
                         },
                       ),
@@ -283,100 +257,41 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                 FontAwesomeIcons.earthAfrica,
                                 size: globalIconSizeBig,
                               ),
-                              Text('Explore'),
+                              Text('Explore',
+                                  style: Theme.of(context).textTheme.bodyText1),
                             ]),
                         onTap: () {
-                          _screens.removeAt(3);
-
-                          _screens.insert(
-                              3,
-                              MomentsPage(
-                                key: UniqueKey(),
-                                play: false,
-                              ));
-
-                          setState(() {
-                            _currentIndex = 1;
-                          });
+                          openExplorePage();
                           Navigator.pop(context);
                         },
                       ),
-                      ListTile(
-                        title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              UploadButton(iconSize: globalIconSizeBig),
-                              Text('Upload'),
-                            ]),
-                        onTap: () {
-                          _screens.removeAt(3);
-
-                          _screens.insert(
-                              3,
-                              MomentsPage(
-                                key: UniqueKey(),
-                                play: false,
-                              ));
-                          if (globals.keyPermissions.contains(4)) {
-                            // if there is a current background upload running
-                            //  show snackbar and do not navigate to the upload screen
-                            if (BlocProvider.of<AppStateBloc>(context).state
-                                    is UploadStartedState ||
-                                BlocProvider.of<AppStateBloc>(context).state
-                                    is UploadProcessingState) {
-                              showCustomFlushbarOnError(
-                                  "please wait until upload is finished",
-                                  context);
-                            }
-                            // if the most recent background upload task is finished
-                            // reset UploadState and navigate to the upload screen
-                            if (BlocProvider.of<AppStateBloc>(context).state
-                                    is UploadFinishedState ||
-                                BlocProvider.of<AppStateBloc>(context).state
-                                    is UploadFailedState) {
-                              BlocProvider.of<AppStateBloc>(context).add(
-                                  UploadStateChangedEvent(
-                                      uploadState: UploadInitialState()));
-                              _screens.removeAt(2);
-                              _screens.insert(
-                                  2,
-                                  new
-                                  //UploaderMainPage(
-                                  //callback: uploaderCallback,
-                                  UploadPresetSelection(
-                                    uploaderCallback: uploaderCallback,
-                                    key: UniqueKey(),
-                                  ));
-                            }
-                            // if there is no background upload task running or recently finished
-                            if (BlocProvider.of<AppStateBloc>(context).state
-                                is UploadInitialState) {
-                              // navigate to the uploader screen
-                              // if the user navigated to the uploader screen
-                              // reset uploader page
-                              _screens.removeAt(2);
-                              _screens.insert(
-                                  2,
-                                  new
-                                  //UploaderMainPage(
-                                  //callback: uploaderCallback,
-                                  UploadPresetSelection(
-                                    uploaderCallback: uploaderCallback,
-                                    key: UniqueKey(),
-                                  ));
-                            }
-                          } else {
-                            // Flushbar not working when main menu opened
-                            // showCustomFlushbarOnError(
-                            //     "you need to be signed in to upload content",
-                            //     context);
-                          }
-                          setState(() {
-                            _currentIndex = 2;
-                          });
-                          Navigator.pop(context);
-                        },
-                      ),
+                      globals.keyPermissions.isNotEmpty
+                          ? ListTile(
+                              title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    UploadButton(iconSize: globalIconSizeBig),
+                                    Text(
+                                      'Upload',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1!
+                                          .copyWith(
+                                              color: !globals.keyPermissions
+                                                      .contains(4)
+                                                  ? Colors.grey
+                                                  : globalAlmostWhite),
+                                    ),
+                                  ]),
+                              onTap: () {
+                                if (globals.keyPermissions.contains(4)) {
+                                  openUploadPage(context);
+                                }
+                                Navigator.pop(context);
+                              },
+                            )
+                          : Container(),
                       ListTile(
                         title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -385,61 +300,34 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                 FontAwesomeIcons.podcast,
                                 size: globalIconSizeBig,
                               ),
-                              Text('Moments'),
+                              Text('Moments',
+                                  style: Theme.of(context).textTheme.bodyText1),
                             ]),
                         onTap: () {
-                          // if the user navigated to the moments page
-
-                          // reset moments page and set play = true
-
-                          _screens.removeAt(3);
-
-                          _screens.insert(
-                            3,
-                            new MultiBlocProvider(
-                                providers: [
-                                  BlocProvider(
-                                      create: (context) => FeedBloc(
-                                          repository: FeedRepositoryImpl())),
-                                ],
-                                child: MomentsPage(
-                                  key: UniqueKey(),
-                                  play: true,
-                                )),
-                          );
-                          setState(() {
-                            _currentIndex = 3;
-                          });
+                          openMomentsPage();
                           Navigator.pop(context);
                         },
                       ),
-                      ListTile(
-                        title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              FaIcon(
-                                FontAwesomeIcons.hotel,
-                                size: globalIconSizeBig,
-                              ),
-                              Text('Governance'),
-                            ]),
-                        onTap: () {
-                          if (globals.keyPermissions.isNotEmpty) {
-                            _screens.removeAt(3);
-
-                            _screens.insert(
-                                3,
-                                MomentsPage(
-                                  key: UniqueKey(),
-                                  play: false,
-                                ));
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return GovernanceMainPage();
-                            }));
-                          }
-                        },
-                      ),
+                      globals.keyPermissions.isNotEmpty
+                          ? ListTile(
+                              title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    FaIcon(
+                                      FontAwesomeIcons.hotel,
+                                      size: globalIconSizeBig,
+                                    ),
+                                    Text('Governance',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1),
+                                  ]),
+                              onTap: () {
+                                openGovernancePage(context);
+                              },
+                            )
+                          : Container(),
                       ListTile(
                         title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -448,73 +336,36 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                 FontAwesomeIcons.gears,
                                 size: globalIconSizeBig,
                               ),
-                              Text('Settings'),
+                              Text('Settings',
+                                  style: Theme.of(context).textTheme.bodyText1),
                             ]),
                         onTap: () {
-                          _screens.removeAt(3);
-
-                          _screens.insert(
-                              3,
-                              MomentsPage(
-                                key: UniqueKey(),
-                                play: false,
-                              ));
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return BlocProvider<SettingsBloc>(
-                                create: (context) => SettingsBloc(),
-                                child: SettingsTabContainer());
-                          }));
+                          openSettingsPage(context);
                         },
                       ),
-                      ListTile(
-                        title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              globals.keyPermissions.isEmpty
-                                  ? FaIcon(FontAwesomeIcons.userSecret)
-                                  : AccountIconBase(
+                      globals.keyPermissions.isNotEmpty
+                          ? ListTile(
+                              title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    AccountIconBase(
                                       avatarSize: globalIconSizeBig,
                                       showVerified: false,
                                       username: "you",
                                       showBorder: false,
                                     ),
-                              Text('Profile'),
-                            ]),
-                        onTap: () {
-                          // if the selected page is the profile page
-                          if (globals.keyPermissions.isEmpty) {
-                            showCustomFlushbarOnError(
-                                "you need to be signed in to access your profile",
-                                context);
-                          } else {
-                            _screens.removeAt(3);
-
-                            _screens.insert(
-                                3,
-                                MomentsPage(
-                                  key: UniqueKey(),
-                                  play: false,
-                                ));
-                            _screens.removeAt(4);
-                            _screens.insert(
-                              4,
-                              BlocProvider(
-                                create: (context) =>
-                                    UserBloc(repository: UserRepositoryImpl()),
-                                child: UserPage(
-                                  ownUserpage: true,
-                                  //key: UniqueKey(),
-                                ),
-                              ),
-                            );
-                            setState(() {
-                              _currentIndex = 4;
-                            });
-                            Navigator.pop(context);
-                          }
-                        },
-                      ),
+                                    Text('Profile',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1),
+                                  ]),
+                              onTap: () {
+                                openProfilePage(context);
+                                Navigator.pop(context);
+                              },
+                            )
+                          : Container(),
                       ListTile(
                         title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -523,22 +374,11 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                 FontAwesomeIcons.question,
                                 size: globalIconSizeBig,
                               ),
-                              Text('About & FAQ'),
+                              Text('About & FAQ',
+                                  style: Theme.of(context).textTheme.bodyText1),
                             ]),
                         onTap: () {
-                          _screens.removeAt(3);
-
-                          _screens.insert(
-                              3,
-                              MomentsPage(
-                                key: UniqueKey(),
-                                play: false,
-                              ));
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AboutAppDialog();
-                              });
+                          openAboutDialog(context);
                         },
                       ),
                     ],
@@ -554,82 +394,19 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: InkWell(
-                              child: UploadButton(iconSize: 24),
-                              onTap: () {
-                                _screens.removeAt(3);
-
-                                _screens.insert(
-                                    3,
-                                    MomentsPage(
-                                      key: UniqueKey(),
-                                      play: false,
-                                    ));
-                                if (globals.keyPermissions.contains(4)) {
-                                  // if there is a current background upload running
-                                  //  show snackbar and do not navigate to the upload screen
-                                  if (BlocProvider.of<AppStateBloc>(context)
-                                          .state is UploadStartedState ||
-                                      BlocProvider.of<AppStateBloc>(context)
-                                          .state is UploadProcessingState) {
-                                    showCustomFlushbarOnError(
-                                        "please wait until upload is finished",
-                                        context);
-                                  }
-                                  // if the most recent background upload task is finished
-                                  // reset UploadState and navigate to the upload screen
-                                  if (BlocProvider.of<AppStateBloc>(context)
-                                          .state is UploadFinishedState ||
-                                      BlocProvider.of<AppStateBloc>(context)
-                                          .state is UploadFailedState) {
-                                    BlocProvider.of<AppStateBloc>(context).add(
-                                        UploadStateChangedEvent(
-                                            uploadState: UploadInitialState()));
-                                    _screens.removeAt(2);
-                                    _screens.insert(
-                                        2,
-                                        new
-                                        //UploaderMainPage(
-                                        //callback: uploaderCallback,
-                                        UploadPresetSelection(
-                                          uploaderCallback: uploaderCallback,
-                                          key: UniqueKey(),
-                                        ));
-                                  }
-                                  // if there is no background upload task running or recently finished
-                                  if (BlocProvider.of<AppStateBloc>(context)
-                                      .state is UploadInitialState) {
-                                    // navigate to the uploader screen
-                                    // if the user navigated to the uploader screen
-                                    // reset uploader page
-                                    _screens.removeAt(2);
-                                    _screens.insert(
-                                        2,
-                                        new
-                                        //UploaderMainPage(
-                                        //callback: uploaderCallback,
-                                        UploadPresetSelection(
-                                          uploaderCallback: uploaderCallback,
-                                          key: UniqueKey(),
-                                        ));
-                                    setState(() {
-                                      _currentIndex = 2;
-                                    });
-                                  }
-                                } else {
-                                  showCustomFlushbarOnError(
-                                      "you need to be signed in to upload content",
-                                      context);
-                                }
-                              },
-                            ),
-                          ),
-                          globals.keyPermissions.isNotEmpty
-                              ? Padding(
+                      globals.keyPermissions.isNotEmpty
+                          ? Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: InkWell(
+                                    child: UploadButton(iconSize: 24),
+                                    onTap: () {
+                                      openUploadPage(context);
+                                    },
+                                  ),
+                                ),
+                                Padding(
                                   padding: EdgeInsets.only(left: 20),
                                   child: InkWell(
                                     child: FaIcon(
@@ -637,26 +414,15 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                       color: globalAlmostWhite,
                                     ),
                                     onTap: () {
-                                      _screens.removeAt(3);
-
-                                      _screens.insert(
-                                          3,
-                                          MomentsPage(
-                                            key: UniqueKey(),
-                                            play: false,
-                                          ));
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) {
-                                        return GovernanceMainPage();
-                                      }));
+                                      openGovernancePage(context);
                                     },
                                   ),
                                 )
-                              : SizedBox(
-                                  width: 0,
-                                )
-                        ],
-                      ),
+                              ],
+                            )
+                          : SizedBox(
+                              width: 0,
+                            ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -701,26 +467,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                 color: globalAlmostWhite,
                               ),
                               onPressed: () {
-                                _screens.removeAt(3);
-
-                                _screens.insert(
-                                    3,
-                                    MomentsPage(
-                                      key: UniqueKey(),
-                                      play: false,
-                                    ));
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return MultiBlocProvider(providers: [
-                                    BlocProvider<SearchBloc>(
-                                        create: (context) => SearchBloc(
-                                            repository:
-                                                SearchRepositoryImpl())),
-                                    BlocProvider(
-                                        create: (context) => FeedBloc(
-                                            repository: FeedRepositoryImpl())),
-                                  ], child: SearchScreen());
-                                }));
+                                openSearchScreen(context);
                               },
                             ),
                           ),
@@ -756,6 +503,213 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
 
           return NewsScreenLoading(crossAxisCount: 4);
         });
+  }
+
+  void openFeedPage() {
+    _screens.removeAt(3);
+
+    _screens.insert(
+        3,
+        MomentsPage(
+          key: UniqueKey(),
+          play: false,
+        ));
+    setState(() {
+      _currentIndex = 0;
+    });
+  }
+
+  void openExplorePage() {
+    _screens.removeAt(3);
+
+    _screens.insert(
+        3,
+        MomentsPage(
+          key: UniqueKey(),
+          play: false,
+        ));
+
+    setState(() {
+      _currentIndex = 1;
+    });
+  }
+
+  void openAboutDialog(BuildContext context) {
+    _screens.removeAt(3);
+
+    _screens.insert(
+        3,
+        MomentsPage(
+          key: UniqueKey(),
+          play: false,
+        ));
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AboutAppDialog();
+        });
+  }
+
+  void openProfilePage(BuildContext context) {
+    if (globals.keyPermissions.isEmpty) {
+      showCustomFlushbarOnError(
+          "you need to be signed in to access your profile", context);
+    } else {
+      _screens.removeAt(3);
+
+      _screens.insert(
+          3,
+          MomentsPage(
+            key: UniqueKey(),
+            play: false,
+          ));
+      _screens.removeAt(4);
+      _screens.insert(
+        4,
+        BlocProvider(
+          create: (context) => UserBloc(repository: UserRepositoryImpl()),
+          child: UserPage(
+            ownUserpage: true,
+            //key: UniqueKey(),
+          ),
+        ),
+      );
+      setState(() {
+        _currentIndex = 4;
+      });
+    }
+  }
+
+  void openSettingsPage(BuildContext context) {
+    _screens.removeAt(3);
+
+    _screens.insert(
+        3,
+        MomentsPage(
+          key: UniqueKey(),
+          play: false,
+        ));
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return BlocProvider<SettingsBloc>(
+          create: (context) => SettingsBloc(), child: SettingsTabContainer());
+    }));
+  }
+
+  void openGovernancePage(BuildContext context) {
+    if (globals.keyPermissions.isNotEmpty) {
+      _screens.removeAt(3);
+
+      _screens.insert(
+          3,
+          MomentsPage(
+            key: UniqueKey(),
+            play: false,
+          ));
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return GovernanceMainPage();
+      }));
+    }
+  }
+
+  void openMomentsPage() {
+    _screens.removeAt(3);
+
+    _screens.insert(
+      3,
+      new MultiBlocProvider(
+          providers: [
+            BlocProvider(
+                create: (context) =>
+                    FeedBloc(repository: FeedRepositoryImpl())),
+          ],
+          child: MomentsPage(
+            key: UniqueKey(),
+            play: true,
+          )),
+    );
+    setState(() {
+      _currentIndex = 3;
+    });
+  }
+
+  void openUploadPage(BuildContext context) {
+    _screens.removeAt(3);
+
+    _screens.insert(
+        3,
+        MomentsPage(
+          key: UniqueKey(),
+          play: false,
+        ));
+    if (globals.keyPermissions.contains(4)) {
+      // if there is a current background upload running
+      //  show snackbar and do not navigate to the upload screen
+      if (BlocProvider.of<AppStateBloc>(context).state is UploadStartedState ||
+          BlocProvider.of<AppStateBloc>(context).state
+              is UploadProcessingState) {
+        showCustomFlushbarOnError(
+            "please wait until upload is finished", context);
+      }
+      // if the most recent background upload task is finished
+      // reset UploadState and navigate to the upload screen
+      if (BlocProvider.of<AppStateBloc>(context).state is UploadFinishedState ||
+          BlocProvider.of<AppStateBloc>(context).state is UploadFailedState) {
+        BlocProvider.of<AppStateBloc>(context)
+            .add(UploadStateChangedEvent(uploadState: UploadInitialState()));
+        _screens.removeAt(2);
+        _screens.insert(
+            2,
+            new
+            //UploaderMainPage(
+            //callback: uploaderCallback,
+            UploadPresetSelection(
+              uploaderCallback: uploaderCallback,
+              key: UniqueKey(),
+            ));
+      }
+      // if there is no background upload task running or recently finished
+      if (BlocProvider.of<AppStateBloc>(context).state is UploadInitialState) {
+        // navigate to the uploader screen
+        // if the user navigated to the uploader screen
+        // reset uploader page
+        _screens.removeAt(2);
+        _screens.insert(
+            2,
+            new
+            //UploaderMainPage(
+            //callback: uploaderCallback,
+            UploadPresetSelection(
+              uploaderCallback: uploaderCallback,
+              key: UniqueKey(),
+            ));
+      }
+      setState(() {
+        _currentIndex = 2;
+      });
+    } else {
+      showCustomFlushbarOnError(
+          "you need to be signed in to upload content", context);
+    }
+  }
+
+  void openSearchScreen(BuildContext context) {
+    _screens.removeAt(3);
+
+    _screens.insert(
+        3,
+        MomentsPage(
+          key: UniqueKey(),
+          play: false,
+        ));
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return MultiBlocProvider(providers: [
+        BlocProvider<SearchBloc>(
+            create: (context) =>
+                SearchBloc(repository: SearchRepositoryImpl())),
+        BlocProvider(
+            create: (context) => FeedBloc(repository: FeedRepositoryImpl())),
+      ], child: SearchScreen());
+    }));
   }
 }
 
