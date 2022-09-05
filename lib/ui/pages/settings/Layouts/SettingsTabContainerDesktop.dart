@@ -104,10 +104,11 @@ class _SettingsTabContainerDesktopState
           context: context,
           builder: (context) => PopUpDialogWithTitleLogo(
             showTitleWidget: true,
+            height: 200,
+            width: 300,
             callbackOK: () {},
-            child: SingleChildScrollView(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -118,8 +119,7 @@ class _SettingsTabContainerDesktopState
                       style: Theme.of(context).textTheme.headline5,
                       textAlign: TextAlign.center),
                 ),
-                SizedBox(height: 2.h),
-                SizedBox(height: 2.h),
+                SizedBox(height: 20),
                 InkWell(
                     child: Container(
                       padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -139,11 +139,11 @@ class _SettingsTabContainerDesktopState
                       Navigator.of(context).pop(true);
                     }),
               ],
-            )),
+            ),
             titleWidget:
-                Center(child: FaIcon(FontAwesomeIcons.doorOpen, size: 18.w)),
-            titleWidgetPadding: 10.h,
-            titleWidgetSize: 20.w,
+                Center(child: FaIcon(FontAwesomeIcons.doorOpen, size: 50)),
+            titleWidgetPadding: 25,
+            titleWidgetSize: 50,
           ),
         ) ??
         false; //if showDialouge had returned null, then return false
