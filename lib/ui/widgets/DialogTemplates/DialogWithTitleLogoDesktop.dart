@@ -69,12 +69,12 @@ class _PopUpDialogWithTitleLogoDesktopState
                 left: 20,
                 right: 20,
                 child: CircleAvatar(
-                  backgroundColor: globalAlmostWhite,
-                  radius: 50,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(50)),
-                      child: widget.titleWidget),
-                ),
+                    backgroundColor: globalAlmostWhite,
+                    radius: 50,
+                    // child: ClipRRect(
+                    //     borderRadius: BorderRadius.all(Radius.circular(10)),
+                    //     child: widget.titleWidget),
+                    child: widget.titleWidget),
               )
             : Container(),
       ],

@@ -665,8 +665,8 @@ class PostInfoBaseRow extends StatelessWidget {
                                           txBloc:
                                               BlocProvider.of<TransactionBloc>(
                                                   context),
-                                          postBloc: BlocProvider.of<PostBloc>(
-                                              context),
+                                          postBloc: new PostBloc(
+                                              repository: PostRepositoryImpl()),
                                           author: widget.author,
                                           link: widget.link,
                                           downvote: true,
@@ -742,8 +742,8 @@ class PostInfoBaseRow extends StatelessWidget {
                                               widget.defaultPostVotingWeight),
                                           defaultTip: double.parse(
                                               widget.defaultPostVotingTip),
-                                          postBloc: BlocProvider.of<PostBloc>(
-                                              context),
+                                          postBloc: new PostBloc(
+                                              repository: PostRepositoryImpl()),
                                           txBloc:
                                               BlocProvider.of<TransactionBloc>(
                                                   context),

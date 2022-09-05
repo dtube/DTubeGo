@@ -26,6 +26,7 @@ import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
@@ -647,55 +648,6 @@ class PostInfoBaseRow extends StatelessWidget {
                       foregroundColor: globalAlmostWhite,
                       elevation: 0.0,
                       children: [
-                        // COMMENT BUTTON
-                        SpeedDialChild(
-                            child: ShadowedIcon(
-                                visible: globals.keyPermissions.contains(4),
-                                icon: FontAwesomeIcons.comment,
-                                color: globalAlmostWhite,
-                                shadowColor: Colors.black,
-                                size: globalIconSizeBig),
-                            foregroundColor: globalAlmostWhite,
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            onTap: () {
-                              if (autoPauseVideoOnPopup) {
-                                videoController.pause();
-                                ytController.pause();
-                              }
-                              commentOpenCallback();
-
-                              showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    BlocProvider<UserBloc>(
-                                  create: (context) => UserBloc(
-                                      repository: UserRepositoryImpl()),
-                                  child: CommentDialog(
-                                    txBloc: BlocProvider.of<TransactionBloc>(
-                                        context),
-                                    originAuthor: feedItem.author,
-                                    originLink: feedItem.link,
-                                    defaultCommentVote: double.parse(
-                                        defaultCommentVotingWeight),
-                                    okCallback: () {
-                                      commentCloseCallback();
-                                      if (autoPauseVideoOnPopup) {
-                                        ytController.play();
-                                        videoController.play();
-                                      }
-                                    },
-                                    cancelCallback: () {
-                                      commentCloseCallback();
-                                      if (autoPauseVideoOnPopup) {
-                                        ytController.play();
-                                        videoController.play();
-                                      }
-                                    },
-                                  ),
-                                ),
-                              );
-                            }),
                         // DOWNVOTE BUTTON
                         SpeedDialChild(
                             child: ShadowedIcon(
@@ -705,7 +657,7 @@ class PostInfoBaseRow extends StatelessWidget {
                                     ? globalAlmostWhite
                                     : globalRed,
                                 shadowColor: Colors.black,
-                                size: globalIconSizeBig),
+                                size: globalIconSizeMedium),
                             foregroundColor: globalAlmostWhite,
                             elevation: 0,
                             backgroundColor: Colors.transparent,
@@ -767,6 +719,57 @@ class PostInfoBaseRow extends StatelessWidget {
                                 );
                               }
                             }),
+
+                        // COMMENT BUTTON
+                        SpeedDialChild(
+                            child: ShadowedIcon(
+                                visible: globals.keyPermissions.contains(4),
+                                icon: FontAwesomeIcons.comment,
+                                color: globalAlmostWhite,
+                                shadowColor: Colors.black,
+                                size: globalIconSizeMedium),
+                            foregroundColor: globalAlmostWhite,
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                            onTap: () {
+                              if (autoPauseVideoOnPopup) {
+                                videoController.pause();
+                                ytController.pause();
+                              }
+                              commentOpenCallback();
+
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    BlocProvider<UserBloc>(
+                                  create: (context) => UserBloc(
+                                      repository: UserRepositoryImpl()),
+                                  child: CommentDialog(
+                                    txBloc: BlocProvider.of<TransactionBloc>(
+                                        context),
+                                    originAuthor: feedItem.author,
+                                    originLink: feedItem.link,
+                                    defaultCommentVote: double.parse(
+                                        defaultCommentVotingWeight),
+                                    okCallback: () {
+                                      commentCloseCallback();
+                                      if (autoPauseVideoOnPopup) {
+                                        ytController.play();
+                                        videoController.play();
+                                      }
+                                    },
+                                    cancelCallback: () {
+                                      commentCloseCallback();
+                                      if (autoPauseVideoOnPopup) {
+                                        ytController.play();
+                                        videoController.play();
+                                      }
+                                    },
+                                  ),
+                                ),
+                              );
+                            }),
+
                         // UPVOTE BUTTON
 
                         SpeedDialChild(
@@ -777,7 +780,7 @@ class PostInfoBaseRow extends StatelessWidget {
                                     ? globalAlmostWhite
                                     : globalRed,
                                 shadowColor: Colors.black,
-                                size: globalIconSizeBig),
+                                size: globalIconSizeMedium),
                             foregroundColor: globalAlmostWhite,
                             elevation: 0,
                             backgroundColor: Colors.transparent,
@@ -847,7 +850,7 @@ class PostInfoBaseRow extends StatelessWidget {
                                 icon: FontAwesomeIcons.gift,
                                 color: globalAlmostWhite,
                                 shadowColor: Colors.black,
-                                size: globalIconSizeBig),
+                                size: globalIconSizeMedium),
                             foregroundColor: globalAlmostWhite,
                             elevation: 0,
                             backgroundColor: Colors.transparent,

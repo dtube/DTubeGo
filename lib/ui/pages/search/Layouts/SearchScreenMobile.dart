@@ -230,7 +230,7 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                                             .bodyText1,
                                       ),
                                     ),
-                                    SizedBox(width: 15.w, child: _buildChips()),
+                                    SizedBox(width: 20.w, child: _buildChips()),
                                   ],
                                 ),
                               ],

@@ -93,8 +93,10 @@ class _VotingDialogDesktopState extends State<VotingDialogDesktop> {
         return true;
       },
       child: PopUpDialogWithTitleLogo(
-        titleWidgetPadding: 5.w,
-        titleWidgetSize: 20.w,
+        titleWidgetPadding: 25,
+        titleWidgetSize: 50,
+        height: 500,
+        width: 400,
         callbackOK: () {},
         titleWidget: FaIcon(
           widget.downvote ? FontAwesomeIcons.flag : FontAwesomeIcons.heart,
@@ -127,7 +129,9 @@ class _VotingDialogDesktopState extends State<VotingDialogDesktop> {
                         children: [
                           Center(
                             child: Text(
-                              "Voting",
+                              widget.downvote && widget.fixedDownvoteActivated
+                                  ? "Flagging"
+                                  : "Voting",
                               style: Theme.of(context).textTheme.headline1,
                             ),
                           ),
@@ -141,7 +145,7 @@ class _VotingDialogDesktopState extends State<VotingDialogDesktop> {
                                   child: Column(
                                     children: [
                                       Text(
-                                          "Flagging this content will permanently hide it from your user interface." +
+                                          "Flagging this content will put a downvote on it and permanently hide it from your user interface." +
                                               " If the curation team agrees it will get removed from the whole platform.",
                                           style: Theme.of(context)
                                               .textTheme

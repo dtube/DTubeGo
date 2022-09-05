@@ -98,7 +98,7 @@ class _VotingDialogMobileState extends State<VotingDialogMobile> {
         callbackOK: () {},
         titleWidget: FaIcon(
           widget.downvote ? FontAwesomeIcons.flag : FontAwesomeIcons.heart,
-          size: 20.w,
+          size: 10.w,
           color: widget.downvote ? globalRed : globalBGColor,
         ),
         showTitleWidget: true,
