@@ -801,7 +801,7 @@ class _SettingsTabContainerDesktopState
                                         Expanded(
                                           flex: 2,
                                           child: Slider(
-                                            min: 1.0,
+                                            min: 0.0,
                                             max: 100.0,
                                             value: _defaultVote,
                                             label: _defaultVote
