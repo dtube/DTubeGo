@@ -38,6 +38,8 @@ dependencies:
   encrypt: ^5.0.1
   crypto: ^3.0.1
 
+  universal_io: ^2.0.4   # Webrequests on web, mobile and desktop
+
   # UI - video related
   # webview_flutter: ^3.0.0
   video_player: ^2.4.4

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/widgets/AppBar/DTubeSubAppBarDesktop.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -85,7 +86,7 @@ class _EULAScreenState extends State<EULAScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: dtubeSubAppBar(true, "", context, null),
+        appBar: dtubeSubAppBarDesktop(true, "", context, null),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

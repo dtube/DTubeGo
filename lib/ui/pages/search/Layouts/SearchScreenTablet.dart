@@ -1,6 +1,7 @@
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/ui/pages/search/ResultCards/PostResultCardDesktop.dart';
 import 'package:dtube_go/ui/pages/search/ResultCards/UserResultCard/UserResultCardTablet.dart';
+import 'package:dtube_go/ui/widgets/AppBar/DTubeSubAppBarDesktop.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -177,7 +178,8 @@ class SearchScreenTabletState extends State<SearchScreenTablet> {
           // AsyncSnapshot<Your object type>
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
-                appBar: dtubeSubAppBar(true, "Global Search", context, null),
+                appBar:
+                    dtubeSubAppBarDesktop(true, "Global Search", context, null),
                 resizeToAvoidBottomInset: true,
                 body: Align(
                     alignment: Alignment.topCenter,
@@ -187,7 +189,8 @@ class SearchScreenTabletState extends State<SearchScreenTablet> {
           } else {
             if (snapshot.hasError)
               return Scaffold(
-                  appBar: dtubeSubAppBar(true, "Global Search", context, null),
+                  appBar: dtubeSubAppBarDesktop(
+                      true, "Global Search", context, null),
                   resizeToAvoidBottomInset: true,
                   body: Align(
                       alignment: Alignment.topCenter,
@@ -196,7 +199,8 @@ class SearchScreenTabletState extends State<SearchScreenTablet> {
                               subtitle: "an error happened... ", size: 10.w))));
             else
               return Scaffold(
-                appBar: dtubeSubAppBar(true, "Global Search", context, null),
+                appBar:
+                    dtubeSubAppBarDesktop(true, "Global Search", context, null),
                 resizeToAvoidBottomInset: true,
                 body: Align(
                   alignment: Alignment.topCenter,

@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/widgets/AppBar/DTubeSubAppBarDesktop.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:dtube_go/bloc/accountHistory/accountHistory_bloc_full.dart';
@@ -65,7 +66,7 @@ class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: dtubeSubAppBar(false, "history", context, null),
+        appBar: dtubeSubAppBarDesktop(false, "", context, null),
         body:
             // Container(
             //   child: BlocBuilder<AccountHistoryBloc, AccountHistoryState>(

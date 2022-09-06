@@ -1,3 +1,4 @@
+import 'package:dtube_go/ui/widgets/AppBar/DTubeSubAppBarDesktop.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/DTubeLogo.dart';
@@ -174,7 +175,7 @@ class _SettingsTabContainerDesktopState
     return WillPopScope(
       onWillPop: showExitPopup, //call function on back button press
       child: Scaffold(
-        appBar: dtubeSubAppBar(true, "App Settings", context, [
+        appBar: dtubeSubAppBarDesktop(true, "App Settings", context, [
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 16, 16.0, 0),
             child: HeartBeat(

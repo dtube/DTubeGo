@@ -12,6 +12,7 @@ import 'package:dtube_go/ui/pages/Governance/Pages/KeyManagement/KeyManagement.d
 
 import 'package:dtube_go/ui/pages/Governance/Pages/Rewards/RewardsPage.dart';
 import 'package:dtube_go/ui/pages/Governance/Pages/Wallet/WalletPage.dart';
+import 'package:dtube_go/ui/widgets/AppBar/DTubeSubAppBarDesktop.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,7 +48,7 @@ class _GovernanceMainPageDesktopState extends State<GovernanceMainPageDesktop>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: dtubeSubAppBar(true, "Governance & Wallet", context, null),
+      appBar: dtubeSubAppBarDesktop(true, "Governance & Wallet", context, null),
       resizeToAvoidBottomInset: true,
       body: Column(
         children: [

@@ -1,4 +1,5 @@
 import 'package:dtube_go/ui/pages/notifications/NotificationItem/NotificationItemDesktop.dart';
+import 'package:dtube_go/ui/widgets/AppBar/DTubeSubAppBarDesktop.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -30,7 +31,7 @@ class _NotificationsDesktopState extends State<NotificationsDesktop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: dtubeSubAppBar(true, "Notification", context, null),
+      appBar: dtubeSubAppBarDesktop(true, "Notification", context, null),
       body: Container(
         child: BlocBuilder<NotificationBloc, NotificationState>(
           builder: (context, state) {

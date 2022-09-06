@@ -6,6 +6,7 @@ import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/StateChart.da
 import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/StateChip.dart';
 import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/VoteOverview.dart';
 import 'package:dtube_go/ui/pages/Governance/Pages/DAO/DAO/Widgets/VotingDialog.dart';
+import 'package:dtube_go/ui/widgets/AppBar/DTubeSubAppBarDesktop.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
@@ -58,7 +59,8 @@ class _ProposalDetailPageDesktopState extends State<ProposalDetailPageDesktop> {
             // resizeToAvoidBottomInset: true,
             extendBodyBehindAppBar: true,
             // backgroundColor: Colors.transparent,
-            appBar: dtubeSubAppBar(true, "Proposal Details", context, null),
+            appBar:
+                dtubeSubAppBarDesktop(true, "Proposal Details", context, null),
             body: BlocBuilder<DaoBloc, DaoState>(builder: (context, state) {
               if (state is ProposalLoadedState) {
                 DAOItem _daoItem = state.daoItem;

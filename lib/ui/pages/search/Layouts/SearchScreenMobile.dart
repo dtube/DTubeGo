@@ -1,4 +1,5 @@
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
+import 'package:dtube_go/ui/widgets/AppBar/DTubeSubAppBarMobile.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
@@ -177,7 +178,8 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
           // AsyncSnapshot<Your object type>
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
-                appBar: dtubeSubAppBar(true, "Global Search", context, null),
+                appBar:
+                    dtubeSubAppBarMobile(true, "Global Search", context, null),
                 resizeToAvoidBottomInset: true,
                 body: Align(
                     alignment: Alignment.topCenter,
@@ -187,7 +189,8 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
           } else {
             if (snapshot.hasError)
               return Scaffold(
-                  appBar: dtubeSubAppBar(true, "Global Search", context, null),
+                  appBar: dtubeSubAppBarMobile(
+                      true, "Global Search", context, null),
                   resizeToAvoidBottomInset: true,
                   body: Align(
                       alignment: Alignment.topCenter,
@@ -196,7 +199,8 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                               subtitle: "an error happened... ", size: 20.w))));
             else
               return Scaffold(
-                appBar: dtubeSubAppBar(true, "Global Search", context, null),
+                appBar:
+                    dtubeSubAppBarMobile(true, "Global Search", context, null),
                 resizeToAvoidBottomInset: true,
                 body: Align(
                   alignment: Alignment.topCenter,

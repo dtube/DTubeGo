@@ -1,4 +1,5 @@
 import 'package:dtube_go/ui/pages/notifications/NotificationItem/NotificationItemMobile.dart';
+import 'package:dtube_go/ui/widgets/AppBar/DTubeSubAppBarMobile.dart';
 import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/style/ThemeData.dart';
@@ -29,7 +30,7 @@ class _NotificationsMobileState extends State<NotificationsMobile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: dtubeSubAppBar(true, "", context, null),
+      appBar: dtubeSubAppBarMobile(true, "", context, null),
       body: Container(
         child: BlocBuilder<NotificationBloc, NotificationState>(
           builder: (context, state) {
