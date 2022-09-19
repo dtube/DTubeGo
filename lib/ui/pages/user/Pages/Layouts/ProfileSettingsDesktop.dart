@@ -1,3 +1,9 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart' as dio;
+import 'package:file_picker/file_picker.dart';
+import 'package:mime/mime.dart';
+
 import 'package:dtube_go/ui/widgets/AppBar/DTubeSubAppBarDesktop.dart';
 import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
@@ -671,6 +677,8 @@ class UploadImageButton extends StatefulWidget {
 }
 
 class _UploadImageButtonState extends State<UploadImageButton> {
+  bool highlightSizeHint = false;
+
   Future<String> getAndUploadFile() async {
     BlocProvider.of<ThirdPartyUploaderBloc>(context)
         .add(SetThirdPartyUploaderInitState());
@@ -688,10 +696,19 @@ class _UploadImageButtonState extends State<UploadImageButton> {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-        onPressed: () async {
-          String imagePath = await getAndUploadFile();
-        },
-        child: Text("upload"));
+    return Column(
+      children: [
+        ElevatedButton(
+            onPressed: () async {
+              String imagePath = await getAndUploadFile();
+            },
+            child: Text("upload")),
+        Text(
+          "the file should be 10MB or less.",
+          style: Theme.of(context).textTheme.bodyText1!.copyWith(
+              color: highlightSizeHint ? globalRed : globalAlmostWhite),
+        )
+      ],
+    );
   }
 }

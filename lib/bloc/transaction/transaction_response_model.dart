@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 class Transaction {
   String? sender;
   int? ts;
@@ -185,6 +187,7 @@ class UploadData {
   bool crossPostToHive;
 
   String? ipfsGateway;
+  Uint8List? thumbBytes;
 
   UploadData(
       {required this.link,
@@ -215,6 +218,7 @@ class UploadData {
       required this.thumbnail210Hash,
       required this.uploaded,
       required this.crossPostToHive,
+      this.thumbBytes,
       this.ipfsGateway});
 }
 

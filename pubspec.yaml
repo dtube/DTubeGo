@@ -2,7 +2,7 @@ name: dtube_go
 description: Client to interact with the avalon blockchain
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.6.4+106
+version: 1.6.4+107
 
 environment:
   sdk: ">=2.13.0 <3.0.0"
@@ -60,6 +60,10 @@ dependencies:
   
   image_cropper: ^2.0.3 # cropping tool for thumbnails
   image_picker: ^0.8.5+3 # open file browser / record image/video
+  file_picker: ^5.0.1
+  mime: ^1.0.2
+  image_picker_web: ^2.1.1
+  image_compression_flutter: ^1.0.2
 
   # UI - responsive design
   native_device_orientation: ^1.0.0 # get the real device orientation

@@ -139,7 +139,7 @@ class _CustomWizardDesktopState extends State<CustomWizardDesktop> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            width: 50.w,
+            width: 80.w,
             child: DTubeFormCard(
               avoidAnimation: true,
               waitBeforeFadeIn: Duration(seconds: 0),

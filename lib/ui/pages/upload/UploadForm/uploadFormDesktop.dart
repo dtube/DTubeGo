@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dtube_go/res/Config/UploadConfigValues.dart';
 import 'package:dtube_go/res/Config/appConfigValues.dart';
 import 'package:dtube_go/ui/pages/upload/dialogs/HivePostCooldownDialog.dart';
@@ -7,6 +9,7 @@ import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer/P2SourcePlayer.dart'
 import 'package:flutter/services.dart';
 import 'package:dtube_go/ui/pages/upload/PresetSelection/Widgets/PresetCards.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
@@ -26,6 +29,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+
+import 'dart:html' as html;
 
 class UploadFormDesktop extends StatefulWidget {
   UploadFormDesktop(
@@ -72,7 +77,9 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
   late YoutubePlayerController _ytController;
 
 // video and thumbnail variables
-  File? _image;
+  Image? _imageFileImage;
+  var _imageFileBytes;
+
   String _imageHints = "";
   File? _video;
   final _picker = ImagePicker();
@@ -117,6 +124,23 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
     _descController.dispose();
     _tagController.dispose();
     super.dispose();
+  }
+
+  Future<void> getImage() async {
+    var mediaData = await ImagePickerWeb.getImageInfo;
+    // String mimeType = mime(Path.basename(mediaData!.fileName));
+    // html.File mediaFile =
+    //     new html.File(mediaData.data, mediaData.fileName, {'type': mimeType});
+
+    // if (mediaFile != null) {
+    setState(() {
+      // _cloudFile = mediaFile;
+      _imageFileBytes = mediaData!.data;
+      _imageFileImage = Image.memory(mediaData!.data!);
+      stateUploadData.localThumbnail = true;
+      stateUploadData.thumbBytes = _imageFileBytes;
+      stateUploadData.thumbnailLocation = mediaData.fileName!;
+    });
   }
 
   Future getFile(bool video, bool camera) async {
@@ -186,7 +210,7 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
     setState(() {
       if (_pickedFile != null) {
         if (!video) {
-          _image = File(_pickedFile.path);
+          //_image = File(_pickedFile.path);
           stateUploadData.localThumbnail = true;
           stateUploadData.thumbnailLocation = _pickedFile.path;
         } else {
@@ -264,9 +288,15 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                videoPreview(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    videoPreview(),
+                    thumbnail(),
+                  ],
+                ),
                 Container(
-                  width: 50.w,
+                  width: 80.w,
                   child: stateUploadData.videoLocation != ""
                       ? DTubeFormCard(
                           avoidAnimation: true,
@@ -282,64 +312,15 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
                 ),
                 _formIsFilled
                     ? Container(
-                        width: 50.w,
+                        width: 80.w,
                         child: DTubeFormCard(
                             avoidAnimation: true,
                             waitBeforeFadeIn: Duration(seconds: 0),
                             childs: [
-                              thumbnail(),
                               Column(
                                 children: [
                                   moreSettings(),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 1.h),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Checkbox(
-                                            value: _termsAccepted,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _termsAccepted =
-                                                    !_termsAccepted;
-                                              });
-                                            }),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text("I have read & agree to the "),
-                                            GestureDetector(
-                                              child: Text(
-                                                "Terms for UGC of DTube Go",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1!
-                                                    .copyWith(color: globalRed),
-                                              ),
-                                              onTap: () {
-                                                showDialog<String>(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) =>
-                                                          UploadTermsDialog(
-                                                    agreeToTermsCallback: () {
-                                                      setState(() {
-                                                        _termsAccepted =
-                                                            !_termsAccepted;
-                                                      });
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 2.h),
+                                  SizedBox(height: 20),
                                   Text(
                                       "Info: direct uploads could take some time to get pinned on the ipfs network. That means they need a few minutes to be playable after the initial upload.",
                                       style: Theme.of(context)
@@ -351,7 +332,12 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline1),
-                                    onPressed: _formIsFilled && _termsAccepted
+                                    onPressed: _formIsFilled &&
+                                            (stateUploadData
+                                                        .thumbnailLocation !=
+                                                    "" ||
+                                                stateUploadData.thumbBytes !=
+                                                    null)
                                         ? () async {
                                             int _hiveCooldown = await sec
                                                 .getSecondsUntilHiveCooldownEnds();
@@ -401,11 +387,12 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
       // _tagFocus.requestFocus();
       checkIfFormIsFilled();
       return Container(
-        width: 50.w,
-        child: DTubeFormCard(
-          avoidAnimation: true,
-          waitBeforeFadeIn: Duration(seconds: 0),
-          childs: [
+        width: 30.w,
+        height: 400,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text("Video preview", style: Theme.of(context).textTheme.headline5),
             YTPlayerIFrame(
                 videoUrl: stateUploadData.videoLocation,
                 autoplay: false,
@@ -432,7 +419,7 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
               : _video!.path;
 
       return Container(
-        width: 50.w,
+        width: 80.w,
         child: DTubeFormCard(
             avoidAnimation: true,
             waitBeforeFadeIn: Duration(seconds: 0),
@@ -457,7 +444,7 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
       // if none of above -> file picker
       return Center(
         child: Container(
-          width: 50.w,
+          width: 80.w,
           child: DTubeFormCard(
             avoidAnimation: true,
             waitBeforeFadeIn: Duration(seconds: 0),
@@ -609,7 +596,7 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
             },
           ),
           Container(
-            width: 50.w,
+            width: 80.w,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -680,71 +667,38 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
 
   Widget thumbnail() {
     return Center(
-      child: Column(
-        children: [
-          Column(
-            children: [
-              Text("3. Additional information",
-                  style: Theme.of(context).textTheme.headline5),
-              InputChip(
-                backgroundColor: globalRed,
-                label: Text(
-                    stateUploadData.thumbnailLocation == ""
-                        ? "pick a custom thumbnail"
-                        : "change thumbnail",
-                    style: Theme.of(context).textTheme.bodyText1),
-                onPressed: () {
-                  getFile(false, false);
-                },
-              ),
+      child: Container(
+        width: 30.w,
+        height: 400,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Column(
+              children: [
+                Text("Thumbnail", style: Theme.of(context).textTheme.headline5),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 10.0),
+                  child: InputChip(
+                    backgroundColor: globalRed,
+                    label: Text(
+                        stateUploadData.thumbnailLocation == ""
+                            ? "pick a thumbnail"
+                            : "change thumbnail",
+                        style: Theme.of(context).textTheme.bodyText1),
+                    onPressed: () {
+                      getImage();
+                    },
+                  ),
+                ),
 
-              stateUploadData.thumbnailLocation != ""
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                            width: 40.w,
-                            child: stateUploadData.localThumbnail
-                                ? Image.file(
-                                    File(stateUploadData.thumbnailLocation))
-                                : CachedNetworkImage(
-                                    imageUrl:
-                                        stateUploadData.thumbnailLocation)),
-                        _imageHints != ""
-                            ? Column(
-                                children: [
-                                  Container(
-                                      width: 40.w,
-                                      child: Text(_imageHints,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1)),
-                                  InputChip(
-                                    backgroundColor: globalRed,
-                                    label: Text("crop thumbnail",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1),
-                                    onPressed: () async {
-                                      File croppedFile = await cropImage(File(
-                                          stateUploadData.thumbnailLocation));
-                                      setState(() {
-                                        stateUploadData.thumbnailLocation =
-                                            croppedFile.path;
-                                      });
-                                    },
-                                  )
-                                ],
-                              )
-                            : SizedBox(height: 0)
-                      ],
-                    )
-                  : SizedBox(height: 0)
-              //       ;
-              // }),
-            ],
-          ),
-        ],
+                _imageFileImage != null ? _imageFileImage! : Container()
+
+                //       ;
+                // }),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -862,7 +816,7 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
               style: Theme.of(context).textTheme.headline6,
             ),
             Container(
-              width: 50.w,
+              width: 80.w,
               child: Slider(
                 min: 0.1,
                 max: 100.0,
@@ -913,7 +867,7 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
               style: Theme.of(context).textTheme.headline6,
             ),
             Container(
-              width: 50.w,
+              width: 80.w,
               child: Slider(
                 min: 0.0,
                 max: (stateUploadData.dtcBalance + 0.0) / 100 < 100.0

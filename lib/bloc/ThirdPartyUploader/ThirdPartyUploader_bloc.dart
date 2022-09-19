@@ -3,6 +3,7 @@ import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_event.dart';
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_state.dart';
 
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 
@@ -18,8 +19,14 @@ class ThirdPartyUploaderBloc
       String _uploadServiceEndpoint =
           await repository.getUploadServiceEndpoint(imageUploadProvider);
 
-      String resultString =
-          await repository.uploadFile(event.filePath, _uploadServiceEndpoint);
+      String resultString = "";
+      if (kIsWeb) {
+        resultString = await repository.uploadFileFromWeb(
+            event.filePath, _uploadServiceEndpoint);
+      } else {
+        resultString =
+            await repository.uploadFile(event.filePath, _uploadServiceEndpoint);
+      }
 
       emit(ThirdPartyUploaderUploadedState(uploadResponse: resultString));
     });

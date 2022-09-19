@@ -34,6 +34,7 @@ import 'package:dtube_go/ui/widgets/system/customSnackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DesktopScaffold extends StatefulWidget {
   DesktopScaffold({Key? key}) : super(key: key);
@@ -381,6 +382,39 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                           openAboutDialog(context);
                         },
                       ),
+                      SizedBox(height: 100),
+                      ListTile(
+                        title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FaIcon(
+                                FontAwesomeIcons.android,
+                                size: globalIconSizeBig,
+                              ),
+                              Text('App on Android',
+                                  style: Theme.of(context).textTheme.bodyText1),
+                            ]),
+                        onTap: () {
+                          launchUrl(Uri.parse(
+                              "https://github.com/dtube/DTubeGo/releases"));
+                        },
+                      ),
+                      ListTile(
+                        title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FaIcon(
+                                FontAwesomeIcons.apple,
+                                size: globalIconSizeBig,
+                              ),
+                              Text('App on iOS',
+                                  style: Theme.of(context).textTheme.bodyText1),
+                            ]),
+                        onTap: () {
+                          launchUrl(Uri.parse(
+                              "https://testflight.apple.com/join/C1RKgxlM"));
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -417,7 +451,23 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                       openGovernancePage(context);
                                     },
                                   ),
-                                )
+                                ),
+                                globals.keyPermissions.isNotEmpty
+                                    ? Padding(
+                                        padding: EdgeInsets.only(left: 20),
+                                        child: InkWell(
+                                          child: AccountIconBase(
+                                            avatarSize: globalIconSizeBig,
+                                            showVerified: false,
+                                            username: "you",
+                                            showBorder: false,
+                                          ),
+                                          onTap: () {
+                                            openProfilePage(context);
+                                          },
+                                        ),
+                                      )
+                                    : Container()
                               ],
                             )
                           : SizedBox(

@@ -259,6 +259,7 @@ class FeedList extends StatelessWidget {
                   _scrollController.position.maxScrollExtent &&
               !BlocProvider.of<FeedBloc>(context).isFetching &&
               feedType != "UserFeed" &&
+              feedType != "NewUserMoments" &&
               feedType != "tagSearch") {
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
@@ -272,6 +273,7 @@ class FeedList extends StatelessWidget {
                   _scrollController.position.minScrollExtent &&
               !BlocProvider.of<FeedBloc>(context).isFetching &&
               feedType != "UserFeed" &&
+              feedType != "NewUserMoments" &&
               feedType != "tagSearch") {
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
@@ -399,6 +401,7 @@ class FeedList extends StatelessWidget {
                   _scrollController.position.maxScrollExtent &&
               !BlocProvider.of<FeedBloc>(context).isFetching &&
               feedType != "UserFeed" &&
+              feedType != "NewUserMoments" &&
               feedType != "tagSearch") {
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
@@ -412,6 +415,7 @@ class FeedList extends StatelessWidget {
                   _scrollController.position.minScrollExtent &&
               !BlocProvider.of<FeedBloc>(context).isFetching &&
               feedType != "UserFeed" &&
+              feedType != "NewUserMoments" &&
               feedType != "tagSearch") {
             BlocProvider.of<FeedBloc>(context)
               ..isFetching = true
@@ -480,6 +484,7 @@ class FeedList extends StatelessWidget {
                     _scrollController.position.maxScrollExtent &&
                 !BlocProvider.of<FeedBloc>(context).isFetching &&
                 feedType != "UserFeed" &&
+                feedType != "NewUserMoments" &&
                 feedType != "tagSearch") {
               BlocProvider.of<FeedBloc>(context)
                 ..isFetching = true
@@ -493,6 +498,7 @@ class FeedList extends StatelessWidget {
                     _scrollController.position.minScrollExtent &&
                 !BlocProvider.of<FeedBloc>(context).isFetching &&
                 feedType != "UserFeed" &&
+                feedType != "NewUserMoments" &&
                 feedType != "tagSearch") {
               BlocProvider.of<FeedBloc>(context)
                 ..isFetching = true

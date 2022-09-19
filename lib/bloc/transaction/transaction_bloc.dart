@@ -1,6 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:image_compression_flutter/image_compression_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:dtube_go/bloc/config/txTypes.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
@@ -15,7 +20,41 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
   TransactionBloc({required this.repository})
       : super(TransactionInitialState()) {
-// TODO: support more providers
+// TODO: big files
+// big files: https://stackoverflow.com/questions/70079208/how-to-upload-large-files-in-flutter-web
+// https://pub.dev/packages/large_file_uploader
+
+    Future<String> uploadThumbnailFromWeb(
+        Uint8List bytes, String filename) async {
+      String _url = "https://api.imgur.com/3/image";
+      String authHeader = "Client-ID fc2dde68a83c037";
+
+      var dio = Dio();
+      dio.options.headers["Authorization"] = authHeader;
+
+      FormData data = FormData.fromMap({
+        "image": MultipartFile.fromBytes(
+          bytes,
+          filename: filename,
+        ),
+      });
+
+      var response = await dio.post(
+        _url,
+        data: data,
+      );
+
+      if (response.statusCode == 200) {
+        print(response);
+        var uploadedUrl = response.data['data']['link'];
+        // var uploadedUrl = "";
+
+        return uploadedUrl;
+      } else {
+        throw Exception();
+      }
+    }
+
     Future<String> uploadThumbnail(String localFilePath) async {
       //String _url = endpoint;
       String _url = "https://api.imgur.com/3/image";
@@ -347,7 +386,12 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             // TODO: use the thirdpartyupload bloc!
             String _thumbUrl = "";
             if (!_upload.thumbnailLocation.contains("http")) {
-              _thumbUrl = await uploadThumbnail(_upload.thumbnailLocation);
+              if (kIsWeb) {
+                _thumbUrl = await uploadThumbnailFromWeb(
+                    _upload.thumbBytes!, _upload.thumbnailLocation);
+              } else {
+                _thumbUrl = await uploadThumbnail(_upload.thumbnailLocation);
+              }
             } else {
               _thumbUrl = _upload.thumbnailLocation;
             }
@@ -381,7 +425,12 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               // TODO: use the thirdpartyupload bloc!
               String _thumbUrl = "";
               if (!_upload.thumbnailLocation.contains("http")) {
-                _thumbUrl = await uploadThumbnail(_upload.thumbnailLocation);
+                if (kIsWeb) {
+                  _thumbUrl = await uploadThumbnailFromWeb(
+                      _upload.thumbBytes!, _upload.thumbnailLocation);
+                } else {
+                  _thumbUrl = await uploadThumbnail(_upload.thumbnailLocation);
+                }
               } else {
                 _thumbUrl = _upload.thumbnailLocation;
               }

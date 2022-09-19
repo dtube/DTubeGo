@@ -1,5 +1,6 @@
 import 'package:dtube_go/res/Config/InitiativePresets.dart';
 import 'package:dtube_go/ui/pages/upload/UploaderMainPage.dart';
+import 'package:dtube_go/ui/widgets/AppBar/DTubeSubAppBarDesktop.dart';
 import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/upload/PresetSelection/Widgets/PresetCards.dart';
@@ -63,101 +64,98 @@ class _UploadPresetSelectionDesktopState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: dtubeSubAppBar(true, "", context, null),
+      // appBar: dtubeSubAppBarDesktop(true, "Upload", context, []),
       resizeToAvoidBottomInset: true,
-      body: Padding(
-        padding: const EdgeInsets.only(top: 50.0),
-        child: !_presetSelected
-            ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text("Initiatives",
-                        style: Theme.of(context).textTheme.headline1),
-                    Container(
-                      height: 30.h,
-                      width: 50.w,
-                      color: globalBGColor,
-                      child: MasonryGridView.count(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        // scrollDirection: Axis.vertical,
-                        itemCount: _initiativePresets.length,
-                        crossAxisCount: 3,
-                        itemBuilder: (BuildContext context, int index) {
-                          return InitiativePresetCard(
-                              currentIndex: index,
-                              iconSize: 50,
-                              initiative: _initiativePresets[index],
-                              // activated: _activatedGenres.contains(index),
-                              onTapCallback: () {
-                                setState(() {
-                                  _selectedPreset = _initiativePresets[index];
-                                  _presetSelected = true;
-                                });
+      body: !_presetSelected
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("Pick an Initiative reset",
+                      style: Theme.of(context).textTheme.headline3),
+                  Container(
+                    height: 150,
+                    width: 80.w,
+                    color: globalBGColor,
+                    child: MasonryGridView.count(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      // scrollDirection: Axis.vertical,
+                      itemCount: _initiativePresets.length,
+                      crossAxisCount: 3,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InitiativePresetCard(
+                            currentIndex: index,
+                            iconSize: 50,
+                            initiative: _initiativePresets[index],
+                            // activated: _activatedGenres.contains(index),
+                            onTapCallback: () {
+                              setState(() {
+                                _selectedPreset = _initiativePresets[index];
+                                _presetSelected = true;
                               });
-                        },
-                        // staggeredTileBuilder: (int index) =>
-                        //     new StaggeredTile.fit(2),
-                        mainAxisSpacing: 4.0,
-                        crossAxisSpacing: 4.0,
-                      ),
+                            });
+                      },
+                      // staggeredTileBuilder: (int index) =>
+                      //     new StaggeredTile.fit(2),
+                      mainAxisSpacing: 4.0,
+                      crossAxisSpacing: 4.0,
                     ),
-                    Center(
-                      child: Text("Your presets",
-                          style: Theme.of(context).textTheme.headline1),
-                    ),
-                    FutureBuilder(
-                        future: _customPresetsLoaded,
-                        builder: (context, exploreTagsSnapshot) {
-                          if (exploreTagsSnapshot.connectionState ==
-                                  ConnectionState.none ||
-                              exploreTagsSnapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                            return Container();
-                          }
-                          return Container(
-                            height: 30.h,
-                            width: 50.w,
-                            color: globalBGColor,
-                            child: MasonryGridView.count(
-                              padding: EdgeInsets.zero,
-                              itemCount: _ativeCustomPresets.length,
-                              crossAxisCount:
-                                  _ativeCustomPresets.length > 1 ? 3 : 1,
-                              //shrinkWrap: true,
-                              // scrollDirection: Axis.vertical,
-                              itemBuilder: (BuildContext context, int index) {
-                                return PresetCard(
-                                    currentIndex: _ativeCustomPresets[index],
-                                    preset: _customPresets[
-                                        _ativeCustomPresets[index]],
-                                    iconSize: 50,
-                                    // activated: _activatedGenres.contains(index),
-                                    onTapCallback: () {
-                                      setState(() {
-                                        _selectedPreset = _customPresets[
-                                            _ativeCustomPresets[index]];
-                                        _presetSelected = true;
-                                      });
+                  ),
+                  Center(
+                    child: Text("or continue with your preset",
+                        style: Theme.of(context).textTheme.headline3),
+                  ),
+                  FutureBuilder(
+                      future: _customPresetsLoaded,
+                      builder: (context, exploreTagsSnapshot) {
+                        if (exploreTagsSnapshot.connectionState ==
+                                ConnectionState.none ||
+                            exploreTagsSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                          return Container();
+                        }
+                        return Container(
+                          height: 30.h,
+                          width: 50.w,
+                          color: globalBGColor,
+                          child: MasonryGridView.count(
+                            padding: EdgeInsets.zero,
+                            itemCount: _ativeCustomPresets.length,
+                            crossAxisCount:
+                                _ativeCustomPresets.length > 1 ? 3 : 1,
+                            //shrinkWrap: true,
+                            // scrollDirection: Axis.vertical,
+                            itemBuilder: (BuildContext context, int index) {
+                              return PresetCard(
+                                  currentIndex: _ativeCustomPresets[index],
+                                  preset: _customPresets[
+                                      _ativeCustomPresets[index]],
+                                  iconSize: 50,
+                                  // activated: _activatedGenres.contains(index),
+                                  onTapCallback: () {
+                                    setState(() {
+                                      _selectedPreset = _customPresets[
+                                          _ativeCustomPresets[index]];
+                                      _presetSelected = true;
                                     });
-                              },
-                              // staggeredTileBuilder: (int index) =>
-                              //     new StaggeredTile.fit(2),
-                              mainAxisSpacing: 4.0,
-                              crossAxisSpacing: 4.0,
-                            ),
-                          );
-                        })
-                  ],
-                ),
-              )
-            : UploaderMainPage(
-                callback: widget.uploaderCallback,
-                key: UniqueKey(),
-                preset: _presetSelected ? _selectedPreset : _customPresets[0]),
-      ),
+                                  });
+                            },
+                            // staggeredTileBuilder: (int index) =>
+                            //     new StaggeredTile.fit(2),
+                            mainAxisSpacing: 4.0,
+                            crossAxisSpacing: 4.0,
+                          ),
+                        );
+                      })
+                ],
+              ),
+            )
+          : UploaderMainPage(
+              callback: widget.uploaderCallback,
+              key: UniqueKey(),
+              preset: _presetSelected ? _selectedPreset : _customPresets[0]),
     );
   }
 }
