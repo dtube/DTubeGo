@@ -1,10 +1,3 @@
-import 'dart:convert';
-import 'dart:html' as html;
-
-import 'package:http/http.dart' as http;
-
-import 'dart:typed_data';
-
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 
