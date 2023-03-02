@@ -11,7 +11,8 @@ class UploadConfig {
     "https://4.btfsu.d.tube"
   ];
 
-  static List<String> web3StorageEndpoints = ["https://dtube.fso.ovh:5080/"];
+  static List<Map<String, String>> web3StorageEndpoints = [{"api": "https://upload.dtube.fso.ovh:5082",
+  "tus": "http://upload.dtube.fso.ovh:1080"}];
   static String web3StorageGateway = "https://ipfs.io";
   static int maxUploadRetries = 2;
 

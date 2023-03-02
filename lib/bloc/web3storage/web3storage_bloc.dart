@@ -19,7 +19,7 @@ class Web3StorageBloc extends Bloc<Web3StorageEvent, Web3StorageState> {
     });
 
     on<UploadVideo>((event, emit) async {
-      String _uploadEndpoint = "";
+      Map<String, String> _uploadEndpoint = {"tus": "", "api": ""};
       String _thumbnailOnlineLocation = "";
       String _cid = "";
       String _newThumbnail = "";
@@ -60,8 +60,8 @@ class Web3StorageBloc extends Bloc<Web3StorageEvent, Web3StorageState> {
       do {
         try {
           _uploadEndpoint = await repository.getUploadEndpoint();
-          print("ENDPOINT: " + _uploadEndpoint);
-          if (_uploadEndpoint == "") {
+          print("ENDPOINT: " + _uploadEndpoint["tus"]!);
+          if (_uploadEndpoint["tus"] == "" || _uploadEndpoint["api"] == "") {
             // yield Web3StorageErrorState(message: "no valid endpoint found");
             uploadErrorMessage = "no valid upload endpoint found!\n\n";
 
@@ -93,8 +93,11 @@ class Web3StorageBloc extends Bloc<Web3StorageEvent, Web3StorageState> {
                   e.toString();
           uploadErrorCount++;
         }
-        // thumnail upload
+        // thumbnail upload
+        // ToDo: RE-ENABLE THOSE LINES BEFORE RELEASE!
+        // /*
         try {
+
           _thumbnailOnlineLocation =
               await repository.uploadThumbnail(_newThumbnail);
           appStateBloc.add(UploadStateChangedEvent(
@@ -115,10 +118,11 @@ class Web3StorageBloc extends Bloc<Web3StorageEvent, Web3StorageState> {
           // thumbnail upload failed
 
           uploadErrorMessage =
-              "Thumnail upload failed!\n\nPlease report this error to the dtube team with a screenshot!\n\n" +
+              "Thumbnail upload failed!\n\nPlease report this error to the dtube team with a screenshot!\n\n" +
                   e.toString();
           uploadErrorCount++;
         }
+        // */
       } while (uploadErrorCount != 0 &&
           uploadErrorCount < UploadConfig.maxUploadRetries);
       if (uploadErrorCount == UploadConfig.maxUploadRetries) {
