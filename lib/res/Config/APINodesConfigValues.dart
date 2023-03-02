@@ -7,19 +7,18 @@ class APINodeConfig {
   static List<String> apiNodesDev = [
     // development nodes for new features
     // 'https://dtube.club/mainnetapi',
-    'https://testnetapi.avalonblocks.com'
-    //'https://avalon.tibfox.com'
+    // 'https://testnetapi.avalonblocks.com',
+    'https://testnet.dtube.fso.ovh'
   ];
 
   static List<String> apiNodes = [
     // common api nodes
-    'https://avalon.tibfox.com',
     'https://avalon.d.tube',
     // 'https://dtube.club/mainnetapi',
-    'https://avalon.oneloved.tube',
+    'https://api.avalonblocks.com',
     'https://dtube.fso.ovh'
   ];
 
 // node discovery & api node configs
-  static Duration nodeDescoveryTimeout = Duration(milliseconds: 200);
+  static Duration nodeDiscoveryTimeout = Duration(milliseconds: 200);
 }
