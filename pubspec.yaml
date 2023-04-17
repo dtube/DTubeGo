@@ -139,6 +139,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  dependency_validator: ^3.2.2
   # integration_test:
   #   sdk: flutter
 
