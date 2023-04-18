@@ -153,7 +153,7 @@ class _PostListCardLargeState extends State<PostListCardLarge> {
               widget.author +
               "/" +
               widget.link +
-              "CHANGED TO " +
+              " CHANGED TO " +
               visiblePercentage.toString());
         }
       },
@@ -379,7 +379,7 @@ class PostInfoDetailsRow extends StatelessWidget {
               width: widget.width * 0.5,
               child: Text(
                 '@${widget.author}',
-                style: Theme.of(context).textTheme.bodyText2,
+                style: Theme.of(context).textTheme.bodyMedium,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -387,14 +387,14 @@ class PostInfoDetailsRow extends StatelessWidget {
               children: [
                 Text(
                   '${widget.publishDate}',
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Text(
                   ' - ' +
                       (widget.duration.inHours == 0
                           ? widget.duration.toString().substring(2, 7) + ' min'
                           : widget.duration.toString().substring(0, 7) + ' h'),
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
             ),
@@ -408,7 +408,7 @@ class PostInfoDetailsRow extends StatelessWidget {
             children: [
               Text(
                 '${widget.dtcValue}',
-                style: Theme.of(context).textTheme.headline5,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
               Padding(
                 padding: EdgeInsets.only(left: widget.width * 0.01),
@@ -454,7 +454,7 @@ class PostInfoBaseRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Row(
           children: [
@@ -467,7 +467,6 @@ class PostInfoBaseRow extends StatelessWidget {
                     child: AccountIconContainer(
                         widget: widget, avatarSize: _avatarSize),
                   ),
-            SizedBox(width: widget.width * 0.02),
             globals.disableAnimations
                 ? TitleWidgetForRow(widget: widget)
                 : FadeInLeftBig(
@@ -481,7 +480,7 @@ class PostInfoBaseRow extends StatelessWidget {
         ),
         SizedBox(height: 2.h),
         Container(
-          width: widget.width * 0.28,
+          width: widget.width * 0.26,
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -506,7 +505,7 @@ class PostInfoBaseRow extends StatelessWidget {
                         fadeInFromLeft: false,
                         tagName: widget.mainTag,
                         width: widget.width * 0.14,
-                        fontStyle: Theme.of(context).textTheme.caption),
+                        fontStyle: Theme.of(context).textTheme.bodySmall),
                   ),
                 ],
               ),

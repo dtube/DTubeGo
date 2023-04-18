@@ -17,7 +17,9 @@ String shortVP(int vpBalance) {
   double _vpBalanceK = vpBalance / 1000;
   String result = "";
   if (vpBalance > 1000) {
-    if (_vpBalanceK >= 1000) {
+    if (_vpBalanceK >= 1000000) {
+      result = (_vpBalanceK / 1000000).toStringAsFixed(1) + 'B';
+    } else if (_vpBalanceK >= 1000) {
       result = (_vpBalanceK / 1000).toStringAsFixed(1) + 'M';
     } else {
       result = _vpBalanceK.toStringAsFixed(1) + 'K';

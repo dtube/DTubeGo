@@ -9,7 +9,7 @@ import 'package:dtube_go/ui/widgets/players/P2PSourcePlayer/P2SourcePlayer.dart'
 import 'package:flutter/services.dart';
 import 'package:dtube_go/ui/pages/upload/PresetSelection/Widgets/PresetCards.dart';
 import 'package:dtube_go/ui/widgets/UnsortedCustomWidgets.dart';
-import 'package:image_picker_web/image_picker_web.dart';
+// import 'package:image_picker_web/image_picker_web.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dtube_go/bloc/ThirdPartyUploader/ThirdPartyUploader_bloc_full.dart';
 import 'package:dtube_go/bloc/hivesigner/hivesigner_bloc_full.dart';
@@ -30,7 +30,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-import 'dart:html' as html;
 
 class UploadFormDesktop extends StatefulWidget {
   UploadFormDesktop(
@@ -125,7 +124,7 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
     _tagController.dispose();
     super.dispose();
   }
-
+ /*
   Future<void> getImage() async {
     var mediaData = await ImagePickerWeb.getImageInfo;
     // String mimeType = mime(Path.basename(mediaData!.fileName));
@@ -142,6 +141,7 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
       stateUploadData.thumbnailLocation = mediaData.fileName!;
     });
   }
+*/
 
   Future getFile(bool video, bool camera) async {
     String imageUploadProvider = await sec.getImageUploadService();
@@ -686,7 +686,7 @@ class _UploadFormDesktopState extends State<UploadFormDesktop> {
                             : "change thumbnail",
                         style: Theme.of(context).textTheme.bodyText1),
                     onPressed: () {
-                      getImage();
+                      //getImage();
                     },
                   ),
                 ),

@@ -12,7 +12,7 @@ class AppConfig {
       50; // min free space to enable the user to record video in app
 
 // urls for login screen
-  static String signUpUrl = "https://signup.d.tube";
+  static String signUpUrl = "https://signup.dtube.fso.ovh";
   static String readmoreUrl = "https://token.d.tube";
   static String discordUrl = "https://discord.gg/dtube";
   static String faqUrl = "https://d.tube/#!/wiki/faq/README";

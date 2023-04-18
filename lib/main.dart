@@ -1,7 +1,7 @@
 // @dart=2.9
 //
 import 'dart:io';
-import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
+
 import 'package:dtube_go/App.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -27,10 +27,12 @@ const MaterialColor kPrimaryColor = const MaterialColor(
 );
 
 void main() async {
-  // sec.deleteAllSettings(); // delete all settings
-
   // deactivate landscape mode
   WidgetsFlutterBinding.ensureInitialized();
+
+  ByteData data = await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
+  SecurityContext.defaultContext.setTrustedCertificatesBytes(data.buffer.asUint8List());
+  /*
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: FirebaseOptions(
@@ -42,11 +44,11 @@ void main() async {
           appId: secretConfig.fbWebAppId,
           measurementId: secretConfig.fbWebMeasurementId),
     );
-  } else {
+  } else { */
     if (Platform.isAndroid || Platform.isIOS) {
       await Firebase.initializeApp();
     }
-  }
+  //}
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 

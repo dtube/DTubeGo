@@ -1,9 +1,8 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as Badges;
 import 'package:dtube_go/bloc/notification/notification_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
 import 'package:dtube_go/ui/pages/notifications/Notifications.dart';
 import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayIcon.dart';
-import 'package:dtube_go/ui/widgets/OverlayWidgets/OverlayText.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -68,7 +67,7 @@ class _NotificationButtonState extends State<NotificationButton> {
 
   Widget buildNotificationIcon(
       bool newNotifications, double iconSize, int newNotificationsCount) {
-    return Badge(
+    return Badges.Badge(
       child: ShadowedIcon(
         icon: FontAwesomeIcons.bell,
         color: globalAlmostWhite,
@@ -78,8 +77,7 @@ class _NotificationButtonState extends State<NotificationButton> {
       badgeContent: Text(
           // newNotificationsCount.toString(),
           newNotificationsCount.toString(),
-          style: Theme.of(context).textTheme.bodyText2),
-      animationType: BadgeAnimationType.scale,
+          style: Theme.of(context).textTheme.bodyMedium),
       showBadge: newNotificationsCount > 0,
     );
     //     newNotificationsCount > 0
