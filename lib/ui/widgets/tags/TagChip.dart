@@ -89,7 +89,7 @@ class TagChipWidget extends StatelessWidget {
             tagName,
             style: fontStyle != null
                 ? fontStyle
-                : Theme.of(context).textTheme.bodyText1,
+                : Theme.of(context).textTheme.bodyLarge,
             overflow: TextOverflow.ellipsis,
           ),
         ),
@@ -122,7 +122,7 @@ class TagChipWidgetWithoutNavigation extends StatelessWidget {
             tagName,
             style: fontStyle != null
                 ? fontStyle
-                : Theme.of(context).textTheme.bodyText1,
+                : Theme.of(context).textTheme.bodyLarge,
             overflow: TextOverflow.ellipsis,
           ),
         ),

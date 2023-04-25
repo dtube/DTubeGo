@@ -1,12 +1,8 @@
-import 'package:dtube_go/bloc/appstate/appstate_bloc_full.dart';
 import 'package:dtube_go/bloc/auth/auth_bloc_full.dart';
-import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_go/bloc/ipfsUpload/ipfsUpload_bloc_full.dart';
 import 'package:dtube_go/bloc/thirdPartyLogin/thirdPartyLogin_bloc_full.dart';
 import 'package:dtube_go/bloc/transaction/transaction_bloc_full.dart';
 import 'package:dtube_go/bloc/user/user_bloc_full.dart';
 import 'package:dtube_go/style/ThemeData.dart';
-import 'package:dtube_go/ui/MainContainer/NavigationContainer.dart';
 import 'package:dtube_go/ui/startup/Startup.dart';
 import 'package:dtube_go/ui/startup/login/pages/SocialUserNewAccount.dart';
 import 'package:dtube_go/ui/widgets/DialogTemplates/DialogWithTitleLogo.dart';
@@ -56,19 +52,19 @@ class _SocialUserActionPopupState extends State<SocialUserActionPopup> {
                     Padding(
                       padding: EdgeInsets.only(top: 2.h),
                       child: Text("Enter your password",
-                          style: Theme.of(context).textTheme.headline5),
+                          style: Theme.of(context).textTheme.headlineSmall),
                     ),
                     Container(
                       width: 50.w,
                       child: TextField(
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style: Theme.of(context).textTheme.bodyLarge,
                         controller: passwordController,
                         cursorColor: globalRed,
                         obscureText: true,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Password',
-                            labelStyle: Theme.of(context).textTheme.bodyText1),
+                            labelStyle: Theme.of(context).textTheme.bodyLarge),
                       ),
                     ),
                     ValueListenableBuilder<TextEditingValue>(
@@ -87,7 +83,7 @@ class _SocialUserActionPopupState extends State<SocialUserActionPopup> {
                                   : null,
                               child: Text(
                                 "Login",
-                                style: Theme.of(context).textTheme.headline5,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ));
                         }),
                   ],

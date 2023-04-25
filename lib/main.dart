@@ -7,8 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:dtube_go/res/Config/secretConfigValues.dart' as secretConfig;
 
 const MaterialColor kPrimaryColor = const MaterialColor(
   0xFF223154,
@@ -54,7 +52,7 @@ void main() async {
 
   /////////////
   runApp(
-    // embedding MyApp into a Pheonix widget to be able to restart the app from within the app itself
+    // embedding MyApp into a Phoenix widget to be able to restart the app from within the app itself
     // used for saving the global settings to reinitialize everything based on those settings
     Phoenix(
       child: App(),

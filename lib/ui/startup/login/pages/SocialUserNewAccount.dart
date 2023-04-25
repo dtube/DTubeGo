@@ -119,7 +119,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                       Text("Social Login / Sign Up",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline4),
+                                              .headlineMedium),
                                       Padding(
                                         padding: EdgeInsets.only(top: 1.h),
                                         child: Text(
@@ -145,7 +145,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                               },
                                               textStyle: Theme.of(context)
                                                   .textTheme
-                                                  .headline6!,
+                                                  .titleLarge!,
                                               width: 35.w,
                                             ),
                                             CustomChoiceCard(
@@ -162,7 +162,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                               },
                                               textStyle: Theme.of(context)
                                                   .textTheme
-                                                  .headline6!,
+                                                  .titleLarge!,
                                               width: 35.w,
                                             ),
                                           ],
@@ -183,14 +183,14 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                       Text("Link your DTube Account",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline4),
+                                              .headlineMedium),
                                       Padding(
                                         padding: EdgeInsets.only(top: 1.h),
                                         child: Text(
                                             "You can now link your existing DTube user to the selected social login in a secure way. We want to make clear that the public/private key method is still the most secure option even though we are doing our best to keep everything as secure as it can be.",
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyText1),
+                                                .bodyLarge),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(top: 2.h),
@@ -228,13 +228,13 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                       Text("1. Enter your DTube credentials",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5),
+                                              .headlineSmall),
                                       Container(
                                         width: 75.w,
                                         child: TextField(
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyText1,
+                                              .bodyLarge,
                                           controller: usernameController,
                                           inputFormatters: [
                                             FilteringTextInputFormatter.allow(
@@ -246,7 +246,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                               labelText: 'Username',
                                               labelStyle: Theme.of(context)
                                                   .textTheme
-                                                  .bodyText1),
+                                                  .bodyLarge),
                                         ),
                                       ),
                                       Container(
@@ -254,7 +254,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                         child: TextField(
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyText1,
+                                              .bodyLarge,
                                           controller: privateKeyController,
                                           cursorColor: globalRed,
                                           decoration: InputDecoration(
@@ -262,7 +262,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                               labelText: 'Private Key',
                                               labelStyle: Theme.of(context)
                                                   .textTheme
-                                                  .bodyText1),
+                                                  .bodyLarge),
                                         ),
                                       ),
                                       Text(
@@ -349,7 +349,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                             Text("Your credentials are valid!",
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline5),
+                                                    .headlineSmall),
                                             state.txTypes.length >=
                                                     txTypes.length
                                                 ? Padding(
@@ -359,7 +359,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                         "It seams you have used the private master key with all permissions. We highly recommend to use a custom key for this login method.",
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .bodyText1!
+                                                            .bodyLarge!
                                                             .copyWith(
                                                                 color:
                                                                     globalRed)),
@@ -386,7 +386,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                                 fontStyle: Theme.of(
                                                                         context)
                                                                     .textTheme
-                                                                    .caption))
+                                                                    .bodySmall))
                                                             .toList(),
                                                       ),
                                                     ],
@@ -398,7 +398,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                   "Now allmost everything is prepared to link your DTube account. We just need a password to encrypt your private key and save it securely to our database.",
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .bodyText1),
+                                                      .bodyLarge),
                                             ),
                                             Padding(
                                               padding:
@@ -439,7 +439,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                 "Invalid User or Private Key",
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline5,
+                                                    .headlineSmall,
                                               ),
                                             ),
                                             Padding(
@@ -480,7 +480,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                         child: TextField(
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyText1,
+                                              .bodyLarge,
                                           controller: passwordController,
                                           obscureText: true,
                                           cursorColor: globalRed,
@@ -489,7 +489,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                               labelText: 'Password',
                                               labelStyle: Theme.of(context)
                                                   .textTheme
-                                                  .bodyText1),
+                                                  .bodyLarge),
                                           onChanged: (value) {
                                             setState(() {
                                               _passwordHint =
@@ -504,7 +504,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                         child: TextField(
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyText1,
+                                              .bodyLarge,
                                           controller: passwordRepeatController,
                                           obscureText: true,
                                           cursorColor: globalRed,
@@ -513,14 +513,14 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                               labelText: 'repeat Password',
                                               labelStyle: Theme.of(context)
                                                   .textTheme
-                                                  .bodyText1),
+                                                  .bodyLarge),
                                         ),
                                       ),
                                       Text(
                                         _passwordHint,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText1,
+                                            .bodyLarge,
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(top: 2.h),
@@ -591,14 +591,14 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                       Text("Congratulations!",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline2),
+                                              .displayMedium),
                                       Padding(
                                         padding: EdgeInsets.only(top: 1.h),
                                         child: Text(
                                             "Now everything is set up to link your DTube user to the social login on ${widget.socialLoginBaseData.socialLoginProvider}!\n\nIf you want to proceed feel free to click \"Link it\". You will then get logged in automatically!",
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyText1),
+                                                .bodyLarge),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(top: 2.h),
@@ -645,7 +645,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                                       style: Theme.of(
                                                                               context)
                                                                           .textTheme
-                                                                          .headline5,
+                                                                          .headlineSmall,
                                                                     ),
                                                                     FaIcon(
                                                                       FontAwesomeIcons
@@ -678,14 +678,14 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                       Text("Sign Up for DTube",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline4),
+                                              .headlineMedium),
                                       Padding(
                                         padding: EdgeInsets.only(top: 1.h),
                                         child: Text(
                                             "You can now create a new DTube user and we will automatically link it to your ${widget.socialLoginBaseData.socialLoginProvider} account.\n\nIf you're already signed up on DTube please login manually with your private key. You can link your DTube user to any social login within the profile settings.",
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyText1),
+                                                .bodyLarge),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(top: 2.h),
@@ -724,13 +724,13 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                       Text("1. Choose a username",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5),
+                                              .headlineSmall),
                                       Container(
                                         width: 75.w,
                                         child: TextField(
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyText1,
+                                              .bodyLarge,
                                           controller: usernameController,
                                           inputFormatters: [
                                             FilteringTextInputFormatter.allow(
@@ -763,7 +763,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                               labelText: 'Username',
                                               labelStyle: Theme.of(context)
                                                   .textTheme
-                                                  .bodyText1),
+                                                  .bodyLarge),
                                         ),
                                       ),
                                       _usernameHint == ""
@@ -777,7 +777,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                       "checking account name... ",
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .bodyText1);
+                                                          .bodyLarge);
                                                 } else if (state
                                                         is AvalonAccountAvailableState &&
                                                     usernameController.value
@@ -787,7 +787,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                       "account name available",
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .bodyText1!
+                                                          .bodyLarge!
                                                           .copyWith(
                                                               color: Colors
                                                                   .green));
@@ -797,7 +797,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                       "account name not available",
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .bodyText1!
+                                                          .bodyLarge!
                                                           .copyWith(
                                                               color:
                                                                   globalRed));
@@ -806,7 +806,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                     _usernameHint,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .bodyText1!
+                                                        .bodyLarge!
                                                         .copyWith(
                                                             color: globalRed),
                                                   );
@@ -816,14 +816,14 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                               _usernameHint,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .bodyText1!
+                                                  .bodyLarge!
                                                   .copyWith(color: globalRed),
                                             ),
                                       Text(
                                         "The username should be at least 12 characters & it can include numbers, dashes (-) or dots (.)\nDon't worry: inside the app you can set a custom display name however and how often you want.",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText1,
+                                            .bodyLarge,
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(top: 2.h),
@@ -884,14 +884,14 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                       Text("2. Copy your keys",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5),
+                                              .headlineSmall),
                                       Padding(
                                         padding: EdgeInsets.only(top: 1.h),
                                         child: Text(
                                             "A DTube user account also got its own login key (private key). To be able to login on other DTube user interfaces (eg. the DTube website) you'll need the private key. \n\nImportant: Nobody will ever be able to reset it except you - so store the keys very safe and secure.",
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyText1),
+                                                .bodyLarge),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(top: 2.h),
@@ -941,7 +941,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                               child: TextField(
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText1,
+                                                    .bodyLarge,
                                                 cursorColor: globalRed,
                                                 readOnly: true,
                                                 controller: publicKeyController,
@@ -952,7 +952,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                     labelStyle:
                                                         Theme.of(context)
                                                             .textTheme
-                                                            .bodyText1),
+                                                            .bodyLarge),
                                               ),
                                             ),
                                             Container(
@@ -960,7 +960,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                               child: TextField(
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText1,
+                                                    .bodyLarge,
                                                 cursorColor: globalRed,
                                                 readOnly: true,
                                                 controller:
@@ -972,7 +972,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                     labelStyle:
                                                         Theme.of(context)
                                                             .textTheme
-                                                            .bodyText1),
+                                                            .bodyLarge),
                                               ),
                                             ),
                                             Text(
@@ -1067,7 +1067,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                         "I stored the keys securely and I understand that nobody can restore nor reset the keys except of myself.",
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .bodyText1,
+                                                            .bodyLarge,
                                                       ),
                                                     ),
                                                   )
@@ -1117,14 +1117,14 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                       Text("3. Set a password",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5),
+                                              .headlineSmall),
                                       Padding(
                                         padding: EdgeInsets.only(top: 1.h),
                                         child: Text(
                                             "Now allmost everything is prepared to create your new DTube account. We just need a password to encrypt your private key and save it securely to our database.",
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyText1),
+                                                .bodyLarge),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(top: 2.h),
@@ -1165,7 +1165,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                         child: TextField(
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyText1,
+                                              .bodyLarge,
                                           controller: passwordController,
                                           obscureText: true,
                                           cursorColor: globalRed,
@@ -1174,7 +1174,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                               labelText: 'Password',
                                               labelStyle: Theme.of(context)
                                                   .textTheme
-                                                  .bodyText1),
+                                                  .bodyLarge),
                                           onChanged: (value) {
                                             setState(() {
                                               _passwordHint =
@@ -1189,7 +1189,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                         child: TextField(
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyText1,
+                                              .bodyLarge,
                                           controller: passwordRepeatController,
                                           obscureText: true,
                                           cursorColor: globalRed,
@@ -1198,14 +1198,14 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                               labelText: 'repeat Password',
                                               labelStyle: Theme.of(context)
                                                   .textTheme
-                                                  .bodyText1),
+                                                  .bodyLarge),
                                         ),
                                       ),
                                       Text(
                                         _passwordHint,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText1,
+                                            .bodyLarge,
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(top: 2.h),
@@ -1276,14 +1276,14 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                       Text("Congratulations!",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline2),
+                                              .displayMedium),
                                       Padding(
                                         padding: EdgeInsets.only(top: 1.h),
                                         child: Text(
                                             "Now everything is set up to create your new DTube user!\n\nIf you are ready to start your DTube journey feel free to click \"Sign Up\". You will get logged in automatically!",
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyText1),
+                                                .bodyLarge),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(top: 2.h),
@@ -1328,7 +1328,7 @@ class _SocialUserNewAccountState extends State<SocialUserNewAccount> {
                                                                   style: Theme.of(
                                                                           context)
                                                                       .textTheme
-                                                                      .headline5,
+                                                                      .headlineSmall,
                                                                 ),
                                                                 FaIcon(
                                                                   FontAwesomeIcons
