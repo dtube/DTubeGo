@@ -61,8 +61,7 @@ class NewsPageMobile extends StatelessWidget {
 
             Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           Container(
-            height: 80.h,
-            width: 100.w,
+            height: 75.h,
             child: NewsFeedList(
               newsList: newsFeed,
             ),
