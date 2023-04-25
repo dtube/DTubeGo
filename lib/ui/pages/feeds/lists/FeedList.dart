@@ -311,6 +311,7 @@ class FeedList extends StatelessWidget {
                         ? bottompadding!
                         : 2.0),
                 child: PostListCard(
+                  showDTCValue: true,
                   width: 100.w,
                   heightPerEntry: heightPerEntry!,
                   largeFormat: largeFormat,
@@ -581,6 +582,7 @@ class PostListCard extends StatefulWidget {
   final String publishDate;
   final Duration duration;
   final String dtcValue;
+  final bool showDTCValue;
   final String videoUrl;
   final String videoSource;
   final bool alreadyVoted;
@@ -618,6 +620,7 @@ class PostListCard extends StatefulWidget {
     required this.publishDate,
     required this.duration,
     required this.dtcValue,
+    required this.showDTCValue,
     required this.videoUrl,
     required this.videoSource,
     required this.alreadyVoted,
@@ -656,6 +659,7 @@ class _PostListCardState extends State<PostListCard>
         create: (BuildContext context) =>
             UserBloc(repository: UserRepositoryImpl()),
         child: PostListCardLarge(
+          showDTCValue: true,
           width: 90.w,
           blur: widget.blur,
           thumbnailUrl: widget.thumbnailUrl,
@@ -684,11 +688,10 @@ class _PostListCardState extends State<PostListCard>
         ),
       );
     } else {
-      return
           // Padding(
           //   padding: EdgeInsets.only(left: 5.w),
           //   child:
-          PostListCardNarrow(
+      return PostListCardNarrow(
         // width: widget.width * 0.85,
         width: widget.width,
         height: widget.heightPerEntry,
@@ -701,13 +704,13 @@ class _PostListCardState extends State<PostListCard>
         publishDate: widget.publishDate,
         duration: widget.duration,
         dtcValue: widget.dtcValue,
+        showDTCValue: widget.showDTCValue,
         indexOfList: widget.indexOfList,
         enableNavigation: widget.enableNavigation,
         itemSelectedCallback: widget.itemSelectedCallback,
         userPage: widget.feedType == "UserFeed",
         //),
       );
-      SizedBox(height: 0);
     }
   }
 }

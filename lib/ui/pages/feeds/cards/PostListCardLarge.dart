@@ -36,6 +36,7 @@ class PostListCardLarge extends StatefulWidget {
       required this.publishDate,
       required this.duration,
       required this.dtcValue,
+      required this.showDTCValue,
       required this.videoUrl,
       required this.videoSource,
       required this.alreadyVoted,
@@ -66,6 +67,7 @@ class PostListCardLarge extends StatefulWidget {
   final String publishDate;
   final Duration duration;
   final String dtcValue;
+  final bool showDTCValue;
   final String videoUrl;
   final String videoSource;
   final bool alreadyVoted;
@@ -405,16 +407,23 @@ class PostInfoDetailsRow extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                '${widget.dtcValue}',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
+            children: [ LayoutBuilder(builder: (context, constraints) {
+              if (widget.showDTCValue == true) {
+                return Text(
+                  '${widget.dtcValue}',
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .bodyMedium,
+                );
+              } else {
+                return Text("");
+              }
+            }),
               Padding(
-                padding: EdgeInsets.only(left: widget.width * 0.01),
-                child: DTubeLogoShadowed(size: widget.width * 0.05),
-              ),
-            ],
+                  padding: EdgeInsets.only(left: 0.5.w),
+                  child: DTubeLogoShadowed(size: 4.w)
+              )],
           ),
         ),
       ],
@@ -454,7 +463,7 @@ class PostInfoBaseRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Row(
           children: [
@@ -485,7 +494,7 @@ class PostInfoBaseRow extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   widget.oc
@@ -499,12 +508,12 @@ class PostInfoBaseRow extends StatelessWidget {
                             )
                       : SizedBox(width: globalIconSizeSmall),
                   Padding(
-                    padding: EdgeInsets.only(left: 8.0),
+                    padding: EdgeInsets.zero,
                     child: TagChip(
                         waitBeforeFadeIn: Duration(milliseconds: 600),
                         fadeInFromLeft: false,
                         tagName: widget.mainTag,
-                        width: widget.width * 0.14,
+                        width: widget.width * 0.16,
                         fontStyle: Theme.of(context).textTheme.bodySmall),
                   ),
                 ],
@@ -887,7 +896,7 @@ class TitleWidgetForRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: widget.width * 0.55,
+      width: widget.width * 0.60,
       child: InkWell(
         onTap: () {
           navigateToPostDetailPage(
@@ -897,7 +906,7 @@ class TitleWidgetForRow extends StatelessWidget {
           widget.title,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
     );

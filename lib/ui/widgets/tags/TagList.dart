@@ -83,7 +83,7 @@ class TagListState extends State<TagList> {
                 elevation: 0,
                 title: Text(
                   "#" + widget.tagName,
-                  style: Theme.of(context).textTheme.headline1,
+                  style: Theme.of(context).textTheme.displayLarge,
                 ),
               ),
               body: Padding(
@@ -93,7 +93,7 @@ class TagListState extends State<TagList> {
                     children: [
                       Text(
                         "videos with the tag #${widget.tagName} of the last 90 days: ",
-                        style: Theme.of(context).textTheme.headline5,
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 2.h),
@@ -162,6 +162,7 @@ class TagListState extends State<TagList> {
           itemCount: searchResults.length,
           itemBuilder: (ctx, pos) {
             return PostListCardLarge(
+              showDTCValue: true,
               width: 90.w,
               alreadyVoted: searchResults[pos].alreadyVoted!,
               alreadyVotedDirection: searchResults[pos].alreadyVotedDirection!,

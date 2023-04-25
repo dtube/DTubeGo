@@ -174,7 +174,7 @@ class FeedListCarousel extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(top: 1.h, bottom: 1.h),
-            child: Text(header, style: Theme.of(context).textTheme.headline5),
+            child: Text(header, style: Theme.of(context).textTheme.headlineSmall),
           ),
           Container(
             height: 38.h,
@@ -206,6 +206,7 @@ class FeedListCarousel extends StatelessWidget {
                       create: (context) =>
                           UserBloc(repository: UserRepositoryImpl()),
                       child: PostListCardLarge(
+                        showDTCValue: true,
                         width: 80.w,
                         alreadyVoted: false,
                         alreadyVotedDirection: false,
@@ -272,7 +273,7 @@ class FeedListCarousel extends StatelessWidget {
         width: width,
         child: Column(
           children: [
-            Text(header, style: Theme.of(context).textTheme.headline5),
+            Text(header, style: Theme.of(context).textTheme.headlineSmall),
             Container(
               height: 45.h,
               child: CarouselSlider.builder(
@@ -303,6 +304,7 @@ class FeedListCarousel extends StatelessWidget {
                         create: (context) =>
                             UserBloc(repository: UserRepositoryImpl()),
                         child: PostListCardNarrow(
+                          showDTCValue: true,
                           width: width!,
                           height: heightPerEntry!,
                           blur: (_nsfwMode == 'Blur' &&

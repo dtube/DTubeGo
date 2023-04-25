@@ -8,6 +8,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 typedef ListOfString2VoidFunc = void Function(List<String>);
 
 class PostListCardNarrow extends StatefulWidget {
+
   const PostListCardNarrow(
       {Key? key,
       required this.blur,
@@ -19,6 +20,7 @@ class PostListCardNarrow extends StatefulWidget {
       required this.publishDate,
       required this.duration,
       required this.dtcValue,
+      required this.showDTCValue,
       required this.indexOfList,
       required this.width,
       required this.height,
@@ -37,6 +39,7 @@ class PostListCardNarrow extends StatefulWidget {
   final String publishDate;
   final Duration duration;
   final String dtcValue;
+  final bool showDTCValue;
   final int indexOfList;
   final double width;
   final double height;
@@ -104,8 +107,8 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
                     child: Text(
                       widget.title,
                       style: widget.userPage
-                          ? Theme.of(context).textTheme.headline6
-                          : Theme.of(context).textTheme.bodyText2,
+                          ? Theme.of(context).textTheme.titleLarge
+                          : Theme.of(context).textTheme.bodyMedium,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -116,7 +119,7 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           widget.author,
-                          style: Theme.of(context).textTheme.subtitle2,
+                          style: Theme.of(context).textTheme.titleSmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -133,22 +136,32 @@ class _PostListCardNarrowState extends State<PostListCardNarrow> {
                                 ? widget.duration.toString().substring(2, 7)
                                 : widget.duration.toString().substring(0, 7)),
                         style: !widget.userPage
-                            ? Theme.of(context).textTheme.subtitle2
-                            : Theme.of(context).textTheme.bodyText2,
+                            ? Theme.of(context).textTheme.titleSmall
+                            : Theme.of(context).textTheme.bodyMedium,
                       ),
                       Row(
-                        children: [
-                          Text(
-                            '${widget.dtcValue}',
-                            style: !widget.userPage
-                                ? Theme.of(context).textTheme.bodyText2
-                                : Theme.of(context).textTheme.bodyText2,
-                          ),
+                        children: [ LayoutBuilder(builder: (context, constraints) {
+                          if (widget.showDTCValue == true) {
+                            return Text(
+                              '${widget.dtcValue}',
+                              style: !widget.userPage
+                                  ? Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  : Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyMedium,
+                            );
+                          } else {
+                            return Text("");
+                          }
+                        }),
                           Padding(
                             padding: EdgeInsets.only(left: 0.5.w),
-                            child: DTubeLogoShadowed(size: 4.w),
-                          ),
-                        ],
+                            child: widget.showDTCValue ? DTubeLogoShadowed(size: 4.w) : null,
+                        )],
                       ),
                     ],
                   ),

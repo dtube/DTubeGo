@@ -231,7 +231,7 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                                         maxLines: 1,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText1,
+                                            .bodyLarge,
                                       ),
                                     ),
                                     SizedBox(width: 20.w, child: _buildChips()),
@@ -355,6 +355,7 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                   create: (context) =>
                       UserBloc(repository: UserRepositoryImpl()),
                   child: PostListCardLarge(
+                    showDTCValue: true,
                     width: 90.w,
                     alreadyVoted:
                         searchResults.hits!.hits![pos].sSource!.alreadyVoted!,
@@ -448,6 +449,7 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
               return BlocProvider<UserBloc>(
                 create: (context) => UserBloc(repository: UserRepositoryImpl()),
                 child: PostListCardLarge(
+                  showDTCValue: true,
                   width: 90.w,
                   alreadyVoted: searchResults[pos].alreadyVoted!,
                   alreadyVotedDirection:

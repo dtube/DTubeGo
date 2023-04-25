@@ -370,6 +370,7 @@ class _PostListCardState extends State<PostListCard>
           create: (BuildContext context) =>
               UserBloc(repository: UserRepositoryImpl()),
           child: PostListCardLarge(
+            showDTCValue: true,
             width: 80.w,
             blur: widget.blur,
             thumbnailUrl: widget.thumbnailUrl,
@@ -399,11 +400,11 @@ class _PostListCardState extends State<PostListCard>
         ),
       );
     } else {
-      return
           // Padding(
           //   padding: EdgeInsets.only(left: 5.w),
           //   child:
-          PostListCardNarrow(
+      return PostListCardNarrow(
+        showDTCValue: true,
         // width: widget.width * 0.85,
         width: widget.width,
         height: widget.heightPerEntry,
@@ -422,7 +423,6 @@ class _PostListCardState extends State<PostListCard>
         userPage: widget.feedType == "UserFeed",
         //),
       );
-      SizedBox(height: 0);
     }
   }
 }
