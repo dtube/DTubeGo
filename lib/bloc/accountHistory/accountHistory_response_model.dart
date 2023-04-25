@@ -69,7 +69,7 @@ class AvalonAccountHistoryItem {
     data['_id'] = this.iId;
     data['phash'] = this.phash;
     data['timestamp'] = this.timestamp;
-    if (this.txs != null) {
+    if (this.txs.isNotEmpty) {
       data['txs'] = this.txs.map((txItem) => txItem.toJson()).toList();
     }
     data['miner'] = this.miner;
