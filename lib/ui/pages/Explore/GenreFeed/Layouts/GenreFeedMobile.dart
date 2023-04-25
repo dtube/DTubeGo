@@ -1,7 +1,12 @@
+import 'package:dtube_go/bloc/user/user_bloc.dart';
+import 'package:dtube_go/bloc/user/user_repository.dart';
 import 'package:dtube_go/style/ThemeData.dart';
+import 'package:dtube_go/ui/pages/feeds/cards/PostListCardNarrow.dart';
+import 'package:dtube_go/utils/Strings/friendlyTimestamp.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dtube_go/ui/pages/feeds/lists/FeedList.dart';
 import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
@@ -9,27 +14,55 @@ import 'package:dtube_go/utils/GlobalStorage/SecureStorage.dart' as sec;
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
+
 
 typedef Bool2VoidFunc = void Function(bool);
 
 class GenreFeedMobile extends StatefulWidget {
   GenreFeedMobile({Key? key}) : super(key: key);
+  List<FeedItem> _feedItems = [];
 
   @override
   State<GenreFeedMobile> createState() => _GenreFeedMobileState();
 }
 
 class _GenreFeedMobileState extends State<GenreFeedMobile> {
-  late FeedBloc postBloc;
 
+  late FeedBloc postBloc;
+  final ScrollController _scrollController = ScrollController();
   //final ScrollController _scrollController = ScrollController();
 
   List<FontAwesomeIcons> genreIcons = [];
   List<String> genreSubTagStrings = [];
   List<FeedItem> _feedItems = [];
+  double? topPaddingForFirstEntry;
+  double? sidepadding;
+  double? bottompadding;
+  double? width;
+  double? heightPerEntry;
+  final bool enableNavigation = true;
+  final itemSelectedCallback = (bool) {}; // only used in landscape mode for now
+  double? topPadding;
+
+  final Bool2VoidFunc scrollCallback = (bool) {};
+  final int tabletCrossAxisCount = 4;
+  final int desktopCrossAxisCount = 4;
 
   String? _nsfwMode;
   String? _hiddenMode;
+  String? _applicationUser;
+  String? _defaultCommentVotingWeight;
+  String? _defaultPostVotingWeight;
+  String? _defaultPostVotingTip;
+
+  String? _fixedDownvoteActivated;
+  String? _fixedDownvoteWeight;
+
+  bool? _autoPauseVideoOnPopup;
+  bool? showBorder;
+  bool? disablePlayback;
+  bool? hideSpeedDial;
 
   Future<bool> getDisplayModes() async {
     _hiddenMode = await sec.getShowHidden();
@@ -45,6 +78,16 @@ class _GenreFeedMobileState extends State<GenreFeedMobile> {
 
   @override
   Widget build(BuildContext context) {
+    if (topPaddingForFirstEntry == null) {
+      topPaddingForFirstEntry = 0;
+    }
+    if (topPadding == null) {
+      topPadding = 0;
+    }
+
+    if (heightPerEntry == null) {
+      heightPerEntry = 10.h;
+    }
     return FutureBuilder<bool>(
         future: getDisplayModes(),
         builder: (context, snapshot) {
@@ -131,8 +174,10 @@ class _GenreFeedMobileState extends State<GenreFeedMobile> {
       //     }
       //   }),
       padding: EdgeInsets.only(top: 19.h),
-      crossAxisCount: 4,
+      crossAxisCount: 2,
       itemCount: feed.length,
+      mainAxisSpacing: 0.0,
+      crossAxisSpacing: 4.0,
       itemBuilder: (BuildContext context, int index) => GestureDetector(
         onTap: () {
           navigateToPostDetailPage(context, feed[index].author,
@@ -144,32 +189,56 @@ class _GenreFeedMobileState extends State<GenreFeedMobile> {
             ? SizedBox(
                 height: 0,
               )
-            : new CachedNetworkImage(
-                imageUrl: feed[index].thumbUrl,
-                placeholder: (context, url) => Container(
-                    //width: widget.avatarSize,
-                    height: 15.h,
-                    child: Container(
-                      height: 10.h,
-                      child: DTubeLogoPulse(
-                        size: 10.h,
-                      ),
-                    )),
-                errorWidget: (context, url, error) => Container(
-                    color: globalBGColor,
-                    //width: widget.avatarSize,
-                    height: 20.h,
-                    child: Container(
-                        height: 10.h,
-                        child: Image.asset(
-                          'assets/images/dtube_logo_white.png',
-                          fit: BoxFit.fitHeight,
-                        ))),
-              ),
+            : PostListCard(
+          width: 100.w,
+          heightPerEntry: heightPerEntry!,
+          largeFormat: false,
+          showAuthor: true,
+          blur: (_nsfwMode == 'Blur' &&
+              feed[index].jsonString?.nsfw == 1) ||
+              (_hiddenMode == 'Blur' &&
+                  feed[index].summaryOfVotes < 0)
+              ? true
+              : false,
+          title: feed[index].jsonString!.title,
+          description: feed[index].jsonString!.desc != null
+              ? feed[index].jsonString!.desc!
+              : "",
+          author: feed[index].author,
+          link: feed[index].link,
+          publishDate: TimeAgo.timeInAgoTSShort(feed[index].ts),
+          dtcValue: (feed[index].dist / 100).round().toString(),
+          showDTCValue: false,
+          duration: new Duration(
+              seconds: int.tryParse(feed[index].jsonString!.dur) != null
+                  ? int.parse(feed[index].jsonString!.dur)
+                  : 0),
+          thumbnailUrl: feed[index].thumbUrl!,
+          videoUrl: feed[index].videoUrl,
+          videoSource: feed[index].videoSource,
+          alreadyVoted: feed[index].alreadyVoted!,
+          alreadyVotedDirection: feed[index].alreadyVotedDirection!,
+          upvotesCount: feed[index].upvotes!.length,
+          downvotesCount: feed[index].downvotes!.length,
+          indexOfList: index,
+          mainTag: feed[index].jsonString!.tag,
+          oc: feed[index].jsonString!.oc == 1 ? true : false,
+          enableNavigation: enableNavigation,
+          itemSelectedCallback: itemSelectedCallback,
+          feedType: "explore",
+          defaultCommentVotingWeight: _defaultCommentVotingWeight,
+          defaultPostVotingWeight: _defaultPostVotingWeight,
+          defaultPostVotingTip: _defaultPostVotingTip,
+          fixedDownvoteActivated: _fixedDownvoteActivated,
+          fixedDownvoteWeight: _fixedDownvoteWeight,
+          parentContext: context,
+          autoPauseVideoOnPopup: _autoPauseVideoOnPopup,
+        ),
+        //Text(pos.toString())
       ),
+                //Text(pos.toString())
+
+      );
       //staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
-      mainAxisSpacing: 4.0,
-      crossAxisSpacing: 4.0,
-    );
   }
 }
