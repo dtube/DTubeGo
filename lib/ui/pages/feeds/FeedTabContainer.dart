@@ -23,18 +23,18 @@ class FeedMainPage extends StatefulWidget {
 class _FeedMainPageState extends State<FeedMainPage>
     with SingleTickerProviderStateMixin {
   List<String> _tabNames = [
-    "Original DTubers",
-    "Fresh Videos",
-    "Follow Feed",
-    "Hot Videos",
-    "Trending Videos"
+    "Original",
+    "Fresh",
+    "Following",
+    "Hot",
+    "Trending"
   ];
   List<String> _tabNamesUnsignedLogin = [
-    "Original DTubers",
-    "Fresh Videos",
-    // "Follow Feed",
-    "Hot Videos",
-    "Trending Videos"
+    "Original",
+    "Fresh",
+    // "Following",
+    "Hot",
+    "Trending"
   ];
   List<IconData> _tabIcons = [
     FontAwesomeIcons.circleCheck,
@@ -184,7 +184,7 @@ class _FeedMainPageState extends State<FeedMainPage>
         break;
 
       case 4:
-        if (!globals.keyPermissions.isEmpty) {
+        if (globals.keyPermissions.isNotEmpty) {
           BlocProvider.of<FeedBloc>(context)
             ..isFetching = true
             ..add(FetchFeedEvent(feedType: "TrendingFeed"));
