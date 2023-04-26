@@ -463,42 +463,47 @@ class PostInfoBaseRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        Row(
-          children: [
-            globals.disableAnimations
-                ? AccountIconContainer(widget: widget, avatarSize: _avatarSize)
-                : FadeIn(
-                    preferences: AnimationPreferences(
-                        offset: Duration(milliseconds: 500),
-                        duration: Duration(seconds: 1)),
-                    child: AccountIconContainer(
-                        widget: widget, avatarSize: _avatarSize),
-                  ),
-            globals.disableAnimations
-                ? TitleWidgetForRow(widget: widget)
-                : FadeInLeftBig(
-                    preferences: AnimationPreferences(
-                      offset: Duration(milliseconds: 100),
-                      duration: Duration(milliseconds: 350),
+        Expanded(child: Container(
+          width: widget.width * 0.50,
+          child: Row(
+            children: [
+              globals.disableAnimations
+                  ? AccountIconContainer(widget: widget, avatarSize: _avatarSize)
+                  : FadeIn(
+                      preferences: AnimationPreferences(
+                          offset: Duration(milliseconds: 500),
+                          duration: Duration(seconds: 1)),
+                      child: AccountIconContainer(
+                          widget: widget, avatarSize: _avatarSize),
                     ),
-                    child: TitleWidgetForRow(widget: widget),
-                  ),
-          ],
+              globals.disableAnimations
+                  ? TitleWidgetForRow(widget: widget)
+                  : FadeInLeftBig(
+                      preferences: AnimationPreferences(
+                        offset: Duration(milliseconds: 100),
+                        duration: Duration(milliseconds: 350),
+                      ),
+                      child: TitleWidgetForRow(widget: widget),
+                    ),
+            ],
+          )
+        ),
         ),
         SizedBox(height: 2.h),
         Container(
-          width: widget.width * 0.26,
+          width: widget.width * 0.235,
           child: Stack(
             alignment: Alignment.center,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  widget.oc
-                      ? globals.disableAnimations
+                children: [Expanded(
+                    flex: 1,
+                    child:
+                widget.oc ? globals.disableAnimations
                           ? OriginalContentIcon()
                           : FadeIn(
                               preferences: AnimationPreferences(
@@ -506,17 +511,18 @@ class PostInfoBaseRow extends StatelessWidget {
                                   duration: Duration(seconds: 1)),
                               child: OriginalContentIcon(),
                             )
-                      : SizedBox(width: globalIconSizeSmall),
-                  Padding(
-                    padding: EdgeInsets.zero,
-                    child: TagChip(
-                        waitBeforeFadeIn: Duration(milliseconds: 600),
-                        fadeInFromLeft: false,
-                        tagName: widget.mainTag,
-                        width: widget.width * 0.16,
-                        fontStyle: Theme.of(context).textTheme.bodySmall),
-                  ),
-                ],
+                      : SizedBox(width: globalIconSizeSmall)),
+                    Expanded(flex: 0, child: Padding(
+                        padding: EdgeInsets.zero,
+                        child: TagChip(
+                          waitBeforeFadeIn: Duration(milliseconds: 600),
+                          fadeInFromLeft: false,
+                          tagName: widget.mainTag,
+                          width: widget.width * 0.14,
+                          fontStyle: Theme.of(context).textTheme.bodySmall,
+                        )
+                      ))
+                  ]
               ),
               globals.keyPermissions.isEmpty ||
                       (widget.hideSpeedDial != null && widget.hideSpeedDial!)
