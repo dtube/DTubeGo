@@ -149,7 +149,7 @@ class _GenreBaseMobileState extends State<GenreBaseMobile> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 6.h, left: 2.w, right: 2.w),
+                      padding: EdgeInsets.only(top: 10.h, left: 2.w, right: 2.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -186,14 +186,14 @@ class _GenreBaseMobileState extends State<GenreBaseMobile> {
                                           : "show results",
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyText1!
+                                          .bodyLarge!
                                           .copyWith(color: globalBlue),
                                     )),
                                 Text(
                                     _activatedGenres.length == 0
                                         ? "pick at least one genre"
                                         : "",
-                                    style: Theme.of(context).textTheme.caption)
+                                    style: Theme.of(context).textTheme.bodySmall)
                               ],
                             ),
                           ),
@@ -243,7 +243,7 @@ class GenreCard extends StatelessWidget {
                               color:
                                   activated ? globalRed : globalAlmostWhite)),
                       Text(currentName,
-                          style: Theme.of(context).textTheme.caption)
+                          style: Theme.of(context).textTheme.bodySmall)
                     ],
                   ),
                 ],
