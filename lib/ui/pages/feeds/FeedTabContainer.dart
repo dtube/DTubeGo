@@ -118,10 +118,10 @@ class _FeedMainPageState extends State<FeedMainPage>
 
   @override
   void initState() {
-    // if (globals.keyPermissions.isEmpty) {
-    //   tabBarFeedItemList.removeAt(2); // remove MyFeed (followings) from tabs
-    //   _tabNames.removeAt(2);
-    // }
+    if (globals.keyPermissions.isEmpty) {
+      tabBarFeedItemList.removeAt(2); // remove MyFeed (followings) from tabs
+      _tabNames.removeAt(2);
+    }
 
     _tabController = new TabController(
         length: globals.keyPermissions.isEmpty
