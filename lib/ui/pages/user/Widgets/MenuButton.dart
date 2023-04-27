@@ -47,7 +47,28 @@ Widget buildUserMenuSpeedDial(
               size: globalIconSizeBig),
           elevation: 0,
           backgroundColor: Colors.transparent,
-          onTap: () {
+            // Start of temporary placeholder message ==>
+            onTap: () {
+              showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    backgroundColor: globalBGColor,
+                    title: Text("Temporarily disabled"),
+                    content: Text("Account history functionality is temporarily diabled, please use avalonblocks.com explorer instead."),
+                      actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'Cancel'),
+                        child: Text(
+                          'Ok',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      )
+                      ],
+                  ));
+            // end of temporary placeholder message <==
+            /*
+            // Temporary disable account history button, as it is bugged.
+            // Todo: fix and re-enable it, then remove above placeholder popup message.
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return BlocProvider<AccountHistoryBloc>(
                   create: (context) => AccountHistoryBloc(
@@ -56,7 +77,9 @@ Widget buildUserMenuSpeedDial(
                     username: user.name,
                   ));
             }));
+            */
           }),
+
       SpeedDialChild(
           child: ShadowedIcon(
               icon: FontAwesomeIcons.rightFromBracket,
