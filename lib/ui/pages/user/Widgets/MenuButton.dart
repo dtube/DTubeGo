@@ -54,7 +54,7 @@ Widget buildUserMenuSpeedDial(
                   builder: (BuildContext context) => AlertDialog(
                     backgroundColor: globalBGColor,
                     title: Text("Temporarily disabled"),
-                    content: Text("Account history functionality is temporarily diabled, please use avalonblocks.com explorer instead."),
+                    content: Text("Account history functionality is temporarily disabled, please, in the mean time, use avalonblocks.com explorer instead."),
                       actions: <Widget>[
                       TextButton(
                         onPressed: () => Navigator.pop(context, 'Cancel'),
