@@ -1,7 +1,5 @@
 import 'package:dtube_go/bloc/feed/feed_bloc_full.dart';
-import 'package:dtube_go/ui/pages/feeds/cards/widets/CollapsedDescription.dart';
 import 'package:dtube_go/ui/pages/feeds/cards/widets/ThumbPlayerWidgets.dart';
-import 'package:dtube_go/ui/widgets/system/ColorChangeCircularProgressIndicator.dart';
 import 'package:dtube_go/utils/GlobalStorage/globalVariables.dart' as globals;
 
 import 'dart:io';
@@ -26,7 +24,6 @@ import 'package:dtube_go/ui/widgets/AccountAvatar.dart';
 import 'package:dtube_go/utils/Navigation/navigationShortcuts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
