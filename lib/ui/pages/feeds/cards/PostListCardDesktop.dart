@@ -453,7 +453,7 @@ class PostInfoDetailsRow extends StatelessWidget {
                   child: Text(
                     author,
                     //'@${width}',
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context).textTheme.bodyMedium,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -479,7 +479,7 @@ class PostInfoDetailsRow extends StatelessWidget {
                     fadeInFromLeft: false,
                     tagName: tag,
                     width: width * 0.2,
-                    fontStyle: Theme.of(context).textTheme.caption),
+                    fontStyle: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ],
@@ -491,7 +491,7 @@ class PostInfoDetailsRow extends StatelessWidget {
               children: [
                 Text(
                   TimeAgo.timeInAgoTSShort(ts),
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 dur > 0
                     ? Text(
@@ -503,7 +503,7 @@ class PostInfoDetailsRow extends StatelessWidget {
                                 : (new Duration(seconds: dur).inHours)
                                         .toString() +
                                     ' h'),
-                        style: Theme.of(context).textTheme.bodyText2,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : SizedBox(
                         width: 0,
@@ -516,7 +516,7 @@ class PostInfoDetailsRow extends StatelessWidget {
               children: [
                 Text(
                   (dist / 100).round().toString(),
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 5),
@@ -586,7 +586,8 @@ class PostInfoBaseRow extends StatelessWidget {
                 author: feedItem.author,
                 link: feedItem.link,
                 title: feedItem.jsonString!.title,
-                width: width * 0.8)
+                width: width * 0.65
+                )
             : FadeInLeftBig(
                 preferences: AnimationPreferences(
                   offset: Duration(milliseconds: 100),
@@ -596,7 +597,7 @@ class PostInfoBaseRow extends StatelessWidget {
                     author: feedItem.author,
                     link: feedItem.link,
                     title: feedItem.jsonString!.title,
-                    width: width * 0.8),
+                    width: width * 0.65),
               ),
         Container(
           width: width * 0.1,
@@ -951,6 +952,7 @@ class TitleWidgetForRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width,
+      height: 4.5.h,
       child: InkWell(
         onTap: () {
           navigateToPostDetailPage(context, author, link, "none", false, () {});
@@ -959,7 +961,7 @@ class TitleWidgetForRow extends StatelessWidget {
           title,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
     );
