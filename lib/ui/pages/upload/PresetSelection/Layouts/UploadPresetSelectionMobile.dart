@@ -74,7 +74,7 @@ class _UploadPresetSelectionMobileState
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text("Initiatives",
-                        style: Theme.of(context).textTheme.headline5),
+                        style: Theme.of(context).textTheme.headlineSmall),
                     Container(
                       height: 30.h,
                       width: 100.w,
@@ -87,7 +87,7 @@ class _UploadPresetSelectionMobileState
                         shrinkWrap: true,
                         // scrollDirection: Axis.vertical,
                         itemCount: _initiativePresets.length,
-                        crossAxisCount: 4,
+                        crossAxisCount: 2,
                         itemBuilder: (BuildContext context, int index) {
                           return InitiativePresetCard(
                               currentIndex: index,
@@ -114,7 +114,7 @@ class _UploadPresetSelectionMobileState
                         padding: EdgeInsets.only(top: 2.h),
                         child: Center(
                           child: Text("Your presets",
-                              style: Theme.of(context).textTheme.headline5),
+                              style: Theme.of(context).textTheme.headlineSmall),
                         ),
                       ),
                     ),

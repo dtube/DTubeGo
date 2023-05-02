@@ -183,7 +183,7 @@ class _LoginFormMobileState extends State<LoginFormMobile> {
                                           "continue without login",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyText1,
+                                              .bodyLarge,
                                         )),
                                   ),
                                 ],
@@ -206,7 +206,7 @@ class _LoginFormMobileState extends State<LoginFormMobile> {
                         Padding(
                           padding: EdgeInsets.only(top: 2.h),
                           child: Text("You want to know more about DTube?",
-                              style: Theme.of(context).textTheme.bodyText1),
+                              style: Theme.of(context).textTheme.bodyLarge),
                         ),
                         Column(
                           // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -220,7 +220,7 @@ class _LoginFormMobileState extends State<LoginFormMobile> {
                                   "read the Whitepaper",
                                   style: Theme.of(context)
                                       .textTheme
-                                      .bodyText1!
+                                      .bodyLarge!
                                       .copyWith(color: globalBlue),
                                 )),
                             Padding(
@@ -237,10 +237,10 @@ class _LoginFormMobileState extends State<LoginFormMobile> {
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
-                                          "Join the DTube Discord",
+                                          "Join DTube's Discord",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyText1!
+                                              .bodyLarge!
                                               .copyWith(color: globalBlue),
                                         ),
                                         FaIcon(
