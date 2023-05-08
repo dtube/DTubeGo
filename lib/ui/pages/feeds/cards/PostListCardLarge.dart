@@ -469,7 +469,7 @@ class PostInfoBaseRow extends StatelessWidget {
           width: widget.width * 0.50,
           child: Row(
             children: [
-              globals.disableAnimations
+              Expanded(flex: 0, child: globals.disableAnimations
                   ? AccountIconContainer(widget: widget, avatarSize: _avatarSize)
                   : FadeIn(
                       preferences: AnimationPreferences(
@@ -477,8 +477,8 @@ class PostInfoBaseRow extends StatelessWidget {
                           duration: Duration(seconds: 1)),
                       child: AccountIconContainer(
                           widget: widget, avatarSize: _avatarSize),
-                    ),
-              globals.disableAnimations
+                    )),
+              Expanded(flex: 1, child: globals.disableAnimations
                   ? TitleWidgetForRow(widget: widget)
                   : FadeInLeftBig(
                       preferences: AnimationPreferences(
@@ -486,7 +486,7 @@ class PostInfoBaseRow extends StatelessWidget {
                         duration: Duration(milliseconds: 350),
                       ),
                       child: TitleWidgetForRow(widget: widget),
-                    ),
+                    )),
             ],
           )
         ),
