@@ -187,7 +187,7 @@ class Web3StorageRepositoryImpl implements Web3StorageRepository {
 // TODO: support more providers
   Future<String> uploadThumbnail(String localFilePath) async {
     //String _url = endpoint;
-    String _url = "https://api.imgur.com/3/image";
+    String _url = "https://api.imgur.com/3/upload";
 
     String authHeader = "Client-ID " + secret.imgurClientID;
 
