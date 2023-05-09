@@ -158,10 +158,11 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
         },
       );
 
-      chips.add(SizedBox(
+      chips.add(Expanded(flex: 1, child: SizedBox(
           width: globalIconSizeBig,
           height: globalIconSizeBig,
-          child: choiceChip));
+          child: choiceChip))
+      );
     }
 
     return Row(
@@ -215,13 +216,13 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                               avoidAnimation: true,
                               waitBeforeFadeIn: Duration(seconds: 0),
                               childs: [
-                                Row(
+                              Expanded(flex: 0, child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    SizedBox(
-                                      width: 60.w,
+                                    Expanded(flex: 1, child: SizedBox(
+                                      width: 55.w,
                                       child: TextField(
                                         autofocus: true,
                                         controller: searchTextController,
@@ -233,10 +234,10 @@ class SearchScreenMobileState extends State<SearchScreenMobile> {
                                             .textTheme
                                             .bodyLarge,
                                       ),
-                                    ),
-                                    SizedBox(width: 20.w, child: _buildChips()),
+                                    )),
+                                    SizedBox(width: 25.w, child: _buildChips()),
                                   ],
-                                ),
+                                )),
                               ],
                             ),
                           ),
