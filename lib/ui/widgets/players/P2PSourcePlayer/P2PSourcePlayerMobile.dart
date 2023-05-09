@@ -1,8 +1,7 @@
-import 'package:better_player/better_player.dart';
+import 'package:appinio_video_player/appinio_video_player.dart';
 // import 'package:chewie/chewie.dart';
 import 'package:dtube_go/ui/widgets/dtubeLogoPulse/dtubeLoading.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -42,22 +41,26 @@ class P2PSourcePlayerMobile extends StatefulWidget {
 }
 
 class _P2PSourcePlayerMobileState extends State<P2PSourcePlayerMobile> {
-  late BetterPlayerController _P2PSourcePlayerMobileController;
-
+  late VideoPlayerController videoPlayerController;
+  late CustomVideoPlayerController _customVideoPlayerController;
   late Future<void> _future;
   late double aspectRatio;
+  late CustomVideoPlayerWebController _customVideoPlayerWebController;
+  late ValueNotifier<bool> isPlaying;
   Future<void> initVideoPlayer() async {
+    videoPlayerController = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((value) => setState(() {}));
+    _customVideoPlayerController = CustomVideoPlayerController(
+      customVideoPlayerSettings: CustomVideoPlayerSettings(),
+      context: context,
+      videoPlayerController: videoPlayerController,
+    );
+    _customVideoPlayerWebController = CustomVideoPlayerWebController(
+      webVideoPlayerSettings: CustomVideoPlayerWebSettings(autoplay: true, src: widget.videoUrl, aspectRatio:
+      aspectRatio > 0.0 ? aspectRatio : 16 / 11)
+    );
     // await widget.videocontroller.initialize();
-
     setState(() {
-      aspectRatio = widget.videocontroller.value.size.width /
-          widget.videocontroller.value.size.height;
-      BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-          !widget.localFile
-              ? BetterPlayerDataSourceType.network
-              : BetterPlayerDataSourceType.file,
-          widget.videoUrl);
-
       // _P2PSourcePlayerMobileController = ChewieController(
       //     videoPlayerController: widget.videocontroller,
       //     aspectRatio: !(aspectRatio > 0.0) ? 1 : aspectRatio,
@@ -66,30 +69,31 @@ class _P2PSourcePlayerMobileState extends State<P2PSourcePlayerMobile> {
       //     allowFullScreen: widget.allowFullscreen,
       //     allowMuting: true,
       //     showControls: widget.controls);
-      _P2PSourcePlayerMobileController = BetterPlayerController(
-          BetterPlayerConfiguration(
-              autoDetectFullscreenAspectRatio: true,
-              fit: BoxFit.contain,
-              autoDispose: true,
-              autoPlay: widget.autoplay),
-          betterPlayerDataSource: betterPlayerDataSource);
     });
   }
 
   @override
   void initState() {
+    isPlaying = ValueNotifier(false);
     super.initState();
     // widget.videocontroller = !widget.localFile
     //     ? VideoPlayerController.network(widget.videoUrl)
     //     : VideoPlayerController.file(File(widget.videoUrl));
+    aspectRatio = widget.videocontroller.value.size.width /
+        widget.videocontroller.value.size.height;
     _future = initVideoPlayer();
+    if (!isPlaying.value) {
+      kIsWeb ? _customVideoPlayerWebController.play() : _customVideoPlayerController.videoPlayerController.play();
+    }
   }
 
   @override
   void dispose() {
     widget.videocontroller.dispose();
-    _P2PSourcePlayerMobileController.pause();
-    _P2PSourcePlayerMobileController.dispose();
+    videoPlayerController.pause();
+    videoPlayerController.dispose();
+    _customVideoPlayerController.videoPlayerController.pause();
+    _customVideoPlayerController.dispose();
     super.dispose();
   }
 
@@ -128,20 +132,19 @@ class _P2PSourcePlayerMobileState extends State<P2PSourcePlayerMobile> {
                           aspectRatio:
                               aspectRatio > 0.0 ? aspectRatio : 16 / 11,
                           child: widget.controls
-                              ? BetterPlayer(
-                                  controller: _P2PSourcePlayerMobileController,
+                              ? CustomVideoPlayer(
+                                  customVideoPlayerController: _customVideoPlayerController,
                                 )
                               : GestureDetector(
-                                  child: BetterPlayer(
-                                    controller:
-                                        _P2PSourcePlayerMobileController,
-                                  ),
+                                  child: kIsWeb ? CustomVideoPlayerWeb(
+                                    customVideoPlayerWebController:
+                                        _customVideoPlayerWebController,
+                                  ) : VideoPlayer(videoPlayerController),
                                   onTap: () {
-                                    if (_P2PSourcePlayerMobileController
-                                        .isPlaying()!) {
-                                      _P2PSourcePlayerMobileController.pause();
+                                    if (isPlaying.value) {
+                                      kIsWeb ? _customVideoPlayerWebController.pause() : _customVideoPlayerController.videoPlayerController.pause();
                                     } else {
-                                      _P2PSourcePlayerMobileController.play();
+                                      kIsWeb ? _customVideoPlayerWebController.play() : _customVideoPlayerController.videoPlayerController.play();
                                     }
                                   }),
                         )
@@ -154,7 +157,7 @@ class _P2PSourcePlayerMobileState extends State<P2PSourcePlayerMobile> {
                                   child: Text(
                                     "Hint: preview of landscape videos could be wrong oriented.\nBut the upload will usually be fine!",
                                     style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                        Theme.of(context).textTheme.bodyLarge,
                                   ),
                                 ),
                               ],
