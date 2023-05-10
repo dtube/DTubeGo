@@ -44,6 +44,7 @@ dependencies:
 
   # UI - video related
   # webview_flutter: ^3.0.0
+  appinio_video_player: ^1.2.1 # player for IPFS, YT videos... maybe more?
   video_player: ^2.4.4
   youtube_explode_dart: ^1.12.0 #loading youtube metadata
   better_player: ^0.0.83 # player for ipfs/sia/local files

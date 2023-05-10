@@ -25,6 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.12.29"
+  appinio_video_player:
+    dependency: "direct main"
+    description:
+      name: appinio_video_player
+      sha256: ecf05d15af99503a4265204d80f6550e59f171bb1d4592e301980ce9aa4f8179
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
   archive:
     dependency: transitive
     description:

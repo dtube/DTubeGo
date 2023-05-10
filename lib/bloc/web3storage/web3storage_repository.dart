@@ -113,66 +113,66 @@ class Web3StorageRepositoryImpl implements Web3StorageRepository {
         },
     );
     String cid = "";
-    do {
-      await client.upload(
-        onComplete: () async {
-          log("Complete!");
-          String tmpUrl = client.uploadUrl.toString();
-          String token = tmpUrl.split("/")[tmpUrl
-              .split("/")
-              .length - 1];
-          String _tokenUrl = endpoint["api"]! + "/progress/" + token;
+    await client.upload(
+      onComplete: () async {
+        int _tryCount = 0;
+        log("Complete!");
+        String tmpUrl = client.uploadUrl.toString();
+        String token = tmpUrl.split("/")[tmpUrl
+            .split("/")
+            .length - 1];
+        String _tokenUrl = endpoint["api"]! + "/progress/" + token;
 
-          BaseOptions options = new BaseOptions(
-              connectTimeout: Duration(seconds: 60), // 60 seconds
-              receiveTimeout: Duration(seconds: 60), // 60 seconds
-              headers: {
-                'contentType': 'video/mp4',
-                'apikey': apiKeyHeader,
-                'username': applicationUsername,
-                'ts': ts.toString(),
-                'signature': base64Encode(JSONToUTF8.convert(signedData.toJson())),
-                "pubkey": pubKey,
-            }
-          );
-          var dioToken = new Dio(options);
-          dioToken.options.headers["apikey"] = apiKeyHeader;
-          do {
-            try {
-              await Future.delayed(Duration(seconds: 15));
-              print(_tokenUrl);
-              var responseTokenQuery = await dioToken.get(_tokenUrl);
-              if (responseTokenQuery.statusCode == 200) {
-                print("progress checked");
-                var progressData = responseTokenQuery.data;
-                if (progressData["status"] == 'error') {
-                  break;
-                }
-                if (progressData["progress"] == "uploaded") {
-                  cid = progressData["cid"];
-                  print("cid=" + cid);
-                }
+        BaseOptions options = new BaseOptions(
+            connectTimeout: Duration(seconds: 60), // 60 seconds
+            receiveTimeout: Duration(seconds: 60), // 60 seconds
+            headers: {
+              'contentType': 'video/mp4',
+              'apikey': apiKeyHeader,
+              'username': applicationUsername,
+              'ts': ts.toString(),
+              'signature': base64Encode(JSONToUTF8.convert(signedData.toJson())),
+              "pubkey": pubKey,
+          }
+        );
+        var dioToken = new Dio(options);
+        dioToken.options.headers["apikey"] = apiKeyHeader;
+        do {
+          _tryCount = _tryCount + 1;
+          try {
+            await Future.delayed(Duration(seconds: 15));
+            print(_tokenUrl);
+            var responseTokenQuery = await dioToken.get(_tokenUrl);
+            if (responseTokenQuery.statusCode == 200) {
+              print("progress checked");
+              var progressData = responseTokenQuery.data;
+              if (progressData["status"] == 'error') {
+                break;
               }
-            } on DioError catch (e) {
-              if (e.response != null) {
-                if (e.response?.statusCode != 404) {
-                  throw e;
-                }
-              } else {
+              if (progressData["progress"] == "uploaded") {
+                cid = progressData["cid"];
+                print("cid=" + cid);
+              }
+            }
+          } on DioError catch (e) {
+            if (e.response != null) {
+              if (e.response?.statusCode != 404) {
                 throw e;
               }
+            } else {
+              throw e;
             }
-          } while (cid == "");
-          // var url = client.uploadUrl.toString();
-          log(cid);
-          return cid;
-          // var pathImageThumb = await getThumbnail(xfile.path);
-        },
-        onProgress: (progress) {
-          log("Progress: $progress");
-        },
-      );
-    } while (cid == "");
+          }
+        } while (cid == "" && _tryCount < 20 && _tryCount != 0);
+        // var url = client.uploadUrl.toString();
+        log(cid);
+        return cid;
+        // var pathImageThumb = await getThumbnail(xfile.path);
+      },
+      onProgress: (progress) {
+        log("Progress: $progress");
+      },
+    );
     return cid;
   /*
     var formData = FormData.fromMap({
